@@ -48,3 +48,9 @@ source-provenance.json records source hashes and import-only migration changes.
 Public verification results omit host paths, author identity and private output.
 Private logs remain outside Git. See tools/audit_repository.py for publication
 checks; automated scanning supplements manual file/provenance review.
+
+E15 private tests additionally require the external E15_data_page_boundary
+pre_before/pre_after/after snapshots, generated database and preflight comparison.
+They verify byte-perfect generation, the exact observed allocation delta and safe
+rejection of the seven-page result; they do not implement allocation. Portable
+pre-boundary tests use synthetic bytes and require none of this evidence.

@@ -961,3 +961,29 @@ and any general writer remain outside this milestone. E15 has not begun.
 ## Final automated verification
 
 72 tests passed:55 original parser regressions,6 evolved PoC tests (including exact E08 identity),11 multi-record/CLI/application-fixture/capacity/atomic tests. Exact E10 reconstruction also passed. Capacity guard exhaustion uses injected limits rather than producing a forbidden near-full file. All1,890 installed-file hashes/inventories acrossE00–E14 match; all prior evidence manifests and the original PoC artifact manifest match. Both126-file PhaseIII-A snapshot manifests and current evidence hashes match. Parser/CLI implementation hashes remain unchanged. Full per-manifest counts are in PHASE3A_VALIDATION.json.
+
+## E15: observed first extra PERSONAL data page — 2026-10-31
+
+A verified writer-generated 6144-byte preflight database held 17 rows (16 users),
+with 17 zero bytes free after the page-4 list marker at 13EE. Calendar displayed
+all eleven 60-character generated descriptions, then exited with all126 file
+contents unchanged. The user revised the crossing event to exactly BOUND12
+(2026-11-01 Sunday,11:00–12:00,alarmoff). Its24-byte row exceeds17free bytes;
+the original77-byte proposal also exceeded17 but was never saved.
+
+One application insertion grew the closed file to7168bytes. New page6 starts
+1800 with row ID21: `80 21 8F 6C 62 01 62 01 01 AC 01 B0 01 31 01 42 4F 55 4E 44 31 32 01 02`;
+03 at1818, then999zeros. Existing index page5 adds `(6,0,21)` encoded
+`06 00 00 00 21 00` at1482; two2027 entries shift6bytes right, no old row
+relocates or changes ID. The full old data page4 including internal row,03 and
+17zero tail is identical. Schema pages2/3 and index header also identical.
+Count00017→00018,next-ID candidate00033→00034(decimal); descriptor page numbers
+unchanged. Only other old-extent changes are header0026..27 FF8F→006F and
+002A..2B F000→8FFF: allocation-associated opaque values, not a decoded page map.
+OnlyPERSONAL.CLN changed among126files:14old positions plus1024appended bytes.
+
+This confirms one new whole-row data page addressed through the existing index,
+not general page linkage, reuse, allocator or checksum semantics. New-page03
+coexists with the unchanged old-page03. The conservative parser intentionally
+rejects this seven-page file with unsupported_layout; writer remains bounded.
+See the E15 experiment report for exact hashes, all byte runs and evidence.

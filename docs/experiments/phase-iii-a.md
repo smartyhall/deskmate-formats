@@ -130,3 +130,10 @@ and any general writer remain outside this milestone. E15 has not begun.
 ## Final automated verification
 
 72 tests passed:55 original parser regressions,6 evolved PoC tests (including exact E08 identity),11 multi-record/CLI/application-fixture/capacity/atomic tests. Exact E10 reconstruction also passed. Capacity guard exhaustion uses injected limits rather than producing a forbidden near-full file. All1,890 installed-file hashes/inventories acrossE00–E14 match; all prior evidence manifests and the original PoC artifact manifest match. Both126-file PhaseIII-A snapshot manifests and current evidence hashes match. Parser/CLI implementation hashes remain unchanged. Full per-manifest counts are in PHASE3A_VALIDATION.json.
+
+## Subsequent E15 outcome
+
+The plan above remains historical. [E15](e15-page-boundary.md) completed the
+preflight and one boundary insertion. Before saving, the owner changed BOUND12
+to seven characters (24-byte row); both24 and the proposed77 exceed17free bytes.
+Calendar allocated page6 and grew to7168bytes. No allocation support was added.
