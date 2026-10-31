@@ -85,6 +85,9 @@ writer retain their conservative six-page scope; no general allocator is impleme
 page-6 event leaves the seven-page file and retired payload on disk. Page-reuse
 and deletion-marker semantics remain unimplemented and experimentally unresolved.
 
+[Screen-state research](docs/research/screen-state.md) recovered partial Calendar
+schedule text through read-only RAM captures; it is not a general screen API.
+
 ## Licensing
 
 Software: **GPL-3.0-or-later**. Formal technical specifications:
