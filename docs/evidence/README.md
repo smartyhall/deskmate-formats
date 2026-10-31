@@ -54,3 +54,8 @@ pre_before/pre_after/after snapshots, generated database and preflight compariso
 They verify byte-perfect generation, the exact observed allocation delta and safe
 rejection of the seven-page result; they do not implement allocation. Portable
 pre-boundary tests use synthetic bytes and require none of this evidence.
+
+E16 private tests additionally require external E16_page_reclamation/after and
+E15 post-insertion/preflight databases. They assert exact byte deltas and retained
+evidence without extending production support. Portable retained-page tests
+construct only synthetic in-memory specimens and require no laboratory files.

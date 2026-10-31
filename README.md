@@ -81,6 +81,10 @@ publication steps, external paid services or AI dependencies.
 data page for a 24-byte BOUND12 record when 17 bytes remained. The parser and
 writer retain their conservative six-page scope; no general allocator is implemented.
 
+[E16](docs/experiments/e16-page-reclamation.md) observed that deleting the sole
+page-6 event leaves the seven-page file and retired payload on disk. Page-reuse
+and deletion-marker semantics remain unimplemented and experimentally unresolved.
+
 ## Licensing
 
 Software: **GPL-3.0-or-later**. Formal technical specifications:
