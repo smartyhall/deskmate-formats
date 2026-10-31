@@ -122,3 +122,24 @@ GPL-3.0-or-later; the research report uses GPL-3.0-or-later OR CC-BY-SA-4.0;
 formal specification additions retain GPL-3.0-or-later OR CC-BY-4.0.
 These are local verification results; E16 hosted CI success is not asserted.
 No PR is created or merged by E16, and repository visibility remains private.
+
+## Screen-state research verification — 2026-10-31
+
+* Portable suite: **55 passed** on each Windows Python 3.13/3.14 (four new
+  synthetic tests); private integration: **80 passed** on each version.
+* Original laboratory suite: **72 passed**, unchanged.
+* REUSE, strict SPDX expressions, canonical license-text hashes, focused Ruff,
+  wheel/source build, installed imports/CLI on both versions and repository plus
+  distribution-content audits passed. No runtime/dependency/CI changes.
+* E00–E14 complete 126-file manifests, E15 477-entry and E16 313-entry manifests,
+  and Phase III-A 295-entry manifest verified against preserved evidence.
+* Research before/after installation: all126files byte-identical. All13 guarded
+  emulator/profile files retain hashes and modification timestamps.
+* The explicit-span helper reproduced both screenshot-verified schedule rows
+  from private segmented RAM captures. A third bounded region read after exit
+  no longer contained either row. No full-screen, position, focus or cross-run
+  stability claim follows. Raw memory/screenshots remain outside the repository.
+
+The owner reports merged E16 PR#3 passed all four hosted CI jobs; the local main
+was fast-forwarded to f5a044ebbb688b8d0907af014ac9712ae80db1d4 before branching.
+These research checks are local results; no new hosted CI success is asserted.
