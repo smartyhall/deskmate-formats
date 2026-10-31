@@ -3,7 +3,8 @@
 DOSLAB is the authoritative private archive. No executables, disk images, installed
 trees, screenshots, archived .CLN files, access tokens or downloaded archives ship
 in this proposed repository. Package code and authored documentation are staged;
-the owner has not yet chosen an open-source license.
+their approved per-file licenses are defined in [LICENSING.md](../../LICENSING.md).
+Private evidence remains outside those grants.
 
 ## Portable tests
 

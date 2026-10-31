@@ -1,6 +1,9 @@
-include README.md CONTRIBUTING.md LICENSE-DECISION.md
-recursive-include docs *.md *.json
-recursive-include tests *.py *.md
-recursive-include tools *.py
-recursive-include .github *.yml *.yaml
+include README.md CONTRIBUTING.md LICENSE-DECISION.md LICENSING.md LICENSE
+include *.license
+include .gitattributes .gitignore
+recursive-include LICENSES *.txt
+recursive-include docs *.md *.json *.license
+recursive-include tests *.py *.md *.license
+recursive-include tools *.py *.license
+recursive-include .github *.yml *.yaml *.license
 global-exclude *.pyc

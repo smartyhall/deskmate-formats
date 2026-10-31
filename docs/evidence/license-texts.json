@@ -1,0 +1,25 @@
+{
+  "retrieved_date": "2026-10-31",
+  "provenance": "Unmodified standard texts from the SPDX license-list-data project; original license-text attributions retained.",
+  "root_LICENSE": "Byte-identical copy of LICENSES/GPL-3.0-or-later.txt; or-later designation is in project and per-file declarations.",
+  "files": [
+    {
+      "identifier": "GPL-3.0-or-later",
+      "source": "https://raw.githubusercontent.com/spdx/license-list-data/main/text/GPL-3.0-or-later.txt",
+      "sha256": "fb981668c18a279e285fc4d83fba1e836cc84dd4daa73c9697d3cfd2d8aca6e0",
+      "size": 34674
+    },
+    {
+      "identifier": "CC-BY-4.0",
+      "source": "https://raw.githubusercontent.com/spdx/license-list-data/main/text/CC-BY-4.0.txt",
+      "sha256": "d557539df68e771cc1eedcc91d13f70fca930e508d11eedcafa4b15db49e3744",
+      "size": 17023
+    },
+    {
+      "identifier": "CC-BY-SA-4.0",
+      "source": "https://raw.githubusercontent.com/spdx/license-list-data/main/text/CC-BY-SA-4.0.txt",
+      "sha256": "cde7883b9050a1104f4ac19a1572aafd6e5d7323b68351aaf51fbf4beba54966",
+      "size": 18375
+    }
+  ]
+}

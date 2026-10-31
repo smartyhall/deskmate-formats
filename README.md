@@ -54,6 +54,7 @@ The implementation remains Calendar-specific; no shared engine is asserted.
 ```sh
 python -m pip install '.[dev]'
 python -m unittest discover -s tests/portable -v
+python -m reuse lint
 python -m ruff check src tests/portable tools
 python tools/audit_repository.py
 python -m build
@@ -78,10 +79,17 @@ publication steps, external paid services or AI dependencies.
 
 E15 is proposed only; this repository transition performs no new format experiment.
 
-## License decision pending
+## Licensing
 
-No open-source license has been selected or granted by this staging work. There is
-intentionally no LICENSE file or package license assertion. MIT is the recommended
-option for independently authored code/documentation, subject to the owner's choice;
-see [license decision](LICENSE-DECISION.md). Third-party evidence has separate rights.
-This local repository has not been published or connected to a remote.
+Software: **GPL-3.0-or-later**. Formal technical specifications:
+**GPL-3.0-or-later OR CC-BY-4.0**. General documentation:
+**GPL-3.0-or-later OR CC-BY-SA-4.0**. Recipients may choose either offered license
+for a dual-licensed file, respecting attribution/conditions of the chosen license.
+Adjacent REUSE-compatible .license sidecars provide exact per-file declarations.
+
+Copyright (c) 2026 Michael A. Hall, except where another accurate notice applies.
+No ownership or redistribution rights are claimed over original DeskMate software,
+media, databases, manuals or third-party works. Complete standard texts are in
+[LICENSES](LICENSES); [LICENSE](LICENSE) is the software GPL text.
+See [LICENSING.md](LICENSING.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
+The repository remains local with no remote or publication configured.

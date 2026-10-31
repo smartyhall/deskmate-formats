@@ -9,7 +9,8 @@ description = "Independent documentation and tools for preserving Tandy DeskMate
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = []
-license-files = []
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE", "LICENSES/*.txt", "LICENSING.md", "LICENSING.md.license", "README.md.license"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Programming Language :: Python :: 3",
@@ -18,11 +19,14 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-dev = ["build>=1.2", "ruff>=0.11"]
+dev = ["build>=1.2", "ruff>=0.11", "reuse[charset-normalizer]>=6.0"]
 
 [project.scripts]
 deskmate-calendar = "deskmate_formats.calendar.cli:main"
 deskmate-calendar-append = "deskmate_formats.calendar.writer:main"
+
+[tool.setuptools.package-data]
+"*" = ["*.license"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

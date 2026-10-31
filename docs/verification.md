@@ -41,7 +41,9 @@ manual provenance review and cannot grant rights to third-party evidence.
 The repository has a local main branch, no remote and no release/publication
 workflow. Audited files form the initial local commit. The owner supplied an author identity
 after initial verification; it is configured only in this repository.
-No license was selected. LICENSE-DECISION.md recommends MIT without granting it.
+At that repository-preparation checkpoint no license was selected. This historical
+state is superseded by the approved [licensing policy](../LICENSING.md); see the
+[licensing review](licensing-review.md) for its subsequent verification.
 The owner still controls licensing, contribution attribution and any publication.
 
 Private execution logs and environment paths remain outside Git; public results

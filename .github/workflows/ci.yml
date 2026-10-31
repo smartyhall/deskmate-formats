@@ -22,7 +22,9 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Install build and static analysis tools
-        run: python -m pip install build ruff
+        run: python -m pip install build ruff "reuse[charset-normalizer]"
+      - name: License declarations (REUSE)
+        run: python -m reuse lint
       - name: Build wheel and source archive
         run: python -m build
       - name: Install built wheel

@@ -3,3 +3,8 @@
 *.md text eol=lf
 *.yml text eol=lf
 *.toml text eol=lf
+
+# Preserve canonical standard-license bytes and portable REUSE metadata.
+LICENSE -text
+LICENSES/*.txt -text
+*.license text eol=lf

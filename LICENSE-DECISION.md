@@ -1,3 +1,12 @@
+# Historical recommendation — superseded
+
+The repository-preparation note below is retained as history, not current policy.
+The owner subsequently approved [LICENSING.md](LICENSING.md) and confirmed the
+default attribution to Michael A. Hall. No MIT license was applied. Pending-license
+statements below describe only the earlier staging checkpoint.
+
+---
+
 # License recommendation — decision reserved to the owner
 
 Recommendation: MIT for independently authored code and documentation, because it
