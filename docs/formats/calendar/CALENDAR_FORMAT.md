@@ -987,3 +987,33 @@ not general page linkage, reuse, allocator or checksum semantics. New-page03
 coexists with the unchanged old-page03. The conservative parser intentionally
 rejects this seven-page file with unsupported_layout; writer remains bounded.
 See the E15 experiment report for exact hashes, all byte runs and evidence.
+
+## E16: deletion leaves a retained, unindexed page-6 row — 2026-10-31
+
+From the fully verified E15 seven-page copy, Calendar removed only BOUND12 via
+Event→Remove→This event only. All16survivors were visuallyverified; normalDOSexit
+preceded collection. File remains7168bytes, not6144. Exactly11bytes differ from
+E15after:0439 38→37(count00018→00017);043D 30→31(opaque token000→001);
+index1482/1484/1486 06/00/21→04/27/11,148A/148C 27/11→3F/12,
+148E/1490/1492 04/3F/12→00/00/00;1800 80→44. Allotherbytes unchanged.
+
+Candidate next-ID00034(decimal) is retained; maxliveID20hex+1 is33decimal,
+so maxliveID+1 is not a universal rule. Opaque descriptor token5(zero-based)
+000→001 is associated with this deletion; its meaning remains unconfirmed.
+Newprefix44(ASCII D) is consistent with a tombstone but not a general marker
+codec. The entire retired row payload,ending0102,03at1818 and999zero tail remain.
+No liveindex entry references page6/ID21. Indexpage5 fully matches preflight,
+lastslot148E..1493 cleared;17entries. All oldlive rowIDs/addresses/rawbytes and
+internalrow1000 unchanged; fullpages2/3/4 unchanged fromE15.
+
+Headerpage0 is entirely unchanged fromE15:0026..27=006F,002A..2B=8FFF.
+These values therefore do not simply reverse when the only livepage6row is
+removed. File retention is observed; free/allocated/reusable page state and
+header/free-list/checksum encodings remain unknown. No new page linkage observed.
+
+Against6144bytepreflight, firstextent differs at0026,0027,002A,002B,043D,0443,
+plus1024retainedpagebytes; no byte-perfect restoration. SHA256E16:
+818c44af2f351cc764dfd48a82b3d8ae1dd0b5f733c8549dbdd902f67eed05ea.
+OnlyPERSONAL.CLN changes among126files againsteitherreference. Both production
+reader/writer intentionally reject E16; observed001 andretaineddeletedrows do
+not extend supported structures. See E16report for allrawbytes andhypotheses.

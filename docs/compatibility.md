@@ -28,3 +28,7 @@ E15 observed a seven-page application-produced file after one allocation. It is
 documented evidence, **not supported parser/writer input**; both reject it.
 The accepted six-page near-capacity preflight remains supported. See
 [the E15 report](experiments/e15-page-boundary.md).
+
+E16 observed deletion without truncation: the seven-page file retains a 44-prefixed
+unindexed row and descriptor token001. It remains unsupported; no reclamation
+or tombstone codec was added. See [E16](experiments/e16-page-reclamation.md).

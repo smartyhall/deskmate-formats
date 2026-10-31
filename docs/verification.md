@@ -91,3 +91,34 @@ branch; real databases, screenshots and complete trees remain private in DOSLAB.
 These are local verification results; no new hosted CI success is asserted here.
 Dependabot activation awaits an owner-reviewed merge to the default branch;
 alerts/security updates are separately reviewed repository settings.
+
+## E16 verification — 2026-10-31
+
+Started from a clean local worktree, fetched origin and fast-forwarded main only
+to27c1f9097ae226979f7d83fec543b4239894e869 (merged PR#1). The owner reports all
+four E15 PR CI jobs passed. E16 is on experiment/e16-page-reclamation, retaining
+E15 history; neither the completed PR nor Dependabot setup was recreated.
+
+* Portable tests: **51 passed** on Windows Python3.13.15 and3.14.7. Two new
+  synthetic tests protect rejection of retained deleted-row pages, nonzero opaque
+  descriptor values and read-only preservation, without any private input.
+* Private integration: **80 passed** on each Python version, adding three E16
+  tests for the entire11-byte delta, retained payload/index/survivor bytes and
+  the lack of binary restoration or expanded production support.
+* Original unchanged laboratory suite: **72 passed** separately.
+* All1,890E00–E14 installed files, E15's full477-entry artifact manifest and its
+  three126-file snapshot manifests, PhaseIII-A's295-entry manifest and two126-file
+  snapshots, and both126-file E16 snapshots matched inventories and hashes.
+  All2,225 earlier watched evidence/source files retained hashes and timestamps.
+* REUSE/SPDX, canonical license text hashes and focused Ruff checks passed.
+  Wheel and source archive built, updated wheels installed and imports/CLI checked
+  on both Python versions; installed runtime source matches the unchanged tree.
+  Repository and distribution content audits passed; private binary fixtures,
+  software, screenshots and installed trees remain external.
+
+Runtime code, package requirements, CI/Dependabot configuration, workflow SHA
+pins/permissions and standard license texts are unchanged. New tests use
+GPL-3.0-or-later; the research report uses GPL-3.0-or-later OR CC-BY-SA-4.0;
+formal specification additions retain GPL-3.0-or-later OR CC-BY-4.0.
+These are local verification results; E16 hosted CI success is not asserted.
+No PR is created or merged by E16, and repository visibility remains private.
