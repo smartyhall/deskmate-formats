@@ -1,13 +1,30 @@
 # deskmate-formats
 
-Independent preservation of the native file formats used by Tandy DeskMate.
-The long-term objective is complete technical documentation and independently
-developed tools to inspect, read, write and convert standard DeskMate application
-files. **Calendar is the first implemented format, not the project boundary.**
+**Preserving Tandy DeskMate file formats through reverse engineering, open
+specifications, and independent tools.**
 
-This is an early, evidence-driven project. It is not affiliated with Tandy and
-contains no DeskMate executables, disk images or complete installed snapshots.
-The original DOSLAB archive remains the authority for experimental evidence.
+This public, evidence-driven digital-preservation project aims to document the
+native file formats used by Tandy DeskMate and develop independent tools to
+inspect, read, write, export and eventually convert them. **DeskMate 3.05
+Calendar is the first implemented format, not the project boundary.**
+
+The project is not affiliated with Tandy. It does not distribute original
+DeskMate executables, disk images, real user databases or complete installed
+snapshots. Original experimental evidence is preserved separately in DOSLAB;
+the repository's portable tests use independently generated synthetic data.
+
+## Project status
+
+| Area | Status | What is available or being investigated |
+|---|---|---|
+| **Calendar 3.05** (`PERSONAL.CLN`) | **Experimental tools** | Read-only parsing, indexed record inspection, text/JSON output, and a narrowly bounded append writer for verified six-page layouts |
+| **Calendar storage research** | **Ongoing** | Documented page allocation and deleted-record retention; general allocation, record reuse, editing and recovery are not yet implemented |
+| **DeskMate screen-state research** | **Exploratory** | Partial Calendar schedule text recovered from read-only emulator RAM captures; not a general screen reader or automation interface |
+| **Other DeskMate applications** | **Future work** | Address Book, Filer, Text, Worksheet and Draw have no validated storage models or implementations yet |
+
+The tools are experimental and support only explicitly measured cases. See
+[compatibility](docs/compatibility.md) for exact limits and the
+[format inventory](docs/inventory.md) for the broader preservation scope.
 
 ## Current functionality
 
@@ -88,6 +105,14 @@ and deletion-marker semantics remain unimplemented and experimentally unresolved
 [Screen-state research](docs/research/screen-state.md) recovered partial Calendar
 schedule text through read-only RAM captures; it is not a general screen API.
 
+## Contributing
+
+Corrections to the specifications, reproducible observations, independently
+authored tests and interoperability tooling are welcome. See
+[CONTRIBUTING.md](CONTRIBUTING.md) and the repository's issue templates.
+Please do not submit DeskMate binaries, disk images, original user data or
+private laboratory memory dumps as fixtures.
+
 ## Licensing
 
 Software: **GPL-3.0-or-later**. Formal technical specifications:
@@ -101,7 +126,6 @@ No ownership or redistribution rights are claimed over original DeskMate softwar
 media, databases, manuals or third-party works. Complete standard texts are in
 [LICENSES](LICENSES); [LICENSE](LICENSE) is the software GPL text.
 See [LICENSING.md](LICENSING.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
-The repository is hosted privately. The initial four GitHub Actions jobs passed
-on Windows/Ubuntu with Python 3.13/3.14 (owner-reported). See
-[dependency maintenance](docs/dependency-maintenance.md) for update review and
-Dependabot activation requirements.
+The repository is publicly hosted. GitHub Actions runs the portable
+Windows/Ubuntu Python 3.13/3.14 matrix on pushes and pull requests. See
+[dependency maintenance](docs/dependency-maintenance.md) for update review.
