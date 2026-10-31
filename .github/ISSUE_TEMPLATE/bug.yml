@@ -1,0 +1,20 @@
+name: Tool defect
+description: Report an independently reproducible parser/writer problem
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Tool, Python and operating-system versions
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal synthetic reproduction and expected versus actual behavior
+      description: Do not attach software, archives, credentials or personal data.
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Sanitized errors and relevant offsets

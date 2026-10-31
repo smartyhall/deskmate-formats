@@ -1,0 +1,20 @@
+name: Format evidence or investigation
+description: Document a controlled observation or propose a new application investigation
+body:
+  - type: input
+    id: application
+    attributes:
+      label: Application and exact DeskMate version
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Controlled variable, provenance, hashes and complete differences
+      description: Use independently generated examples or redacted tables; no proprietary software or private data.
+    validations:
+      required: true
+  - type: textarea
+    id: interpretation
+    attributes:
+      label: Confirmed findings, hypotheses and unresolved alternatives

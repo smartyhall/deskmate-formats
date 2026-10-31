@@ -1,0 +1,13 @@
+{
+  "source": "Private DOSLAB analysis sources at Phase III-A checkpoint",
+  "changes": "Package imports, mock targets and explicit fixture opt-in only; portable mutation tests use synthetic data. Full Calendar specification prepended provenance note. Staged specification and synthetic mutation-test trailing blank lines normalized for Git whitespace checks; semantic content unchanged.",
+  "source_sha256": {
+    "calendar_personal.py": "3b7b69d26bdb2f379c6b93e96cb5f702549d8cec3b46e999cc2fb9e513acf0fe",
+    "calendar_personal_cli.py": "7d56b7d4a1853c6e1e359a58ea5f9d0cd8099ec69d92e0abc2defd4d594bc920",
+    "calendar_writer_poc.py": "e99c9f494fa00fd6973d9a9e6dc59aeb64112022680f5eb87d00a0789650c264",
+    "test_calendar_personal.py": "eb934f64e24113bc59b6ffb002ca14f948bd1817344ec4b3030353fdadd3b228",
+    "test_calendar_writer_poc.py": "3ec8d75ba6fdf929502ebdedf74cd27ad8eb928fbb0457b29df0fbfd04edd1bc",
+    "test_calendar_writer_multi.py": "b7f2703199e2d9db2eab1ae02b24b16e051537579b9da08b6f7c5726c117259c"
+  },
+  "specification_source_sha256": "f3eacd44737c6c194b725533630c2be3de564f008901bf4c3cae978d667b4fe9"
+}

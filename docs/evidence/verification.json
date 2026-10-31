@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-31",
+  "platform": "Windows",
+  "portable": [
+    {
+      "python": "313",
+      "suite": "portable",
+      "passed": true,
+      "tests": 47
+    },
+    {
+      "python": "314",
+      "suite": "portable",
+      "passed": true,
+      "tests": 47
+    },
+    {
+      "python": "313",
+      "suite": "private",
+      "passed": true,
+      "tests": 74
+    },
+    {
+      "python": "314",
+      "suite": "private",
+      "passed": true,
+      "tests": 74
+    }
+  ],
+  "original_lab_tests": 72,
+  "fixture_hashes_verified": 1890,
+  "migration_test_assertions_preserved": true,
+  "runtime_changes": "Relative imports only",
+  "Linux_executed": false,
+  "GitHub_Actions_executed": false,
+  "remote_created": false,
+  "license_selected": false,
+  "E15_performed": false
+}

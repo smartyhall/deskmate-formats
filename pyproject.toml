@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deskmate-formats"
+version = "0.1.0.dev0"
+description = "Independent documentation and tools for preserving Tandy DeskMate native file formats"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+license-files = []
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+
+[project.optional-dependencies]
+dev = ["build>=1.2", "ruff>=0.11"]
+
+[project.scripts]
+deskmate-calendar = "deskmate_formats.calendar.cli:main"
+deskmate-calendar-append = "deskmate_formats.calendar.writer:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["F63", "F7", "F82"]
