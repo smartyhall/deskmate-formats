@@ -77,7 +77,9 @@ publication steps, external paid services or AI dependencies.
 * [Evidence provenance](docs/evidence/README.md), [verification](docs/verification.md)
 * [Interoperability roadmap](docs/interoperability.md), [contributing](CONTRIBUTING.md)
 
-E15 is proposed only; this repository transition performs no new format experiment.
+[E15](docs/experiments/e15-page-boundary.md) observed Calendar allocating one extra
+data page for a 24-byte BOUND12 record when 17 bytes remained. The parser and
+writer retain their conservative six-page scope; no general allocator is implemented.
 
 ## Licensing
 
@@ -92,4 +94,7 @@ No ownership or redistribution rights are claimed over original DeskMate softwar
 media, databases, manuals or third-party works. Complete standard texts are in
 [LICENSES](LICENSES); [LICENSE](LICENSE) is the software GPL text.
 See [LICENSING.md](LICENSING.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
-The repository remains local with no remote or publication configured.
+The repository is hosted privately. The initial four GitHub Actions jobs passed
+on Windows/Ubuntu with Python 3.13/3.14 (owner-reported). See
+[dependency maintenance](docs/dependency-maintenance.md) for update review and
+Dependabot activation requirements.
