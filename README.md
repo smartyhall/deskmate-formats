@@ -87,6 +87,8 @@ and deletion-marker semantics remain unimplemented and experimentally unresolved
 
 [Screen-state research](docs/research/screen-state.md) recovered partial Calendar
 schedule text through read-only RAM captures; it is not a general screen API.
+[Phase II](docs/research/screen-state-mcp.md) corrected the MCP port and verified
+one targeted read; repeated operation and Calendar restart stability remain blocked.
 
 ## Licensing
 
