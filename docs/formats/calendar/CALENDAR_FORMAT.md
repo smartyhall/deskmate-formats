@@ -1035,3 +1035,19 @@ Exactly35positions change,only inPERSONAL.CLN. See [E17](../../experiments/e17-r
 for the exhaustive table and provenance. This supports retained-page append for
 this case,not a general allocator/free-list or tombstone codec. Production
 reader/writer still reject seven-page files; no new supported layout is declared.
+
+
+## E19: first page-six pressure transition — observed 2026-11-01
+
+From originalE16,12application-created77-byte rows append1818..1BB3,IDs22..2D,
+leaving03at1BB4/75zeros. The13th77-byte row does not trigger retired-span
+reclamation: it is placed at1C00 on newly appendedpage7,ID2E,index14CA(7,0,2E),
+file7168→8192. All29priorindexedrowsraw/IDs/addressesstable; wholepage6 including
+retired24bytes/prefix44/oldID21,its03and75zeros unchanged. Originalpage4/control1000
+unchanged. Count00029→00030,nextcandidate00046→00047,opaque001unchanged.
+Crossingchanges16oldbytes+1024appended. Header0026..27stays006F;0029 FF→00,
+002A8F→7F,002BFF→F8,002C00→FF,002D00→F0. Allocation-associated bytes, not a decoded
+allocator/map. Five-byte footprint means the E15four-byte update is not universal.
+FinalSHAad6683ae34d3367026e47aeddd91ca93502551c557f02f7762039ff2d82011a1.
+See [E19](../../experiments/e19-space-pressure.md) for full provenance/deltas.
+This is one controlled transition; conservative productionlayout rejection remains.
