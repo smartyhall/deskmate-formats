@@ -1,0 +1,13 @@
+# Review local paths and enable only in a subsequent Codex session.
+# Keep the existing debugger MCP entry unchanged.
+[mcp_servers.doslab_keys]
+enabled = false
+command = 'REPLACE_WITH_PRIVATE_VENV_PYTHON_EXE'
+args = ["-m", "dosbox_mcp.server"]
+startup_timeout_sec = 45
+tool_timeout_sec = 45
+enabled_tools = ["dosbox_attach", "dosbox_send_keys", "dosbox_read_memory", "dosbox_sessions", "dosbox_capabilities"]
+
+[mcp_servers.doslab_keys.env]
+DOSBOX_MCP_PROFILE = "none"
+DOSBOX_MCP_OUTPUT_DIR = 'REPLACE_WITH_PRIVATE_EVIDENCE_DIRECTORY'
