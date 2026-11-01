@@ -9,7 +9,8 @@ import zipfile
 
 ROOT=Path(__file__).resolve().parents[1]
 EXCLUDED={'.git','build','dist','local-results','private-fixtures','.ruff_cache'}
-BAD_EXT={'.exe','.com','.dll','.img','.ima','.iso','.zip','.7z','.cln','.png','.pdf'}
+BAD_EXT={'.exe','.com','.dll','.img','.ima','.iso','.zip','.7z','.cln','.png','.pdf',
+         '.pdm','.res','.r89','.fil','.adr','.pcl','.hlp','.tut'}
 PATTERNS={
     'host Windows user path':r'(?i)[a-z]:[\\/]Users[\\/]',
     'host POSIX user path':r'/(?:home|Users)/[^/\s]+',
