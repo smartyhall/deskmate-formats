@@ -1,6 +1,10 @@
 # E17 preparation: one deleted-record reuse test
 
-## Status: prepared, not performed
+## Historical preparation status: prepared, not performed
+
+E17 was subsequently performed after the keyboard prerequisite was repaired.
+See [the E17 result](e17-reuse.md). The following records the earlier blocked
+preparation checkpoint and is retained unchanged as historical evidence.
 
 The research sprint authorized E17 subject to reliable GUI entry and visual
 verification. That gate failed: the separate screen-research installation opened

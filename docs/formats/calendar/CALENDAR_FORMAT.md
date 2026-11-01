@@ -1017,3 +1017,21 @@ plus1024retainedpagebytes; no byte-perfect restoration. SHA256E16:
 OnlyPERSONAL.CLN changes among126files againsteitherreference. Both production
 reader/writer intentionally reject E16; observed001 andretaineddeletedrows do
 not extend supported structures. See E16report for allrawbytes andhypotheses.
+
+
+## E17: insertion after the retained page-6 tombstone — observed 2026-11-01
+
+From exact E16 SHA818c44af2f351cc764dfd48a82b3d8ae1dd0b5f733c8549dbdd902f67eed05ea,
+one REUSE17 event (2026-11-01,11:00–12:00,visible alarm off) produces SHA
+a220b4657e85e0d9986975ca6ab741296f986ed617326a26b2cf73e1bde0bae1,still7168bytes.
+It appends a24-byte live row at1818 withID22hex; it does not reuse the retired
+24-byte span1800..1817 orID21. The entire retired span/prefix44 is unchanged
+and unindexed. Old03at1818 becomes80; new03is1830,followed by975zeros. Index1482
+becomes(6,0018,0022); the two2027 triples shift right6bytes without target/ID changes.
+Count00017→00018,next-IDcandidate00034→00035(decimal),opaque001unchanged.
+All17oldindexedrows includinginternal1000 retain raw bytes,IDs,addresses. Full
+pages0/2/3/4 unchanged; four allocation-associated header bytes remain006F/8FFF.
+Exactly35positions change,only inPERSONAL.CLN. See [E17](../../experiments/e17-reuse.md)
+for the exhaustive table and provenance. This supports retained-page append for
+this case,not a general allocator/free-list or tombstone codec. Production
+reader/writer still reject seven-page files; no new supported layout is declared.
