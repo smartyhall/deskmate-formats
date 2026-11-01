@@ -2,8 +2,8 @@
 
 | Application/family | Evidence status | Implemented capabilities |
 |---|---|---|
-| Calendar 3.05 PERSONAL.CLN | E00–E14 and Phase III-A observed subset | Read/index enumeration, JSON export, bounded append |
-| Address Book | Not investigated | None |
+| Calendar 3.05 PERSONAL.CLN | E00–E19 and Phase III-A observed subsets | Read/index enumeration, JSON export, bounded append |
+| Address Book 3.05 PERSONAL.ADR | [Initial no-edit and single-contact controls](research/addressbook-phase1.md); incomplete format research | None |
 | Filer | Not investigated | None |
 | Text | Not investigated | None |
 | Worksheet | Not investigated | None |

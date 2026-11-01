@@ -18,9 +18,10 @@ the repository's portable tests use independently generated synthetic data.
 | Area | Status | What is available or being investigated |
 |---|---|---|
 | **Calendar 3.05** (`PERSONAL.CLN`) | **Experimental tools** | Read-only parsing, indexed record inspection, text/JSON output, and a narrowly bounded append writer for verified six-page layouts |
-| **Calendar storage research** | **Ongoing** | Documented page allocation and deleted-record retention; general allocation, record reuse, editing and recovery are not yet implemented |
+| **Calendar storage research** | **Ongoing** | E15–E19 document page growth, retained deletion data, and append behavior; no general allocator or deleted-record recovery implementation |
 | **DeskMate screen-state research** | **Exploratory** | Partial Calendar schedule text recovered from read-only emulator RAM captures; not a general screen reader or automation interface |
-| **Other DeskMate applications** | **Future work** | Address Book, Filer, Text, Worksheet and Draw have no validated storage models or implementations yet |
+| **Address Book 3.05** (`PERSONAL.ADR`) | **Initial research** | No-edit and two independent synthetic-contact observations; no parser, writer, or validated full storage model |
+| **Other DeskMate applications** | **Future work** | Filer, Text, Worksheet and Draw have no validated storage models or implementations yet |
 
 The tools are experimental and support only explicitly measured cases. See
 [compatibility](docs/compatibility.md) for exact limits and the
@@ -101,6 +102,16 @@ writer retain their conservative six-page scope; no general allocator is impleme
 [E16](docs/experiments/e16-page-reclamation.md) observed that deleting the sole
 page-6 event leaves the seven-page file and retired payload on disk. Page-reuse
 and deletion-marker semantics remain unimplemented and experimentally unresolved.
+
+[E17](docs/experiments/e17-reuse.md) and [E18](docs/experiments/e18-reuse-variants.md)
+showed that new records of 20, 24, and 37 bytes were appended after a deleted
+page-six row rather than reusing its retired slot. [E19](docs/experiments/e19-space-pressure.md)
+observed another page allocation under storage pressure without compaction.
+These experiments do not establish a general allocation or reclamation algorithm.
+
+[Address Book Phase I](docs/research/addressbook-phase1.md) documents a no-edit
+control and two independent, synthetic single-contact observations, including
+measured variable-length first-name storage. No Address Book implementation exists.
 
 [Screen-state research](docs/research/screen-state.md) recovered partial Calendar
 schedule text through read-only RAM captures; it is not a general screen API.
