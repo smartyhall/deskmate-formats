@@ -11,14 +11,15 @@ table-directory grammar, index headers, six-byte index entries and row framing.
 These correspondences extend through actual targets and application-specific
 tables. They exceed the earlier isolated-string evidence.
 
-A common runtime database service is plausible and supported by embedded module
-names and database metadata in executable components. **Its use by all three
-applications is not proved by a recovered call graph or runtime trace.**
+A [follow-up call/reference review](database-call-review.md) recovered named
+DMDB binding sequences and far-indirect call thunks in all three applications.
+This supports a common callable service interface. **Runtime binding and the
+storage-operation meanings of those calls remain unresolved.**
 No general Filer allocator, writer, codec or universal parser follows.
 
 | Hypothesis | Evidence and limitations | Assessment |
 |---|---|---|
-| H1: common underlying engine | Shared structures; executable DMDB family; application header names and embedded DMDB/DMDBRD literals; dispatch/call paths incomplete | Credible leading implementation hypothesis, medium confidence |
+| H1: common underlying engine | Shared structures and code-backed named service calls; record-operation dispatch remains incomplete | Strong static interface evidence; shared storage implementation still a hypothesis |
 | H2: shared low-level structures, application-specific storage | Common directories/indexing/framing with different schemas and payloads directly demonstrated | Strongest supported architectural description, high confidence for inspected files; separate implementations not established |
 | H3: conventions without substantial shared implementation | Separately compiled/copied format implementations remain possible | Not excluded as implementation claim; isolated naming coincidence cannot explain the complete indexed structures |
 

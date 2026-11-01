@@ -1,0 +1,170 @@
+{
+  "scope": "Original-byte static references; no runtime binding or storage-operation semantics established",
+  "offsets": "absolute file offsets; integers decimal",
+  "applications": [
+    {
+      "file": "FILER.PDM",
+      "sha256": "5c62bfcf9676153003753046b223467136659a23ad0883ba56fb312e55b96005",
+      "conditional_ds_file_base": 34672,
+      "dmdb_name_file_offset": 38392,
+      "binding_routine_candidate": 27751,
+      "binding_slot_ds_offset": 4006,
+      "far_call_thunk": 29709,
+      "far_call_instruction": 29723,
+      "edges": [
+        {
+          "source": 27670,
+          "target": 27476,
+          "kind": "near_call",
+          "confidence": "H: original bytes and Ghidra caller/operand context"
+        },
+        {
+          "source": 27515,
+          "target": 29709,
+          "kind": "near_call",
+          "confidence": "H: original bytes and Ghidra caller/operand context"
+        }
+      ],
+      "binding_interpretation_confidence": "M: INT E0 implementation not traced",
+      "storage_operation_semantics": "unresolved"
+    },
+    {
+      "file": "ADDRESS.PDM",
+      "sha256": "ef685b20e259f0932378668d9b120882468dc0da157a015e2df95d4ce61a60fb",
+      "conditional_ds_file_base": 48592,
+      "dmdb_name_file_offset": 58998,
+      "binding_routine_candidate": 41445,
+      "binding_slot_ds_offset": 10692,
+      "far_call_thunk": 43449,
+      "far_call_instruction": 43463,
+      "edges": [
+        {
+          "source": 41364,
+          "target": 39486,
+          "kind": "near_call",
+          "confidence": "H: original bytes and Ghidra caller/operand context"
+        },
+        {
+          "source": 39577,
+          "target": 43449,
+          "kind": "near_call",
+          "confidence": "H: original bytes and Ghidra caller/operand context"
+        }
+      ],
+      "binding_interpretation_confidence": "M: INT E0 implementation not traced",
+      "storage_operation_semantics": "unresolved"
+    },
+    {
+      "file": "CALENDAR.PDM",
+      "sha256": "819df5658b663aa69b15584abf805062679e97f587f3404738f6e82876e4bd23",
+      "conditional_ds_file_base": 60016,
+      "dmdb_name_file_offset": 70580,
+      "binding_routine_candidate": 55269,
+      "binding_slot_ds_offset": 10850,
+      "far_call_thunk": 56991,
+      "far_call_instruction": 57005,
+      "edges": [
+        {
+          "source": 55188,
+          "target": 54916,
+          "kind": "near_call",
+          "confidence": "H: original bytes and Ghidra caller/operand context"
+        },
+        {
+          "source": 54955,
+          "target": 56991,
+          "kind": "near_call",
+          "confidence": "H: original bytes and Ghidra caller/operand context"
+        }
+      ],
+      "binding_interpretation_confidence": "M: INT E0 implementation not traced",
+      "storage_operation_semantics": "unresolved"
+    }
+  ],
+  "callbacks": [
+    {
+      "file": "DMDB.R89",
+      "sha256": "799444bb8c04632d261f61498ba269f9352e5528718f2e0a89512bf6ef7b808f",
+      "pointers": [
+        {
+          "pointer_file_offset": 1028,
+          "offset_word": 221,
+          "segment_word": 0,
+          "segment_has_mz_relocation": true,
+          "target_file_offset_candidate": 733,
+          "target_in_stored_image": true,
+          "scope": "candidate pointer arithmetic; caller establishes pointer/code identity"
+        },
+        {
+          "pointer_file_offset": 1032,
+          "offset_word": 403,
+          "segment_word": 0,
+          "segment_has_mz_relocation": true,
+          "target_file_offset_candidate": 915,
+          "target_in_stored_image": true,
+          "scope": "candidate pointer arithmetic; caller establishes pointer/code identity"
+        }
+      ],
+      "confidence": "H: relocated data references; callback roles not assigned"
+    },
+    {
+      "file": "DMDBRD.RES",
+      "sha256": "c4bc9f5699bfaf1ac5adb57a011b04dcec00a2ae75edb2baf603c8001fa99cee",
+      "pointers": [
+        {
+          "pointer_file_offset": 21226,
+          "offset_word": 187,
+          "segment_word": 1218,
+          "segment_has_mz_relocation": true,
+          "target_file_offset_candidate": 20187,
+          "target_in_stored_image": true,
+          "scope": "candidate pointer arithmetic; caller establishes pointer/code identity"
+        },
+        {
+          "pointer_file_offset": 21230,
+          "offset_word": 114,
+          "segment_word": 1218,
+          "segment_has_mz_relocation": true,
+          "target_file_offset_candidate": 20114,
+          "target_in_stored_image": true,
+          "scope": "candidate pointer arithmetic; caller establishes pointer/code identity"
+        }
+      ],
+      "confidence": "H: relocated data references; callback roles not assigned"
+    }
+  ],
+  "artifacts": [
+    {
+      "private_artifact": "stub_ghidra.log",
+      "sha256": "803d05c4b06cc885dad311471b497c494ee2963d830f3e0f5f40fc76295c9d89"
+    },
+    {
+      "private_artifact": "apps_ghidra.log",
+      "sha256": "ce8e8831c72f3530b18e245c5a71da1fcc71a101476c55a1af02fbcf9130f66b"
+    },
+    {
+      "private_artifact": "thunks_corrected_ghidra.log",
+      "sha256": "58fec8e7403105a4a84ed27b8f87b7f2221d3fd646301ec3431c2b190e9fe31d"
+    },
+    {
+      "private_artifact": "mz_independent_audit.json",
+      "sha256": "f346e3e1c0f2f41a93ca83cf4b2854271957ed8490e59a0e5c7f1897fb0c378a"
+    },
+    {
+      "private_artifact": "raw_name_operand_candidates.json",
+      "sha256": "6e3c6d3e59d308567dbdb50dfcfa4e5ce9491026a7137223a5093d8f2e3cec00"
+    }
+  ],
+  "segment_mov_display": {
+    "version": "Ghidra 12.1.4",
+    "source": "Ghidra/Processors/x86/data/languages/ia.sinc",
+    "sha256": "5112439554604933fb7f5d1afc123c0517727d4583c18bf795d0c49b66dd1570",
+    "lines": [
+      4013,
+      4014
+    ],
+    "opcode": "8E /r register form",
+    "observation": "display operand order and semantic destination differ; no language file modified",
+    "confidence": "H for installed source and reproduced listing"
+  }
+}

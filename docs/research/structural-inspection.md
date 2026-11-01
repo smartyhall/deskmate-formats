@@ -48,3 +48,26 @@ python -m unittest discover -s tests/private -p test_cross_application.py -v
 
 The second command requires DOSLAB_ROOT pointing at the existing private lab.
 Tests never fabricate native acceptance or use the tool to modify evidence.
+
+## MZ coordinate and relocation probes
+
+The call review adds two commands using the standard DOS MZ header:
+
+```text
+python tools/inspect_structure.py mz MODULE
+python tools/inspect_structure.py mz-far MODULE --offset 0x52ea
+```
+
+The second example applies to the inspected DMDBRD.RES descriptor pointer.
+It reports the original off16:seg16 words and computes a same-image file target
+only when the segment word has an MZ relocation. It does not dereference an
+unrelocated value or infer DS, a runtime load base, instruction identity or API
+semantics. The caller must establish that the selected bytes are a pointer.
+MZ output distinguishes declared image length from appended overlay bytes and
+checks header, relocation-table and relocation-site bounds.
+
+Five new synthetic tests cover these distinctions. Five opt-in binding tests
+assert selected original-byte references and callback arithmetic; they do not
+substitute Ghidra-generated function names for original symbols. A separate
+privacy-audit extension rejects native PDM/RES/R89/FIL/ADR/PCL/HLP/TUT files in
+both source and distribution content, with four synthetic boundary tests.

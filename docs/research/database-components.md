@@ -29,6 +29,11 @@ binary or substantial disassembly is included in source.
 
 ## Metadata data references
 
+Review update: the [call/reference audit](database-call-review.md) adds explicit
+application binding/thunk evidence and a segment-MOV display caveat. The sections
+below retain the original static observations. Adding a candidate base to a value
+is address arithmetic; it does not establish a C pointer type or a runtime DS value.
+
 DMDBRD contains the exact NUL-separated sequence cname, owner, pos, len, type,
 uniq at50C2–50DF. At50E0–5115 are six consecutive9-byte candidate descriptors:
 
@@ -44,8 +49,8 @@ uniq at50C2–50DF. At50E0–5115 are six consecutive9-byte candidate descriptor
 Each nine-byte entry has a little-endian32-bit candidate relative name value,
 a little-endian16-bit width, a type byte, and two ASCII0 bytes retained as opaque.
 Adding file base5080 to each name value resolves all six strings exactly.
-That base is the loaded data-segment candidate identified by the MZ analysis
-(segment04E8 before Ghidra's1000 relocation base). This is a recoverable
+That base corresponds to the explicit relocated DS-load candidate04E8 identified
+in code; MZ itself has no initial DS field. This is a recoverable
 **data-address relationship**, not a guess based only on filenames.
 Widths/types match all four files' on-disk DBCOLS self-schema rows exactly.
 DBCOLS itself is present at5116.
