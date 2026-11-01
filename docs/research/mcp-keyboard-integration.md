@@ -95,3 +95,48 @@ Markdown/configuration documentation only: REUSE/SPDX and repository privacy
 checks are run before this checkpoint. The unchanged historical suites/builds are
 not rerun. E17 is separately authorized and will use its own verified E16 copy;
 neither read-only keyboard installation is its starting database.
+
+
+## Recovery-session registration audit and fresh gate — 2026-11-01
+
+The effective local MCP listing recognizes exactly one enabled `doslab_keys`
+registration. Its interpreter exists, module arguments remain `-m dosbox_mcp.server`,
+the five-tool allowlist above is intact, and all pre-existing parsed configuration
+values are unchanged. The upstream tree remains clean at the pinned commit.
+No dependency, emulator/profile, port or configuration change was needed.
+The debugger MCP remains exposed and returned PONG plus two successful bounded
+memory dumps/RUN operations.
+
+**The active tool catalog in this continued chat still contains no doslab_keys
+tools.** The configuration listing alone is not successful registered-tool use.
+No host startup/error log was available in the inspected conventional log directory;
+there is insufficient evidence to identify the catalog omission's cause. A future
+newly loaded host session must expose and exercise the tools before issue #10's
+registered-tool acceptance criterion can close. No application restart, package
+installation, timeout/configuration change or repeated service troubleshooting was
+performed to force activation during research.
+
+A fresh explicit-PID disposable emulator passed the authorized local-SDK fallback
+integration gate. Its first client initialization timed out after 30 seconds,
+before attachment or any key call; the empty server stderr and failure stage were
+preserved. One separately logged startup with a 45-second initialization bound
+matching the existing configured bound succeeded. This does not establish that a
+Codex timeout caused the catalog omission. No partially delivered input was retried.
+
+`echo GATE19` executed once. Calendar opened, both Find Date dialogs visibly
+selected the complete existing value, and direct eight-digit overtyping produced
+10232026 and 10312026 without preliminary field navigation/editing keys. Completed
+dates were checked before Enter. Screenshots verified EARLY26 at 9–10 AM and
+Halloween on their correct dates. Independent 160-byte debugger captures around
+physical 0x12640 contain the expected screen text in both states. These reads do
+not define a universal screen-buffer schema or imply that a drained key ring is
+screen readiness. This fresh test did not repeat the already preserved unfocused
+host-window experiment; that earlier result remains evidence, not a new claim.
+
+Calendar and the emulator exited normally. All 126 installation file contents
+remained identical and all 14 protected hash-and-mtime guards passed. Complete
+source/final inventories, raw replies, failure logs, BIOS bytes, screenshots and
+readback evidence remain private under DOSLAB
+`EXPERIMENTS/RESEARCH/recovery_sprint_20261101/integration`.
+No appointments were edited. The evidence supports reliable local-client operation
+for subsequent controlled experiments while registered-tool exposure remains open.
