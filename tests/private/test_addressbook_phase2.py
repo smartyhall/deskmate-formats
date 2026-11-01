@@ -15,8 +15,8 @@ class AddressBookPhase2Tests(unittest.TestCase):
     def adr(self, case, side='after'):
         return (self.root(case) / side / 'files/DESKMATE/PERSONAL.ADR').read_bytes()
 
-    def test_a03_complete_preserved_installations(self):
-        root = self.root('PHASE2/A03_work_phone')
+    def check_preserved_installations(self, case):
+        root = self.root(case)
         manifests = {}
         for side in ('before', 'saved', 'after'):
             directory = root / side / 'files'
@@ -28,10 +28,15 @@ class AddressBookPhase2Tests(unittest.TestCase):
             manifests[side] = actual
         self.assertEqual(manifests['saved'], manifests['after'])
         self.assertEqual([p for p in manifests['before'] if manifests['before'][p] != manifests['after'][p]], ['DESKMATE/PERSONAL.ADR'])
-        final = self.adr('PHASE2/A03_work_phone')
+        final = self.adr(case)
         self.assertEqual(final, (root / 'evidence/immediate_saved.ADR').read_bytes())
-        self.assertEqual(self.adr('PHASE2/A03_work_phone', 'before'), self.adr('A01_contact', 'before'))
-        self.assertEqual(hashlib.sha256(self.adr('PHASE2/A03_work_phone', 'before')).hexdigest(), BASELINE)
+        self.assertEqual(self.adr(case, 'before'), self.adr('A01_contact', 'before'))
+        self.assertEqual(hashlib.sha256(self.adr(case, 'before')).hexdigest(), BASELINE)
+
+    def test_complete_preserved_installations(self):
+        for case in ('PHASE2/A03_work_phone', 'PHASE2/A04_city'):
+            with self.subTest(case=case):
+                self.check_preserved_installations(case)
 
     def test_a03_exact_bytes_and_framing(self):
         before = self.adr('PHASE2/A03_work_phone', 'before')
@@ -57,3 +62,27 @@ class AddressBookPhase2Tests(unittest.TestCase):
         self.assertEqual(short[0x1014:0x103a], original[0x1018:0x103e])
         self.assertEqual(short[0x103a:0x103e], bytes(4))
         self.assertEqual(short[0x103e:], original[0x103e:])
+
+    def test_a04_exact_bytes_and_city_field(self):
+        before = self.adr('PHASE2/A04_city', 'before')
+        final = self.adr('PHASE2/A04_city')
+        self.assertEqual(len(final), 10240)
+        self.assertEqual(hashlib.sha256(final).hexdigest(), '2584874c957d74b0c1240ebc0d02a50ac4c886a53b977749cb912e1628cce46f')
+        self.assertEqual([i for i, (x, y) in enumerate(zip(before, final)) if x != y], [0x435, 0x43f, *range(0x1000, 0x1043), 0x1428, 0x142c])
+        self.assertEqual(final[0x1000:0x1002], bytes([0x80, 0x10]))
+        self.assertEqual(final[0x1040:0x1043], bytes([1, 2, 3]))
+        self.assertEqual(final[0x1428:0x142e], bytes([4, 0, 0, 0, 0x10, 0]))
+        self.assertEqual(final[0x431:0x436], b'00001')
+        self.assertEqual(final[0x43b:0x440], b'00017')
+        fields = final[0x1002:0x1040].split(bytes([1]))
+        self.assertEqual(fields, [b'', b'TEST', b'USER A', b'', b'METRO', b'', b'', b'', b'202-555-0142', b'', b'', b'Birthday', b'', b'Anniversary', b'', b'n'])
+        self.assertEqual(final[0x1000:0x1042].count(bytes([1])), 16)
+
+    def test_a04_only_five_city_bytes_added_to_a01(self):
+        original = self.adr('A01_contact')
+        city = self.adr('PHASE2/A04_city')
+        self.assertEqual(city[:0x1010], original[:0x1010])
+        self.assertEqual(city[0x1010:0x1015], b'METRO')
+        self.assertEqual(city[0x1015:0x1043], original[0x1010:0x103e])
+        self.assertEqual(original[0x103e:0x1043], bytes(5))
+        self.assertEqual(city[0x1043:], original[0x1043:])
