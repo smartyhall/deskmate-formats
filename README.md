@@ -20,8 +20,10 @@ the repository's portable tests use independently generated synthetic data.
 | **Calendar 3.05** (`PERSONAL.CLN`) | **Experimental tools** | Read-only parsing, indexed record inspection, text/JSON output, and a narrowly bounded append writer for verified six-page layouts |
 | **Calendar storage research** | **Ongoing** | E15–E19 document page growth, retained deletion data, and append behavior; no general allocator or deleted-record recovery implementation |
 | **DeskMate screen-state research** | **Exploratory** | Partial Calendar schedule text recovered from read-only emulator RAM captures; not a general screen reader or automation interface |
-| **Address Book 3.05** (`PERSONAL.ADR`) | **Initial research** | No-edit and two independent synthetic-contact observations; no parser, writer, or validated full storage model |
-| **Other DeskMate applications** | **Future work** | Filer, Text, Worksheet and Draw have no validated storage models or implementations yet |
+| **Address Book 3.05** (`PERSONAL.ADR`) | **Initial research** | A00–A04 no-edit, one-contact and independent field-length controls; no parser or writer |
+| **Cross-application database architecture** | **Offline structural and call evidence** | Shared metadata/index structures plus named DMDB binding/call thunks in all three applications; record-operation dispatch remains unresolved |
+| **Filer 3.05** | **Native experiments prepared** | Static sample/component comparison and F00–F02 operator runbook; no native Filer experiment or implementation yet |
+| **Other DeskMate applications** | **Future work** | Text, Worksheet and Draw have no validated storage models or implementations yet |
 
 The tools are experimental and support only explicitly measured cases. See
 [compatibility](docs/compatibility.md) for exact limits and the
@@ -89,6 +91,12 @@ publication steps, external paid services or AI dependencies.
 
 * [Format inventory](docs/inventory.md) and [architecture](docs/architecture.md)
 * [Observed container structures](docs/containers/README.md)
+* [Cross-application architecture and comparison matrix](docs/research/cross-application-db.md),
+  [component findings](docs/research/database-components.md),
+  [read-only inspection tool](docs/research/structural-inspection.md), and
+  [F00–F02 native runbook](docs/research/filer-native-runbook.md)
+* [Audited database call map and next static task](docs/research/database-call-review.md),
+  [integration and verification](docs/research/database-integration.md)
 * [Calendar specification](docs/formats/calendar/CALENDAR_FORMAT.md) with original
   evidence/confidence distinctions and historical experiment checkpoints retained
 * [Experimental method](docs/experiments/methodology.md), [Phase III-A](docs/experiments/phase-iii-a.md)

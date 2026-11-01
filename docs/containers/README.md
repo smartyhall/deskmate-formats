@@ -5,7 +5,10 @@ schema rows, PERSONAL rows and page/offset/ID index triples. The parser validate
 that exact profile; it is not a general .FIL reader. See the Calendar specification
 for confirmed arithmetic, probable page roles and opaque values.
 
-No second application/container has been characterized. Shared database-engine
-code is intentionally not extracted until a practical cross-application use and
-compatible evidence exist. Preserve raw tokens/unknown fields rather than assigning
-meanings to undocumented engine flags or checksums.
+The [cross-application investigation](../research/cross-application-db.md) now
+compares Calendar, native Address Book controls and two shipped Filer samples.
+All four share a complete 152-byte self-schema region and the same index-header
+and six-byte target arithmetic across 14 tables. Filer native creation/mutation
+has not been performed; a common runtime engine remains an implementation hypothesis.
+No generic parser, writer or engine API has been extracted. Preserve raw tokens
+and unknown fields rather than assigning undocumented flag/checksum meanings.
