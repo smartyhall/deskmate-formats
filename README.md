@@ -107,9 +107,13 @@ schedule text through read-only RAM captures; it is not a general screen API.
 [Phase II](docs/research/screen-state-mcp.md) corrected the MCP port and verified
 one targeted read; repeatability was blocked at that checkpoint.
 [Phase III](docs/research/screen-state-phase3.md) demonstrates repeated targeted
-MCP reads and two interface views across restarts; changing the date remains
-blocked. The [offline RAM helper](docs/research/ram-analysis.md) preserves raw
+MCP reads and two interface views across restarts; date entry was blocked at
+that checkpoint. The [offline RAM helper](docs/research/ram-analysis.md) preserves raw
 context and distinguishes physical addresses from capture offsets.
+[BIOS keyboard research](docs/research/mcp-keyboard-input.md) verifies DOS input
+and repeated Calendar date navigation on the stock SDL1 build, resolving the
+masked-field editing blocker. A separate stdio MCP configuration is prepared for
+later review; the tests used an isolated local client, not a new Codex registration.
 
 ## Contributing
 
