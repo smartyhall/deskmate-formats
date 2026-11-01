@@ -114,6 +114,9 @@ context and distinguishes physical addresses from capture offsets.
 and repeated Calendar date navigation on the stock SDL1 build, resolving the
 masked-field editing blocker. A separate stdio MCP configuration is prepared for
 later review; the tests used an isolated local client, not a new Codex registration.
+[The integration follow-up](docs/research/mcp-keyboard-integration.md) confirms
+natural date overtyping and complete unfocused navigation. A restricted keyboard
+MCP entry is now persisted locally; active tool visibility awaits a later session.
 
 ## Contributing
 

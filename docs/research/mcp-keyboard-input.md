@@ -1,5 +1,20 @@
 # BIOS keyboard input through a separate MCP server
 
+
+## Subsequent correction: natural selection — 2026-11-01
+
+The project owner identified the automatic whole-date selection on opening Find
+Date. The [integration follow-up](mcp-keyboard-integration.md) independently
+confirms direct overtyping, including eight-digit entry across Calendar/emulator
+restart and a full two-date round trip with another host application foreground.
+Do not normally send Home, End, Tab, arrows or Backspace first: inspect the
+initial highlight, type the replacement date directly, verify it, then Enter.
+The clearing procedure below is retained as the tested fallback after selection
+has already been lost. Earlier failed attempts remain recorded; individual
+preliminary-key effects were not separately isolated. The original checkpoint's
+registration/focus limitations below are historical; see the follow-up for current
+persisted registration and still-unverified active Codex tool visibility.
+
 ## Result and scope
 
 The upstream `dosbox_send_keys` BIOS-buffer method works with the existing,
