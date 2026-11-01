@@ -12,3 +12,8 @@ Address Book Phase I: set `DOSLAB_ROOT` and run
 `python -m unittest discover -s tests/private -p test_addressbook_phase1.py -v`.
 The A00/A01/A02 fixtures remain external; these tests assert observed bytes only,
 not an implemented format reader or writer.
+
+Address Book Phase II A03: set `DOSLAB_ROOT` and run
+`python -m unittest discover -s tests/private -p test_addressbook_phase2.py -v`.
+Requires the external A01 and PHASE2/A03_work_phone before/saved/after fixtures.
+These fixed observations do not implement a reader or writer.
