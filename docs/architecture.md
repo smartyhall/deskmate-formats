@@ -11,7 +11,7 @@ Conceptual layers guide later work:
 | Layer | Current state / extraction rule |
 |---|---|
 | Binary reading and encoding utilities | Bounded reads/field rules remain in Calendar; extract a common helper only for a real second use |
-| Database containers | Documented Calendar-observed profile; no generic engine or cross-application API |
+| Database containers | Calendar profile plus [cross-application structural evidence](research/cross-application-db.md); no generic engine or cross-application API |
 | Application formats | Calendar only; future siblings can be added after evidence establishes their structures |
 | Conversion/interchange | Calendar JSON export exists; no general importer, iCalendar conversion or roundtrip guarantee |
 | CLIs | Two installed Calendar commands; public Python API remains separate from listing presentation |

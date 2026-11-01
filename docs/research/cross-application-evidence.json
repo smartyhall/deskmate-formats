@@ -1,0 +1,644 @@
+{
+  "scope": "Static fixed-fixture observations; not a universal format specification",
+  "confidence": "high for byte/target observations; interpretations separately qualified in report",
+  "offsets": "absolute byte offsets; exclusive ends",
+  "source": "DOSLAB/EXPERIMENTS/FILER/F00_baseline/before/files/DESKMATE",
+  "files": {
+    "PERSONAL.CLN": {
+      "size": 6144,
+      "sha256": "e48066b2b78fb73ec414271ae4404468529628c840dfac3f7c374621544bc243",
+      "tables": [
+        {
+          "name": "DBCOLS",
+          "descriptor_start": 1024,
+          "descriptor_end": 1061,
+          "starting_data_block_candidate": 2,
+          "declared_fields": 6,
+          "declared_count": 13,
+          "opaque_token": "000",
+          "next_id_like_token": "00029",
+          "index_block": 3,
+          "trailing_tokens": [
+            "2",
+            "3"
+          ],
+          "index_entry_count": 13,
+          "target_blocks": [
+            2
+          ],
+          "all_low_id_prefixes_match": true,
+          "schema_field_counts": [
+            6
+          ]
+        },
+        {
+          "name": "PERSONAL",
+          "descriptor_start": 1061,
+          "descriptor_end": 1106,
+          "starting_data_block_candidate": 4,
+          "declared_fields": 7,
+          "declared_count": 6,
+          "opaque_token": "000",
+          "next_id_like_token": "00022",
+          "index_block": 5,
+          "trailing_tokens": [
+            "1",
+            "2",
+            "4",
+            "5",
+            "7"
+          ],
+          "index_entry_count": 6,
+          "target_blocks": [
+            4
+          ],
+          "all_low_id_prefixes_match": true,
+          "schema_field_counts": null
+        }
+      ]
+    },
+    "PERSONAL.ADR": {
+      "size": 10240,
+      "sha256": "cb890e6d7ba96fafb5a5d3991e208f4de862bee485f6ce32696e989c97d3394c",
+      "tables": [
+        {
+          "name": "DBCOLS",
+          "descriptor_start": 1024,
+          "descriptor_end": 1061,
+          "starting_data_block_candidate": 2,
+          "declared_fields": 6,
+          "declared_count": 27,
+          "opaque_token": "000",
+          "next_id_like_token": "00043",
+          "index_block": 3,
+          "trailing_tokens": [
+            "2",
+            "3"
+          ],
+          "index_entry_count": 27,
+          "target_blocks": [
+            2
+          ],
+          "all_low_id_prefixes_match": true,
+          "schema_field_counts": [
+            6
+          ]
+        },
+        {
+          "name": "DATA",
+          "descriptor_start": 1061,
+          "descriptor_end": 1096,
+          "starting_data_block_candidate": 4,
+          "declared_fields": 16,
+          "declared_count": 0,
+          "opaque_token": "000",
+          "next_id_like_token": "00016",
+          "index_block": 5,
+          "trailing_tokens": [
+            "3",
+            "2"
+          ],
+          "index_entry_count": 0,
+          "target_blocks": [],
+          "all_low_id_prefixes_match": true,
+          "schema_field_counts": null
+        },
+        {
+          "name": "NAMES",
+          "descriptor_start": 1096,
+          "descriptor_end": 1128,
+          "starting_data_block_candidate": 6,
+          "declared_fields": 2,
+          "declared_count": 15,
+          "opaque_token": "000",
+          "next_id_like_token": "00031",
+          "index_block": 7,
+          "trailing_tokens": [],
+          "index_entry_count": 15,
+          "target_blocks": [
+            6
+          ],
+          "all_low_id_prefixes_match": true,
+          "schema_field_counts": null
+        },
+        {
+          "name": "CONFIG",
+          "descriptor_start": 1128,
+          "descriptor_end": 1161,
+          "starting_data_block_candidate": 8,
+          "declared_fields": 3,
+          "declared_count": 1,
+          "opaque_token": "000",
+          "next_id_like_token": "00017",
+          "index_block": 9,
+          "trailing_tokens": [],
+          "index_entry_count": 1,
+          "target_blocks": [
+            8
+          ],
+          "all_low_id_prefixes_match": true,
+          "schema_field_counts": null
+        }
+      ]
+    },
+    "CARMAINT.FIL": {
+      "size": 14336,
+      "sha256": "ca5ea9d77dc7545e761457ddc9d40c0b5aca427d7f787a19038d61495f4c67e7",
+      "tables": [
+        {
+          "name": "DBCOLS",
+          "descriptor_start": 1024,
+          "descriptor_end": 1061,
+          "starting_data_block_candidate": 2,
+          "declared_fields": 6,
+          "declared_count": 28,
+          "opaque_token": "000",
+          "next_id_like_token": "00044",
+          "index_block": 3,
+          "trailing_tokens": [
+            "2",
+            "3"
+          ],
+          "index_entry_count": 28,
+          "target_blocks": [
+            2
+          ],
+          "all_low_id_prefixes_match": true,
+          "schema_field_counts": [
+            6
+          ]
+        },
+        {
+          "name": "LAYOUTS",
+          "descriptor_start": 1061,
+          "descriptor_end": 1099,
+          "starting_data_block_candidate": 4,
+          "declared_fields": 13,
+          "declared_count": 22,
+          "opaque_token": "000",
+          "next_id_like_token": "00038",
+          "index_block": 5,
+          "trailing_tokens": [
+            "9",
+            "8"
+          ],
+          "index_entry_count": 22,
+          "target_blocks": [
+            4,
+            10
+          ],
+          "all_low_id_prefixes_match": true,
+          "schema_field_counts": null
+        },
+        {
+          "name": "GRAPHICS",
+          "descriptor_start": 1099,
+          "descriptor_end": 1134,
+          "starting_data_block_candidate": 6,
+          "declared_fields": 2,
+          "declared_count": 4,
+          "opaque_token": "000",
+          "next_id_like_token": "00020",
+          "index_block": 7,
+          "trailing_tokens": [],
+          "index_entry_count": 4,
+          "target_blocks": [
+            6,
+            11,
+            12,
+            13
+          ],
+          "all_low_id_prefixes_match": true,
+          "schema_field_counts": null
+        },
+        {
+          "name": "DATA",
+          "descriptor_start": 1134,
+          "descriptor_end": 1169,
+          "starting_data_block_candidate": 8,
+          "declared_fields": 7,
+          "declared_count": 0,
+          "opaque_token": "000",
+          "next_id_like_token": "00016",
+          "index_block": 9,
+          "trailing_tokens": [
+            "3",
+            "1"
+          ],
+          "index_entry_count": 0,
+          "target_blocks": [],
+          "all_low_id_prefixes_match": true,
+          "schema_field_counts": null
+        }
+      ]
+    },
+    "INVNTORY.FIL": {
+      "size": 12288,
+      "sha256": "62316203c555e42cddc47b118f4a34ef1c60362e684d2b90a978fb3675d9c6fe",
+      "tables": [
+        {
+          "name": "DBCOLS",
+          "descriptor_start": 1024,
+          "descriptor_end": 1061,
+          "starting_data_block_candidate": 2,
+          "declared_fields": 6,
+          "declared_count": 26,
+          "opaque_token": "000",
+          "next_id_like_token": "00022",
+          "index_block": 3,
+          "trailing_tokens": [
+            "2",
+            "3"
+          ],
+          "index_entry_count": 26,
+          "target_blocks": [
+            2
+          ],
+          "all_low_id_prefixes_match": true,
+          "schema_field_counts": [
+            5,
+            6
+          ]
+        },
+        {
+          "name": "LAYOUTS",
+          "descriptor_start": 1061,
+          "descriptor_end": 1099,
+          "starting_data_block_candidate": 4,
+          "declared_fields": 13,
+          "declared_count": 20,
+          "opaque_token": "002",
+          "next_id_like_token": "00038",
+          "index_block": 5,
+          "trailing_tokens": [
+            "9",
+            "8"
+          ],
+          "index_entry_count": 20,
+          "target_blocks": [
+            4
+          ],
+          "all_low_id_prefixes_match": true,
+          "schema_field_counts": null
+        },
+        {
+          "name": "GRAPHICS",
+          "descriptor_start": 1099,
+          "descriptor_end": 1134,
+          "starting_data_block_candidate": 6,
+          "declared_fields": 2,
+          "declared_count": 3,
+          "opaque_token": "000",
+          "next_id_like_token": "00019",
+          "index_block": 7,
+          "trailing_tokens": [],
+          "index_entry_count": 3,
+          "target_blocks": [
+            6,
+            8,
+            9
+          ],
+          "all_low_id_prefixes_match": true,
+          "schema_field_counts": null
+        },
+        {
+          "name": "DATA",
+          "descriptor_start": 1134,
+          "descriptor_end": 1167,
+          "starting_data_block_candidate": 10,
+          "declared_fields": 5,
+          "declared_count": 3,
+          "opaque_token": "000",
+          "next_id_like_token": "00019",
+          "index_block": 11,
+          "trailing_tokens": [],
+          "index_entry_count": 3,
+          "target_blocks": [
+            10
+          ],
+          "all_low_id_prefixes_match": true,
+          "schema_field_counts": null
+        }
+      ]
+    }
+  },
+  "components": {
+    "DMDB.R89": {
+      "size": 1109,
+      "sha256": "799444bb8c04632d261f61498ba269f9352e5528718f2e0a89512bf6ef7b808f",
+      "image_offset": 512,
+      "entry_file_offset": 512
+    },
+    "DMDBBLD.RES": {
+      "size": 11858,
+      "sha256": "91ada27c026de823aef6a9aae541bafcb6a312552cc5bd612ec8b0e90e53aeed",
+      "image_offset": 512,
+      "entry_file_offset": 11708
+    },
+    "DMDBRD.RES": {
+      "size": 21955,
+      "sha256": "c4bc9f5699bfaf1ac5adb57a011b04dcec00a2ae75edb2baf603c8001fa99cee",
+      "image_offset": 512,
+      "entry_file_offset": 20396
+    },
+    "DMDBUPD.RES": {
+      "size": 13740,
+      "sha256": "9e77a2081ebb3a9549903f5d337580c65d6e0a3f603185064d4c82e16327cf4f",
+      "image_offset": 512,
+      "entry_file_offset": 13590
+    },
+    "FILER.PDM": {
+      "size": 40081,
+      "sha256": "5c62bfcf9676153003753046b223467136659a23ad0883ba56fb312e55b96005",
+      "image_offset": 512,
+      "entry_file_offset": 33744
+    },
+    "FORMSET.PDM": {
+      "size": 60163,
+      "sha256": "a57c7e87ad4e2339d4e3231f4cd26b53e9311fec626949326790249e54c7d736",
+      "image_offset": 512,
+      "entry_file_offset": 53362
+    },
+    "CALENDAR.PDM": {
+      "size": 72593,
+      "sha256": "819df5658b663aa69b15584abf805062679e97f587f3404738f6e82876e4bd23",
+      "image_offset": 512,
+      "entry_file_offset": 59088
+    },
+    "ADDRESS.PDM": {
+      "size": 61025,
+      "sha256": "ef685b20e259f0932378668d9b120882468dc0da157a015e2df95d4ce61a60fb",
+      "image_offset": 512,
+      "entry_file_offset": 47632
+    }
+  },
+  "pcl_resources": [
+    {
+      "file": "DB01.PCL",
+      "sha256": "4c6e64a5bc83357a2f8f89d5668c8054d09f26429e9556f381671a3f3d53859c",
+      "size": 2017,
+      "count": 16,
+      "first_payload": 139,
+      "all_contiguous": true,
+      "all_in_bounds": true,
+      "last_end": 2017
+    },
+    {
+      "file": "DB02.PCL",
+      "sha256": "55dc3ae8853f8bd8ca1785fdac6faa6ffb8e900e494cad4d1e11f1d8b136a6d9",
+      "size": 3008,
+      "count": 40,
+      "first_payload": 331,
+      "all_contiguous": true,
+      "all_in_bounds": true,
+      "last_end": 3008
+    },
+    {
+      "file": "DB03.PCL",
+      "sha256": "ce8f278dad4dd17b2bf3061c8e3b11f479977696c9412da6782195a625644c27",
+      "size": 3559,
+      "count": 36,
+      "first_payload": 299,
+      "all_contiguous": true,
+      "all_in_bounds": true,
+      "last_end": 3559
+    },
+    {
+      "file": "DB04.PCL",
+      "sha256": "19cf89442d75a49df265f1013283e378c036a8a6ee12f9833af059e9cc6982a4",
+      "size": 2532,
+      "count": 33,
+      "first_payload": 275,
+      "all_contiguous": true,
+      "all_in_bounds": true,
+      "last_end": 2532
+    },
+    {
+      "file": "DB05.PCL",
+      "sha256": "a94c89cc98863b931668aa64ee8e82211ea2790ceefb74d1affa94813d567b9c",
+      "size": 2076,
+      "count": 28,
+      "first_payload": 235,
+      "all_contiguous": true,
+      "all_in_bounds": true,
+      "last_end": 2076
+    },
+    {
+      "file": "DB06.PCL",
+      "sha256": "73782e7432882447365c37ac508a5d53481fbd7c9f0f1b05b86ab05b8edc0250",
+      "size": 8135,
+      "count": 10,
+      "first_payload": 91,
+      "all_contiguous": true,
+      "all_in_bounds": true,
+      "last_end": 8135
+    },
+    {
+      "file": "DB07.PCL",
+      "sha256": "73addc221c8608a5b4dccd979fc0b96f00d5fee8e64becb61451c9d14631329f",
+      "size": 4376,
+      "count": 117,
+      "first_payload": 947,
+      "all_contiguous": true,
+      "all_in_bounds": true,
+      "last_end": 4376
+    },
+    {
+      "file": "DB08.PCL",
+      "sha256": "2e4a9eba6f35fdc801ae11b90569de93af9c02c092e30ae3bebbe7830ed0e07d",
+      "size": 12385,
+      "count": 9,
+      "first_payload": 83,
+      "all_contiguous": true,
+      "all_in_bounds": true,
+      "last_end": 12385
+    },
+    {
+      "file": "DB09.PCL",
+      "sha256": "b763a9cc472426d26d5394d2fb68ea7199377242e17f060895ebb3a7244d2062",
+      "size": 11754,
+      "count": 16,
+      "first_payload": 139,
+      "all_contiguous": true,
+      "all_in_bounds": true,
+      "last_end": 11754
+    }
+  ],
+  "common_self_schema": {
+    "start": 2048,
+    "end": 2200,
+    "length": 152,
+    "sha256": "090cfee8845b005925fd79a7dfce21362976239a08d02dc7061b84928316c353",
+    "all_six_pairwise_equal": true
+  },
+  "alternative_block_sizes": [
+    {
+      "block_size_assumption": 64,
+      "matching_id_prefixes": 0,
+      "in_bounds": 33,
+      "total": 168,
+      "by_file": {
+        "PERSONAL.CLN": {
+          "matched": 0,
+          "total": 19
+        },
+        "PERSONAL.ADR": {
+          "matched": 0,
+          "total": 43
+        },
+        "CARMAINT.FIL": {
+          "matched": 0,
+          "total": 54
+        },
+        "INVNTORY.FIL": {
+          "matched": 0,
+          "total": 52
+        }
+      }
+    },
+    {
+      "block_size_assumption": 128,
+      "matching_id_prefixes": 0,
+      "in_bounds": 55,
+      "total": 168,
+      "by_file": {
+        "PERSONAL.CLN": {
+          "matched": 0,
+          "total": 19
+        },
+        "PERSONAL.ADR": {
+          "matched": 0,
+          "total": 43
+        },
+        "CARMAINT.FIL": {
+          "matched": 0,
+          "total": 54
+        },
+        "INVNTORY.FIL": {
+          "matched": 0,
+          "total": 52
+        }
+      }
+    },
+    {
+      "block_size_assumption": 256,
+      "matching_id_prefixes": 1,
+      "in_bounds": 82,
+      "total": 168,
+      "by_file": {
+        "PERSONAL.CLN": {
+          "matched": 0,
+          "total": 19
+        },
+        "PERSONAL.ADR": {
+          "matched": 1,
+          "total": 43
+        },
+        "CARMAINT.FIL": {
+          "matched": 0,
+          "total": 54
+        },
+        "INVNTORY.FIL": {
+          "matched": 0,
+          "total": 52
+        }
+      }
+    },
+    {
+      "block_size_assumption": 512,
+      "matching_id_prefixes": 3,
+      "in_bounds": 126,
+      "total": 168,
+      "by_file": {
+        "PERSONAL.CLN": {
+          "matched": 1,
+          "total": 19
+        },
+        "PERSONAL.ADR": {
+          "matched": 0,
+          "total": 43
+        },
+        "CARMAINT.FIL": {
+          "matched": 1,
+          "total": 54
+        },
+        "INVNTORY.FIL": {
+          "matched": 1,
+          "total": 52
+        }
+      }
+    },
+    {
+      "block_size_assumption": 1024,
+      "matching_id_prefixes": 168,
+      "in_bounds": 168,
+      "total": 168,
+      "by_file": {
+        "PERSONAL.CLN": {
+          "matched": 19,
+          "total": 19
+        },
+        "PERSONAL.ADR": {
+          "matched": 43,
+          "total": 43
+        },
+        "CARMAINT.FIL": {
+          "matched": 54,
+          "total": 54
+        },
+        "INVNTORY.FIL": {
+          "matched": 52,
+          "total": 52
+        }
+      }
+    },
+    {
+      "block_size_assumption": 2048,
+      "matching_id_prefixes": 3,
+      "in_bounds": 136,
+      "total": 168,
+      "by_file": {
+        "PERSONAL.CLN": {
+          "matched": 1,
+          "total": 19
+        },
+        "PERSONAL.ADR": {
+          "matched": 0,
+          "total": 43
+        },
+        "CARMAINT.FIL": {
+          "matched": 1,
+          "total": 54
+        },
+        "INVNTORY.FIL": {
+          "matched": 1,
+          "total": 52
+        }
+      }
+    },
+    {
+      "block_size_assumption": 4096,
+      "matching_id_prefixes": 1,
+      "in_bounds": 81,
+      "total": 168,
+      "by_file": {
+        "PERSONAL.CLN": {
+          "matched": 0,
+          "total": 19
+        },
+        "PERSONAL.ADR": {
+          "matched": 1,
+          "total": 43
+        },
+        "CARMAINT.FIL": {
+          "matched": 0,
+          "total": 54
+        },
+        "INVNTORY.FIL": {
+          "matched": 0,
+          "total": 52
+        }
+      }
+    }
+  ]
+}
