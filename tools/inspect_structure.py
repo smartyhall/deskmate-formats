@@ -85,6 +85,59 @@ def block_map(data: bytes, block_size: int = PAGE_SIZE) -> list[dict]:
     return result
 
 
+def inspect_mz(data: bytes) -> dict:
+    """Map standard DOS MZ file offsets; do not infer DS or module binding.
+
+    Relocation sites identify words adjusted by a DOS image loader. This does
+    not interpret DeskMate's header extensions, runtime pointers or entry APIs.
+    """
+    _span(data, 0, 28)
+    if data[:2] != b'MZ':
+        raise ValueError('expected an MZ header')
+    _, tail, pages, count, paragraphs, _, _, ss, sp, _, ip, cs, table = struct.unpack_from('<13H', data)
+    if not pages or tail > 511:
+        raise ValueError('invalid MZ file-size fields')
+    declared = (pages - 1) * 512 + (tail or 512)
+    header = paragraphs * 16
+    if not 28 <= header <= declared <= len(data):
+        raise ValueError('MZ header/image extends outside input')
+    if table + count * 4 > header:
+        raise ValueError('MZ relocation table extends outside header')
+    relocations = []
+    for pos in range(table, table + count * 4, 4):
+        within, segment = struct.unpack_from('<HH', data, pos)
+        site = header + segment * 16 + within
+        if not header <= site <= declared - 2:
+            raise ValueError('MZ relocation site extends outside stored image')
+        relocations.append({'table_offset': pos, 'segment': segment,
+                            'offset': within, 'file_offset': site,
+                            'original_word': struct.unpack_from('<H', data, site)[0]})
+    return {'header_bytes': header, 'declared_file_bytes': declared,
+            'trailing_bytes': len(data) - declared, 'entry_cs': cs, 'entry_ip': ip,
+            'entry_file_offset_candidate': header + cs * 16 + ip,
+            'initial_ss': ss, 'initial_sp': sp, 'relocations': relocations,
+            'scope': 'standard MZ arithmetic only; no runtime DS/load-base assumption'}
+
+
+def resolve_mz_far(data: bytes, offset: int) -> dict:
+    """Inspect an explicitly selected off16:seg16 candidate, not an opcode.
+
+    Only a segment word covered by an MZ relocation is mapped to this file.
+    Unrelocated pointers may name another segment/module or be unresolved data.
+    """
+    mz = inspect_mz(data)
+    raw = _span(data, offset, 4)
+    within, segment = struct.unpack('<HH', raw)
+    relocated = any(r['file_offset'] == offset + 2 for r in mz['relocations'])
+    target = mz['header_bytes'] + segment * 16 + within if relocated else None
+    return {'pointer_file_offset': offset, 'offset_word': within,
+            'segment_word': segment, 'segment_has_mz_relocation': relocated,
+            'target_file_offset_candidate': target,
+            'target_in_stored_image': mz['header_bytes'] <= target < mz['declared_file_bytes']
+            if target is not None else None,
+            'scope': 'candidate pointer arithmetic; caller establishes pointer/code identity'}
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
@@ -103,6 +156,11 @@ def main(argv=None):
     p = sub.add_parser('blocks')
     p.add_argument('file', type=Path)
     p.add_argument('--block-size', type=number, default=PAGE_SIZE)
+    p = sub.add_parser('mz')
+    p.add_argument('file', type=Path)
+    p = sub.add_parser('mz-far')
+    p.add_argument('file', type=Path)
+    p.add_argument('--offset', type=number, required=True)
     args = parser.parse_args(argv)
     try:
         if args.command == 'compare':
@@ -112,8 +170,14 @@ def main(argv=None):
         else:
             data = args.file.read_bytes()
             sources = [data]
-            result = (inspect_triples(data, args.offset, args.count, args.page_size)
-                      if args.command == 'triples' else block_map(data, args.block_size))
+            if args.command == 'triples':
+                result = inspect_triples(data, args.offset, args.count, args.page_size)
+            elif args.command == 'blocks':
+                result = block_map(data, args.block_size)
+            elif args.command == 'mz':
+                result = inspect_mz(data)
+            else:
+                result = resolve_mz_far(data, args.offset)
     except (OSError, ValueError) as exc:
         parser.error(str(exc))
     print(json.dumps({'inputs': [{'size': len(b), 'sha256': hashlib.sha256(b).hexdigest()}
