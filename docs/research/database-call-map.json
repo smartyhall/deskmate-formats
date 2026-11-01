@@ -166,5 +166,108 @@
     "opcode": "8E /r register form",
     "observation": "display operand order and semantic destination differ; no language file modified",
     "confidence": "H for installed source and reproduced listing"
-  }
+  },
+  "lookup_traces": [
+    {
+      "issue": 22,
+      "application": "CALENDAR.PDM",
+      "sha256": "819df5658b663aa69b15584abf805062679e97f587f3404738f6e82876e4bd23",
+      "selected_call": 41004,
+      "selector": 11,
+      "near_call_words": [
+        "0x000B",
+        "caller BP-0x14 (offset only)",
+        "0x0000"
+      ],
+      "role_hypothesis": {
+        "role": "retrieve/search Description for existing internal row",
+        "confidence": "M; API semantics and side effects not established",
+        "field_name_offset": 67878,
+        "predicate_operator_store": 40953,
+        "predicate_template_offset": 67990,
+        "value_source_offset": 68240,
+        "value_hex": "2020ff",
+        "string_copy_condition": "DF clear"
+      },
+      "native_support": {
+        "file": "E00 PERSONAL.CLN",
+        "sha256": "c556b7f57102fc5432ce926317c8c0aa95cf8992d7fb64a72e2f270e4c517890",
+        "date_span": [
+          4098,
+          4101
+        ],
+        "index_span": [
+          5160,
+          5166
+        ],
+        "id": 16
+      },
+      "edges": [
+        {
+          "source": 40966,
+          "target": 58006,
+          "kind": "near_call",
+          "confidence": "H original-byte relative target; selected caller also queried in Ghidra"
+        },
+        {
+          "source": 41004,
+          "target": 52728,
+          "kind": "near_call",
+          "confidence": "H original-byte relative target; selected caller also queried in Ghidra"
+        },
+        {
+          "source": 52750,
+          "target": 54990,
+          "kind": "near_call",
+          "confidence": "H original-byte relative target; selected caller also queried in Ghidra"
+        },
+        {
+          "source": 55028,
+          "target": 56991,
+          "kind": "near_call",
+          "confidence": "H original-byte relative target; selected caller also queried in Ghidra"
+        }
+      ],
+      "transport": {
+        "selector_store": 55010,
+        "argument_word_store": 55016,
+        "callback_object_ds_offset": 10842
+      },
+      "stop": {
+        "instruction": 57005,
+        "kind": "far_indirect_call",
+        "slot_ds_offset": 10850,
+        "slot_file_offset": 70866,
+        "initial_words": [
+          43981,
+          56506
+        ],
+        "segment_has_mz_relocation": false,
+        "resolved_callee": null,
+        "reason": "runtime INT E0 binding/export choice unresolved"
+      },
+      "reader_reached": false,
+      "six_byte_index_consumer_verified": false,
+      "second_application_examined": false,
+      "evidence": [
+        {
+          "private_artifact": "lookup_ghidra.log",
+          "sha256": "dbab056b7368c8f971c29252e5ad197bad9c544de61505bb84e0492965259ba3"
+        },
+        {
+          "private_artifact": "ghidra_command.json",
+          "sha256": "1a6ebd2edf0a91344efea072a94aa2e4c42e26cd8b535cda69de66ffb6cf4a7f"
+        },
+        {
+          "private_artifact": "slot_facts.json",
+          "sha256": "29d46dcfdc006538302ef7cd05932a70d7968a4cd8f004a305d3aa45fdc7d21b"
+        },
+        {
+          "private_artifact": "calendar_call_candidates_0xcdf8.json",
+          "sha256": "2b6f348283c32b0a8505127d70236b0b98fedaffe8b3e70db33a990ed75ac233"
+        }
+      ],
+      "span_convention": "start inclusive, end exclusive"
+    }
+  ]
 }

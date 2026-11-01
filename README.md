@@ -97,6 +97,7 @@ publication steps, external paid services or AI dependencies.
   [F00–F02 native runbook](docs/research/filer-native-runbook.md)
 * [Audited database call map and next static task](docs/research/database-call-review.md),
   [integration and verification](docs/research/database-integration.md)
+* [Issue 22: one Calendar lookup candidate and its exact dispatch blocker](docs/research/lookup-trace-22.md)
 * [Calendar specification](docs/formats/calendar/CALENDAR_FORMAT.md) with original
   evidence/confidence distinctions and historical experiment checkpoints retained
 * [Experimental method](docs/experiments/methodology.md), [Phase III-A](docs/experiments/phase-iii-a.md)
