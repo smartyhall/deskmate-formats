@@ -21,8 +21,9 @@ the repository's portable tests use independently generated synthetic data.
 | **Calendar storage research** | **Ongoing** | E15–E19 document page growth, retained deletion data, and append behavior; no general allocator or deleted-record recovery implementation |
 | **DeskMate screen-state research** | **Exploratory** | Partial Calendar schedule text recovered from read-only emulator RAM captures; not a general screen reader or automation interface |
 | **Address Book 3.05** (`PERSONAL.ADR`) | **Initial research** | A00–A04 no-edit, one-contact and independent field-length controls; no parser or writer |
-| **Cross-application database architecture** | **Offline structural and call evidence** | Shared metadata/index structures plus named DMDB binding/call thunks in all three applications; record-operation dispatch remains unresolved |
+| **Cross-application database architecture** | **Offline structural and call evidence** | Named DMDB binding/call thunks in all three applications and a conditional DESK INT E0 dispatch path; actual runtime vector, callback selection and record-operation dispatch remain unresolved |
 | **Filer 3.05** | **Native experiments prepared** | Static sample/component comparison and F00–F02 operator runbook; no native Filer experiment or implementation yet |
+| **86Box automation** | **Static preflight only** | Source-pinned protocol 1 capability review and ROM-free policy mock; no tested emulator build, MCP bridge, or DeskMate observation |
 | **Other DeskMate applications** | **Future work** | Text, Worksheet and Draw have no validated storage models or implementations yet |
 
 The tools are experimental and support only explicitly measured cases. See
@@ -98,6 +99,8 @@ publication steps, external paid services or AI dependencies.
 * [Audited database call map and next static task](docs/research/database-call-review.md),
   [integration and verification](docs/research/database-integration.md)
 * [Issue 22: one Calendar lookup candidate and its exact dispatch blocker](docs/research/lookup-trace-22.md)
+* [Calendar INT E0 static dispatch and unresolved runtime binding](docs/research/calendar-binding-25.md)
+* [86Box automation source review and proposed MCP observation policy](docs/research/86box-automation-preflight-23.md)
 * [Calendar specification](docs/formats/calendar/CALENDAR_FORMAT.md) with original
   evidence/confidence distinctions and historical experiment checkpoints retained
 * [Experimental method](docs/experiments/methodology.md), [Phase III-A](docs/experiments/phase-iii-a.md)
