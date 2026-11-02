@@ -94,6 +94,7 @@ class ObservationHarness:
         self.expected_version = expected_version
         self.epoch = 0
         self.ready = False
+        self.last_ms = None
 
     def call(self, request):
         try:
@@ -108,6 +109,7 @@ class ObservationHarness:
 
     def attach(self):
         self.ready = False
+        self.last_ms = None
         self.epoch += 1
         status, info = self.call('status'), self.call('info')
         if (status.get('protocol') != 1 or status.get('version') != self.expected_version
@@ -140,7 +142,9 @@ class ObservationHarness:
             frame = self.call('screenshot') if framebuffer else None
             after = self.call('status')
             end_resets = self.resets(self.call('info'))
-            if (before.get('held') is not True or after.get('held') is not True
+            if (type(before.get('ms')) is not int
+                    or (self.last_ms is not None and before['ms'] < self.last_ms)
+                    or before.get('held') is not True or after.get('held') is not True
                     or before.get('paused') is not False or after.get('paused') is not False
                     or any(before.get(k) != after.get(k) for k in ('ms', 'frames', 'version'))
                     or before.get('version') != self.expected_version
@@ -152,6 +156,7 @@ class ObservationHarness:
             if frame and (frame.get('ms') != before['ms']
                           or frame.get('frames') != before['frames']):
                 raise ValueError('frame timing changed')
+            self.last_ms = before['ms']
             return dict(mock_only=True, epoch=epoch, ms=before['ms'],
                         regs=regs, data=raw.hex(), frame=frame)
         except (KeyError, OSError, ValueError, TypeError):
