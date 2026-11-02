@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "review_date": "2026-11-02",
+  "upstream_repository": "86Box/86Box",
+  "upstream_commit": "bc65ce3080df22dacdf78541f6455feb0ed5c446",
+  "protocol_version": 1,
+  "runtime_validated": false,
+  "source_files": [
+    {
+      "path": "doc/specifications/automation.md",
+      "url": "https://raw.githubusercontent.com/86Box/86Box/bc65ce3080df22dacdf78541f6455feb0ed5c446/doc/specifications/automation.md",
+      "sha256": "2d3b59cbb90d08b018ece483c4e2ddba849ea776254c958f87cd551746d0aaeb",
+      "size": 21841
+    },
+    {
+      "path": "src/automation.c",
+      "url": "https://raw.githubusercontent.com/86Box/86Box/bc65ce3080df22dacdf78541f6455feb0ed5c446/src/automation.c",
+      "sha256": "87770158dc63516d1aaa01c6d344c78b4ebbdca2580e3ead9ecdeb576f1ddd6c",
+      "size": 104308
+    },
+    {
+      "path": "src/include/86box/automation.h",
+      "url": "https://raw.githubusercontent.com/86Box/86Box/bc65ce3080df22dacdf78541f6455feb0ed5c446/src/include/86box/automation.h",
+      "sha256": "3c3f8b058a4b8a5dd4b95bcc08057bfbe1d7d18381d76abab5f84e998e0a0f17",
+      "size": 3826
+    },
+    {
+      "path": "CMakeLists.txt",
+      "url": "https://raw.githubusercontent.com/86Box/86Box/bc65ce3080df22dacdf78541f6455feb0ed5c446/CMakeLists.txt",
+      "sha256": "a2a5fa7832e51ea03a25f22374ab29a64eacd0e55767d7f70e10975f9b7bf3d4",
+      "size": 10314
+    },
+    {
+      "path": "src/CMakeLists.txt",
+      "url": "https://raw.githubusercontent.com/86Box/86Box/bc65ce3080df22dacdf78541f6455feb0ed5c446/src/CMakeLists.txt",
+      "sha256": "f4fdc8fb7ac9ca8b6cf81da63d9e5a9fcf796aa6c8d3489aa336f77817092ae6",
+      "size": 9679
+    }
+  ],
+  "capabilities": [
+    {
+      "capability": "status/info",
+      "request": "status; info",
+      "status": "source-verified",
+      "source_line_ranges": [
+        [
+          2024,
+          2031
+        ],
+        [
+          776,
+          859
+        ]
+      ],
+      "notes": "Protocol 1; time/hold state and target/reset metadata. Not a unique authenticated instance ID."
+    },
+    {
+      "capability": "hold",
+      "request": "hold",
+      "status": "source-verified",
+      "source_line_ranges": [
+        [
+          2032,
+          2034
+        ]
+      ],
+      "notes": "Holds CPU scheduler; distinct from GUI paused."
+    },
+    {
+      "capability": "time_step",
+      "request": "step <ms>",
+      "status": "source-verified",
+      "source_line_ranges": [
+        [
+          2051,
+          2057
+        ],
+        [
+          2562,
+          2616
+        ]
+      ],
+      "notes": "Emulated time, not an instruction. Scheduler quantum is 1 or 10 ms; report actual elapsed time."
+    },
+    {
+      "capability": "keyboard",
+      "request": "key down|up <set1-code>...",
+      "status": "source-verified",
+      "source_line_ranges": [
+        [
+          2109,
+          2129
+        ]
+      ],
+      "notes": "0x100 denotes E0 prefix; scheduled 2 ms gaps; changes guest state/time."
+    },
+    {
+      "capability": "framebuffer",
+      "request": "screenshot [path]",
+      "status": "source-verified",
+      "source_line_ranges": [
+        [
+          2170,
+          2189
+        ]
+      ],
+      "notes": "No argument returns base64 PNG; optional path writes host file. Latest rendered monitor-0 frame, not semantic UI."
+    },
+    {
+      "capability": "registers",
+      "request": "regs",
+      "status": "source-verified",
+      "source_line_ranges": [
+        [
+          2387,
+          2428
+        ]
+      ],
+      "notes": "CPU-dependent fields; no time/hold metadata in reply."
+    },
+    {
+      "capability": "memory",
+      "request": "memr <addr> <len> [view] [width]",
+      "status": "source-verified",
+      "source_line_ranges": [
+        [
+          2255,
+          2285
+        ]
+      ],
+      "notes": "1..65536 bytes; views bus/cpu/normal/smm/linear. Restrict proposed bridge to known RAM; no time/hold metadata."
+    },
+    {
+      "capability": "text",
+      "request": "text",
+      "status": "source-verified",
+      "source_line_ranges": [
+        [
+          2253,
+          2254
+        ]
+      ],
+      "notes": "BIOS text-mode interpretation; does not decode graphics dialogs."
+    },
+    {
+      "capability": "wait_memory",
+      "request": "wait mem <timeout_ms> <addr> <hex>",
+      "status": "source-verified",
+      "source_line_ranges": [
+        [
+          2066,
+          2076
+        ]
+      ],
+      "notes": "Runs between polls; not an exact execution breakpoint."
+    },
+    {
+      "capability": "instruction_step",
+      "request": "none in automation protocol",
+      "status": "unsupported-by-reviewed-automation",
+      "source_line_ranges": [],
+      "notes": "Requires separately validated GDB stub or emulator changes."
+    },
+    {
+      "capability": "execution_breakpoint",
+      "request": "none in automation protocol",
+      "status": "unsupported-by-reviewed-automation",
+      "source_line_ranges": [],
+      "notes": "GDB stub integration is documented; automation-only wrapper cannot invent precise stops."
+    },
+    {
+      "capability": "atomic_observation",
+      "request": "none in automation protocol",
+      "status": "proposed-wrapper-bracketing",
+      "source_line_ranges": [],
+      "notes": "Hold, exclusive lease, status/info bracket; no atomic combined upstream command."
+    },
+    {
+      "capability": "semantic_ui",
+      "request": "none",
+      "status": "unsupported-by-reviewed-automation",
+      "source_line_ranges": [],
+      "notes": "Framebuffer/register/memory primitives require independent DeskMate decoding and validation."
+    }
+  ]
+}
