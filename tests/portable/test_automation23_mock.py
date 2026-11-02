@@ -57,6 +57,20 @@ class AutomationModelTests(unittest.TestCase):
                     self.bridge.observe(epoch, 0, 4)
                 self.assertFalse(self.bridge.ready)
 
+    def test_backward_time_between_valid_observations_invalidates_epoch(self):
+        epoch = self.bridge.attach()
+        self.model.ms = 10
+        first = self.bridge.observe(epoch, 0x380, 4)
+        self.assertEqual(first['ms'], 10)
+        # Rewinding the emulator clock without a reported reset must never
+        # allow previous segment mappings or observations to remain trusted.
+        self.model.ms = 0
+        with self.assertRaises(ValueError):
+            self.bridge.observe(epoch, 0x380, 4)
+        self.assertFalse(self.bridge.ready)
+        with self.assertRaises(ValueError):
+            self.bridge.observe(epoch, 0x380, 4)
+
     def test_truncated_memory_is_rejected(self):
         epoch = self.bridge.attach()
         def exchange(line):
