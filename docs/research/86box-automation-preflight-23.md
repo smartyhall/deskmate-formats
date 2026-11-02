@@ -69,14 +69,14 @@ Do not expose a user-supplied arbitrary endpoint or arbitrary protocol line.
 
 | Proposed tool | Arguments / result | Implementation policy |
 |---|---|---|
-| `emu.attach` | allowlisted profile ID â†’ opaque epoch/lease, capabilities | Authenticate, check protocol/version and private per-run identity, hold, read reset counters; no guest launch |
-| `emu.hold` | lease â†’ observed hold/time | `hold`, then status verification; GUI pause treated separately |
-| `emu.advance_ms` | lease, 1..1000 ms â†’ actual delta/stop reason/new epoch | Require held and duration multiple of validated quantum; no automatic retry |
-| `emu.key` | lease, down/up, 1..8 validated codes â†’ actual delta/new epoch | Serialize; journal uncertain delivery; input explicitly changes guest state |
-| `emu.registers` | lease â†’ registers/mode, bracket metadata | Held-only; validate required fields for CPU profile |
-| `emu.memory_read` | lease, approved RAM region ID, offset, 1..4096 bytes â†’ hex/metadata | Reject boundary crossing, MMIO, BIOS/video/ROM ranges unless independently authorized as harmless for the fixture; explicit view `normal`, width 1 |
-| `emu.framebuffer` | lease â†’ PNG resource, dimensions, render generation | No-argument screenshot; bounded base64/PNG decoding, private resource storage; never arbitrary host path |
-| `emu.observe` | lease, bounded read list, optional frame â†’ grouped observation | Hold, serialized status/info bracket around reads; reject inconsistent group |
+| `emu.attach` | allowlisted profile ID → opaque epoch/lease, capabilities | Authenticate, check protocol/version and private per-run identity, hold, read reset counters; no guest launch |
+| `emu.hold` | lease → observed hold/time | `hold`, then status verification; GUI pause treated separately |
+| `emu.advance_ms` | lease, 1..1000 ms → actual delta/stop reason/new epoch | Require held and duration multiple of validated quantum; no automatic retry |
+| `emu.key` | lease, down/up, 1..8 validated codes → actual delta/new epoch | Serialize; journal uncertain delivery; input explicitly changes guest state |
+| `emu.registers` | lease → registers/mode, bracket metadata | Held-only; validate required fields for CPU profile |
+| `emu.memory_read` | lease, approved RAM region ID, offset, 1..4096 bytes → hex/metadata | Reject boundary crossing, MMIO, BIOS/video/ROM ranges unless independently authorized as harmless for the fixture; explicit view `normal`, width 1 |
+| `emu.framebuffer` | lease → PNG resource, dimensions, render generation | No-argument screenshot; bounded base64/PNG decoding, private resource storage; never arbitrary host path |
+| `emu.observe` | lease, bounded read list, optional frame → grouped observation | Hold, serialized status/info bracket around reads; reject inconsistent group |
 
 Observation tools do not advance time. Do not expose `memw`, I/O access,
 reset/media/quit commands, remote listen, raw socket commands or host paths.
