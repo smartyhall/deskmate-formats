@@ -269,5 +269,90 @@
       ],
       "span_convention": "start inclusive, end exclusive"
     }
+  ],
+  "binding_investigations": [
+    {
+      "issue": 25,
+      "report": "calendar-binding-25.md",
+      "confidence_key": {
+        "H": "verified original bytes, instructions and stated address arithmetic",
+        "M": "functional interpretation",
+        "U": "unresolved"
+      },
+      "calendar": {
+        "interrupt_file_offset": 55296,
+        "return_file_offset": 55298,
+        "callf_file_offset": 57005,
+        "slot_ds_offset": 10850,
+        "slot_file_offset": 70866,
+        "selectors": [
+          518,
+          524
+        ],
+        "selection": "020C if saved helper result is signed positive, else 0206"
+      },
+      "actual_chain_stop": {
+        "kind": "runtime_interrupt_vector",
+        "real_mode_physical_span": [
+          896,
+          900
+        ],
+        "handler_identity": null,
+        "bound_target": null,
+        "callback_export": null,
+        "reason": "installation alternatives do not establish the runtime IVT entry or later handler changes",
+        "confidence": "U"
+      },
+      "conditional_desk_candidate": {
+        "sha256": "0f2a40243c997276904d2555a117c60eedf0016dde073285e8d63c8345a2eba3",
+        "vector_get_file_offset": 14256,
+        "vector_set_file_offset": 14309,
+        "bootstrap_image_segment": 1029,
+        "bootstrap_offset": 79,
+        "bootstrap_file_offset": 17055,
+        "ah02_entry_file_offset": 1560,
+        "near_table_file_offset": 1670,
+        "table_entry_file_offsets": [
+          1683,
+          1695
+        ],
+        "near_target_file_offset": 1797,
+        "selector_preservation_file_offset": 11621,
+        "internal_iteration_callback_file_offset": 11706,
+        "internal_callback_is_dmdb_export": false,
+        "state_stop": {
+          "instruction_file_offset": 11375,
+          "kind": "LES SI,[DI+2]",
+          "initial_table_ds_offset": 384,
+          "stride": 11,
+          "max_entries": 32,
+          "selected_module": null
+        },
+        "confidence": "H conditional byte/dataflow relationship; actual execution U"
+      },
+      "evidence": [
+        {
+          "private_artifact": "vector_candidates.json",
+          "sha256": "c5ace8c4c3645148d6e920873c95affb2d849e17f6b5c9fef5452e694bc3e14d"
+        },
+        {
+          "private_artifact": "verified_byte_spans.json",
+          "sha256": "6764260db143c4989acb836f42b44b75acb524e33c0d9c697be3db34327f3cf9"
+        },
+        {
+          "private_artifact": "final_probe_command.json",
+          "sha256": "4ea60ee369e82b65b1c566944af66c13e2b2287446f9624d904a501ea8b4a450"
+        },
+        {
+          "private_artifact": "final_probe_console.log",
+          "sha256": "f9a1d4c7fd3eb99f1f66bd75cb888645b8bf33de044702e997d66270ee150ff6"
+        },
+        {
+          "private_artifact": "final_probe_result.json",
+          "sha256": "75876e0e3f497cad271143ba85bd4f36569cd81195509043f860dab14265b716"
+        }
+      ],
+      "reader_reached": false
+    }
   ]
 }
