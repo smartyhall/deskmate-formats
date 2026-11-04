@@ -13,6 +13,14 @@ function Get-OptionalRegistryValue {
     if ($null -eq $property) { return $null }
     return $property.Value
 }
+# Report services as strings; bare, absent ServiceController objects can
+# otherwise render as an unhelpful empty object in Windows PowerShell 5.1 JSON.
+function Get-OptionalServiceStatus {
+    param([string]$Name)
+    $service = Get-Service -Name $Name -ErrorAction SilentlyContinue
+    if ($null -eq $service) { return 'NotInstalled' }
+    return [string]$service.Status
+}
 $report=[ordered]@{
     os=(Get-CimInstance Win32_OperatingSystem).Caption
     build=(Get-CimInstance Win32_OperatingSystem).BuildNumber
@@ -24,12 +32,13 @@ $report=[ordered]@{
     chrome=(Test-Path 'C:\Program Files\Google\Chrome\Application\chrome.exe')
     msys2=(Test-Path 'C:\msys64\ucrt64.exe')
     ghidra=[bool](Test-Path 'C:\Tools\ghidra_12.1.4_PUBLIC\support\analyzeHeadless.bat')
-    sshd=(Get-Service sshd -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Status -ErrorAction SilentlyContinue)
+    sshd=(Get-OptionalServiceStatus -Name 'sshd')
     allowTelemetry=(Get-OptionalRegistryValue -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection' -Name 'AllowTelemetry')
     taskbarSearchMode=(Get-OptionalRegistryValue -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Search' -Name 'SearchboxTaskbarMode')
     taskbarNewsMode=(Get-OptionalRegistryValue -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Feeds' -Name 'ShellFeedsTaskbarViewMode')
     feedsPolicy=(Get-OptionalRegistryValue -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds' -Name 'EnableFeeds')
-    guestAdditionsService=(Get-Service VBoxService -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Status -ErrorAction SilentlyContinue)
+    guestAdditionsService=(Get-OptionalServiceStatus -Name 'VBoxService')
+    vmwareToolsService=(Get-OptionalServiceStatus -Name 'VMTools')
     guestAdditionsStageRecorded=(Test-Path (Join-Path $root 'setup-logs\guest-additions-installed.txt'))
     guestAdditionsDeferred=(Test-Path (Join-Path $root 'setup-logs\guest-additions-deferred.txt'))
 }
