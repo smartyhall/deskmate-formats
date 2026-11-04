@@ -47,6 +47,28 @@ try {
         if (-not $SkipOnlinePackages) {
             & (Join-Path $root 'Initialize-LabWinGet.ps1')
         }
+        # Consumer-app cleanup is a conservative allowlist, not blanket debloating.
+        # Default in new Lab ISOs is Remove; builder -KeepConsumerApps opts out.
+        # Keep failure nonfatal so an optional Windows package does not prevent
+        # the compiler, emulator, Ghidra and WinGet toolchain from installing.
+        $consumerAppMode='Remove'
+        $consumerAppConfig=Join-Path $root 'consumer-app-cleanup-mode.txt'
+        if (Test-Path -LiteralPath $consumerAppConfig -PathType Leaf) {
+            $consumerAppMode=(Get-Content -LiteralPath $consumerAppConfig -Raw).Trim()
+        }
+        if ($consumerAppMode -notin @('Remove','Keep')) {
+            throw "Invalid consumer-app cleanup mode: $consumerAppMode"
+        }
+        if ($consumerAppMode -eq 'Remove') {
+            try {
+                & (Join-Path $root 'Clean-LabApps.ps1')
+            } catch {
+                $_ | Out-String | Set-Content -LiteralPath (Join-Path $logDir 'consumer-app-cleanup-error.txt')
+                Write-Warning 'Optional consumer-app cleanup failed; core provisioning continues.'
+            }
+        } else {
+            Write-Host 'Consumer-app cleanup disabled by ISO builder preference.'
+        }
         # Chrome Enterprise's official, Google-hosted MSI. Verify publisher.
         if (-not (Test-Path 'C:\Program Files\Google\Chrome\Application\chrome.exe')) {
             $msi=Join-Path $root 'Packages\googlechromestandaloneenterprise64.msi'
