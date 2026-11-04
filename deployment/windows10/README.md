@@ -315,6 +315,52 @@ Deployment customization note: taskbar, power and Guest Additions stages are
 source-reviewed, but require a live Windows guest test before being described
 as fully verified. They are not present in previously built ISO files.
 
+## Pending ESXi finishing work: VMware Tools and ChatGPT desktop
+
+These remain **unverified tasks**, not completed parts of the ISO recipe.
+
+**VMware Tools.** On the ESXi Windows 10 Pro (19045) experiment, Tools
+10.3.10.12406962 registered as installed, `vmtoolsd.exe` existed and
+`VGAuthService` was running, but `Get-Service VMTools` found no service
+and ESXi showed Tools as absent. The VMXNET3 driver itself worked. This is a
+partially installed package, not a networking failure. After Windows Update
+settles, take a VM snapshot and mount the VMware Tools installation media
+from the host. Use **Programs and Features -> VMware Tools -> Change/Repair**
+(or launch the matching installer and choose Repair), reboot, then check
+`Get-Service VMTools` and ESXi guest-tools status. If Repair fails,
+inspect `vminst.log` / `vmmsi.log` (normally in `C:\Windows\Temp`
+or the installing user's `%TEMP%`) before considering a complete
+uninstall/reboot/reinstall. For this 10.3.x release, VMware/Broadcom documents
+Visual C++ prerequisite installation sometimes needing multiple reboots.
+No service is to be created manually, and don't delete registry keys as a
+first troubleshooting step. See:
+https://knowledge.broadcom.com/external/article/315389/
+and https://knowledge.broadcom.com/external/article/313512/ .
+
+**ChatGPT Windows client.** Windows 10 Pro 19045 meets OpenAI's minimum
+Windows 10 build 17763.0 requirement. The Microsoft Store GUI stalled during
+install on the ESXi guest, although Store/App Installer updating and WinGet
+registration previously enabled other packages. Try the documented Store
+package ID from the interactive lab-user session:
+
+```powershell
+winget.exe install --id 9NT1R1C2HH7J --source msstore --accept-package-agreements --accept-source-agreements
+```
+
+This still uses Microsoft's Store backend; it is not an offline installer
+or bypass of Windows Store restrictions. If it fails, run `wsreset.exe`,
+check pending Windows Update/Store updates, and collect the WinGet error
+and `Microsoft-Windows-AppXDeploymentServer/Operational` event logs.
+Do not label the installation complete until the app launches and the
+user can sign in. See https://help.openai.com/en/articles/9982051-using-the-chatgpt-windows-app
+and https://learn.microsoft.com/troubleshoot/windows-client/shell-experience/troubleshooting-microsoft-store-apps-download-failure .
+
+**Future automation:** Optional, user-enabled installation stages for a
+VMware-compatible Tools package and the official ChatGPT Store app should
+be isolated from the mandatory offline-compatible core provisioning. Neither
+requires proprietary installers or private credentials in Git. The ESXi
+host's exact version and the compatible Tools media still need recording.
+
 ## November 2026 ESXi / VirtualBox integration observations
 
 - The same user-built ISO reached Windows 10 OOBE on both VirtualBox 7.2.22
