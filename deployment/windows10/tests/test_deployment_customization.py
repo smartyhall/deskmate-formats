@@ -70,6 +70,37 @@ class DeploymentCustomizationTests(unittest.TestCase):
             self.assertIn(needle,s)
         self.assertNotIn('Invoke-WebRequest',s)
 
+    def test_consumer_app_cleanup_is_allowlisted_and_disableable(self):
+        builder = self.read("Build-LabISO.ps1")
+        provision = self.read("Provision-Lab.ps1")
+        cleanup = self.read("Clean-LabApps.ps1")
+        self.assertIn("[switch]$KeepConsumerApps", builder)
+        self.assertIn("'Clean-LabApps.ps1'", builder)
+        self.assertIn("consumer-app-cleanup-mode.txt", builder)
+        self.assertIn("'Keep' } else { 'Remove' }", builder)
+        self.assertIn("consumer_app_cleanup_mode=$consumerAppMode", builder)
+        self.assertIn("'Clean-LabApps.ps1'", provision)
+        self.assertIn("consumer-app-cleanup-error.txt", provision)
+        self.assertLess(provision.index("'Initialize-LabWinGet.ps1'"),
+                        provision.index("'Clean-LabApps.ps1'"))
+        self.assertLess(provision.index("'Clean-LabApps.ps1'"),
+                        provision.index("googlechromestandaloneenterprise64.msi"))
+        for name in ("Microsoft.SkypeApp", "Microsoft.MicrosoftOfficeHub",
+                     "Microsoft.Office.OneNote", "Microsoft.OneDriveSync",
+                     "Microsoft.XboxApp", "Microsoft.ZuneMusic"):
+            self.assertIn("'" + name + "'", cleanup)
+        for keep in ("'Microsoft.WindowsStore'", "'Microsoft.DesktopAppInstaller'",
+                     "'Microsoft.VCLibs'", "'Microsoft.Windows.SecHealthUI'"):
+            self.assertNotIn(keep, cleanup)
+        for api in ("Get-AppxPackage -AllUsers", "Remove-AppxPackage -Package",
+                    "Get-AppxProvisionedPackage -Online",
+                    "Remove-AppxProvisionedPackage -Online",
+                    "OneDriveSetup.exe", "SupportsShouldProcess=$true",
+                    "consumer-app-cleanup.json"):
+            self.assertIn(api, cleanup)
+        self.assertNotIn("Remove-Item -Recurse", cleanup)
+        self.assertNotIn("winget uninstall", cleanup)
+
     def test_iso_staged_scripts_are_writable_and_service_statuses_are_scalar(self):
         provision = self.read("Provision-Lab.ps1")
         verifier = self.read("Verify-Lab.ps1")
