@@ -114,6 +114,16 @@ try {
     throw
 } finally {
     # Do not create an unending auto-retry loop on failed installers.
-    & schtasks.exe /Delete /TN 'DeskMateLab-FirstLogon' /F 2>$null | Out-Null
+    # SetupComplete registers this fallback task only for VirtualBox; ESXi
+    # and other environments normally have no task to delete. Do not let
+    # optional task cleanup turn a successful provisioning run into an error.
+    try {
+        $task = Get-ScheduledTask -TaskName 'DeskMateLab-FirstLogon' -ErrorAction SilentlyContinue
+        if ($null -ne $task) {
+            Unregister-ScheduledTask -TaskName 'DeskMateLab-FirstLogon' -Confirm:$false -ErrorAction Stop
+        }
+    } catch {
+        Write-Warning ('Optional first-logon task cleanup failed: ' + $_.Exception.Message)
+    }
     $mutex.ReleaseMutex(); $mutex.Dispose()
 }
