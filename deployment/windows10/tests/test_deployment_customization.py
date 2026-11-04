@@ -70,6 +70,17 @@ class DeploymentCustomizationTests(unittest.TestCase):
             self.assertIn(needle,s)
         self.assertNotIn('Invoke-WebRequest',s)
 
+    def test_iso_staged_scripts_are_writable_and_service_statuses_are_scalar(self):
+        provision = self.read("Provision-Lab.ps1")
+        verifier = self.read("Verify-Lab.ps1")
+        self.assertIn("Where-Object { $_.IsReadOnly }", provision)
+        self.assertIn("$_.IsReadOnly = $false", provision)
+        self.assertIn("function Get-OptionalServiceStatus", verifier)
+        self.assertIn("return 'NotInstalled'", verifier)
+        self.assertIn("return [string]$service.Status", verifier)
+        for field in ("sshd", "guestAdditionsService", "vmwareToolsService"):
+            self.assertIn(field + "=(Get-OptionalServiceStatus ", verifier)
+
     def test_verification_survives_absent_optional_registry_policy(self):
         verifier = self.read("Verify-Lab.ps1")
         self.assertIn("Set-StrictMode -Version Latest", verifier)
