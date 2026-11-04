@@ -9,6 +9,11 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
 [Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12
 $root='C:\DeskMateLab'
+# Windows Setup may preserve the read-only attribute inherited from the ISO.
+# Clear it on lab scripts so verified updates can replace them without manual attrib.
+Get-ChildItem -LiteralPath $root -File -ErrorAction Stop |
+    Where-Object { $_.IsReadOnly } |
+    ForEach-Object { $_.IsReadOnly = $false }
 $logDir=Join-Path $root 'setup-logs'
 New-Item -ItemType Directory -Path $logDir -Force | Out-Null
 $done=Join-Path $root 'provision-complete.txt'
