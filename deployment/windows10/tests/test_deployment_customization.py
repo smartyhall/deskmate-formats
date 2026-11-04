@@ -70,6 +70,22 @@ class DeploymentCustomizationTests(unittest.TestCase):
             self.assertIn(needle,s)
         self.assertNotIn('Invoke-WebRequest',s)
 
+    def test_verification_survives_absent_optional_registry_policy(self):
+        verifier = self.read("Verify-Lab.ps1")
+        self.assertIn("Set-StrictMode -Version Latest", verifier)
+        self.assertIn("function Get-OptionalRegistryValue", verifier)
+        self.assertIn("$entry.PSObject.Properties[$Name]", verifier)
+        for key in (
+            "deliveryOptimizationPolicy", "allowTelemetry",
+            "taskbarSearchMode", "taskbarNewsMode", "feedsPolicy"
+        ):
+            self.assertIn(key + "=(Get-OptionalRegistryValue ", verifier)
+        for direct_access in (
+            ").DODownloadMode", ").AllowTelemetry", ").SearchboxTaskbarMode",
+            ").ShellFeedsTaskbarViewMode", ").EnableFeeds"
+        ):
+            self.assertNotIn(direct_access, verifier)
+
     def test_guest_stage_before_online_install(self):
         s = self.read("Provision-Lab.ps1")
         self.assertLess(s.index("'Configure-LabWorkstation.ps1'"),s.index("googlechromestandaloneenterprise64.msi"))
