@@ -70,6 +70,15 @@ Python API: `deskmate_formats.calendar.personal.parse_bytes/parse_file` and
 `deskmate_formats.calendar.writer.Appointment/append_appointment/capacity/write_new`.
 The implementation remains Calendar-specific; no shared engine is asserted.
 
+## Reproducible Windows 10 laboratory (experimental)
+
+The [Windows 10 Pro ISO deployment recipe](deployment/windows10/README.md) tracks
+VM setup for DeskMate reverse engineering across ESXi and VirtualBox. This is
+**source only**, not Windows media, a validated unattended release, or a
+redistributable bundle of third-party binaries. The recipe documents current
+WinGet/bootstrap, autologon and Delivery Optimization settings, private-media
+boundaries, verification tests, and outstanding live installation checks.
+
 ## Tests and development
 
 ```sh
