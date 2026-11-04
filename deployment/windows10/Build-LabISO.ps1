@@ -16,6 +16,7 @@ param(
     [string]$PackageDirectory,
     [string]$GuestAdditionsISO,
     [switch]$EnableAutoLogon,
+    [switch]$KeepConsumerApps,
     [ValidateSet('Lan','HttpOnly')][string]$DeliveryOptimizationMode = 'Lan',
     [switch]$EraseDisk0UEFI,
     [switch]$KeepWorkDir
@@ -82,12 +83,15 @@ $payload = Join-Path $stage 'sources\$OEM$\$1\DeskMateLab'
 $setupScripts = Join-Path $stage 'sources\$OEM$\$$\Setup\Scripts'
 New-Item -ItemType Directory -Path $payload,$setupScripts -Force | Out-Null
 foreach ($name in @('Provision-Lab.ps1','Privacy-Lab.ps1','Verify-Lab.ps1','Enable-LabSSH.ps1','Setup-86Box-UCRT64.sh',
-        'Configure-LabWorkstation.ps1','Install-LabGuestAdditions.ps1','Set-LabLogon.ps1','Initialize-LabWinGet.ps1')) {
+        'Configure-LabWorkstation.ps1','Install-LabGuestAdditions.ps1','Set-LabLogon.ps1','Initialize-LabWinGet.ps1',
+        'Clean-LabApps.ps1')) {
     Copy-Item -LiteralPath (Join-Path $kit $name) -Destination (Join-Path $payload $name)
 }
 Copy-Item -LiteralPath (Join-Path $kit 'SetupComplete.cmd') -Destination (Join-Path $setupScripts 'SetupComplete.cmd')
 Set-Content -LiteralPath (Join-Path $payload 'installation-mode.txt') -Value $AccountMode -Encoding ASCII
 Set-Content -LiteralPath (Join-Path $payload 'delivery-optimization-mode.txt') -Value $DeliveryOptimizationMode -Encoding ASCII
+$consumerAppMode=if ($KeepConsumerApps) { 'Keep' } else { 'Remove' }
+Set-Content -LiteralPath (Join-Path $payload 'consumer-app-cleanup-mode.txt') -Value $consumerAppMode -Encoding ASCII
 if ($PackageDirectory) {
     $PackageDirectory = (Resolve-Path -LiteralPath $PackageDirectory).Path
     Copy-Item -LiteralPath $PackageDirectory -Destination (Join-Path $payload 'Packages') -Recurse
@@ -145,6 +149,7 @@ $result = [ordered]@{
     includes_password=($AccountMode -eq 'Lab')
     persistent_auto_logon=($AccountMode -eq 'Lab' -and $EnableAutoLogon.IsPresent)
     delivery_optimization_mode=$DeliveryOptimizationMode
+    consumer_app_cleanup_mode=$consumerAppMode
     guest_additions_iso_sha256=$guestAdditionsHash
     notes='No activation key, original DeskMate media, ROMs or personal credentials are bundled.'
 }
