@@ -263,7 +263,7 @@ class HttpTests(LocalObserver):
                                         "timeline"})
         self.assertEqual(set(payload["observation"]["frame"]), {
             "key", "generation", "width", "height", "captured_at_ms", "rendered_at_ms",
-            "rendered_emulated_ms", "age_ms", "age_basis",
+            "rendered_emulated_ms", "age_ms", "age_basis", "latest_rendered",
         })
         self.assertEqual(payload["observation"]["frame"]["age_basis"], "render")
         with Image.open(BytesIO(self.request("/frame.png")[2])) as image:

@@ -1,8 +1,9 @@
-"""Strict single-instance observation policy; no MCP dependency and no mutation.
+"""Strict native observation policy; no MCP dependency and no guest mutation.
 
 The adapter intentionally does NOT call Client.observe(), which establishes hold.
 Only status/info/regs/text/memr/screenshot are reachable through this interface.
 """
+from copy import deepcopy
 import json
 from pathlib import Path
 import re
@@ -10,6 +11,10 @@ import threading
 import uuid
 
 from .client import Client
+from .observer_bridge import (
+    CHECKPOINT_FIELDS, RESET_FIELDS, OwnerPublication, matches_checkpoint, prepare_frame, sample_times,
+)
+from ..observer.publication import ErrorCode, Machine, ObservationRegistry, host_time_ms
 
 TOOLS = ('list_instances', 'get_instance_status', 'get_cpu_registers',
          'get_screen_text', 'get_framebuffer', 'read_memory', 'observe_machine')
@@ -17,7 +22,6 @@ MAX_READ = 512
 MAX_TOTAL = 1024
 MAX_FRAME = 1024 * 1024
 IDENTIFIER = re.compile(r'[A-Za-z0-9_-]{1,64}\Z')
-RESET_FIELDS = ('hard_resets', 'soft_resets', 'last_reset_ms')
 STATUS_FIELDS = ('ms', 'frames', 'held', 'paused', 'bios_mode', 'w', 'h')
 
 
@@ -48,20 +52,35 @@ def configuration(path):
 
 
 def validate_config(config):
-    if not isinstance(config, dict) or set(config) != {'instances'}:
-        raise ValueError('one explicit instances mapping required')
+    if not isinstance(config, dict) or not {'instances'} <= set(config) <= {'instances', 'observer'}:
+        raise ValueError('explicit instances mapping required')
     instances = config['instances']
-    if not isinstance(instances, dict) or len(instances) != 1:
-        raise ValueError('Phase I supports exactly one configured instance')
+    if not isinstance(instances, dict) or not 1 <= len(instances) <= 8:
+        raise ValueError('configure one to eight instances')
+    observer = config.get('observer')
+    if 'observer' in config:
+        if not isinstance(observer, dict) or set(observer) != {'port'}:
+            raise ValueError('observer requires an explicit port')
+        integer(observer['port'], 0, 65535)
+    ports = {observer['port']} if observer else set()
+    directories = set()
     for name, item in instances.items():
         if not IDENTIFIER.fullmatch(name) or not isinstance(item, dict):
             raise ValueError('invalid instance')
+        if observer:
+            Machine(name, name)  # Observer URLs have a stricter public ID syntax.
         required = {'machine_directory', 'port', 'expected_machine', 'expected_version', 'ram_regions'}
-        if not required <= set(item) <= required | {'ram_checkpoint'}:
+        if not required <= set(item) <= required | {'ram_checkpoint', 'display_approval'}:
             raise ValueError('invalid instance fields')
-        if not Path(item['machine_directory']).is_absolute():
+        directory = Path(item['machine_directory'])
+        if not directory.is_absolute():
             raise ValueError('machine directory must be absolute')
-        integer(item['port'], 1, 65535)
+        port = integer(item['port'], 1, 65535)
+        directory = directory.resolve()
+        if port in ports or directory in directories:
+            raise ValueError('configure distinct instance ports and machine directories')
+        ports.add(port)
+        directories.add(directory)
         for key, pattern in (('expected_machine', r'[A-Za-z0-9_.-]{1,64}'),
                              ('expected_version', r'[A-Za-z0-9_. \[\]()-]{1,64}')):
             if not isinstance(item[key], str) or not re.fullmatch(pattern, item[key]):
@@ -78,28 +97,78 @@ def validate_config(config):
                 raise ValueError('only conventional ordinary RAM is supported')
         checkpoint = item.get('ram_checkpoint')
         if regions:
-            counts = ('ms', 'frames', *RESET_FIELDS)
-            if not isinstance(checkpoint, dict) or set(checkpoint) != {'token_sha256', *counts}:
+            if not isinstance(checkpoint, dict) or set(checkpoint) != {'token_sha256', *CHECKPOINT_FIELDS}:
                 raise ValueError('RAM requires an owner-verified checkpoint')
-            for key in counts:
-                integer(checkpoint[key], 0, 2**64-1)
-            if not isinstance(checkpoint['token_sha256'], str) or not re.fullmatch(r'[a-f0-9]{64}', checkpoint['token_sha256']):
-                raise ValueError('invalid checkpoint token fingerprint')
+            validate_checkpoint(checkpoint, ())
         elif checkpoint is not None:
             raise ValueError('RAM checkpoint requires configured regions')
+        if 'display_approval' in item:
+            approval = item['display_approval']
+            fields = {'screen_sha256', 'framebuffer_sha256'}
+            base = {'token_sha256', *CHECKPOINT_FIELDS}
+            if (not observer or not isinstance(approval, dict)
+                    or not base <= set(approval) <= base | fields or not fields.intersection(approval)):
+                raise ValueError('display approval requires an observer and reviewed display hashes')
+            validate_checkpoint(approval, fields.intersection(approval))
+            if checkpoint and approval['token_sha256'] != checkpoint['token_sha256']:
+                raise ValueError('display and RAM must refer to the same launch')
     return config
 
 
+def validate_checkpoint(checkpoint, digests):
+    for key in CHECKPOINT_FIELDS:
+        integer(checkpoint[key], 0, 2**64-1)
+    for key in ('token_sha256', *digests):
+        if not isinstance(checkpoint[key], str) or not re.fullmatch(r'[a-f0-9]{64}', checkpoint[key]):
+            raise ValueError('invalid checkpoint fingerprint')
+
+
 class Adapter:
-    """One serialized lazy connection, explicit generations, no implicit retries."""
+    """Route read-only calls to independent, serialized native owners."""
 
     def __init__(self, config, client_factory=Client):
-        self.config = validate_config(config)
-        self.instance_id, self.item = next(iter(config['instances'].items()))
-        self.factory = client_factory
+        config = deepcopy(validate_config(config))
+        instances = config['instances']
+        self.server_session = uuid.uuid4().hex  # Local identity, not a process UUID.
+        self.observer_port = config['observer']['port'] if 'observer' in config else None
+        self.registry = (ObservationRegistry(Machine(name, name) for name in instances)
+                         if self.observer_port is not None else None)
+        self._instances = {
+            name: _Instance(name, item, uuid.uuid4().hex if len(instances) > 1 else self.server_session,
+                            client_factory,
+                            self.registry.stream(name) if self.registry is not None else None)
+            for name, item in instances.items()
+        }
+
+    def call(self, tool, arguments):
+        if tool not in TOOLS:
+            raise Refusal('UNKNOWN_TOOL')
+        if not isinstance(arguments, dict):
+            raise Refusal('BAD_ARGUMENTS')
+        if tool == 'list_instances':
+            if arguments:
+                raise Refusal('BAD_ARGUMENTS')
+            return {'instances': [owner.listing() for owner in self._instances.values()]}, None
+        name = arguments.get('instance_id')
+        if not isinstance(name, str) or name not in self._instances:
+            raise Refusal('UNKNOWN_INSTANCE')
+        return self._instances[name].call(tool, arguments)
+
+    def close(self):
+        for owner in self._instances.values():
+            owner.close()
+
+
+class _Instance:
+    """Own one serialized lazy connection and its publication sequence."""
+
+    def __init__(self, name, item, session, factory, stream):
+        self.instance_id, self.item = name, item
+        self.factory = factory
+        self.publication = OwnerPublication(stream, item.get('display_approval')) if stream else None
         self.client = None
         self.lock = threading.RLock()
-        self.server_session = uuid.uuid4().hex  # Local identity, NOT a process UUID.
+        self.server_session = session
         self.generation = 0
         self.connection_generation = 0
         self.mapping_valid = bool(self.item['ram_regions'])
@@ -109,11 +178,22 @@ class Adapter:
     def close(self):
         with self.lock:
             if self.client is not None:
-                self.client.close()  # Never quit/release/hold the emulator.
-                self.client = None
+                self.disconnect()
+                if self.publication:
+                    self.publication.unavailable(self.generation, retain=True)
+                    self.publication.approval = None
+                self.mapping_valid = False
 
-    def drop(self):
-        self.close()
+    def disconnect(self):
+        if self.client is not None:
+            self.client.close()  # Never quit/release/hold the emulator.
+            self.client = None
+
+    def drop(self, error, *, retain=False):
+        self.disconnect()
+        if self.publication:
+            self.publication.unavailable(self.generation, error=error, retain=retain)
+            self.publication.approval = None
         self.generation += 1
         self.mapping_valid = False
 
@@ -124,7 +204,7 @@ class Adapter:
 
     def connect(self):
         if self.client is None:
-            checkpoint = self.item.get('ram_checkpoint') or {}
+            checkpoint = self.item.get('ram_checkpoint') or self.item.get('display_approval') or {}
             self.client = self.factory(Path(self.item['machine_directory']) / 'automation.token',
                 port=self.item['port'], host='127.0.0.1', timeout=5, max_reply=2*1024*1024,
                 expected_token_sha256=checkpoint.get('token_sha256'))
@@ -147,15 +227,18 @@ class Adapter:
         reset = tuple(integer(info[k], 0, 2**64-1) for k in RESET_FIELDS)
         sample = reset, tuple(status[k] for k in STATUS_FIELDS)
         checkpoint = self.item.get('ram_checkpoint')
-        if self.last and (reset != self.last[0] or status['ms'] < self.last[1][0]):
+        if self.last and (reset != self.last[0] or status['ms'] < self.last[1][0]
+                          or status['frames'] < self.last[1][1]):
             self.generation += 1
             self.mapping_valid = False
         if self.mapping_valid and (
-                not status['held'] or status['paused']
-                or any(status[k] != checkpoint[k] for k in ('ms', 'frames'))
-                or reset != tuple(checkpoint[k] for k in RESET_FIELDS)
+                not matches_checkpoint(checkpoint, sample)
                 or self.last is not None and sample != self.last):
             self.invalidate_mapping()
+        if self.publication:
+            if self.last is not None and sample != self.last:
+                self.publication.approval = None
+            self.publication.track(sample)
         self.last = sample
         return sample
 
@@ -185,38 +268,62 @@ class Adapter:
         """Return (safe JSON object, optional PNG); Refusal carries only a fixed code."""
         with self.lock:
             try:
-                return self._call(tool, arguments)
+                result, png, sample, sampled_at = self._call(tool, arguments)
             except Refusal as exc:
                 self.last_error = exc.code
                 if exc.code == 'TARGET_MISMATCH':
-                    self.drop()
-                elif exc.code == 'INCONSISTENT_OBSERVATION':
+                    self.drop(ErrorCode.OBSERVATION_FAILED)
+                elif exc.code in ('INCONSISTENT_OBSERVATION', 'FRAMEBUFFER_LIMIT'):
                     self.invalidate_mapping()
+                    if self.publication:
+                        self.publication.approval = None
+                        self.publication.unavailable(self.generation, error=ErrorCode.OBSERVATION_FAILED)
+                elif self.publication and exc.code in ('ALREADY_HELD_REQUIRED', 'TEXT_MODE_REQUIRED',
+                                                       'MEMORY_APPROVAL_STALE'):
+                    self.publication.record(self.generation, self.last, *sample_times())
+                exc.generation = self.generation
+                exc.instance_id = self.instance_id
+                exc.server_session = self.server_session
                 raise
             except Exception:
-                self.drop()
+                self.drop(ErrorCode.TRANSPORT, retain=True)
                 self.last_error = 'NATIVE_UNAVAILABLE_OR_INVALID'
-                raise Refusal(self.last_error) from None
+                exc = Refusal(self.last_error)
+                exc.generation, exc.instance_id = self.generation, self.instance_id
+                exc.server_session = self.server_session
+                raise exc from None
+            pending = None
+            if self.publication:
+                pending = self.publication.record(
+                    self.generation, sample, result['metadata']['observed_at_ms'], sampled_at,
+                    lines=result.get('screen', {}).get('lines'), png=png,
+                    captured_at=result.get('framebuffer', {}).get('captured_at_ms'),
+                )
+        if pending is not None:
+            observation, sampled_at, source, captured_at = pending
+            frame = None
+            try:
+                frame = prepare_frame(observation, source, captured_at)
+            finally:
+                with self.lock:
+                    self.publication.finish(observation, sampled_at, frame)
+        return result, png
 
-    def _call(self, tool, args):
-        if tool not in TOOLS:
-            raise Refusal('UNKNOWN_TOOL')
-        if not isinstance(args, dict):
-            raise Refusal('BAD_ARGUMENTS')
-        if tool == 'list_instances':
-            if args:
-                raise Refusal('BAD_ARGUMENTS')
-            return {'instances':[{'instance_id':self.instance_id,
+    def listing(self):
+        with self.lock:
+            return {'instance_id':self.instance_id,
                 'availability':'connected' if self.client else 'not_connected',
                 'last_error':self.last_error,
-                'ram_regions':{name: span['length'] for name, span in self.item['ram_regions'].items()}}]}, None
+                'ram_regions':{name: span['length'] for name, span in self.item['ram_regions'].items()}}
+
+    def _call(self, tool, args):
         allowed = {'instance_id'}
         if tool == 'read_memory':
             allowed |= {'region_id','offset','length','expected_generation','expected_session'}
         if tool == 'observe_machine':
             allowed |= {'memory','include_text','include_framebuffer','expected_generation','expected_session'}
-        if set(args) - allowed or args.get('instance_id') != self.instance_id:
-            raise Refusal('UNKNOWN_INSTANCE' if args.get('instance_id') != self.instance_id else 'BAD_ARGUMENTS')
+        if set(args) - allowed:
+            raise Refusal('BAD_ARGUMENTS')
         for key in ('include_text','include_framebuffer'):
             if key in args and type(args[key]) is not bool:
                 raise Refusal('BAD_ARGUMENTS')
@@ -260,11 +367,13 @@ class Adapter:
         png = None
         if tool == 'get_framebuffer' or tool == 'observe_machine' and args.get('include_framebuffer', False):
             png, frame = c.framebuffer()
+            captured_at = host_time_ms()
             if len(png) > MAX_FRAME or frame['w']*frame['h'] > 2048*1536:
                 raise Refusal('FRAMEBUFFER_LIMIT')
             if any(frame[k] != before[k] for k in ('ms','frames','w','h')):
                 raise Refusal('INCONSISTENT_OBSERVATION')
             result['framebuffer'] = {k:frame[k] for k in ('ms','frames','w','h')}
+            result['framebuffer']['captured_at_ms'] = captured_at
             result['framebuffer']['semantics'] = 'last rendered frame; not instruction precise'
         if spans:
             result['memory'] = []
@@ -276,14 +385,16 @@ class Adapter:
                 result['memory'].append({'region_id':name,'address':address,'length':length,
                     'view':'normal','width':1,'hex':data.hex()})
         after, end = c.status(), c.info()
+        observed_at, sampled_at = sample_times()
         final_sample = self.track(after, end)
         if tool != 'get_instance_status' and final_sample != sample:
             raise Refusal('INCONSISTENT_OBSERVATION')
         result['metadata'] = {'instance_id':self.instance_id, 'server_session':self.server_session,
+            'observed_at_ms':max(observed_at, result.get('framebuffer', {}).get('captured_at_ms', 0)),
             'generation':self.generation,'connection_generation':self.connection_generation,
             'memory_mapping_valid':self.mapping_valid,'coherent_held_group':tool != 'get_instance_status',
             'process_identity':'not provided by native protocol; no cross-restart guarantee',
             'status':{k:after[k] for k in ('ms','frames','held','paused','w','h','bios_mode')},
             'identity':{k:end[k] for k in ('machine','version','hard_resets','soft_resets','last_reset_ms')}}
         self.last_error = None
-        return result, png
+        return result, png, final_sample, sampled_at

@@ -26,6 +26,7 @@ def frame_metadata(view, now):
         "captured_at_ms": frame.captured_at_ms,
         "rendered_at_ms": frame.rendered_at_ms,
         "rendered_emulated_ms": frame.rendered_emulated_ms,
+        "latest_rendered": frame.latest_rendered,
         "age_ms": now - age_from if now >= age_from else None,
         "age_basis": age_basis,
     }
@@ -116,8 +117,9 @@ def _status_lines(machine, view, now):
     ])
     frame = frame_metadata(view, now)
     if frame is not None:
+        source = " (latest render at capture)" if frame["latest_rendered"] else ""
         lines.extend([
-            f"Framebuffer      {frame['width']} x {frame['height']} / frame {frame['generation']}",
+            f"Framebuffer      {frame['width']} x {frame['height']} / frame {frame['generation']}{source}",
             f"Frame age        {_ms(frame['age_ms'])} since {frame['age_basis']}",
             f"Frame captured   {_utc(frame['captured_at_ms'])}",
             f"Frame rendered   {_utc(frame['rendered_at_ms'])} / guest {_ms(frame['rendered_emulated_ms'])}",

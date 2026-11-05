@@ -1,8 +1,9 @@
-"""Official MCP Python SDK 2.x stdio adapter; no HTTP listener or guest control."""
+"""Read-only MCP stdio service with an optional loopback browser observatory."""
 import argparse
 import base64
 import json
 import sys
+from threading import Thread
 
 from .readonly import Adapter, Refusal, configuration, TOOLS
 
@@ -60,8 +61,11 @@ async def serve(adapter):
                     data=base64.b64encode(png).decode('ascii')))
             return types.CallToolResult(content=content,structured_content=result)
         except Refusal as exc:
-            result = {'error':{'code':exc.code}, 'server_session':adapter.server_session,
-                      'generation':adapter.generation}
+            result = {'error':{'code':exc.code},
+                      'server_session':getattr(exc, 'server_session', adapter.server_session),
+                      'generation':getattr(exc, 'generation', 0)}
+            if hasattr(exc, 'instance_id'):
+                result['instance_id'] = exc.instance_id
             return types.CallToolResult(is_error=True,structured_content=result,
                 content=[types.TextContent(type='text',text=json.dumps(result))])
 
@@ -83,7 +87,21 @@ def main():
     try:
         import anyio
         adapter = Adapter(configuration(args.config))
-        anyio.run(serve,adapter)
+        if adapter.registry is None:
+            anyio.run(serve, adapter)
+        else:
+            from ..observer.http import ObserverServer
+
+            with ObserverServer(adapter.registry, port=adapter.observer_port) as observer:
+                listener = Thread(target=observer.serve_forever, kwargs={'poll_interval': 0.1})
+                listener.start()
+                try:
+                    print(f'86Box observatory: http://127.0.0.1:{observer.port}/',
+                          file=sys.stderr, flush=True)
+                    anyio.run(serve, adapter)
+                finally:
+                    observer.shutdown()
+                    listener.join()
     except ImportError:
         print('86Box MCP: install the optional deskmate-formats[mcp] extra.',file=sys.stderr)
         raise SystemExit(2)

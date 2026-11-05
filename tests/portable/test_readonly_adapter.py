@@ -76,11 +76,11 @@ class AdapterTests(unittest.TestCase):
                     self.call('get_instance_status')
                 self.assertNotIn(str(self.peer.root),str(error.exception))
                 self.assertNotIn(self.peer.token,str(error.exception))
-                self.assertIsNone(self.adapter.client)
+                self.assertIsNone(self.adapter._instances['fixture'].client)
 
     def test_reset_invalidates_memory_but_keeps_observation_available(self):
         args = self.read_args()
-        previous = self.adapter.generation
+        previous = args['expected_generation']
         self.peer.resets += 1
         new = self.call('get_instance_status')[0]['metadata']
         self.assertGreater(new['generation'],previous)
@@ -174,7 +174,7 @@ class AdapterTests(unittest.TestCase):
         self.peer.bad_png = True
         with self.assertRaises(Refusal):
             self.call('get_framebuffer')
-        self.assertIsNone(self.adapter.client)
+        self.assertIsNone(self.adapter._instances['fixture'].client)
 
     def test_no_default_instance_or_rom_configuration(self):
         for mutate in ('empty','rom','missing_checkpoint'):

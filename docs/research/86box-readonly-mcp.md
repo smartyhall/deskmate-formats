@@ -3,7 +3,9 @@
 The server uses the [official MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)
 over stdio and the repository's native authenticated 86Box client over IPv4
 loopback. It opens one serialized native connection on the first observation
-request. It exposes a single owner-configured instance and opens no HTTP listener.
+request per configured instance. Up to eight instances can use separate native
+ports and machine directories. Each instance has its own connection lock. The
+browser listener is optional and runs in the same process.
 
 ## Install and configure
 
@@ -50,6 +52,41 @@ args = ['-m', 'deskmate_formats.automation.mcp_server', '--config', 'C:\Lab\priv
 
 The equivalent CLI registration is `codex mcp add 86box_readonly -- <python-executable> -m deskmate_formats.automation.mcp_server --config <private-config>`.
 
+## Enable browser publication
+
+Add `"observer": {"port": 8086}` at the top level of the private JSON config.
+The server prints the IPv4 loopback URL on stderr. Port 0 selects an ephemeral
+port. Omit the observer field for an MCP-only process. Instance IDs used in
+browser URLs must start with a lowercase ASCII letter or digit and contain up
+to 32 lowercase ASCII letters, digits and hyphens. Install
+`deskmate-formats[mcp,observer]` when approving images.
+
+With the listener enabled, native reads also publish the instance ID,
+execution flags and sampled emulated clock. The browser starts with an empty
+stream and receives no guest display by default. To approve an exact display,
+hold the guest under exclusive operator control and review its full screen
+transcript and native PNG privately. In the relevant instance config, add
+`display_approval` with these fields:
+
+| Field | Value from the reviewed checkpoint |
+| --- | --- |
+| `ms`, `frames` | Exact integers from native status |
+| `hard_resets`, `soft_resets`, `last_reset_ms` | Exact integers from native info |
+| `token_sha256` | SHA-256 of the decoded 32-byte launch token, as for RAM approval |
+| `screen_sha256` | Optional SHA-256 of UTF-8 encoded `decode_cp437(line.encode("cp437") for line in native_lines)`. Keep full rows and spaces, with LF separators and no added final LF. |
+| `framebuffer_sha256` | Optional SHA-256 of the native PNG bytes, before browser conversion |
+
+Use lowercase hexadecimal digests and supply one or both display hashes. For
+RAM and display approval in the same instance, both sections must pin the same
+launch credential. Close the setup client before starting MCP. An explicit
+MCP text or framebuffer read then supplies the candidate for its corresponding
+publication. A held `observe_machine` call can supply both in one bracket.
+Unapproved display remains available to the trusted MCP client under the
+existing held-read policy. Only loopback browser readers get the approved
+projection. Any observed checkpoint change, lost hold, inconsistency,
+disconnect or identity failure retires display approval for that process.
+Restart with a newly reviewed private configuration to approve again.
+
 ## Tools and consistency
 
 | Tool | Arguments and result |
@@ -69,7 +106,10 @@ resets, injects keys or changes media. Held observations compare samples around
 reads. This detects sampled changes and cannot provide an atomic CPU snapshot
 or an instruction breakpoint. Free-running status and identity are sampled
 separately. `server_session`, `generation` and `connection_generation` describe
-local continuity. The native protocol has no process UUID.
+local continuity. Session values used for RAM approval are scoped to the
+instance. Successful observations include the UTC host `observed_at_ms`;
+framebuffer results also include host `captured_at_ms`. The native protocol
+has no process UUID or frame render timestamp.
 
 ### Approve RAM only for one held checkpoint
 
@@ -119,12 +159,8 @@ transport failure closes the connection and returns a fixed error code. A later
 explicit call can reconnect for observations, with RAM approval invalidated.
 Stdio shutdown closes the socket and leaves the emulator alone.
 
-The instance-ID interface can later address multiple machines. A future owner
-service can serialize control and publish reviewed observations to additional
-agents or the browser observer. Those consumers should subscribe to published
-state without opening another native socket.
-
 Tests use an authenticated synthetic native peer and the real SDK client over
 subprocess stdio. They exercise initialization, discovery, structured results,
-image content, native errors, EOF, and stderr separation. Live MCP use on 86Box
-and tool registration in a running Codex session remain unverified.
+image content, native errors, EOF, stderr separation and embedded HTTP
+publication. See the [controlled canary procedure](86box-observatory-canary.md)
+for Codex registration and the separately authorized live validation.
