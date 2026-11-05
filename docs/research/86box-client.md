@@ -16,11 +16,20 @@ with the UCRT64 runtime on PATH. For example, in PowerShell:
 $machine = 'C:\DeskMateLab\machines\rsx-dos5-experiment'
 $python = (Get-Command python.exe).Source
 $env:PATH = 'C:\msys64\ucrt64\bin;' + $env:PATH
-Start-Process -FilePath C:\DeskMateLab\builds\86box-automation\src\86Box.exe -ArgumentList "--vmpath $machine --automation tcp:127.0.0.1:8765 --automation-hold --automation-seed 1" -WorkingDirectory $machine -WindowStyle Hidden -PassThru
+Start-Process -FilePath C:\DeskMateLab\builds\86box-automation\src\86Box.exe -ArgumentList "--vmpath $machine --automation tcp:127.0.0.1:8765 --automation-hold --automation-seed 1" -WorkingDirectory $machine -PassThru
 # Wait for this launch's default token and loopback listener before connecting.
 & $python tools/86box_client.py --machine $machine status
 & $python tools/86box_client.py --machine $machine info
 ```
+
+This example intentionally uses the **normal visible launch** for an
+interactive Windows/RDP research session. A previous `-WindowStyle Hidden`
+flag suppressed the emulator window even though the native automation socket
+worked. Do not use Computer Use or host mouse/keyboard injection to diagnose
+86Box while an RDP session is active: an earlier attempt disrupted the
+remote connection. Debug subprocess flags and window/session state using
+programmatic Windows APIs first. Headless/background runs remain useful but
+must be selected explicitly and must not affect guest automation behavior.
 
 The example path has no spaces. Quote individual launch arguments when using
 other paths. Keep a private launch receipt with PID, process command line,
