@@ -33,4 +33,6 @@ cmake -S . -B "$root/builds/86box-automation" -G Ninja \
   -D AUTOMATION=ON -D CMAKE_BUILD_TYPE=Release
 cmake --build "$root/builds/86box-automation" --parallel 4
 printf '\n86Box built with AUTOMATION=ON. Find executable in build directory.\n'
-printf 'ROMs, VM profile, and automation socket/MCP tests are separate next steps.\n'
+printf 'Next: in PowerShell as DeskMateLab, optionally clone official ROMs with:\n'
+printf '  powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\\DeskMateLab\\Setup-86Box-ROMs.ps1\n'
+printf 'ROMs, VM profile, and automation socket/MCP tests are separate from compiling.\n'
