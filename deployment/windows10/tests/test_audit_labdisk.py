@@ -1,6 +1,7 @@
 """Portable, synthetic tests for the host-only deployment disk audit."""
 import importlib.util
 import io
+import os
 import json
 from pathlib import Path
 import tempfile
