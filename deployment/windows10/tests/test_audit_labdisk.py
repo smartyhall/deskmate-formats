@@ -171,7 +171,7 @@ storagecontrollername0="SATA Controller"
             raise
         link = compat / "libosxfuse.dylib"
         self.assertTrue(link.is_symlink())
-        self.assertEqual(str(link.readlink()), "/usr/local/lib/libfuse.2.dylib")
+        self.assertEqual(link.readlink().as_posix(), "/usr/local/lib/libfuse.2.dylib")
         self.assertEqual(env["DYLD_LIBRARY_PATH"].split(os.pathsep), [
             str(compat), "/usr/local/lib", "/legacy/path",
         ])
