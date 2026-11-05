@@ -130,6 +130,23 @@ try {
         if (Test-Path $git) {
             & $git -C $checkout rev-parse HEAD | Set-Content (Join-Path $logDir 'source-commit.txt')
         }
+        # 86Box dev builds favor a Git checkout of the ROM repo rather than
+        # tagged ROM archives. This is explicit opt-in, since the third-party
+        # ROM files are not relicensed by our public deployment recipe.
+        $romFetchMode='Skip'
+        $romFetchConfig=Join-Path $root '86box-roms-mode.txt'
+        if (Test-Path -LiteralPath $romFetchConfig -PathType Leaf) {
+            $romFetchMode=(Get-Content -LiteralPath $romFetchConfig -Raw).Trim()
+        }
+        if ($romFetchMode -notin @('Fetch','Skip')) { throw "Invalid 86Box ROM mode: $romFetchMode" }
+        if ($romFetchMode -eq 'Fetch' -and -not $SkipOnlinePackages) {
+            try {
+                & (Join-Path $root 'Setup-86Box-ROMs.ps1')
+            } catch {
+                $_ | Out-String | Set-Content -LiteralPath (Join-Path $logDir '86box-roms-error.txt')
+                Write-Warning 'Optional 86Box ROM fetch failed; core provisioning continues.'
+            }
+        }
         # OpenSSH Server is deliberately not enabled/exposed by unattended setup.
         # Run SSH setup only after checking the VM NAT/firewall configuration.
         # 86Box needs the MSYS2 UCRT64 pacman base update before its build stage.
