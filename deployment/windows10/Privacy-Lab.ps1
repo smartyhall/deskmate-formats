@@ -48,9 +48,22 @@ foreach ($task in @(
     '\Microsoft\Windows\Customer Experience Improvement Program\Consolidator',
     '\Microsoft\Windows\Customer Experience Improvement Program\UsbCeip',
     '\Microsoft\Windows\Application Experience\ProgramDataUpdater',
+    '\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser',
     '\Microsoft\Windows\Feedback\Siuf\DmClient',
     '\Microsoft\Windows\Feedback\Siuf\DmClientOnScenarioDownload'
 )) {
     & schtasks.exe /Change /TN $task /Disable 2>$null | Out-Null
+}
+# Verify the specific compatibility-assessment task rather than trusting
+# schtasks.exe's exit status or assuming it exists on every Windows build.
+# Windows servicing may recreate/re-enable optional scheduled tasks.
+try {
+    $appraiser = Get-ScheduledTask -TaskPath '\Microsoft\Windows\Application Experience\' `
+        -TaskName 'Microsoft Compatibility Appraiser' -ErrorAction SilentlyContinue
+    if ($null -ne $appraiser -and [string]$appraiser.State -ne 'Disabled') {
+        Write-Warning 'Microsoft Compatibility Appraiser remains enabled; check task permissions.'
+    }
+} catch {
+    Write-Warning ('Could not verify Compatibility Appraiser task: ' + $_.Exception.Message)
 }
 Write-Host 'Applied reduced-telemetry policies (not zero telemetry). Windows Update/Defender preserved.'
