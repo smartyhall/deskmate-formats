@@ -22,7 +22,8 @@ class RepositoryBoundaryTests(unittest.TestCase):
         self.temp.cleanup()
 
     def test_native_extensions_are_blocked_even_for_printable_files(self):
-        for suffix in ('.PDM', '.RES', '.R89', '.FIL', '.ADR', '.PCL', '.HLP', '.TUT'):
+        for suffix in ('.PDM', '.RES', '.R89', '.FIL', '.ADR', '.PCL', '.HLP', '.TUT',
+                       '.NVR', '.ROM', '.VHD', '.VHDX', '.HDI', '.RAW', '.TOKEN'):
             p = audit.ROOT / ('native' + suffix)
             p.write_text('synthetic printable content', encoding='utf-8')
             with self.subTest(suffix=suffix), self.assertRaisesRegex(ValueError, 'excluded'):
