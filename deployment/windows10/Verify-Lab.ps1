@@ -28,14 +28,7 @@ function Get-OptionalSysMainStartMode {
         return [string]$service.StartMode
     } catch { return 'Unknown' }
 }
-function Get-OptionalCompatibilityAppraiserState {
-    try {
-        $task = Get-ScheduledTask -TaskPath '\Microsoft\Windows\Application Experience\' `
-            -TaskName 'Microsoft Compatibility Appraiser' -ErrorAction SilentlyContinue
-        if ($null -eq $task) { return 'NotInstalled' }
-        return [string]$task.State
-    } catch { return 'Unknown' }
-}
+. (Join-Path $PSScriptRoot 'Get-LabCompatibilityAppraiserState.ps1')
 $report=[ordered]@{
     os=(Get-CimInstance Win32_OperatingSystem).Caption
     build=(Get-CimInstance Win32_OperatingSystem).BuildNumber
@@ -50,7 +43,7 @@ $report=[ordered]@{
     sshd=(Get-OptionalServiceStatus -Name 'sshd')
     sysMainService=(Get-OptionalServiceStatus -Name 'SysMain')
     sysMainStartMode=(Get-OptionalSysMainStartMode)
-    compatibilityAppraiserTask=(Get-OptionalCompatibilityAppraiserState)
+    compatibilityAppraiserTask=(Get-LabCompatibilityAppraiserState)
     allowTelemetry=(Get-OptionalRegistryValue -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection' -Name 'AllowTelemetry')
     taskbarSearchMode=(Get-OptionalRegistryValue -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Search' -Name 'SearchboxTaskbarMode')
     taskbarNewsMode=(Get-OptionalRegistryValue -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Feeds' -Name 'ShellFeedsTaskbarViewMode')
