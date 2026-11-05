@@ -384,6 +384,21 @@ def inspect_vm(vm: str, disk_uuid: str | None = None) -> dict:
                     pass
 
 
+def is_within_guest_volume(root: Path, destination: Path) -> bool:
+    """Compare canonical paths, including existing symlink/short-name aliases.
+
+    A report path may not exist yet, so resolve the deepest existing parent
+    and normalize Windows casing before testing the path boundary.
+    """
+    canonical_root = os.path.normcase(str(root.resolve(strict=True)))
+    canonical_dest = os.path.normcase(str(destination.resolve(strict=False)))
+    try:
+        return os.path.commonpath((canonical_root, canonical_dest)) == canonical_root
+    except ValueError:
+        # Different Windows drives: cannot be inside this guest volume.
+        return False
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Inspect a powered-off Windows lab VM (or a previously mounted NTFS root), without writes."
@@ -402,8 +417,8 @@ def main(argv: list[str] | None = None) -> int:
         if args.root:
             root = args.root.expanduser().resolve()
             if args.json:
-                dest = args.json.expanduser().absolute()
-                if os.path.commonpath((str(root), str(dest))) == str(root):
+                dest = args.json.expanduser().resolve(strict=False)
+                if is_within_guest_volume(root, dest):
                     raise AuditError("Report output must not be written into the mounted Windows volume.")
             report = inspect_root(root)
         else:
