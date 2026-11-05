@@ -1,5 +1,7 @@
 """Guard against omissions in the public Windows 10 deployment recipe."""
 from pathlib import Path
+import shutil
+import subprocess
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -72,13 +74,35 @@ class DeploymentCustomizationTests(unittest.TestCase):
         self.assertLess(workstation.index("if ($UserOnly) { return }"),
                         workstation.index("Set-Service -Name 'SysMain'"))
         self.assertIn(r"'\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser'", privacy)
-        self.assertIn("Get-ScheduledTask", privacy)
+        self.assertIn("'Get-LabCompatibilityAppraiserState.ps1'", privacy)
+        self.assertIn("'Get-LabCompatibilityAppraiserState.ps1'", verifier)
+        builder = self.read("Build-LabISO.ps1")
+        self.assertIn("'Get-LabCompatibilityAppraiserState.ps1'", builder)
+        helper = self.read("Get-LabCompatibilityAppraiserState.ps1")
+        self.assertIn("Get-ScheduledTask -TaskPath $taskPath -ErrorAction Stop", helper)
+        self.assertNotIn("-ErrorAction SilentlyContinue", helper)
+        self.assertIn("return 'NotInstalled'", helper)
+        self.assertIn("return 'Unknown'", helper)
+        self.assertIn("return 'Enabled'", helper)
         self.assertLess(provision.index("'Privacy-Lab.ps1'"),
                         provision.index("'Configure-LabWorkstation.ps1'"))
         for key in ("sysMainService", "sysMainStartMode", "compatibilityAppraiserTask"):
             self.assertIn(key + "=", verifier)
         self.assertNotIn("Set-Service -Name 'wuauserv'", workstation)
         self.assertNotIn("Set-Service -Name 'WinDefend'", workstation)
+
+    def test_mocked_appraiser_states_on_windows_powershell(self):
+        powershell = shutil.which("powershell.exe")
+        if powershell is None:
+            self.skipTest("Windows PowerShell 5.1 unavailable")
+        test_script = ROOT / "tests" / "test_appraiser_state.ps1"
+        result = subprocess.run(
+            [powershell, "-NoProfile", "-NonInteractive",
+             "-ExecutionPolicy", "Bypass", "-File", str(test_script)],
+            text=True, capture_output=True, timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("failed lookup passed", result.stdout)
 
     def test_optional_guest_install_and_signature_check(self):
         s = self.read("Install-LabGuestAdditions.ps1")
