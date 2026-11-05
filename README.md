@@ -114,6 +114,7 @@ publication steps, external paid services or AI dependencies.
   [native automation client](docs/research/86box-client.md)
 * [Visible and unattended launch modes](docs/research/86box-visible-operation.md),
   [proposed read-only browser observer](docs/research/86box-observer-design.md)
+* [Original guest canary: measured source, register, RAM and screen correspondence](docs/research/86box-guest-canary.md)
 * [Calendar specification](docs/formats/calendar/CALENDAR_FORMAT.md) with original
   evidence/confidence distinctions and historical experiment checkpoints retained
 * [Experimental method](docs/experiments/methodology.md), [Phase III-A](docs/experiments/phase-iii-a.md)

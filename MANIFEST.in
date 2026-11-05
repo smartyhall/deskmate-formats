@@ -5,5 +5,6 @@ recursive-include LICENSES *.txt
 recursive-include docs *.md *.json *.license
 recursive-include tests *.py *.md *.license
 recursive-include tools *.py *.license
+recursive-include experiments *.asm *.license
 recursive-include .github *.yml *.yaml *.license
 global-exclude *.pyc
