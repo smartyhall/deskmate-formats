@@ -20,10 +20,12 @@ classifiers = [
 
 [project.optional-dependencies]
 dev = ["build>=1.2", "ruff>=0.11", "reuse[charset-normalizer]>=6.0"]
+mcp = ["mcp>=2.3,<3", "anyio>=4.9,<5"]
 
 [project.scripts]
 deskmate-calendar = "deskmate_formats.calendar.cli:main"
 deskmate-calendar-append = "deskmate_formats.calendar.writer:main"
+deskmate-86box-mcp = "deskmate_formats.automation.mcp_server:main"
 
 [tool.setuptools.package-data]
 "*" = ["*.license"]

@@ -1,0 +1,133 @@
+"""Exercise the installed official SDK client and server over subprocess stdio."""
+import asyncio
+import base64
+from importlib.util import find_spec
+import json
+import os
+import subprocess
+import sys
+import unittest
+
+from mcp_fixture import NativePeer, png
+
+
+@unittest.skipUnless(find_spec('mcp'), 'install the mcp extra for SDK integration tests')
+class StdioTests(unittest.TestCase):
+    def setUp(self):
+        self.peer = NativePeer()
+        self.addCleanup(self.peer.close)
+        self.config_path = self.peer.root / 'private-config.json'
+        self.config_path.write_text(json.dumps(self.peer.config()), encoding='utf-8')
+        self.args = ['-m', 'deskmate_formats.automation.mcp_server', '--config', str(self.config_path)]
+
+    async def exercise(self, calls):
+        from mcp.client.session import ClientSession
+        from mcp.client.stdio import StdioServerParameters, stdio_client
+
+        stderr_path = self.peer.root / 'stderr.txt'
+        params = StdioServerParameters(command=sys.executable, args=self.args, env=dict(os.environ))
+        with stderr_path.open('w', encoding='utf-8') as stderr:
+            async with stdio_client(params, errlog=stderr) as (read, write):
+                async with ClientSession(read, write, read_timeout_seconds=15) as session:
+                    initialized = await session.initialize()
+                    self.assertEqual(initialized.server_info.name, 'deskmate-86box-readonly')
+                    self.assertIsNotNone(initialized.capabilities.tools)
+                    await calls(session)
+        self.assertEqual(stderr_path.read_bytes(), b'')
+
+    def test_discovery_invocation_and_native_disconnect(self):
+        from mcp.types import ImageContent
+
+        async def calls(session):
+            tools = (await session.list_tools()).tools
+            self.assertEqual({tool.name for tool in tools}, {
+                'list_instances', 'get_instance_status', 'get_cpu_registers', 'get_screen_text',
+                'get_framebuffer', 'read_memory', 'observe_machine',
+            })
+            for tool in tools:
+                self.assertTrue(tool.annotations.read_only_hint)
+                self.assertFalse(tool.annotations.destructive_hint)
+                self.assertFalse(tool.input_schema['additionalProperties'])
+
+            async def call(name, args=None, error=None):
+                result = await session.call_tool(name, args)
+                self.assertEqual(bool(result.is_error), bool(error))
+                data = result.structured_content
+                self.assertEqual(json.loads(result.content[0].text), data)
+                serialized = json.dumps(data)
+                for secret in ('DO_NOT_DISCLOSE', self.peer.token):
+                    self.assertNotIn(secret, serialized)
+                if error:
+                    self.assertEqual(data['error']['code'], error)
+                return data, result.content[1:]
+
+            instances, _ = await call('list_instances')
+            self.assertEqual(instances['instances'][0]['instance_id'], 'fixture')
+            self.assertEqual(instances['instances'][0]['ram_regions'], {'canary': 64})
+            await call('get_instance_status', {'instance_id':'unknown'}, 'UNKNOWN_INSTANCE')
+            await call('get_instance_status', {'instance_id':'fixture','port':1234}, 'BAD_ARGUMENTS')
+            self.assertEqual(self.peer.authentications, 0)
+            target = {'instance_id':'fixture'}
+            status, _ = await call('get_instance_status', target)
+            meta = status['metadata']
+            approval = dict(expected_session=meta['server_session'], expected_generation=meta['generation'])
+            span = dict(region_id='canary', offset=4, length=4)
+            ram, _ = await call('read_memory', dict(target, **approval, **span))
+            self.assertEqual(ram['memory'][0]['hex'], bytes(n % 251 for n in range(0x504, 0x508)).hex())
+            await call('read_memory', dict(target, **approval, **dict(span, offset=63)), 'MEMORY_DENIED')
+            regs, _ = await call('get_cpu_registers', target)
+            self.assertEqual(regs['registers']['eax'], 0x13579bdf)
+            screen, _ = await call('get_screen_text', target)
+            self.assertEqual(screen['screen']['lines'], ['┌'])
+            frame, images = await call('get_framebuffer', target)
+            self.assertEqual(frame['framebuffer']['ms'], 1000)
+            self.assertEqual(len(images), 1)
+            self.assertIsInstance(images[0], ImageContent)
+            self.assertEqual(images[0].mime_type, 'image/png')
+            self.assertEqual(base64.b64decode(images[0].data, validate=True), png())
+            group, images = await call('observe_machine', dict(target, **approval,
+                memory=[span], include_framebuffer=True))
+            self.assertEqual(group['memory'], ram['memory'])
+            self.assertEqual(group['screen'], screen['screen'])
+            self.assertTrue(group['metadata']['coherent_held_group'])
+            self.assertEqual(len(images), 1)
+            self.assertEqual(self.peer.authentications, 1)
+            self.assertEqual(self.peer.ms, 1000)
+            self.peer.held = False
+            await call('get_cpu_registers', target, 'ALREADY_HELD_REQUIRED')
+            self.peer.held = True
+            await call('read_memory', dict(target, **approval, **span), 'MEMORY_APPROVAL_STALE')
+
+        asyncio.run(self.exercise(calls))
+        self.assertTrue(self.peer.disconnected.wait(2), 'stdio shutdown did not close the native socket')
+        self.assertTrue(all(c.split()[0] in {'status','info','regs','text','memr','screenshot'}
+                            for c in self.peer.commands))
+
+    def test_authentication_error_is_structured_and_safe(self):
+        self.peer.failure = 'auth'
+
+        async def calls(session):
+            result = await session.call_tool('get_instance_status', {'instance_id':'fixture'})
+            self.assertTrue(result.is_error)
+            self.assertEqual(result.structured_content['error']['code'], 'NATIVE_UNAVAILABLE_OR_INVALID')
+            for secret in ('DO_NOT_DISCLOSE', self.peer.token):
+                self.assertNotIn(secret, result.content[0].text)
+
+        asyncio.run(self.exercise(calls))
+        self.assertEqual(self.peer.authentications, 1)
+        self.assertEqual(self.peer.commands, [])
+
+    def test_startup_failure_uses_stderr_and_eof_exits_cleanly(self):
+        def run():
+            return subprocess.run([sys.executable, *self.args], input=b'', capture_output=True, timeout=15)
+
+        normal = run()
+        self.assertEqual((normal.returncode, normal.stdout, normal.stderr), (0, b'', b''))
+        self.config_path.write_text('{INVALID DO_NOT_DISCLOSE}', encoding='utf-8')
+        failed = run()
+        self.assertEqual(failed.returncode, 2)
+        self.assertEqual(failed.stdout, b'')
+        self.assertIn(b'STARTUP_OR_SERVER_FAILED', failed.stderr)
+        self.assertNotIn(b'DO_NOT_DISCLOSE', failed.stderr)
+        self.assertNotIn(self.peer.token.encode(), failed.stderr)
+        self.assertEqual(self.peer.authentications, 0)
