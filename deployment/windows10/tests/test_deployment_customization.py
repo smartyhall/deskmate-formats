@@ -71,7 +71,7 @@ class DeploymentCustomizationTests(unittest.TestCase):
         self.assertIn("Stop-Service -Name 'SysMain' -Force", workstation)
         self.assertLess(workstation.index("if ($UserOnly) { return }"),
                         workstation.index("Set-Service -Name 'SysMain'"))
-        self.assertIn("'\\Microsoft\\Windows\\Application Experience\\Microsoft Compatibility Appraiser'", privacy)
+        self.assertIn(r"'\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser'", privacy)
         self.assertIn("Get-ScheduledTask", privacy)
         self.assertLess(provision.index("'Privacy-Lab.ps1'"),
                         provision.index("'Configure-LabWorkstation.ps1'"))
