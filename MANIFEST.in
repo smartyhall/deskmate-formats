@@ -1,4 +1,4 @@
-include README.md CONTRIBUTING.md LICENSE-DECISION.md LICENSING.md LICENSE
+include README.md AGENTS.md CONTRIBUTING.md LICENSE-DECISION.md LICENSING.md LICENSE
 include *.license
 include .gitattributes .gitignore
 recursive-include LICENSES *.txt

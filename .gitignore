@@ -18,3 +18,10 @@ local-results/
 *.zip
 *.7z
 *.cln
+*.nvr
+*.rom
+*.vhd
+*.vhdx
+*.hdi
+*.raw
+*.token

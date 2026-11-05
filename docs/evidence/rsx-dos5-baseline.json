@@ -1,0 +1,533 @@
+{
+  "experiment": "RSX DOS 5 baseline, 2026-11-04 America/Los_Angeles",
+  "state": "powered off; no floppy mounted; time_sync disabled",
+  "source_revision": "855258da966f1594f568350be59e8e1eca082ed1",
+  "rom_revision": "908394b690f7da28f47727d9876774fd672c4ed3",
+  "executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+  "files": {
+    "86box.cfg": {
+      "bytes": 789,
+      "sha256": "12bb7f7699f85c1eb094bd17da5994f5fc2a0c7bc74de27117b904ce5e5d1773"
+    },
+    "rsx-dos5-working.img": {
+      "bytes": 54525952,
+      "sha256": "6c146364c24000dbf46898eec1abd4940c3f8a3a666670bdda3aa30a01e681ec"
+    },
+    "nvr/tandy1000rsx.nvr": {
+      "bytes": 128,
+      "sha256": "a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2"
+    }
+  },
+  "geometry": {
+    "disk_bytes": 54525952,
+    "cylinders": 1024,
+    "heads": 4,
+    "sectors_per_track": 26,
+    "partition_type": 6,
+    "active": true,
+    "partition_start_lba": 26,
+    "partition_sectors": 106366,
+    "partition_bytes": 54459392,
+    "bytes_per_sector": 512,
+    "sectors_per_cluster": 4,
+    "reserved_sectors": 1,
+    "fat_count": 2,
+    "root_entries": 512,
+    "sectors_per_fat": 104,
+    "bpb_sectors_per_track": 26,
+    "bpb_heads": 4,
+    "volume_serial_hex": "5d64a800"
+  },
+  "installed_files": [
+    {
+      "filename": "IBMBIO.COM",
+      "bytes": 33510,
+      "sha256": "64a5639a46e764f8f1d34db117d35644318812fa795def82e9a98d08821571a6"
+    },
+    {
+      "filename": "IBMDOS.COM",
+      "bytes": 37394,
+      "sha256": "bdc441e3996d3e8af3da0a38451d79314b7ed2db34fdbb7c9dac10566de8fb38"
+    },
+    {
+      "filename": "COMMAND.COM",
+      "bytes": 47845,
+      "sha256": "74ad25067e7d9f5c3a0ac2f2967347defb0ffef9e6ed60b60e6499f0b1a8cc89"
+    },
+    {
+      "filename": "WINA20.386",
+      "bytes": 9349,
+      "sha256": "76bc80950f72e58393918df04652870dcb10df2f62cdd8c2f68841e81332629e"
+    },
+    {
+      "filename": "CONFIG.SYS",
+      "bytes": 71,
+      "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+    },
+    {
+      "filename": "AUTOEXEC.BAT",
+      "bytes": 54,
+      "sha256": "bb03fd69a04483680399768f8ba917a3646d93640ba8d3542a6aed6326f5b922"
+    },
+    {
+      "filename": "DOS/COUNTRY.SYS",
+      "bytes": 17069,
+      "sha256": "ba263d4276024a904ece68fe193f8ca6da928dc9b35f8948f69d458dbb6ac3d0"
+    },
+    {
+      "filename": "DOS/EGA.SYS",
+      "bytes": 4885,
+      "sha256": "884f31fb77b5dd7b6f3048a0f6b092e635fdbaaa22c626d44054586fca308d6b"
+    },
+    {
+      "filename": "DOS/FORMAT.COM",
+      "bytes": 32911,
+      "sha256": "fcf53c7d6b9812551acfe46a159442807eca15eda450877e72f8ae93ab797fef"
+    },
+    {
+      "filename": "DOS/KEYB.COM",
+      "bytes": 14986,
+      "sha256": "ed8c9be704e136379c3ae841c50787749377fdf95e25c2087f82d6a512094e5e"
+    },
+    {
+      "filename": "DOS/KEYBOARD.SYS",
+      "bytes": 34697,
+      "sha256": "9ca2472909fdab7ed1fe2173915bdcfd39eec39cd0141a6f7c8a9dbf858b7409"
+    },
+    {
+      "filename": "DOS/NLSFUNC.EXE",
+      "bytes": 7052,
+      "sha256": "a49e8c6c392f0fd323b52c1fa612420a9fc0258ba59413ccb3d2d19b1f229ee8"
+    },
+    {
+      "filename": "DOS/DISPLAY.SYS",
+      "bytes": 15792,
+      "sha256": "dbc1da7f05c62a0585bd04dc1e189a6b77530f9a77d398869762644ef1f8fb4c"
+    },
+    {
+      "filename": "DOS/EGA.CPI",
+      "bytes": 58873,
+      "sha256": "d908ab45c6b4a2b5a923420a583440b19c96c12dc49cdf9def30c38837c619c5"
+    },
+    {
+      "filename": "DOS/HIMEM.SYS",
+      "bytes": 11552,
+      "sha256": "66baf46fdd6482f5927ca8258478b4981cef157eeefa13339ed9c465c543aebf"
+    },
+    {
+      "filename": "DOS/MODE.COM",
+      "bytes": 23537,
+      "sha256": "62ea3047b69f10a9ceb6701c11911376f6d0c9f9f9028a0b05b99920666a6351"
+    },
+    {
+      "filename": "DOS/SETVER.EXE",
+      "bytes": 12007,
+      "sha256": "3f20a2061acc44604f6bc860bae8c308236c0a46517d73fc396d19b22100464d"
+    },
+    {
+      "filename": "DOS/ANSI.SYS",
+      "bytes": 9029,
+      "sha256": "c929c0893bba4c6454632d3408ee4f7661b51cf5c2ce20035dcd4283cd623c85"
+    },
+    {
+      "filename": "DOS/DEBUG.EXE",
+      "bytes": 20634,
+      "sha256": "9c230aa1caff2ff9d845514017b3e4bbe7b308ad26ad88740967651f7955cd60"
+    },
+    {
+      "filename": "DOS/EDLIN.EXE",
+      "bytes": 12642,
+      "sha256": "9d835a8a46406fcb01f4509550cc86ea2755c3084c95c744cbec79d8d94c0477"
+    },
+    {
+      "filename": "DOS/EMM386.EXE",
+      "bytes": 91742,
+      "sha256": "f70c867445f951aca19c46e1e1feecfe3565b483af699041790c57f4cfcaef7d"
+    },
+    {
+      "filename": "DOS/FASTOPEN.EXE",
+      "bytes": 12050,
+      "sha256": "505391518f746c18fbac78e65261e145389c8ae01158e5f69733e3da5960d143"
+    },
+    {
+      "filename": "DOS/FDISK.EXE",
+      "bytes": 57224,
+      "sha256": "b76c18b12640134211bc94d6c6398c167eae045896d91496708c6a6bfe178a59"
+    },
+    {
+      "filename": "DOS/MEM.EXE",
+      "bytes": 39818,
+      "sha256": "0a6e111a0ccd35d55d704ab4ad3c714e42f61fa59d9e246c79288034cc51fc09"
+    },
+    {
+      "filename": "DOS/MIRROR.COM",
+      "bytes": 18169,
+      "sha256": "a6b3e6a0577a32f7a270ca70032c28a46b054bf3f9c99151272a32f59d197523"
+    },
+    {
+      "filename": "DOS/RAMDRIVE.SYS",
+      "bytes": 5873,
+      "sha256": "aabcdef310fcb3529136e9442808fa7be4a8250ae827d879d10d1ecd72c4a2fa"
+    },
+    {
+      "filename": "DOS/SHARE.EXE",
+      "bytes": 10912,
+      "sha256": "53773662d1645f765201e6dd7a2569cab57a5255d4c574a2dda5076f26f0b74f"
+    },
+    {
+      "filename": "DOS/SMARTDRV.SYS",
+      "bytes": 8335,
+      "sha256": "f9c8494021ee234adcad6c63036fb9a1f9a27e65b0e4d062a8f9ae7cc9ba9162"
+    },
+    {
+      "filename": "DOS/SYS.COM",
+      "bytes": 13440,
+      "sha256": "3661a841986235f0607f71038ef0eb7e6b5a12728b2232e464a4fb2620f6bc42"
+    },
+    {
+      "filename": "DOS/UNDELETE.EXE",
+      "bytes": 13924,
+      "sha256": "5cfd8f07f4cedc27c69e347611de12f970ff1e0f9a70953743925032e70a1a89"
+    },
+    {
+      "filename": "DOS/UNFORMAT.COM",
+      "bytes": 18576,
+      "sha256": "adf6631fc7f253b5a19e704da0ceffc09b9f872a6015b7cab0949cad5cbfc8ae"
+    },
+    {
+      "filename": "DOS/XCOPY.EXE",
+      "bytes": 15804,
+      "sha256": "7bb81fa1cf31f03abe34f7f2c6dfdbb3b18fdfb8d3c15797a2db5b955a86e937"
+    },
+    {
+      "filename": "DOS/DOSKEY.COM",
+      "bytes": 6128,
+      "sha256": "90436c6b413c5ffe2bca36aa3a69d531b6fe18ef41aaf0fe3f3e3ce08b7c7173"
+    },
+    {
+      "filename": "DOS/DOSSHELL.VID",
+      "bytes": 9462,
+      "sha256": "f63ae5656c12494e704c7bca48279ffd92725fb18c99efb730c4e2ca290815ce"
+    },
+    {
+      "filename": "DOS/DOSSHELL.INI",
+      "bytes": 12231,
+      "sha256": "8e7b203e22c67945a1b80264a6edd7ac0cbab3fc4ee7c79e00f35a6c47262213"
+    },
+    {
+      "filename": "DOS/DOSSHELL.COM",
+      "bytes": 4623,
+      "sha256": "c9aa719ea88aaf84fa2cfb7be58daf39d1081270ca1586b9d1d6c1a4415cd148"
+    },
+    {
+      "filename": "DOS/DOSSHELL.EXE",
+      "bytes": 235484,
+      "sha256": "b81214987e0d55903dc2dc337d175da1024cbe5a5a36921eefd81b8dbdf061cd"
+    },
+    {
+      "filename": "DOS/DOSSHELL.GRB",
+      "bytes": 4421,
+      "sha256": "b34fc325fe31bfdf2ad25a0f432d6f4e523eb49e8967b9b7a3c0c891dcc2f7d5"
+    },
+    {
+      "filename": "DOS/DOSSWAP.EXE",
+      "bytes": 18756,
+      "sha256": "3c8fd39d8f8d6f6205842539ff4cea87ffc08771bcf86a9f8a87ae466914c7c1"
+    },
+    {
+      "filename": "DOS/PACKING.LST",
+      "bytes": 2645,
+      "sha256": "47c89e74faa7578daec8c58120131333723ad5eca44676a303c071107ef8f0d3"
+    },
+    {
+      "filename": "DOS/PRINT.EXE",
+      "bytes": 15656,
+      "sha256": "f4266cb5e2a8de18d244812f670c1b9ba7c1784796dce08323abd90ac680360e"
+    },
+    {
+      "filename": "DOS/APPNOTES.TXT",
+      "bytes": 8723,
+      "sha256": "412558420bd8ad3cda6dc8481f89cdd05337cc9268df7e0b30507a12f303da5b"
+    },
+    {
+      "filename": "DOS/DOSSHELL.HLP",
+      "bytes": 161763,
+      "sha256": "f463c772eab867176ebbc49367d3f0626940a73e98b3ff109e0506a7ca5108c8"
+    },
+    {
+      "filename": "DOS/EDIT.HLP",
+      "bytes": 17898,
+      "sha256": "deb09a378b88f46a5ba3c755afe03b9b2b0e18c929d9cdb24003b6bf0caee631"
+    },
+    {
+      "filename": "DOS/RECOVER.EXE",
+      "bytes": 9146,
+      "sha256": "a830bc7aee08c4b1d9c5a7c26dba6e10ddd702b5dabd23c9141ae449cb2b7727"
+    },
+    {
+      "filename": "DOS/INSTALL.PDM",
+      "bytes": 11607,
+      "sha256": "0d4236065003b64e2011cea1e25ce25b79f66c643681d5fc336db9e721ed18e2"
+    },
+    {
+      "filename": "DOS/DOSHELP.HLP",
+      "bytes": 5651,
+      "sha256": "aba19825715c0f4515412d0d9b27a907df968570f3e0584c1f4ecbb190dff9f1"
+    },
+    {
+      "filename": "DOS/HELP.EXE",
+      "bytes": 11473,
+      "sha256": "c75e35972e266b0ae2b9c26deea3088aa658d37dfb16b915950e0e2660707b17"
+    },
+    {
+      "filename": "DOS/QBASIC.HLP",
+      "bytes": 130810,
+      "sha256": "6740dba6966378c317a6273299157db1388d6b5820ecb7a05ab68cf2af96a8db"
+    },
+    {
+      "filename": "DOS/EDIT.COM",
+      "bytes": 413,
+      "sha256": "e0a0b24fee4037cb050670661c30ad7ecc0ea9483938152fca3d807c443e8a46"
+    },
+    {
+      "filename": "DOS/MONEY.BAS",
+      "bytes": 46225,
+      "sha256": "9f5153fddae4351fe845f2eeedd74e293d30f8898505a0d9b4d4488888f9d065"
+    },
+    {
+      "filename": "DOS/MSHERC.COM",
+      "bytes": 6934,
+      "sha256": "eb96ee0e8be6d4a4332c3e1947d95f9c448a0a8a96b5cd74a38d33a1e0b9405e"
+    },
+    {
+      "filename": "DOS/QBASIC.EXE",
+      "bytes": 254799,
+      "sha256": "ea964a696c011110f8778ef418d65527c13dfcee6e70aee2a9a6f8bf772738ca"
+    },
+    {
+      "filename": "DOS/GORILLA.BAS",
+      "bytes": 29434,
+      "sha256": "9926fc1f50c4b489ec4c1b0da5bd2c497ebf4282b3259c28a835a743e24699f7"
+    },
+    {
+      "filename": "DOS/4201.CPI",
+      "bytes": 6404,
+      "sha256": "e46d224fc096d3e2903ca58d7356bb37b16fd1d9ffda439903f386860a664e88"
+    },
+    {
+      "filename": "DOS/4208.CPI",
+      "bytes": 720,
+      "sha256": "efc2024ba77545c252df9122f5fa41848e0d3bcf85c34c40e8794612961c2ed6"
+    },
+    {
+      "filename": "DOS/5202.CPI",
+      "bytes": 395,
+      "sha256": "a076342b547d2ec6d5c751e4a14ec4f313cb8f43948e87c827ca22cfab048be0"
+    },
+    {
+      "filename": "DOS/APPEND.EXE",
+      "bytes": 10774,
+      "sha256": "8377c82c7f79ef9de92899cbd4fc2208500ab24313c43a0822941f8494396821"
+    },
+    {
+      "filename": "DOS/ASSIGN.COM",
+      "bytes": 6399,
+      "sha256": "0021455677bd43a763264ee8b596fd3f300b39c8d0bd69e0a100579eb2e292d1"
+    },
+    {
+      "filename": "DOS/ATTRIB.EXE",
+      "bytes": 15796,
+      "sha256": "9dbed1fadb44ed2c4d957dbe7b36849d9e4a72ccb81bd9e98932cba62b72c870"
+    },
+    {
+      "filename": "DOS/BACKUP.EXE",
+      "bytes": 36092,
+      "sha256": "e9f79ffe2e982259a4296e735485453fa86d5045861eef8078b63066d652dc3c"
+    },
+    {
+      "filename": "DOS/CHKDSK.EXE",
+      "bytes": 16200,
+      "sha256": "7da835343719b1a2340b74b39ce45e16b73c917c12783bd2b1b2edc7d728bfde"
+    },
+    {
+      "filename": "DOS/COMP.EXE",
+      "bytes": 14282,
+      "sha256": "941098e51891e49023719bba66a773fcd7a6b78f2a2733ce15270578cfdc53f8"
+    },
+    {
+      "filename": "DOS/DISKCOMP.COM",
+      "bytes": 10652,
+      "sha256": "2566e62a78f591bf43cbd4703ca057abe1d2f4fca511c192e6e74f334843afe0"
+    },
+    {
+      "filename": "DOS/DISKCOPY.COM",
+      "bytes": 11793,
+      "sha256": "0ddade0ebc42d0749c36813246d9a3c674f0e4801c87b6ba7ba9368302b73812"
+    },
+    {
+      "filename": "DOS/DRIVER.SYS",
+      "bytes": 5409,
+      "sha256": "1cf7128c3986d85b4ea8d3f7cb356ed8df7d6b38f76e1822188aea629325c0ed"
+    },
+    {
+      "filename": "DOS/FC.EXE",
+      "bytes": 18650,
+      "sha256": "fc2a2fde283b8c8e051fe58d60e6d46d4a12ce6c7d0991d63ed6e7e0e0ca748a"
+    },
+    {
+      "filename": "DOS/FIND.EXE",
+      "bytes": 6770,
+      "sha256": "b28b207a0d9f1a46cb96b31180c32a69643bd96a452d866b3220fd44c5327b46"
+    },
+    {
+      "filename": "DOS/GRAFTABL.COM",
+      "bytes": 11205,
+      "sha256": "d908a7ef7c2bc3e2a74e5f74515a61bf24a00d10208dac6a23ad9d341ca5af63"
+    },
+    {
+      "filename": "DOS/GRAPHICS.COM",
+      "bytes": 19694,
+      "sha256": "989b38806ec1e1bdd30da3dc6b41cc85bdc81dda74f870fcc7df399876eb2756"
+    },
+    {
+      "filename": "DOS/GRAPHICS.PRO",
+      "bytes": 21232,
+      "sha256": "b734f750a473f83d33aa773fe3d6c7bcdd209d97339f37b03b8c5f3f8eed890b"
+    },
+    {
+      "filename": "DOS/LABEL.EXE",
+      "bytes": 9390,
+      "sha256": "05d7a96df8db07eb444a8a02180fa00b90722cc9db2bbf4eba891a0fec84cc97"
+    },
+    {
+      "filename": "DOS/MORE.COM",
+      "bytes": 2618,
+      "sha256": "3639c7bd3362a04b81dcc0645533c6a129e9482cc559d51b5dee334e3f2b2b11"
+    },
+    {
+      "filename": "DOS/NIBBLES.BAS",
+      "bytes": 24103,
+      "sha256": "24017f3b84e5e072090ab55b76700feaec197c5b12ebb26432bce3b2e88e8528"
+    },
+    {
+      "filename": "DOS/REMLINE.BAS",
+      "bytes": 12314,
+      "sha256": "b1b9b3b3c70026ed01a47c88319c9bd1bb392e55575a9dec7e87230a36799ac5"
+    },
+    {
+      "filename": "DOS/RESTORE.EXE",
+      "bytes": 38294,
+      "sha256": "1c77cf6ecf25267e4068aa8385ab6147d9208e31537c8fb253d8d67daed8b8b5"
+    },
+    {
+      "filename": "DOS/SORT.EXE",
+      "bytes": 6938,
+      "sha256": "506d5b6c5ab3016112ebda4d00ccd0a4d4a085143920632f47ebe01a04a07f1a"
+    },
+    {
+      "filename": "DOS/EXE2BIN.EXE",
+      "bytes": 8424,
+      "sha256": "edf4009a2ab45a30ae3291b0f8c9585de9a15b6a1262288ae6694d4693cb737e"
+    },
+    {
+      "filename": "DOS/EXPAND.EXE",
+      "bytes": 14563,
+      "sha256": "459bdef9e48f1104c68513c09b4ba12570bf84f937edd80f81570ea73b1b08bd"
+    },
+    {
+      "filename": "DOS/HDRIVE.SYS",
+      "bytes": 788,
+      "sha256": "6dcaf7de72c450a3b441f5024b240fc7ceff49cab59abb1878d255ef1de9449e"
+    },
+    {
+      "filename": "DOS/HSECT.COM",
+      "bytes": 6560,
+      "sha256": "6ed9bcf5601528550f2ddeeadd818a13409478eb026da19ba930affb80310cf5"
+    },
+    {
+      "filename": "DOS/JOIN.EXE",
+      "bytes": 17870,
+      "sha256": "c015b7027ec0d2e6cdaf71d4482701995b10442b9fef3b4d56876d51897bddef"
+    },
+    {
+      "filename": "DOS/LCD.CPI",
+      "bytes": 10753,
+      "sha256": "2cbdd3833724b2ea79b60bcc0e05ca9b364d2677e156a782204da392a19db043"
+    },
+    {
+      "filename": "DOS/LOADFIX.COM",
+      "bytes": 1131,
+      "sha256": "8e62654a49bd88c784c53f25e9fba13c641624d6a02214385115f66ccf1ecfdb"
+    },
+    {
+      "filename": "DOS/MOUSE.COM",
+      "bytes": 34295,
+      "sha256": "bd348d3d5a702a93cd25f0314712f138b14167ea84df4b992842045895ebf678"
+    },
+    {
+      "filename": "DOS/MOUSE.SYS",
+      "bytes": 34499,
+      "sha256": "f5ac7e727a6e0d21c66209d362779e1c685b42bb1e4cb42cfbc760137465c4c1"
+    },
+    {
+      "filename": "DOS/PATCH.COM",
+      "bytes": 752,
+      "sha256": "a0cdec13b0cab133b7851013c506899f7f2f7fb1e8a4f750506145460616ca74"
+    },
+    {
+      "filename": "DOS/PRINTER.SYS",
+      "bytes": 18804,
+      "sha256": "97d5a259cabb8b94f00095a2f7b2d8b95f48f720758dd70322fb625d17c448a6"
+    },
+    {
+      "filename": "DOS/README.TXT",
+      "bytes": 13739,
+      "sha256": "9cc7cc3685618f00e6da4b65355b2083b5a1b782987c079ee42f9a155d1336dd"
+    },
+    {
+      "filename": "DOS/REPLACE.EXE",
+      "bytes": 20226,
+      "sha256": "4e6aeacc0b3498d9e9fd62c4d55ed3ecc53cd017e5e60702e3bba567fdbd27eb"
+    },
+    {
+      "filename": "DOS/SUBST.EXE",
+      "bytes": 18478,
+      "sha256": "bd32c51692a61bf4ec2565ae6f8394bdf5156b45a23835b28a9a14906414688a"
+    },
+    {
+      "filename": "DOS/TREE.COM",
+      "bytes": 6901,
+      "sha256": "ba024caf36cec782e3a897c73ffee2e0c0acf2616b2029f370bb43acdd3553d2"
+    },
+    {
+      "filename": "DOS/AUTOEXEC.DSK",
+      "bytes": 313,
+      "sha256": "2568d0d1a4fc869c981f7471b1e0903d4c2cd0bcc58d7ea07d0066d004f1de29"
+    },
+    {
+      "filename": "DOS/CONFIG.DSK",
+      "bytes": 79,
+      "sha256": "c8b7508a9032055faa7b8f508bb2ec18558a53f638c8e2a08f06ff381a605d43"
+    },
+    {
+      "filename": "DOS/HDSPIN.COM",
+      "bytes": 714,
+      "sha256": "32f85664bebbdc3f75c688d0e6063922951bf8540635513908836bb3dc3e4419"
+    },
+    {
+      "filename": "DOS/PIODISK.SYS",
+      "bytes": 2647,
+      "sha256": "45aa3bef7ca279d5374756ef5deeb99e9c8d60feef5374b69663b0acfa21eceb"
+    },
+    {
+      "filename": "DOS/SETUPRLX.EXE",
+      "bytes": 21979,
+      "sha256": "ab017a1b1dfd3d44366f03c8816e6636ed058b087f53f0e69f8217e69085269c"
+    },
+    {
+      "filename": "DOS/COMMAND.COM",
+      "bytes": 47845,
+      "sha256": "74ad25067e7d9f5c3a0ac2f2967347defb0ffef9e6ed60b60e6499f0b1a8cc89"
+    }
+  ]
+}
