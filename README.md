@@ -110,6 +110,7 @@ publication steps, external paid services or AI dependencies.
 * [Issue 22: one Calendar lookup candidate and its exact dispatch blocker](docs/research/lookup-trace-22.md)
 * [Calendar INT E0 static dispatch and unresolved runtime binding](docs/research/calendar-binding-25.md)
 * [86Box automation source review and proposed MCP observation policy](docs/research/86box-automation-preflight-23.md)
+* [Read-only 86Box browser observatory and synthetic demo](docs/research/86box-observer-design.md)
 * [Live RSX / DOS 5.00 baseline, provenance and BIOS findings](docs/research/rsx-dos5-baseline.md),
   [native automation client](docs/research/86box-client.md)
 * [Visible and unattended launch modes](docs/research/86box-visible-operation.md),

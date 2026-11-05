@@ -52,6 +52,10 @@ No experiment values, hashes, results or uncertainty classifications were change
 
 ## Dependencies and third-party compatibility
 
+This section records the 2026-10-31 dependency review. The later browser
+observatory adds an optional image dependency, recorded in the
+[observer guide](research/86box-observer-design.md).
+
 The package declares no third-party runtime dependencies and uses Python's
 standard library. Python itself retains its PSF terms; no interpreter is bundled.
 Build/check tooling is executed rather than copied into the project distribution.

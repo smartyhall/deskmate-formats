@@ -79,10 +79,11 @@ notices. Exact sources and hashes are in docs/evidence/license-texts.json. DOSLA
 is external, unchanged and not relicensed. Independently assembled synthetic
 fixture-generator code is software; no archived database is bundled.
 
-There are no third-party runtime package dependencies; Python's standard library
-is used. Development/build/check tools and referenced GitHub Actions retain their
-own terms and are not vendored. Their execution is distinct from redistribution.
-The licensing review records this distinction and dependency metadata.
+The base package uses Python's standard library. The optional `observer` extra
+installs Pillow for approved display image conversion under Pillow's own terms.
+Dependency source is excluded from project distributions. Development tools and
+referenced GitHub Actions retain their own terms. The observer guide records the
+image dependency and the licensing review records the development tooling.
 
 ## Contributions and checks
 
