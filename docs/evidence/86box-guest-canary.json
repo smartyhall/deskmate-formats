@@ -1,0 +1,157 @@
+{
+  "experiment": "native 86Box original guest canary, 2026-11-04 America/Los_Angeles",
+  "evidence": "runtime verified; raw captures and journals private",
+  "base_main": "5236a9529e72842460e42e10bc97fb0b212d75ea",
+  "emulator_source": "855258da966f1594f568350be59e8e1eca082ed1",
+  "rom_revision": "908394b690f7da28f47727d9876774fd672c4ed3",
+  "executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+  "source_hashes": {
+    "experiments/guest-canary/canary.asm": "ac3e062a1f5263cbde3d3b017911a4735f2de4a3dd406de683634a348e6b8914",
+    "tools/experimental/guest_canary.py": "b63d75e6db803162637a13b0271dca5fccedf5a69fe42f96204cb57d3dad3bc8"
+  },
+  "generated_artifacts": {
+    "CANARY.COM": {
+      "bytes": 288,
+      "sha256": "f4eb898f81815716359bd63bea663d41b2637bc7662e58c3b693680bd3335b7a"
+    },
+    "canary-data.img": {
+      "bytes": 1474560,
+      "sha256": "0334004234965919e2f597ebabf641812e4f6b39c907500ad9e252efd68e4690"
+    }
+  },
+  "memory_view": "normal, byte width 1; bounded original program code/data only",
+  "checkpoint": {
+    "locations": {
+      "segment": 1096,
+      "code": 17792,
+      "checkpoint": 17888,
+      "data": 18048
+    },
+    "registers": {
+      "eax": 324508639,
+      "ecx": 195948557,
+      "edx": 1437217740,
+      "ebx": 610839776,
+      "esp": 65280,
+      "ebp": 270544960,
+      "esi": 287454020,
+      "edi": 1432778632
+    },
+    "ip": 352,
+    "code_bytes_verified": 98,
+    "data_bytes_verified": 32,
+    "data_hex": "444d462d43414e4152592d763100000102030405060708090a0b0c0d0e0fa55a",
+    "screen_lines": [
+      "DMF CANARY v1",
+      "SOURCE / REGISTERS / RAM",
+      "┌──────────────┐",
+      "│ CANARY READY │",
+      "└──────────────┘"
+    ],
+    "status": {
+      "ms": 15044,
+      "frames": 1036,
+      "held": true,
+      "paused": false,
+      "bios_mode": 3,
+      "w": 720,
+      "h": 400
+    },
+    "identity": {
+      "version": "7.0",
+      "machine": "tandy1000rsx",
+      "hard_resets": 1,
+      "soft_resets": 1,
+      "last_reset_ms": 613
+    },
+    "framebuffer_sha256": "36ea086aa723538a28a5f7ec7d68219977916d14846614beed155e90d543df9b"
+  },
+  "after_1000ms": {
+    "locations": {
+      "segment": 1096,
+      "code": 17792,
+      "checkpoint": 17888,
+      "data": 18048
+    },
+    "registers": {
+      "eax": 324508639,
+      "ecx": 195948557,
+      "edx": 1437217740,
+      "ebx": 610839776,
+      "esp": 65280,
+      "ebp": 270544960,
+      "esi": 287454020,
+      "edi": 1432778632
+    },
+    "ip": 352,
+    "code_bytes_verified": 98,
+    "data_bytes_verified": 32,
+    "data_hex": "444d462d43414e4152592d763100000102030405060708090a0b0c0d0e0fa55a",
+    "screen_lines": [
+      "DMF CANARY v1",
+      "SOURCE / REGISTERS / RAM",
+      "┌──────────────┐",
+      "│ CANARY READY │",
+      "└──────────────┘"
+    ],
+    "status": {
+      "ms": 16044,
+      "frames": 1106,
+      "held": true,
+      "paused": false,
+      "bios_mode": 3,
+      "w": 720,
+      "h": 400
+    },
+    "identity": {
+      "version": "7.0",
+      "machine": "tandy1000rsx",
+      "hard_resets": 1,
+      "soft_resets": 1,
+      "last_reset_ms": 613
+    },
+    "framebuffer_sha256": "feee5e1fd47a92e56ffd9588145ed50136876a7af2d9539bfb1e68dc9fd0b337"
+  },
+  "reconnect": {
+    "fresh_authenticated_connection": true,
+    "no_replayed_mutation": true,
+    "ms_before": 15044,
+    "ms_after": 15044,
+    "registers_code_data_text_and_frame_equal": true
+  },
+  "reset": {
+    "before": {
+      "hard_resets": 1,
+      "soft_resets": 1,
+      "last_reset_ms": 613
+    },
+    "after": {
+      "hard_resets": 2,
+      "soft_resets": 2,
+      "last_reset_ms": 16657
+    },
+    "boot_ms": 28044,
+    "version_ms": 28560,
+    "dos_version": "5.00",
+    "old_address_mapping_retired": true
+  },
+  "launch_mode": "visible",
+  "initial_readiness": "short launcher request timed out; original failed receipt preserved; explicit fresh read-only authentication verified same process held at 0 ms before any guest mutation",
+  "preservation": {
+    "sealed_files_sha256": {
+      "86box.cfg": "12bb7f7699f85c1eb094bd17da5994f5fc2a0c7bc74de27117b904ce5e5d1773",
+      "rsx-dos5-working.img": "6c146364c24000dbf46898eec1abd4940c3f8a3a666670bdda3aa30a01e681ec",
+      "nvr/tandy1000rsx.nvr": "a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2"
+    },
+    "sealed_manifest_unchanged": true,
+    "working_files_sha256": {
+      "86box.cfg": "b8416f4e7e91511974b02163d296aa0e4e92d2f7128ce9fb079dd9efea307353",
+      "rsx-dos5-working.img": "6c146364c24000dbf46898eec1abd4940c3f8a3a666670bdda3aa30a01e681ec",
+      "nvr/tandy1000rsx.nvr": "b64494ffbfc5aa2795e58bba7b9a21a1f5a022268ef1ba01962301945e043d92"
+    },
+    "working_hard_disk_unchanged": true,
+    "experimental_floppy_unchanged": true
+  },
+  "precision": "held observation in CLI/JMP self-loop, not an instruction breakpoint",
+  "framebuffer_visual_check": "native 720x400 image visually matched the five source-defined CP437 lines"
+}
