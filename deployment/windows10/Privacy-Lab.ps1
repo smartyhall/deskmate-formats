@@ -54,16 +54,13 @@ foreach ($task in @(
 )) {
     & schtasks.exe /Change /TN $task /Disable 2>$null | Out-Null
 }
-# Verify the specific compatibility-assessment task rather than trusting
-# schtasks.exe's exit status or assuming it exists on every Windows build.
-# Windows servicing may recreate/re-enable optional scheduled tasks.
-try {
-    $appraiser = Get-ScheduledTask -TaskPath '\Microsoft\Windows\Application Experience\' `
-        -TaskName 'Microsoft Compatibility Appraiser' -ErrorAction SilentlyContinue
-    if ($null -ne $appraiser -and [string]$appraiser.State -ne 'Disabled') {
-        Write-Warning 'Microsoft Compatibility Appraiser remains enabled; check task permissions.'
-    }
-} catch {
-    Write-Warning ('Could not verify Compatibility Appraiser task: ' + $_.Exception.Message)
+# Query task state using a shared checked lookup; absence is only confirmed
+# when enumeration succeeds. Windows servicing may re-enable optional tasks.
+. (Join-Path $PSScriptRoot 'Get-LabCompatibilityAppraiserState.ps1')
+switch (Get-LabCompatibilityAppraiserState) {
+    'Disabled' { Write-Host 'Compatibility Appraiser task is disabled.' }
+    'NotInstalled' { Write-Host 'Compatibility Appraiser task is not installed.' }
+    'Enabled' { Write-Warning 'Compatibility Appraiser remains enabled; check task permissions.' }
+    default { Write-Warning 'Compatibility Appraiser state unknown: scheduled-task lookup failed or returned an unexpected state.' }
 }
 Write-Host 'Applied reduced-telemetry policies (not zero telemetry). Windows Update/Defender preserved.'
