@@ -110,6 +110,33 @@ storagecontrollername0="SATA Controller"
         self.assertEqual(rv, 2)
         self.assertFalse((self.root / "report.json").exists())
 
+    def test_reject_write_inside_new_guest_subdirectory(self):
+        output = io.StringIO()
+        target = self.root / "new-reports" / "report.json"
+        with redirect_stderr(output):
+            rv = audit.main(["--root", str(self.root), "--json", str(target)])
+        self.assertEqual(rv, 2)
+        self.assertFalse(target.exists())
+        self.assertFalse(target.parent.exists())
+
+    def test_canonical_alias_containment(self):
+        root = self.root.resolve()
+        self.assertTrue(audit.is_within_guest_volume(root, root / "new" / "report.json"))
+        self.assertFalse(audit.is_within_guest_volume(root, root.parent / "report.json"))
+        self.assertFalse(audit.is_within_guest_volume(root, root.parent / (root.name + "-other") / "report.json"))
+        if os.name == "nt":
+            # On Windows, path-case differences must not permit a guest write.
+            other_case = Path(str(root).swapcase()) / "new" / "report.json"
+            self.assertTrue(audit.is_within_guest_volume(root, other_case))
+
+    def test_reject_guest_symlink_alias_when_supported(self):
+        alias = Path(self.tmp.name) / "guest-alias"
+        try:
+            alias.symlink_to(self.root, target_is_directory=True)
+        except (OSError, NotImplementedError):
+            self.skipTest("This host cannot create directory symlinks")
+        self.assertTrue(audit.is_within_guest_volume(self.root, alias / "report.json"))
+
     def test_refuses_running_other_vm(self):
         with patch.object(audit, "call_tool", return_value='"AnotherVM" {11111111-1111-1111-1111-111111111111}\n'):
             with self.assertRaisesRegex(audit.AuditError, "ALL VMs"):
@@ -132,10 +159,15 @@ storagecontrollername0="SATA Controller"
     def test_mac_legacy_fuse_alias_is_private_and_temporary(self):
         import os
         compat = Path(self.tmp.name) / "compat"
-        with patch.object(audit.sys, "platform", "darwin"), \
-                patch.object(audit.Path, "is_file", return_value=True), \
-                patch.dict(os.environ, {"DYLD_LIBRARY_PATH": "/legacy/path"}):
-            env = audit.fuse_environment(compat)
+        try:
+            with patch.object(audit.sys, "platform", "darwin"), \
+                    patch.object(audit.Path, "is_file", return_value=True), \
+                    patch.dict(os.environ, {"DYLD_LIBRARY_PATH": "/legacy/path"}):
+                env = audit.fuse_environment(compat)
+        except OSError as exc:
+            if os.name == "nt" and getattr(exc, "winerror", None) == 1314:
+                self.skipTest("Windows symlink privilege required for macOS FUSE simulation")
+            raise
         link = compat / "libosxfuse.dylib"
         self.assertTrue(link.is_symlink())
         self.assertEqual(str(link.readlink()), "/usr/local/lib/libfuse.2.dylib")
