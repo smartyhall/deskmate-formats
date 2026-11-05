@@ -25,6 +25,7 @@ function renderFrame(frame) {
   }
   byId("frame-meta").textContent = [
     frame.width + " × " + frame.height + " px · frame " + frame.generation,
+    ...(frame.latest_rendered ? ["Latest render at capture"] : []),
     frame.age_ms == null ? "age unknown" : ms(frame.age_ms) + " since " + frame.age_basis,
     "Captured " + utc(frame.captured_at_ms),
     "Rendered " + utc(frame.rendered_at_ms) + " / guest " + ms(frame.rendered_emulated_ms),

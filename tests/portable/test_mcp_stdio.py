@@ -7,6 +7,7 @@ import os
 import subprocess
 import sys
 import unittest
+from urllib.request import urlopen
 
 from mcp_fixture import NativePeer, png
 
@@ -20,7 +21,7 @@ class StdioTests(unittest.TestCase):
         self.config_path.write_text(json.dumps(self.peer.config()), encoding='utf-8')
         self.args = ['-m', 'deskmate_formats.automation.mcp_server', '--config', str(self.config_path)]
 
-    async def exercise(self, calls):
+    async def exercise(self, calls, *, observer=False):
         from mcp.client.session import ClientSession
         from mcp.client.stdio import StdioServerParameters, stdio_client
 
@@ -32,8 +33,54 @@ class StdioTests(unittest.TestCase):
                     initialized = await session.initialize()
                     self.assertEqual(initialized.server_info.name, 'deskmate-86box-readonly')
                     self.assertIsNotNone(initialized.capabilities.tools)
-                    await calls(session)
-        self.assertEqual(stderr_path.read_bytes(), b'')
+                    if observer:
+                        url = stderr_path.read_text(encoding='utf-8').splitlines()[0].removeprefix(
+                            '86Box observatory: ')
+                        await calls(session, url)
+                    else:
+                        await calls(session)
+        if not observer:
+            self.assertEqual(stderr_path.read_bytes(), b'')
+
+    def test_stdio_owner_publishes_to_its_embedded_listener(self):
+        from hashlib import sha256
+
+        config = self.peer.config()
+        config['observer'] = {'port': 0}
+        item = config['instances']['fixture']
+        item['display_approval'] = dict(item['ram_checkpoint'],
+                                       screen_sha256=sha256('┌'.encode()).hexdigest())
+        self.config_path.write_text(json.dumps(config), encoding='utf-8')
+        address = None
+
+        async def calls(session, url):
+            nonlocal address
+            address = url
+            self.assertRegex(url, r'^http://127\.0\.0\.1:[0-9]+/$')
+
+            def read(route):
+                with urlopen(url + route, timeout=2) as response:
+                    return response.read()
+
+            self.assertIsNone(json.loads(read('api/status'))['observation'])
+            self.assertEqual(self.peer.authentications, 0)
+            result = await session.call_tool('observe_machine', {'instance_id': 'fixture'})
+            self.assertFalse(result.is_error)
+            commands = self.peer.commands.copy()
+            for _ in range(3):
+                view = json.loads(read('api/status'))['observation']
+                self.assertEqual(view['screen'], '┌')
+                self.assertEqual(view['observed_at_ms'], result.structured_content['metadata']['observed_at_ms'])
+                self.assertEqual(view['emulated_ms'], 1000)
+                self.assertIn(b'APPROVED SCREEN TEXT\r\n+\r\n', read('status.txt'))
+            self.assertEqual(self.peer.commands, commands)
+            self.assertEqual(self.peer.authentications, 1)
+
+        asyncio.run(self.exercise(calls, observer=True))
+        self.assertTrue(self.peer.disconnected.wait(2))
+        from urllib.error import URLError
+        with self.assertRaises(URLError):
+            urlopen(address + 'healthz', timeout=1)
 
     def test_discovery_invocation_and_native_disconnect(self):
         from mcp.types import ImageContent

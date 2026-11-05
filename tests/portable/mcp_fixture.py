@@ -36,7 +36,9 @@ class NativePeer:
         self.failure = None
         self.held = True
         self.ms = 1000
+        self.frames = 1
         self.resets = 1
+        self.text_chars = 'da'
         self.bad_png = False
         self.machine = 'SYNTHETIC'
         self.version = '7.0 Beta [1234]'
@@ -50,11 +52,11 @@ class NativePeer:
             'expected_machine':'SYNTHETIC','expected_version':self.version,
             'ram_regions':{'canary':{'start':0x500,'length':64}},
             'ram_checkpoint':{'token_sha256':hashlib.sha256(bytes.fromhex(self.token)).hexdigest(),
-                'ms':self.ms,'frames':1,'hard_resets':self.resets,'soft_resets':0,
+                'ms':self.ms,'frames':self.frames,'hard_resets':self.resets,'soft_resets':0,
                 'last_reset_ms':self.resets*100}}}}
 
     def respond(self, command):
-        status = dict(ms=self.ms,frames=1,held=self.held,paused=False,w=1,h=1,
+        status = dict(ms=self.ms,frames=self.frames,held=self.held,paused=False,w=1,h=1,
                       bios_mode=3,protocol=1,version=self.version,quantum_ms=1)
         if command == 'status':
             return dict(ok=True,**status)
@@ -65,10 +67,10 @@ class NativePeer:
         if command == 'regs':
             return dict(ok=True,eax=0x13579bdf,eip=0x160,cs=0x50)
         if command == 'text':
-            return dict(ok=True,mode=3,cols=1,rows=1,cursor=[0,0],chars=['da'],attrs=['07'])
+            return dict(ok=True,mode=3,cols=1,rows=1,cursor=[0,0],chars=[self.text_chars],attrs=['07'])
         if command == 'screenshot':
             data = b'INVALID' if self.bad_png else png()
-            return dict(ok=True,w=1,h=1,ms=self.ms,frames=1,
+            return dict(ok=True,w=1,h=1,ms=self.ms,frames=self.frames,
                         png=base64.b64encode(data).decode(),private_path=str(self.root))
         if command.startswith('memr '):
             _, start, length, view, width = command.split()

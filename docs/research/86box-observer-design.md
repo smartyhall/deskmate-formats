@@ -1,12 +1,13 @@
 # Read-only 86Box browser observatory
 
 The observatory displays observations explicitly approved by the owner of an
-86Box automation connection. This implementation has a synthetic producer for
-local testing. Integration with a live automation owner is a follow-up.
+86Box automation connection. The native MCP service can host the observer in
+its process. The standalone demo supplies synthetic observations for local
+testing.
 
 ~~~mermaid
 flowchart LR
-    E[86Box] <-->|one authenticated socket| H[Research harness or MCP owner]
+    E[86Box] <-->|one authenticated socket per instance| H[Native MCP owner]
     H -->|approved display and status| P[In-memory publication]
     D[Synthetic demo] -->|fictional fixtures| P
     P -->|immutable latest view| W[Loopback HTTP observer]
@@ -165,7 +166,7 @@ Mosaic, Netscape Navigator, or other historical browser versions requires
 tests on those browsers. HTTP/0.9 and network access from period hardware
 are outside this local prototype.
 
-## Security and future 86Box integration
+## Native MCP integration and security
 
 The listener accepts `127.0.0.1` and `localhost` authorities for its port,
 validates Origin when provided, sends no CORS grants, and sets no-store and
@@ -181,19 +182,36 @@ review exported text and visible pixels for secrets. Approved display content
 could contain a guest path, typed password, or other sensitive data. The
 repository and distributions include only the source of the synthetic fixtures.
 
-After [PR #37](https://github.com/smartyhall/deskmate-formats/pull/37) is
-reviewed and merged, add a producer adapter where the MCP service or
-[research harness](86box-client.md) already owns the native connection. After
-the owner's held-observation checks succeed, explicitly map approved guest
-clock and execution flags to `Observation`, map continuity to the generation,
-and optionally pass reviewed CP437 screen text and PNG bytes to publication.
-Use the native frame count as the frame generation only when the owner can
-verify its continuity. Native status time and screenshot-read time alone
-cannot establish the last render time. Map failures to fixed public codes and
-call `mark_unavailable()` to retain the approved display. A bounded handoff
-inside the owner can coalesce expensive display preparation and count skips.
-Schedule observations through the owner and let browser polling sample that
-publication independently.
+The [MCP operator guide](86box-readonly-mcp.md#enable-browser-publication)
+describes the listener and exact-checkpoint display approval. Every publication
+comes from an explicit MCP observation on the existing native connection.
+Discovery, browser requests and the passage of host time never open or poll a
+native socket. The listener receives only the registry.
+
+- Each owner assigns a sequence under its instance lock. Browser generation
+  matches the owner's sampled generation. Reset counter changes, a regressed
+  guest clock or frame count, and reconnection can break continuity. RAM
+  approval retirement can also increment the owner generation. No native
+  process UUID is available. The configured ID and publication-session ID
+  identify the browser stream.
+- Connection loss marks the view stale immediately, with unknown execution
+  flags and the last confirmed clock when available. A previously approved
+  display can remain in that stale view. An inconsistent group or target
+  mismatch clears the display. A successful reconnect starts a new generation
+  with no display, even if the target counters match. Explicit observations
+  resume status updates.
+- Without a new sample the view becomes stale after ten seconds of monotonic
+  host time. Image preparation consumes part of that interval. Status-only
+  updates at the same approved checkpoint preserve the original frame capture
+  timestamp. A stale still can be retrieved while it is the latest approved
+  image. Superseded keys return 404.
+- Approved PNG/GIF preparation uses one slot per instance outside the native
+  lock. A newer observation can supersede pending work. It takes precedence
+  even if the encoder completes later. The stream counts discarded display
+  updates and publishes status without waiting for the encoder to free its
+  slot. The frame generation uses the producer sequence, independent of native
+  frame count. Native frames are labeled as the latest render at capture. The
+  browser reports capture-based age and leaves both render timestamps unknown.
 
 The `deskmate_formats.observer` package can move to a future
 `86box-agent-bridge` package with its publication code, frame preparation,
@@ -220,4 +238,7 @@ python tools/audit_repository.py
 
 Tests use actual localhost requests to cover both views, three independent
 producers, unchanged guest time under polling, host and path validation,
-stalled clients, display escaping, image sanitization, and shutdown.
+stalled clients, display escaping, image sanitization, and shutdown. The
+integrated tests use authenticated synthetic native peers to verify approval,
+reset and reconnect handling, encoder ordering, independent instances, and
+zero native commands or guest milliseconds during browser refreshes.

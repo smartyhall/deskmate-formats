@@ -21,3 +21,17 @@ Conceptual layers guide later work:
 There are deliberately no empty Address Book/Filer/Text/Worksheet/Draw modules,
 common-engine base classes or conversion frameworks. A shared abstraction must have
 experimental support and reduce real duplication, not encode an assumed .FIL family.
+
+## Emulator observation
+
+`automation.readonly` owns one lazy, serialized native socket per configured
+86Box instance. `automation.mcp_server` exposes the owner's read-only calls
+through the MCP stdio SDK. Coherent held observations require operator control
+of execution before handing off the socket.
+
+`automation.observer_bridge` projects only approved status and display onto
+immutable `observer.publication` streams. The owner tracks sequence and
+continuity per instance and prepares browser images outside its native lock.
+The optional loopback HTTP listener reads the registry, which has no reference
+to a native socket or guest control. See the [observatory architecture and
+operator boundaries](research/86box-observer-design.md#native-mcp-integration-and-security).

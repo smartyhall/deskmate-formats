@@ -176,12 +176,12 @@ class ObservationStream:
     def machine(self):
         return self._machine
 
-    def publish(self, observation: Observation):
-        """Replace the latest snapshot after validating stream ordering."""
+    def publish(self, observation: Observation, *, sampled_at=None):
+        """Replace the latest snapshot, optionally aging it from a monotonic sample time."""
         if type(observation) is not Observation or observation.instance_id != self.machine.instance_id:
             raise ValueError("observation belongs to another stream")
         with self._lock:
-            self._publish(observation)
+            self._publish(observation, sampled_at=sampled_at)
 
     def mark_unavailable(self, *, sequence, observed_at_ms, error=None):
         """Record a loss of contact while retaining the latest approved display."""
@@ -195,7 +195,7 @@ class ObservationStream:
             )
             self._publish(observation)
 
-    def _publish(self, observation):
+    def _publish(self, observation, *, sampled_at=None):
         previous = self._latest
         last_frame_generation = self._last_frame_generation
         last_emulated_ms = self._last_emulated_ms
@@ -226,7 +226,7 @@ class ObservationStream:
         self._latest = observation
         self._last_frame_generation = last_frame_generation
         self._last_emulated_ms = last_emulated_ms
-        self._fresh_until = monotonic() + self._stale_after
+        self._fresh_until = (monotonic() if sampled_at is None else sampled_at) + self._stale_after
 
     def view(self):
         with self._lock:

@@ -26,6 +26,7 @@ class Frame:
     captured_at_ms: int
     rendered_at_ms: int | None = None
     rendered_emulated_ms: int | None = None
+    latest_rendered: bool = False
     width: int = field(init=False)
     height: int = field(init=False)
     png: bytes = field(init=False, repr=False)
@@ -34,6 +35,8 @@ class Frame:
     def __post_init__(self, approved_png):
         counter(self.generation)
         counter(self.captured_at_ms, MAX_TIMESTAMP)
+        if type(self.latest_rendered) is not bool:
+            raise ValueError("invalid frame source")
         if self.rendered_at_ms is not None:
             counter(self.rendered_at_ms, self.captured_at_ms)
         if self.rendered_emulated_ms is not None:
