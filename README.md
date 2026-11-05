@@ -112,6 +112,8 @@ publication steps, external paid services or AI dependencies.
 * [86Box automation source review and proposed MCP observation policy](docs/research/86box-automation-preflight-23.md)
 * [Live RSX / DOS 5.00 baseline, provenance and BIOS findings](docs/research/rsx-dos5-baseline.md),
   [native automation client](docs/research/86box-client.md)
+* [Visible and unattended launch modes](docs/research/86box-visible-operation.md),
+  [proposed read-only browser observer](docs/research/86box-observer-design.md)
 * [Calendar specification](docs/formats/calendar/CALENDAR_FORMAT.md) with original
   evidence/confidence distinctions and historical experiment checkpoints retained
 * [Experimental method](docs/experiments/methodology.md), [Phase III-A](docs/experiments/phase-iii-a.md)
