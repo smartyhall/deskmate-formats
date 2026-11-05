@@ -48,9 +48,19 @@ foreach ($task in @(
     '\Microsoft\Windows\Customer Experience Improvement Program\Consolidator',
     '\Microsoft\Windows\Customer Experience Improvement Program\UsbCeip',
     '\Microsoft\Windows\Application Experience\ProgramDataUpdater',
+    '\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser',
     '\Microsoft\Windows\Feedback\Siuf\DmClient',
     '\Microsoft\Windows\Feedback\Siuf\DmClientOnScenarioDownload'
 )) {
     & schtasks.exe /Change /TN $task /Disable 2>$null | Out-Null
+}
+# Query task state using a shared checked lookup; absence is only confirmed
+# when enumeration succeeds. Windows servicing may re-enable optional tasks.
+. (Join-Path $PSScriptRoot 'Get-LabCompatibilityAppraiserState.ps1')
+switch (Get-LabCompatibilityAppraiserState) {
+    'Disabled' { Write-Host 'Compatibility Appraiser task is disabled.' }
+    'NotInstalled' { Write-Host 'Compatibility Appraiser task is not installed.' }
+    'Enabled' { Write-Warning 'Compatibility Appraiser remains enabled; check task permissions.' }
+    default { Write-Warning 'Compatibility Appraiser state unknown: scheduled-task lookup failed or returned an unexpected state.' }
 }
 Write-Host 'Applied reduced-telemetry policies (not zero telemetry). Windows Update/Defender preserved.'
