@@ -52,12 +52,14 @@ No experiment values, hashes, results or uncertainty classifications were change
 
 ## Dependencies and third-party compatibility
 
-This section records the 2026-10-31 dependency review. The later browser
-observatory adds an optional image dependency, recorded in the
-[observer guide](research/86box-observer-design.md).
-
-The package declares no third-party runtime dependencies and uses Python's
-standard library. Python itself retains its PSF terms; no interpreter is bundled.
+The base package declares no third-party runtime dependencies and uses Python's
+standard library. The optional `mcp` extra declares the MCP SDK and AnyIO.
+The optional `observer` extra declares Pillow for display conversion (13.0.0
+reported MIT-CMU in the Windows integration environment). See the
+[observer guide](research/86box-observer-design.md) for details.
+Installed metadata identifies MIT terms for MCP 2.3.0 and AnyIO 4.x. Their
+distributions and transitive dependencies retain their own notices. Python
+itself retains its PSF terms, and the project bundles no interpreter.
 Build/check tooling is executed rather than copied into the project distribution.
 The local review reads installed license metadata for build, setuptools, wheel,
 Ruff, REUSE and their installed dependencies. Their notices/licenses stay with
@@ -68,8 +70,8 @@ an aggregate metadata expression, Apache-2.0 AND CC0-1.0 AND CC-BY-SA-4.0 AND
 GPL-3.0-or-later, for its included components. Its transitive packages include
 permissive terms and python-debian GPL-2.0-or-later. Aggregate metadata does not
 mean every component has every license; consult original notices if redistributing
-the tools. These are development checks, not linked runtime
-dependencies or vendored sources. No runtime license conflict was identified.
+the tools. These development tools are separate from the optional runtime
+packages and are not vendored.
 This is a version-specific metadata review, not a guarantee for future dependency
 versions, a license grant from this project, or permission to redistribute private
 archives. Recheck dependency terms if code is vendored or packaging changes.

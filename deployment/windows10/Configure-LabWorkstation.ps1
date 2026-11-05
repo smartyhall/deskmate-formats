@@ -43,6 +43,23 @@ if ($LASTEXITCODE -ne 0) { throw 'Could not disable the virtual machine AC hiber
 # leave the Windows Search service and Windows Update enabled.
 Set-Dword 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds' 'EnableFeeds' 0
 
+# SysMain (formerly Superfetch) can monopolize disk I/O on this small lab VM.
+# Unlike Windows Search, Update or Defender, it is unnecessary for our
+# reproducible emulator workloads. Disable startup and stop it if running.
+# This is best-effort: a missing/protected service must not block provisioning.
+$sysMain = Get-Service -Name 'SysMain' -ErrorAction SilentlyContinue
+if ($null -ne $sysMain) {
+    try {
+        Set-Service -Name 'SysMain' -StartupType Disabled -ErrorAction Stop
+        if ($sysMain.Status -ne 'Stopped') {
+            Stop-Service -Name 'SysMain' -Force -ErrorAction Stop
+        }
+        Write-Host 'SysMain startup disabled; service stopped.'
+    } catch {
+        Write-Warning ('SysMain configuration could not finish: ' + $_.Exception.Message)
+    }
+}
+
 # Active Setup is processed at interactive Explorer logon and applies HKCU
 # settings for accounts created by VirtualBox or later added to this lab.
 # It does not execute the machine power configuration in those accounts.

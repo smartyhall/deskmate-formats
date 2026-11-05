@@ -79,11 +79,12 @@ notices. Exact sources and hashes are in docs/evidence/license-texts.json. DOSLA
 is external, unchanged and not relicensed. Independently assembled synthetic
 fixture-generator code is software; no archived database is bundled.
 
-The base package uses Python's standard library. The optional `observer` extra
-installs Pillow for approved display image conversion under Pillow's own terms.
-Dependency source is excluded from project distributions. Development tools and
-referenced GitHub Actions retain their own terms. The observer guide records the
-image dependency and the licensing review records the development tooling.
+The base installation uses Python's standard library. The optional `mcp`
+extra installs the MCP SDK and AnyIO; the optional `observer` extra installs
+Pillow for approved image conversion. These dependencies retain their own
+license terms and notices; their source is not bundled in project distributions.
+Development, build and check tools and referenced GitHub Actions also retain
+their own terms. The licensing review and observer guide record these distinctions.
 
 ## Contributions and checks
 

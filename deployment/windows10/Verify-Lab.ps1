@@ -21,6 +21,14 @@ function Get-OptionalServiceStatus {
     if ($null -eq $service) { return 'NotInstalled' }
     return [string]$service.Status
 }
+function Get-OptionalSysMainStartMode {
+    try {
+        $service = Get-CimInstance Win32_Service -Filter "Name='SysMain'" -ErrorAction Stop
+        if ($null -eq $service) { return 'NotInstalled' }
+        return [string]$service.StartMode
+    } catch { return 'Unknown' }
+}
+. (Join-Path $PSScriptRoot 'Get-LabCompatibilityAppraiserState.ps1')
 $report=[ordered]@{
     os=(Get-CimInstance Win32_OperatingSystem).Caption
     build=(Get-CimInstance Win32_OperatingSystem).BuildNumber
@@ -33,6 +41,9 @@ $report=[ordered]@{
     msys2=(Test-Path 'C:\msys64\ucrt64.exe')
     ghidra=[bool](Test-Path 'C:\Tools\ghidra_12.1.4_PUBLIC\support\analyzeHeadless.bat')
     sshd=(Get-OptionalServiceStatus -Name 'sshd')
+    sysMainService=(Get-OptionalServiceStatus -Name 'SysMain')
+    sysMainStartMode=(Get-OptionalSysMainStartMode)
+    compatibilityAppraiserTask=(Get-LabCompatibilityAppraiserState)
     allowTelemetry=(Get-OptionalRegistryValue -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection' -Name 'AllowTelemetry')
     taskbarSearchMode=(Get-OptionalRegistryValue -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Search' -Name 'SearchboxTaskbarMode')
     taskbarNewsMode=(Get-OptionalRegistryValue -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Feeds' -Name 'ShellFeedsTaskbarViewMode')

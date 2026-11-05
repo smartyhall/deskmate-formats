@@ -23,7 +23,7 @@ the repository's portable tests use independently generated synthetic data.
 | **Address Book 3.05** (`PERSONAL.ADR`) | **Initial research** | A00–A04 no-edit, one-contact and independent field-length controls; no parser or writer |
 | **Cross-application database architecture** | **Offline structural and call evidence** | Named DMDB binding/call thunks in all three applications and a conditional DESK INT E0 dispatch path; actual runtime vector, callback selection and record-operation dispatch remain unresolved |
 | **Filer 3.05** | **Native experiments prepared** | Static sample/component comparison and F00–F02 operator runbook; no native Filer experiment or implementation yet |
-| **86Box automation** | **DOS baseline validated** | Authenticated native client, Tandy RSX BIOS correction, verified DOS 5.00 installation and restored baseline; no MCP bridge or DeskMate observation |
+| **86Box automation** | **DOS baseline validated** | Authenticated native client, verified Tandy RSX DOS 5.00 baseline, original guest canary, and a read-only MCP bridge tested with a synthetic native peer |
 | **Other DeskMate applications** | **Future work** | Text, Worksheet and Draw have no validated storage models or implementations yet |
 
 The tools are experimental and support only explicitly measured cases. See
@@ -110,11 +110,12 @@ publication steps, external paid services or AI dependencies.
 * [Issue 22: one Calendar lookup candidate and its exact dispatch blocker](docs/research/lookup-trace-22.md)
 * [Calendar INT E0 static dispatch and unresolved runtime binding](docs/research/calendar-binding-25.md)
 * [86Box automation source review and proposed MCP observation policy](docs/research/86box-automation-preflight-23.md)
-* [Read-only 86Box browser observatory and synthetic demo](docs/research/86box-observer-design.md)
+* [Read-only 86Box MCP setup and observation policy](docs/research/86box-readonly-mcp.md)
+* [Read-only browser observatory and synthetic demo](docs/research/86box-observer-design.md)
 * [Live RSX / DOS 5.00 baseline, provenance and BIOS findings](docs/research/rsx-dos5-baseline.md),
   [native automation client](docs/research/86box-client.md)
 * [Visible and unattended launch modes](docs/research/86box-visible-operation.md),
-  [proposed read-only browser observer](docs/research/86box-observer-design.md)
+  [read-only browser observer](docs/research/86box-observer-design.md)
 * [Original guest canary: measured source, register, RAM and screen correspondence](docs/research/86box-guest-canary.md)
 * [Calendar specification](docs/formats/calendar/CALENDAR_FORMAT.md) with original
   evidence/confidence distinctions and historical experiment checkpoints retained

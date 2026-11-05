@@ -178,7 +178,15 @@ The lab does not sleep or turn off the virtual monitor while on AC power.
 Windows 10 taskbar Search and News and Interests are hidden for the current
 account, and an Active Setup entry applies the per-user choices at later
 interactive logons. Windows Search indexing, Windows Update and Defender remain
-available. User interface changes may require signing out and back in.
+available. SysMain (Superfetch) is disabled and stopped during machine-wide
+provisioning to reduce background disk contention. The optional
+`\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser`
+scheduled task is also disabled alongside the existing CEIP tasks. The
+verification report distinguishes absent, enabled and disabled task states
+and reports unknown when task enumeration fails. Windows servicing may
+re-enable optional tasks later. Neither change disables Windows Update,
+Defender, SmartScreen or the Windows Search service. User interface changes
+may require signing out and back in.
 
 VirtualBox Guest Additions are **not** bundled in this public repository.
 For a fully unattended installation, supply the official `VBoxGuestAdditions.iso`

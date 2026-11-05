@@ -20,9 +20,16 @@ for name in ("dashboard.css", "dashboard.js"):
 
 dist = importlib.metadata.distribution("deskmate-formats")
 assert dist.version == "0.1.0.dev0"
-for command in ("deskmate-calendar", "deskmate-calendar-append", "deskmate-86box-observer"):
+for command in (
+    "deskmate-calendar",
+    "deskmate-calendar-append",
+    "deskmate-86box-mcp",
+    "deskmate-86box-observer",
+):
     matches = [entry for entry in dist.entry_points if entry.name == command]
     assert len(matches) == 1 and callable(matches[0].load())
-    executable = Path(sysconfig.get_path("scripts")) / (command + (".exe" if sys.platform == "win32" else ""))
+    executable = Path(sysconfig.get_path("scripts")) / (
+        command + (".exe" if sys.platform == "win32" else "")
+    )
     subprocess.run([str(executable), "--help"], check=True, stdout=subprocess.DEVNULL)
-print("Installed package, dashboard assets and three CLI entry points passed", sys.version.split()[0])
+print("Installed package, observer assets, and all four CLI entry points passed", sys.version.split()[0])
