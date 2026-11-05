@@ -180,7 +180,7 @@ account, and an Active Setup entry applies the per-user choices at later
 interactive logons. Windows Search indexing, Windows Update and Defender remain
 available. SysMain (Superfetch) is disabled and stopped during machine-wide
 provisioning to reduce background disk contention. The optional
-\`\\Microsoft\\Windows\\Application Experience\\Microsoft Compatibility Appraiser\`
+`\\Microsoft\\Windows\\Application Experience\\Microsoft Compatibility Appraiser`
 scheduled task is also disabled alongside the existing CEIP tasks. The
 verification report includes both settings, and Windows servicing may
 re-enable optional tasks later. Neither change disables Windows Update,
