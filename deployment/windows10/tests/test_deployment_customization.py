@@ -62,6 +62,24 @@ class DeploymentCustomizationTests(unittest.TestCase):
         self.assertNotIn('Set-Service WSearch',s)
         self.assertNotIn('Set-Service wuauserv',s)
 
+    def test_provisioning_disables_sysmain_and_compatibility_appraiser(self):
+        workstation = self.read("Configure-LabWorkstation.ps1")
+        privacy = self.read("Privacy-Lab.ps1")
+        provision = self.read("Provision-Lab.ps1")
+        verifier = self.read("Verify-Lab.ps1")
+        self.assertIn("Set-Service -Name 'SysMain' -StartupType Disabled", workstation)
+        self.assertIn("Stop-Service -Name 'SysMain' -Force", workstation)
+        self.assertLess(workstation.index("if ($UserOnly) { return }"),
+                        workstation.index("Set-Service -Name 'SysMain'"))
+        self.assertIn("'\\Microsoft\\Windows\\Application Experience\\Microsoft Compatibility Appraiser'", privacy)
+        self.assertIn("Get-ScheduledTask", privacy)
+        self.assertLess(provision.index("'Privacy-Lab.ps1'"),
+                        provision.index("'Configure-LabWorkstation.ps1'"))
+        for key in ("sysMainService", "sysMainStartMode", "compatibilityAppraiserTask"):
+            self.assertIn(key + "=", verifier)
+        self.assertNotIn("Set-Service -Name 'wuauserv'", workstation)
+        self.assertNotIn("Set-Service -Name 'WinDefend'", workstation)
+
     def test_optional_guest_install_and_signature_check(self):
         s = self.read("Install-LabGuestAdditions.ps1")
         for needle in ("VBoxWindowsAdditions.exe", "Get-AuthenticodeSignature",
