@@ -1,0 +1,55 @@
+{
+  "url": "https://nextcloud.retroconnect.org/raw/arNSj24G52zEbcy",
+  "server_filename": null,
+  "assigned_filename": "tandy-dos5-original.zip",
+  "format": "7z (not ZIP)",
+  "bytes": 947189,
+  "sha256": "826029a352455e016efe6c1dfe4c4c7243a30526cb604be92a227a7d6643438b",
+  "entries": [
+    {
+      "filename": "MSDOS1.img",
+      "bytes": 1474560,
+      "sha256": "ad566ffef55afab65e73b7bfd4edd94ff22c062bfdfab92bd70bb0c2884594fe"
+    },
+    {
+      "filename": "MSDOS2.img",
+      "bytes": 1474560,
+      "sha256": "c187413ce6d40c715e49b94001f976d1bb35f7fd6a96aa06745dd620aad2f393"
+    },
+    {
+      "filename": "README.TXT",
+      "bytes": 321,
+      "sha256": "45bd2b7d1f7bffd8629e6f6d4de348b5b1018dc199caca81dd2679882cbe4a0d"
+    },
+    {
+      "filename": "winworldpc.com.txt",
+      "bytes": 691,
+      "sha256": "f319274880a90680e248978b5baf022a6b8471b867aa0b6a30d8ff85a1950b07"
+    }
+  ],
+  "retrieved_utc": "2026-11-05T01:50:31Z",
+  "http_status": 200,
+  "content_type": "application/x-7z-compressed",
+  "working_disk2_derivation": {
+    "reason": "SETUP.INI expects DISK      2; verified Disk 2 has no root volume-label entry",
+    "source_sha256": "c187413ce6d40c715e49b94001f976d1bb35f7fd6a96aa06745dd620aad2f393",
+    "derived_sha256": "2fa123a23b28ac1148caa95410ff43ec96f5e06ff74894777abec87cf859165e",
+    "directory_entry_offset": 11328,
+    "before_entry_hex": "0000000000000000000000000000000000000000000000000000000000000000",
+    "after_entry_hex": "4449534b20202020202032080000000000000000000000000000000000000000",
+    "changed_offsets": [
+      11328,
+      11329,
+      11330,
+      11331,
+      11332,
+      11333,
+      11334,
+      11335,
+      11336,
+      11337,
+      11338,
+      11339
+    ]
+  }
+}
