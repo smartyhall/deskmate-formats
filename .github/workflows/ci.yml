@@ -33,6 +33,8 @@ jobs:
         run: python tools/check_install.py
       - name: Portable tests only (no lab fixtures)
         run: python -m unittest discover -s tests/portable -v
+      - name: Deployment script portability tests (synthetic; no VM media)
+        run: python -m unittest discover -s deployment/windows10/tests -v
       - name: Static analysis
         run: python -m ruff check src tests/portable tools
       - name: Audit repository content
