@@ -21,14 +21,17 @@ classifiers = [
 [project.optional-dependencies]
 dev = ["build>=1.2", "ruff>=0.11", "reuse[charset-normalizer]>=6.0"]
 mcp = ["mcp>=2.3,<3", "anyio>=4.9,<5"]
+observer = ["Pillow>=13.0.0,<14"]
 
 [project.scripts]
 deskmate-calendar = "deskmate_formats.calendar.cli:main"
 deskmate-calendar-append = "deskmate_formats.calendar.writer:main"
 deskmate-86box-mcp = "deskmate_formats.automation.mcp_server:main"
+deskmate-86box-observer = "deskmate_formats.observer.demo:main"
 
 [tool.setuptools.package-data]
 "*" = ["*.license"]
+"deskmate_formats.observer" = ["dashboard.css", "dashboard.js"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

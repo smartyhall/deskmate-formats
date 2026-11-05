@@ -31,6 +31,10 @@ jobs:
         run: python tools/install_wheel.py
       - name: Check imports and CLI entry points
         run: python tools/check_install.py
+      - name: Observer tests without image dependency
+        run: python -m unittest discover -s tests/portable -p "test_observer*.py" -v
+      - name: Install built wheel with observer image extra
+        run: python tools/install_wheel.py --observer
       - name: Portable tests only (no lab fixtures)
         run: python -m unittest discover -s tests/portable -v
       - name: Deployment script portability tests (synthetic; no VM media)

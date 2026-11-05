@@ -54,6 +54,9 @@ No experiment values, hashes, results or uncertainty classifications were change
 
 The base package declares no third-party runtime dependencies and uses Python's
 standard library. The optional `mcp` extra declares the MCP SDK and AnyIO.
+The optional `observer` extra declares Pillow for display conversion (13.0.0
+reported MIT-CMU in the Windows integration environment). See the
+[observer guide](research/86box-observer-design.md) for details.
 Installed metadata identifies MIT terms for MCP 2.3.0 and AnyIO 4.x. Their
 distributions and transitive dependencies retain their own notices. Python
 itself retains its PSF terms, and the project bundles no interpreter.

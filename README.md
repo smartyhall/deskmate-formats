@@ -111,10 +111,11 @@ publication steps, external paid services or AI dependencies.
 * [Calendar INT E0 static dispatch and unresolved runtime binding](docs/research/calendar-binding-25.md)
 * [86Box automation source review and proposed MCP observation policy](docs/research/86box-automation-preflight-23.md)
 * [Read-only 86Box MCP setup and observation policy](docs/research/86box-readonly-mcp.md)
+* [Read-only browser observatory and synthetic demo](docs/research/86box-observer-design.md)
 * [Live RSX / DOS 5.00 baseline, provenance and BIOS findings](docs/research/rsx-dos5-baseline.md),
   [native automation client](docs/research/86box-client.md)
 * [Visible and unattended launch modes](docs/research/86box-visible-operation.md),
-  [proposed read-only browser observer](docs/research/86box-observer-design.md)
+  [read-only browser observer](docs/research/86box-observer-design.md)
 * [Original guest canary: measured source, register, RAM and screen correspondence](docs/research/86box-guest-canary.md)
 * [Calendar specification](docs/formats/calendar/CALENDAR_FORMAT.md) with original
   evidence/confidence distinctions and historical experiment checkpoints retained
