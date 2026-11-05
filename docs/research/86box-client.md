@@ -8,6 +8,18 @@ or a DeskMate semantic interface. Its first live validation is described in the
 
 ## Launch and identify
 
+For interactive research, the [visible-by-default launcher](86box-visible-operation.md)
+adds process/window readiness checks and a private launch receipt:
+
+```powershell
+python tools/86box_launch.py --machine C:\DeskMateLab\machines\rsx-dos5-visible
+```
+
+Use a writable clone. The explicit alternatives are `--mode headless` (Qt
+offscreen) and `--mode background` (the earlier hidden Windows-window workflow).
+All guest actions still use the authenticated client. See the follow-up for
+input-capture limits. The manual visible launch below remains supported.
+
 Verify that the designated emulator is stopped and the port is free. Back up
 the machine's configuration and NVRAM. Launch the automation-enabled executable
 with the UCRT64 runtime on PATH. For example, in PowerShell:
