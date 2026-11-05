@@ -79,10 +79,11 @@ notices. Exact sources and hashes are in docs/evidence/license-texts.json. DOSLA
 is external, unchanged and not relicensed. Independently assembled synthetic
 fixture-generator code is software; no archived database is bundled.
 
-There are no third-party runtime package dependencies; Python's standard library
-is used. Development/build/check tools and referenced GitHub Actions retain their
-own terms and are not vendored. Their execution is distinct from redistribution.
-The licensing review records this distinction and dependency metadata.
+The base installation uses Python's standard library. The optional `mcp` extra
+installs the MCP SDK and AnyIO under their own terms. No dependency source is
+bundled in the project distributions. Development, build and check tools and
+referenced GitHub Actions also retain their own terms. The licensing review
+records this distinction and dependency metadata.
 
 ## Contributions and checks
 
