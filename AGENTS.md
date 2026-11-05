@@ -12,6 +12,12 @@
 - Interact with 86Box through its authenticated loopback automation socket.
   Avoid emulator-display clicks and host keyboard/mouse injection. Keep tokens
   out of logs; use bounded requests and never replay uncertain mutations.
+- For interactive demonstrations, launch 86Box with a visible window by
+  default, but continue guest control exclusively over the native socket.
+  Never invoke Computer Use or inject host mouse/keyboard input to inspect
+  the emulator over RDP without the user's explicit approval. Previous use
+  disrupted the Windows remote session. Prefer subprocess/Win32 inspection;
+  keep background/headless execution an explicit option.
 - Keep reusable automation separate from experiment scripts. Test transport and
   validation with synthetic fixtures; do not require ROMs or proprietary software
   for portable tests. Report exact elapsed emulated time and observation limits.
