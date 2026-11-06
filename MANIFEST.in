@@ -4,6 +4,7 @@ include .gitattributes .gitignore
 recursive-include LICENSES *.txt
 recursive-include docs *.md *.json *.license
 recursive-include tests *.py *.md *.license
+recursive-include tests/fixtures/codex-exec-0.166.0 *.jsonl
 recursive-include tests/fixtures/application-generated *.json
 recursive-include tools *.py *.license
 recursive-include experiments *.asm *.license

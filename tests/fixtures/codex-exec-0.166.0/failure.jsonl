@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"01234567-89ab-4def-8123-456789abcdef"}
+{"type":"turn.started"}
+{"type":"item.started","item":{"id":"item_0","type":"command_execution","command":"synthetic command","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_0","type":"command_execution","command":"synthetic command","aggregated_output":"fixture output","exit_code":7,"status":"failed"}}
+{"type":"item.completed","item":{"id":"item_1","type":"command_execution","command":"synthetic declined command","aggregated_output":"","exit_code":null,"status":"declined"}}
+{"type":"error","message":"<script>private-error-marker</script>\nsynthetic fatal"}
+{"type":"turn.failed","error":{"message":"private-failure-marker"}}

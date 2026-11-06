@@ -41,11 +41,16 @@ def _unique_object(pairs):
     return result
 
 
+def _invalid_constant(_):
+    raise EventError("non-JSON numeric constant")
+
+
 def decode_json(data, limit=MAX_INPUT_BYTES):
     if len(data) > limit:
         raise EventError("JSON exceeds byte limit")
     try:
-        return json.loads(data.decode("utf-8"), object_pairs_hook=_unique_object)
+        return json.loads(data.decode("utf-8"), object_pairs_hook=_unique_object,
+                          parse_constant=_invalid_constant)
     except EventError:
         raise
     except (ValueError, RecursionError):

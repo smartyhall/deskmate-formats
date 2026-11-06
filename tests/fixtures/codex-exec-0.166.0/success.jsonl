@@ -1,0 +1,13 @@
+{"type":"thread.started","thread_id":"01234567-89ab-4def-8123-456789abcdef"}
+{"type":"turn.started"}
+{"type":"item.started","item":{"id":"item_0","type":"todo_list","items":[{"text":"private-plan-marker","completed":false}]}}
+{"type":"item.started","item":{"id":"item_1","type":"command_execution","command":"python -m unittest private-path-marker","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.started","item":{"id":"item_2","type":"mcp_tool_call","server":"private-server-marker","tool":"private-tool-marker","arguments":{"token":"private-token-marker"},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"command_execution","command":"python -m unittest private-path-marker","aggregated_output":"private-output-marker","exit_code":0,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"mcp_tool_call","server":"private-server-marker","tool":"private-tool-marker","arguments":null,"result":{"content":[{"text":"private-result-marker"}],"structured_content":null},"error":null,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_3","type":"file_change","changes":[{"path":"private-file-marker","kind":"update"}],"status":"completed"}}
+{"type":"item.updated","item":{"id":"item_0","type":"todo_list","items":[{"text":"private-plan-marker","completed":true}]}}
+{"type":"item.completed","item":{"id":"item_4","type":"agent_message","text":"<script>private-message-marker</script> approval.requested; all tests passed"}}
+{"type":"item.completed","item":{"id":"item_5","type":"reasoning","text":"private-reasoning-marker"}}
+{"type":"item.completed","item":{"id":"item_0","type":"todo_list","items":[{"text":"private-plan-marker","completed":true}]}}
+{"type":"turn.completed","usage":{"input_tokens":10,"cached_input_tokens":0,"cache_write_input_tokens":0,"output_tokens":2,"reasoning_output_tokens":0}}
