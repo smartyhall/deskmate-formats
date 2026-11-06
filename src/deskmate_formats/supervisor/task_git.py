@@ -122,12 +122,23 @@ class TrustedSource:
                      r"^(include\.|includeif\.)", allowed=(0, 1)).returncode == 0:
             raise TaskError("Git source uses included configuration")
 
-    def _require_tip(self, commit):
+    def _tip(self):
         ref = "refs/heads/" + self.branch
         if self._run("symbolic-ref", "--quiet", "--no-recurse", ref, allowed=(0, 1)).returncode != 1:
             raise TaskError("trusted branch must be a direct branch reference")
-        if self._run("show-ref", "--verify", "--hash", ref).stdout.strip() != commit.encode("ascii"):
+        try:
+            return self._oid(self._run("show-ref", "--verify", "--hash", ref).stdout.strip().decode("ascii"))
+        except UnicodeError:
+            raise TaskError("invalid branch object ID") from None
+
+    def _require_tip(self, commit):
+        if self._tip() != commit:
             raise TaskError("pinned commit is not the configured branch tip")
+
+    def verify(self):
+        """Check configuration and ancestry before creating a queue."""
+        self._check_repository()
+        self.require_descendant(self._tip(), self.anchor)
 
     def require_descendant(self, commit, ancestor):
         for oid in (commit, ancestor):
