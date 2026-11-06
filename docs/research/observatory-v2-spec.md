@@ -169,6 +169,9 @@ Ingest the offline decoder developed from the Calendar and DMCSR experiments via
 This feature consumes read results already authorized to the emulator owner; it does not expand memory-access permissions from the HTTP side.
 
 The [SDK-guided verification plan](sdk-semantic-observer-plan.md) separates app-owned forms, DMCSR allocation and event evidence into individually verified stages.
+The [controlled Calendar replay](calendar-live-dialog-identity.md) verifies
+Add, Change and Find Date identities from held, producer-supplied evidence
+and demonstrates why a retained editor title must be ignored in day view.
 
 ### F10. Operations (P1)
 

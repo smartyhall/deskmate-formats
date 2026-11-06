@@ -52,9 +52,14 @@ working Calendar decoder bounded to the validated launches and forms.
 Then add the two application profiles after independent controls. The
 current investigation leaves the observer's behavior intact.
 
-## Prioritized future experiments
+## Experiment priorities
 
-All experiments are proposals. Use a separately provisioned disposable
+The [controlled Add and Change trial](calendar-live-dialog-identity.md)
+completed priority 1. Its scoped offline replay now requires the held
+allocation, Calendar descriptor ownership, frame and table association,
+and the matching editor title token before emitting a named editor.
+
+The remaining experiments are proposals. Use a separately provisioned disposable
 clone with the RSX/DOS 5.00, 86Box, ROM, graphics-mode and module pins in the
 [activation report](calendar-dialog-activation.md#repeat-clone-runtime-pins),
 or record and explicitly review any changed pin. Copy and hash source

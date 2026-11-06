@@ -71,7 +71,9 @@ writes the pointer at `DS:2124`, precisely editor frame `+8`, with
 `0x0536` for Add and `0x0540` for Change before their shared editor
 call. Find Date uses its own frame and title. The Change title pointer
 survived Cancel in prior RAM. The Add assignment is statically verified
-and the Add title was seen on screen. Its held pointer has yet to be read.
+and the Add title was seen on screen. A subsequent
+[live comparison](calendar-live-dialog-identity.md) measured both held
+editor pointers and their retention after Cancel.
 The frame sizes `1194/0B2C` and `0AF0/044C` match the prior allocated
 outer-window measurements for Change and Find Date. Those are world-unit
 extents. Screen pixels depend on the window and video mapping.
