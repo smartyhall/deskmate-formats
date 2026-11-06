@@ -52,10 +52,10 @@ if ($JavaHome) {
 }
 
 $selected = $null
-foreach ($home in $candidates) {
-    $exe = Join-Path $home 'bin\java.exe'
+foreach ($candidateHome in $candidates) {
+    $exe = Join-Path $candidateHome 'bin\java.exe'
     if (Test-Path -LiteralPath $exe -PathType Leaf) {
-        $selected = (Resolve-Path -LiteralPath $home).Path
+        $selected = (Resolve-Path -LiteralPath $candidateHome).Path
         break
     }
 }
