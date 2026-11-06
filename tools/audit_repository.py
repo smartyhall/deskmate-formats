@@ -13,6 +13,13 @@ EXCLUDED = {'.git', 'build', 'dist', 'local-results', 'private-fixtures', '.ruff
 FIXTURE_DIR = Path('tests/fixtures/application-generated')
 DATA_EXT = {'.cln', '.adr', '.fil', '.pcl'}
 PRIVATE_SPOOL_FILES = {'events.jsonl', 'writer.lock'}
+TELEMETRY_FIXTURE_DIR = 'tests/fixtures/codex-exec-0.166.0/'
+TELEMETRY_FIXTURES = {
+    'anomalies.jsonl': 'af47f774319320c7e5e6d8cefb903e2f711e93f20ec6a529eabe3d81ebbd1a2b',
+    'failure.jsonl': 'c780a82c87b33b7ce875da451614fa17a562eaa2b9a844bf7df516865e0b6576',
+    'open-turn.jsonl': 'a7c8cfc883c658b7b3911224832d68b0f7f10433e5c91b088fde88298c0b02ae',
+    'success.jsonl': '3a453f3cfa512c9d53e1ff6366112ac102d0bb257f4902ff697f081b3bb216c9',
+}
 BAD_EXT = {'.exe', '.com', '.dll', '.img', '.ima', '.iso', '.zip', '.7z', '.cln',
            '.png', '.pdf', '.pdm', '.res', '.r89', '.fil', '.adr', '.pcl', '.hlp',
            '.tut', '.nvr', '.rom', '.vhd', '.vhdx', '.hdi', '.raw', '.token'}
@@ -64,10 +71,22 @@ def fixture_manifest():
     return index
 
 
+def check_telemetry_file(path, data):
+    if PurePosixPath(path).suffix.lower() not in ('.jsonl', '.ndjson'):
+        return False
+    digest = TELEMETRY_FIXTURES.get(path.removeprefix(TELEMETRY_FIXTURE_DIR))
+    if not path.startswith(TELEMETRY_FIXTURE_DIR) or digest is None:
+        raise ValueError('unlisted JSONL trace: ' + path)
+    if hashlib.sha256(data).hexdigest() != digest:
+        raise ValueError('synthetic JSONL fixture digest mismatch: ' + path)
+    return True
+
+
 def audit():
     allowed = fixture_manifest()
     found = set()
     count = 0
+    telemetry_count = 0
     for path in source_files():
         rel_path = path.relative_to(ROOT)
         rel = rel_path.as_posix()
@@ -76,6 +95,7 @@ def audit():
         if path.name.lower() in PRIVATE_SPOOL_FILES:
             raise ValueError('private Observatory spool file: ' + rel)
         data = path.read_bytes()
+        telemetry_count += check_telemetry_file(rel, data)
         if rel in allowed and rel_path.suffix.lower() in DATA_EXT:
             if data.startswith(b'MZ'):
                 raise ValueError('executable disguised as fixture: ' + rel)
@@ -108,7 +128,7 @@ def audit():
     # Git-only binary research fixtures. A source checkout requires every entry.
     if found != set(allowed) and not (ROOT / 'PKG-INFO').is_file():
         raise ValueError('missing declared fixtures: ' + ', '.join(sorted(set(allowed) - found)))
-    # Git fixtures are not included in the sdist/wheel.
+    # Git-only binary fixtures are excluded. Pinned synthetic JSONL ships in the sdist.
     for path in (ROOT / 'dist').glob('*'):
         if path.suffix == '.whl':
             with zipfile.ZipFile(path) as archive:
@@ -125,12 +145,17 @@ def audit():
                 raise ValueError('excluded file in archive: ' + name)
             if PurePosixPath(name).name.lower() in PRIVATE_SPOOL_FILES:
                 raise ValueError('private Observatory spool file in archive: ' + name)
+            if PurePosixPath(name).suffix.lower() in ('.jsonl', '.ndjson'):
+                if path.suffix == '.whl':
+                    raise ValueError('JSONL trace in wheel: ' + name)
+                check_telemetry_file(name.partition('/')[2], data)
             text = data.decode('utf-8')
             for label, pattern in PATTERNS.items():
                 if re.search(pattern, text):
                     raise ValueError(label + ' in archive: ' + name)
     return {'source_files_checked': count, 'status': 'passed',
             'application_generated_fixtures_checked': len(found),
+            'synthetic_jsonl_fixtures_checked': telemetry_count,
             'excluded': 'Commercial software, private data and unlisted binary files.'}
 
 

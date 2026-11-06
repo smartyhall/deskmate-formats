@@ -84,6 +84,16 @@ class AgentTests(unittest.TestCase):
         self.assertEqual(len(projection.events), 1)
         self.assertEqual([(view.agent_id, view.state) for view in projection.views(500)], [("alpha", "active-reporting")])
 
+    def test_reported_process_exit_stays_stopped_without_claim_or_terminal_turn(self):
+        turn = event(1, "turn.started")
+        exited = event(2, "process.exited")
+        disconnected, = self.project(turn, exited)
+        self.assertEqual((disconnected.process, disconnected.state, disconnected.reported_lifecycle),
+                         ("stopped", "disconnected", "running"))
+        self.assertEqual(disconnected.transport, "recent")
+        self.assertEqual(disconnected.last_activity.type, "turn.started")
+        self.assertIsNone(disconnected.verified_pid)
+
     @unittest.skipUnless(sys.platform in ("win32", "linux"), "platform has no local process identity probe")
     def test_actual_local_identity_and_child_exit(self):
         claim = process_claim()

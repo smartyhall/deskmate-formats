@@ -26,6 +26,7 @@ for command in (
     "deskmate-86box-mcp",
     "deskmate-86box-observer",
     "deskmate-observer-event",
+    "deskmate-observer-codex",
 ):
     matches = [entry for entry in dist.entry_points if entry.name == command]
     assert len(matches) == 1 and callable(matches[0].load())
@@ -33,4 +34,4 @@ for command in (
         command + (".exe" if sys.platform == "win32" else "")
     )
     subprocess.run([str(executable), "--help"], check=True, stdout=subprocess.DEVNULL)
-print("Installed package, observer assets, and all five CLI entry points passed", sys.version.split()[0])
+print("Installed package, observer assets, and all six CLI entry points passed", sys.version.split()[0])

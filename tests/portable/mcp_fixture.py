@@ -32,6 +32,7 @@ class NativePeer:
         self.port = self.listener.getsockname()[1]
         self.stop = threading.Event()
         self.commands = []
+        self.connections = 0
         self.authentications = 0
         self.failure = None
         self.held = True
@@ -86,6 +87,7 @@ class NativePeer:
                 continue
             except OSError:
                 break
+            self.connections += 1
             try:
                 with connection, connection.makefile('rb') as stream:
                     self.disconnected.clear()

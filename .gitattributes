@@ -6,6 +6,7 @@
 *.toml text eol=lf
 *.css text eol=lf
 *.js text eol=lf
+tests/fixtures/codex-exec-0.166.0/*.jsonl text eol=lf
 
 # Preserve canonical standard-license bytes and portable REUSE metadata.
 LICENSE -text

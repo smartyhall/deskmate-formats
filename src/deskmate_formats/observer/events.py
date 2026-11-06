@@ -16,7 +16,7 @@ EVENT_TYPES = frozenset("""
     plan.updated milestone.completed tool.started tool.completed tool.failed command.started
     command.completed test.started test.completed git.commit git.branch git.pr.opened git.pr.updated
     experiment.checkpoint experiment.sample experiment.result approval.requested approval.resolved
-    process.heartbeat source.disconnected source.reconnected source.error agent.note
+    process.heartbeat process.exited source.disconnected source.reconnected source.error agent.note
 """.split())
 SEVERITIES = frozenset(("debug", "info", "warning", "error"))
 CORRELATIONS = frozenset(("session", "turn", "command", "tool", "experiment", "task", "approval", "test"))
@@ -41,11 +41,16 @@ def _unique_object(pairs):
     return result
 
 
+def _invalid_constant(_):
+    raise EventError("non-JSON numeric constant")
+
+
 def decode_json(data, limit=MAX_INPUT_BYTES):
     if len(data) > limit:
         raise EventError("JSON exceeds byte limit")
     try:
-        return json.loads(data.decode("utf-8"), object_pairs_hook=_unique_object)
+        return json.loads(data.decode("utf-8"), object_pairs_hook=_unique_object,
+                          parse_constant=_invalid_constant)
     except EventError:
         raise
     except (ValueError, RecursionError):

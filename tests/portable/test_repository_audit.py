@@ -117,6 +117,28 @@ class FixtureAuditTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'private Observatory spool file in archive'):
             self.audit()
 
+    def test_renamed_source_trace_and_modified_approved_jsonl_rejected(self):
+        self.manifest([])
+        trace = self.root / 'renamed.ndjson'
+        trace.write_text('{"type":"turn.started"}\n', encoding='utf-8')
+        with self.assertRaisesRegex(ValueError, 'unlisted JSONL trace'):
+            self.audit()
+        trace.unlink()
+        approved = self.root / audit_repository.TELEMETRY_FIXTURE_DIR / 'success.jsonl'
+        approved.parent.mkdir()
+        approved.write_text('{"type":"turn.started"}\n', encoding='utf-8')
+        with self.assertRaisesRegex(ValueError, 'synthetic JSONL fixture digest mismatch'):
+            self.audit()
+
+    def test_renamed_trace_in_wheel_rejected(self):
+        self.manifest([])
+        dist = self.root / 'dist'
+        dist.mkdir()
+        with ZipFile(dist / 'test.whl', 'w') as wheel:
+            wheel.writestr('somewhere/codex-trace.jsonl', b'{}\n')
+        with self.assertRaisesRegex(ValueError, 'JSONL trace in wheel'):
+            self.audit()
+
 
 if __name__ == '__main__':
     unittest.main()
