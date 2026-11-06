@@ -79,6 +79,29 @@ class FixtureAuditTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unsafe fixture path'):
             self.audit()
 
+    def test_manifested_binary_with_access_token_rejected(self):
+        data = b'\x03FIL\x00' + b'https://example.invalid/?access_token=EXAMPLE12345678'
+        path = self.base / 'calendar/E03.cln'
+        path.parent.mkdir()
+        path.write_bytes(data)
+        self.manifest([self.entry('calendar/E03.cln', data)])
+        with self.assertRaisesRegex(ValueError, 'archive access query'):
+            self.audit()
+
+    def test_manifested_binary_with_private_host_path_rejected(self):
+        data = b'\x03FIL\x00C:\\Users\\example\\Secrets'
+        path = self.base / 'calendar/E04.cln'
+        path.parent.mkdir()
+        path.write_bytes(data)
+        self.manifest([self.entry('calendar/E04.cln', data)])
+        with self.assertRaisesRegex(ValueError, 'host Windows user path'):
+            self.audit()
+
+    def test_source_distribution_with_omitted_binary_is_auditable(self):
+        self.manifest([self.entry('calendar/E02.cln', b'private-test-file')])
+        (self.root / 'PKG-INFO').write_text('Metadata-Version: 2.4\n')
+        self.assertEqual(self.audit()['status'], 'passed')
+
 
 if __name__ == '__main__':
     unittest.main()
