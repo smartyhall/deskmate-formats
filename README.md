@@ -119,7 +119,8 @@ publication steps, external paid services or AI dependencies.
 * [Read-only 86Box MCP setup and observation policy](docs/research/86box-readonly-mcp.md)
 * [Read-only browser observatory and synthetic demo](docs/research/86box-observer-design.md)
 * [Observatory v2 functional specification](docs/research/observatory-v2-spec.md),
-  [proposed Codex laboratory supervisor](docs/research/codex-supervisor-design.md)
+  [proposed Codex laboratory supervisor](docs/research/codex-supervisor-design.md),
+  and [deferred headless research appliance roadmap](docs/research/headless-research-appliance-roadmap.md)
 * [Live RSX / DOS 5.00 baseline, provenance and BIOS findings](docs/research/rsx-dos5-baseline.md),
   [native automation client](docs/research/86box-client.md)
 * [Visible and unattended launch modes](docs/research/86box-visible-operation.md),
