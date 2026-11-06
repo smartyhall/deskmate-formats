@@ -6,6 +6,9 @@
 **Target environment:** Dedicated Windows 10 research VM with 86Box native automation, Codex and Ghidra; ordinary browsers on the user's trusted LAN.
 **Future platform exploration:** [Deferred headless research appliance roadmap](headless-research-appliance-roadmap.md); not a prerequisite for Windows acceptance.
 
+The [M0/M1 implementation guide](observatory-v2-m0-m1.md) records the shipped
+contract, operator workflows, and milestone decisions.
+
 ## 1. Purpose and decisions
 
 Build a browser-based, **strictly read-only** operations console for agents conducting emulator experiments. The operator must be able to monitor emulator screens, host/guest state, agent progress, tool/test activity, pending approvals, and historical milestones from a different computer or phone **without RDP, keyboard/mouse capture, or any emulator-control surface**.

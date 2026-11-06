@@ -5,6 +5,7 @@ import json
 import sys
 from threading import Thread
 
+from ..observer.agent_feed import add_viewer_options, configured_feed
 from .readonly import Adapter, Refusal, configuration, TOOLS
 
 ID = {'type':'string','pattern':'^[A-Za-z0-9_-]{1,64}$','maxLength':64}
@@ -83,16 +84,23 @@ async def serve(adapter):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config',required=True)
+    add_viewer_options(parser)
     args = parser.parse_args()
     try:
         import anyio
         adapter = Adapter(configuration(args.config))
         if adapter.registry is None:
+            if args.journal is not None:
+                parser.error('--journal requires an enabled observer in the MCP configuration')
             anyio.run(serve, adapter)
         else:
             from ..observer.http import ObserverServer
 
-            with ObserverServer(adapter.registry, port=adapter.observer_port) as observer:
+            with configured_feed(parser, args) as agent_feed, ObserverServer(
+                adapter.registry, port=adapter.observer_port,
+                agent_publication=agent_feed.publication if agent_feed else None,
+                agent_page_limit=args.agent_page_limit,
+            ) as observer:
                 listener = Thread(target=observer.serve_forever, kwargs={'poll_interval': 0.1})
                 listener.start()
                 try:

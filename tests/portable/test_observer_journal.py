@@ -91,6 +91,22 @@ class JournalTests(unittest.TestCase):
         with self.assertRaisesRegex(JournalError, "retention limit"):
             publish_event(self.spool, event(2), limits=small_limits)
 
+    def test_short_write_is_not_retried_and_does_not_commit(self):
+        publish_event(self.spool, event())
+        write = os.write
+
+        def short_write(fd, data):
+            return write(fd, data[: len(data) // 2])
+
+        with patch("deskmate_formats.observer.journal.os.write", side_effect=short_write) as attempt:
+            with self.assertRaisesRegex(JournalError, "reconcile history"):
+                publish_event(self.spool, event(2))
+        attempt.assert_called_once()
+        replay = read_journal(self.spool)
+        self.assertEqual([entry["cursor"] for entry in replay.records], [1])
+        self.assertGreater(replay.tail_bytes, 0)
+        self.assertEqual(publish_event(self.spool, event(2)).recovered_tail_bytes, replay.tail_bytes)
+
     def test_actual_cross_process_lock_and_forced_exit(self):
         publish_event(self.spool, event())
         ready = self.spool.parent / "ready"

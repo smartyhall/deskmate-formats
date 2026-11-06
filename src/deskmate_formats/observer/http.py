@@ -10,6 +10,8 @@ import sys
 from threading import BoundedSemaphore
 from time import monotonic
 
+from .agent_http import MAX_PAGE, match_route, query_snapshot
+from .agent_publication import AgentPublication
 from .presentation import dashboard, frame_key, legacy_page, plain_status, status
 from .publication import INSTANCE_ID, ObservationRegistry, host_time_ms
 
@@ -18,7 +20,7 @@ _READ_SECONDS = 3
 _WRITE_SECONDS = 3
 _TOKEN = re.compile(rb"[!#$%&'*+\-.^_|~0-9A-Za-z]+")
 _REQUEST_LINE = re.compile(rb"([^ ]+) ([^ ]+) HTTP/1\.([01])")
-_TARGET = re.compile(r"/[a-z0-9/._-]*(?:\?[a-z0-9=.]+)?")
+_TARGET = re.compile(r"/[a-z0-9/._-]*(?:\?[a-z0-9=.&_-]+)?")
 _FRAME_QUERY = re.compile(r"frame=[0-9a-f]{32}\.(?:0|[1-9][0-9]{0,15})\.(?:0|[1-9][0-9]{0,15})")
 _POLICY = ("default-src 'none'; script-src 'self'; style-src 'self'; "
            "connect-src 'self'; img-src 'self'; base-uri 'none'; frame-ancestors 'none'")
@@ -138,12 +140,19 @@ class ObserverServer(ThreadingMixIn, TCPServer):
     allow_reuse_address = sys.platform != "win32"
     request_queue_size = 16
 
-    def __init__(self, registry: ObservationRegistry, *, port=8086):
+    def __init__(self, registry: ObservationRegistry, *, port=8086,
+                 agent_publication: AgentPublication | None = None, agent_page_limit=MAX_PAGE):
         if type(registry) is not ObservationRegistry:
             raise ValueError("expected an observation registry")
         if type(port) is not int or not 0 <= port <= 65535:
             raise ValueError("invalid observer port")
+        if agent_publication is not None and type(agent_publication) is not AgentPublication:
+            raise ValueError("expected an agent publication")
+        if type(agent_page_limit) is not int or not 1 <= agent_page_limit <= MAX_PAGE:
+            raise ValueError("invalid agent page limit")
         self.registry = registry
+        self._agent_publication = agent_publication if agent_publication is not None else AgentPublication()
+        self._agent_page_limit = agent_page_limit
         self._machines = registry.machines
         self._slots = BoundedSemaphore(self.request_queue_size)
         assets = files(__package__)
@@ -177,6 +186,15 @@ class ObserverServer(ThreadingMixIn, TCPServer):
         path, _, query = target.partition("?")
         if "//" in path or any(part in (".", "..") for part in path.split("/")):
             raise _RequestError(400)
+        agent_route = match_route(path)
+        if agent_route is not None:
+            try:
+                data = query_snapshot(self._agent_publication.view(), agent_route, query, self._agent_page_limit)
+            except ValueError:
+                raise _RequestError(400) from None
+            except LookupError:
+                raise _RequestError(404) from None
+            return "application/json", json.dumps(data, ensure_ascii=False).encode("utf-8")
         if query and (not _FRAME_QUERY.fullmatch(query) or path.rsplit("/", 1)[-1] not in
                       ("frame.png", "frame.gif")):
             raise _RequestError(400)

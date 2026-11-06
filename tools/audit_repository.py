@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 EXCLUDED = {'.git', 'build', 'dist', 'local-results', 'private-fixtures', '.ruff_cache'}
 FIXTURE_DIR = Path('tests/fixtures/application-generated')
 DATA_EXT = {'.cln', '.adr', '.fil', '.pcl'}
+PRIVATE_SPOOL_FILES = {'events.jsonl', 'writer.lock'}
 BAD_EXT = {'.exe', '.com', '.dll', '.img', '.ima', '.iso', '.zip', '.7z', '.cln',
            '.png', '.pdf', '.pdm', '.res', '.r89', '.fil', '.adr', '.pcl', '.hlp',
            '.tut', '.nvr', '.rom', '.vhd', '.vhdx', '.hdi', '.raw', '.token'}
@@ -72,6 +73,8 @@ def audit():
         rel = rel_path.as_posix()
         if path.is_symlink():
             raise ValueError('symlink is not permitted: ' + rel)
+        if path.name.lower() in PRIVATE_SPOOL_FILES:
+            raise ValueError('private Observatory spool file: ' + rel)
         data = path.read_bytes()
         if rel in allowed and rel_path.suffix.lower() in DATA_EXT:
             if data.startswith(b'MZ'):
@@ -120,6 +123,8 @@ def audit():
                 raise ValueError('excluded directory in archive: ' + name)
             if Path(name).suffix.lower() in BAD_EXT:
                 raise ValueError('excluded file in archive: ' + name)
+            if PurePosixPath(name).name.lower() in PRIVATE_SPOOL_FILES:
+                raise ValueError('private Observatory spool file in archive: ' + name)
             text = data.decode('utf-8')
             for label, pattern in PATTERNS.items():
                 if re.search(pattern, text):

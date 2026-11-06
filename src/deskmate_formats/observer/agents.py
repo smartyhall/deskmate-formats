@@ -42,6 +42,8 @@ class AgentView:
     activity_age_ms: int | None
     last_signal_utc: str
     signal_age_ms: int | None
+    last_heartbeat_utc: str | None
+    heartbeat_age_ms: int | None
     transport: str
     process: str
     verified_pid: int | None
@@ -55,6 +57,8 @@ class _Agent:
     signal_ns: int | None
     activity: PublicEvent | None = None
     activity_ns: int | None = None
+    heartbeat_utc: str | None = None
+    heartbeat_ns: int | None = None
     lifecycle: str = "unknown"
     turn: str | None = None
     session_ended: bool = False
@@ -73,6 +77,7 @@ class _Agent:
         elif kind == "source.disconnected":
             self.disconnected = True
         elif kind == "process.heartbeat":
+            self.heartbeat_utc, self.heartbeat_ns = event.ingested_at_utc, observed_ns
             claim = record.get("process")
             self.claim = (claim["pid"], claim["identity"]) if claim else None
 
@@ -101,6 +106,9 @@ class _Agent:
         def elapsed(stamp):
             return None if stamp is None or stamp > now_ns else now_ns - stamp
 
+        def milliseconds(age):
+            return None if age is None else age // 1_000_000
+
         activity_age = elapsed(self.activity_ns)
         signal_age = elapsed(self.signal_ns)
         historical = signal_age is None
@@ -125,8 +133,8 @@ class _Agent:
         return AgentView(
             latest.origin_id, latest.agent_id, latest.run_id, latest.source, latest.machine_ids, latest.cursor,
             state, self.lifecycle, stale, historical, self.activity,
-            None if activity_age is None else activity_age // 1_000_000,
-            latest.ingested_at_utc, None if signal_age is None else signal_age // 1_000_000, transport,
+            milliseconds(activity_age), latest.ingested_at_utc, milliseconds(signal_age),
+            self.heartbeat_utc, milliseconds(elapsed(self.heartbeat_ns)), transport,
             process, self.claim[0] if process in ("alive", "stopped") else None,
             len(pending), pending[-8:],
         )

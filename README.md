@@ -83,6 +83,13 @@ redistributable bundle of third-party binaries. The recipe documents current
 WinGet/bootstrap, autologon and Delivery Optimization settings, private-media
 boundaries, verification tests, and outstanding live installation checks.
 
+## Read-only Observatory
+
+Publish explicit agent events with `deskmate-observer-event` and view them
+alongside separately published machine observations over localhost. The
+[Observatory v2 guide](docs/research/observatory-v2-m0-m1.md) includes a
+synthetic demo, private journal recovery and the read-only query API.
+
 ## Tests and development
 
 ```sh

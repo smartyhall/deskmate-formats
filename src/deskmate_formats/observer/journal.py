@@ -22,6 +22,10 @@ class JournalError(OSError):
     """Storage failure with a diagnostic safe for a local publisher to print."""
 
 
+class JournalBusy(JournalError):
+    """A cooperating reader or writer currently owns the spool lock."""
+
+
 @dataclass(frozen=True)
 class JournalLimits:
     max_bytes: int = DEFAULT_MAX_BYTES
@@ -106,7 +110,7 @@ def _storage_error(error):
     if isinstance(error, JournalError):
         return error
     if isinstance(error, LockBusy):
-        return JournalError("event journal is busy; no append attempted")
+        return JournalBusy("event journal is busy; no append attempted")
     if error.errno in (errno.ENOSPC, getattr(errno, "EDQUOT", -1)):
         return JournalError("event journal storage is full")
     return JournalError("cannot access private journal storage; check location and permissions")
@@ -146,13 +150,14 @@ def publish_event(path, payload, *, limits=JournalLimits()):
             if end + len(line) > limits.max_bytes or len(replay.records) >= limits.max_records:
                 raise JournalError("event journal retention limit reached")
             try:
+                fd = stream.fileno()
                 if replay.tail_bytes:
-                    stream.truncate(end)
-                stream.seek(end)
-                if stream.write(line) != len(line):
+                    os.ftruncate(fd, end)
+                os.lseek(fd, end, os.SEEK_SET)
+                # Bypass the read buffer so closing after an error cannot retry a write.
+                if os.write(fd, line) != len(line):
                     raise OSError("short journal write")
-                stream.flush()
-                os.fsync(stream.fileno())
+                os.fsync(fd)
             except OSError as error:
                 reason = "storage full" if error.errno in (errno.ENOSPC, getattr(errno, "EDQUOT", -1)) else "I/O error"
                 raise JournalError(f"journal append {reason}; reconcile history before retrying") from None
