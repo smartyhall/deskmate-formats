@@ -85,7 +85,7 @@ $setupScripts = Join-Path $stage 'sources\$OEM$\$$\Setup\Scripts'
 New-Item -ItemType Directory -Path $payload,$setupScripts -Force | Out-Null
 foreach ($name in @('Provision-Lab.ps1','Privacy-Lab.ps1','Get-LabCompatibilityAppraiserState.ps1','Verify-Lab.ps1','Enable-LabSSH.ps1','Setup-86Box-UCRT64.sh',
         'Configure-LabWorkstation.ps1','Install-LabGuestAdditions.ps1','Set-LabLogon.ps1','Initialize-LabWinGet.ps1',
-        'Clean-LabApps.ps1','Setup-86Box-ROMs.ps1')) {
+        'Clean-LabApps.ps1','Setup-86Box-ROMs.ps1','Configure-LabGhidraFirewall.ps1')) {
     Copy-Item -LiteralPath (Join-Path $kit $name) -Destination (Join-Path $payload $name)
 }
 Copy-Item -LiteralPath (Join-Path $kit 'SetupComplete.cmd') -Destination (Join-Path $setupScripts 'SetupComplete.cmd')

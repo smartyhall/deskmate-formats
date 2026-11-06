@@ -114,6 +114,14 @@ try {
         }
         if (-not (Test-Path (Join-Path $ghidraDir 'support\analyzeHeadless.bat'))) { throw 'Ghidra extraction did not produce expected headless tool.' }
         [Environment]::SetEnvironmentVariable('GHIDRA_INSTALL_DIR',$ghidraDir,'Machine')
+        # Ghidra's JDK gets localhost-only inbound rules, never LAN-wide access.
+        # This optional networking stage must not prevent core tool provisioning.
+        try {
+            & (Join-Path $root 'Configure-LabGhidraFirewall.ps1')
+        } catch {
+            $_ | Out-String | Set-Content -LiteralPath (Join-Path $logDir 'ghidra-firewall-error.txt')
+            Write-Warning 'Ghidra Java localhost firewall setup was deferred; review the private setup log.'
+        }
         # Codex CLI installs without authentication or storing ChatGPT secrets.
         $npm='C:\Program Files\nodejs\npm.cmd'
         if (-not (Test-Path $npm)) { throw 'Node.js/npm missing: cannot install Codex CLI.' }

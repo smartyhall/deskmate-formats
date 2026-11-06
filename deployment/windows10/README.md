@@ -231,6 +231,47 @@ The public example account password is insecure; change it before enabling
 SSH, shared folders, or bidirectional clipboard. These interoperability
 features remain opt-in for the isolated lab.
 
+### Ghidra Java firewall prompt
+
+Ghidra can trigger a Windows Defender Firewall prompt when its Java process
+first opens a listener. After installing Ghidra and Temurin,
+Provision-Lab.ps1 runs Configure-LabGhidraFirewall.ps1. This helper creates
+idempotent inbound TCP rules for Ghidra's selected JDK java.exe and javaw.exe,
+restricted to 127.0.0.1 and ::1 as both the local and remote addresses.
+It does not grant incoming LAN access. The helper checks the launcher
+JAVA_HOME_OVERRIDE setting, then JAVA_HOME and the installed JDK.
+
+This is a best-effort optional stage, not evidence that Ghidra binds only to
+loopback, nor a guarantee that Windows will suppress all prompts. The helper
+never changes or removes other firewall rules, including permissions previously
+granted interactively. Those should be reviewed independently.
+
+On an existing VM, after copying the new helper to C:\DeskMateLab, you
+can preview and then apply it from **elevated Windows PowerShell**:
+
+~~~powershell
+& 'C:\DeskMateLab\Configure-LabGhidraFirewall.ps1' -WhatIf
+& 'C:\DeskMateLab\Configure-LabGhidraFirewall.ps1'
+# Supply -JavaHome with the verified JDK root if Ghidra uses another JDK.
+~~~
+
+To identify the Java executable and listeners without interrupting a
+running Codex session, the following **read-only** commands avoid process
+command lines (which can contain private arguments):
+
+~~~powershell
+$java = @(Get-CimInstance Win32_Process |
+    Where-Object { $_.Name -in @('java.exe','javaw.exe') } |
+    Select-Object ProcessId,ExecutablePath)
+$java
+Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue |
+    Where-Object { $_.OwningProcess -in @($java.ProcessId) } |
+    Select-Object OwningProcess,LocalAddress,LocalPort
+~~~
+
+A listener on 0.0.0.0 or :: needs further investigation. Do not widen
+the exception to non-loopback traffic merely to suppress a prompt.
+
 ## First-boot provisioning
 
 `$OEM$` copies the setup files into `C:\DeskMateLab`. Early provisioning
