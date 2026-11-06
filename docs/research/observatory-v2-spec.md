@@ -168,6 +168,8 @@ Ingest the offline decoder developed from the Calendar and DMCSR experiments via
 
 This feature consumes read results already authorized to the emulator owner; it does not expand memory-access permissions from the HTTP side.
 
+The [SDK-guided verification plan](sdk-semantic-observer-plan.md) separates app-owned forms, DMCSR allocation and event evidence into individually verified stages.
+
 ### F10. Operations (P1)
 
 Document installation, configuration, binding address, firewall scope, restart/recovery, log paths, backups, and clean shutdown. Provide a dedicated background supervisor/service that can run unattended under a normal lab user and recover the observer after a reboot **without** auto-starting or resetting emulators unless separately configured. Record supervisor PID/start time and child process identity; support safe, idempotent cleanup. Viewer disconnects never stop an experiment. Incompatible config should fail clearly rather than silently widening listening interfaces.

@@ -4,6 +4,10 @@
 [issue22](https://github.com/smartyhall/deskmate-formats/issues/22).
 Offline, read-only investigation; no DeskMate execution or database mutation.
 
+The later SDK comparison identifies `0x0B` as `FIRST_RECORD` and this
+packet as a configuration-row lookup. Its backend trace still ends at the
+far dispatch below. [SDK request crosswalk](sdk-calendar-database.md#database-request-crosswalk)
+
 ## Result
 
 Calendar request **selector0x0B at file0xA02C** is a strong candidate for retrieving

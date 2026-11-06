@@ -112,6 +112,9 @@ publication steps, external paid services or AI dependencies.
   [integration and verification](docs/research/database-integration.md)
 * [Issue 22: one Calendar lookup candidate and its exact dispatch blocker](docs/research/lookup-trace-22.md)
 * [Calendar INT E0 static dispatch and unresolved runtime binding](docs/research/calendar-binding-25.md)
+* DeskMate SDK crosswalks for [Calendar and DMCSR](docs/research/sdk-calendar-dmcsr.md)
+  and [Calendar database requests and storage](docs/research/sdk-calendar-database.md),
+  with the [observer verification plan](docs/research/sdk-semantic-observer-plan.md)
 * [86Box automation source review and proposed MCP observation policy](docs/research/86box-automation-preflight-23.md)
 * [Read-only 86Box MCP setup and observation policy](docs/research/86box-readonly-mcp.md)
 * [Read-only browser observatory and synthetic demo](docs/research/86box-observer-design.md)
