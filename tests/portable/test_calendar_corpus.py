@@ -2,10 +2,10 @@
 import struct
 import unittest
 
-from deskmate_formats.calendar.personal import parse_bytes
+from deskmate_formats.calendar.personal import CalendarParseError, parse_bytes
 from deskmate_formats.calendar.writer import Appointment, append_appointment, capacity
 
-from calendar_corpus import DATES, TIMES, Case, specimen_cases
+from calendar_corpus import DATES, TIMES, Case, probes, specimen_cases
 from synthetic import INTERNAL
 
 
@@ -24,7 +24,9 @@ def check_case(test, case, data):
     test.assertEqual((internal.record_id, internal.offset, internal.raw_hex),
                      (16, 4096, INTERNAL.hex(' ')))
 
-    for slot, (record, physical) in enumerate(zip(db.appointments, case.index_order), 1):
+    keys = [(record.date, record.start_time) for record in db.appointments]
+    test.assertEqual(keys, sorted(set(keys)))
+    for record, physical in zip(db.appointments, case.index_order, strict=True):
         event = case.events[physical]
         day, weekday, _, _ = DATES[event.day]
         test.assertEqual((record.date, record.day_of_week, record.start_time,
@@ -45,15 +47,35 @@ def check_case(test, case, data):
         test.assertEqual(struct.unpack_from('<HHH', data, index_offset),
                          (4, record.offset - 4096, record.record_id))
 
+
+
+def check_writer(test, case, data):
     if case.events:
         prefix = Case(case.name, case.events[:-1], case.category).build()
         last = case.events[-1]
         appointment = Appointment(DATES[last.day][0], TIMES[last.start], TIMES[last.end],
                                   last.description)
         # Full-byte equality also checks the unrelated pages and all existing rows.
-        test.assertEqual(append_appointment(prefix, appointment), data)
+        source = bytearray(prefix)
+        test.assertEqual(append_appointment(source, appointment), data)
+        test.assertEqual(source, prefix)
     if case.category == 'exact-fit':
         test.assertEqual(capacity(data)['data_bytes'], 0)
+        with test.assertRaisesRegex(ValueError, 'additional data/index page required'):
+            append_appointment(prefix, Appointment(appointment.day, appointment.start_minutes,
+                                                   appointment.end_minutes, last.description + '~'))
+
+
+def check_probe(test, probe, data):
+    if probe.error:
+        with test.assertRaises(CalendarParseError) as caught:
+            parse_bytes(data)
+        test.assertEqual(caught.exception.code, probe.error)
+    else:
+        appointment, = parse_bytes(data).appointments
+        test.assertIsNone(appointment.description)
+        test.assertEqual(appointment.undecoded_fields['Description'], '82')
+        test.assertEqual(appointment.raw_fields['Description'], '82')
 
 
 class CalendarCorpusTests(unittest.TestCase):
@@ -65,3 +87,10 @@ class CalendarCorpusTests(unittest.TestCase):
                 self.assertNotIn(data, seen)
                 seen.add(data)
                 check_case(self, case, data)
+                check_writer(self, case, data)
+
+
+    def test_parser_probes(self):
+        for probe in probes():
+            with self.subTest(probe=probe.name):
+                check_probe(self, probe, probe.data)

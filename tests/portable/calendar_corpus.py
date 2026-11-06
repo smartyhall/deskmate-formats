@@ -57,13 +57,20 @@ class Case:
 
 def specimen_cases(seed=DEFAULT_SEED, count=NORMAL_COUNT):
     """Yield count valid specimens, including fixed structural boundaries."""
+    if not 64 <= count <= STRESS_COUNT:
+        raise ValueError(f'count must be in 64..{STRESS_COUNT}')
     yield Case('empty', (), 'empty')
     # 39-byte internal row + seven 137-byte rows + a 25-byte row + marker.
     full = tuple(Event(day, start, start + 1, '~' * length)
                  for (day, start), length in zip(reversed(KEYS[:8]), (120,) * 7 + (8,)))
     yield Case('exact-fit', full, 'exact-fit')
+    yield Case('printable-ascii', (Event(0, 0, 1, ''.join(map(chr, range(32, 127)))),),
+               'printable-ascii')
+    all_keys = tuple(Event(day, start, start + 1, 'KEY')
+                     for day, start in reversed(KEYS))
+    yield Case('all-start-keys', all_keys, 'all-start-keys')
     # Single appointments exhaust the observed date x increasing time-pair matrix.
-    for number in range(count - 2):
+    for number in range(count - 4):
         token = sha256(f'{seed}:{number}'.encode('ascii')).hexdigest()
         day = number % len(DATES)
         start, end = PAIRS[number // len(DATES) % len(PAIRS)]
@@ -83,3 +90,26 @@ def specimen_cases(seed=DEFAULT_SEED, count=NORMAL_COUNT):
                 desc = (token + ' AZaz09~' + token)[:size]
                 items.append(Event(other_day, other_start, other_end, desc))
         yield Case(f'matrix-{number:04d}', tuple(items), 'single' if len(items) == 1 else 'multi')
+
+@dataclass(frozen=True)
+class Probe:
+    name: str
+    data: bytes
+    error: str | None
+
+
+def probes():
+    single = Case('probe-base', (Event(0, 0, 1, 'X'),), 'single').build()
+    yield Probe('truncated', single[:-1], 'truncated_file')
+    yield Probe('extra-page', single + bytes(1024), 'unsupported_layout')
+    yield Probe('bad-magic', b'BAD!' + single[4:], 'invalid_header')
+    yield Probe('duplicate-index', single[:5166] + single[5160:5166] + single[5172:],
+                'invalid_index')
+    overlong = Case('overlong', (Event(0, 0, 1, 'X' * 121),), 'malformed').build()
+    yield Probe('overlong', overlong, 'unsupported_record')
+    reversed_time = Case('reversed', (Event(0, 1, 0, 'X'),), 'unsupported').build()
+    yield Probe('reversed-time', reversed_time, 'unsupported_time_order')
+    # Replace one description byte without changing widths or record framing.
+    description = single.index(b'X', 4096, 5120)
+    yield Probe('opaque-description', single[:description] + b'\x82' + single[description + 1:],
+                None)
