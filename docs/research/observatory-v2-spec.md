@@ -6,8 +6,9 @@
 **Target environment:** Dedicated Windows 10 research VM with 86Box native automation, Codex and Ghidra; ordinary browsers on the user's trusted LAN.
 **Future platform exploration:** [Deferred headless research appliance roadmap](headless-research-appliance-roadmap.md); not a prerequisite for Windows acceptance.
 
-The [M0/M1 implementation guide](observatory-v2-m0-m1.md) records the shipped
-contract, operator workflows, and milestone decisions.
+The [M0/M1 implementation guide](observatory-v2-m0-m1.md) and
+[M2 Codex CLI guide](observatory-v2-m2.md) record the shipped contracts,
+operator workflows, and milestone decisions.
 
 ## 1. Purpose and decisions
 
@@ -71,7 +72,7 @@ Normalized event types:
 - `git.commit`, `git.branch`, `git.pr.opened`, `git.pr.updated`
 - `experiment.checkpoint`, `experiment.sample`, `experiment.result`
 - `approval.requested`, `approval.resolved` (view-only indication; no approval action in observer)
-- `process.heartbeat`, `source.disconnected`, `source.reconnected`, `source.error`
+- `process.heartbeat`, `process.exited`, `source.disconnected`, `source.reconnected`, `source.error`
 - `agent.note` (bounded, explicitly supplied message)
 
 Each event has a schema version, source type, origin/run ID, per-origin sequence, UTC time, monotonic ordering where available, severity, human summary, structured optional details, correlation IDs, and a `visibility`/data-class designation. Treat upstream timestamps as data and assign an ingest sequence and host timestamp locally to create trustworthy order.

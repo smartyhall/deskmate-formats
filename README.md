@@ -89,6 +89,9 @@ Publish explicit agent events with `deskmate-observer-event` and view them
 alongside separately published machine observations over localhost. The
 [Observatory v2 guide](docs/research/observatory-v2-m0-m1.md) includes a
 synthetic demo, private journal recovery and the read-only query API.
+For a new Codex CLI task, use the opt-in
+[Codex JSONL wrapper](docs/research/observatory-v2-m2.md) to send bounded
+telemetry through the same journal.
 
 ## Tests and development
 

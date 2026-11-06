@@ -72,10 +72,14 @@ if __name__ == "__main__":
     if mode == "emit":
         emit(arguments)
     else:
-        from deskmate_formats.observer.codex_cli import capture_codex
+        from deskmate_formats.observer.codex_cli import _raw_stdout, capture_codex
         from deskmate_formats.observer.codex_exec import SUPPORTED_VERSION
 
         journal, visibility, fixture, *options = arguments
+        forward = "--raw-stdout" in options
+        if forward:
+            options.remove("--raw-stdout")
         result = capture_codex(child_command(fixture, *options), journal,
-                               version=SUPPORTED_VERSION, visibility=visibility)
+                               version=SUPPORTED_VERSION, visibility=visibility,
+                               raw_output=_raw_stdout() if forward else None)
         raise SystemExit(result)

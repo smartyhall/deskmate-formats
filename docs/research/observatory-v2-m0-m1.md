@@ -5,7 +5,8 @@ localhost browser feed. The event publisher and its Python API work without
 86Box, DeskMate, Codex, Ghidra, Pillow or MCP. The original [machine observer](86box-observer-design.md)
 and [native owner's approval policy](86box-readonly-mcp.md#enable-browser-publication)
 remain separate from agent events. This guide describes the implemented subset
-of the [v2 specification](observatory-v2-spec.md).
+of the [v2 specification](observatory-v2-spec.md). M2 adds the
+[Codex CLI adapter and wrapper](observatory-v2-m2.md) as another publisher.
 
 ## Run a synthetic demonstration
 
@@ -188,10 +189,13 @@ IDs are reported independently. Resolution affects only its correlated ID,
 and ending the session clears outstanding approvals for that run. No browser
 operation can resolve them.
 
-`process`, `transport` and `last_activity` are independent. A process heartbeat
-refreshes publication freshness but is excluded from actual activity along
-with `source.*` events. Liveness can be unknown if the source supplies no
-identity, access is denied, the platform is unsupported, or the probe budget
+`process`, `transport` and `last_activity` are independent. Process heartbeat
+and exit records refresh publication freshness but are excluded from actual
+activity along with `source.*` events. A producer that directly waits for a
+child can publish `process.exited` to report that it stopped. The run keeps its
+last reported turn outcome, and the exit report does not verify a currently
+live PID. Use a fresh origin for each process lifetime. Liveness can be unknown
+if the source supplies no identity, access is denied, the platform is unsupported, or the probe budget
 of 64 distinct process claims per refresh is reached. A dead or reused PID
 does not imply a failed turn. Activity and heartbeat ages use the host
 monotonic clock and are unknown for events from before the reader started.

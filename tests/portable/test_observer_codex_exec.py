@@ -1,5 +1,6 @@
 """Offline schema, ordering and privacy checks for the Codex exec adapter."""
 
+import json
 from pathlib import Path
 import unittest
 
@@ -86,3 +87,28 @@ class CodexExecTests(unittest.TestCase):
         self.assertEqual(tail["details"]["stdout_line"], 4)
         self.assertIsNone(source.turn_state)
         self.assertIsNone(source.finish())
+
+    def test_collaboration_and_malformed_tool_payloads(self):
+        source = adapter(visibility="observer")
+        records = list(source.feed((FIXTURES / "open-turn.jsonl").read_bytes()))
+        collab = {"id": "source-collab", "type": "collab_tool_call", "tool": "wait",
+                  "sender_thread_id": "private-sender", "receiver_thread_ids": ["private-receiver"],
+                  "prompt": "private-collab-prompt", "agents_states": {}, "status": "in_progress"}
+        items = [
+            ("item.started", collab),
+            ("item.completed", {**collab, "status": "failed"}),
+            ("item.completed", {"id": "fake-file", "type": "file_change", "status": "completed", "changes": [1]}),
+            ("item.completed", {"id": "fake-mcp", "type": "mcp_tool_call", "status": "completed",
+                                "server": "test", "tool": "test", "result": [], "error": None}),
+        ]
+        for kind, item in items:
+            line = json.dumps({"type": kind, "item": item}).encode() + b"\n"
+            records.extend(map(normalize_event, source.feed(line)))
+        started, failed, bad_file, bad_mcp = records[-4:]
+        self.assertEqual([row["type"] for row in records[-4:]],
+                         ["tool.started", "tool.failed", "source.error", "source.error"])
+        self.assertEqual(started["correlation"], failed["correlation"])
+        self.assertEqual(failed["details"]["receiver_thread_ids"], ["private-receiver"])
+        self.assertNotIn("private-collab-prompt", repr(records))
+        for row in (started, failed, bad_file, bad_mcp):
+            self.assertNotIn("private-", row["summary"])

@@ -47,6 +47,12 @@ def _source_id(value):
     return value
 
 
+def _list(value):
+    if type(value) is not list:
+        raise EventError("expected a Codex JSONL array")
+    return value
+
+
 def _integer(value, bits):
     if type(value) is not int or not -(1 << (bits - 1)) <= value < 1 << (bits - 1):
         raise EventError("invalid Codex JSONL integer")
@@ -248,14 +254,13 @@ class CodexExecAdapter:
     def _item_outcome(self, item, details, started, completed):
         item_type = item["type"]
         if item_type == "todo_list":
-            if type(item["items"]) is not list:
-                raise EventError("invalid Codex plan")
-            for step in item["items"]:
+            steps = _list(item["items"])
+            for step in steps:
                 _string(_object(step, "text completed")["text"])
                 if type(step["completed"]) is not bool:
                     raise EventError("invalid Codex plan step")
-            details["plan_steps"] = len(item["items"])
-            details["plan_steps_completed"] = sum(step["completed"] for step in item["items"])
+            details["plan_steps"] = len(steps)
+            details["plan_steps_completed"] = sum(step["completed"] for step in steps)
             return "plan.updated", "Codex plan snapshot recorded" if completed else "Codex plan updated", "info"
         if item_type in ("agent_message", "reasoning", "error"):
             if not completed:
@@ -295,20 +300,42 @@ class CodexExecAdapter:
         if item_type == "mcp_tool_call":
             _string(item["server"])
             _string(item["tool"])
+            if item["result"] is not None:
+                result = _object(item["result"], "content structured_content", "_meta")
+                _list(result["content"])
             if item["error"] is not None:
                 details["error"] = _private_excerpt(_object(item["error"], "message")["message"])
-        elif item_type == "file_change" and type(item["changes"]) is not list:
-            raise EventError("invalid Codex file change list")
+        elif item_type == "file_change":
+            for change in _list(item["changes"]):
+                _string(_object(change, "path kind")["path"])
+                if change["kind"] not in ("add", "delete", "update"):
+                    raise EventError("unsupported Codex file change kind")
         elif item_type == "collab_tool_call":
-            details["sender_thread_id"] = _source_id(item["sender_thread_id"])
-            receivers = item["receiver_thread_ids"]
-            if type(receivers) is not list:
-                raise EventError("invalid Codex collaboration thread list")
-            details["receiver_thread_ids"] = [_source_id(value) for value in receivers[:8]]
-            details["receiver_thread_count"] = len(receivers)
+            self._collaboration_details(item, details)
         label = _TOOLS[item_type]
         if started:
             return "tool.started", f"{label} started", "info"
         if status == "failed":
             return "tool.failed", f"{label} failed", "error"
         return "tool.completed", f"{label} completed", "info"
+
+    def _collaboration_details(self, item, details):
+        if item["tool"] not in ("spawn_agent", "send_input", "wait", "close_agent"):
+            raise EventError("unsupported Codex collaboration tool")
+        if item["prompt"] is not None:
+            _string(item["prompt"])
+        details["sender_thread_id"] = _source_id(item["sender_thread_id"])
+        receivers = [_source_id(value) for value in _list(item["receiver_thread_ids"])]
+        details["receiver_thread_ids"] = receivers[:8]
+        details["receiver_thread_count"] = len(receivers)
+        states = item["agents_states"]
+        if type(states) is not dict:
+            raise EventError("invalid Codex collaboration state map")
+        for thread_id, state in states.items():
+            _source_id(thread_id)
+            _object(state, "status message")
+            if state["status"] not in ("pending_init", "running", "interrupted", "completed",
+                                       "errored", "shutdown", "not_found"):
+                raise EventError("unsupported Codex collaboration state")
+            if state["message"] is not None:
+                _string(state["message"])

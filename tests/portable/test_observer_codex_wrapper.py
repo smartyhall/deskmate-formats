@@ -71,6 +71,17 @@ class CodexWrapperTests(unittest.TestCase):
         self.assertEqual(child.stdout, b"")
         self.assertEqual(child.stderr.splitlines(), [b"synthetic child stderr"])
 
+    def test_closed_process_stdout_pipe_preserves_exit_status(self):
+        with subprocess.Popen(wrapper_command(self.spool, FIXTURES / "failure.jsonl",
+                                              "--exit", "29", "--raw-stdout"),
+                              stdout=subprocess.PIPE, stderr=subprocess.PIPE) as wrapper:
+            wrapper.stdout.close()
+            self.assertEqual(wrapper.wait(timeout=10), 29)
+            diagnostics = wrapper.stderr.read()
+        self.assertIn(b"raw stdout forwarding stopped", diagnostics)
+        self.assertNotIn(b"Exception ignored", diagnostics)
+        self.assertIn("process.exited", [row["type"] for row in read_journal(self.spool).records])
+
     def test_early_stdout_close_keeps_child_alive_and_waits_for_exit(self):
         gate = self.root / "release"
         with subprocess.Popen(wrapper_command(self.spool, FIXTURES / "open-turn.jsonl",

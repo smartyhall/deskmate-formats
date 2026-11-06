@@ -84,6 +84,23 @@ def _exit_was_interrupt(code):
     return (code & 0xFFFFFFFF) == 0xC000013A if os.name == "nt" else code == -signal.SIGINT
 
 
+def _raw_stdout():
+    stream = sys.stdout.buffer
+    # A failed buffered flush can leave pending bytes and replace the child's
+    # status with Python's shutdown error. Write directly to the binary sink.
+    return getattr(stream, "raw", stream)
+
+
+def _forward(output, data):
+    remaining = memoryview(data)
+    while remaining:
+        count = output.write(remaining)
+        if not count:
+            raise OSError("raw stdout made no progress")
+        remaining = remaining[count:]
+    output.flush()
+
+
 def _record_exit(publisher, code, end_reason, disconnected, interrupt_received):
     adapter = publisher.adapter
     details = {"exit_code": code, "turn_state": adapter.turn_state or "unreported",
@@ -142,8 +159,7 @@ def _capture(child, publisher, raw_output, interrupted):
         if data:
             if raw_output is not None:
                 try:
-                    raw_output.write(data)
-                    raw_output.flush()
+                    _forward(raw_output, data)
                 except OSError:
                     _warn("raw stdout forwarding stopped")
                     raw_output = None
@@ -215,6 +231,8 @@ def main(argv=None):
                         help="forward sensitive raw JSONL to your stdout")
     args = list(sys.argv[1:] if argv is None else argv)
     sep = args.index("--") if "--" in args else len(args)
+    if sep == len(args) and "-h" not in args and "--help" not in args:
+        parser.error("provide -- ABSOLUTE_CODEX_BINARY exec --json [Codex arguments]")
     options = parser.parse_args(args[:sep])
     command = args[sep + 1:]
     if command[1:3] != ["exec", "--json"]:
@@ -237,7 +255,7 @@ def main(argv=None):
     try:
         code = capture_codex(command, journal, version=version, agent_id=options.agent,
                              visibility=options.visibility, limits=limits,
-                             raw_output=sys.stdout.buffer if options.passthrough_stdout else None)
+                             raw_output=_raw_stdout() if options.passthrough_stdout else None)
     except EventError as error:
         _warn(str(error))
         return 2
