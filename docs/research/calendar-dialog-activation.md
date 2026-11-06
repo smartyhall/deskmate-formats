@@ -102,6 +102,31 @@ The held final disk matched the complete source disk byte-for-byte. The
 repeat sampled registers at one-ms steps during opening and closing. No
 new guest-memory spans were read in this repeat.
 
+### Repeat clone runtime pins
+
+| Component | Verified identity |
+| --- | --- |
+| 86Box source | `855258da966f1594f568350be59e8e1eca082ed1` |
+| Build | 86Box 7.0, UCRT64 Release, `AUTOMATION=ON`, `GDBSTUB=OFF` |
+| Executable SHA-256 | `e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d` |
+| ROM checkout | `908394b690f7da28f47727d9876774fd672c4ed3` |
+| RSX BIOS SHA-256 | `17984fe7c31ab6b51c96272ba8ee89580eb139aab01399a1b865f6743f3334f2` |
+| Complete starting E02 disk SHA-256 | `c013712c0cda7628a5a3138047a7d0e9b631098c5c72d41d5b8f717a6f90a281` |
+| Machine config at launch SHA-256 | `bdc9f3fc44af41e5360ba6e04a8445a9a36c72543f6b150eace9edb99626d7f1` |
+| Global config at launch SHA-256 | `ed46df650d08c87667b68731a3c8588e6d10a93a9a1393772f3972c01cd128b6` |
+| Starting NVRAM SHA-256 | `a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2` |
+
+The launch receipt identifies this repeat clone's executable and final
+machine configuration. Applying the launcher's preference transformation
+to its preserved pre-launch configuration reproduced the receipt hash.
+The archived E02 source image and pre-launch NVRAM backup establish the
+starting inputs. The clean source and ROM checkouts, build cache, and
+recorded ROM search order were checked separately. The RSX BIOS file
+matched its tracked Git blob. The clone started visibly in hold with
+seed 1. The private manifest `calendar-activation-repeat-runtime-v1`
+has SHA-256
+`1b5518b60ac5f258e2ff451995a7515110ab07d09b30e65ce8946e6b93290c26`.
+
 | Held checkpoint | Guest ms | Frame | Visual label |
 | --- | ---: | ---: | --- |
 | A | 18,992 | 1,253 | October 23 day schedule with the E02 row selected |
