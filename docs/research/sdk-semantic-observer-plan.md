@@ -63,6 +63,14 @@ The [controlled Alarm differential](calendar-alarm-encoding.md) completed
 priority 3. Relative to the no-op save, the closed disk changed by just
 bit `0x40` in the appointment's Protected field.
 
+The [cross-application trial](sdk-dialog-portability.md) exercised
+priority 4. Address Book reproduced the packed frame and table fields
+and reversible allocation, with two large records at held B. The
+Calendar outer-record rule reached geometry matching the edit field.
+Filer's Print record command was disabled on the permitted sample.
+Keep the shared allocation measurement separate from the unresolved
+record ownership and form identification.
+
 For the remaining live proposals, use a separately provisioned disposable
 clone with the RSX/DOS 5.00, 86Box, ROM, graphics-mode and module pins in the
 [activation report](calendar-dialog-activation.md#repeat-clone-runtime-pins),

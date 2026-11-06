@@ -24,6 +24,16 @@ class WindowContextTests(unittest.TestCase):
         self.assertTrue(result['a_to_b_selected_id_changed'])
         self.assertTrue(result['a_equals_c'])
 
+    def test_two_window_four_small_records_and_matched_idle(self):
+        parent = pack('<3H', 0x0814, 0x0F2C, 6)
+        modal = pack('<3H', 0x088C, 0x0EEC, 11)
+        for during, expected in ((modal, (2, 4, True)), (parent, (0, 0, False))):
+            with self.subTest(expected=expected):
+                result = context.compare_triplet(parent, during, parent)
+                self.assertEqual((result['a_to_b_window_records'], result['a_to_b_small_records'],
+                                  result['a_to_b_selected_id_changed']), expected)
+                self.assertTrue(result['a_equals_c'])
+
     def test_handle_only_change_and_missing_restoration(self):
         day = pack('<3H', 0x079C, 0x0F9C, 0xFFFF)
         transient = pack('<3H', 0x079C, 0x0F9C, 2)
