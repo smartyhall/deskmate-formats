@@ -79,6 +79,12 @@ def audit():
             entry = allowed[rel]
             if len(data) != entry['size'] or hashlib.sha256(data).hexdigest() != entry['sha256']:
                 raise ValueError('fixture digest or size mismatch: ' + rel)
+            # Native binary structure is permitted, not credentials or host paths.
+            for text_variant in (data.decode('latin-1'),
+                                 data.replace(b'\x00', b'').decode('latin-1')):
+                for label, pattern in PATTERNS.items():
+                    if re.search(pattern, text_variant):
+                        raise ValueError(label + ': ' + rel)
             found.add(rel)
             count += 1
             continue
@@ -95,7 +101,9 @@ def audit():
         if path.suffix == '.py':
             ast.parse(text, filename=rel)
         count += 1
-    if found != set(allowed):
+    # An extracted sdist carries provenance metadata but intentionally omits the
+    # Git-only binary research fixtures. A source checkout requires every entry.
+    if found != set(allowed) and not (ROOT / 'PKG-INFO').is_file():
         raise ValueError('missing declared fixtures: ' + ', '.join(sorted(set(allowed) - found)))
     # Git fixtures are not included in the sdist/wheel.
     for path in (ROOT / 'dist').glob('*'):
