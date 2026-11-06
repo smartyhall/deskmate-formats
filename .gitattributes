@@ -7,8 +7,11 @@
 *.css text eol=lf
 *.js text eol=lf
 tests/fixtures/codex-exec-0.166.0/*.jsonl text eol=lf
+src/deskmate_formats/supervisor/codex-0.166.0.json text eol=lf
+src/deskmate_formats/supervisor/CODEX-NOTICE.txt -text
 
 # Preserve canonical standard-license bytes and portable REUSE metadata.
 LICENSE -text
 LICENSES/*.txt -text
 *.license text eol=lf
+docs/research/codex-app-server-0.166.0.json text eol=lf
