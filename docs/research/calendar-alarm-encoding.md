@@ -156,9 +156,15 @@ The snapshots establish persistence and stable final placement. The
 experiment did not sample intermediate writes or advance to alarm
 delivery time. The parser exposes the stored appointment setting for
 the observed timed profile and retains the full Protected byte.
-Portable tests use independent synthetic rows. The append writer
-continues to require empty Duration and Protected `0x31` in its inputs
-and output. Other Protected patterns, bit 7, global alarm delivery,
+The portable regression uses a byte-exact copy of the original trial C
+database, verified against the evidence index, closed-disk manifest
+and disk bytes. The file has the same schema and configuration as E02
+and contains one synthetic appointment. Independently assembled cases
+exercise both states and unsupported values.
+[Application-generated fixture manifest](../../tests/fixtures/application-generated/manifest.json)
+
+The append writer continues to require empty Duration and Protected
+`0x31` in its inputs and output. Other Protected patterns, bit 7, global alarm delivery,
 and reminder, annual occasion, midnight and blank-time variants require
 separate validation. Their SDK-defined signatures can serve as
 predictions for later application-generated comparisons.
