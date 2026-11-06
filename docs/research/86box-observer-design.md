@@ -1,5 +1,11 @@
 # Read-only 86Box browser observatory
 
+For planned agent activity telemetry, LAN viewing and read-only operations,
+see the [Observatory v2 specification](observatory-v2-spec.md). The separate
+[Codex supervisor proposal](codex-supervisor-design.md) covers privileged
+work scheduling, managed turns, and Git checkpoints; those actions are never
+part of this browser interface.
+
 The observatory displays observations explicitly approved by the owner of an
 86Box automation connection. The native MCP service can host the observer in
 its process. The standalone demo supplies synthetic observations for local
