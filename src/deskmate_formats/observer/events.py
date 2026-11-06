@@ -16,7 +16,7 @@ EVENT_TYPES = frozenset("""
     plan.updated milestone.completed tool.started tool.completed tool.failed command.started
     command.completed test.started test.completed git.commit git.branch git.pr.opened git.pr.updated
     experiment.checkpoint experiment.sample experiment.result approval.requested approval.resolved
-    process.heartbeat source.disconnected source.reconnected source.error agent.note
+    process.heartbeat process.exited source.disconnected source.reconnected source.error agent.note
 """.split())
 SEVERITIES = frozenset(("debug", "info", "warning", "error"))
 CORRELATIONS = frozenset(("session", "turn", "command", "tool", "experiment", "task", "approval", "test"))

@@ -42,7 +42,7 @@ def _string(value):
 
 def _source_id(value):
     value = _string(value)
-    if not value or len(value) > 256 or not value.isprintable():
+    if not value or not value.isprintable() or len(value.encode("utf-8")) > 256:
         raise EventError("invalid Codex source identity")
     return value
 
