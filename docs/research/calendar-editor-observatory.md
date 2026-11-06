@@ -10,8 +10,8 @@ The record and selected row survived cancellation in both focus runs. A
 bounded static trace produced a focus-index candidate and register-only
 observations located its data segment. The approved RAM comparison below
 confirmed the predicted control index for both visible focus states in this
-loaded instance. Branch publication is held pending confirmation of the
-archive digest.
+loaded instance. The archive's measured digest is reproducible across both
+downloads. The supplied 63-character reference remains unconfirmed.
 
 ### Media and disposable installation
 
