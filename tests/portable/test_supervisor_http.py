@@ -107,7 +107,8 @@ class SupervisorHttpTests(LocalObserver):
         feed.disconnected()
         client.close()
         feed.sample_process()
-        ended = self.wait_for(lambda agent: agent["process"] == "stopped")
+        ended = self.wait_for(lambda agent: agent["process"] == "stopped"
+                              and agent["transport"] == "disconnected")
         self.assertEqual((ended["state"], ended["transport"], ended["pending_approval_count"]),
                          ("completed", "disconnected", 0))
         self.assertEqual(ended["last_activity"]["type"], "turn.completed")
