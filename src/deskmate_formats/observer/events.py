@@ -11,13 +11,14 @@ MAX_INPUT_BYTES = 8192
 MAX_RECORD_BYTES = MAX_INPUT_BYTES + 512  # Includes collector fields and LF.
 MAX_SEQUENCE = (1 << 53) - 1  # Exact in browser JSON numbers.
 IDENTITY = re.compile(r"[a-z0-9][a-z0-9._-]{0,63}")
+TASK_EVENTS = frozenset(("task.accepted", "task.rejected"))
 EVENT_TYPES = frozenset("""
     session.started session.ended turn.started turn.completed turn.failed turn.interrupted
     plan.updated milestone.completed tool.started tool.completed tool.failed command.started
     command.completed test.started test.completed git.commit git.branch git.pr.opened git.pr.updated
     experiment.checkpoint experiment.sample experiment.result approval.requested approval.resolved
     process.heartbeat process.exited source.disconnected source.reconnected source.error agent.note
-""".split())
+""".split()) | TASK_EVENTS
 SEVERITIES = frozenset(("debug", "info", "warning", "error"))
 CORRELATIONS = frozenset(("session", "turn", "command", "tool", "experiment", "task", "approval", "test"))
 _REQUIRED = frozenset(("schema_version", "source", "origin_id", "run_id", "agent_id",

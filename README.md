@@ -93,6 +93,9 @@ For a new Codex CLI task, use the opt-in
 [Codex JSONL wrapper](docs/research/observatory-v2-m2.md) to send bounded
 telemetry through the same journal.
 
+The [Supervisor S1 task intake guide](docs/research/codex-supervisor-s1.md)
+covers local Git discovery, operator decisions and read-only queue reporting.
+
 ## Tests and development
 
 ```sh

@@ -176,17 +176,25 @@ class TaskQueue:
                                (task_id(identifier), revision(rev))).fetchone()
         return self._receipt(row) if row is not None else None
 
-    def counts(self):
+    def counts(self, *, through=None):
         self._check_open()
         return {"accepted": 0, "rejected": 0, "unresolved": 0, "abandoned": 0} | dict(
-            self._db.execute("SELECT state, COUNT(*) FROM tasks GROUP BY state")
+            self._db.execute(
+                "SELECT state, COUNT(*) FROM tasks WHERE (? IS NULL OR sequence <= ?) GROUP BY state",
+                (through, through),
+            )
         )
 
     def discover(self, commit, path):
         self._check_open()
         source = TrustedSource(*self._binding)
         latest = self._db.execute("SELECT commit_id FROM tasks ORDER BY sequence DESC LIMIT 1").fetchone()
-        return source.discover(commit, path, previous=latest[0] if latest else None)
+        candidate = source.discover(commit, path, previous=latest[0] if latest else None)
+        manifest = candidate.manifest
+        existing = self.get(manifest["id"], manifest["revision"])
+        if existing is not None and existing.candidate.raw != candidate.raw:
+            raise TaskError("manifest bytes conflict with the recorded task revision")
+        return candidate
 
     @contextmanager
     def _write(self):
@@ -227,8 +235,6 @@ class TaskQueue:
         identifier, rev, key = (manifest[field] for field in ("id", "revision", "idempotency_key"))
         existing = self.get(identifier, rev)
         if existing is not None:
-            if existing.candidate.source.sha256 != candidate.source.sha256:
-                raise TaskError("manifest bytes conflict with the recorded task revision")
             if existing.state != decision:
                 raise TaskError("task revision already has a different outcome")
             return existing, False

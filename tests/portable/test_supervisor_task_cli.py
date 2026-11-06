@@ -77,6 +77,10 @@ class TaskCliTests(unittest.TestCase):
         self.assertNotIn(b"Operator decline", listing)
         self.assertEqual(json.loads(self.invoke("inspect", "sample", "1").stdout)["reason"],
                          "Operator decline")
+        publication = ("publish", "sample", "1", "--journal", str(self.root / "journal"))
+        self.invoke(*publication, "--journal-max-bytes", "1", expected=6)
+        self.assertEqual(json.loads(self.invoke(*publication).stdout), {"created": True, "cursor": 1})
+        self.assertEqual(json.loads(self.invoke(*publication).stdout), {"created": False, "cursor": 1})
 
     def test_process_exit_before_commit_preserves_unresolved_intent(self):
         token = self.initialize()

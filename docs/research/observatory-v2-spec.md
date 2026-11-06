@@ -74,6 +74,7 @@ Normalized event types:
 - `approval.requested`, `approval.resolved` (view-only indication; no approval action in observer)
 - `process.heartbeat`, `process.exited`, `source.disconnected`, `source.reconnected`, `source.error`
 - `agent.note` (bounded, explicitly supplied message)
+- `task.accepted`, `task.rejected` (sanitized queue milestones in the event timeline)
 
 Each event has a schema version, source type, origin/run ID, per-origin sequence, UTC time, monotonic ordering where available, severity, human summary, structured optional details, correlation IDs, and a `visibility`/data-class designation. Treat upstream timestamps as data and assign an ingest sequence and host timestamp locally to create trustworthy order.
 

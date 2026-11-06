@@ -41,4 +41,9 @@ for command in (
         command + (".exe" if sys.platform == "win32" else "")
     )
     subprocess.run([str(executable), "--help"], check=True, stdout=subprocess.DEVNULL)
+    if command == "deskmate-supervisor-task":
+        sample = (b'{"schema_version":1,"id":"sample","revision":1,"idempotency_key":"sample-1",'
+                  b'"title":"Check install","description":"Synthetic task","category":"verification",'
+                  b'"profile":"offline","resources":["source-read"],"dependencies":[]}')
+        subprocess.run([str(executable), "validate"], input=sample, check=True, stdout=subprocess.DEVNULL)
 print("Installed package, observer assets, and all seven CLI entry points passed", sys.version.split()[0])

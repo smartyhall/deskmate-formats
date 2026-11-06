@@ -62,7 +62,6 @@ class QueueTests(unittest.TestCase):
     def test_cycles_and_missing_dependencies_cannot_enter_accepted_set(self):
         self.create()
         other_path = "ops/tasks/other.json"
-        self.repo.stage(other_path, b'{"unused":"replaced by next commit"}')
         self.repo.commit(manifest(dependencies=[{"id": "other", "revision": 1}]))
         cyclic = self.repo.commit(manifest(id="other", idempotency_key="other-1", dependencies=[
             {"id": "sample", "revision": 1},

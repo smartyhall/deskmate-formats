@@ -6,8 +6,12 @@ import json
 from pathlib import Path
 import sys
 
+from deskmate_formats.observer.event_cli import add_journal_options, journal_limits
+from deskmate_formats.observer.journal import JournalError
+
 from .task_git import TrustedSource
 from .task_manifest import MAX_MANIFEST_BYTES, TaskError, validate_manifest
+from .task_publication import publish_decision
 from .task_queue import MAX_RECORDS, QueueError, QueueUnresolved, open_queue
 
 
@@ -61,7 +65,7 @@ def _parser():
             command.add_argument("--review-token", required=True)
             command.add_argument("--reason-stdin", action="store_true", required=True,
                                  help="read the required UTF-8 decision reason from stdin")
-    for action in ("inspect", "abandon"):
+    for action in ("inspect", "abandon", "publish"):
         command = actions.add_parser(action, allow_abbrev=False)
         command.add_argument("id")
         command.add_argument("revision", type=int)
@@ -69,6 +73,8 @@ def _parser():
             command.add_argument("--review-token", required=True)
             command.add_argument("--reason-stdin", action="store_true", required=True,
                                  help="read the required UTF-8 recovery reason from stdin")
+        if action == "publish":
+            add_journal_options(command)
     return parser
 
 
@@ -113,12 +119,22 @@ def main(argv=None):
     if args.action != "validate" and args.queue is None:
         parser.error("--queue is required for this command")
     try:
+        if args.action == "publish":
+            if not args.journal:
+                parser.error("--journal is required for publication")
+            cursor, created = publish_decision(args.queue, args.journal, args.id, args.revision,
+                                               limits=journal_limits(parser, args))
+            _json({"cursor": cursor, "created": created})
+            return 0
         return _operate(args)
     except (TaskError, QueueError) as error:
         print(str(error), file=sys.stderr)
         if isinstance(error, TaskError):
             return 2
         return 5 if isinstance(error, QueueUnresolved) else 4
+    except JournalError as error:
+        print(str(error), file=sys.stderr)
+        return 6
     except KeyboardInterrupt:
         print("Interrupted; inspect the private queue before retrying a decision", file=sys.stderr)
         return 130
