@@ -1,8 +1,9 @@
 # Held RSX/DOS 5.00 canary through MCP and the observatory
 
 This procedure extends the [original canary experiment](86box-guest-canary.md).
-The [first live MCP and browser comparison](86box-observatory-live-report.md)
-verified the initial projection and stopped before the final native readback.
+The [live validation report](86box-observatory-live-report.md) records the
+initial projection, the comparator correction and a completed refresh
+comparison with native readback on both sides of the interval.
 
 ## Before live authorization
 

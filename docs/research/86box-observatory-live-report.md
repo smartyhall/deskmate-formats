@@ -1,11 +1,13 @@
-# First live RSX/DOS canary observatory comparison
+# Live RSX/DOS canary observatory validation
 
 On 2026-11-05 in America/New_York, the read-only MCP owner captured the verified
 RSX/DOS 5.00 COM checkpoint and published its two approved display artifacts
-to the loopback observatory. The initial comparison succeeded. A line-ending
-assertion in the private comparison harness stopped the run before the final
-native sample. The full refresh-isolation result for
-[issue #39](https://github.com/smartyhall/deskmate-formats/issues/39) remains open.
+to the loopback observatory. A line-ending assertion stopped the first
+comparison before the final native sample. A separately authorized
+completion run on the same emulator process verified the browser projection
+and measured **0 ms** of guest advancement and **zero** additional native
+connection attempts during refresh. These results cover the live validation
+for [issue #39](https://github.com/smartyhall/deskmate-formats/issues/39).
 
 ## Reproduction and custody
 
@@ -39,7 +41,7 @@ sent the canary command and stepped a further 3,000 ms. Scheduled key delivery
 accounted for 44 ms. The native setup socket closed before the MCP owner opened
 its connection. The operator separately approved the two display digests.
 
-## Measured live results
+## First live comparison
 
 The native setup and MCP group agreed on `tandy1000rsx` under 86Box 7.0, held
 and unpaused at **15,044 emulated ms** and frame **1036**. The counters showed
@@ -67,7 +69,7 @@ RAM and grouped observation.
 | Published PNG | `a25cf2b61fcbbbe34a9e9a1a59101d34754da0ae44a85100cd4e23302173da32` |
 | Published GIF | `74f0ee7ee6dcc0019df66f2c09f0fff55804d42ab487fbe963aa46740e5ac28a` |
 
-## Stop condition and remaining check
+## Comparator failure and correction
 
 After the headless reloads, the harness fetched the plain status and classic
 HTML for the first HTTP refresh sample. Its combined assertion normalized
@@ -79,8 +81,8 @@ CRLF-delimited comparison matches. The synthetic rehearsal used a one-row
 screen, which exercised neither the multiline HTML assertion nor this failure
 condition. The harness raised before saving the raw
 plain status and classic bodies. The captured classic DOM independently
-verified the ASCII transcript and GIF link. Direct live plain-status
-verification remains open.
+verified the ASCII transcript and GIF link. The first comparison stopped
+before direct plain-status verification finished.
 
 The observation session closed its native socket and HTTP listener. The
 emulator stayed running. The interruption occurred before the final MCP
@@ -88,9 +90,59 @@ status, register and RAM samples and before the post-refresh TCP table
 sample. The browser's unchanged published clock cannot establish the actual
 guest-time delta, and the socket audit is scoped to the owner process.
 
-Before a separately authorized completion attempt, validate the comparator
-with a multiline fixture and preserve raw bodies before assertions. Compare
-both text responses after line-ending normalization. Capture the native
-clock, registers, approved RAM, execution flags, reset counters and TCP
-endpoints on both sides of the refresh interval. Historical browser
+The corrected private comparator preserved raw responses before checking
+them. It normalized both ASCII bodies to LF, compared the entire
+plain-status transcript including the trailing blank rows and spaces,
+and checked the classic HTML transcript, GIF image source and GIF link
+separately. An authenticated synthetic native peer supplied a four-row
+CP437 fixture with box drawing, an accent, HTML-sensitive characters and
+a padded blank row. The old comparison failed against the CRLF wire body.
+The corrected checks passed for CRLF and LF. Negative checks rejected
+missing screen padding, changed classic text, and incorrect GIF links or
+image sources. The production observatory code stayed at the pinned revision.
+
+## Completed live comparison
+
+A separate authorization allowed one new owner on the same process.
+Before opening the socket, the harness matched the OS process ID, start
+time, session, executable hash and launch arguments against the private
+receipts. The new owner verified the held checkpoint, read the complete
+register reply and both approved RAM spans against the saved native
+capture, and observed the approved display in the same group. It
+discovered and exercised all seven MCP tools. The transcript and PNG
+matched their approval hashes. Browser JSON, raw plain status, classic
+HTML, PNG and GIF matched the approved projection. Both browser renderings
+and the three image hashes matched the first comparison.
+
+The browser-only interval ran for **14.408 seconds** on the host clock. The
+modern and classic views each loaded and reloaded three times. The harness
+also made 12 rounds of direct HTTP reads of the JSON, text, classic HTML,
+PNG and GIF. It issued no MCP calls during the interval. The observer's
+generation, sequence and frame key remained fixed as the display aged from
+fresh to stale.
+
+| Comparison | Before refresh | After refresh |
+| --- | --- | --- |
+| Native emulated clock | 15,044 ms | 15,044 ms (**0 ms delta**) |
+| Native frame count | 1036 | 1036 |
+| Native execution state | Held, unpaused | Held, unpaused |
+| Native reset counters | 1 hard, 1 soft, last at 613 ms | Identical |
+| Full native registers and both approved RAM spans | Archived checkpoint match | Identical to the pre-refresh group |
+| MCP owner session and connection generation | One session, connection generation 1 | Same session and generation |
+| Browser publication | Generation 1, sequence 5 | Same generation, sequence, frame key and published clock |
+| Native connection audit | One initial attempt and one established connection | Zero additional attempts and the same established endpoints |
+
+The final MCP status and grouped register and RAM reads completed before the
+owner closed. OS TCP samples showed both sides of the same native connection
+before and after refresh. The Python audit counted connection attempts to the
+native endpoint within the owner process. It did not trace unrelated host
+processes. Native equality refers to the sampled state and the two approved
+RAM spans. The protocol cannot establish instruction-precise render timing
+or detect transitions that leave no sampled change.
+
+The MCP socket and loopback browser listener closed at the end of the
+comparison. The same emulator process remained running, last observed held
+and unpaused at the verified checkpoint. The sealed baseline and canary
+media hashes matched again. Both runs remain private, including the
+completion run's raw wire bodies and artifact manifest. Historical browser
 compatibility remains under issue #31.
