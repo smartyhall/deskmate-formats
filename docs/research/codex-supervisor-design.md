@@ -1,6 +1,7 @@
 # Proposed Codex laboratory supervisor — design and integration plan
 
-**Status:** Architectural proposal, not implemented.
+**Status:** Architectural proposal. The offline S0 foundation and its limits
+are recorded in [Supervisor S0 app-server protocol](codex-supervisor-s0.md).
 **Companion:** [DeskMate Observatory v2 functional specification](observatory-v2-spec.md).
 **Deferred successor:** [Headless and reproducible research appliance roadmap](headless-research-appliance-roadmap.md) (only after validated Windows observer/supervisor).
 **Scope:** Local Windows 10 research workstation and multiple isolated Codex/86Box
@@ -221,7 +222,7 @@ separate authorized channel, never through the display endpoint.
 
 | Phase | Priority | Functional result | Test |
 | --- | --- | --- | --- |
-| S0 — Architecture probe | P0 | Verify app-server protocol and own-thread telemetry on actual Windows VM; document existing desktop-session attachment limits | Start a disposable thread, observe events, resume after restart; no live emulator |
+| S0 — Architecture probe | P0 | Pin the app-server protocol and exercise owned stdio, restart and telemetry with a synthetic child | Offline S0 checks. A disposable real thread remains a separate operator-authorized smoke test. |
 | S1 — Task intake | P0 | Versioned Git task manifests, append-only queue ledger, manual dispatch | Same task revision seen twice produces one run; malformed/untrusted tasks rejected |
 | S2 — Managed turns | P0 | One supervised app-server Codex thread, new turns, queued prompts and exact-ID steering | Queue and steer observed under test; approval only when explicitly authorized |
 | S3 — Checkpoints | P1 | Milestone commits, remote branch push and draft PR updates | Induced connection failure leaves local commit; retry never duplicates/moves unrelated branches |

@@ -6,6 +6,7 @@ from hashlib import sha256
 from importlib.resources import files
 import json
 import math
+import os
 from pathlib import Path
 from queue import Empty, Full, Queue
 import re
@@ -236,8 +237,12 @@ class AppServer:
 
         def write():
             try:
-                self._child.stdin.write(frame)
-                self._child.stdin.flush()
+                remaining = memoryview(frame)
+                while remaining:
+                    count = os.write(self._child.stdin.fileno(), remaining)
+                    if not count:
+                        raise OSError("short stdio write")
+                    remaining = remaining[count:]
             except (OSError, ValueError):
                 outcome.put(False)
             else:
@@ -342,7 +347,8 @@ class AppServer:
             # Refuse to offer a decision for unrecognized policy extensions.
             definition = self.schema.methods[method][0]
             allowed = self.schema.fields(definition)
-            if not params.keys() <= allowed.keys() or params.get("networkApprovalContext") is not None:
+            if (not params.keys() <= allowed.keys() or params.get("networkApprovalContext") is not None
+                    or params.get("kind", "command") != "command"):
                 decisions = ()
             approval = Approval(self.generation, identifier, method, entity_id(params["threadId"]),
                                 entity_id(params["turnId"]), entity_id(params["itemId"]), decisions)
@@ -404,8 +410,21 @@ class AppServer:
     def _take_synthetic_approval(self, approval, *, generation, thread_id, turn_id, decision):
         """Consume and serialize one exact approval. Only the offline harness writes it."""
         self._usable()
-        if type(approval) is not Approval:
+        if self._requesting or type(approval) is not Approval:
             raise ProtocolError("approval must be an outstanding request object")
+        # Process already available resolutions and turn completions before a decision.
+        for _ in range(MAX_EVENTS):
+            message = self._receive(monotonic())
+            if message is None:
+                break
+            try:
+                if "method" not in message:
+                    raise ProtocolError("unexpected response without outstanding request")
+                self._event(message)
+            except ProtocolError as error:
+                raise self._fail(str(error)) from None
+        else:
+            raise self._fail("receive backlog during approval")
         current = self._approvals.get(request_id(approval.request_id))
         if (current is not approval or generation != self.generation
                 or (thread_id, turn_id) != (approval.thread_id, approval.turn_id)

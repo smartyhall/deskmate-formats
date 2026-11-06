@@ -31,7 +31,7 @@ class SyntheticServer(AppServer):
 
 
 def events(client):
-    while (event := client.next_event(timeout=0.05)) is not None:
+    while (event := client.next_event(timeout=0.15)) is not None:
         yield event
 
 
@@ -61,12 +61,12 @@ class AppServerTests(unittest.TestCase):
             self.assertEqual(resumed["turns"][0]["id"], turn["id"])
 
     def test_approval_requires_exact_session_association_and_identity(self):
-        for mode in ("approval", "string-approval"):
+        for mode in ("approval", "string-approval", "file-approval"):
             with self.subTest(mode=mode), fake(self.path, mode) as client:
                 client.request("thread/start", {})
                 turn = client.request("turn/start", INPUT)["turn"]
                 approval, = [event for event in events(client) if isinstance(event, Approval)]
-                self.assertEqual(approval.request_id, 2 if mode == "approval" else "2")
+                self.assertEqual(approval.request_id, "2" if mode == "string-approval" else 2)
                 args = dict(generation=client.generation, thread_id="test-thread",
                             turn_id=turn["id"], decision="decline")
                 for change in ({"generation": "old"}, {"thread_id": "wrong"},
@@ -86,6 +86,20 @@ class AppServerTests(unittest.TestCase):
                 self.assertEqual([e.method for e in events(client)], ["serverRequest/resolved", "turn/completed"])
                 with self.assertRaises(ProtocolError):
                     client.decline(approval, authorized=True, **expected)
+
+    def test_resolved_and_old_generation_approvals_are_stale(self):
+        with fake(self.path, "stale-approval") as client:
+            client.request("thread/start", {})
+            turn = client.request("turn/start", INPUT)["turn"]
+            approval, = [event for event in events(client) if isinstance(event, Approval)]
+            expected = dict(generation=client.generation, thread_id="test-thread", turn_id=turn["id"])
+            with self.assertRaises(ProtocolError):
+                client.decline(approval, authorized=True, **expected)
+        with fake(self.path, "approval") as client:
+            client.request("thread/start", {})
+            client.request("turn/start", INPUT)
+            with self.assertRaises(ProtocolError):
+                client.decline(approval, authorized=True, **expected)
 
     def test_steer_and_interrupt(self):
         with fake(self.path) as client:

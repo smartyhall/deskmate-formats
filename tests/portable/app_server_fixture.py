@@ -110,9 +110,16 @@ def main(state_path, mode):
                 if mode == "lost-ack":
                     # The mutation reached durable synthetic state before stdout vanished.
                     return
+                if mode == "lost-ack-live":
+                    # Break protocol after the mutation but stay alive until stdin closes.
+                    sys.stdout.write("not-json\n")
+                    sys.stdout.flush()
+                    continue
                 lifecycle = {"threadId": thread["id"], "turn": turn}
                 item = {"id": "synthetic-tool", "type": "commandExecution", "command": PRIVATE,
                         "cwd": thread["cwd"], "commandActions": [], "status": "inProgress"}
+                if mode == "file-approval":
+                    item = {"id": item["id"], "type": "fileChange", "changes": [], "status": "inProgress"}
                 activity = {"threadId": thread["id"], "turnId": turn["id"], "item": item}
                 notify("synthetic/ignored", {"secret": PRIVATE})
                 if mode == "out-of-order":
@@ -122,13 +129,16 @@ def main(state_path, mode):
                 notify("turn/started", lifecycle)
                 if mode != "out-of-order":
                     notify("item/started", activity | {"startedAtMs": 1})
-                if mode in ("approval", "string-approval"):
+                if mode in ("approval", "string-approval", "file-approval", "stale-approval"):
                     # Collide with an outstanding client ID in the numeric case.
-                    pending = identifier if mode == "approval" else str(identifier)
-                    emit({"id": pending, "method": "item/commandExecution/requestApproval", "params": {
-                        "threadId": thread["id"], "turnId": turn["id"], "itemId": item["id"],
-                        "startedAtMs": 1, "command": PRIVATE,
-                    }})
+                    pending = str(identifier) if mode == "string-approval" else identifier
+                    approval = {"threadId": thread["id"], "turnId": turn["id"],
+                                "itemId": item["id"], "startedAtMs": 1}
+                    kind = "fileChange" if mode == "file-approval" else "commandExecution"
+                    emit({"id": pending, "method": f"item/{kind}/requestApproval", "params": approval})
+                    if mode == "stale-approval":
+                        notify("serverRequest/resolved", {"threadId": thread["id"], "requestId": pending})
+                        pending = None
                 if mode in ("out-of-order", "failed"):
                     turn_status(turn, "failed" if mode == "failed" else "completed")
                     save()
