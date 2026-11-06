@@ -37,7 +37,11 @@ observations from synthetic tests or algorithm hypotheses. Never assume shared
 storage between applications. Prefer small evidence-backed additions over empty
 frameworks or speculative field names.
 
-Do not attach executables, full snapshots, disk images, credentials, private paths
-or personal data to issues/PRs. Provide a minimal independently generated specimen
-or a redacted offset table instead. Keep paid services and AI-dependent CI out of
-required verification. No automatic publication/release is configured.
+Preserve byte-exact application-generated files from controlled synthetic-data
+experiments in `tests/fixtures/application-generated/`, with SHA-256 and experiment
+provenance. Native schemas, indexes and metadata are valuable evidence; do not
+replace a genuine application-created file with an approximation from our writer.
+Do not attach executables, ROMs, install media, complete installed snapshots,
+disk images, credentials, private paths, real user data or raw RAM dumps.
+Keep paid services and AI-dependent CI out of required verification.
+No automatic publication/release is configured.

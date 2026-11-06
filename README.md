@@ -9,9 +9,12 @@ inspect, read, write, export and eventually convert them. **DeskMate 3.05
 Calendar is the first implemented format, not the project boundary.**
 
 The project is not affiliated with Tandy. It does not distribute original
-DeskMate executables, disk images, real user databases or complete installed
-snapshots. Original experimental evidence is preserved separately in DOSLAB;
-the repository's portable tests use independently generated synthetic data.
+DeskMate executables, installation media, ROMs, disk images, real user databases
+or complete installed snapshots. Application-generated documents containing
+controlled synthetic test data are eligible for byte-exact preservation as
+[research fixtures](tests/fixtures/application-generated/README.md), including
+native schemas, indexes and metadata. Private inputs and raw lab evidence
+remain archived outside Git.
 
 ## Project status
 
@@ -90,9 +93,9 @@ python tools/audit_repository.py
 python -m build
 ```
 
-Portable tests generate synthetic bytes without opening DOSLAB. Private tests are
-separate and require an explicit `DOSLAB_ROOT`; the complete original 72-test lab
-suite is **not** claimed portable. See [test/evidence instructions](docs/evidence/README.md).
+Portable tests use synthetic data and may load committed application-generated
+test fixtures without opening DOSLAB. Private tests are separate and require an
+explicit `DOSLAB_ROOT`; the complete original 72-test lab suite is **not** claimed portable. See [test/evidence instructions](docs/evidence/README.md).
 CI builds and installs the wheel, checks imports/entry points and runs only portable
 tests on Windows/Linux with Python 3.13/3.14. CI has no emulator, archival fixtures,
 publication steps, external paid services or AI dependencies.
@@ -162,8 +165,9 @@ MCP entry is now persisted locally; active tool visibility awaits a later sessio
 Corrections to the specifications, reproducible observations, independently
 authored tests and interoperability tooling are welcome. See
 [CONTRIBUTING.md](CONTRIBUTING.md) and the repository's issue templates.
-Please do not submit DeskMate binaries, disk images, original user data or
-private laboratory memory dumps as fixtures.
+Preserve application-generated synthetic test files with hashes and provenance.
+Do not submit DeskMate executables, installation media, ROMs, disk images, real
+user data or private laboratory memory dumps as fixtures.
 
 ## Licensing
 
@@ -175,7 +179,8 @@ Adjacent REUSE-compatible .license sidecars provide exact per-file declarations.
 
 Copyright (c) 2026 Michael A. Hall, except where another accurate notice applies.
 No ownership or redistribution rights are claimed over original DeskMate software,
-media, databases, manuals or third-party works. Complete standard texts are in
+installation media, real user databases, manuals or third-party works. Native
+format structures and facts are not claimed as project-owned copyright. Complete standard texts are in
 [LICENSES](LICENSES); [LICENSE](LICENSE) is the software GPL text.
 See [LICENSING.md](LICENSING.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
 The repository is publicly hosted. GitHub Actions runs the portable

@@ -1,48 +1,107 @@
-"""Keep native DeskMate materials out of both source trees and distributions."""
-import importlib.util
-from pathlib import Path
+"""Publication audit tests for application-generated synthetic-data specimens."""
+import hashlib
+import json
 import tempfile
 import unittest
-import zipfile
+from pathlib import Path
+from unittest.mock import patch
 
-spec = importlib.util.spec_from_file_location(
-    'audit_repository', Path(__file__).resolve().parents[2] / 'tools/audit_repository.py')
-audit = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(audit)
+from tools import audit_repository
 
 
-class RepositoryBoundaryTests(unittest.TestCase):
+class FixtureAuditTest(unittest.TestCase):
     def setUp(self):
-        self.temp = tempfile.TemporaryDirectory()
-        self.old = audit.ROOT
-        audit.ROOT = Path(self.temp.name)
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        self.base = self.root / 'tests/fixtures/application-generated'
+        self.base.mkdir(parents=True)
 
-    def tearDown(self):
-        audit.ROOT = self.old
-        self.temp.cleanup()
+    def manifest(self, items):
+        (self.base / 'manifest.json').write_text(
+            json.dumps({'fixtures': items}), encoding='utf-8')
 
-    def test_native_extensions_are_blocked_even_for_printable_files(self):
-        for suffix in ('.PDM', '.RES', '.R89', '.FIL', '.ADR', '.PCL', '.HLP', '.TUT',
-                       '.NVR', '.ROM', '.VHD', '.VHDX', '.HDI', '.RAW', '.TOKEN'):
-            p = audit.ROOT / ('native' + suffix)
-            p.write_text('synthetic printable content', encoding='utf-8')
-            with self.subTest(suffix=suffix), self.assertRaisesRegex(ValueError, 'excluded'):
-                audit.audit()
-            p.unlink()
+    @staticmethod
+    def entry(name, data):
+        return {'path': name, 'sha256': hashlib.sha256(data).hexdigest(),
+                'size': len(data), 'origin': 'DeskMate 3.05 controlled experiment',
+                'synthetic_data': True}
 
-    def test_authored_text_remains_allowed(self):
-        (audit.ROOT / 'report.md').write_text('Independent findings.\n', encoding='utf-8')
-        self.assertEqual(audit.audit()['source_files_checked'], 1)
+    def audit(self):
+        with patch.object(audit_repository, 'ROOT', self.root):
+            return audit_repository.audit()
 
-    def test_mz_signature_is_blocked_under_an_innocent_extension(self):
-        (audit.ROOT / 'report.txt').write_bytes(b'MZ synthetic header')
-        with self.assertRaisesRegex(ValueError, 'software/database bytes'):
-            audit.audit()
+    def test_generated_fil_database_accepted(self):
+        data = b'\x03FIL' + b'\x00' * 24
+        path = self.base / 'calendar/E02.cln'
+        path.parent.mkdir()
+        path.write_bytes(data)
+        self.manifest([self.entry('calendar/E02.cln', data)])
+        self.assertEqual(self.audit()['application_generated_fixtures_checked'], 1)
 
-    def test_native_extension_in_wheel_is_blocked(self):
-        dist = audit.ROOT / 'dist'
-        dist.mkdir()
-        with zipfile.ZipFile(dist / 'synthetic.whl', 'w') as z:
-            z.writestr('example/native.res', 'synthetic resource')
-        with self.assertRaisesRegex(ValueError, 'excluded file in archive'):
-            audit.audit()
+    def test_tampering_rejected(self):
+        data = b'\x03FIL' + b'\x00' * 24
+        path = self.base / 'addressbook/A01.adr'
+        path.parent.mkdir()
+        path.write_bytes(data + b'!')
+        self.manifest([self.entry('addressbook/A01.adr', data)])
+        with self.assertRaisesRegex(ValueError, 'digest or size mismatch'):
+            self.audit()
+
+    def test_unlisted_binary_rejected(self):
+        self.manifest([])
+        (self.base / 'unlisted.cln').write_bytes(b'\x03FIL')
+        with self.assertRaisesRegex(ValueError, 'excluded evidence/software type'):
+            self.audit()
+
+    def test_missing_declared_binary_rejected(self):
+        self.manifest([self.entry('calendar/E02.cln', b'data')])
+        with self.assertRaisesRegex(ValueError, 'missing declared fixtures'):
+            self.audit()
+
+    def test_executable_outside_rejected(self):
+        self.manifest([])
+        (self.root / 'installer.com').write_bytes(b'MZ')
+        with self.assertRaisesRegex(ValueError, 'excluded evidence/software type'):
+            self.audit()
+
+    def test_disguised_executable_rejected(self):
+        data = b'MZ' + b'\x00' * 16
+        path = self.base / 'calendar/fake.cln'
+        path.parent.mkdir()
+        path.write_bytes(data)
+        self.manifest([self.entry('calendar/fake.cln', data)])
+        with self.assertRaisesRegex(ValueError, 'executable disguised'):
+            self.audit()
+
+    def test_traversal_rejected(self):
+        self.manifest([self.entry('../outside.cln', b'data')])
+        with self.assertRaisesRegex(ValueError, 'unsafe fixture path'):
+            self.audit()
+
+    def test_manifested_binary_with_access_token_rejected(self):
+        data = b'\x03FIL\x00' + (b'https://example.invalid/?access_' + b'token=EXAMPLE12345678')
+        path = self.base / 'calendar/E03.cln'
+        path.parent.mkdir()
+        path.write_bytes(data)
+        self.manifest([self.entry('calendar/E03.cln', data)])
+        with self.assertRaisesRegex(ValueError, 'archive access query'):
+            self.audit()
+
+    def test_manifested_binary_with_private_host_path_rejected(self):
+        data = b'\x03FIL\x00C:\\Users\\example\\Secrets'
+        path = self.base / 'calendar/E04.cln'
+        path.parent.mkdir()
+        path.write_bytes(data)
+        self.manifest([self.entry('calendar/E04.cln', data)])
+        with self.assertRaisesRegex(ValueError, 'host Windows user path'):
+            self.audit()
+
+    def test_source_distribution_with_omitted_binary_is_auditable(self):
+        self.manifest([self.entry('calendar/E02.cln', b'private-test-file')])
+        (self.root / 'PKG-INFO').write_text('Metadata-Version: 2.4\n')
+        self.assertEqual(self.audit()['status'], 'passed')
+
+
+if __name__ == '__main__':
+    unittest.main()

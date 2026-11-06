@@ -12,6 +12,7 @@ to OpenAI, Codex or any other party.
 | Software and executable/build tooling | `GPL-3.0-or-later` | All Python libraries, CLIs, tests, synthetic generators and tools; pyproject.toml, MANIFEST.in, CI workflow, .gitignore and .gitattributes |
 | Formal technical specifications | `GPL-3.0-or-later OR CC-BY-4.0` | docs/formats/calendar/CALENDAR_FORMAT.md, docs/containers/README.md, docs/compatibility.md |
 | General documentation and explanatory metadata | `GPL-3.0-or-later OR CC-BY-SA-4.0` | Other authored Markdown, evidence/provenance JSON and GitHub issue templates/configuration |
+| Application-generated synthetic-data fixtures | `GPL-3.0-or-later OR CC-BY-4.0`, to the extent rights exist in contributed test content | tests/fixtures/application-generated/; no ownership claim over native structural facts |
 | Standard license texts | Original notices/permissions, unmodified | LICENSE and LICENSES/*.txt |
 
 Each independently authored file has an adjacent REUSE-compatible `.license`
@@ -68,16 +69,20 @@ requirement; scholarly citation remains good practice, not ownership of facts.
 
 ## Third-party material and dependencies
 
-No project license grants rights to Tandy DeskMate executables, media, databases,
-manuals, assets, trademarks, external images or other third-party works. Require
-a documented rights basis before incorporating them. Preserve their original
+No project license grants rights to Tandy DeskMate executables, installation
+media, original user databases, manuals, assets, trademarks, external images or
+other third-party works. Application-generated synthetic test documents can be
+preserved with their native structure; this does not claim copyright in format
+facts. Require a documented rights basis for actual third-party content. Preserve their original
 notices/terms rather than substituting the project attribution. Flag uncertainty
 for human review before incorporation or redistribution.
 
 Standard license texts retain their Free Software Foundation / Creative Commons
 notices. Exact sources and hashes are in docs/evidence/license-texts.json. DOSLAB
-is external, unchanged and not relicensed. Independently assembled synthetic
-fixture-generator code is software; no archived database is bundled.
+is external, unchanged and not relicensed. Independently assembled synthetic fixture-generator code is software.
+Application-generated synthetic databases may be committed as research fixtures
+with provenance and accurate REUSE sidecars. Originals and private records are
+not bundled.
 
 The base installation uses Python's standard library. The optional `mcp`
 extra installs the MCP SDK and AnyIO; the optional `observer` extra installs
