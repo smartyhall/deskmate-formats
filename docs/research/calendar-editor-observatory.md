@@ -8,9 +8,10 @@ database hashes. The visual editor experiment, matched idle control and
 Start Time focus control completed in graphics mode `0x12` at 640 × 480.
 The record and selected row survived cancellation in both focus runs. A
 bounded static trace produced a focus-index candidate and register-only
-observations located its probable data segment. Guest RAM confirmation is
-pending authorization for the exact ranges below. Further guest work and
-publication are also held pending confirmation of the archive digest.
+observations located its data segment. The approved RAM comparison below
+confirmed the predicted control index for both visible focus states in this
+loaded instance. Branch publication is held pending confirmation of the
+archive digest.
 
 ### Media and disposable installation
 
@@ -157,9 +158,9 @@ further stops with DS still `0x3472`. The observed Calendar data base is
 verified independently. The primary B happened to stop in a different
 execution context, so its live DS is unsuitable as an application address.
 
-The proposed normal-view width-one reads below apply to this one launch and
-still-loaded Calendar instance. First require both code comparisons against
-the original image. If either fails, stop before the data reads. Rebind the
+The approved normal-view width-one reads below applied to this one launch
+and still-loaded Calendar instance. The protocol first required both code
+comparisons against the original image. If either fails, stop before the data reads. Rebind the
 approved region list to each held sample in the MCP owner. The four data spans
 sum to 16 bytes. The primary prediction is `05` at `0x369E9` for Description
 and `01` for Start Time. Compare A→B, B→C and A→C, as well as the matched
@@ -175,11 +176,56 @@ the focus index is meaningful only when the corresponding editor is active.
 | Data | `0x37056..0x37059` | 4 | Calendar `DS:0x2936`, DMCSR dispatch pointer. Compare its words without dereferencing it |
 | Data | `0x3C252..0x3C259` | 8 | Calendar `DS:0x7B32`, seven description characters and potential NUL |
 
-The emulator was left visibly running and held on the restored day view.
-There was no browser publication. The completed canary was not contacted or
-modified. Private evidence includes original media, clone backups, held disk
-copies, full file manifests, raw native and MCP evidence, register sweeps and
-the offline Ghidra projects and traces.
+### Approved RAM comparison
+
+The initial code-only check at 516,012 ms, frame 31,422, matched both
+reference windows in the independently hashed `CALENDAR.PDM`. At every
+subsequent checkpoint the owner matched both windows again before reading
+the four data spans. A native PNG matched the corresponding previously
+labelled frame after masking the clock digits and selection blink line.
+The owner reproduced the native registers and read the data twice at each
+held checkpoint. Both read groups agreed with a guest-time delta of **0 ms**.
+The SDK owner used one authenticated connection per checkpoint. The host
+socket table confirmed the prior owner was closed at every handoff. The
+launch, reset counters and Calendar code anchors stayed consistent.
+
+Each table cell shows guest ms, frame count and the two decoded control
+indices at the held checkpoint. The first index is descriptor `+3` and the
+second is `+4`.
+
+| Run | A | B | C |
+| --- | --- | --- | --- |
+| Description | 516,012 ms / 31,422 / (8, 8) | 517,248 ms / 31,496 / (5, 5) | 517,852 ms / 31,532 / (8, 8) |
+| Idle | 517,852 ms / 31,532 / (8, 8) | 519,088 ms / 31,607 / (8, 8) | 519,692 ms / 31,643 / (8, 8) |
+| Start Time | 519,692 ms / 31,643 / (8, 8) | 520,928 ms / 31,717 / (1, 1) | 521,532 ms / 31,753 / (8, 8) |
+
+In each editor run both index bytes changed on A→B and B→C, and all 16
+approved data bytes agreed on A→C. The idle triplet was constant. At B only
+the two index bytes differed between the editor runs, while the visible
+values stayed the same. The first index therefore tracks the selected
+control in this editor under these conditions, in agreement with the
+code that updates it and indexes the control table. The second index
+coincided in these settled samples. Its behavior between updates remains
+unmeasured.
+
+Index 8 is the Cancel entry in the editor's table. Day-view A and C both
+held this value, and the first A followed an earlier cancelled editor in
+the same application lifetime. The result is consistent with retained
+editor state. It leaves open what the slot contains before the first
+editor open and how an observer independently determines that the modal
+editor is active. The title pointer and the description buffer matched the
+known title and appointment text in all nine samples, including the day
+views. The dispatch pointer was also invariant and matched the relocated
+named DMCSR descriptor entry. The pointer comparison used the stored value
+alone and left the target unread.
+
+The last held disk copy was byte-identical to the archived E02 disk. The
+clone remains visibly running and held on the restored day view at 521,532
+ms. The browser listener stayed disabled throughout. Private evidence
+contains the original media, clone backups, held disk copies, raw bounded
+RAM and register replies, checkpoint PNGs, owner and timing records, byte
+diffs, and the offline Ghidra projects and traces. The completed canary was
+outside the run.
 
 ## Original experiment plan
 
