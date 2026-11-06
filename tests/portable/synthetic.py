@@ -14,8 +14,9 @@ PERSONAL = [('Date',3,'C'),('DayOfWeek',1,'C'),('Duration',1,'C'),
 def row(ident,fields):
     return bytes((128,ident))+b'\x01'.join(fields)+b'\x01\x02'
 
-def event(ident,description,day=b'\x90lb',weekday=b'c',start=b'\xa5',end=b'\xa9'):
-    return row(ident,[day,weekday,b'',start,end,b'1',description.encode('ascii')])
+def event(ident,description,day=b'\x90lb',weekday=b'c',start=b'\xa5',end=b'\xa9',
+          *,duration=b'',protected=b'1'):
+    return row(ident,[day,weekday,duration,start,end,protected,description.encode('ascii')])
 
 INTERNAL = row(16, [b'  \xff', b'', b'', b'', b'', b'0', b'ie'+b'a'*12+b'@PaSsWoRd@='])
 

@@ -2,7 +2,12 @@
 
 # DeskMate 3.05 Calendar: initial PERSONAL.CLN specification
 
-Validated through E14 on 2026-10-31 against the preserved fixtures. This is an evidence-based description of these fixtures. The initial read-only parser below supports an explicit subset; no general decoder or writer is claimed. Absolute offsets are zero-based. **Confirmed** means directly observed or reproduced; **probable** means a structural interpretation supported by repeated examples; **speculative** means an untested semantic explanation.
+Validated through E14 on 2026-10-31 against the preserved fixtures. The
+[November 6 Alarm differential](#protected-and-alarm) adds one controlled
+comparison on the E02 appointment. Absolute offsets are zero-based.
+**Confirmed** means directly observed or reproduced. **Probable** means a
+structural interpretation supported by repeated examples. **Speculative**
+means an untested semantic explanation.
 
 ## Evidence and provenance
 
@@ -111,7 +116,7 @@ offset: 1027    1029          102D          1030     1032     1034     1036     
 | `1031` | +10 | `01` | Separator |
 | `1032` | +11 | E01–E03 `A8`, E04 `A9` | **Confirmed EndTime location:** isolated 10:00→10:15 AM edit changes only this byte |
 | `1033` | +12 | `01` | Separator |
-| `1034` | +13 | `31` | Candidate Protected field; literal ASCII `1`, semantic meaning untested |
+| `1034` | +13 | `31` | Protected. In the tested ordinary appointment, `31` is Alarm off and `71` is Alarm on. See [Protected and Alarm](#protected-and-alarm). |
 | `1035` | +14 | `01` | Separator |
 | `1036–103C` | +15 | E01 `4C 50 48 61 31 32 33` | **Confirmed** description `LPHa123`; E02 final byte is `34` |
 | `103D` | +22 | `01` | Probable final field separator |
@@ -119,6 +124,24 @@ offset: 1027    1029          102D          1030     1032     1034     1036     
 | `103F` | +24 | `03` | Probable row-list terminator, displaced from E00's `1027` |
 
 Control-byte escaping, embedded delimiters, longer IDs, long descriptions and record movement are unknown. Do not hardcode these absolute offsets for other databases.
+
+### Protected and Alarm
+
+For the ordinary timed appointment tested on 3.05, column 6
+(Protected) contains `0x31` with Alarm off and `0x71` with Alarm
+on. The values differ by bit `0x40`. Cancellation and a no-op save on
+E02 siblings both reproduced the complete starting database. The
+Alarm-enabled sibling changed only the Protected byte at row-relative
+`+0x0D` (file offset `0x1034`). The row length, other fields, both
+indexes and configuration row all matched. [Controlled Alarm trial](../../research/calendar-alarm-encoding.md)
+
+The reader reports `alarm_enabled` as false or true for these exact
+bytes when the date, weekday and increasing start/end times decode
+within the observed profile and Duration is empty. Other cases yield
+null. The full Protected byte remains available in the raw fields.
+The internal row's `0x30`, other Protected patterns, bit 7, reminder
+and annual-occasion records, and midnight or blank-time variants fall
+outside this interpretation.
 
 ## Index and counters
 

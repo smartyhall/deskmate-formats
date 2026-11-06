@@ -26,7 +26,7 @@ the broad compatibility claim.
 | Other config bytes | A-6 documents initial weekly hour at Description byte 0, followed after mode by unused biased bytes and a fixed marker. E01/E02 store `69` (8) and the same tail. `9EE7..9F20` initializes that payload. A-5 also identifies the active-calendar table index as a `PGSETUP.bText` use. | D+S+R high for defaults. Page-setup serialization and multi-calendar selection remain unverified. |
 | Event date and weekday | A-7 specifies three date bytes biased by `0x61` (year relative to 1980, one-based month/day) and one biased weekday (Sunday=1). E01/E02 and historical E03–E07 values agree. The pinned Calendar add path `B06E..B07D` applies the bias to the first three bytes and weekday. | D+S+R high within observed inputs. Year limits, wrap and abnormal input behavior remain open. |
 | Event time | A-7 specifies bit 7, hour in bits 6–2 and quarter-hour in bits 1–0. It distinguishes blank-time cases and midnight by field and context. The ordinary observed E01–E07 bytes agree. In particular the documented `80` can mean both times blank or midnight at start, with `E0` for end midnight and `F0` for blank end with a start. | D+R high for ordinary times. The sentinel combinations still need 3.05 data before expanding the parser. |
-| Alarm and Protected | A-7 specifies `31` without alarm and `71` with alarm for an ordinary event. In 3.05 `C3DB` initializes the new event's low bits to `31`. The validated-Enter path at `C6A3..C6C3` combines them with `40` when checked. On load, `C396` tests `C0` and `C3B9` retains the low six bits. Existing generated rows have alarm off and `31`. | D+S high for the ordinary 3.05 write prediction, R only for off. Meaning of bit 7 and other Protected patterns remains open. |
+| Alarm and Protected | A-7 specifies `31` without alarm and `71` with alarm for an ordinary event. In 3.05 `C3DB` initializes the new event's low bits to `31`. The validated-Enter path at `C6A3..C6C3` combines them with `40` when checked. On load, `C396` tests `C0` and `C3B9` retains the low six bits. | D+S+R high for ordinary `31` and `71`. The [controlled Alarm save](calendar-alarm-encoding.md) changed only bit `40` in Protected relative to the no-op save. Bit 7 and other patterns remain open. |
 | Reminder and annual occasion | A-7/A-8 describe a weekday code of 8 before biasing, type-specific date/time patterns and shorter text limits (60 and 30 versus 120 for events). The annual leap-day case repurposes time bytes. | D high for the documented formats. These variants need separate 3.05 file evidence. |
 
 The [fixture regression](../../tests/portable/test_calendar_sdk_crosswalk.py)
@@ -95,7 +95,7 @@ version-specific backends. They do not establish a byte-identical engine.
   encoding, free space policy, counters, index chaining, and checksums
   dependent on differential fixtures or a verified engine path.
 - **Additional record types.** The appendix is a source of predictions for
-  reminder, annual occasion, alarm, blank time, and boundary values.
+  reminder, annual occasion, blank time, and boundary values.
   Expanding the supported parser or writer profile needs generated 3.05
   evidence that distinguishes them, including malformed-input behavior
   and handling of dates beyond the observed range.

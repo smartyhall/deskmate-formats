@@ -22,9 +22,10 @@ Accepted dates: 2026-10-23,2026-10-24,2026-11-01,2027-11-01. Accepted time value
 printable ASCII characters; control characters/non-ASCII are rejected. The schema
 limit120 is a conservative structural cap; application validation here used
 seven-character descriptions, not every accepted length. Duration stays empty
-and Protected stays raw ASCII1 (hex31). Other opaque values are rejected for new
-records. Alarm encoding is not known; those literals reproduce the observed
-alarm-off profile and are not interpreted as a general alarm flag.
+and Protected stays raw ASCII1 (hex31). These literals reproduce the observed
+alarm-off profile. The later controlled trial established the stored Alarm-on
+literal for the reader. The append profile still requires empty Duration and
+Protected `31`. [Controlled Alarm trial](../../research/calendar-alarm-encoding.md)
 
 The parser validates all source structures. Existing user values must be fully
 decoded and use the supported opaque profile. Tied date/start keys are rejected,
