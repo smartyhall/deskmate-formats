@@ -1,8 +1,8 @@
 # Held RSX/DOS 5.00 canary through MCP and the observatory
 
 This procedure extends the [original canary experiment](86box-guest-canary.md).
-The native checkpoint was verified in that earlier experiment. Issue #39
-adds the MCP and browser comparison, which still requires a live run.
+The [first live MCP and browser comparison](86box-observatory-live-report.md)
+verified the initial projection and stopped before the final native readback.
 
 ## Before live authorization
 
@@ -164,17 +164,20 @@ their hashes to the browser configuration.
    PNG dimensions and RGB pixels with the approved native PNG composited
    onto black. Compare the single GIF still with the approved PNG resized
    by nearest neighbor within 640 × 480 and quantized to at most 64 colors
-   without dithering. Use `observer.presentation.ascii_display()` to
-   compare the transcript in `/i/rsx-lab/status.txt`; check that
-   `/i/rsx-lab/legacy/` references the same GIF key.
+   without dithering. Save the raw `/i/rsx-lab/status.txt` and
+   `/i/rsx-lab/legacy/` bodies before checking them. The server uses CRLF
+   in both. Normalize line endings before comparing their multiline text
+   with `observer.presentation.ascii_display()`. Compare the legacy HTML
+   transcript with its escaped form and check the GIF key separately.
 6. Record a refresh interval with no MCP calls. Retrieve those five routes
    repeatedly and load or refresh the modern and classic browser pages.
    Save the first and last browser observation sequence, generation, frame
    key and guest clock. All four must be unchanged. The view can become
    stale after ten seconds and the frame age can grow. Finish with another
-   `get_instance_status`. Verify unchanged guest ms (delta **0 ms**),
-   frames, held state, reset identity, server session and connection
-   generation. Expect **zero** new entries in the owner's socket-attempt
+   `get_instance_status` and a grouped register and approved-memory read.
+   Verify unchanged guest ms (delta **0 ms**), frames, held state, reset
+   identity, server session, connection generation, full register reply
+   and approved RAM. Expect **zero** new entries in the owner's socket-attempt
    log and the same established native endpoint before and after. If the
    optional trace was used, stop it with
    `logman stop DeskMateIssue39Live -ets` and count native connections during
