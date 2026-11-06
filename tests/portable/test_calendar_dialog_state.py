@@ -69,6 +69,16 @@ class DialogStateTests(unittest.TestCase):
     def replay(self, archive, age=40):
         return decoder.replay(archive, as_of_ms=140, max_age_ms=age)
 
+    def test_two_window_four_small_records_do_not_imply_find_date(self):
+        archive = triplet('find')
+        # Address Book demonstrated a different large-record depth with
+        # the same small-record delta. The two geometries are independent.
+        archive['samples'][1]['window'] = span(0x20F9C, pack('<3H', 0x0850, 0x0F5C, 8))
+        archive['samples'][1]['geometry'] = span(0x2082C, pack('<2H', 2000, 220))
+        result = self.replay(archive)
+        self.assertEqual(result['classification'], 'unknown')
+        self.assertEqual(result['reason'], 'unrecognized window-context transition')
+
     def test_tested_contexts_and_stale_geometry_at_day_view(self):
         for kind, expected in (('idle', 'no-tested-modal-context'), ('change', 'change-event-style'),
                                ('find', 'find-date-style')):

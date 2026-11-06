@@ -2,12 +2,13 @@
 
 Address Book's Add List Name used the packed SDK descriptor and the same
 DMCSR allocation fields as Calendar. Its held input context grew by two
-`0x3C` records and four `0x10` records. The extra child record seen
-in Calendar's settled forms was absent at this checkpoint. The approved
-application-side spans reproduced the frame, table and settled focus
-predictions. Filer's Print Form was verified statically. The permitted
-shipped sample had Print record disabled, so that dialog has no live
-validation in this experiment.
+`0x3C` records and four `0x10` records, then restored exactly on
+Escape. The application frame held 3500 × 1540, but the record at
+Calendar's candidate outer-window position held 2000 × 220, the edit
+field's extents. Allocation depth and the candidate record position
+cannot identify the active frame across these applications. Filer's
+Print Form was verified statically. The permitted sample had Print
+record disabled, so that dialog has no live validation here.
 [SDK crosswalk](sdk-calendar-dmcsr.md) · [Calendar live controls](calendar-live-dialog-identity.md)
 
 ## Inputs and controls
@@ -130,7 +131,7 @@ DMCSR file `27CF` at 25,673 ms. These are sampled witnesses
 from bounded sweeps. A held framebuffer is the latest render
 with an unknown render timestamp.
 
-### Approved capture and current hold
+### Approved comparison
 
 The code and context bases came from the independently observed
 DMCSR cached CS `0x0D760` and ES `0x1DB70`. Compute code
@@ -150,26 +151,53 @@ a failed condition.
 | `0x33358–0x3335D` | DS `18D8–18DD` frame extents and title, active and idle A/B/C |
 | `0x333D8`, `0x333DB–0x333DC`, `0x333BE–0x333C3` | DS `1958`, `195B–195C`, `193E–1943` control count, table offset and entries, active B |
 | `0x1E3D8–0x1E3DB` | Conditional geometry at outer record `0850`. Skipped because A's measured top was `0850`, rather than the required `0814`. |
+| `0x1E414–0x1E417` | Separately approved at the same active B. ES `08A4–08A7`, candidate record `088C` plus `0x18`. |
 
-At A the allocation words were `0850/0CEC/002C`. B held
-`08C8/0CAC/0031`. The large boundary rose by `0x78`, two
-records, and the small boundary fell by `0x40`, four records.
-The B descriptor pointed to frame `18D4` and component table
-`193E`. It reported three entries with the pinned offsets
-`190E/18DE/18F2`. The held frame gave 3500 × 1540 with title
-token `084A`. Focus and mirror were both zero, consistent
-with the Address Book initializer and the blank focused edit box.
-The result supports the SDK layout and an application-specific
-allocation profile. The geometry of the allocated record is a
-separate measurement from the extents stored in the frame.
+Each A→B interval was 1,236 ms and each B→C interval was 604 ms.
+Both code anchors matched at every held capture. Every duplicate
+agreed and advanced **0 guest ms**, including the separately
+authorized geometry capture at the same B. The parent framebuffer
+matched byte for byte at active A and C and at all idle checkpoints.
 
-The trial is held at active B, 26,351 guest ms and frame 1,702.
-Active A was 25,115 ms and frame 1,628. Both checkpoints matched
-the two pinned code anchors and the duplicate observations agreed
-with zero guest advancement. The actual A top places the candidate
-outer record at `088C`, a different address from the conditional
-grant. A separate four-byte authorization is pending. C and the
-matched idle RAM comparison will follow the decision at this hold.
+| Trial | A guest ms / frame | B guest ms / frame | C guest ms / frame | Context A → B → C | Focus/mirror A → B → C |
+| --- | --- | --- | --- | --- | --- |
+| Add List Name | 25,115 / 1,628 | 26,351 / 1,702 | 26,955 / 1,739 | `0850/0CEC/002C → 08C8/0CAC/0031 → 0850/0CEC/002C` | `2/2 → 0/0 → 2/2` |
+| Matched idle | 26,955 / 1,739 | 28,191 / 1,813 | 28,795 / 1,849 | `0850/0CEC/002C` throughout | `2/2` throughout |
+
+The large boundary rose by `0x78`, two records, and the small
+boundary fell by `0x40`, four records. The selected handle
+changed and restored with the boundaries. At B the descriptor
+pointed to frame `18D4` and table `193E`. The count was three,
+with entries `190E/18DE/18F2`. Focus and mirror were zero,
+consistent with the initializer and the visible caret in the
+blank edit box. The `2/2` pair after Cancel refers to retained
+descriptor bytes outside this modal context. Frame pointer
+`18D4`, extents 3500 × 1540 and title token `084A` persisted
+through both active and idle triplets.
+
+The Calendar rule would place the outer record at A top plus
+one `0x3C` marker, or `088C`. The opening rehearsal observed
+a large allocation there. The separately approved read showed
+**2000 × 220** at that record, matching the edit component's
+static rectangle at `DS:190E+3`. The app frame independently
+held **3500 × 1540**. Thus the allocated record at `088C`
+does not corroborate outer-frame ownership. The register stop
+at 25,679 ms in DMCSR file `29A5` also found handle `002D`
+at `0850` during opening. That is an intermediate lookup.
+The trial does not locate the settled outer frame or establish
+which record owns B's selected handle `0031`. There was no
+read at the earlier conditional address or any additional
+record location.
+
+The earlier held rehearsal disk matched the E02 source image.
+After the measured controls, Escape and 1,000 ms of steps
+returned to DOS at 29,799 ms, frame 1,918. The final held disk
+SHA-256 was `d7f117f2521acc1aac2676126d61abf933df5c710ab8ba8446ad9bfd59342ba4`.
+All 143 installed files, including `PERSONAL.ADR`, were byte-identical
+to the source. The only whole-disk differences were
+`0x3CCF36–0x3CCF39`, the FAT write time and date of
+`PERSONAL.ADR`. The stamp changed from 1989-02-28 09:33:08 to
+2026-10-23 08:00:16 in guest local time.
 
 ## Filer
 
@@ -212,28 +240,42 @@ sample, all 143 installed files and filesystem metadata.
 
 ## Observer boundary
 
-Decode DMCSR allocation boundaries and restoration independently
-of application identity. A version-pinned form profile can
-combine the measured context with the application call path,
-owned frame and table, and an independent framebuffer label.
-Retained application objects remain readable outside the modal
-scope. The measured two-record Address Book context rules out
-a three-record activation requirement shared across these forms.
-The reason for the missing third record and the exact relation
-between the selected handle and the edit control at settled B
-remain open. The Filer data supports a static profile candidate
-only. A separate disposable Filer run with an authorized record
-would be needed for the modal comparison.
+| Layer | Supported by this comparison |
+| --- | --- |
+| SDK layout | Both binaries use the packed descriptor, near frame and table pointers, and DMCSR draw/run ABI. The watched Address Book fields agree live. |
+| Pinned DMCSR allocation | The six-byte decoder measures the same boundary and selection fields in Address Book and Calendar. The strides and restoration are reusable. Growth is a measured delta, with +2/+4 here and +3/+4 for Calendar Find Date. |
+| Record ownership | The Calendar outer-position rule fails at Address Book B. A selected handle, record position, and matching component geometry need an independent ownership witness before interpretation. |
+| App fields and focus | App digests, DS mapping, descriptor, frame, title and table are profile-specific. The settled Address Book focus at index 0 and mirror agree with the pinned control. The retained `2/2` pair in idle cannot identify current focus. |
+| Filer | Live evidence covers startup and the sample parent path. The Print Form layout and cancellation branch remain static predictions. |
+
+The existing offline six-byte comparison already separates numeric
+allocation measurements from application semantics. It replays
+both Address Book triplets directly. Synthetic regression tests
+cover the measured allocation shape, the matched idle and the
+Calendar decoder's conservative rejection of the two-record input.
+The working named-modal decoder keeps its Calendar profile.
+An Address Book profile would need independently verified ownership
+of the settled outer record and the selected handle before joining
+that record to the descriptor. Whether the difference originates
+in the application, the active control handler or sampling phase
+remains open. Filer needs a separately authorized disposable
+baseline with an enabled Print record command for the modal test.
 
 For Observatory v2, publish a reviewed held checkpoint, profile
 digest, allocation delta, restoration result and separate
 ownership, geometry and focus evidence flags. Treat incomplete
 or conflicting evidence as unknown. Browser clients should
-consume only the owner-published projection.
+consume only the owner-published projection. A register-derived
+mapping and code anchors establish the capture scope. A future
+record-ownership witness should travel separately from the frame
+and table evidence so the projection can report a verified
+transition with unresolved identity.
 [Observatory v2 semantic diagnostics](observatory-v2-spec.md#f9-semantic-deskmate-diagnostics-p2)
 
 The private evidence is archived under
 `C:/DeskMateLab/private-evidence/sdk-dialog-portability-20261106`.
 It contains setup and native drivers, clone and process identities,
 static listings, socket journals, register traces, framebuffer
-captures, scoped MCP results and verified disk snapshots.
+captures, scoped MCP results and verified disk snapshots. The
+746-file `evidence-index.json` has SHA-256
+`d675f6786955fb31de4cc5c483d47fb43e89593f36b69bada28e6d995d326e89`.
