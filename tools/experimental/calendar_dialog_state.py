@@ -19,6 +19,10 @@ CALENDAR_ANCHORS = (
     (0xC775, 23, '1ea0bd0bc8da6ba56b3ee25d76d97d3a745bfca5fadda5a6e6fdfe195a22dae9'),
     (0xE2B4, 19, 'aa3287bd17373ac67fae6998c74b0cd4a2123d3c2933490f0c80775093727e03'),
 )
+TITLE_ANCHORS = (
+    (0xC6FE, 29, '28b4fd17022e5e3a47307474b7cdcf542a3ac8e5b322e91646f32e2f3067d076'),
+    CALENDAR_ANCHORS[0],
+)
 MZ_HEADER = 0x200
 WINDOW_WORDS = 0x0F9C
 OUTER_SIZE = 0x18
@@ -29,6 +33,12 @@ FORMS = {
     (3, 4): ('find-date-style', (0x0AF0, 0x044C)),
 }
 TESTED_FOCUS = {1: 'Start Time', 5: 'Description'}
+EDITOR_TITLES = {0x0536: 'add-event', 0x0540: 'change-event'}
+# The descriptor, frame and table offsets are specific to the pinned Calendar module.
+FORM_LAYOUTS = {
+    'change-event-style': (0x22C6, 0x211C, 0x22B4, 9),
+    'find-date-style': (0x1AA0, 0x1A2C, 0x1A9A, 3),
+}
 
 
 def require(condition, reason):
@@ -101,9 +111,55 @@ def decode_focus(sample, evidence, *, as_of_ms, max_age_ms):
             'checkpoint': observed, 'age_ms': age}
 
 
+def decode_form(form, evidence, style, outer, semantic):
+    """Join reviewed owner evidence to the measured outer record at B."""
+    a, b, c = evidence
+    require(checkpoint(form) == b and a['source_id'] == b['source_id'] == c['source_id'],
+            'form evidence is from a different checkpoint or source')
+    require(form['module_sha256'] == CALENDAR_SHA256, 'Calendar source identity mismatch')
+    verify_anchors(form['anchors'], base(form['code_base']), TITLE_ANCHORS)
+    data_base = base(form['data_base'])
+    # These sources identify independently reviewed evidence in the producer's archive.
+    owner_source = identity(form['owner_source'])
+    visual_source = identity(form['visual_source'])
+    require(owner_source != visual_source, 'form lacks separate owner and visual evidence')
+    descriptor, frame, table, count = FORM_LAYOUTS[style]
+    require(type(form['descriptor']) is int and type(form['outer_record']) is int and
+            (form['descriptor'], form['outer_record']) == (descriptor, outer),
+            'descriptor does not own the allocated outer record')
+    semantic['ownership'] = 'corroborated'
+    require(type(form['frame_offset']) is int and form['frame_offset'] == frame,
+            'frame conflicts with the descriptor')
+    semantic['frame'] = 'corroborated'
+    require(type(form['component_table']) is int and type(form['component_count']) is int and
+            (form['component_table'], form['component_count']) == (table, count),
+            'component table conflicts with the descriptor')
+    semantic['component_table'] = 'corroborated'
+
+    if style == 'find-date-style':
+        require(form['reviewed_dialog'] == 'find-date', 'visual label conflicts with Find Date ownership')
+        # The separate descriptor and geometry identify Find Date. The editor
+        # title slot may still hold an old token. Find Date focus was not sampled.
+        semantic['classification'] = 'active-find-date'
+        return
+
+    current, mirror = read_span(form['indices'], data_base + descriptor + 3, 2)
+    require(current < count and current == mirror, 'invalid or unsettled editor focus index')
+    title, = unpack('<H', read_span(form['title'], data_base + frame + 8, 2))
+    dialog = EDITOR_TITLES.get(title)
+    if dialog is None:
+        semantic.update(title_token=title, reason='unknown editor title token')
+        return
+    require(form['reviewed_dialog'] == dialog, 'visual label conflicts with the editor title token')
+    semantic.update(classification=f'active-{dialog}', focus_index=current, title_token=title)
+    if current in TESTED_FOCUS:
+        semantic['focus_control'] = TESTED_FOCUS[current]
+
+
 def replay(archive, *, as_of_ms, max_age_ms):
-    """Return a scoped interpretation of the archived B sample with A and C as controls."""
-    result = {'classification': 'unknown', 'focus': None}
+    """Interpret B with A and C as controls, preserving the legacy style projection."""
+    semantic = {'classification': 'insufficient-or-contradictory-evidence'}
+    result = {'classification': 'unknown', 'focus': None, 'semantic': semantic}
     try:
         mapping = archive['mapping']
         require(mapping['module_sha256'] == DMCSR_SHA256, 'DMCSR source identity mismatch')
@@ -123,6 +179,7 @@ def replay(archive, *, as_of_ms, max_age_ms):
         require(as_of_ms >= c['observed_at_ms'] and age <= counter(max_age_ms), 'stale or future dialog evidence')
         for sample in samples:
             verify_anchors(sample['anchors'], code_base, DMCSR_ANCHORS)
+        semantic['freshness'] = 'verified'
         transition = compare_triplet(*(read_span(sample['window'], context_base + WINDOW_WORDS, 6)
                                        for sample in samples))
         require(transition['a_equals_c'], 'window context did not restore at C')
@@ -130,27 +187,39 @@ def replay(archive, *, as_of_ms, max_age_ms):
         handle_changed = transition['a_to_b_selected_id_changed']
         if counts == (0, 0) and not handle_changed:
             result['classification'] = 'no-tested-modal-context'
+            semantic.update(classification='no-verified-active-modal-context', allocation='day-baseline')
             return result
-        require(counts in FORMS and handle_changed, 'unrecognized window-context transition')
+        require(counts in FORMS and handle_changed and
+                transition['checkpoints']['B']['selected_window_id'] != 0xFFFF,
+                'unrecognized window-context transition')
         style, size = FORMS[counts]
         geometry = samples[1].get('geometry')
+        outer = transition['checkpoints']['A']['window_record_top'] + WINDOW_RECORD_SIZE
         if geometry is not None:
-            parent = transition['checkpoints']['A']['window_record_top']
-            outer = parent + WINDOW_RECORD_SIZE
             require(outer + WINDOW_RECORD_SIZE <= transition['checkpoints']['B']['window_record_top'],
                     'outer dialog window is not allocated')
             words = unpack('<2H', read_span(geometry, context_base + outer + OUTER_SIZE, 4))
             require(words == size, 'geometry conflicts with the tested context')
+            semantic.update(classification='verified-modal-unknown-identity', allocation='geometry-corroborated')
+        else:
+            semantic['allocation'] = 'window-transition-only'
         result.update(classification=style, geometry_corroborated=geometry is not None,
                       add_event_possible=style == 'change-event-style')
         focus = archive.get('focus')
-        if style == 'change-event-style' and focus is not None:
+        if style == 'change-event-style' and focus is not None and 'form' not in archive:
             try:
                 result['focus'] = decode_focus(samples[1], focus, as_of_ms=as_of_ms, max_age_ms=max_age_ms)
             except (KeyError, TypeError, ValueError) as error:
                 result['focus_warning'] = str(error)
+        if 'form' in archive:
+            try:
+                require(geometry is not None, 'form evidence requires allocated outer geometry')
+                decode_form(archive['form'], evidence, style, outer, semantic)
+            except (KeyError, TypeError, ValueError) as error:
+                semantic.update(classification='insufficient-or-contradictory-evidence', reason=str(error))
     except (KeyError, TypeError, ValueError) as error:
         result['reason'] = str(error)
+        semantic['reason'] = str(error)
     return result
 
 
