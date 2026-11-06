@@ -44,6 +44,8 @@ class StdioTests(unittest.TestCase):
 
     def test_stdio_owner_publishes_to_its_embedded_listener(self):
         from hashlib import sha256
+        from deskmate_formats.observer.journal import publish_event
+        from observatory_fixture import event
 
         config = self.peer.config()
         config['observer'] = {'port': 0}
@@ -51,6 +53,9 @@ class StdioTests(unittest.TestCase):
         item['display_approval'] = dict(item['ram_checkpoint'],
                                        screen_sha256=sha256('┌'.encode()).hexdigest())
         self.config_path.write_text(json.dumps(config), encoding='utf-8')
+        spool = self.peer.root.parent / 'event-journal'
+        publish_event(spool, event(machine_ids=['fixture']))
+        self.args.extend(('--journal', str(spool), '--agent-page-limit', '3'))
         address = None
 
         async def calls(session, url):
@@ -63,6 +68,10 @@ class StdioTests(unittest.TestCase):
                     return response.read()
 
             self.assertIsNone(json.loads(read('api/status'))['observation'])
+            agent_feed = json.loads(read('api/v1/agents'))
+            self.assertEqual(agent_feed['limit'], 3)
+            self.assertTrue(agent_feed['agents'][0]['historical'])
+            self.assertEqual(agent_feed['agents'][0]['machine_ids'], ['fixture'])
             self.assertEqual(self.peer.authentications, 0)
             result = await session.call_tool('observe_machine', {'instance_id': 'fixture'})
             self.assertFalse(result.is_error)

@@ -13,8 +13,11 @@ from urllib.request import Request, urlopen
 
 from deskmate_formats.automation.observer_bridge import prepare_frame
 from deskmate_formats.automation.readonly import Adapter, Refusal
+from deskmate_formats.observer.agent_feed import AgentJournalFeed
 from deskmate_formats.observer.http import ObserverServer
+from deskmate_formats.observer.journal import publish_event
 from mcp_fixture import NativePeer, png
+from observatory_fixture import event
 
 
 def approve(config, *, screen='┌', framebuffer=False):
@@ -37,10 +40,10 @@ class OwnerObserverTests(unittest.TestCase):
         self.addCleanup(peer.close)
         return peer
 
-    def start(self):
+    def start(self, *, agent_publication=None):
         self.adapter = Adapter(self.config)
         self.addCleanup(self.adapter.close)
-        self.server = ObserverServer(self.adapter.registry, port=0)
+        self.server = ObserverServer(self.adapter.registry, port=0, agent_publication=agent_publication)
         listener = Thread(target=self.server.serve_forever, kwargs={'poll_interval': 0.01})
         listener.start()
         self.addCleanup(self.server.server_close)
@@ -97,6 +100,44 @@ class OwnerObserverTests(unittest.TestCase):
         error.exception.close()
         self.assertEqual(self.peer.commands, before)
         self.assertEqual((self.peer.authentications, self.peer.ms), (1, 1000))
+
+    def test_agent_and_machine_browser_reads_do_not_touch_native_peer(self):
+        spool = self.peer.root.parent / 'agent-journal'
+        publish_event(spool, event(machine_ids=['fixture']))
+        feed = self.enterContext(AgentJournalFeed(spool, interval=0.05))
+        approve(self.config)
+        self.start(agent_publication=feed.publication)
+        self.assertEqual(json.loads(self.get('/api/v1/events'))['events'][0]['machine_ids'], ['fixture'])
+        self.assertEqual(self.peer.authentications, 0)
+        self.call('get_screen_text')
+        baseline = (self.peer.authentications, self.peer.ms, self.peer.frames, self.peer.resets, self.peer.commands[:])
+        connect = socket.socket.connect
+        connect_ex = socket.socket.connect_ex
+        attempts = []
+
+        def guard(operation):
+            def checked(peer, address):
+                if address != self.server.server_address:
+                    attempts.append(address)
+                    raise AssertionError('unexpected outbound connection during browser polling')
+                return operation(peer, address)
+            return checked
+
+        routes = ('/', '/legacy/', '/api/status', '/status.txt', '/i/fixture/api/status', '/healthz',
+                  '/api/v1/agents', '/api/v1/events?after=0')
+        for disconnected in (False, True):
+            if disconnected:
+                self.adapter.close()
+                self.assertTrue(self.peer.disconnected.wait(2))
+            view = self.adapter.registry.stream('fixture').view()
+            with patch.object(socket.socket, 'connect', guard(connect)), \
+                    patch.object(socket.socket, 'connect_ex', guard(connect_ex)), ThreadPoolExecutor(6) as pool:
+                self.assertTrue(all(pool.map(self.get, routes * 20)))
+            self.assertEqual(self.adapter.registry.stream('fixture').view(), view)
+            self.assertEqual(view.observation.emulated_ms, 1000)
+        self.assertEqual(attempts, [])
+        self.assertEqual((self.peer.authentications, self.peer.ms, self.peer.frames,
+                          self.peer.resets, self.peer.commands), baseline)
 
     def test_text_approval_canonicalizes_cp437_and_checks_exact_content(self):
         self.peer.text_chars = '01'  # Native MCP decodes as a CP437 low byte.

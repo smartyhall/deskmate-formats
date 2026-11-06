@@ -4,6 +4,7 @@ import argparse
 from io import BytesIO
 from threading import Event, Thread
 
+from .agent_feed import add_viewer_options, configured_feed
 from .frames import Frame
 from .http import ObserverServer
 from .publication import Action, Machine, Observation, ObservationRegistry, decode_cp437, host_time_ms
@@ -99,6 +100,7 @@ def main(argv=None):
     parser.add_argument("--instances", type=int, choices=(1, 2, 3), default=1)
     parser.add_argument("--interval", type=float, default=2.0, help="seconds per fictional scene (default 2)")
     parser.add_argument("--text-only", action="store_true", help="run without the optional Pillow dependency")
+    add_viewer_options(parser)
     args = parser.parse_args(argv)
     if not 0 <= args.port <= 65535 or not 0.25 <= args.interval <= 60:
         parser.error("port must be 0..65535 and interval must be 0.25..60 seconds")
@@ -111,7 +113,10 @@ def main(argv=None):
     stop = Event()
     workers = []
     try:
-        with ObserverServer(registry, port=args.port) as server:
+        with configured_feed(parser, args) as agent_feed, ObserverServer(
+            registry, port=args.port, agent_publication=agent_feed.publication if agent_feed else None,
+            agent_page_limit=args.agent_page_limit,
+        ) as server:
             for machine in registry.machines:
                 stream = registry.stream(machine.instance_id)
                 publish_scene(stream, 0, host_time_ms(), with_frames=not args.text_only)

@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
+from zipfile import ZipFile
 
 from tools import audit_repository
 
@@ -101,6 +102,20 @@ class FixtureAuditTest(unittest.TestCase):
         self.manifest([self.entry('calendar/E02.cln', b'private-test-file')])
         (self.root / 'PKG-INFO').write_text('Metadata-Version: 2.4\n')
         self.assertEqual(self.audit()['status'], 'passed')
+
+    def test_private_observatory_spool_rejected_in_checkout_and_archive(self):
+        self.manifest([])
+        journal = self.root / 'events.jsonl'
+        journal.write_bytes(b'{"summary":"fictional private content"}\n')
+        with self.assertRaisesRegex(ValueError, 'private Observatory spool file'):
+            self.audit()
+        journal.unlink()
+        dist = self.root / 'dist'
+        dist.mkdir()
+        with ZipFile(dist / 'test.whl', 'w') as wheel:
+            wheel.writestr('data/writer.lock', b'')
+        with self.assertRaisesRegex(ValueError, 'private Observatory spool file in archive'):
+            self.audit()
 
 
 if __name__ == '__main__':

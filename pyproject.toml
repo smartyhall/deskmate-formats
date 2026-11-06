@@ -28,6 +28,7 @@ deskmate-calendar = "deskmate_formats.calendar.cli:main"
 deskmate-calendar-append = "deskmate_formats.calendar.writer:main"
 deskmate-86box-mcp = "deskmate_formats.automation.mcp_server:main"
 deskmate-86box-observer = "deskmate_formats.observer.demo:main"
+deskmate-observer-event = "deskmate_formats.observer.event_cli:main"
 
 [tool.setuptools.package-data]
 "*" = ["*.license"]

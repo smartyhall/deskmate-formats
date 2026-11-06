@@ -23,11 +23,14 @@ class LocalObserver(unittest.TestCase):
 
     def setUp(self):
         self.registry = ObservationRegistry(self.machines, history_limit=5, stale_after=60)
-        self.server = ObserverServer(self.registry, port=0)
+        self.server = self.make_server()
         self.addCleanup(self.server.server_close)
         self.thread = Thread(target=self.server.serve_forever, kwargs={"poll_interval": 0.02})
         self.thread.start()
         self.addCleanup(self.stop)
+
+    def make_server(self):
+        return ObserverServer(self.registry, port=0)
 
     def stop(self):
         if self.thread.is_alive():
@@ -91,6 +94,8 @@ class HttpTests(LocalObserver):
         self.assertIn(b"PC &lt;Test&gt;", modern)
         self.assertIn(b"/dashboard.js", modern)
         self.assertIn(b"Classic view", modern)
+        self.assertIn(b"Agent activity", modern)
+        self.assertEqual(json.loads(self.request("/api/v1/agents")[2])["collector"], "disabled")
         css = self.request("/dashboard.css")
         js = self.request("/dashboard.js")
         self.assertIn("text/css", css[1]["content-type"])

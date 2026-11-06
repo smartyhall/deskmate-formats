@@ -61,6 +61,10 @@ browser URLs must start with a lowercase ASCII letter or digit and contain up
 to 32 lowercase ASCII letters, digits and hyphens. Install
 `deskmate-formats[mcp,observer]` when approving images.
 
+Pass `--journal <directory>` to the MCP command to enable the optional agent
+activity feed in the same listener. This reads only explicit events from a
+separate spool. See the [publisher and API guide](observatory-v2-m0-m1.md).
+
 With the listener enabled, native reads also publish the instance ID,
 execution flags and sampled emulated clock. The browser starts with an empty
 stream and receives no guest display by default. To approve an exact display,

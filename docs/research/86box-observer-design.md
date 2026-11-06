@@ -172,6 +172,13 @@ Mosaic, Netscape Navigator, or other historical browser versions requires
 tests on those browsers. HTTP/0.9 and network access from period hardware
 are outside this local prototype.
 
+## Observatory v2 agent activity
+
+The modern dashboard also supports an opt-in, read-only agent feed. Its
+publisher and private journal operate independently of the machine registry.
+The classic view keeps its station-only presentation. See the
+[event publisher and API guide](observatory-v2-m0-m1.md).
+
 ## Native MCP integration and security
 
 The listener accepts `127.0.0.1` and `localhost` authorities for its port,
@@ -192,7 +199,8 @@ The [MCP operator guide](86box-readonly-mcp.md#enable-browser-publication)
 describes the listener and exact-checkpoint display approval. Every publication
 comes from an explicit MCP observation on the existing native connection.
 Discovery, browser requests and the passage of host time never open or poll a
-native socket. The listener receives only the registry.
+native socket. The listener receives the machine registry and, when enabled,
+an independent sanitized agent publication.
 
 - Each owner assigns a sequence under its instance lock. Browser generation
   matches the owner's sampled generation. Reset counter changes, a regressed

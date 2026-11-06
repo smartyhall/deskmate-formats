@@ -233,6 +233,13 @@ def dashboard(machine, machines):
         <h2 id="timeline-title">Recent observations</h2>
         <ol id="timeline"><li>Waiting for publication</li></ol>
       </section>
+      <section class="panel agent-panel" aria-labelledby="agent-title">
+        <h2 id="agent-title">Agent activity</h2>
+        <p id="agent-collector" class="muted" role="status">Waiting for the agent feed</p>
+        <ul id="agent-runs" class="activity-list"></ul>
+        <h3>Recent published events</h3>
+        <ol id="agent-events" class="activity-list"></ol>
+      </section>
     </div>
   </main>
 </body>
