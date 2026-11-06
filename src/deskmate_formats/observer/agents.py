@@ -4,7 +4,8 @@ from dataclasses import dataclass, field
 
 from .process_health import verify_process
 
-_TRANSPORT = frozenset(("process.heartbeat", "source.disconnected", "source.reconnected", "source.error"))
+_NON_ACTIVITY = frozenset(("process.heartbeat", "process.exited", "source.disconnected",
+                           "source.reconnected", "source.error"))
 _TURN_END = {"turn.completed": "completed", "turn.failed": "failed", "turn.interrupted": "interrupted"}
 _TERMINAL = frozenset(_TURN_END.values())
 _MAX_PROCESS_PROBES = 64
@@ -64,19 +65,22 @@ class _Agent:
     session_ended: bool = False
     disconnected: bool = False
     claim: tuple[int, str] | None = None
+    process_exited: bool = False
     approvals: dict[str, bool] = field(default_factory=dict)
 
     def apply(self, event, record, observed_ns):
         self.latest, self.signal_ns = event, observed_ns
         kind = event.type
-        if kind not in _TRANSPORT:
+        if kind not in _NON_ACTIVITY:
             self.activity, self.activity_ns = event, observed_ns
             self.disconnected = False
         elif kind == "source.reconnected":
             self.disconnected = False
         elif kind == "source.disconnected":
             self.disconnected = True
-        elif kind == "process.heartbeat":
+        elif kind == "process.exited":
+            self.process_exited = True
+        elif kind == "process.heartbeat" and not self.process_exited:
             self.heartbeat_utc, self.heartbeat_ns = event.ingested_at_utc, observed_ns
             claim = record.get("process")
             self.claim = (claim["pid"], claim["identity"]) if claim else None
@@ -135,7 +139,7 @@ class _Agent:
             state, self.lifecycle, stale, historical, self.activity,
             milliseconds(activity_age), latest.ingested_at_utc, milliseconds(signal_age),
             self.heartbeat_utc, milliseconds(elapsed(self.heartbeat_ns)), transport,
-            process, self.claim[0] if process in ("alive", "stopped") else None,
+            process, self.claim[0] if self.claim and not self.process_exited and process in ("alive", "stopped") else None,
             len(pending), pending[-8:],
         )
 
@@ -173,7 +177,9 @@ class AgentProjection:
         views = []
         for agent in self._agents:
             process = "unknown"
-            if agent.claim is not None:
+            if agent.process_exited:
+                process = "stopped"
+            elif agent.claim is not None:
                 if agent.claim not in observed and len(observed) < _MAX_PROCESS_PROBES:
                     observed[agent.claim] = probe(*agent.claim)
                 process = observed.get(agent.claim, "unknown")
