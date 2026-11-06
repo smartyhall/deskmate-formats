@@ -53,7 +53,7 @@ def fixture_manifest():
             raise ValueError('unsafe fixture path: ' + name)
         if rel.suffix.lower() not in DATA_EXT:
             raise ValueError('unexpected fixture extension: ' + name)
-        if name in index or not re.fullmatch(r'[0-9a-f]{64}', str(item.get('sha256', ''))):
+        if (FIXTURE_DIR / name).as_posix() in index or not re.fullmatch(r'[0-9a-f]{64}', str(item.get('sha256', ''))):
             raise ValueError('duplicate or invalid fixture digest: ' + name)
         if type(item.get('size')) is not int or item['size'] < 0:
             raise ValueError('invalid fixture size: ' + name)
