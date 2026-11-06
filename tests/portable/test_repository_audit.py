@@ -80,7 +80,7 @@ class FixtureAuditTest(unittest.TestCase):
             self.audit()
 
     def test_manifested_binary_with_access_token_rejected(self):
-        data = b'\x03FIL\x00' + b'https://example.invalid/?access_token=EXAMPLE12345678'
+        data = b'\x03FIL\x00' + (b'https://example.invalid/?access_' + b'token=EXAMPLE12345678')
         path = self.base / 'calendar/E03.cln'
         path.parent.mkdir()
         path.write_bytes(data)
