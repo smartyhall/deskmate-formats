@@ -43,10 +43,10 @@ The tools are experimental and support only explicitly measured cases. See
   unchanged-event OK and clean exit, all database bytes and installed-file contents
   were identical. This is narrow application evidence, not general compatibility.
 
-Only four dates and six quarter-hour time values are decoded. Alarm semantics,
-multi-page allocation, long IDs, editing, deletion, arbitrary text, tied index keys
-and general conversion are unsupported. Other applications have **no implementation
-or validated storage model**. See [compatibility](docs/compatibility.md).
+The reader decodes four dates, six quarter-hour time values and the stored Alarm
+setting for ordinary timed appointments. Multi-page allocation, long IDs,
+editing, deletion, arbitrary text, tied index keys and general conversion are
+outside the supported scope. See [compatibility](docs/compatibility.md).
 
 ## Installation and use
 
@@ -71,7 +71,8 @@ supporting filesystem and fails safely without an overwrite fallback.
 
 Python API: `deskmate_formats.calendar.personal.parse_bytes/parse_file` and
 `deskmate_formats.calendar.writer.Appointment/append_appointment/capacity/write_new`.
-The implementation remains Calendar-specific; no shared engine is asserted.
+The reader exposes `alarm_enabled` on records and in JSON, with the complete
+Protected field retained in the raw output.
 
 ## Reproducible Windows 10 laboratory (experimental)
 
@@ -112,6 +113,7 @@ publication steps, external paid services or AI dependencies.
   [integration and verification](docs/research/database-integration.md)
 * [Issue 22: one Calendar lookup candidate and its exact dispatch blocker](docs/research/lookup-trace-22.md)
 * [Calendar INT E0 static dispatch and unresolved runtime binding](docs/research/calendar-binding-25.md)
+* [Controlled Calendar Alarm differential](docs/research/calendar-alarm-encoding.md)
 * DeskMate SDK crosswalks for [Calendar and DMCSR](docs/research/sdk-calendar-dmcsr.md)
   and [Calendar database requests and storage](docs/research/sdk-calendar-database.md),
   with the [observer verification plan](docs/research/sdk-semantic-observer-plan.md)

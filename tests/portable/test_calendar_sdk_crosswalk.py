@@ -11,6 +11,12 @@ FIXTURES = Path(__file__).resolve().parents[1] / 'fixtures' / 'application-gener
 
 
 class CalendarSDKCrosswalkTests(unittest.TestCase):
+    def test_alarm_enabled_application_save(self):
+        db = parse_file(FIXTURES / 'alarm-on-86box-trial-c.cln')
+        event, = db.appointments
+        self.assertIs(event.alarm_enabled, True)
+        self.assertEqual(event.raw_fields['Protected'], '71')
+
     def test_configuration_records_preserve_the_recorded_exit_mode(self):
         # Development Guide A-5/A-6. E01 exited from month view and E02 from day view.
         cases = (

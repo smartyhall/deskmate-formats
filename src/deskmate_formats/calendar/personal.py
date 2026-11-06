@@ -69,6 +69,7 @@ class Record:
     start_time: str | None = None
     end_time: str | None = None
     description: str | None = None
+    alarm_enabled: bool | None = None
 
     def to_dict(self) -> dict:
         result = asdict(self)
@@ -249,8 +250,9 @@ def _decode(data: bytes, entry: IndexEntry, end: int, values: list[bytes], names
              'invalid_record', 'field widths disagree with PERSONAL schema', entry.address)
     _require(len(raw['Description']) <= 120, 'unsupported_record',
              'description exceeds declared schema limit', entry.address)
+    # Keep the complete Protected byte in the existing raw output.
     unknown = {n: fields[n] for n in ('Duration', 'Protected')}
-    warnings = ['Alarm storage is undecoded; Duration and Protected are raw, not alarm flags.']
+    warnings = []
     decoded_date = None
     components = (1980 + raw['Date'][0] - 0x61, raw['Date'][1] - 0x61, raw['Date'][2] - 0x61)
     try:
@@ -285,6 +287,11 @@ def _decode(data: bytes, entry: IndexEntry, end: int, values: list[bytes], names
     if all(times.values()):
         _require(times['StartTime'] < times['EndTime'], 'unsupported_time_order',
                  'reversed, zero-length or overnight event is outside the observed subset', entry.address)
+    alarm_enabled = None
+    if decoded_date is not None and weekday is not None and all(times.values()) and not raw['Duration']:
+        alarm_enabled = {b'1': False, b'q': True}.get(raw['Protected'])
+    if alarm_enabled is None:
+        warnings.append('Alarm state is outside the observed ordinary appointment profile.')
     description = None
     if all(0x20 <= x < 0x7F for x in raw['Description']):
         description = raw['Description'].decode('ascii')
@@ -293,7 +300,7 @@ def _decode(data: bytes, entry: IndexEntry, end: int, values: list[bytes], names
         warnings.append('Non-printable/non-ASCII description retained raw; encoding/escaping unknown.')
     return Record(kind='appointment', date=decoded_date, day_of_week=weekday,
                   start_time=times['StartTime'], end_time=times['EndTime'],
-                  description=description, undecoded_fields=unknown,
+                  description=description, alarm_enabled=alarm_enabled, undecoded_fields=unknown,
                   warnings=tuple(warnings), **common)
 
 

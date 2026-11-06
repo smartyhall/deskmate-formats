@@ -7,7 +7,7 @@ import io,json,tempfile,unittest
 from deskmate_formats.calendar.personal import parse_bytes,parse_file,CalendarParseError
 from deskmate_formats.calendar.cli import main as read_main
 from deskmate_formats.calendar.writer import Appointment,TARGET,append_appointment,capacity,write_new,main
-from synthetic import build
+from synthetic import INTERNAL, assemble, build, event
 
 SAMPLE=[TARGET,Appointment(date(2026,10,23),540,600,'EARLY26'),
         Appointment(date(2026,11,1),600,660,'MID2026'),Appointment(date(2026,10,24),555,615,'LATEOCT')]
@@ -19,6 +19,46 @@ class PortableCalendarTests(unittest.TestCase):
                 db=parse_bytes(build(kind));self.assertEqual(len(db.appointments),count)
                 self.assertEqual(len(db.internal_records),1)
                 self.assertEqual(db.metadata['tables']['PERSONAL']['record_count'],count+1)
+
+    def test_alarm_state_and_raw_protected_on_independent_specimens(self):
+        for protected, expected in ((b'\x31', False), (b'\x71', True)):
+            with self.subTest(protected=protected):
+                data = assemble([(16, INTERNAL), (17, event(17, 'SYNTH', protected=protected))],
+                                [16, 17])
+                db = parse_bytes(data)
+                appointment, = db.appointments
+                self.assertIs(appointment.alarm_enabled, expected)
+                self.assertIs(db.to_dict()['appointments'][0]['alarm_enabled'], expected)
+                self.assertEqual(appointment.raw_fields['Protected'], protected.hex())
+                self.assertEqual(appointment.undecoded_fields['Protected'], protected.hex())
+                self.assertIsNone(db.internal_records[0].alarm_enabled)
+
+    def test_alarm_state_is_unknown_outside_ordinary_appointment_profile(self):
+        variants = (
+            {'protected': b''},
+            {'protected': b'\x70'},
+            {'protected': b'\xf1'},
+            {'duration': b'Q'},
+            {'weekday': b'i'},
+            {'start': b''},
+            {'start': b'\x80'},
+            {'end': b'\xe0'},
+        )
+        for variant in variants:
+            with self.subTest(variant=variant):
+                fields = {'protected': b'\x71', **variant}
+                data = assemble([(16, INTERNAL), (17, event(17, 'SYNTH', **fields))], [16, 17])
+                appointment, = parse_bytes(data).appointments
+                self.assertIsNone(appointment.alarm_enabled)
+                self.assertEqual(appointment.raw_fields['Protected'], fields['protected'].hex())
+                self.assertEqual(appointment.undecoded_fields['Protected'], fields['protected'].hex())
+
+    def test_append_rejects_alarm_enabled_input_and_output(self):
+        source = assemble([(16, INTERNAL), (17, event(17, 'SYNTH', protected=b'\x71'))], [16, 17])
+        with self.assertRaisesRegex(ValueError, 'existing event has unsupported'):
+            append_appointment(source)
+        with self.assertRaisesRegex(ValueError, 'opaque Duration/Protected'):
+            append_appointment(build(), replace(TARGET, protected_raw=b'\x71'))
 
     def test_independent_synthetic_append_oracle(self):
         self.assertEqual(append_appointment(build('one')),build('two'))

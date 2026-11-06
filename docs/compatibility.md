@@ -8,7 +8,7 @@
 | Dates | 2026-10-23,2026-10-24,2026-11-01,2027-11-01 |
 | Time values | 09:00,09:15,10:00,10:15,11:00,12:00; writer requires start<end |
 | Text | Reader decodes printable ASCII; writer accepts 1..120 printable ASCII characters; 7/10-character historical descriptions and E15 60-character generated descriptions application-verified |
-| Opaque values | Duration/Protected retained raw; writer accepts observed empty/31 profile; no alarm codec |
+| Alarm and raw fields | Reader reports `alarm_enabled` for ordinary timed appointments with empty Duration and exact Protected byte `31` (off) or `71` (on). Other cases return null. Duration and Protected stay raw in output. Writer accepts the empty/`31` profile. |
 | Index ordering | Writer uses chronological date/start ordering, rejects ties; compatible with checked five-event sample |
 
 Read-only parsing can preserve unsupported values as raw/null with warnings, but

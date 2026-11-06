@@ -1,5 +1,12 @@
 > Historical lab parser notes; package commands and current limitations are documented in the root README and compatibility.md. Relative lab evidence stays private.
 
+The current package exposes `Record.alarm_enabled` and the corresponding
+JSON key. An ordinary timed appointment with a decoded date, weekday and
+increasing start/end times and empty Duration yields false for Protected
+`0x31` and true for `0x71`. Other cases yield null. Both `raw_fields`
+and `undecoded_fields` retain the complete Protected byte.
+[Controlled Alarm trial](../../research/calendar-alarm-encoding.md)
+
 # Initial read-only PERSONAL.CLN parser
 
 Python 3.10+ and standard library only; validated here with installed Python 3.13.
