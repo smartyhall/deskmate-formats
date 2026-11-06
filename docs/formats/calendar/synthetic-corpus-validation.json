@@ -1,0 +1,555 @@
+{
+  "generator_revision": "8869a54a54785ff2a6ab2afe178991ed6b15f573",
+  "independent_process_comparison": {
+    "byte_identical_specimens": 263,
+    "manifest_byte_identical": true
+  },
+  "normal-a": {
+    "batches": [
+      {
+        "checks_passed": {
+          "byte_identity_comparisons": 263,
+          "parsed": 256,
+          "probes_passed": 7,
+          "writer_overflow_rejected": 1,
+          "writer_round_trip": 255
+        },
+        "coverage": {
+          "appointments_per_case": {
+            "0": 1,
+            "1": 61,
+            "2": 39,
+            "20": 1,
+            "3": 39,
+            "4": 38,
+            "5": 38,
+            "6": 38,
+            "8": 1
+          },
+          "category": {
+            "all-start-keys": 1,
+            "empty": 1,
+            "exact-fit": 1,
+            "multi": 192,
+            "printable-ascii": 1,
+            "single": 60
+          },
+          "date": {
+            "2026-10-23": 216,
+            "2026-10-24": 219,
+            "2026-11-01": 195,
+            "2027-11-01": 224
+          },
+          "date_distribution": {
+            "multi-day": 178,
+            "same-day": 16
+          },
+          "description_length": {
+            "1": 138,
+            "10": 137,
+            "119": 137,
+            "120": 145,
+            "3": 20,
+            "60": 137,
+            "7": 138,
+            "8": 1,
+            "95": 1
+          },
+          "duration_minutes": {
+            "105": 122,
+            "120": 90,
+            "15": 115,
+            "165": 41,
+            "180": 31,
+            "45": 135,
+            "60": 278,
+            "75": 42
+          },
+          "ordering": {
+            "chronological": 148,
+            "reordered": 108
+          },
+          "probe_outcome": {
+            "invalid_header": 1,
+            "invalid_index": 1,
+            "opaque-description": 1,
+            "truncated_file": 1,
+            "unsupported_layout": 1,
+            "unsupported_record": 1,
+            "unsupported_time_order": 1
+          },
+          "time_pair": {
+            "09:00-09:15": 54,
+            "09:00-10:00": 43,
+            "09:00-10:15": 42,
+            "09:00-11:00": 35,
+            "09:00-12:00": 31,
+            "09:15-10:00": 54,
+            "09:15-10:15": 36,
+            "09:15-11:00": 45,
+            "09:15-12:00": 41,
+            "10:00-10:15": 61,
+            "10:00-11:00": 57,
+            "10:00-12:00": 55,
+            "10:15-11:00": 81,
+            "10:15-12:00": 77,
+            "11:00-12:00": 142
+          },
+          "weekday": {
+            "Friday": 216,
+            "Monday": 224,
+            "Saturday": 219,
+            "Sunday": 195
+          }
+        },
+        "distinct_specimens": 263,
+        "elapsed_seconds": 1.035,
+        "failures": [],
+        "generations": 2,
+        "manifest_sha256": "724ca8f3cdaee8ab39bd29b8fac850fb86991ac442fe89895f78304a3f231924",
+        "seed": 20261105,
+        "valid_requested": 256
+      }
+    ],
+    "distinct_specimens_across_batches": 263,
+    "emit": true,
+    "mode": "normal",
+    "python": "3.13.17",
+    "system": "Windows"
+  },
+  "normal-b": {
+    "batches": [
+      {
+        "checks_passed": {
+          "byte_identity_comparisons": 263,
+          "parsed": 256,
+          "probes_passed": 7,
+          "writer_overflow_rejected": 1,
+          "writer_round_trip": 255
+        },
+        "coverage": {
+          "appointments_per_case": {
+            "0": 1,
+            "1": 61,
+            "2": 39,
+            "20": 1,
+            "3": 39,
+            "4": 38,
+            "5": 38,
+            "6": 38,
+            "8": 1
+          },
+          "category": {
+            "all-start-keys": 1,
+            "empty": 1,
+            "exact-fit": 1,
+            "multi": 192,
+            "printable-ascii": 1,
+            "single": 60
+          },
+          "date": {
+            "2026-10-23": 216,
+            "2026-10-24": 219,
+            "2026-11-01": 195,
+            "2027-11-01": 224
+          },
+          "date_distribution": {
+            "multi-day": 178,
+            "same-day": 16
+          },
+          "description_length": {
+            "1": 138,
+            "10": 137,
+            "119": 137,
+            "120": 145,
+            "3": 20,
+            "60": 137,
+            "7": 138,
+            "8": 1,
+            "95": 1
+          },
+          "duration_minutes": {
+            "105": 122,
+            "120": 90,
+            "15": 115,
+            "165": 41,
+            "180": 31,
+            "45": 135,
+            "60": 278,
+            "75": 42
+          },
+          "ordering": {
+            "chronological": 148,
+            "reordered": 108
+          },
+          "probe_outcome": {
+            "invalid_header": 1,
+            "invalid_index": 1,
+            "opaque-description": 1,
+            "truncated_file": 1,
+            "unsupported_layout": 1,
+            "unsupported_record": 1,
+            "unsupported_time_order": 1
+          },
+          "time_pair": {
+            "09:00-09:15": 54,
+            "09:00-10:00": 43,
+            "09:00-10:15": 42,
+            "09:00-11:00": 35,
+            "09:00-12:00": 31,
+            "09:15-10:00": 54,
+            "09:15-10:15": 36,
+            "09:15-11:00": 45,
+            "09:15-12:00": 41,
+            "10:00-10:15": 61,
+            "10:00-11:00": 57,
+            "10:00-12:00": 55,
+            "10:15-11:00": 81,
+            "10:15-12:00": 77,
+            "11:00-12:00": 142
+          },
+          "weekday": {
+            "Friday": 216,
+            "Monday": 224,
+            "Saturday": 219,
+            "Sunday": 195
+          }
+        },
+        "distinct_specimens": 263,
+        "elapsed_seconds": 1.485,
+        "failures": [],
+        "generations": 2,
+        "manifest_sha256": "724ca8f3cdaee8ab39bd29b8fac850fb86991ac442fe89895f78304a3f231924",
+        "seed": 20261105,
+        "valid_requested": 256
+      }
+    ],
+    "distinct_specimens_across_batches": 263,
+    "emit": true,
+    "mode": "normal",
+    "python": "3.13.17",
+    "system": "Windows"
+  },
+  "source_base": "3ddf12f543a16bf2548f850a2da19081049c3154",
+  "stress": {
+    "batches": [
+      {
+        "checks_passed": {
+          "byte_identity_comparisons": 1031,
+          "parsed": 1024,
+          "probes_passed": 7,
+          "writer_overflow_rejected": 1,
+          "writer_round_trip": 1023
+        },
+        "coverage": {
+          "appointments_per_case": {
+            "0": 1,
+            "1": 61,
+            "2": 192,
+            "20": 1,
+            "3": 192,
+            "4": 192,
+            "5": 192,
+            "6": 192,
+            "8": 1
+          },
+          "category": {
+            "all-start-keys": 1,
+            "empty": 1,
+            "exact-fit": 1,
+            "multi": 960,
+            "printable-ascii": 1,
+            "single": 60
+          },
+          "date": {
+            "2026-10-23": 977,
+            "2026-10-24": 1013,
+            "2026-11-01": 948,
+            "2027-11-01": 991
+          },
+          "date_distribution": {
+            "multi-day": 864,
+            "same-day": 98
+          },
+          "description_length": {
+            "1": 650,
+            "10": 650,
+            "119": 650,
+            "120": 657,
+            "3": 20,
+            "60": 650,
+            "7": 650,
+            "8": 1,
+            "95": 1
+          },
+          "duration_minutes": {
+            "105": 582,
+            "120": 438,
+            "15": 496,
+            "165": 222,
+            "180": 172,
+            "45": 554,
+            "60": 1305,
+            "75": 160
+          },
+          "ordering": {
+            "chronological": 482,
+            "reordered": 542
+          },
+          "probe_outcome": {
+            "invalid_header": 1,
+            "invalid_index": 1,
+            "opaque-description": 1,
+            "truncated_file": 1,
+            "unsupported_layout": 1,
+            "unsupported_record": 1,
+            "unsupported_time_order": 1
+          },
+          "time_pair": {
+            "09:00-09:15": 213,
+            "09:00-10:00": 169,
+            "09:00-10:15": 160,
+            "09:00-11:00": 172,
+            "09:00-12:00": 172,
+            "09:15-10:00": 204,
+            "09:15-10:15": 206,
+            "09:15-11:00": 209,
+            "09:15-12:00": 222,
+            "10:00-10:15": 283,
+            "10:00-11:00": 251,
+            "10:00-12:00": 266,
+            "10:15-11:00": 350,
+            "10:15-12:00": 373,
+            "11:00-12:00": 679
+          },
+          "weekday": {
+            "Friday": 977,
+            "Monday": 991,
+            "Saturday": 1013,
+            "Sunday": 948
+          }
+        },
+        "distinct_specimens": 1031,
+        "elapsed_seconds": 3.441,
+        "failures": [],
+        "generations": 2,
+        "manifest_sha256": "ab58de7c1d849f021e2d0d410c2a1888aa5c8a64d1d022fbcd54288e51fa6b8f",
+        "seed": 20261105,
+        "valid_requested": 1024
+      },
+      {
+        "checks_passed": {
+          "byte_identity_comparisons": 1031,
+          "parsed": 1024,
+          "probes_passed": 7,
+          "writer_overflow_rejected": 1,
+          "writer_round_trip": 1023
+        },
+        "coverage": {
+          "appointments_per_case": {
+            "0": 1,
+            "1": 61,
+            "2": 192,
+            "20": 1,
+            "3": 192,
+            "4": 192,
+            "5": 192,
+            "6": 192,
+            "8": 1
+          },
+          "category": {
+            "all-start-keys": 1,
+            "empty": 1,
+            "exact-fit": 1,
+            "multi": 960,
+            "printable-ascii": 1,
+            "single": 60
+          },
+          "date": {
+            "2026-10-23": 1067,
+            "2026-10-24": 1002,
+            "2026-11-01": 970,
+            "2027-11-01": 890
+          },
+          "date_distribution": {
+            "multi-day": 864,
+            "same-day": 98
+          },
+          "description_length": {
+            "1": 650,
+            "10": 650,
+            "119": 650,
+            "120": 657,
+            "3": 20,
+            "60": 650,
+            "7": 650,
+            "8": 1,
+            "95": 1
+          },
+          "duration_minutes": {
+            "105": 570,
+            "120": 404,
+            "15": 514,
+            "165": 201,
+            "180": 181,
+            "45": 562,
+            "60": 1317,
+            "75": 180
+          },
+          "ordering": {
+            "chronological": 462,
+            "reordered": 562
+          },
+          "probe_outcome": {
+            "invalid_header": 1,
+            "invalid_index": 1,
+            "opaque-description": 1,
+            "truncated_file": 1,
+            "unsupported_layout": 1,
+            "unsupported_record": 1,
+            "unsupported_time_order": 1
+          },
+          "time_pair": {
+            "09:00-09:15": 231,
+            "09:00-10:00": 174,
+            "09:00-10:15": 180,
+            "09:00-11:00": 169,
+            "09:00-12:00": 181,
+            "09:15-10:00": 217,
+            "09:15-10:15": 221,
+            "09:15-11:00": 213,
+            "09:15-12:00": 201,
+            "10:00-10:15": 283,
+            "10:00-11:00": 249,
+            "10:00-12:00": 235,
+            "10:15-11:00": 345,
+            "10:15-12:00": 357,
+            "11:00-12:00": 673
+          },
+          "weekday": {
+            "Friday": 1067,
+            "Monday": 890,
+            "Saturday": 1002,
+            "Sunday": 970
+          }
+        },
+        "distinct_specimens": 1031,
+        "elapsed_seconds": 3.376,
+        "failures": [],
+        "generations": 2,
+        "manifest_sha256": "6ee8b1510da120f4c2bbc70d0e855901031b16e4b70c06e8122b4daf649d5b67",
+        "seed": 17,
+        "valid_requested": 1024
+      },
+      {
+        "checks_passed": {
+          "byte_identity_comparisons": 1031,
+          "parsed": 1024,
+          "probes_passed": 7,
+          "writer_overflow_rejected": 1,
+          "writer_round_trip": 1023
+        },
+        "coverage": {
+          "appointments_per_case": {
+            "0": 1,
+            "1": 61,
+            "2": 192,
+            "20": 1,
+            "3": 192,
+            "4": 192,
+            "5": 192,
+            "6": 192,
+            "8": 1
+          },
+          "category": {
+            "all-start-keys": 1,
+            "empty": 1,
+            "exact-fit": 1,
+            "multi": 960,
+            "printable-ascii": 1,
+            "single": 60
+          },
+          "date": {
+            "2026-10-23": 939,
+            "2026-10-24": 973,
+            "2026-11-01": 1023,
+            "2027-11-01": 994
+          },
+          "date_distribution": {
+            "multi-day": 864,
+            "same-day": 98
+          },
+          "description_length": {
+            "1": 650,
+            "10": 650,
+            "119": 650,
+            "120": 657,
+            "3": 20,
+            "60": 650,
+            "7": 650,
+            "8": 1,
+            "95": 1
+          },
+          "duration_minutes": {
+            "105": 569,
+            "120": 410,
+            "15": 517,
+            "165": 214,
+            "180": 146,
+            "45": 568,
+            "60": 1331,
+            "75": 174
+          },
+          "ordering": {
+            "chronological": 489,
+            "reordered": 535
+          },
+          "probe_outcome": {
+            "invalid_header": 1,
+            "invalid_index": 1,
+            "opaque-description": 1,
+            "truncated_file": 1,
+            "unsupported_layout": 1,
+            "unsupported_record": 1,
+            "unsupported_time_order": 1
+          },
+          "time_pair": {
+            "09:00-09:15": 215,
+            "09:00-10:00": 185,
+            "09:00-10:15": 174,
+            "09:00-11:00": 179,
+            "09:00-12:00": 146,
+            "09:15-10:00": 202,
+            "09:15-10:15": 202,
+            "09:15-11:00": 212,
+            "09:15-12:00": 214,
+            "10:00-10:15": 302,
+            "10:00-11:00": 256,
+            "10:00-12:00": 231,
+            "10:15-11:00": 366,
+            "10:15-12:00": 357,
+            "11:00-12:00": 688
+          },
+          "weekday": {
+            "Friday": 939,
+            "Monday": 994,
+            "Saturday": 973,
+            "Sunday": 1023
+          }
+        },
+        "distinct_specimens": 1031,
+        "elapsed_seconds": 3.29,
+        "failures": [],
+        "generations": 2,
+        "manifest_sha256": "c32ef69f87665560139973d0f63edf929d8d1f7b655dc79671b13446d4a0992a",
+        "seed": 8675309,
+        "valid_requested": 1024
+      }
+    ],
+    "distinct_specimens_across_batches": 3051,
+    "emit": false,
+    "mode": "stress",
+    "python": "3.13.17",
+    "system": "Windows"
+  }
+}
