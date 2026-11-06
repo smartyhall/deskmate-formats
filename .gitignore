@@ -18,6 +18,13 @@ local-results/
 *.zip
 *.7z
 *.cln
+*.adr
+*.fil
+*.pcl
+!tests/fixtures/application-generated/**/*.cln
+!tests/fixtures/application-generated/**/*.adr
+!tests/fixtures/application-generated/**/*.fil
+!tests/fixtures/application-generated/**/*.pcl
 *.nvr
 *.rom
 *.vhd
