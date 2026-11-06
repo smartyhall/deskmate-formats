@@ -4,6 +4,7 @@
 **Target repository:** [`smartyhall/deskmate-formats`](https://github.com/smartyhall/deskmate-formats)  
 **Priority:** Instrumentation and reliability first; visual redesign last  
 **Target environment:** Dedicated Windows 10 research VM with 86Box native automation, Codex and Ghidra; ordinary browsers on the user's trusted LAN.
+**Future platform exploration:** [Deferred headless research appliance roadmap](headless-research-appliance-roadmap.md); not a prerequisite for Windows acceptance.
 
 ## 1. Purpose and decisions
 

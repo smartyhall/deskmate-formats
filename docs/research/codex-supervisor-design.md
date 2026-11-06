@@ -2,6 +2,7 @@
 
 **Status:** Architectural proposal, not implemented.
 **Companion:** [DeskMate Observatory v2 functional specification](observatory-v2-spec.md).
+**Deferred successor:** [Headless and reproducible research appliance roadmap](headless-research-appliance-roadmap.md) (only after validated Windows observer/supervisor).
 **Scope:** Local Windows 10 research workstation and multiple isolated Codex/86Box
 experiments. This note records proposed behavior; it does not authorize any
 currently running Codex process or emulator to be controlled.
