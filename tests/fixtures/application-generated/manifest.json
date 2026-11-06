@@ -1,3 +1,26 @@
 {
-  "fixtures": []
+  "fixtures": [
+    {
+      "path": "calendar/e01-86box-historical-match.cln",
+      "size": 6144,
+      "sha256": "5a3ff71dbd9654cc98cbda22e5f42e651c7792419c0c856b4bf0cfc5fa3ab508",
+      "application": "Tandy DeskMate Calendar",
+      "version": "03.05.00",
+      "experiment": "E01 86Box RSX/DOS 5.00 reproduction",
+      "origin": "From the installed default database, opened Add Event from the October 23, 2026 month view, entered 09:00–10:00 AM and LPHa123 with the alarm off, saved once, and exited Calendar from month view before copying the database from the held DOS disk.",
+      "historical_comparison": "Exact SHA-256 match to the historical E01 specimen.",
+      "synthetic_data": true
+    },
+    {
+      "path": "calendar/e02-86box-historical-match.cln",
+      "size": 6144,
+      "sha256": "0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9",
+      "application": "Tandy DeskMate Calendar",
+      "version": "03.05.00",
+      "experiment": "E02 86Box RSX/DOS 5.00 reproduction",
+      "origin": "Reopened E01, entered the October 23, 2026 day view, opened the existing appointment in Change Event, and used End, Backspace and 4 to replace the last description character. Verified 09:00–10:00 AM, LPHa124 and alarm off, saved once, and exited Calendar from day view before copying the database from the held DOS disk.",
+      "historical_comparison": "Exact SHA-256 match to the historical E02 specimen.",
+      "synthetic_data": true
+    }
+  ]
 }
