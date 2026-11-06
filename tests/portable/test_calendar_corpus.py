@@ -1,11 +1,12 @@
 """Portable parameterized checks for the programmatic Calendar corpus."""
+from hashlib import sha256
 import struct
 import unittest
 
 from deskmate_formats.calendar.personal import CalendarParseError, parse_bytes
 from deskmate_formats.calendar.writer import Appointment, append_appointment, capacity
 
-from calendar_corpus import DATES, TIMES, Case, probes, specimen_cases
+from calendar_corpus import DATES, TIMES, Case, manifest_bytes, probes, specimen_cases
 from synthetic import INTERNAL
 
 
@@ -94,3 +95,11 @@ class CalendarCorpusTests(unittest.TestCase):
         for probe in probes():
             with self.subTest(probe=probe.name):
                 check_probe(self, probe, probe.data)
+
+
+    def test_default_corpus_fingerprint(self):
+        # Pin the Windows validation manifest so Linux and Windows CI check the same bytes.
+        hashes = {case.name: sha256(case.build()).hexdigest() for case in specimen_cases()}
+        hashes.update({probe.name: sha256(probe.data).hexdigest() for probe in probes()})
+        self.assertEqual(sha256(manifest_bytes(hashes)).hexdigest(),
+                         '724ca8f3cdaee8ab39bd29b8fac850fb86991ac442fe89895f78304a3f231924')

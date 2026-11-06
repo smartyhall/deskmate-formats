@@ -113,3 +113,9 @@ def probes():
     description = single.index(b'X', 4096, 5120)
     yield Probe('opaque-description', single[:description] + b'\x82' + single[description + 1:],
                 None)
+
+
+
+def manifest_bytes(hashes):
+    """Serialize specimen names and hex SHA-256 hashes in stable order."""
+    return ''.join(f'{name} {digest}\n' for name, digest in sorted(hashes.items())).encode('ascii')

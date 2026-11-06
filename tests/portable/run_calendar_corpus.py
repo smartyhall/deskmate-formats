@@ -9,7 +9,7 @@ from time import perf_counter
 import unittest
 
 from calendar_corpus import (
-    DEFAULT_SEED, DATES, NORMAL_COUNT, STRESS_COUNT, TIMES, probes, specimen_cases,
+    DEFAULT_SEED, DATES, NORMAL_COUNT, STRESS_COUNT, TIMES, manifest_bytes, probes, specimen_cases,
 )
 from test_calendar_corpus import check_case, check_probe, check_writer, clock
 
@@ -107,15 +107,15 @@ def run_batch(root, seed, count, repeats, emit):
                 checks['byte_identity_comparisons'] += 1
 
     hashes = {name: sha256(data).hexdigest() for name, data in cases.items()}
-    manifest = ''.join(f'{name} {digest}\n' for name, digest in sorted(hashes.items()))
+    manifest = manifest_bytes(hashes)
     if emit:
-        (root / 'sha256.txt').write_bytes(manifest.encode('ascii'))
+        (root / 'sha256.txt').write_bytes(manifest)
     return {
         'seed': seed,
         'valid_requested': count,
         'distinct_specimens': len(set(cases.values())),
         'generations': repeats,
-        'manifest_sha256': sha256(manifest.encode('ascii')).hexdigest(),
+        'manifest_sha256': sha256(manifest).hexdigest(),
         'coverage': features,
         'checks_passed': checks,
         'failures': failures,
