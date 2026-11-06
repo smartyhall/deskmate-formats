@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass, field
 
+from .events import TASK_EVENTS
 from .process_health import verify_process
 
 _NON_ACTIVITY = frozenset(("process.heartbeat", "process.exited", "source.disconnected",
@@ -163,6 +164,8 @@ class AgentProjection:
                 record["type"], record["severity"], record["summary"],
             )
             events.append(event)
+            if event.type in TASK_EVENTS:
+                continue  # Queue reports appear in the timeline without creating an agent run.
             stamp = int(record["ingested_monotonic_ns"])
             observed_ns = stamp if started_ns <= stamp <= scanned_ns else None
             agent = agents.get(event.origin_id)

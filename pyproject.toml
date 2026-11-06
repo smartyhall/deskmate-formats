@@ -31,6 +31,7 @@ deskmate-86box-mcp = "deskmate_formats.automation.mcp_server:main"
 deskmate-86box-observer = "deskmate_formats.observer.demo:main"
 deskmate-observer-event = "deskmate_formats.observer.event_cli:main"
 deskmate-observer-codex = "deskmate_formats.observer.codex_cli:main"
+deskmate-supervisor-task = "deskmate_formats.supervisor.task_cli:main"
 
 [tool.setuptools.package-data]
 "*" = ["*.license"]

@@ -32,3 +32,7 @@ local-results/
 *.hdi
 *.raw
 *.token
+task-queue.sqlite3
+task-queue.sqlite3-journal
+task-queue.sqlite3-wal
+task-queue.sqlite3-shm
