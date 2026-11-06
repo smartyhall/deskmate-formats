@@ -121,8 +121,9 @@ broader sampling contract is verified.
 
 The library symbol-to-selector mapping resolves the unnamed app calls.
 `DM.LIB` and `DMMED.LIB` expose the same relevant low ordinals, with
-`0x10xx` selector words. The checked retail 3.05 Calendar call sites use
-`0x20xx`. The DMCSR low-ordinal table entries for `E3/E4` are at
+`0x10xx` selector words. Retail 3.03 Calendar uses `10E3/10E4` at
+file `D732/D738`. Retail 3.05 uses `20E3/20E4` at `D647/D64D`.
+The DMCSR low-ordinal table entries for `E3/E4` are at
 `12986/12988` (SDK runtime), `1291E/12920` (retail 3.03) and
 `12AF7/12AF9` (retail 3.05), leading to the verified draw/run bodies
 after adding the MZ header. The first two builds have distinct code

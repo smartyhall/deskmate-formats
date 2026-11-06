@@ -151,9 +151,9 @@ E01→E02 has exactly **two** differing positions in two one-byte runs:
 | Offset | E01 → E02 | Confidence |
 |---|---|---|
 | `103C` | `33 → 34` (`3 → 4`) | **Confirmed** final description character, changed in place |
-| `100D` | `63 → 65` (`c → e`) | **Confirmed** raw change in second description-payload byte of existing row ID 10; purpose unknown |
+| `100D` | `63 → 65` (`c → e`) | **Confirmed** saved screen-mode byte in the configuration row, month → day. [SDK and 3.05 code correlation](../../research/sdk-calendar-database.md#what-the-application-guide-resolves) |
 
-The appointment's other bytes, both index pages, file header, schema, counters and file size are unchanged. No record relocation or separate checksum change is identified. This does **not** prove checksums are absent: the extra byte remains unexplained. A persisted display/view preference is **speculative**, because E01 ended in month view while E02 used day view. An edit-triggered control value is another possibility; these experiments do not isolate the cause.
+The appointment's other bytes, both index pages, file header, schema, counters and file size are unchanged. No record relocation or separate checksum change was identified. The SDK correlation resolves the original saved-view hypothesis for this pair. Checksum behavior outside the measured changes remains open.
 
 ```text
 0x1000 E01: 80 10 20 20 FF 01 01 01 01 01 30 01 69 63 61 61
@@ -174,7 +174,7 @@ The appointment's other bytes, both index pages, file header, schema, counters a
 
 There are no inserted/removed bytes or file-size changes. The other 125 file contents are identical. Header, schema, table counters, indexes, appointment ID, date, DayOfWeek, empty Duration, EndTime A8, Protected byte and description are unchanged.
 
-The **entire existing internal row `0x1000–0x1026` is identical**, including `0x100D = 65` in both E02 and E03. Thus the extra E02 byte is not a value that must change on every appointment edit. E02 restored day view at E03 startup; E03 also ended in day view. These observations strengthen the saved-view/state explanation for the earlier `63→65` change, but do not prove its exact meaning. No checksum or other metadata byte changed in response to this isolated start-time edit; universal absence of checksums is not established.
+The **entire existing configuration row `0x1000–0x1026` is identical**, including `0x100D = 65` in both E02 and E03. E02 restored day view at E03 startup, and E03 also ended in day view. No checksum or other metadata byte changed in response to this isolated start-time edit.
 
 ```text
 0x1000 E02/E03: 80 10 20 20 FF 01 01 01 01 01 30 01 69 65 61 61
