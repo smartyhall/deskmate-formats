@@ -91,6 +91,11 @@ license terms and notices; their source is not bundled in project distributions.
 Development, build and check tools and referenced GitHub Actions also retain
 their own terms. The licensing review and observer guide record these distinctions.
 
+The optional `supervisor` extra installs the jsonschema validator. The packaged
+Codex app-server schema profile is derived from OpenAI's generated protocol
+schemas under Apache-2.0, with upstream attribution and NOTICE retained.
+See [S0 protocol provenance](docs/research/codex-supervisor-s0.md).
+
 ## Contributions and checks
 
 See CONTRIBUTING.md. Authors retain copyright and attribution; there is no CLA or

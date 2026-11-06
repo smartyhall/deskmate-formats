@@ -13,6 +13,9 @@ EXCLUDED = {'.git', 'build', 'dist', 'local-results', 'private-fixtures', '.ruff
 FIXTURE_DIR = Path('tests/fixtures/application-generated')
 DATA_EXT = {'.cln', '.adr', '.fil', '.pcl'}
 PRIVATE_SPOOL_FILES = {'events.jsonl', 'writer.lock'}
+PRIVATE_SPOOL_FILES.update(
+    {'operations.sqlite3', 'operations.sqlite3-journal', 'operations.sqlite3-wal', 'operations.sqlite3-shm'}
+)
 TELEMETRY_FIXTURE_DIR = 'tests/fixtures/codex-exec-0.166.0/'
 TELEMETRY_FIXTURES = {
     'anomalies.jsonl': 'af47f774319320c7e5e6d8cefb903e2f711e93f20ec6a529eabe3d81ebbd1a2b',
