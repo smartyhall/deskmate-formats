@@ -17,18 +17,24 @@ def row(ident,fields):
 def event(ident,description,day=b'\x90lb',weekday=b'c',start=b'\xa5',end=b'\xa9'):
     return row(ident,[day,weekday,b'',start,end,b'1',description.encode('ascii')])
 
+INTERNAL = row(16, [b'  \xff', b'', b'', b'', b'', b'0', b'ie'+b'a'*12+b'@PaSsWoRd@='])
+
 def build(kind='one'):
     if kind not in ('empty','one','two','five'):raise ValueError(kind)
-    d=bytearray(6144);d[:4]=b'\x03FIL'
-    marker=b'INDEPENDENT SYNTHETIC TEST';d[64:64+len(marker)]=marker
-    internal=row(16,[b'  \xff',b'',b'',b'',b'',b'0',b'ie'+b'a'*12+b'@PaSsWoRd@='])
-    rows=[(16,internal)]
+    rows=[(16,INTERNAL)]
     if kind!='empty':rows.append((17,event(17,'LPHa124')))
     if kind in ('two','five'):rows.append((18,event(18,'BETA456',start=b'\xac',end=b'\xb0')))
     if kind=='five':
         rows.extend([(19,event(19,'EARLY26',b'\x8fkx',b'g',b'\xa4',b'\xa8')),
                      (20,event(20,'MID2026',b'\x8flb',b'b',b'\xa8',b'\xac')),
                      (21,event(21,'LATEOCT',b'\x8fky',b'h'))])
+    order=[16,19,21,20,17,18] if kind=='five' else [i for i,_ in rows]
+    return assemble(rows, order)
+
+def assemble(rows, order):
+    """Assemble physical rows and a separate index order."""
+    d=bytearray(6144);d[:4]=b'\x03FIL'
+    marker=b'INDEPENDENT SYNTHETIC TEST';d[64:64+len(marker)]=marker
     metadata=[[b'T',b'DBCOLS',b'2',b'06',b'00013',b'000',b'00029',b'3',b'2',b'3'],
               [b'T',b'PERSONAL',b'4',b'07',f'{len(rows):05d}'.encode(),b'000',
                f'{max(i for i,_ in rows)+1:05d}'.encode(),b'5',b'1',b'2',b'4',b'5',b'7']]
@@ -47,7 +53,8 @@ def build(kind='one'):
     cursor=4096;locations={}
     for ident,value in rows:
         locations[ident]=cursor;d[cursor:cursor+len(value)]=value;cursor+=len(value)
+    if cursor >= 5120:
+        raise ValueError('synthetic rows exceed the PERSONAL data page')
     d[cursor]=3
-    order=[16,19,21,20,17,18] if kind=='five' else [i for i,_ in rows]
     for n,ident in enumerate(order):struct.pack_into('<HHH',d,5160+6*n,4,locations[ident]-4096,ident)
     return bytes(d)
