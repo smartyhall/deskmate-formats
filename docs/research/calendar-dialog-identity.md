@@ -8,6 +8,10 @@ Their static title-pointer assignments differ. A visual and register-only
 Add trial on the repeat clone cancelled without changing the E02 disk.
 [Activation experiment and runtime pins](calendar-dialog-activation.md)
 
+The [live title comparison](calendar-live-dialog-identity.md) later measured
+both title words under the same allocation and geometry and tested their
+retention after Escape.
+
 ## Geometry and record ownership
 
 The repeat used the already-held E02 clone and the pinned runtime from the
@@ -145,9 +149,10 @@ at B must match the allocated outer record and the proposed form size.
 The decoder verifies the pinned DMCSR identity and the mapped anchor digests.
 An archive's labels and provenance still require a trusted capture process.
 
-The replay classifies B as no tested modal context, Change Event-style,
-Find Date-style, or unknown. It checks A/C restoration and observation age
-against caller-supplied `--as-of-ms` and `--max-age-ms`. The age calculation
+The legacy `classification` field describes B as no tested modal context,
+Change Event-style, Find Date-style, or unknown. Replay checks A/C
+restoration and observation age against caller-supplied `--as-of-ms`
+and `--max-age-ms`. The age calculation
 is deterministic for the same archived timestamps. Change Event-style
 retains the possibility of Add Event. Optional focus evidence must refer to
 the same held capture, have a separate reviewed Change Event label, match
@@ -158,6 +163,38 @@ sample. The three geometry triplets and both previous focus samples replayed
 successfully from private evidence. The new portable tests use synthetic
 inputs, including stale samples, changed identities, failed restoration and
 conflicting geometry. The decoder does not access a guest or publish data.
+
+The `semantic.classification` field additionally distinguishes
+`no-verified-active-modal-context`, `active-add-event`,
+`active-change-event`, `active-find-date`,
+`verified-modal-unknown-identity` and
+`insufficient-or-contradictory-evidence`. The `semantic` object keeps
+freshness, allocation, ownership, frame and component-table evidence
+separate. For a named form, supply B geometry and a top-level `form`
+object with the following evidence.
+
+- The same B checkpoint fields used by the legacy focus evidence.
+- The pinned Calendar `module_sha256`, mapped `code_base` and
+  `data_base`, and the two `anchors` for the Add and Change setters
+  in file order.
+- `owner_source` and `visual_source` identifiers for independently
+  reviewed evidence, plus the `reviewed_dialog` label.
+- The application `descriptor`, `frame_offset`, `component_table` and
+  `component_count`, and the `outer_record` offset relative to the
+  DMCSR context segment. The producer resolves these from the reviewed
+  register trace and pinned code and data layout. Replay checks the
+  supplied association against the profile and allocated outer record.
+- For either editor, `title` and `indices` spans at frame `+8` and
+  descriptor `+3`. The title token must agree with the visual label.
+  The focus index must be in table bounds and match its settled mirror.
+  Only the two observed control names are emitted. Find Date uses its
+  own descriptor and frame and leaves focus unspecified.
+
+A matched idle triplet takes precedence over any retained form bytes.
+Geometry can corroborate a tested context with identity still unknown.
+A contradictory form association yields insufficient evidence in the
+semantic projection. Archived producer provenance must be trusted and
+reviewed before use.
 
 ```text
 python tools/experimental/calendar_dialog_state.py archive.json --as-of-ms <archive-time> --max-age-ms <limit>

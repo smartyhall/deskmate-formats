@@ -44,6 +44,27 @@ def triplet(kind):
                 samples=samples)
 
 
+def with_form(kind, token=None, *, index=5):
+    archive = triplet(kind)
+    sample = archive['samples'][1]
+    form = {key: sample[key] for key in ('capture_id', 'source_id', 'launch_id', 'guest_ms', 'frame',
+                                        'observed_at_ms', 'held', 'paused', 'reset')}
+    code, data = 0x28000, 0x36000
+    form.update(module_sha256=decoder.CALENDAR_SHA256, code_base=code, data_base=data,
+                anchors=anchors(code, decoder.TITLE_ANCHORS), outer_record=0x0814,
+                owner_source='reviewed-register-trace', visual_source='reviewed-frame')
+    if kind == 'find':
+        form.update(descriptor=0x1AA0, frame_offset=0x1A2C, component_table=0x1A9A, component_count=3,
+                    reviewed_dialog='find-date')
+    else:
+        form.update(descriptor=0x22C6, frame_offset=0x211C, component_table=0x22B4, component_count=9,
+                    reviewed_dialog='add-event' if token == 0x0536 else 'change-event',
+                    title=span(data + 0x2124, pack('<H', token)),
+                    indices=span(data + 0x22C9, bytes((index, index))))
+    archive['form'] = form
+    return archive
+
+
 class DialogStateTests(unittest.TestCase):
     def replay(self, archive, age=40):
         return decoder.replay(archive, as_of_ms=140, max_age_ms=age)
@@ -113,6 +134,69 @@ class DialogStateTests(unittest.TestCase):
         evidence['capture_id'] = archive['samples'][1]['capture_id']
         evidence['reviewed_dialog'] = 'add-event'
         self.assertIsNone(self.replay(archive)['focus'])
+
+    def test_editor_title_disambiguates_identical_allocation_and_geometry(self):
+        for token, label, index, control in ((0x0536, 'active-add-event', 1, 'Start Time'),
+                                             (0x0540, 'active-change-event', 5, 'Description')):
+            with self.subTest(token=token):
+                archive = with_form('change', token, index=index)
+                semantic = self.replay(archive)['semantic']
+                self.assertEqual(semantic['classification'], label)
+                self.assertEqual(semantic['title_token'], token)
+                self.assertEqual(semantic['focus_index'], index)
+                self.assertEqual(semantic['focus_control'], control)
+                for stage in ('ownership', 'frame', 'component_table'):
+                    self.assertEqual(semantic[stage], 'corroborated')
+
+    def test_retained_editor_slot_cannot_activate_idle_or_rename_find_date(self):
+        archive = with_form('change', 0x0540)
+        idle = triplet('idle')
+        idle['form'] = archive['form']
+        idle['samples'][1]['geometry'] = archive['samples'][1]['geometry']
+        self.assertEqual(self.replay(idle)['semantic']['classification'], 'no-verified-active-modal-context')
+        find = with_form('find')
+        find['form']['title'] = archive['form']['title']
+        result = self.replay(find)['semantic']
+        self.assertEqual(result['classification'], 'active-find-date')
+        self.assertNotIn('title_token', result)
+        self.assertNotIn('focus_index', result)
+
+    def test_known_context_with_missing_owner_or_unrecognized_title(self):
+        for archive in (triplet('change'), with_form('change', 0x9999), triplet('find')):
+            result = self.replay(archive)['semantic']
+            self.assertEqual(result['classification'], 'verified-modal-unknown-identity')
+            self.assertEqual(result['allocation'], 'geometry-corroborated')
+
+    def test_form_rejects_missing_conflicting_or_mismatched_evidence(self):
+        for mutation, reason in (
+            (lambda a: a['samples'][1].pop('window'), 'window'),
+            (lambda a: a['samples'][1].pop('geometry'), 'requires allocated outer geometry'),
+            (lambda a: a['samples'][1]['window'].update(hex=pack('<3H', 0x088C, 0x0EFC, 0xFFFF).hex()),
+             'unrecognized'),
+            (lambda a: a['form'].update(module_sha256='0'*64), 'Calendar source identity'),
+            (lambda a: a['form']['anchors'][0].update(sha256='0'*64), 'anchor mismatch'),
+            (lambda a: a['form'].update(capture_id='other-capture'), 'different checkpoint'),
+            (lambda a: a['form'].update(data_base=0x36010), 'span mapping'),
+            (lambda a: a['form'].update(outer_record=0x088C), 'does not own'),
+            (lambda a: a['form'].update(descriptor=0x1AA0), 'does not own'),
+            (lambda a: a['form'].update(owner_source='reviewed-frame'), 'separate owner and visual'),
+            (lambda a: a['form'].update(frame_offset=0x1A2C), 'frame conflicts'),
+            (lambda a: a['form'].update(component_table=0x1A9A), 'component table'),
+            (lambda a: a['form']['indices'].update(hex='0909'), 'focus index'),
+            (lambda a: a['form']['indices'].update(hex='0501'), 'focus index'),
+            (lambda a: a['form'].update(reviewed_dialog='add-event'), 'visual label'),
+        ):
+            with self.subTest(reason=reason):
+                archive = with_form('change', 0x0540)
+                mutation(archive)
+                result = self.replay(archive)['semantic']
+                self.assertEqual(result['classification'], 'insufficient-or-contradictory-evidence')
+                self.assertIn(reason, result['reason'])
+
+    def test_stale_form_cannot_upgrade_legacy_context(self):
+        result = self.replay(with_form('change', 0x0536), age=19)['semantic']
+        self.assertEqual(result['classification'], 'insufficient-or-contradictory-evidence')
+        self.assertIn('stale', result['reason'])
 
 
 if __name__ == '__main__':
