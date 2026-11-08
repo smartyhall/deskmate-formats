@@ -46,6 +46,13 @@ The three original PERSONAL data pages (4, 6, 7) and PERSONAL's reorganized inde
 
 ## Interpretation and limits
 
-This is a *native-produced result supplied by the operator*, not an implementation test of our writer. No code in the project is claimed to generate this result yet. The current strict common reader does not yet accept the rebalanced PERSONAL index routing structure in either native two-calendar specimen. Keep both as immutable byte oracles while building safe multitable read and narrowly bounded write support in [issue #81](https://github.com/smartyhall/deskmate-formats/issues/81).
+This is a *native-produced result supplied by the operator*. At its original
+publication checkpoint the common reader did not yet accept the rebalanced
+PERSONAL index, and no writer reproduced it. The separate
+[reader/writer successor](calendar-multicalendar-reader-writer.md) now reads both
+unaltered originals and reproduces the complete B bytes through a bounded
+first-SECOND append. Its tool-generated output has separate provenance; the
+original specimen and this operator action report remain unchanged. These are
+still immutable byte oracles for [issue #81](https://github.com/smartyhall/deskmate-formats/issues/81).
 
 Do not infer full native save/reopen acceptance from operator action reports, arbitrary insertion, deleted-record reclamation, index splitting, table rename/delete, additional page allocation, or alarm firing.

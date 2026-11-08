@@ -1,8 +1,8 @@
 """Independent byte-exact regression for a native SECOND first-event append.
 
 Uses immutable committed fixtures only, no production parser or emulator.
-The original native index-routing structure is not yet accepted by the
-production database reader.
+The separate multicalendar tests cover successful production parsing; this
+regression deliberately remains an independent original-byte comparison.
 """
 import hashlib
 from pathlib import Path

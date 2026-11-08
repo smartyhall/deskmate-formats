@@ -1,5 +1,13 @@
 > **Historical E00–E14 parser checkpoint.** Commands and original test counts below describe the earlier DOSLAB implementation, not the current installed package. The package now has a bounded append writer and an opt-in SDK profile supporting additional indexed data-page **reading** and broader ordinary date/time decoding. E15–E19 subsequently observed native page growth. For current capabilities see [README](../../../README.md), [compatibility](../../compatibility.md) and [project status](../../../PROJECT_STATUS.md). Original lab evidence stays private.
 
+The SDK reader now also enumerates named calendars through `db.calendars` and
+`db.calendar(name)`, with separate configurations and calendar-scoped record IDs.
+It validates packed-12 chains and per-subdivision index routing, preserves the
+full byte snapshot in `db.data`, and accepts both native SECOND specimens. See
+[the bounded reader/writer campaign](../../research/calendar-multicalendar-reader-writer.md)
+for independently checked A/B reproduction and the two exact-source experimental
+writers. The historical default-profile limits below remain unchanged.
+
 The current package exposes `Record.alarm_enabled` and the corresponding
 JSON key. An ordinary timed appointment with a decoded date, weekday and
 increasing start/end times and empty Duration yields false for Protected

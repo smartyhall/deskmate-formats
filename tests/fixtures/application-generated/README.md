@@ -62,3 +62,14 @@ locator on page 9. Every `PERSONAL` data and index page remains unchanged.
 [issue #81](https://github.com/smartyhall/deskmate-formats/issues/81).
 The operator's action/save history is reported, not an independently captured
 emulator operation; neither fixture is evidence of general native write support.
+
+The separate `calendar/second-empty-calendar-tool-generated.cln` and
+`calendar/second-first-event-tool-generated.cln` files are **tool-generated,
+not application-produced or native-accepted**. Both are 10,240 bytes. Their
+SHA-256 values are respectively
+`338487558d9992452db15858de1ba9cf790c26abf990ba70b47bbc9dc8d011f5` and
+`b9c9a4cae3cffac1bc337f7b378ea25df74efd3b6771e117c6e0fc3f81b77084`:
+complete independently checked bytes equal the distinct native A/B oracles.
+The filenames retain their generated provenance despite byte equality. See
+[bounded reader/writer campaign](../../../docs/research/calendar-multicalendar-reader-writer.md)
+and the manifest for exact source hashes, commands, contents and limits.

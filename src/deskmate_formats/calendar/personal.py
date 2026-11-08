@@ -1,11 +1,11 @@
-"""Conservative, read-only reader for the observed six-page PERSONAL.CLN layout.
+"""Read-only observed six-page profile and explicit bounded SDK named calendars.
 
 No fixture hashes or appointment addresses are used by the parser. Unknown value
 semantics remain raw; unknown structural layouts are rejected. See README_PARSER.md.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from datetime import date
 from pathlib import Path
 import hashlib
@@ -70,6 +70,7 @@ class Record:
     end_time: str | None = None
     description: str | None = None
     alarm_enabled: bool | None = None
+    calendar_name: str = 'PERSONAL'
 
     def to_dict(self) -> dict:
         result = asdict(self)
@@ -80,6 +81,20 @@ class Record:
 
 
 @dataclass(frozen=True)
+class NamedCalendar:
+    name: str
+    records: tuple[Record, ...]
+
+    @property
+    def appointments(self) -> tuple[Record, ...]:
+        return tuple(r for r in self.records if r.kind == 'appointment')
+
+    @property
+    def internal_records(self) -> tuple[Record, ...]:
+        return tuple(r for r in self.records if r.kind == 'internal/control')
+
+
+@dataclass(frozen=True)
 class CalendarDatabase:
     source: str | None
     sha256: str
@@ -87,6 +102,14 @@ class CalendarDatabase:
     metadata: dict
     records: tuple[Record, ...]
     warnings: tuple[str, ...]
+    calendars: tuple[NamedCalendar, ...] = ()
+    data: bytes = b''
+
+    def calendar(self, name: str) -> NamedCalendar:
+        for calendar in self.calendars or (NamedCalendar('PERSONAL', self.records),):
+            if calendar.name == name:
+                return calendar
+        raise CalendarParseError('unsupported_schema', f'missing calendar {name}')
 
     @property
     def appointments(self) -> tuple[Record, ...]:
@@ -98,11 +121,15 @@ class CalendarDatabase:
 
     def to_dict(self) -> dict:
         return {'source': self.source, 'sha256': self.sha256, 'size': self.size,
-                'scope': ('SDK ordinary codecs; bounded multipage reading' if self.metadata.get('codec_profile') == 'sdk' else SCOPE), 'metadata': self.metadata,
+                'scope': ('SDK ordinary codecs; bounded multipage/multicalendar reading' if self.metadata.get('codec_profile') == 'sdk' else SCOPE), 'metadata': self.metadata,
                 'warnings': list(self.warnings),
                 'appointment_count': len(self.appointments),
                 'appointments': [r.to_dict() for r in self.appointments],
-                'internal_records': [r.to_dict() for r in self.internal_records]}
+                'internal_records': [r.to_dict() for r in self.internal_records],
+                'calendars': [{'name': c.name, 'appointment_count': len(c.appointments),
+                               'appointments': [r.to_dict() for r in c.appointments],
+                               'internal_records': [r.to_dict() for r in c.internal_records]}
+                              for c in self.calendars or (NamedCalendar('PERSONAL', self.records),)]}
 
 
 def _decimal(raw: bytes, label: str, offset: int) -> int:
@@ -330,7 +357,8 @@ def parse_bytes(source: bytes, *, source_name: str | None = None, profile='obser
                 'header_page_raw_hex': data[:PAGE_SIZE].hex(' ')}
     return CalendarDatabase(source_name, hashlib.sha256(data).hexdigest(), len(data), metadata,
                             records, ('Header fields beyond magic and page/table token semantics remain partly unknown.',
-                                      'Structural acceptance does not validate untested codecs, page growth or deletion.'))
+                                      'Structural acceptance does not validate untested codecs, page growth or deletion.'),
+                            data=data)
 
 
 def _parse_sdk(source, *, source_name=None):
@@ -341,35 +369,59 @@ def _parse_sdk(source, *, source_name=None):
     except database.DatabaseError as exc:
         raise CalendarParseError(exc.code, str(exc), exc.offset) from exc
     _require(db.data[:4] == b'\x03FIL', 'invalid_header', 'expected Calendar FIL header', 0)
-    _require(tuple(t.name for t in db.tables) == ('DBCOLS', 'PERSONAL'),
-             'unsupported_layout', 'only one PERSONAL calendar supported')
+    _require(len(db.tables) >= 2 and db.tables[0].name == 'DBCOLS'
+             and db.tables[1].name == 'PERSONAL',
+             'unsupported_layout', 'expected DBCOLS then PERSONAL and named calendars')
+    _require(db.data[0x15] == len(db.tables) - 1,
+             'invalid_metadata', 'named-calendar count disagrees with directory', 0x15)
     tables = {}
-    for table, expected, pages, tail in (
-            (db.table('DBCOLS'), DBCOLS_SCHEMA, (2, 3), (b'2', b'3')),
-            (db.table('PERSONAL'), PERSONAL_SCHEMA, (4, 5), (b'1', b'2', b'4', b'5', b'7'))):
-        _require((table.data_page, table.index_page) == pages and table.tokens[8:] == tail
+    for table in db.tables:
+        is_schema = table.name == 'DBCOLS'
+        expected = DBCOLS_SCHEMA if is_schema else PERSONAL_SCHEMA
+        tail = (b'2', b'3') if is_schema else (b'1', b'2', b'4', b'5', b'7')
+        pages = (2, 3) if is_schema else (4, 5) if table.name == 'PERSONAL' else None
+        _require((pages is None or (table.data_page, table.index_page) == pages)
+                 and table.tokens[8:] == tail
                  and len(table.tokens[4]) == len(table.tokens[6]) == 5
                  and table.tokens[5] in (b'000', b'001'),
                  'unsupported_layout', 'unknown Calendar table profile')
         _require(tuple((c.name, c.width, c.kind) for c in table.columns) == expected,
                  'unsupported_schema', 'unrecognized Calendar schema')
         tables[table.name] = {'data_page': table.data_page, 'index_page': table.index_page,
+                             'data_pages': list(table.data_pages),
                              'column_count': table.column_count, 'record_count': table.record_count,
                              'next_id_candidate': table.next_id_candidate,
-                             'raw_tokens_hex': [t.hex(' ') for t in table.tokens]}
-    table = db.table('PERSONAL')
-    records = tuple(_decode(db.data, entry, row.end, list(row.fields), FIELD_NAMES, sdk=True)
-                    for entry, row in zip(table.entries, table.rows, strict=True))
-    _require(sum(r.kind == 'internal/control' for r in records) == 1,
-             'unsupported_record', 'expected exactly one known internal/control row')
+                             'raw_descriptor_hex': table.raw_descriptor.hex(' '),
+                             'raw_tokens_hex': [t.hex(' ') for t in table.tokens],
+                             'index_groups': [{'routing_offset': g.routing_offset,
+                                               'routing_key_hex': g.routing_key.hex(' '),
+                                               'entry_count': len(g.entries)}
+                                              for g in table.index_groups]}
+    calendars = []
+    for table in db.tables[1:]:
+        records = tuple(replace(_decode(db.data, entry, row.end, list(row.fields), FIELD_NAMES, sdk=True),
+                                calendar_name=table.name)
+                        for entry, row in zip(table.entries, table.rows, strict=True))
+        _require(sum(r.kind == 'internal/control' for r in records) == 1
+                 and records[0].kind == 'internal/control',
+                 'unsupported_record', 'expected one leading internal/control row per calendar')
+        # The first four sort fields are C, whose reader comparison folds ASCII
+        # lowercase. K description collation (the fifth field) remains opaque.
+        keys = [tuple(row.fields[i].upper() for i in (0, 1, 3, 4)) for row in table.rows]
+        _require(keys == sorted(keys), 'invalid_index', 'Calendar index order disagrees with C sort fields',
+                 table.index_page * PAGE_SIZE)
+        calendars.append(NamedCalendar(table.name, records))
+    records = tuple(r for calendar in calendars for r in calendar.records)
     metadata = {'page_size': PAGE_SIZE, 'page_count': len(db.data) // PAGE_SIZE,
                 'codec_profile': 'sdk', 'tables': tables,
                 'header_page_raw_hex': db.header.hex(' '),
                 'retired_rows': [{'offset': r.offset, 'record_id': r.record_id,
-                                  'raw_hex': r.raw.hex(' ')} for r in table.retired_rows]}
+                                  'raw_hex': r.raw.hex(' '), 'calendar_name': t.name}
+                                 for t in db.tables[1:] for r in t.retired_rows]}
     return CalendarDatabase(source_name, db.sha256, len(db.data), metadata, records,
                             ('SDK-derived ordinary codecs; new combinations are not native-verified.',
-                             'Header allocation semantics and unreferenced pages remain opaque.'))
+                             'Unreferenced pages, K collation and nonstructural metadata remain opaque.'),
+                            tuple(calendars), db.data)
 
 
 def parse_file(path: str | Path, *, profile='observed') -> CalendarDatabase:

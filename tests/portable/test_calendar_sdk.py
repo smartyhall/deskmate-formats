@@ -9,7 +9,7 @@ from deskmate_formats.calendar.codec import encode_date, decode_date, encode_tim
 from deskmate_formats.calendar.personal import CalendarParseError, parse_bytes, parse_file
 from deskmate_formats.calendar.writer import Appointment, append_appointment, capacity, write_new
 from deskmate_formats.calendar.samples import schedule
-from synthetic import build, assemble, INTERNAL, event
+from synthetic import allocation, build, assemble, INTERNAL, event
 
 
 class SDKCalendarTests(unittest.TestCase):
@@ -117,6 +117,7 @@ class SDKCalendarTests(unittest.TestCase):
         row = parse_bytes(data).appointments[-1]
         raw = bytes.fromhex(row.raw_hex)
         data.extend(raw + b'\x03' + bytes(1024 - len(raw) - 1))
+        allocation(data, ((4, 6),))
         data[row.offset:5120] = b'\x03' + bytes(5120 - row.offset - 1)
         struct.pack_into('<HHH', data, row.index_offset, 6, 0, row.record_id)
         self.assertEqual(parse_bytes(data, profile='sdk').appointments[-1].offset, 6144)
