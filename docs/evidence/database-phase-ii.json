@@ -1,0 +1,157 @@
+{
+  "recorded_date": "2026-11-07",
+  "timezone": "America/New_York",
+  "campaign_base": "6c742800f88a63551cb5cd5ba9dc9991bc9a7ead",
+  "stage_0_commit": "52e46bd6a8ce007523889ac5a5e12d35979ee087",
+  "branch": "codex/database-phase-ii",
+  "draft_pr": "https://github.com/smartyhall/deskmate-formats/pull/73",
+  "machine": {
+    "os": "Microsoft Windows 10 Pro",
+    "version": "10.0.19045",
+    "architecture": "64-bit",
+    "python": "3.13.17",
+    "PYTHONPATH": "src"
+  },
+  "evidence_class": "offline diagnostics, pinned-source findings and synthetic controls; separate operator-reported native Calendar display",
+  "calendar_operator_report": {
+    "reference": "docs/research/calendar-14-days-operator-report.md",
+    "candidate_sha256": "85ad05d6bf58540e32349bbb559301d36aced164741b03b09b30d63f22d636ac",
+    "appointments": 29,
+    "distinct_dates": 14,
+    "personal_rows": 30,
+    "reported_display": "all appointments and displayed alarm states appear as expected in DeskMate 3.05",
+    "guest_loaded_hash_independently_verified": false,
+    "native_edit_save_specimen_supplied": false,
+    "alarm_firing_tested": false,
+    "inspection_emulator": "not specified",
+    "inspection_elapsed_emulated_ms": null,
+    "issue_69": "open; display milestone achieved, broader hash-pinned controlled-save acceptance unmet"
+  },
+  "addressbook": {
+    "source_sha256": "cb890e6d7ba96fafb5a5d3991e208f4de862bee485f6ce32696e989c97d3394c",
+    "source_preserved": true,
+    "published_native_hashes_reproduced": ["A01", "A02", "A03", "A04"],
+    "native_two_contact_evidence_available": false,
+    "generated_sample_files": 25,
+    "contacts_per_file": 1,
+    "multicontact_writer_enabled": false,
+    "source_finding": "SDK 3.03 Development Guide, one-based PDF page 477: DATA sorts by LastName then FirstName; does not establish 3.05 physical insertion/counters/collation",
+    "discriminant_limit": "The proposed pair separates last-name ordering from the alternatives, but does not distinguish first-name from insertion order"
+  },
+  "calendar_growth": {
+    "original_e15_e19_bytes_available": false,
+    "DOSLAB_ROOT_configured": false,
+    "search_scope": "documented lab evidence/baseline inventories and prior campaign provenance; known experiment identifiers only; no guessed archive roots",
+    "evidence_used": [
+      "docs/experiments/e15-page-boundary.md",
+      "docs/experiments/e19-space-pressure.md",
+      "tests/private/test_e15_boundary.py",
+      "tests/private/test_e19_space_pressure.py"
+    ],
+    "e15_header_changed_offsets": [38, 39, 42, 43],
+    "e19_header_changed_offsets": [41, 42, 43, 44, 45],
+    "evidence_limit": "published observations plus synthetic controls, not new original-byte measurements or decoded allocation metadata",
+    "multipage_writer_enabled": false,
+    "new_full_month_calendar_generated": false
+  },
+  "source_findings": [
+    {
+      "input": "SDK 3.03 Development Guide PDF",
+      "sha256": "8081d5cd34305982844ab3598ebfbdf8887e7e369d1174a88a7631cba08439e0"
+    },
+    {
+      "input": "SDK 3.03 DMDB.H",
+      "sha256": "47c2ff4638d8ab1bcc12aeab3e2dd5b51ccfeef9bbddb1a014912c831df4d5aa"
+    },
+    {
+      "input": "SDK 3.03 DMDB.INC",
+      "sha256": "2ea33422d68ab2402ca2b83a1c1f5d7fee80db9c36000a8609d42712ce299a29"
+    },
+    {
+      "input": "3.05 DMDB.R89",
+      "sha256": "799444bb8c04632d261f61498ba269f9352e5528718f2e0a89512bf6ef7b808f"
+    },
+    {
+      "input": "3.05 DMDBUPD.RES",
+      "sha256": "9e77a2081ebb3a9549903f5d337580c65d6e0a3f603185064d4c82e16327cf4f"
+    }
+  ],
+  "diagnostic_sources": [
+    {
+      "path": "tools/experimental/database_trial_report.py",
+      "sha256": "e1654174526ad7240ab9827fab8146babb7cf6818385e34e08e5447f91868d0f"
+    },
+    {
+      "path": "tests/portable/test_database_trial_report.py",
+      "sha256": "255ce7b682325360c7d695971e1757c185d9c843bb821fdc4ecc80ed1b9dc3ca"
+    }
+  ],
+  "synthetic_controls": [
+    {
+      "name": "adr-last-name",
+      "before_sha256": "4f1578cb7c1e4d92acbaa1db8a28feca73af9c94a5b50d7871e24e67e226960e",
+      "after_sha256": "05051139a5901fa80b6f6425450187f4dbea2ed49b637960aeccb79a38a6c5df",
+      "report_sha256": "77d99c23766efff24bf218108c6a7655b1207b6ac6e95ab4ae4c70cfaa89556d",
+      "native_observed": false
+    },
+    {
+      "name": "adr-insertion-or-first-name",
+      "before_sha256": "4f1578cb7c1e4d92acbaa1db8a28feca73af9c94a5b50d7871e24e67e226960e",
+      "after_sha256": "16511ba6e78745395da89ce9032c46754d2a6c3f75c5d8656d9d7679457272b0",
+      "report_sha256": "ace02a8a3c3a67ca2588cb850f8046b59454681ea12457daa265fd3901e808ba",
+      "native_observed": false
+    },
+    {
+      "name": "e15",
+      "before_sha256": "80472ee14ffcdd906e696a54e6514769e94509a7110e000db4b78153ebd530ab",
+      "after_sha256": "8d9a51f9e869552b080bfc7688e295e35984f60546ba058c50bb91e843ead8db",
+      "report_sha256": "3e0947335795abf9c8f6295b8ae6dc993f577559d17586a023ef5c6237e55608",
+      "native_observed": false
+    },
+    {
+      "name": "e19",
+      "before_sha256": "7c39439aab76d7a7f409123910688da9bab423ae0e655dcec8673060bc311173",
+      "after_sha256": "c1d43a8677cc1a289118cc065be838495cd2983d7e09919e973f5fe6661b46be",
+      "report_sha256": "12987d9e4b1b0687996689f6c49d1ef9087b478e2d5643d7f1a53897a2f2c5b3",
+      "native_observed": false
+    }
+  ],
+  "a01_unchanged_control": {
+    "classification": "tool-generated exact A01 reconstruction compared with itself, not a second-contact specimen",
+    "report_sha256": "3cff465c6876c9c3db1ab1d7c861263a14b446a069507a3d81ad9ba4c9ee39ea"
+  },
+  "preservation": {
+    "prior_campaign_archive_entries_reverified": 106,
+    "committed_binary_fixtures_changed": false,
+    "historical_reports_changed": false,
+    "original_commercial_inputs_changed": false
+  },
+  "validation": {
+    "portable": {
+      "command": "python -m unittest discover -s tests/portable -v",
+      "passed": 321,
+      "elapsed_seconds": 135.970
+    },
+    "private_oracles": {
+      "command": "python -m unittest discover -s tests/private -p test_addressbook_writer.py -v",
+      "passed": 2,
+      "elapsed_seconds": 0.059,
+      "explicit_pinned_baseline": true
+    },
+    "final_focused": {
+      "command": "python -m unittest discover -s tests/portable -p test_database_trial_report.py -v",
+      "passed": 7,
+      "elapsed_seconds": 0.100,
+      "reason": "replace shared oracle constants in test assembly with independent literal published vectors"
+    },
+    "ruff": "passed",
+    "reuse": "passed",
+    "repository_audit": "passed",
+    "wheel_sdist_build": "passed",
+    "native_execution_this_run": false
+  },
+  "native_requested_emulated_ms": 0,
+  "native_guest_clock_delta_ms": null,
+  "durable_private_archive": "database-phase-ii-20261107 under the documented lab private-evidence directory",
+  "next_operator_action": "Separately authorize the scoped A01 second-contact trial in docs/research/database-phase-ii.md and return full before/after ADR bytes plus installed-tree manifests"
+}

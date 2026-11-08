@@ -1,8 +1,8 @@
 # Project status — DeskMate formats
 
-**Snapshot:** 2026-11-07 (America/New_York), after merge of
-[PR #67](https://github.com/smartyhall/deskmate-formats/pull/67), baseline
-`2e3141a6c894879704fc95c1fb534d7560375853` on `main`.
+**Snapshot:** 2026-11-07 (America/New_York), Phase II evidence reconciliation
+from verified `origin/main` `6c742800f88a63551cb5cd5ba9dc9991bc9a7ead`
+([PR #72](https://github.com/smartyhall/deskmate-formats/pull/72)).
 
 This is a concise, public **capability and handoff snapshot**, not a reconstruction
 of an older missing `PROJECT_STATUS.md`, a substitute for private experiment
@@ -18,6 +18,8 @@ do not by themselves establish native compatibility.
 - **Implemented:** checked-in source; only the documented test scopes are claimed.
 - **Native observed:** tested through an original DeskMate application in a
   controlled emulator experiment.
+- **Operator-reported native display:** human inspection in original DeskMate;
+  retain the report's scope separately from hash-pinned controlled experiments.
 - **Offline tested:** verified by byte comparisons, fixtures or synthetic tests
   without new application interaction.
 - **Proposed / unresolved:** an engineering target or hypothesis, not an observed
@@ -31,7 +33,7 @@ the [README](README.md) for commands.
 
 | Area | Implemented or observed | Remaining limits |
 | --- | --- | --- |
-| Calendar `PERSONAL.CLN` | [Reader and writer](docs/compatibility.md) support the measured default profile and an opt-in SDK-derived date/time profile. A generated **29-event / 14-day** six-page Calendar has independent offline checks; an earlier five-event file was accepted by DeskMate. | The newly generated 14-day file has **not** been opened/saved in DeskMate. Writer remains six-page, append-only and rejects tied starts, sentinel times and unsupported opaque values. A complete full-month file is blocked by allocation. |
+| Calendar `PERSONAL.CLN` | [Reader and writer](docs/compatibility.md) support the measured default profile and an opt-in SDK-derived date/time profile. The operator reports all **29 appointments / 14 dates**, including displayed alarm states, appear as expected in DeskMate 3.05. The committed six-page tool-generated file also has independent offline checks. [Report and limits](docs/research/calendar-14-days-operator-report.md). | Guest-loaded bytes were not independently rehashed; no native edit/rewrite specimen or alarm-firing result was supplied. Writer remains six-page, append-only and rejects tied starts, sentinel times and unsupported opaque values. A complete full-month file is blocked by allocation. |
 | Calendar page behavior | E15 allocated page 6; E16 retained an unindexed deleted row; E17/E18 appended rather than reused its slot; E19 allocated page 7 under pressure. [Reports](docs/experiments/e15-page-boundary.md), [E19](docs/experiments/e19-space-pressure.md). | Extended reader handles bounded indexed pages, but these observations do **not** yet specify a safe multipage allocator or deletion/reclamation writer. |
 | Address Book `PERSONAL.ADR` | [Reader](docs/research/addressbook-codec.md) preserves the ten-page/four-table layout, 16 raw contact fields and opaque tables. Empty-to-one writer reproduces **all four** A01–A04 application-produced whole-file SHA-256 hashes using a pinned source template. | 25 fictional contacts were generated in **25 separate one-contact files**, not one populated book. A second insertion, sort/collation rules, additional pages and broad optional field semantics are unverified. |
 | Shared DMDB database structures | [Common structural reader](src/deskmate_formats/database.py) and [cross-application evidence](docs/research/cross-application-db.md) cover page framing, schemas, records and indexes. [Call study](docs/research/database-call-review.md) finds code-backed DMDB binding/call thunks in Calendar, Address Book and Filer. | No universal allocation writer or proven runtime DMDB export binding. Shared call interfaces do not establish identical application policies. |
@@ -64,18 +66,34 @@ full-month deliverable is not claimed. The 14-day result is 6,144 bytes with
 SHA-256 `85ad05d6bf58540e32349bbb559301d36aced164741b03b09b30d63f22d636ac`.
 See the [public hashes and provenance](docs/evidence/database-campaign.json).
 
+Phase II on `codex/database-phase-ii`, [draft #73](https://github.com/smartyhall/deskmate-formats/pull/73):
+[source findings, independent diagnostic and operator runbooks](docs/research/database-phase-ii.md)
+are prepared for #70/#71. SDK source documents LastName/FirstName ordering;
+native second-contact insertion remains unmeasured. The diagnostic checks E15/E19
+published hash/delta predictions without treating synthetic controls as originals.
+No multicontact writer or page allocator was enabled; no new Calendar generated.
+Current validation: **321 portable tests passed (135.970 s)** and **2 focused
+private oracle tests passed (0.059 s)**. Seven diagnostic tests were rerun after
+making their synthetic header vectors independent of the diagnostic's constants;
+all passed (0.100 s). Ruff, REUSE, repository audit and wheel/sdist build passed.
+See the [Phase II receipt](docs/evidence/database-phase-ii.json). This run requested
+**0 ms** of emulated execution; actual guest-clock delta was **not measured**.
+
 Reported campaign validation: **313 portable tests passed**, **two private
 pinned-baseline hash-oracle tests passed**, plus independent output checks, Ruff,
 REUSE, repository audit and isolated wheel smoke tests. The original E15–E19
 private specimen archives were not available for that run. No new native
-database acceptance test occurred; no real guest-clock delta was measured.
+database acceptance test occurred during that earlier campaign; no real
+guest-clock delta was measured. The later operator-reported native display
+milestone is recorded separately below; it does not establish save persistence.
 
 ## Next practical gates
 
-1. **Native acceptance of generated Calendar:** use one explicitly authorized,
-   disposable installation to load the pinned 14-day file, enumerate representative
-   days/times, and compare an optional controlled save. Keep exact before/after
-   whole-installation hashes and distinguish no-op OK from actual stored edits.
+1. **Calendar display milestone achieved; controlled persistence remains open:**
+   the operator reviewed all 29 appointments and displayed alarm states in native
+   DeskMate. [Issue #69](https://github.com/smartyhall/deskmate-formats/issues/69)
+   remains open for hash-pinned installed-file identity, manifests and a separately
+   authorized controlled save. No-op OK does not establish an actual rewrite.
 2. **Second Address Book contact:** a controlled, freshly cloned A01 scenario
    must establish index ordering/counters/physical append before a multi-contact
    writer is generalized. [Discriminating trial](docs/research/addressbook-codec.md).

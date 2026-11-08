@@ -60,8 +60,14 @@ same keyword, or CLI `--profile sdk`. Existing calls retain their measured limit
 [SDK/source findings](research/sdk-calendar-database.md) support the codec formulas;
 the [campaign report](research/database-campaign.md) records generated artifacts
 and evidence levels. A 29-appointment, 14-day output passes offline independent
-structural checks. **It has not been opened or saved in DeskMate.** Historical
-five-event acceptance does not qualify these newly generated combinations.
+structural checks. On 2026-11-07 the operator reported reviewing all 29
+appointments across the 14 dates in DeskMate 3.05: all appeared as expected,
+including their displayed alarm states. This is successful **operator-reported
+native display/read inspection**, beyond a parser self-round-trip. It remains
+tool-generated. [Exact candidate and evidence limits](research/calendar-14-days-operator-report.md).
+No independently rehashed guest-loaded file, installed-tree capture, native
+edit/rewrite specimen or alarm-firing test was supplied. Other encodings,
+arbitrary times, 30-day capacity and record lifecycle operations remain unqualified.
 
 ## Address Book profile and interchange
 
@@ -75,7 +81,9 @@ Twenty-five synthetic contacts exist as 25 separate files, not one populated boo
 
 [Version 1 interchange](interoperability.md) provides strict Python/JSON semantic
 values and explicit loss reporting. It does not provide byte-preserving native
-reconstruction or network synchronization. New native open/save tests were not run.
+reconstruction or network synchronization. The operator-reported Calendar
+display inspection does not establish native save persistence or Address Book
+multicontact compatibility.
 
 ## Manual UI time-normalization evidence (not a native codec claim)
 
