@@ -11,7 +11,8 @@ import unittest
 from unittest.mock import patch
 
 from deskmate_formats.supervisor.driver import (
-    DriverError, load_plan, prepare, read_record, reconcile_synthetic, run, status, verify_native, write_record,
+    DriverError, implementation_hashes, load_plan, preflight, prepare, read_record, reconcile_synthetic,
+    run, status, verify_native, write_record,
 )
 from deskmate_formats.supervisor.ledger import open_ledger
 from test_supervisor_protocol import AVAILABLE
@@ -135,7 +136,87 @@ class DriverTests(unittest.TestCase):
                 run(self.directory, authorization=token)
             with self.assertRaises(DriverError):
                 reconcile_synthetic(self.directory, authorization=token)
+            with patch("deskmate_formats.supervisor.driver.verify_native"), self.assertRaisesRegex(DriverError, "live launch blocked"):
+                run(self.directory, authorization=token, isolation_reviewed=token)
+            with patch("deskmate_formats.supervisor.driver.verify_native"):
+                self.assertEqual(preflight(self.directory)["state"], "blocked")
         self.assertFalse(status(self.directory)["attempted"])
+
+    def test_scratch_and_sanitized_environment_are_not_filesystem_containment(self):
+        # Synthetic negative evidence: no private lab input is opened.
+        marker = self.root / "outside-scratch.txt"
+        marker.write_text("synthetic-outside-scratch", encoding="ascii")
+        self.prepare()
+        plan, _ = load_plan(self.directory)
+        child = subprocess.run(
+            [sys.executable, "-I", "-c", "from pathlib import Path; import sys; print(Path(sys.argv[1]).read_text())", str(marker)],
+            env=plan["env"], cwd=self.directory / "scratch", capture_output=True, timeout=5,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        )
+        self.assertEqual(child.returncode, 0)
+        self.assertEqual(child.stdout.strip(), b"synthetic-outside-scratch")
+
+    def test_preflight_never_launches_and_reports_requested_not_effective(self):
+        self.prepare()
+        with patch("subprocess.Popen", side_effect=AssertionError("unexpected child")):
+            report = preflight(self.directory)
+        self.assertEqual(report["state"], "synthetic-only")
+        self.assertEqual(report["app_server_launches"], 0)
+        self.assertIn("unverified", report["effective_codex_configuration"])
+        self.assertTrue(all(report["checks"].values()))
+        (self.directory / "codex-home" / "config.toml").write_bytes(b"changed")
+        self.assertEqual(preflight(self.directory)["state"], "blocked")
+
+    def test_dependency_drift_blocks_before_launch(self):
+        token = self.prepare()
+        hashes = implementation_hashes()
+        self.assertIn("observer/_private_storage.py", hashes)
+        hashes["observer/_private_storage.py"] = "0" * 64
+        with patch("deskmate_formats.supervisor.driver.implementation_hashes", return_value=hashes), \
+                patch("subprocess.Popen", side_effect=AssertionError("unexpected child")), self.assertRaises(DriverError):
+            run(self.directory, authorization=token)
+
+    def test_effort_and_approval_reviewer_drift_block_before_turn(self):
+        for mode in ("unsafe-effort", "unsafe-reviewer"):
+            with self.subTest(mode=mode):
+                directory = self.root / mode
+                token = prepare(directory, mode=mode, timeout=2)
+                result = run(directory, authorization=token)
+                self.assertEqual(result["state"], "blocked")
+                self.assertEqual([r["method"] for r in result["operations"]], ["thread/start"])
+                self.assertEqual(read_record(directory / "evidence" / "peer.json")["turns"], [])
+
+    def test_non_canary_items_and_incomplete_history_never_pass(self):
+        for mode in ("web-tool", "image-tool", "hook-item", "terminal-tool", "history-tool",
+                     "history-sentinel", "history-not-loaded", "history-extra-turn", "history-cursor",
+                     "malformed", "oversized", "partial", "duplicate-terminal", "restart-terminal"):
+            with self.subTest(mode=mode):
+                directory = self.root / mode
+                token = prepare(directory, mode=mode, timeout=2, deadline=0.3)
+                result = run(directory, authorization=token)
+                self.assertEqual(result["state"], "blocked", result)
+                self.assertIn(result["child_status"], ("stopped", "not-found"))
+                self.assertNotIn(b"private-canary", (directory / "spool" / "events.jsonl").read_bytes())
+
+    def test_teardown_timeout_is_durable_blocked_even_after_terminal_success(self):
+        from deskmate_formats.supervisor.protocol import AppServer
+        close = AppServer.close
+        def close_then_timeout(client):
+            close(client)  # Keep the synthetic child cleaned up.
+            raise subprocess.TimeoutExpired("private-command", 2)
+        token = self.prepare()
+        with patch.object(AppServer, "close", close_then_timeout):
+            result = run(self.directory, authorization=token)
+        self.assertEqual(result["state"], "blocked")
+        self.assertEqual(result["reason"], "child-teardown-failed")
+        self.assertEqual(status(self.directory)["outcome"], result)
+
+    def test_stale_process_identity_cannot_report_success(self):
+        token = self.prepare()
+        with patch("deskmate_formats.supervisor.driver.verify_process", return_value="identity-mismatch"):
+            result = run(self.directory, authorization=token)
+        self.assertEqual(result["state"], "blocked")
+        self.assertEqual(result["reason"], "child-exit-not-verified")
 
     def test_effective_policy_drift_blocks_before_model_input(self):
         token = self.prepare("unsafe-policy")

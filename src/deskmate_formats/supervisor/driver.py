@@ -21,15 +21,21 @@ from .ledger import LedgerError, open_ledger
 from .operations import Operations
 from .protocol import AppServer, Approval, Notification, PROFILE_SHA256, ProtocolError, RemoteError, Schema, TransportError, VERSION
 from .synthetic_peer import MODES
-from .telemetry import AppServerTelemetry, TOOLS
+from .telemetry import AppServerTelemetry
 from .task_manifest import utc_now
 
 NATIVE_SHA256 = "9d563ee4e0441ff9d59d612013e0460ddf8e5709735c2d9f6b98b7ef8ca4eb42"
 PROMPT = ("Reply exactly S0_CANARY_OK. Do not use tools, read or write files, "
           "run commands, access the network, or request approval.")
 MAX_EVIDENCE = 4 * 1024 * 1024
-IMPLEMENTATION_FILES = ("driver.py", "driver_cli.py", "protocol.py", "operations.py", "ledger.py",
-                        "synthetic_peer.py", "telemetry.py", "bridge.py", "bridge_cli.py")
+# A digest attestation cannot supply an OS security boundary. Re-enable only in
+# a reviewed change that establishes containment before executing the child.
+LIVE_BLOCKERS = (
+    "no verified OS boundary for the app-server and its descendants",
+    "isolated home and empty MCP table do not exclude inherited configuration or built-in tools",
+    "effective Windows sandbox, authentication and tool restrictions are unverified",
+)
+CANARY_ITEM_TYPES = {"userMessage", "agentMessage", "reasoning"}
 
 
 class DriverError(ValueError):
@@ -39,6 +45,13 @@ class DriverError(ValueError):
 def digest(path):
     with Path(path).open("rb") as stream:
         return file_digest(stream, "sha256").hexdigest()
+
+
+def implementation_hashes():
+    """Bind all installed project Python dependencies, including storage/telemetry."""
+    package = Path(__file__).parent.parent
+    return {path.relative_to(package).as_posix(): digest(path)
+            for path in sorted(package.rglob("*.py"))}
 
 
 def read_record(path):
@@ -123,7 +136,7 @@ def prepare(directory, *, executable=None, model=None, effort=None, mode="succes
         "prepared_at_utc": utc_now(),
         "runtime": {"python": sys.version, "platform": platform.platform(),
                     "sqlite": sqlite3.sqlite_version, "jsonschema": version("jsonschema")},
-        "implementation_sha256": {name: digest(Path(__file__).with_name(name)) for name in IMPLEMENTATION_FILES},
+        "implementation_sha256": implementation_hashes(),
     }
     with journal_lock(root, write=True):
         write_record(root / "plan.json", plan)
@@ -152,6 +165,39 @@ def status(directory):
                 "outcome": read_record(root / "outcome.json") if (root / "outcome.json").exists() else None}
 
 
+def preflight(directory):
+    """Offline inventory, not effective-config discovery or launch authorization."""
+    root = storage_directory(directory)
+    with journal_lock(root):
+        plan, token = load_plan(root)
+        Schema()
+        checks = {
+            "implementation_matches": plan["implementation_sha256"] == implementation_hashes(),
+            "executable_matches": digest(plan["argv"][0]) == plan["executable_sha256"],
+            "configuration_matches": digest(root / "codex-home" / "config.toml") == plan["config_sha256"],
+            "scratch_empty": not any((root / "scratch").iterdir()),
+            "never_attempted": not (root / "attempt.json").exists(),
+        }
+        for name in ("scratch", "codex-home", "evidence", "receipts", "spool"):
+            storage_directory(root / name)
+        if plan["kind"] == "live":
+            verify_native(plan["argv"][0])  # --version only, after pin verification.
+        return {
+            "state": "blocked" if plan["kind"] == "live" or not all(checks.values()) else "synthetic-only",
+            "plan_sha256": token, "checks": checks,
+            "package": {"version": version("deskmate-formats"), "module": str(Path(__file__).resolve()),
+                        "implementation_sha256": implementation_hashes()},
+            "requested": {key: plan[key] for key in ("argv", "env", "model", "effort", "timeout", "deadline",
+                                                       "config_sha256", "executable_sha256", "profile_sha256")},
+            "effective_codex_configuration": "unverified; no app-server session launched",
+            "external_enforcement": ["private storage ACL checks", "one-shot attempt fence",
+                                     "live launch disabled before process creation"],
+            "authentication": "not inspected or provisioned; isolated home alone is not a credential boundary",
+            "live_blockers": list(LIVE_BLOCKERS),
+            "app_server_launches": 0, "model_turns": 0,
+        }
+
+
 class Evidence:
     def __init__(self, root):
         self.root = root
@@ -171,8 +217,7 @@ class Evidence:
 def _validate_plan(root, plan, token, authorization, isolation_reviewed):
     if authorization != token:
         raise DriverError("explicit authorization must match the exact plan digest")
-    if (set(plan["implementation_sha256"]) != set(IMPLEMENTATION_FILES)
-            or any(digest(Path(__file__).with_name(name)) != value for name, value in plan["implementation_sha256"].items())):
+    if plan["implementation_sha256"] != implementation_hashes():
         raise DriverError("driver implementation changed after preparation")
     if plan["kind"] == "synthetic":
         argv = plan["argv"]
@@ -199,6 +244,7 @@ def _validate_plan(root, plan, token, authorization, isolation_reviewed):
         verify_native(plan["argv"][0])
         if plan["binding"] is not None:
             raise DriverError("S2 live dispatch is disabled")
+        raise DriverError("live launch blocked: " + "; ".join(LIVE_BLOCKERS))
     Schema()
 
 
@@ -206,8 +252,19 @@ def _effective_policy(result, plan, scratch):
     if (Path(result["cwd"]).resolve() != scratch.resolve()
             or result["approvalPolicy"] != "never" or result["sandbox"] != {"type": "readOnly"}
             or result["model"] != (plan["model"] if plan["kind"] == "live" else "synthetic")
-            or result["modelProvider"] != ("openai" if plan["kind"] == "live" else "synthetic")):
+            or result["modelProvider"] != ("openai" if plan["kind"] == "live" else "synthetic")
+            or result["approvalsReviewer"] != "user"
+            or result.get("reasoningEffort") != (plan["effort"] if plan["kind"] == "live" else "low")
+            or result["thread"]["ephemeral"] is not False
+            or result["thread"]["turns"]):
         raise DriverError("effective thread policy differs from reviewed plan")
+
+
+def _check_items(items):
+    # Positive allowlist: schema-valid web/image/subagent/hook and future item
+    # classes must not silently pass a canary that prohibits tools.
+    if any(item["type"] not in CANARY_ITEM_TYPES for item in items):
+        raise DriverError("unexpected tool or non-canary activity")
 
 
 def _event(ops, telemetry, evidence, thread_id, turn_id, *, timeout=0):
@@ -225,11 +282,11 @@ def _event(ops, telemetry, evidence, thread_id, turn_id, *, timeout=0):
         if event.method in ("turn/started", "turn/completed"):
             if (params["threadId"], params["turn"]["id"]) != (thread_id, turn_id):
                 raise DriverError("stale turn notification")
+            _check_items(params["turn"]["items"])
         if event.method in ("item/started", "item/completed"):
             if (params["threadId"], params["turnId"]) != (thread_id, turn_id):
                 raise DriverError("stale item notification")
-            if params["item"]["type"] in TOOLS:
-                raise DriverError("unexpected tool activity")
+            _check_items([params["item"]])
     return event
 
 
@@ -282,6 +339,7 @@ def _own(root, plan, ledger):
         evidence.save("request-intent", {"operation_id": turn_operation, "method": "turn/start", "params": params})
         result = ops.execute(turn_operation, "turn/start", params)
         evidence.save("turn-result", result)
+        _check_items(result["turn"]["items"])
         turn_id = result["turn"]["id"]
         telemetry.bind(ledger.get(turn_operation))
         terminal = False
@@ -305,13 +363,18 @@ def _own(root, plan, ledger):
         if ledger.get(turn_operation).state != "completed" or answers != ["S0_CANARY_OK"]:
             raise DriverError("terminal receipt or sentinel did not pass canary")
         view = client.request("thread/read", {"threadId": thread_id})
-        page = client.request("thread/turns/list", {"threadId": thread_id, "itemsView": "notLoaded", "limit": 50})
+        page = client.request("thread/turns/list", {"threadId": thread_id, "itemsView": "full", "limit": 50})
         evidence.save("history", {"view": view, "page": page})
         while _event(ops, telemetry, evidence, thread_id, turn_id) is not None:
             pass
         matches = [turn for turn in page["data"] if turn["id"] == turn_id]
-        if view["thread"]["id"] != thread_id or len(matches) != 1 or matches[0]["status"] != "completed":
+        if (view["thread"]["id"] != thread_id or len(matches) != 1 or len(page["data"]) != 1
+                or page.get("nextCursor") or matches[0]["status"] != "completed"
+                or matches[0].get("itemsView") != "full"):
             raise DriverError("history did not confirm the exact completed turn")
+        _check_items(matches[0]["items"])
+        if [item["text"] for item in matches[0]["items"] if item["type"] == "agentMessage"] != ["S0_CANARY_OK"]:
+            raise DriverError("history did not confirm the exact sentinel")
         outcome.update(state="completed", reason="observed-terminal-and-history")
     except (OSError, ValueError, RuntimeError) as error:
         # Raw exception strings can contain private data. Full allowed results are saved above.
@@ -327,7 +390,7 @@ def _own(root, plan, ledger):
             if client is not None:
                 try:
                     client.close()
-                except OSError:
+                except (OSError, subprocess.TimeoutExpired):
                     outcome.update(state="blocked", reason="child-teardown-failed")
                 outcome["child_status"] = verify_process(client.pid, client.process_identity)
                 if outcome["child_status"] not in ("stopped", "not-found"):

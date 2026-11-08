@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import sys
 
-from .driver import prepare, reconcile_synthetic, run, status
+from .driver import preflight, prepare, reconcile_synthetic, run, status
 from .synthetic_peer import MODES
 
 
@@ -19,11 +19,12 @@ def main(argv=None):
     prep.add_argument("--effort", choices=("low", "medium", "high"), help="reviewed live model reasoning effort; no default")
     prep.add_argument("--scenario", choices=MODES, default="success")
     commands.add_parser("status", help="offline private inspection / dry run", allow_abbrev=False)
+    commands.add_parser("preflight", help="offline pins and isolation findings; never starts app-server", allow_abbrev=False)
     synthetic = commands.add_parser("synthetic", help="explicit synthetic dispatch", allow_abbrev=False)
     synthetic.add_argument("--authorize-plan", required=True)
     reconcile = commands.add_parser("reconcile-synthetic", help="read-only synthetic restart only", allow_abbrev=False)
     reconcile.add_argument("--authorize-plan", required=True)
-    live = commands.add_parser("live", help="STOP: requires NEW explicit operator model-use authorization", allow_abbrev=False)
+    live = commands.add_parser("live", help="BLOCKED: effective isolation and descendant containment are not established", allow_abbrev=False)
     live.add_argument("--authorize-live-plan", required=True,
                       help="exact digest reviewed in the separately authorized live experiment")
     live.add_argument("--isolation-reviewed", required=True, help="same plan digest after effective configuration review")
@@ -33,6 +34,8 @@ def main(argv=None):
             result = {"plan_sha256": prepare(args.run, executable=args.executable, model=args.model, effort=args.effort, mode=args.scenario)}
         elif args.action == "status":
             result = status(args.run)
+        elif args.action == "preflight":
+            result = preflight(args.run)
         else:
             current = status(args.run)
             if args.action == "reconcile-synthetic":

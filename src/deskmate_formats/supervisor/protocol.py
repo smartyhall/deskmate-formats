@@ -374,14 +374,17 @@ class AppServer:
                 self._approvals.pop(identifier, None)
             if method == "turn/completed":
                 identity = entity_id(params["threadId"]), entity_id(params["turn"]["id"])
-                if params["turn"]["status"] == "inProgress" or len(self._terminal_turns) >= 4096:
+                if (params["turn"]["status"] == "inProgress" or len(self._terminal_turns) >= 4096
+                        or identity in self._terminal_turns):
                     raise ProtocolError("invalid terminal status or session turn limit reached")
                 self._terminal_turns.add(identity)
                 for identifier, approval in tuple(self._approvals.items()):
                     if (approval.thread_id, approval.turn_id) == identity:
                         del self._approvals[identifier]
-            if method == "turn/started" and params["turn"]["status"] != "inProgress":
-                raise ProtocolError("invalid turn start status")
+            if method == "turn/started":
+                identity = entity_id(params["threadId"]), entity_id(params["turn"]["id"])
+                if params["turn"]["status"] != "inProgress" or identity in self._terminal_turns:
+                    raise ProtocolError("invalid turn start status or terminal turn restarted")
             event = Notification(method, params)
         if len(self._events) >= MAX_EVENTS:
             raise ProtocolError("protocol event queue overflowed")

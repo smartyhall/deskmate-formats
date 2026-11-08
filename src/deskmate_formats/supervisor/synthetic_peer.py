@@ -8,7 +8,13 @@ from uuid import uuid4
 from time import sleep
 
 MODES = ("success", "lost-ack", "delayed-ack", "approval", "driver-approval", "unknown-request", "mismatch",
-         "duplicate", "eof", "normal", "failed", "stale-turn", "history-only", "unsafe-policy", "wrong-version")
+         "duplicate", "eof", "normal", "failed", "stale-turn", "history-only", "unsafe-policy", "wrong-version",
+         "unsafe-effort", "unsafe-reviewer", "web-tool", "image-tool", "hook-item", "terminal-tool",
+         "history-tool", "history-sentinel", "history-not-loaded", "history-extra-turn", "history-cursor",
+         "malformed", "oversized", "partial", "duplicate-terminal", "restart-terminal")
+SUCCESS_MODES = {"success", "stale-turn", "history-only", "web-tool", "image-tool", "hook-item",
+                 "terminal-tool", "history-tool", "history-sentinel", "history-not-loaded",
+                 "history-extra-turn", "history-cursor", "duplicate-terminal", "restart-terminal"}
 
 PRIVATE = "private-canary-command-and-result"
 
@@ -105,13 +111,26 @@ def main(state_path, mode):
                     "thread": thread, "model": "synthetic", "modelProvider": "synthetic",
                     "cwd": thread["cwd"], "approvalPolicy": "on-request" if mode == "unsafe-policy" else "never", "approvalsReviewer": "user",
                     "sandbox": {"type": "readOnly"},
+                    "reasoningEffort": "high" if mode == "unsafe-effort" else "low",
                 }
+                if mode == "unsafe-reviewer":
+                    result["approvalsReviewer"] = "auto_review"
             elif method == "thread/read":
                 assert params["threadId"] == thread["id"]
                 result = {"thread": thread if params.get("includeTurns") else thread | {"turns": []}}
             elif method == "thread/turns/list":
                 assert params["threadId"] == thread["id"]
                 result = {"data": thread["turns"]}
+                if mode == "history-tool":
+                    result["data"][0]["items"].append({"id": "hidden-tool", "type": "webSearch", "query": PRIVATE})
+                elif mode == "history-sentinel":
+                    result["data"][0]["items"] = []
+                elif mode == "history-not-loaded":
+                    result["data"][0]["itemsView"] = "notLoaded"
+                elif mode == "history-extra-turn":
+                    result["data"].append(thread["turns"][0] | {"id": "extra"})
+                elif mode == "history-cursor":
+                    result["nextCursor"] = "more"
             elif method == "turn/start":
                 assert params["threadId"] == thread["id"]
                 turn = {"id": str(uuid4()), "status": "inProgress", "items": []}
@@ -139,8 +158,13 @@ def main(state_path, mode):
                         "completedAtMs": 2, "item": item | {"status": "completed", "aggregatedOutput": PRIVATE},
                     })
                 notify("turn/started", lifecycle)
-                if mode not in ("out-of-order", "success", "stale-turn", "driver-approval", "history-only"):
+                if mode not in SUCCESS_MODES | {"out-of-order", "driver-approval"}:
                     notify("item/started", activity | {"startedAtMs": 1})
+                extra = {"web-tool": {"type": "webSearch", "query": PRIVATE},
+                         "image-tool": {"type": "imageView", "path": PRIVATE},
+                         "hook-item": {"type": "hookPrompt", "fragments": []}}.get(mode)
+                if extra:
+                    notify("item/completed", activity | {"item": {"id": "extra", **extra}, "completedAtMs": 2})
                 if mode in ("approval", "driver-approval", "string-approval", "file-approval", "stale-approval"):
                     # Collide with an outstanding client ID in the numeric case.
                     pending = str(identifier) if mode == "string-approval" else identifier
@@ -151,15 +175,23 @@ def main(state_path, mode):
                     if mode == "stale-approval":
                         notify("serverRequest/resolved", {"threadId": thread["id"], "requestId": pending})
                         pending = None
-                if mode in ("success", "stale-turn", "history-only"):
+                if mode in SUCCESS_MODES:
                     agent = {"id": "synthetic-answer", "type": "agentMessage", "text": "S0_CANARY_OK"}
                     notify("item/completed", {"threadId": thread["id"], "turnId": turn["id"], "item": agent, "completedAtMs": 2})
+                    turn["items"] = [agent]
+                    turn["itemsView"] = "full"
+                    if mode == "terminal-tool":
+                        turn["items"].append({"id": "hidden-tool", "type": "webSearch", "query": PRIVATE})
                     if mode == "stale-turn":
                         notify("turn/completed", {"threadId": thread["id"], "turn": turn | {"id": "stale", "status": "completed"}})
                     elif mode == "history-only":
                         turn["status"] = "completed"
                     else:
                         turn_status(turn, "completed")
+                        if mode == "duplicate-terminal":
+                            notify("turn/completed", {"threadId": thread["id"], "turn": turn | {"status": "failed"}})
+                        elif mode == "restart-terminal":
+                            notify("turn/started", {"threadId": thread["id"], "turn": turn | {"status": "inProgress"}})
                     save()
                     result = {"turn": turn | {"status": "inProgress"}}
                 elif mode in ("out-of-order", "failed"):
