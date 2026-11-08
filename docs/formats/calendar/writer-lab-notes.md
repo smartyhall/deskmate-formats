@@ -1,5 +1,13 @@
 # Bounded experimental Calendar writer — Phase III-A
 
+> **Historical Phase III-A checkpoint.** Commands and the E15 plan below describe
+> what was available *at that phase*. E15–E19 were subsequently performed;
+> see [E15](../../experiments/e15-page-boundary.md) through
+> [E19](../../experiments/e19-space-pressure.md). The installed writer still
+> supports only the bounded six-page profile on the reviewed baseline; see
+> [compatibility](../../compatibility.md) and
+> [project status](../../../PROJECT_STATUS.md).
+
 `calendar_writer_poc.py` now supports repeated **append-only** additions in the
 observed 6,144-byte, single-data/index-page profile. The original E07→E08 byte-perfect
 regression remains. Existing parser/CLI code and preserved fixtures are unchanged.

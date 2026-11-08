@@ -5,7 +5,7 @@ The explicit experimental `sdk` profile is described after it.
 
 | Component | Current supported scope |
 |---|---|
-| Python | Local verification on 3.13/3.14 Windows; initial four hosted Windows/Ubuntu CI jobs passed (owner-reported) |
+| Python | Portable CI on Windows/Ubuntu with Python 3.13/3.14; selected historical local validation on Windows |
 | DeskMate | Only the documented Tandy DeskMate 3.05 Calendar observed subset |
 | Files | Exactly 6,144 bytes, single observed data/index page per table, validated schema, low IDs |
 | Dates | 2026-10-23,2026-10-24,2026-11-01,2027-11-01 |
@@ -23,9 +23,9 @@ promise. E11/E12 demonstrate IDs can change after application edits/deletions.
 The private original 72 tests remain in DOSLAB. Their migrated counterparts use
 the installed package and external fixtures; additional direct E07→E08/E09→E10
 regressions are private as well. Synthetic success does not substitute for the
-archival byte-perfect or application tests. The repository is privately hosted; the owner reports successful initial CI on
-Windows/Ubuntu and Python 3.13/3.14. Historical local results remain in
-verification.md; hosted CI uses only portable tests.
+archival byte-perfect or application tests. The repository is publicly hosted. CI runs portable tests on Windows/Ubuntu
+with Python 3.13/3.14, without original commercial media, private archives or
+live DeskMate. Historical local results remain in [verification.md](verification.md).
 
 E15 observed a seven-page application-produced file after one allocation. The
 default parser and both writer profiles reject it; the explicit `sdk` reader can
@@ -76,3 +76,14 @@ Twenty-five synthetic contacts exist as 25 separate files, not one populated boo
 [Version 1 interchange](interoperability.md) provides strict Python/JSON semantic
 values and explicit loss reporting. It does not provide byte-preserving native
 reconstruction or network synchronization. New native open/save tests were not run.
+
+## Manual UI time-normalization evidence (not a native codec claim)
+
+In a separately observed DOSBox-X Add Event experiment, full-minute input
+5:08 PM–5:31 PM was displayed after save as **5:00 PM–5:45 PM**. This is
+consistent with outward quarter-hour rounding for that example; it does **not**
+prove universal UI behavior or constrain all possible stored time bytes.
+[Research note](research/calendar-ui-time-normalization.md). Native writer
+profiles still accept only their documented quarter-hour values; the proposed
+CalDAV precision-preservation behavior is a [future sync policy](interoperability.md),
+not an implemented converter.

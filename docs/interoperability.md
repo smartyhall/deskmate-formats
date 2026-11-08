@@ -113,3 +113,37 @@ SDK date/time combinations and multicontact indexing is a separate authorized
 experiment. Timezones, recurrence rules, non-ASCII encoding, all-day events,
 date-only contacts, collation/ties, native edits/deletions and stable external-ID
 mapping need explicit future designs and evidence before bridge implementation.
+
+## Proposed future CalDAV precision and change-detection policy
+
+**Operator decision (not implemented):** For events that have greater timing
+precision than DeskMate's supported ordinary quarter-hour model, project the
+start **down** to the preceding quarter-hour and the end **up** to the next
+quarter-hour. Manual [Add Event UI observations](research/calendar-ui-time-normalization.md)
+support this rounding rule for tested examples, but have not independently
+established every native encoding or boundary condition. Do not change the
+current strict version-1 interchange loader/writer to silently round times.
+
+A future synchronizer must retain both (a) the precise original external
+value and stable external event identity and (b) the **last projected value
+written to DeskMate**, with a relevant source snapshot and mapping metadata.
+Compare each DeskMate readback against that last projection. If unchanged,
+**preserve the original external precision**, including seconds or timezone
+metadata, rather than treating projection as an external edit. A description-
+only edit should not erase unchanged precise start/end values.
+
+If the projected native start/end value **has** changed, treat that confirmed
+native time edit as authoritative for the affected time field(s), accepting
+quarter-hour precision loss for those edited values. A user opening/saving an
+unchanged native event does not establish a distinct time edit; do not infer
+intent that cannot be observed. An event modified independently in both systems
+must trigger explicit conflict handling, not silent overwriting. Storage record
+IDs can change after native edits and must **not** stand in for stable external
+UIDs or justify blind deduplication.
+
+Two precise external starts may round to the same native start on the same day.
+The existing writer rejects these tied keys; future bridge work must report
+and handle collisions explicitly instead of dropping or merging appointments.
+Changes that project to the same native time values should not trigger
+unnecessary native rewriting. These rules belong to a **future synchronization
+layer**, outside the existing native page codec and version-1 interchange API.

@@ -1,9 +1,12 @@
 # Proposed Codex laboratory supervisor — design and integration plan
 
-**Status:** Architectural proposal. The offline S0 foundation and its limits
-are recorded in [Supervisor S0 app-server protocol](codex-supervisor-s0.md).
-The [S1 task intake guide](codex-supervisor-s1.md) describes the implemented
-JSON contract and manual review workflow.
+**Status:** Architectural proposal, not an implemented unattended supervisor.
+The [S0 protocol guide](codex-supervisor-s0.md) records an offline-tested
+app-server client/receipt foundation, and [S1](codex-supervisor-s1.md)
+describes implemented trusted Git intake and a manual decision queue. A real
+S0 model canary, production dispatch, approval and resource leases are still
+unverified or unimplemented. The [orchestrator reuse ADR](agent-orchestrator-reuse-assessment.md)
+now informs future S2–S5 design; see [project status](../../PROJECT_STATUS.md).
 **Companion:** [DeskMate Observatory v2 functional specification](observatory-v2-spec.md).
 **Deferred successor:** [Headless and reproducible research appliance roadmap](headless-research-appliance-roadmap.md) (only after validated Windows observer/supervisor).
 **Scope:** Local Windows 10 research workstation and multiple isolated Codex/86Box
@@ -233,8 +236,11 @@ separate authorized channel, never through the display endpoint.
 | S6 — Console integration | P1 | Supervisor feed linked into Observatory v2 LAN view | Five viewers, no guest time or socket activity from browser refresh |
 | S7 — Optional adapters | P2 | Existing desktop-log observer, GitHub Issues adapter, push notifications | Capability-gated adapters never assume unauthorized attach; replayed events deduplicated |
 
-Prefer S0/S1 as the first independent PR, then S2, then S3. The observatory's
-M0/M1 event journal can be built in parallel using agreed event envelopes.
+**Historical rollout order:** S0/S1 first, then S2/S3, with the Observatory
+M0/M1 journal in parallel. S0, S1 and Observatory M0–M2 are now implemented
+at their documented offline/observation scopes; the real S0 canary and S2
+remain separate gates. The table above is a design plan, not evidence that
+all proposed milestones have been delivered.
 Keep the implementation small, inspectable and restartable rather than
 creating a second full-featured distributed workflow engine.
 

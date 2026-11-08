@@ -25,13 +25,14 @@ remain archived outside Git.
 | **DeskMate screen-state research** | **Exploratory** | Partial Calendar schedule text recovered from read-only emulator RAM captures; not a general screen reader or automation interface |
 | **Address Book 3.05** (`PERSONAL.ADR`) | **Conservative codec** | Schema-aware reader and experimental empty-to-one writer; all four A01–A04 native hashes reproduced offline; multicontact insertion remains unsupported |
 | **Cross-application database architecture** | **Offline structural and call evidence** | Named DMDB binding/call thunks in all three applications and a conditional DESK INT E0 dispatch path; actual runtime vector, callback selection and record-operation dispatch remain unresolved |
-| **Filer 3.05** | **Native experiments prepared** | Static sample/component comparison and F00–F02 operator runbook; no native Filer experiment or implementation yet |
+| **Filer 3.05** | **Static research and one scoped native observation** | Shipped CARMAINT sample opened and exited without disk changes; disabled print commands remain unexplained. F00–F02 schema/record experiments and Filer codec are not complete |
 | **86Box automation** | **DOS baseline validated** | Authenticated native client, verified Tandy RSX DOS 5.00 baseline, original guest canary, and a read-only MCP bridge tested with a synthetic native peer |
 | **Other DeskMate applications** | **Future work** | Text, Worksheet and Draw have no validated storage models or implementations yet |
 
-The tools are experimental and support only explicitly measured cases. See
-[compatibility](docs/compatibility.md) for exact limits and the
-[format inventory](docs/inventory.md) for the broader preservation scope.
+These experimental capabilities include SDK-derived, offline-tested cases that
+have **not** all been accepted in the native application. See the dated
+[project status](PROJECT_STATUS.md), [compatibility](docs/compatibility.md)
+for exact limits and [format inventory](docs/inventory.md) for scope.
 
 ## Current functionality
 
@@ -110,8 +111,11 @@ For a new Codex CLI task, use the opt-in
 [Codex JSONL wrapper](docs/research/observatory-v2-m2.md) to send bounded
 telemetry through the same journal.
 
-The [Supervisor S1 task intake guide](docs/research/codex-supervisor-s1.md)
-covers local Git discovery, operator decisions and read-only queue reporting.
+The [Supervisor S0 protocol guide](docs/research/codex-supervisor-s0.md)
+describes offline-tested app-server ownership and durable receipts; the
+[S1 task intake guide](docs/research/codex-supervisor-s1.md) covers verified
+Git discovery, manual operator decisions and read-only queue reporting. Neither
+is a live-validated autonomous dispatcher.
 
 ## Tests and development
 
@@ -162,7 +166,9 @@ publication steps, external paid services or AI dependencies.
   evidence/confidence distinctions and historical experiment checkpoints retained
 * [Experimental method](docs/experiments/methodology.md), [Phase III-A](docs/experiments/phase-iii-a.md)
 * [Evidence provenance](docs/evidence/README.md), [verification](docs/verification.md)
-* [Interoperability roadmap](docs/interoperability.md), [contributing](CONTRIBUTING.md)
+* [Interoperability contract and future sync policy](docs/interoperability.md),
+  [manual Calendar time-normalization observations](docs/research/calendar-ui-time-normalization.md),
+  and [contributing](CONTRIBUTING.md)
 
 [E15](docs/experiments/e15-page-boundary.md) observed Calendar allocating one extra
 data page for a 24-byte BOUND12 record when 17 bytes remained. The default parser
@@ -180,8 +186,9 @@ observed another page allocation under storage pressure without compaction.
 These experiments do not establish a general allocation or reclamation algorithm.
 
 [Address Book Phase I](docs/research/addressbook-phase1.md) documents a no-edit
-control and two independent, synthetic single-contact observations, including
-measured variable-length first-name storage. That report predates implementation.
+control and two independent synthetic single-contact observations, including
+measured variable-length first-name storage. [Phase II](docs/research/addressbook-phase2.md)
+adds phone-length and City-field controls. Both predate implementation.
 The later [codec checkpoint](docs/research/addressbook-codec.md) implements the
 verified field subset and generates 25 separate single-contact files. A single
 populated multicontact book still requires native index evidence.
