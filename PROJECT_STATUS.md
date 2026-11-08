@@ -1,5 +1,21 @@
 # Project status — DeskMate formats
 
+**Supervisor merged checkpoint — 2026-11-08 (America/New_York):**
+[PR #87](https://github.com/smartyhall/deskmate-formats/pull/87)
+(merged `825f9bde92aec087f20fa2a7dcbc82229d532a88`)
+added an installable single-use S0 operator driver and **synthetic-only**
+S1-accepted-task-to-S2 dispatch bridge. The task's exact Git/queue acceptance
+and a separate dispatch grant are checked, with private operation receipts
+and read-only Observatory results. The published synthetic demonstration
+performed one supervised synthetic thread/turn; no original Codex model,
+86Box guest, VM media, paid call, daemon or control listener was used.
+Codex reported 375 passing portable tests, including 58 focused supervisor
+tests; all four final-head GitHub Windows/Ubuntu CI jobs passed.
+[Runbook](docs/research/codex-supervisor-operator-driver.md) and
+[evidence receipt](docs/evidence/supervisor-offline-driver-20261108.json).
+**Issue #86 remains open:** the first real S0 canary and live S2 task execution
+still require separate explicit authorization and effective-isolation review.
+
 **Current merged checkpoint — 2026-11-08 (America/New_York):**
 [PR #83](https://github.com/smartyhall/deskmate-formats/pull/83) published
 the exact operator-produced, synthetic-data FIRST SECOND appointment fixture
