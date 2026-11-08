@@ -81,6 +81,33 @@
       "synthetic_data": true,
       "operator_reported_native_operation": true,
       "native_loaded_file_identity_independently_verified": false
+    },
+    {
+      "path": "calendar/native-second-first-event-operator.cln",
+      "size": 10240,
+      "sha256": "b9c9a4cae3cffac1bc337f7b378ea25df74efd3b6771e117c6e0fc3f81b77084",
+      "application": "Tandy DeskMate Calendar",
+      "version": "03.05.00",
+      "experiment": "2026-11-08 first ordinary appointment in SECOND named calendar, derived by original application from operator-supplied native two-calendar source",
+      "origin": "Exact unmodified operator-uploaded PERSONAL(3).CLN (application-produced transformation of synthetic test data, not a tool-produced candidate). Operator reports opening the previously published empty SECOND calendar database in DeskMate 3.05, creating one event on 2026-10-24 at 11:00-12:00 named SECOND ONLY 001, alarm off, and saving. The uploaded output was compared byte-for-byte with the exact published PERSONAL(2) source: one row, one index entry and two descriptor counter bytes change; all PERSONAL pages 4-7 unchanged. No independently observed guest action ledger, source install SHA, reinstall/reopen or installed-tree manifest.",
+      "source_path": "calendar/native-second-empty-calendar-operator.cln",
+      "source_size": 10240,
+      "source_sha256": "338487558d9992452db15858de1ba9cf790c26abf990ba70b47bbc9dc8d011f5",
+      "evidence_class": "operator-supplied native application-produced synthetic specimen, independently byte-verified; guest save reported by operator, not separately instrumented",
+      "synthetic_data": true,
+      "operator_reported_native_operation": true,
+      "native_loaded_file_identity_independently_verified": false,
+      "expected_calendar": "SECOND",
+      "expected_appointment": {
+        "date": "2026-10-24",
+        "start": "11:00",
+        "end": "12:00",
+        "description": "SECOND ONLY 001",
+        "alarm_enabled": false,
+        "record_id": 17,
+        "page": 8,
+        "in_page_offset": 39
+      }
     }
   ]
 }

@@ -48,3 +48,17 @@ for exact identity, all 30 dates, displayed times/alarms and the separate option
 edit/save trial. Directory placement does not change evidence classification.
 
 The exact `native-second-empty-calendar-operator.cln` file is a **user-supplied, native application-produced change to a synthetic source**. The operator reports adding an empty named calendar `Second` to the 61-event Calendar through DeskMate 3.05. The resulting 10,240-byte file contains the original `PERSONAL` events and a new `SECOND` table with its internal configuration row but **zero SECOND appointments**. SHA-256 is `338487558d9992452db15858de1ba9cf790c26abf990ba70b47bbc9dc8d011f5`. The three original appointment data pages are byte-identical, while an existing index page has been physically rebalanced. See [the analysis](../../../docs/research/calendar-multitable-second.md) and [issue #81](https://github.com/smartyhall/deskmate-formats/issues/81). This specimen has only operator-reported guest provenance; it is not a separately instrumented native save/persistence trial.
+
+The exact `calendar/native-second-first-event-operator.cln` fixture is the
+**operator-supplied native application result**, not a synthetic writer's output,
+after adding `SECOND ONLY 001` (2026-10-24, 11:00–12:00, alarm off) to
+the previously empty `SECOND` calendar. It is 10,240 bytes, SHA-256
+`b9c9a4cae3cffac1bc337f7b378ea25df74efd3b6771e117c6e0fc3f81b77084`.
+The operation changes exactly 38 byte positions from the original
+`native-second-empty-calendar-operator.cln` source: two descriptor counters,
+one 32-byte record and row-list terminator on page 8, and one six-byte index
+locator on page 9. Every `PERSONAL` data and index page remains unchanged.
+[Research note](../../../docs/research/calendar-second-first-event-native.md) ·
+[issue #81](https://github.com/smartyhall/deskmate-formats/issues/81).
+The operator's action/save history is reported, not an independently captured
+emulator operation; neither fixture is evidence of general native write support.
