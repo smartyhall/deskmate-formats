@@ -1,4 +1,4 @@
-> **Historical parser checkpoint (E00–E14).** Paths and test counts below describe the original DOSLAB implementation. The installed package now includes a separate bounded append writer; E15–E19 have since been performed and are documented independently. For current behavior see the [README](../../../README.md), [compatibility](../../compatibility.md), and [project status](../../../PROJECT_STATUS.md). Relative lab evidence stays private.
+> **Historical E00–E14 parser checkpoint.** Commands and original test counts below describe the earlier DOSLAB implementation, not the current installed package. The package now has a bounded append writer and an opt-in SDK profile supporting additional indexed data-page **reading** and broader ordinary date/time decoding. E15–E19 subsequently observed native page growth. For current capabilities see [README](../../../README.md), [compatibility](../../compatibility.md) and [project status](../../../PROJECT_STATUS.md). Original lab evidence stays private.
 
 The current package exposes `Record.alarm_enabled` and the corresponding
 JSON key. An ordinary timed appointment with a decoded date, weekday and
@@ -138,7 +138,7 @@ addresses from parsed E11 rows, not fixed appointment locations.
 **Historical next-step plan:** a controlled first data-page allocation boundary
 with before/after checkpoints. That work was subsequently performed in
 [E15](../../experiments/e15-page-boundary.md), followed by
-[E16–E19](../../experiments/e19-space-pressure.md). The parser and writer on
-the baseline documented in [compatibility](../../compatibility.md) still
-reject those unsupported multi-page layouts; their observed allocation outcomes
-must not be mistaken for implemented support.
+[E16–E19](../../experiments/e19-space-pressure.md). The default *observed* parser and both writer profiles reject those multi-page
+layouts. The opt-in `sdk` reader now handles bounded indexed additional pages,
+but does **not** infer allocation-header semantics or enable page-growth writing.
+These observations must not be mistaken for a general allocator.

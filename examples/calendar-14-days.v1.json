@@ -1,0 +1,240 @@
+{
+  "format": "deskmate-interchange",
+  "version": 1,
+  "kind": "calendar",
+  "items": [
+    {
+      "date": "2026-10-23",
+      "start_minutes": 540,
+      "end_minutes": 600,
+      "description": "LPHa124",
+      "alarm_enabled": false,
+      "storage_record_id": 17
+    },
+    {
+      "date": "2026-10-23",
+      "start_minutes": 570,
+      "end_minutes": 615,
+      "description": "Plan 01",
+      "alarm_enabled": false,
+      "storage_record_id": 45
+    },
+    {
+      "date": "2026-10-23",
+      "start_minutes": 855,
+      "end_minutes": 915,
+      "description": "Review 01",
+      "alarm_enabled": true,
+      "storage_record_id": 44
+    },
+    {
+      "date": "2026-10-24",
+      "start_minutes": 585,
+      "end_minutes": 630,
+      "description": "Plan 02",
+      "alarm_enabled": false,
+      "storage_record_id": 43
+    },
+    {
+      "date": "2026-10-24",
+      "start_minutes": 870,
+      "end_minutes": 930,
+      "description": "Call 02",
+      "alarm_enabled": false,
+      "storage_record_id": 42
+    },
+    {
+      "date": "2026-10-25",
+      "start_minutes": 600,
+      "end_minutes": 645,
+      "description": "Plan 03",
+      "alarm_enabled": false,
+      "storage_record_id": 41
+    },
+    {
+      "date": "2026-10-25",
+      "start_minutes": 885,
+      "end_minutes": 945,
+      "description": "Read 03",
+      "alarm_enabled": false,
+      "storage_record_id": 40
+    },
+    {
+      "date": "2026-10-26",
+      "start_minutes": 570,
+      "end_minutes": 615,
+      "description": "Plan 04",
+      "alarm_enabled": false,
+      "storage_record_id": 39
+    },
+    {
+      "date": "2026-10-26",
+      "start_minutes": 900,
+      "end_minutes": 960,
+      "description": "Review 04",
+      "alarm_enabled": false,
+      "storage_record_id": 38
+    },
+    {
+      "date": "2026-10-27",
+      "start_minutes": 585,
+      "end_minutes": 630,
+      "description": "Plan 05",
+      "alarm_enabled": false,
+      "storage_record_id": 37
+    },
+    {
+      "date": "2026-10-27",
+      "start_minutes": 855,
+      "end_minutes": 915,
+      "description": "Call 05",
+      "alarm_enabled": false,
+      "storage_record_id": 36
+    },
+    {
+      "date": "2026-10-28",
+      "start_minutes": 600,
+      "end_minutes": 645,
+      "description": "Plan 06",
+      "alarm_enabled": false,
+      "storage_record_id": 35
+    },
+    {
+      "date": "2026-10-28",
+      "start_minutes": 870,
+      "end_minutes": 930,
+      "description": "Read 06",
+      "alarm_enabled": true,
+      "storage_record_id": 34
+    },
+    {
+      "date": "2026-10-29",
+      "start_minutes": 570,
+      "end_minutes": 615,
+      "description": "Plan 07",
+      "alarm_enabled": false,
+      "storage_record_id": 33
+    },
+    {
+      "date": "2026-10-29",
+      "start_minutes": 885,
+      "end_minutes": 945,
+      "description": "Review 07",
+      "alarm_enabled": false,
+      "storage_record_id": 32
+    },
+    {
+      "date": "2026-10-30",
+      "start_minutes": 585,
+      "end_minutes": 630,
+      "description": "Plan 08",
+      "alarm_enabled": false,
+      "storage_record_id": 31
+    },
+    {
+      "date": "2026-10-30",
+      "start_minutes": 900,
+      "end_minutes": 960,
+      "description": "Call 08",
+      "alarm_enabled": false,
+      "storage_record_id": 30
+    },
+    {
+      "date": "2026-10-31",
+      "start_minutes": 600,
+      "end_minutes": 645,
+      "description": "Plan 09",
+      "alarm_enabled": false,
+      "storage_record_id": 29
+    },
+    {
+      "date": "2026-10-31",
+      "start_minutes": 855,
+      "end_minutes": 915,
+      "description": "Read 09",
+      "alarm_enabled": false,
+      "storage_record_id": 28
+    },
+    {
+      "date": "2026-11-01",
+      "start_minutes": 570,
+      "end_minutes": 615,
+      "description": "Plan 10",
+      "alarm_enabled": false,
+      "storage_record_id": 27
+    },
+    {
+      "date": "2026-11-01",
+      "start_minutes": 870,
+      "end_minutes": 930,
+      "description": "Review 10",
+      "alarm_enabled": false,
+      "storage_record_id": 26
+    },
+    {
+      "date": "2026-11-02",
+      "start_minutes": 585,
+      "end_minutes": 630,
+      "description": "Plan 11",
+      "alarm_enabled": false,
+      "storage_record_id": 25
+    },
+    {
+      "date": "2026-11-02",
+      "start_minutes": 885,
+      "end_minutes": 945,
+      "description": "Call 11",
+      "alarm_enabled": true,
+      "storage_record_id": 24
+    },
+    {
+      "date": "2026-11-03",
+      "start_minutes": 600,
+      "end_minutes": 645,
+      "description": "Plan 12",
+      "alarm_enabled": false,
+      "storage_record_id": 23
+    },
+    {
+      "date": "2026-11-03",
+      "start_minutes": 900,
+      "end_minutes": 960,
+      "description": "Read 12",
+      "alarm_enabled": false,
+      "storage_record_id": 22
+    },
+    {
+      "date": "2026-11-04",
+      "start_minutes": 570,
+      "end_minutes": 615,
+      "description": "Plan 13",
+      "alarm_enabled": false,
+      "storage_record_id": 21
+    },
+    {
+      "date": "2026-11-04",
+      "start_minutes": 855,
+      "end_minutes": 915,
+      "description": "Review 13",
+      "alarm_enabled": false,
+      "storage_record_id": 20
+    },
+    {
+      "date": "2026-11-05",
+      "start_minutes": 585,
+      "end_minutes": 630,
+      "description": "Plan 14",
+      "alarm_enabled": false,
+      "storage_record_id": 19
+    },
+    {
+      "date": "2026-11-05",
+      "start_minutes": 870,
+      "end_minutes": 930,
+      "description": "Call 14",
+      "alarm_enabled": false,
+      "storage_record_id": 18
+    }
+  ],
+  "source_sha256": "85ad05d6bf58540e32349bbb559301d36aced164741b03b09b30d63f22d636ac"
+}

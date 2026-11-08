@@ -10,6 +10,7 @@ import sys
 import tempfile
 from .personal import (FILE_SIZE, PAGE_SIZE, INDEX_HEADER_SIZE,
                                OBSERVED_DATES, OBSERVED_TIMES, parse_bytes)
+from .codec import encode_date, encode_time
 
 @dataclass(frozen=True)
 class Appointment:
@@ -22,39 +23,57 @@ class Appointment:
 
 TARGET = Appointment(date(2027,11,1),660,720,'BETA456')
 
-def _validate(event):
+def _validate(event, *, profile='observed'):
+    if profile not in ('observed', 'sdk'):
+        raise ValueError('unknown Calendar profile')
     if not isinstance(event,Appointment) or type(event.day) is not date:
         raise ValueError('expected Appointment with date value')
-    if (event.day.year,event.day.month,event.day.day) not in OBSERVED_DATES:
+    if profile == 'sdk':
+        encode_date(event.day)
+    elif (event.day.year,event.day.month,event.day.day) not in OBSERVED_DATES:
         raise ValueError('date outside experimentally measured mappings')
     for minutes in (event.start_minutes,event.end_minutes):
-        if type(minutes) is not int or minutes % 15 or 0x80+minutes//15 not in OBSERVED_TIMES:
+        if profile == 'sdk':
+            encode_time(minutes)
+        elif type(minutes) is not int or minutes % 15 or 0x80+minutes//15 not in OBSERVED_TIMES:
             raise ValueError('time outside experimentally measured mappings')
     if event.start_minutes >= event.end_minutes:
         raise ValueError('nonpositive or overnight duration unsupported')
     if (type(event.description) is not str or not 1 <= len(event.description) <= 120
             or any(not 0x20 <= ord(c) < 0x7F for c in event.description)):
         raise ValueError('description requires 1..120 printable ASCII characters')
-    if event.duration_raw != b'' or event.protected_raw != b'1':
+    if event.duration_raw != b'' or event.protected_raw not in ((b'1', b'q') if profile == 'sdk' else (b'1',)):
         raise ValueError('only observed opaque Duration/Protected values accepted')
 
-def capacity(source):
+def capacity(source, *, profile='observed'):
     """Available new row bytes exclude required list marker; reserve index sentinel."""
-    db=parse_bytes(source);t=db.metadata['tables']['PERSONAL']
+    db=parse_bytes(source, profile=profile);t=db.metadata['tables']['PERSONAL']
+    if db.size != FILE_SIZE:
+        raise ValueError('writing additional-page layouts requires unresolved allocation policy')
+    if (db.metadata.get('retired_rows') or t['raw_tokens_hex'][5] != '30 30 30'
+            or t['next_id_candidate'] != max(r.record_id for r in db.records) + 1):
+        raise ValueError('capacity requires the verified non-retired append profile')
     end=max(r.offset+r.length for r in db.records)
     index=t['index_page']*PAGE_SIZE+INDEX_HEADER_SIZE
     return {'data_bytes':(t['data_page']+1)*PAGE_SIZE-end-1,
             'index_entries':((t['index_page']+1)*PAGE_SIZE-index)//6-1-len(db.records),
             'next_id':t['next_id_candidate'],'low_ids_remaining':0x80-t['next_id_candidate']}
 
-def append_appointment(source, event=TARGET):
-    _validate(event)
-    data=bytes(source);db=parse_bytes(data);t=db.metadata['tables']['PERSONAL']
+def append_appointment(source, event=TARGET, *, profile='observed'):
+    _validate(event, profile=profile)
+    data=bytes(source);db=parse_bytes(data, profile=profile);t=db.metadata['tables']['PERSONAL']
+    if db.size != FILE_SIZE or db.metadata.get('retired_rows'):
+        raise ValueError('writing additional-page/retired layouts unsupported')
+    if t['raw_tokens_hex'][5] != '30 30 30':
+        raise ValueError('opaque table token is outside verified append profile')
+    if t['next_id_candidate'] != max(r.record_id for r in db.records) + 1:
+        raise ValueError('next-ID candidate differs from verified append profile')
     # Sorting is deliberately restricted to fully understood, non-tied keys.
     keys=[]
     for r in db.appointments:
         if (None in (r.date,r.start_time,r.end_time,r.description) or
-                r.undecoded_fields != {'Duration':'','Protected':'31'}):
+                r.undecoded_fields not in ([{'Duration':'','Protected':'31'}, {'Duration':'','Protected':'71'}]
+                                           if profile == 'sdk' else [{'Duration':'','Protected':'31'}])):
             raise ValueError('existing event has unsupported/undecoded fields')
         keys.append((r.date,r.start_time))
     key=(event.day.isoformat(),f'{event.start_minutes//60:02d}:{event.start_minutes%60:02d}')
@@ -67,7 +86,7 @@ def append_appointment(source, event=TARGET):
             bytes((0x61+weekday,)),event.duration_raw,bytes((0x80+event.start_minutes//15,)),
             bytes((0x80+event.end_minutes//15,)),event.protected_raw,event.description.encode('ascii')]
     row=bytes((0x80,ident))+b'\x01'.join(fields)+b'\x01\x02'
-    free=capacity(data)
+    free=capacity(data, profile=profile) if profile == 'sdk' else capacity(data)
     if len(row)>free['data_bytes'] or free['index_entries']<1:
         raise ValueError('additional data/index page required; unsupported')
     address=max(r.offset+r.length for r in db.records)
@@ -87,7 +106,7 @@ def append_appointment(source, event=TARGET):
         cursor=end+2
     for n,value in ((4,t['record_count']+1),(6,ident+1)):
         p=cursor+sum(len(v)+1 for v in tokens[:n]);output[p:p+5]=f'{value:05d}'.encode('ascii')
-    result=bytes(output);parsed=parse_bytes(result)
+    result=bytes(output);parsed=parse_bytes(result, profile=profile)
     if len(result)!=len(data) or len(parsed.records)!=len(db.records)+1:
         raise ValueError('append postcondition failed')
     by_id={r.record_id:r for r in parsed.records}
@@ -95,14 +114,18 @@ def append_appointment(source, event=TARGET):
         raise ValueError('append modified an existing physical record')
     return result
 
-def write_new(path,data):
+def write_new(path,data, *, profile='observed'):
     """Publish complete validated file atomically, fail if destination exists.
 
     Same-directory temporary file + flushed hard-link publication; no overwrite
     fallback on filesystems without hard-link support. Directory durability is
     filesystem dependent. The temporary link is removed in all cases.
     """
-    parse_bytes(data);path=Path(path)
+    if profile == 'sdk':
+        capacity(data, profile=profile)
+    else:
+        parse_bytes(data, profile=profile)
+    path=Path(path)
     fd,temp=tempfile.mkstemp(prefix='.calendar-',suffix='.tmp',dir=path.parent)
     try:
         with os.fdopen(fd,'wb') as handle:
@@ -115,6 +138,7 @@ def main(argv=None):
     cli=argparse.ArgumentParser(description=__doc__)
     cli.add_argument('source',type=Path);cli.add_argument('output',type=Path)
     cli.add_argument('--appointments',type=Path,help='JSON array: date,start_minutes,end_minutes,description')
+    cli.add_argument('--profile', choices=('observed', 'sdk'), default='observed')
     args=cli.parse_args(argv)
     try:
         if args.source.resolve()==args.output.resolve():raise ValueError('source and output must differ')
@@ -128,8 +152,8 @@ def main(argv=None):
                     raise ValueError('unexpected appointment keys')
                 events.append(Appointment(date.fromisoformat(item['date']),item['start_minutes'],item['end_minutes'],item['description']))
         with args.source.open('rb') as handle:data=handle.read(FILE_SIZE+1)
-        for event in events:data=append_appointment(data,event)
-        write_new(args.output,data)
+        for event in events:data=append_appointment(data,event,profile=args.profile)
+        write_new(args.output,data,profile=args.profile)
     except (OSError,ValueError,TypeError) as exc:
         print(str(exc),file=sys.stderr);return 2
     return 0

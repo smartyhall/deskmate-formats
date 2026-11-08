@@ -98,7 +98,7 @@ class CalendarDatabase:
 
     def to_dict(self) -> dict:
         return {'source': self.source, 'sha256': self.sha256, 'size': self.size,
-                'scope': SCOPE, 'metadata': self.metadata,
+                'scope': ('SDK ordinary codecs; bounded multipage reading' if self.metadata.get('codec_profile') == 'sdk' else SCOPE), 'metadata': self.metadata,
                 'warnings': list(self.warnings),
                 'appointment_count': len(self.appointments),
                 'appointments': [r.to_dict() for r in self.appointments],
@@ -228,7 +228,7 @@ def _schema(data: bytes, table: dict):
     return tuple(columns['PERSONAL'][i][0] for i in range(1, 8))
 
 
-def _decode(data: bytes, entry: IndexEntry, end: int, values: list[bytes], names) -> Record:
+def _decode(data: bytes, entry: IndexEntry, end: int, values: list[bytes], names, *, sdk=False) -> Record:
     raw = dict(zip(names, values))
     fields = {k: v.hex(' ') for k, v in raw.items()}
     common = dict(record_id=entry.record_id, offset=entry.address, length=end - entry.address,
@@ -259,15 +259,18 @@ def _decode(data: bytes, entry: IndexEntry, end: int, values: list[bytes], names
         candidate_date = date(*components)
     except ValueError as exc:
         raise CalendarParseError('invalid_date', 'date components do not form a calendar date', entry.address) from exc
-    if components in OBSERVED_DATES:
+    if sdk and not 1980 <= candidate_date.year <= 2138:
+        raise CalendarParseError('invalid_date', 'outside ordinary SDK representable year range', entry.address)
+    if sdk or components in OBSERVED_DATES:
         decoded_date = candidate_date.isoformat()
     else:
         unknown['Date'] = fields['Date']
         warnings.append('Date is outside the four observed date mappings; not decoded.')
     weekday = None
-    if len(raw['DayOfWeek']) == 1 and raw['DayOfWeek'][0] - 0x61 in OBSERVED_WEEKDAYS:
+    weekdays = dict(enumerate(('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'), 1)) if sdk else OBSERVED_WEEKDAYS
+    if len(raw['DayOfWeek']) == 1 and raw['DayOfWeek'][0] - 0x61 in weekdays:
         number = raw['DayOfWeek'][0] - 0x61
-        weekday = OBSERVED_WEEKDAYS[number]
+        weekday = weekdays[number]
         if decoded_date is not None:
             _require(number == (candidate_date.weekday() + 1) % 7 + 1,
                      'inconsistent_weekday', 'stored weekday disagrees with decoded date', entry.address)
@@ -278,7 +281,7 @@ def _decode(data: bytes, entry: IndexEntry, end: int, values: list[bytes], names
     for name in ('StartTime', 'EndTime'):
         value = raw[name]
         times[name] = None
-        if len(value) == 1 and value[0] in OBSERVED_TIMES:
+        if len(value) == 1 and value[0] in (range(0x81, 0xE0) if sdk else OBSERVED_TIMES):
             minutes = 15 * (value[0] - 0x80)
             times[name] = f'{minutes // 60:02d}:{minutes % 60:02d}'
         else:
@@ -304,8 +307,11 @@ def _decode(data: bytes, entry: IndexEntry, end: int, values: list[bytes], names
                   warnings=tuple(warnings), **common)
 
 
-def parse_bytes(source: bytes, *, source_name: str | None = None) -> CalendarDatabase:
+def parse_bytes(source: bytes, *, source_name: str | None = None, profile='observed') -> CalendarDatabase:
     """Parse an immutable byte snapshot; never writes input or accesses an emulator."""
+    if profile == 'sdk':
+        return _parse_sdk(source, source_name=source_name)
+    _require(profile == 'observed', 'unsupported_layout', 'unknown Calendar profile')
     data = bytes(source)
     _require(len(data) >= FILE_SIZE, 'truncated_file',
              f'observed layout requires {FILE_SIZE} bytes, got {len(data)}')
@@ -327,9 +333,48 @@ def parse_bytes(source: bytes, *, source_name: str | None = None) -> CalendarDat
                                       'Structural acceptance does not validate untested codecs, page growth or deletion.'))
 
 
-def parse_file(path: str | Path) -> CalendarDatabase:
+def _parse_sdk(source, *, source_name=None):
+    """Explicit SDK ordinary codecs and bounded extra pages; never allocates."""
+    from deskmate_formats import database
+    try:
+        db = database.parse_bytes(source, allow_retired=True)
+    except database.DatabaseError as exc:
+        raise CalendarParseError(exc.code, str(exc), exc.offset) from exc
+    _require(db.data[:4] == b'\x03FIL', 'invalid_header', 'expected Calendar FIL header', 0)
+    _require(tuple(t.name for t in db.tables) == ('DBCOLS', 'PERSONAL'),
+             'unsupported_layout', 'only one PERSONAL calendar supported')
+    tables = {}
+    for table, expected, pages, tail in (
+            (db.table('DBCOLS'), DBCOLS_SCHEMA, (2, 3), (b'2', b'3')),
+            (db.table('PERSONAL'), PERSONAL_SCHEMA, (4, 5), (b'1', b'2', b'4', b'5', b'7'))):
+        _require((table.data_page, table.index_page) == pages and table.tokens[8:] == tail
+                 and len(table.tokens[4]) == len(table.tokens[6]) == 5
+                 and table.tokens[5] in (b'000', b'001'),
+                 'unsupported_layout', 'unknown Calendar table profile')
+        _require(tuple((c.name, c.width, c.kind) for c in table.columns) == expected,
+                 'unsupported_schema', 'unrecognized Calendar schema')
+        tables[table.name] = {'data_page': table.data_page, 'index_page': table.index_page,
+                             'column_count': table.column_count, 'record_count': table.record_count,
+                             'next_id_candidate': table.next_id_candidate,
+                             'raw_tokens_hex': [t.hex(' ') for t in table.tokens]}
+    table = db.table('PERSONAL')
+    records = tuple(_decode(db.data, entry, row.end, list(row.fields), FIELD_NAMES, sdk=True)
+                    for entry, row in zip(table.entries, table.rows, strict=True))
+    _require(sum(r.kind == 'internal/control' for r in records) == 1,
+             'unsupported_record', 'expected exactly one known internal/control row')
+    metadata = {'page_size': PAGE_SIZE, 'page_count': len(db.data) // PAGE_SIZE,
+                'codec_profile': 'sdk', 'tables': tables,
+                'header_page_raw_hex': db.header.hex(' '),
+                'retired_rows': [{'offset': r.offset, 'record_id': r.record_id,
+                                  'raw_hex': r.raw.hex(' ')} for r in table.retired_rows]}
+    return CalendarDatabase(source_name, db.sha256, len(db.data), metadata, records,
+                            ('SDK-derived ordinary codecs; new combinations are not native-verified.',
+                             'Header allocation semantics and unreferenced pages remain opaque.'))
+
+
+def parse_file(path: str | Path, *, profile='observed') -> CalendarDatabase:
     """Open input strictly in rb mode, bounded to supported size plus one byte."""
     path = Path(path)
     with path.open('rb') as handle:
-        data = handle.read(FILE_SIZE + 1)
-    return parse_bytes(data, source_name=str(path))
+        data = handle.read((64 * PAGE_SIZE if profile == 'sdk' else FILE_SIZE) + 1)
+    return parse_bytes(data, source_name=str(path), profile=profile)

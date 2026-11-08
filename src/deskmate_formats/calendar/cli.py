@@ -32,9 +32,10 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description='Read the observed DeskMate 3.05 PERSONAL.CLN subset.')
     parser.add_argument('database', help='Read-only path to PERSONAL.CLN')
     parser.add_argument('--json', action='store_true', help='JSON with raw fields and undecoded records')
+    parser.add_argument('--profile', choices=('observed', 'sdk'), default='observed')
     args = parser.parse_args(argv)
     try:
-        database = parse_file(args.database)
+        database = parse_file(args.database, profile=args.profile)
     except (CalendarParseError, OSError) as exc:
         print(f'Error: {exc}', file=sys.stderr)
         return 2

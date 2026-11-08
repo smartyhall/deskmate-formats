@@ -1,0 +1,369 @@
+{
+  "campaign_base": "0d8c9e9cb538c65c382cd4f5478048e4397c6bb7",
+  "evidence_class": "offline generated output and independent structural tests",
+  "calendar_14_days": {
+    "receipt_version": 1,
+    "profile": "sdk",
+    "source_sha256": "0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9",
+    "output_sha256": "85ad05d6bf58540e32349bbb559301d36aced164741b03b09b30d63f22d636ac",
+    "size": 6144,
+    "added_appointments": 28,
+    "total_appointments": 29,
+    "distinct_dates": 14,
+    "start": "2026-10-23",
+    "days": 14,
+    "capacity": {
+      "data_bytes": 278,
+      "index_entries": 133,
+      "next_id": 46,
+      "low_ids_remaining": 82
+    },
+    "native_opened": false,
+    "native_save_tested": false
+  },
+  "inputs": {
+    "SDK_Development_Guide_sha256": "8081d5cd34305982844ab3598ebfbdf8887e7e369d1174a88a7631cba08439e0",
+    "Calendar_3_05_PDM_sha256": "819df5658b663aa69b15584abf805062679e97f587f3404738f6e82876e4bd23"
+  },
+  "native_requested_emulated_ms": 0,
+  "native_guest_clock_delta_ms": null,
+  "addressbook_oracles": [
+    {
+      "case": "A01",
+      "sha256": "19215ea147c65b259eb963fd240e9931d96e77f92d1001f0f7edf89024076ac8",
+      "matches_published_native_sha256": true,
+      "source_class": "tool-generated reconstruction; historical original not recovered",
+      "native_opened": false
+    },
+    {
+      "case": "A02",
+      "sha256": "ae216968bce070f7a5d9619b844e20295428dac628984a05d22f203e032d76a6",
+      "matches_published_native_sha256": true,
+      "source_class": "tool-generated reconstruction; historical original not recovered",
+      "native_opened": false
+    },
+    {
+      "case": "A03",
+      "sha256": "81b48761fce08c57cbe43a3bb0a23fc4f7d2faee0cdb800375c9175220787d5d",
+      "matches_published_native_sha256": true,
+      "source_class": "tool-generated reconstruction; historical original not recovered",
+      "native_opened": false
+    },
+    {
+      "case": "A04",
+      "sha256": "2584874c957d74b0c1240ebc0d02a50ac4c886a53b977749cb912e1628cce46f",
+      "matches_published_native_sha256": true,
+      "source_class": "tool-generated reconstruction; historical original not recovered",
+      "native_opened": false
+    }
+  ],
+  "addressbook_samples": {
+    "receipt_version": 1,
+    "source_sha256": "cb890e6d7ba96fafb5a5d3991e208f4de862bee485f6ce32696e989c97d3394c",
+    "file_count": 25,
+    "contacts_per_file": 1,
+    "native_opened": false,
+    "native_save_tested": false,
+    "files": [
+      {
+        "name": "contact-001.adr",
+        "sha256": "6414eaedc92975cd387d2ffc91663ff5bd1648c71dc537ad4cf622ef6d28a4b7",
+        "size": 10240,
+        "contact": {
+          "first_name": "Alex",
+          "last_name": "Example 01",
+          "city": "",
+          "work_phone": "555-0100"
+        }
+      },
+      {
+        "name": "contact-002.adr",
+        "sha256": "a6e79b1e92dd5ddf40fd863b0d6b45f3e1ae158c91d8daf6d2b4430a6d9513d9",
+        "size": 10240,
+        "contact": {
+          "first_name": "Morgan",
+          "last_name": "Example 02",
+          "city": "Sample City",
+          "work_phone": "555-0101"
+        }
+      },
+      {
+        "name": "contact-003.adr",
+        "sha256": "355a93c5d25e21609356972fa145dd24c66e2387786787a7db6671b4ba05e2e2",
+        "size": 10240,
+        "contact": {
+          "first_name": "Riley",
+          "last_name": "Example 03",
+          "city": "Metro",
+          "work_phone": "555-0102"
+        }
+      },
+      {
+        "name": "contact-004.adr",
+        "sha256": "1d6a4472c782fcfff1120a14f815617c196fc2df3025673459c4715e3bc89b61",
+        "size": 10240,
+        "contact": {
+          "first_name": "Taylor",
+          "last_name": "Example 04",
+          "city": "North Example",
+          "work_phone": "555-0103"
+        }
+      },
+      {
+        "name": "contact-005.adr",
+        "sha256": "a4083ecc95c34e661678a525b22ad0795e4d079b7f9a7a31bf2cf48612bfb3de",
+        "size": 10240,
+        "contact": {
+          "first_name": "Sam",
+          "last_name": "Example 05",
+          "city": "Teston",
+          "work_phone": "555-0104"
+        }
+      },
+      {
+        "name": "contact-006.adr",
+        "sha256": "a11d4435828abd60b49dd8675c974b1d04e52570f9b27097955e1e02227996fa",
+        "size": 10240,
+        "contact": {
+          "first_name": "Alex",
+          "last_name": "Sample 06",
+          "city": "",
+          "work_phone": "555-0105"
+        }
+      },
+      {
+        "name": "contact-007.adr",
+        "sha256": "f24b27e4c6502956c2d2b2965dc2640468401b22d78bdda3f487d16c102598a1",
+        "size": 10240,
+        "contact": {
+          "first_name": "Morgan",
+          "last_name": "Sample 07",
+          "city": "Sample City",
+          "work_phone": "555-0106"
+        }
+      },
+      {
+        "name": "contact-008.adr",
+        "sha256": "36cffd2738ce2cbf171ff38866d0982a5475cb844e21285d5ffadf69740b1fc4",
+        "size": 10240,
+        "contact": {
+          "first_name": "Riley",
+          "last_name": "Sample 08",
+          "city": "Metro",
+          "work_phone": "555-0107"
+        }
+      },
+      {
+        "name": "contact-009.adr",
+        "sha256": "b0be448c680a8d7f914caf2f66453a6c5cf9f10954dc115ce52d34fc8507f15e",
+        "size": 10240,
+        "contact": {
+          "first_name": "Taylor",
+          "last_name": "Sample 09",
+          "city": "North Example",
+          "work_phone": "555-0108"
+        }
+      },
+      {
+        "name": "contact-010.adr",
+        "sha256": "0f79e85ffc491b2fbcdc9328ef7e1da1b2c68e2b59d43a0b45ee96f4363e4572",
+        "size": 10240,
+        "contact": {
+          "first_name": "Sam",
+          "last_name": "Sample 10",
+          "city": "Teston",
+          "work_phone": "555-0109"
+        }
+      },
+      {
+        "name": "contact-011.adr",
+        "sha256": "f2fc6807794969dcbe96ed859fd2eec74f452eb688ffb20bd44b690562c73825",
+        "size": 10240,
+        "contact": {
+          "first_name": "Alex",
+          "last_name": "Fiction 11",
+          "city": "",
+          "work_phone": "555-0110"
+        }
+      },
+      {
+        "name": "contact-012.adr",
+        "sha256": "4320b9e1ccf4a1f28a3a7dba3c10746cd959a2d5bd7b1825b96dc43848997326",
+        "size": 10240,
+        "contact": {
+          "first_name": "Morgan",
+          "last_name": "Fiction 12",
+          "city": "Sample City",
+          "work_phone": "555-0111"
+        }
+      },
+      {
+        "name": "contact-013.adr",
+        "sha256": "78e2d9843e058061b4928c1bb43c8a89edf5636b0d95cfe9bf8ec0b933f5587e",
+        "size": 10240,
+        "contact": {
+          "first_name": "Riley",
+          "last_name": "Fiction 13",
+          "city": "Metro",
+          "work_phone": "555-0112"
+        }
+      },
+      {
+        "name": "contact-014.adr",
+        "sha256": "b82177517bd9680e621951f01603e56a0ff61babade22ab7ae84838648bcbb6e",
+        "size": 10240,
+        "contact": {
+          "first_name": "Taylor",
+          "last_name": "Fiction 14",
+          "city": "North Example",
+          "work_phone": "555-0113"
+        }
+      },
+      {
+        "name": "contact-015.adr",
+        "sha256": "af36bd23b6b0988af14cf3afd00b87372cb304fb789ae6f984126a45bd0de9e5",
+        "size": 10240,
+        "contact": {
+          "first_name": "Sam",
+          "last_name": "Fiction 15",
+          "city": "Teston",
+          "work_phone": "555-0114"
+        }
+      },
+      {
+        "name": "contact-016.adr",
+        "sha256": "243c417292fa9e36ef69aaf3093aaf0d13d7c142de2a7c4c00891f1827f43a25",
+        "size": 10240,
+        "contact": {
+          "first_name": "Alex",
+          "last_name": "Test Person 16",
+          "city": "",
+          "work_phone": "555-0115"
+        }
+      },
+      {
+        "name": "contact-017.adr",
+        "sha256": "4a2b883da62ffb1fd4977801c6d3d964655eaaedda77adc711acc0b6a6dd62e1",
+        "size": 10240,
+        "contact": {
+          "first_name": "Morgan",
+          "last_name": "Test Person 17",
+          "city": "Sample City",
+          "work_phone": "555-0116"
+        }
+      },
+      {
+        "name": "contact-018.adr",
+        "sha256": "523186eb9b887d70389249a0baedc717b955cc4ad69e2c124a61a54749854c47",
+        "size": 10240,
+        "contact": {
+          "first_name": "Riley",
+          "last_name": "Test Person 18",
+          "city": "Metro",
+          "work_phone": "555-0117"
+        }
+      },
+      {
+        "name": "contact-019.adr",
+        "sha256": "18bdfc3d49668bee50de0c1b0cfd84768fec180f21d5007a067cae35a1982abf",
+        "size": 10240,
+        "contact": {
+          "first_name": "Taylor",
+          "last_name": "Test Person 19",
+          "city": "North Example",
+          "work_phone": "555-0118"
+        }
+      },
+      {
+        "name": "contact-020.adr",
+        "sha256": "d8c4f32e66c00505335626118dbbb0981c8aaac2c7e996d1dbe24ad462946ca8",
+        "size": 10240,
+        "contact": {
+          "first_name": "Sam",
+          "last_name": "Test Person 20",
+          "city": "Teston",
+          "work_phone": "555-0119"
+        }
+      },
+      {
+        "name": "contact-021.adr",
+        "sha256": "c0afac4e09ca9d4afe3673a0ed0fc01e803e3daeb9e1e17ce073647615660e7d",
+        "size": 10240,
+        "contact": {
+          "first_name": "Alex",
+          "last_name": "Placeholder 21",
+          "city": "",
+          "work_phone": "555-0120"
+        }
+      },
+      {
+        "name": "contact-022.adr",
+        "sha256": "cdfd4cd32c01a24161bcd3298e73720f00f7479e7470a1024eecea8b0aa43a72",
+        "size": 10240,
+        "contact": {
+          "first_name": "Morgan",
+          "last_name": "Placeholder 22",
+          "city": "Sample City",
+          "work_phone": "555-0121"
+        }
+      },
+      {
+        "name": "contact-023.adr",
+        "sha256": "2bd81661ed4443b1045ecdfffead812167a0fba652d581f1d7c8684704902ac2",
+        "size": 10240,
+        "contact": {
+          "first_name": "Riley",
+          "last_name": "Placeholder 23",
+          "city": "Metro",
+          "work_phone": "555-0122"
+        }
+      },
+      {
+        "name": "contact-024.adr",
+        "sha256": "34fb63f5b11897f27d5d25fbdf3caf7552825ceaac3809c62f90165c671afe81",
+        "size": 10240,
+        "contact": {
+          "first_name": "Taylor",
+          "last_name": "Placeholder 24",
+          "city": "North Example",
+          "work_phone": "555-0123"
+        }
+      },
+      {
+        "name": "contact-025.adr",
+        "sha256": "c303d9546c10a196f1c51d9aeb2b357502c539eedec06606b9d69d5985d0e803",
+        "size": 10240,
+        "contact": {
+          "first_name": "Sam",
+          "last_name": "Placeholder 25",
+          "city": "Teston",
+          "work_phone": "555-0124"
+        }
+      }
+    ]
+  },
+  "independent_validation": {
+    "checker_sha256": "52dbf3c03b3ccac00401cb07cd1ce73eddcf4ec224c7e2556d285fefd7dc339f",
+    "calendar_appointments": 29,
+    "contact_files": 25,
+    "contacts_per_file": 1,
+    "malformed_outputs_rejected": 6,
+    "native_opened": false
+  },
+  "calendar_capacity_prefix": {
+    "classification": "incomplete capacity prefix, not a full-month schedule",
+    "attempted_additions": 60,
+    "successful_additions": 39,
+    "total_appointments": 40,
+    "distinct_dates": 21,
+    "output_sha256": "c59b898ab28b6e958c52a2d69ac658da702cf8636a1a4fbd586902104914e6f6",
+    "capacity": {
+      "data_bytes": 12,
+      "index_entries": 122,
+      "next_id": 57,
+      "low_ids_remaining": 71
+    },
+    "failure": "additional data/index page required; unsupported",
+    "native_opened": false
+  }
+}

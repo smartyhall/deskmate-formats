@@ -20,19 +20,19 @@ remain archived outside Git.
 
 | Area | Status | What is available or being investigated |
 |---|---|---|
-| **Calendar 3.05** (`PERSONAL.CLN`) | **Experimental tools** | Read-only parsing, indexed record inspection, text/JSON output, and a narrowly bounded append writer for verified six-page layouts |
+| **Calendar 3.05** (`PERSONAL.CLN`) | **Experimental tools** | Measured default profile plus explicit SDK-derived ordinary codecs, bounded multipage reading and six-page append generation; 29-event/14-day sample validated offline |
 | **Calendar storage research** | **Ongoing** | E15–E19 document page growth, retained deletion data, and append behavior; no general allocator or deleted-record recovery implementation |
 | **DeskMate screen-state research** | **Exploratory** | Partial Calendar schedule text recovered from read-only emulator RAM captures; not a general screen reader or automation interface |
-| **Address Book 3.05** (`PERSONAL.ADR`) | **Initial research** | A00–A04 no-edit, one-contact and independent field-length controls; no parser or writer |
+| **Address Book 3.05** (`PERSONAL.ADR`) | **Conservative codec** | Schema-aware reader and experimental empty-to-one writer; all four A01–A04 native hashes reproduced offline; multicontact insertion remains unsupported |
 | **Cross-application database architecture** | **Offline structural and call evidence** | Named DMDB binding/call thunks in all three applications and a conditional DESK INT E0 dispatch path; actual runtime vector, callback selection and record-operation dispatch remain unresolved |
-| **Filer 3.05** | **Static research and one bounded native observation** | Cross-application structure and DMDB calls examined; shipped CARMAINT sample opened/exited without disk changes, but print commands were disabled. F00–F02 schema/record experiments and a Filer reader/writer remain outstanding |
+| **Filer 3.05** | **Static research and one scoped native observation** | Shipped CARMAINT sample opened and exited without disk changes; disabled print commands remain unexplained. F00–F02 schema/record experiments and Filer codec are not complete |
 | **86Box automation** | **DOS baseline validated** | Authenticated native client, verified Tandy RSX DOS 5.00 baseline, original guest canary, and a read-only MCP bridge tested with a synthetic native peer |
 | **Other DeskMate applications** | **Future work** | Text, Worksheet and Draw have no validated storage models or implementations yet |
 
-These are the capabilities of the tracked baseline, not promises about work
-in progress. See the dated [project status](PROJECT_STATUS.md),
-[compatibility](docs/compatibility.md) for exact limits, and the
-[format inventory](docs/inventory.md) for the broader preservation scope.
+These experimental capabilities include SDK-derived, offline-tested cases that
+have **not** all been accepted in the native application. See the dated
+[project status](PROJECT_STATUS.md), [compatibility](docs/compatibility.md)
+for exact limits and [format inventory](docs/inventory.md) for scope.
 
 ## Current functionality
 
@@ -44,10 +44,13 @@ in progress. See the dated [project status](PROJECT_STATUS.md),
   unchanged-event OK and clean exit, all database bytes and installed-file contents
   were identical. This is narrow application evidence, not general compatibility.
 
-The reader decodes four dates, six quarter-hour time values and the stored Alarm
+The default reader decodes four dates, six quarter-hour time values and the stored Alarm
 setting for ordinary timed appointments. Multi-page allocation, long IDs,
 editing, deletion, arbitrary text, tied index keys and general conversion are
-outside the supported scope. See [compatibility](docs/compatibility.md).
+outside the default scope. The explicit `--profile sdk` adds ordinary date/time
+codecs and additional-page reading; it does not allocate pages. New combinations
+remain offline-verified only. See [compatibility](docs/compatibility.md) and
+[campaign progress](PROJECT_STATUS.md).
 
 ## Installation and use
 
@@ -75,6 +78,20 @@ Python API: `deskmate_formats.calendar.personal.parse_bytes/parse_file` and
 The reader exposes `alarm_enabled` on records and in JSON, with the complete
 Protected field retained in the raw output.
 
+For ordinary SDK-derived Calendar values, pass `profile='sdk'` or CLI
+`--profile sdk`; default calls keep the measured limits. Generate the reproducible
+14-day sample with `tools/generate_calendar_sample.py SOURCE.cln NEW-OUTPUT.cln`.
+The source must be an appropriate six-page disposable template; the documented
+sample uses the committed synthetic E02 native fixture.
+
+Address Book API: `deskmate_formats.addressbook.Contact`, `parse_bytes/parse_file`,
+`create_contact` and `write_new`. CLIs: `deskmate-addressbook SOURCE.adr` and
+`deskmate-addressbook-create EMPTY.adr NEW-OUTPUT.adr --contact contact.json`.
+The JSON object requires `first_name`, `last_name`, `city` and `work_phone`.
+Only empty-to-one creation is implemented. See the
+[Address Book checkpoint](docs/research/addressbook-codec.md) and
+[versioned interchange API/examples](docs/interoperability.md).
+
 ## Reproducible Windows 10 laboratory (experimental)
 
 The [Windows 10 Pro ISO deployment recipe](deployment/windows10/README.md) tracks
@@ -95,10 +112,10 @@ For a new Codex CLI task, use the opt-in
 telemetry through the same journal.
 
 The [Supervisor S0 protocol guide](docs/research/codex-supervisor-s0.md)
-covers the offline-tested, pinned app-server protocol and durable receipts;
-the [S1 task intake guide](docs/research/codex-supervisor-s1.md) covers local
-Git discovery, operator decisions and read-only queue reporting. Neither
-provides autonomous dispatch or a validated live S0 model canary.
+describes offline-tested app-server ownership and durable receipts; the
+[S1 task intake guide](docs/research/codex-supervisor-s1.md) covers verified
+Git discovery, manual operator decisions and read-only queue reporting. Neither
+is a live-validated autonomous dispatcher.
 
 ## Tests and development
 
@@ -149,11 +166,14 @@ publication steps, external paid services or AI dependencies.
   evidence/confidence distinctions and historical experiment checkpoints retained
 * [Experimental method](docs/experiments/methodology.md), [Phase III-A](docs/experiments/phase-iii-a.md)
 * [Evidence provenance](docs/evidence/README.md), [verification](docs/verification.md)
-* [Interoperability roadmap](docs/interoperability.md), [contributing](CONTRIBUTING.md)
+* [Interoperability contract and future sync policy](docs/interoperability.md),
+  [manual Calendar time-normalization observations](docs/research/calendar-ui-time-normalization.md),
+  and [contributing](CONTRIBUTING.md)
 
 [E15](docs/experiments/e15-page-boundary.md) observed Calendar allocating one extra
-data page for a 24-byte BOUND12 record when 17 bytes remained. The parser and
-writer retain their conservative six-page scope; no general allocator is implemented.
+data page for a 24-byte BOUND12 record when 17 bytes remained. The default parser
+and writers retain their conservative six-page scope; the explicit SDK reader
+can enumerate bounded additional data pages. No general allocator is implemented.
 
 [E16](docs/experiments/e16-page-reclamation.md) observed that deleting the sole
 page-6 event leaves the seven-page file and retired payload on disk. Page-reuse
@@ -166,10 +186,12 @@ observed another page allocation under storage pressure without compaction.
 These experiments do not establish a general allocation or reclamation algorithm.
 
 [Address Book Phase I](docs/research/addressbook-phase1.md) documents a no-edit
-control and two independent, synthetic single-contact observations, including
+control and two independent synthetic single-contact observations, including
 measured variable-length first-name storage. [Phase II](docs/research/addressbook-phase2.md)
-measured independent phone-length and City-field changes. No Address Book
-reader or writer exists on this baseline.
+adds phone-length and City-field controls. Both predate implementation.
+The later [codec checkpoint](docs/research/addressbook-codec.md) implements the
+verified field subset and generates 25 separate single-contact files. A single
+populated multicontact book still requires native index evidence.
 
 [Screen-state research](docs/research/screen-state.md) recovered partial Calendar
 schedule text through read-only RAM captures; it is not a general screen API.
