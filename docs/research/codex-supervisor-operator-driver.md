@@ -192,6 +192,42 @@ stdout/stderr and HTTP bodies privately; its `summary.json` is separately review
 for publication. HTTP reads must preserve queue, ledger, outcome and peer hashes.
 No emulator time is measured. No emulator is launched or contacted.
 
+## Accepted offline evidence
+
+Implementation checkpoint: `ac858742b9c81d943351d4957fbab40a4fc4789b`, based on
+fetched `origin/main` `22357a5524ddb56ae27b809479983a69b5360a0c`.
+The [2026-11-08 receipt](../evidence/supervisor-offline-driver-20261108.json)
+pins commands, module/package/log SHA-256 values, runtime versions and the
+redacted synthetic demonstration. Private command/stdout/stderr/HTTP evidence
+is preserved in the lab archives named by that receipt.
+
+Windows 10 build 19045, AMD64, Python 3.13.17 and SQLite 3.50.4 were used.
+The resolved npm native Codex executable still matched 0.166.0 and its
+historical SHA-256; no compatibility drift was found in that selected input.
+Preflight performed hash checking, `--version` and packaged schema validation
+only, with zero real app-server launches and zero model turns.
+
+The frozen implementation passed 58 focused Supervisor tests in 161.104 host
+seconds and 375 portable tests in 197.592 host seconds. Deployment checks
+passed 31 tests in 1.319 host seconds, with two Windows symlink-permission
+skips. Ruff, REUSE, installed entry-point checks, repository/archive audit,
+`git diff --check` and `git fsck --full` passed. Git reported existing dangling
+objects, without integrity failure. Preliminary development failures were
+retained privately; one intermediate run correctly refused implementation
+changes after plan preparation. Accepted runs used frozen source bytes, all
+nine implementation files independently matched against the committed blobs.
+
+The synthetic Git demo used task commit
+`6e79a5a417994dedeb5c82a7786cfd89c61ad2d9`, blob
+`57a58c5df7df58c5b1f6021da209a9275d306dea`, and exactly 264 manifest bytes,
+SHA-256 `0721517346befae87a276957d3f3e24972652a62b5ac91358fbb3ff4756f5057`.
+Its one `thread/start` and one `turn/start` completed with one persisted synthetic
+turn and stopped direct child. The driver elapsed exactly 0.7585974999819882
+host seconds in that run. Actual HTTP checks returned 200 for events/agents,
+405 for event POST and 404 for dispatch/operations. Queue, ledger, outcome and
+peer-state hashes were unchanged by the HTTP reads. These are synthetic local
+runtime observations, not evidence of real Codex execution or emulator timing.
+
 ## Next separately authorized single live canary
 
 **STOP before `live`. This document, tests, PR and prior grants do not authorize it.**
