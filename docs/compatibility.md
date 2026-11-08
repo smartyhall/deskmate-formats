@@ -69,6 +69,8 @@ accepts only hash-pinned native A and one first SECOND event;
 SECOND name and measured repartition profile. Neither enables a general
 allocator/balancer or establishes native reopen/selection acceptance. Both
 complete generated binaries are published with explicit tool-generated provenance.
+Version-1 interchange export explicitly rejects multiple calendars, because its
+schema has no calendar-ownership field; lossy mode cannot silently flatten them.
 
 [SDK/source findings](research/sdk-calendar-database.md) support the codec formulas;
 the [campaign report](research/database-campaign.md) records generated artifacts

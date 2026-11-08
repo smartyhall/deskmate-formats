@@ -124,6 +124,10 @@ Every record carries `calendar_name`; use `(calendar_name, record_id)` as a
 snapshot key. JSON includes a `calendars` array and names on flat records. Text
 output identifies each calendar, including an empty one. Original descriptors,
 tokens, raw fields/records, routing keys and header metadata remain available.
+The version-1 interchange format has no calendar-ownership field: its exporter
+explicitly rejects multicalendar input, including in lossy mode, instead of
+flattening tables or misinterpreting duplicate record IDs. Single-calendar
+interchange behavior is retained.
 
 `python -m deskmate_formats.calendar.cli FILE.cln --profile sdk --json`
 enumerates both. The default observed profile remains six-page. Existing ordinary

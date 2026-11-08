@@ -144,6 +144,9 @@ def _minutes(value):
 def export_calendar(database, *, lossy=False):
     """Export ordinary events. Explicit lossy mode skips unrepresentable rows."""
     _check(type(lossy) is bool, 'invalid_option', '$.options.lossy', 'expected explicit boolean')
+    _check(len(getattr(database, 'calendars', ())) <= 1,
+           'unsupported_calendars', '$.native.calendars',
+           'version 1 has no calendar ownership field; multicalendar export is unsupported')
     items, issues = [], []
     for n, row in enumerate(database.appointments):
         path = f'$.native.appointments[{n}]'

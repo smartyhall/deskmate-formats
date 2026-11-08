@@ -153,12 +153,12 @@
   "validation": {
     "portable": {
       "command": "python -m unittest discover -s tests/portable -v",
-      "tests": 353,
-      "seconds": 169.845,
-      "result": "passed",
       "environment": {
         "PYTHONPATH": "src;tests/portable"
-      }
+      },
+      "tests": 354,
+      "seconds": 138.929,
+      "result": "passed"
     },
     "focused_committed_binary_tests": {
       "command": "python -m unittest discover -s tests/portable -p test_calendar_multicalendar.py -v",
@@ -236,6 +236,31 @@
       "source_files_checked": 633,
       "database_fixtures": 9,
       "synthetic_jsonl": 4
+    },
+    "portable_before_interchange_followup": {
+      "command": "python -m unittest discover -s tests/portable -v",
+      "tests": 353,
+      "seconds": 169.845,
+      "result": "passed",
+      "environment": {
+        "PYTHONPATH": "src;tests/portable"
+      }
+    },
+    "interchange_followup": {
+      "command": "python -m unittest discover -s tests/portable -p test_interchange.py -v",
+      "environment": {
+        "PYTHONPATH": "src;tests/portable"
+      },
+      "tests": 8,
+      "seconds": 0.031,
+      "result": "passed; synthetic/native A/native B, strict and lossy guards, single-calendar compatibility"
+    },
+    "isolated_wheel_followup": {
+      "result": "passed",
+      "creation_exact_a": true,
+      "append_exact_b": true,
+      "multicalendar_export_refused_in_strict_and_lossy": true,
+      "single_calendar_exported_events": 61
     }
   },
   "build_artifacts": [
@@ -285,7 +310,15 @@
       "reuse-final.txt": "7e35f4e0bb1838ca87f5759b018349e5d640594bf5b8b0b4bd413cf28fafd52b",
       "audit-final.txt": "4b38b70bdbf357dc567d4017bafab52f274053c399a9d2e0b2e7d6706654aaaa",
       "preservation-after-final-checks.json": "80d88088191f510594c5f6726a00100a8cc995f6cbf16826f927c9a14e453836",
-      "original-provenance-final-check.json": "8753fa8d044bee16b6534dbb240b72c8649cf3e3f533f88f111335a28f515a6e"
+      "original-provenance-final-check.json": "8753fa8d044bee16b6534dbb240b72c8649cf3e3f533f88f111335a28f515a6e",
+      "portable-followup-final.txt": "58c4a10dc32e884c82d46e1cd16b4d2a14867c496c1c2b4cf852c753bf778683",
+      "interchange-followup.txt": "c116eb6c8fc31d189f70c7a81a21fe5db75c48d47518c48b09b8b2d9acb49ba0",
+      "build-source-followup-sha256.json": "e6ca8922db1354902997afa81fc3f2e6cd278158311f8e6c1a02668819cf0a57",
+      "build-followup.txt": "6703bbf25a39b4fb5da4097ad96eb04cb763585dc6bde07638b9abc761d43357",
+      "build-followup-identities.json": "3ce3404148b838e64f08cdc41859b1125aab573bcfde7818b938a26db561a987",
+      "audit-packages-followup.txt": "4b38b70bdbf357dc567d4017bafab52f274053c399a9d2e0b2e7d6706654aaaa",
+      "wheel-followup-check.py": "d8de32044d7a1e49404370d66db0c1b30c2098230cd12007cebbdf29ade8226f",
+      "wheel-followup-check.txt": "8a98d8c3408dd73d8ded643c9e05cd3b2e09a42eafd9cfdb463dfd9af5dc69d1"
     },
     "fixture_contents_and_mtimes_unchanged_during_final_checks": true,
     "prior_manifest_entries_identical_to_b_publication": true
@@ -299,5 +332,34 @@
   "smallest_next_experiments": [
     "Separately authorized native reopen/selection verification of the generated first-event candidate, with exact input/output and installed-tree hashes.",
     "Separately authorized no-create open/close control of the exact eight-page month source to distinguish index maintenance from table creation."
-  ]
+  ],
+  "interchange_followup": {
+    "reason": "Version-1 semantic schema cannot encode owning calendar; explicitly refuse multicalendar export instead of flattening tables or conflating IDs. Native readers/writers unchanged.",
+    "source_revision_before_followup": "01a02e6185f73378916237abcba6b29777daa67a",
+    "code_sha256": {
+      "src/deskmate_formats/interchange.py": "5ef52f1e8fe1a16dff457f1e2a4b91ae5173a98e7d7b34658cda210a348850aa",
+      "tests/portable/test_interchange.py": "5515bb5f0d61ce6aa1b9fde630468670827558ce5a6ac4f9f93ba09d82e16610"
+    }
+  },
+  "reviewed_checkpoint": {
+    "revision": "01a02e6185f73378916237abcba6b29777daa67a",
+    "pr": "https://github.com/smartyhall/deskmate-formats/pull/84",
+    "ci_run_id": 42461884768,
+    "matrix": "all four Windows/Ubuntu, Python 3.13/3.14 jobs passed",
+    "automated_review": "completed, no findings",
+    "scope": "Checkpoint before final interchange guard; followup local validation recorded separately."
+  },
+  "final_build_artifacts": [
+    {
+      "filename": "deskmate_formats-0.1.0.dev0-py3-none-any.whl",
+      "bytes": 191543,
+      "sha256": "6be690240abbaa4af84e0d4a26d55011ee4391c7b1bd53dc0f42357b4a16fbdd"
+    },
+    {
+      "filename": "deskmate_formats-0.1.0.dev0.tar.gz",
+      "bytes": 782041,
+      "sha256": "8397727b8b243f65ed11e4647e1be8147d3afdfbc207cbaa1a793a732d2fc2bd"
+    }
+  ],
+  "final_build_snapshot_note": "Second fresh source copy includes final interchange guard and evidence/README/status present before its receipt update. Its exact file manifest is archived; fresh wheel installed and both exact format hashes plus export guard/single-calendar export rechecked. Binary fixture privacy audit passed."
 }
