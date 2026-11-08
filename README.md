@@ -25,12 +25,13 @@ remain archived outside Git.
 | **DeskMate screen-state research** | **Exploratory** | Partial Calendar schedule text recovered from read-only emulator RAM captures; not a general screen reader or automation interface |
 | **Address Book 3.05** (`PERSONAL.ADR`) | **Initial research** | A00–A04 no-edit, one-contact and independent field-length controls; no parser or writer |
 | **Cross-application database architecture** | **Offline structural and call evidence** | Named DMDB binding/call thunks in all three applications and a conditional DESK INT E0 dispatch path; actual runtime vector, callback selection and record-operation dispatch remain unresolved |
-| **Filer 3.05** | **Native experiments prepared** | Static sample/component comparison and F00–F02 operator runbook; no native Filer experiment or implementation yet |
+| **Filer 3.05** | **Static research and one bounded native observation** | Cross-application structure and DMDB calls examined; shipped CARMAINT sample opened/exited without disk changes, but print commands were disabled. F00–F02 schema/record experiments and a Filer reader/writer remain outstanding |
 | **86Box automation** | **DOS baseline validated** | Authenticated native client, verified Tandy RSX DOS 5.00 baseline, original guest canary, and a read-only MCP bridge tested with a synthetic native peer |
 | **Other DeskMate applications** | **Future work** | Text, Worksheet and Draw have no validated storage models or implementations yet |
 
-The tools are experimental and support only explicitly measured cases. See
-[compatibility](docs/compatibility.md) for exact limits and the
+These are the capabilities of the tracked baseline, not promises about work
+in progress. See the dated [project status](PROJECT_STATUS.md),
+[compatibility](docs/compatibility.md) for exact limits, and the
 [format inventory](docs/inventory.md) for the broader preservation scope.
 
 ## Current functionality
@@ -93,8 +94,11 @@ For a new Codex CLI task, use the opt-in
 [Codex JSONL wrapper](docs/research/observatory-v2-m2.md) to send bounded
 telemetry through the same journal.
 
-The [Supervisor S1 task intake guide](docs/research/codex-supervisor-s1.md)
-covers local Git discovery, operator decisions and read-only queue reporting.
+The [Supervisor S0 protocol guide](docs/research/codex-supervisor-s0.md)
+covers the offline-tested, pinned app-server protocol and durable receipts;
+the [S1 task intake guide](docs/research/codex-supervisor-s1.md) covers local
+Git discovery, operator decisions and read-only queue reporting. Neither
+provides autonomous dispatch or a validated live S0 model canary.
 
 ## Tests and development
 
@@ -163,7 +167,9 @@ These experiments do not establish a general allocation or reclamation algorithm
 
 [Address Book Phase I](docs/research/addressbook-phase1.md) documents a no-edit
 control and two independent, synthetic single-contact observations, including
-measured variable-length first-name storage. No Address Book implementation exists.
+measured variable-length first-name storage. [Phase II](docs/research/addressbook-phase2.md)
+measured independent phone-length and City-field changes. No Address Book
+reader or writer exists on this baseline.
 
 [Screen-state research](docs/research/screen-state.md) recovered partial Calendar
 schedule text through read-only RAM captures; it is not a general screen API.
