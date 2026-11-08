@@ -25,8 +25,10 @@ Its four CI jobs passed; issue #70 remains open for actual native verification.
 The operator granted standing authority on 2026-11-08 for ChatGPT to merge
 ready, passing Codex PRs after independent review. This does not authorize
 Codex workers to self-merge or to execute paid Codex turns or native guest actions.
-S0 app-server and S1 trusted Git intake remain offline-tested components;
-a real supervisor-owned Codex canary and S2 dispatch have not yet been proven.
+S0 now has an installable operator driver; the S1-to-S0 bridge has a separately
+gated synthetic-only demonstration. A real supervisor-owned Codex canary and
+real S2 dispatch have not yet been proven or authorized by this work.
+[Operator driver and next-canary gates](docs/research/codex-supervisor-operator-driver.md).
 [Supervisor design and rollout](docs/research/codex-supervisor-design.md).
 
 **Historical snapshot below — 2026-11-07:** preserved for its dated context,
@@ -101,7 +103,7 @@ the [README](README.md) for commands.
 | Interchange | [Version-1 semantic Python/JSON contract](docs/interoperability.md), explicit loss reports, source-snapshot IDs and example files are implemented. | No general native edit/delete, lossless reconstruction, stable external UID mapping or CalDAV/CardDAV network synchronization. |
 | Filer | Static schema and sample analysis plus a distinct native CARMAINT open/menu/exit observation; disk contents stayed byte-identical and Print record/report were disabled. [Issue #54](https://github.com/smartyhall/deskmate-formats/issues/54). | No Filer codec. Earlier staged F00–F02 schema/record creation work remains unperformed. |
 | 86Box and Observatory | Native authenticated loopback client, held DOS guest evidence, and [Observatory M0/M1](docs/research/observatory-v2-m0-m1.md) read-only publication with [M2](docs/research/observatory-v2-m2.md) opt-in Codex telemetry. Scoped held-canary verification recorded 0 ms guest advance. | No proven unattended service/old-browser acceptance; launcher startup timeout still warrants safe reconciliation [#35](https://github.com/smartyhall/deskmate-formats/issues/35). |
-| Supervisor | [S0](docs/research/codex-supervisor-s0.md) offline-tested owned app-server protocol and durable receipts; [S1](docs/research/codex-supervisor-s1.md) trusted task Git intake, private operator decisions and sanitized read-only events. | No validated live S0 canary or S2 autonomous dispatch. A queued task is not execution authority. [Canary runbook](docs/research/codex-supervisor-s0-live-canary.md) was prepared, not executed. |
+| Supervisor | [S0](docs/research/codex-supervisor-s0.md) owned protocol/receipts and [installable driver](docs/research/codex-supervisor-operator-driver.md); [S1](docs/research/codex-supervisor-s1.md) trusted Git intake; separate synthetic-only S2 grant/dispatch with read-only Observatory outcome. | No validated live S0 canary or real S2 dispatch. A queued task is not execution authority. The next live canary remains separately authorized and unexecuted. |
 | Windows lab | Existing Windows 10 Pro research VM and [source-only provisioning work](deployment/windows10/INTEGRATION-STATUS.md). | Fresh full ISO/OOBE and recovery validation incomplete; system modifications need explicit review [#32](https://github.com/smartyhall/deskmate-formats/issues/32). |
 
 Text, Worksheet and Draw remain outside implemented application codecs. See

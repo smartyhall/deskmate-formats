@@ -123,8 +123,10 @@ telemetry through the same journal.
 The [Supervisor S0 protocol guide](docs/research/codex-supervisor-s0.md)
 describes offline-tested app-server ownership and durable receipts; the
 [S1 task intake guide](docs/research/codex-supervisor-s1.md) covers verified
-Git discovery, manual operator decisions and read-only queue reporting. Neither
-is a live-validated autonomous dispatcher.
+Git discovery, manual operator decisions and read-only queue reporting. The
+[operator driver](docs/research/codex-supervisor-operator-driver.md) supplies
+installable S0 commands and a separately gated synthetic-only S2 bridge.
+Real model dispatch requires new explicit authorization and live validation.
 
 ## Tests and development
 

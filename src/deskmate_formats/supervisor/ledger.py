@@ -119,6 +119,14 @@ class Ledger:
         row = self._query("SELECT * FROM operations WHERE operation_id = ?", (operation_id,)).fetchone()
         return Receipt(*row) if row is not None else None
 
+    def receipts(self):
+        """Return durable receipts for offline operator inspection."""
+        return [Receipt(*row) for row in self._query("SELECT * FROM operations ORDER BY rowid").fetchall()]
+
+    def sessions(self):
+        """Return saved process claims; these never authorize killing a PID."""
+        return self._query("SELECT generation, pid, process_identity FROM sessions").fetchall()
+
     def prepare(self, operation_id, method, generation, request_id, thread_id, turn_id):
         if type(operation_id) is not str or not re.fullmatch(r"[a-zA-Z0-9_.-]{1,128}", operation_id):
             raise LedgerError("invalid local operation ID")

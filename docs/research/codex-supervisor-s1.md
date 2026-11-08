@@ -1,5 +1,9 @@
 # Supervisor S1 trusted task intake
 
+The [offline S2 bridge](codex-supervisor-operator-driver.md) now consumes an exact
+accepted receipt through a separate synthetic dispatch grant. S1 itself remains
+an intake/review queue; acceptance and Git changes never launch a worker.
+
 S1 implements the Git intake and private queue in
 [issue 60](https://github.com/smartyhall/deskmate-formats/issues/60). A discovered
 candidate has a Git provenance receipt and no queue decision. An acceptance
