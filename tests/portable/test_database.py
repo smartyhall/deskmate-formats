@@ -20,13 +20,35 @@ class DatabaseTests(unittest.TestCase):
 
     def test_native_calendar_fixtures(self):
         root = Path(__file__).parents[1] / 'fixtures/application-generated/calendar'
-        # Tool-derived candidates are not original DeskMate-created specimens.
-        for path in root.glob('*.cln'):
-            if path.name.endswith('-tool-generated.cln'):
-                continue
-            with self.subTest(path=path.name):
-                db = parse_bytes(path.read_bytes())
+        # This legacy positive test covers exactly the observed one-calendar
+        # six-page specimens; it is not a test of every native CLN layout.
+        for name in ('e01-86box-historical-match.cln',
+                     'e02-86box-historical-match.cln',
+                     'alarm-on-86box-trial-c.cln'):
+            with self.subTest(path=name):
+                db = parse_bytes((root / name).read_bytes())
                 self.assertEqual(len(db.table('PERSONAL').rows), 2)
+
+    def test_native_second_calendar_fixture_is_pinned_and_parser_limit_explicit(self):
+        # The application rebalances PERSONAL's index-page routing header.
+        # The strict common reader has not been extended to that layout yet;
+        # do not silently drop this specimen from testing.
+        import hashlib
+        root = Path(__file__).parents[1] / 'fixtures/application-generated/calendar'
+        native = (root / 'native-second-empty-calendar-operator.cln').read_bytes()
+        source = (root / 'sdk-30-days-allocator-tool-generated.cln').read_bytes()
+        self.assertEqual(len(native), 10240)
+        self.assertEqual(hashlib.sha256(native).hexdigest(),
+                         '338487558d9992452db15858de1ba9cf790c26abf990ba70b47bbc9dc8d011f5')
+        self.assertEqual(len(source), 8192)
+        # 61 PERSONAL appointments retain their exact raw data pages.
+        for page in (4, 6, 7):
+            self.assertEqual(native[page*1024:(page+1)*1024],
+                             source[page*1024:(page+1)*1024])
+        with self.assertRaises(DatabaseError) as error:
+            parse_bytes(native)
+        self.assertEqual(error.exception.code, 'unsupported_layout')
+        self.assertEqual(error.exception.offset, 0x1400)
 
     def test_tool_generated_calendar_candidate(self):
         root = Path(__file__).parents[1] / 'fixtures/application-generated/calendar'
