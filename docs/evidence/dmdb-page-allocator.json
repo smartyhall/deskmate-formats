@@ -3,6 +3,8 @@
   "timezone": "America/New_York",
   "base": "8c1e7aa6f6aac04c3167d141f981e10f1d3b860e",
   "branch": "codex/dmdb-page-allocator",
+  "draft_pr": "https://github.com/smartyhall/deskmate-formats/pull/75",
+  "implementation_commit": "0cd6ee8a837ce84c8af2518c9dd660a2f95ad518",
   "source_investigation_commit": "ccf3aa2a2e3ce4cfac189cba4b1827ce2a648886",
   "evidence_class": "pinned executable/static findings; published historical deltas; independent offline checks; new tool-generated candidate",
   "machine": {

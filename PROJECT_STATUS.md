@@ -13,7 +13,8 @@ The immediate objective is **useful Calendar and Address Book files**, validated
 independently in DeskMate. Tests in which our reader accepts our writer's output
 do not by themselves establish native compatibility.
 
-**Allocator continuation on `codex/dmdb-page-allocator` (unmerged):** fetched
+**Allocator continuation on `codex/dmdb-page-allocator`
+([draft #75](https://github.com/smartyhall/deskmate-formats/pull/75), unmerged):** fetched
 `origin/main` verified at `8c1e7aa6f6aac04c3167d141f981e10f1d3b860e`.
 [Static DMDB investigation](docs/research/dmdb-page-allocator.md) decoded packed
 12-bit page chains and reproduced both published E15/E19 header transitions;

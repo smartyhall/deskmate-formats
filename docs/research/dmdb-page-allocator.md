@@ -3,6 +3,7 @@
 Offline continuation from fetched `origin/main`
 `8c1e7aa6f6aac04c3167d141f981e10f1d3b860e`, branch
 `codex/dmdb-page-allocator`, started 2026-11-07 America/New_York.
+[Draft PR #75](https://github.com/smartyhall/deskmate-formats/pull/75).
 Original branches, worktrees, media and private archives were preserved.
 
 ## New static findings
