@@ -65,6 +65,22 @@
       "synthetic_data": true,
       "native_opened": false,
       "native_saved": false
+    },
+    {
+      "path": "calendar/native-second-empty-calendar-operator.cln",
+      "size": 10240,
+      "sha256": "338487558d9992452db15858de1ba9cf790c26abf990ba70b47bbc9dc8d011f5",
+      "application": "Tandy DeskMate Calendar",
+      "version": "03.05.00",
+      "experiment": "2026-11-08 operator-produced empty SECOND calendar from published 30-day synthetic candidate",
+      "origin": "Exact, unmodified operator-uploaded PERSONAL(2).CLN. Operator reports opening the 61-appointment Calendar in original DeskMate 3.05, adding an empty calendar named Second and supplying the resulting file. Independently compared against the exact committed source: PERSONAL appointment data pages 4/6/7 unchanged, all 62 PERSONAL index locators preserved in logical order; two newly allocated pages hold SECOND's configuration row and index. Native-produced transformation of synthetic data; no independent guest input/save ledger or installed-tree manifests.",
+      "source_path": "calendar/sdk-30-days-allocator-tool-generated.cln",
+      "source_size": 8192,
+      "source_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+      "evidence_class": "operator-supplied application-produced synthetic-data specimen; native file structure independently compared, save action operator-reported; not a tool-generated replica and not independently instrumented",
+      "synthetic_data": true,
+      "operator_reported_native_operation": true,
+      "native_loaded_file_identity_independently_verified": false
     }
   ]
 }
