@@ -36,7 +36,11 @@ def main(state_path, mode):
 
     def save():
         temp = path.with_suffix(".tmp")
-        temp.write_text(json.dumps(thread), encoding="utf-8")
+        descriptor = os.open(temp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+            stream.write(json.dumps(thread))
+            stream.flush()
+            os.fsync(stream.fileno())
         temp.replace(path)
 
     for line in sys.stdin:

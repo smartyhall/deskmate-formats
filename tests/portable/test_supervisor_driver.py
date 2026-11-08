@@ -53,6 +53,7 @@ class DriverTests(unittest.TestCase):
         for secret in (b"S0_CANARY_OK", b"test-thread", b"private-canary", str(self.root).encode()):
             self.assertNotIn(secret, public)
         state = (self.directory / "evidence" / "peer.json").read_bytes()
+        self.assertEqual(len(read_record(self.directory / "evidence" / "peer.json")["turns"]), 1)
         with self.assertRaises(DriverError):
             run(self.directory, authorization=token)
         self.assertEqual((self.directory / "evidence" / "peer.json").read_bytes(), state)
