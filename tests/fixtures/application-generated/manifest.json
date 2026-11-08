@@ -33,6 +33,18 @@
       "closed_disk_sha256": "9619c9e8e848f315899bcfbe431d1f47747405554f8bb13a06a6ae5adf0c373d",
       "evidence_index_sha256": "f6cfbfe878f3495f81822c8b3fa54a6055e2a109f7aa29c2bf5b1949c9171ded",
       "synthetic_data": true
+    },
+    {
+      "path": "calendar/sdk-14-days-tool-generated.cln",
+      "size": 6144,
+      "sha256": "85ad05d6bf58540e32349bbb559301d36aced164741b03b09b30d63f22d636ac",
+      "application": "Tandy DeskMate Calendar",
+      "version": "03.05.00",
+      "experiment": "2026-11-07 SDK-profile 14-day offline Calendar generation; native acceptance pending issue #69",
+      "origin": "Tool-generated, NOT application-generated or native-accepted: derived deterministically by deskmate_formats.calendar.samples.schedule and writer.append_appointment(profile='sdk') from the committed 86Box E02 historical-match PERSONAL.CLN source (SHA-256 0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9), adding 28 invented appointments to the existing LPHa124 record. Original source rows/header/schema preserved. File bytes independently recreated and SHA-256 matched the campaign output. User-facing DOSBox-X validation is not yet recorded.",
+      "source_sha256": "0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9",
+      "evidence_class": "tool-generated derived candidate, offline validated; not native application output",
+      "synthetic_data": true
     }
   ]
 }

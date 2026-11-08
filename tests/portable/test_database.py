@@ -20,10 +20,23 @@ class DatabaseTests(unittest.TestCase):
 
     def test_native_calendar_fixtures(self):
         root = Path(__file__).parents[1] / 'fixtures/application-generated/calendar'
+        # Tool-derived candidates are not original DeskMate-created specimens.
         for path in root.glob('*.cln'):
+            if path.name.endswith('-tool-generated.cln'):
+                continue
             with self.subTest(path=path.name):
                 db = parse_bytes(path.read_bytes())
                 self.assertEqual(len(db.table('PERSONAL').rows), 2)
+
+    def test_tool_generated_calendar_candidate(self):
+        root = Path(__file__).parents[1] / 'fixtures/application-generated/calendar'
+        path = root / 'sdk-14-days-tool-generated.cln'
+        db = parse_bytes(path.read_bytes())
+        self.assertEqual(db.sha256,
+                         '85ad05d6bf58540e32349bbb559301d36aced164741b03b09b30d63f22d636ac')
+        self.assertEqual(len(db.data), 6144)
+        self.assertEqual(len(db.table('PERSONAL').rows), 30)
+        self.assertEqual(len(db.table('PERSONAL').entries), 30)
 
     def test_additional_data_page_and_retired_row_opt_in(self):
         data = bytearray(build('two'))
