@@ -1,8 +1,8 @@
 # Project status — DeskMate formats
 
-**Snapshot:** 2026-11-07 (America/New_York), Phase II evidence reconciliation
-from verified `origin/main` `6c742800f88a63551cb5cd5ba9dc9991bc9a7ead`
-([PR #72](https://github.com/smartyhall/deskmate-formats/pull/72)).
+**Snapshot:** 2026-11-07 (America/New_York), after Phase II
+[PR #73](https://github.com/smartyhall/deskmate-formats/pull/73) merged at
+`fb6e1d9fdbfe682403e645575707a9d020d8e326` on `main`.
 
 This is a concise, public **capability and handoff snapshot**, not a reconstruction
 of an older missing `PROJECT_STATUS.md`, a substitute for private experiment
@@ -66,7 +66,7 @@ full-month deliverable is not claimed. The 14-day result is 6,144 bytes with
 SHA-256 `85ad05d6bf58540e32349bbb559301d36aced164741b03b09b30d63f22d636ac`.
 See the [public hashes and provenance](docs/evidence/database-campaign.json).
 
-Phase II on `codex/database-phase-ii`, [draft #73](https://github.com/smartyhall/deskmate-formats/pull/73):
+Phase II from `codex/database-phase-ii`, [merged PR #73](https://github.com/smartyhall/deskmate-formats/pull/73):
 [source findings, independent diagnostic and operator runbooks](docs/research/database-phase-ii.md)
 are prepared for #70/#71. SDK source documents LastName/FirstName ordering;
 native second-contact insertion remains unmeasured. The diagnostic checks E15/E19
