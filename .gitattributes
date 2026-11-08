@@ -14,4 +14,5 @@ src/deskmate_formats/supervisor/CODEX-NOTICE.txt -text
 LICENSE -text
 LICENSES/*.txt -text
 *.license text eol=lf
+tests/fixtures/application-generated/**/*.cln -text
 docs/research/codex-app-server-0.166.0.json text eol=lf

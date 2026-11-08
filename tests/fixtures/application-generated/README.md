@@ -36,3 +36,13 @@ remaining hash-pinned controlled-save acceptance procedure. The operator reports
 all 29 appointments and displayed alarm states appear as expected in DeskMate
 3.05; [the dated report](../../../docs/research/calendar-14-days-operator-report.md)
 records the successful display milestone and untested persistence/alarm firing.
+
+The complete `calendar/sdk-30-days-allocator-tool-generated.cln` is a
+**tool-generated, not application-generated or native-accepted** 8,192-byte
+candidate: 61 appointments over October 23–November 21, 2026, with data chain
+4→6→7. It independently reproduces the archived allocator candidate byte for
+byte. Its [expected listing](calendar/sdk-30-days-allocator-tool-generated.expected.json)
+includes every appointment and its record/page/index locations. Use the
+[download and native inspection guide](../../../docs/research/calendar-30-day-native-acceptance.md)
+for exact identity, all 30 dates, displayed times/alarms and the separate optional
+edit/save trial. Directory placement does not change evidence classification.

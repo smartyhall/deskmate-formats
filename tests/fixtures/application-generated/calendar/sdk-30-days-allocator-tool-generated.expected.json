@@ -1,0 +1,1268 @@
+{
+  "evidence_class": "tool-generated; independently checked offline; native acceptance pending",
+  "source_sha256": "0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9",
+  "output_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+  "bytes": 8192,
+  "pages": 8,
+  "appointments": [
+    {
+      "date": "2026-10-23",
+      "start_time": "09:00",
+      "end_time": "10:00",
+      "description": "LPHa124",
+      "alarm_enabled": false,
+      "record_id": 17,
+      "page": 4,
+      "in_page_offset": 39,
+      "file_offset": 4135,
+      "row_length": 24,
+      "index_offset": 5166
+    },
+    {
+      "date": "2026-10-23",
+      "start_time": "09:30",
+      "end_time": "10:15",
+      "description": "Plan 01 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 77,
+      "page": 7,
+      "in_page_offset": 552,
+      "file_offset": 7720,
+      "row_length": 42,
+      "index_offset": 5172
+    },
+    {
+      "date": "2026-10-23",
+      "start_time": "14:15",
+      "end_time": "15:15",
+      "description": "Review 01 / allocator trial",
+      "alarm_enabled": true,
+      "record_id": 76,
+      "page": 7,
+      "in_page_offset": 508,
+      "file_offset": 7676,
+      "row_length": 44,
+      "index_offset": 5178
+    },
+    {
+      "date": "2026-10-24",
+      "start_time": "09:45",
+      "end_time": "10:30",
+      "description": "Plan 02 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 75,
+      "page": 7,
+      "in_page_offset": 466,
+      "file_offset": 7634,
+      "row_length": 42,
+      "index_offset": 5184
+    },
+    {
+      "date": "2026-10-24",
+      "start_time": "14:30",
+      "end_time": "15:30",
+      "description": "Call 02 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 74,
+      "page": 7,
+      "in_page_offset": 424,
+      "file_offset": 7592,
+      "row_length": 42,
+      "index_offset": 5190
+    },
+    {
+      "date": "2026-10-25",
+      "start_time": "10:00",
+      "end_time": "10:45",
+      "description": "Plan 03 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 73,
+      "page": 7,
+      "in_page_offset": 382,
+      "file_offset": 7550,
+      "row_length": 42,
+      "index_offset": 5196
+    },
+    {
+      "date": "2026-10-25",
+      "start_time": "14:45",
+      "end_time": "15:45",
+      "description": "Read 03 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 72,
+      "page": 7,
+      "in_page_offset": 340,
+      "file_offset": 7508,
+      "row_length": 42,
+      "index_offset": 5202
+    },
+    {
+      "date": "2026-10-26",
+      "start_time": "09:30",
+      "end_time": "10:15",
+      "description": "Plan 04 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 71,
+      "page": 7,
+      "in_page_offset": 298,
+      "file_offset": 7466,
+      "row_length": 42,
+      "index_offset": 5208
+    },
+    {
+      "date": "2026-10-26",
+      "start_time": "15:00",
+      "end_time": "16:00",
+      "description": "Review 04 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 70,
+      "page": 7,
+      "in_page_offset": 254,
+      "file_offset": 7422,
+      "row_length": 44,
+      "index_offset": 5214
+    },
+    {
+      "date": "2026-10-27",
+      "start_time": "09:45",
+      "end_time": "10:30",
+      "description": "Plan 05 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 69,
+      "page": 7,
+      "in_page_offset": 212,
+      "file_offset": 7380,
+      "row_length": 42,
+      "index_offset": 5220
+    },
+    {
+      "date": "2026-10-27",
+      "start_time": "14:15",
+      "end_time": "15:15",
+      "description": "Call 05 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 68,
+      "page": 7,
+      "in_page_offset": 170,
+      "file_offset": 7338,
+      "row_length": 42,
+      "index_offset": 5226
+    },
+    {
+      "date": "2026-10-28",
+      "start_time": "10:00",
+      "end_time": "10:45",
+      "description": "Plan 06 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 67,
+      "page": 7,
+      "in_page_offset": 128,
+      "file_offset": 7296,
+      "row_length": 42,
+      "index_offset": 5232
+    },
+    {
+      "date": "2026-10-28",
+      "start_time": "14:30",
+      "end_time": "15:30",
+      "description": "Read 06 / allocator trial",
+      "alarm_enabled": true,
+      "record_id": 66,
+      "page": 7,
+      "in_page_offset": 86,
+      "file_offset": 7254,
+      "row_length": 42,
+      "index_offset": 5238
+    },
+    {
+      "date": "2026-10-29",
+      "start_time": "09:30",
+      "end_time": "10:15",
+      "description": "Plan 07 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 65,
+      "page": 7,
+      "in_page_offset": 44,
+      "file_offset": 7212,
+      "row_length": 42,
+      "index_offset": 5244
+    },
+    {
+      "date": "2026-10-29",
+      "start_time": "14:45",
+      "end_time": "15:45",
+      "description": "Review 07 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 64,
+      "page": 7,
+      "in_page_offset": 0,
+      "file_offset": 7168,
+      "row_length": 44,
+      "index_offset": 5250
+    },
+    {
+      "date": "2026-10-30",
+      "start_time": "09:45",
+      "end_time": "10:30",
+      "description": "Plan 08 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 63,
+      "page": 6,
+      "in_page_offset": 974,
+      "file_offset": 7118,
+      "row_length": 42,
+      "index_offset": 5256
+    },
+    {
+      "date": "2026-10-30",
+      "start_time": "15:00",
+      "end_time": "16:00",
+      "description": "Call 08 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 62,
+      "page": 6,
+      "in_page_offset": 932,
+      "file_offset": 7076,
+      "row_length": 42,
+      "index_offset": 5262
+    },
+    {
+      "date": "2026-10-31",
+      "start_time": "10:00",
+      "end_time": "10:45",
+      "description": "Plan 09 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 61,
+      "page": 6,
+      "in_page_offset": 890,
+      "file_offset": 7034,
+      "row_length": 42,
+      "index_offset": 5268
+    },
+    {
+      "date": "2026-10-31",
+      "start_time": "14:15",
+      "end_time": "15:15",
+      "description": "Read 09 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 60,
+      "page": 6,
+      "in_page_offset": 848,
+      "file_offset": 6992,
+      "row_length": 42,
+      "index_offset": 5274
+    },
+    {
+      "date": "2026-11-01",
+      "start_time": "09:30",
+      "end_time": "10:15",
+      "description": "Plan 10 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 59,
+      "page": 6,
+      "in_page_offset": 806,
+      "file_offset": 6950,
+      "row_length": 42,
+      "index_offset": 5280
+    },
+    {
+      "date": "2026-11-01",
+      "start_time": "14:30",
+      "end_time": "15:30",
+      "description": "Review 10 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 58,
+      "page": 6,
+      "in_page_offset": 762,
+      "file_offset": 6906,
+      "row_length": 44,
+      "index_offset": 5286
+    },
+    {
+      "date": "2026-11-02",
+      "start_time": "09:45",
+      "end_time": "10:30",
+      "description": "Plan 11 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 57,
+      "page": 6,
+      "in_page_offset": 720,
+      "file_offset": 6864,
+      "row_length": 42,
+      "index_offset": 5292
+    },
+    {
+      "date": "2026-11-02",
+      "start_time": "14:45",
+      "end_time": "15:45",
+      "description": "Call 11 / allocator trial",
+      "alarm_enabled": true,
+      "record_id": 56,
+      "page": 6,
+      "in_page_offset": 678,
+      "file_offset": 6822,
+      "row_length": 42,
+      "index_offset": 5298
+    },
+    {
+      "date": "2026-11-03",
+      "start_time": "10:00",
+      "end_time": "10:45",
+      "description": "Plan 12 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 55,
+      "page": 6,
+      "in_page_offset": 636,
+      "file_offset": 6780,
+      "row_length": 42,
+      "index_offset": 5304
+    },
+    {
+      "date": "2026-11-03",
+      "start_time": "15:00",
+      "end_time": "16:00",
+      "description": "Read 12 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 54,
+      "page": 6,
+      "in_page_offset": 594,
+      "file_offset": 6738,
+      "row_length": 42,
+      "index_offset": 5310
+    },
+    {
+      "date": "2026-11-04",
+      "start_time": "09:30",
+      "end_time": "10:15",
+      "description": "Plan 13 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 53,
+      "page": 6,
+      "in_page_offset": 552,
+      "file_offset": 6696,
+      "row_length": 42,
+      "index_offset": 5316
+    },
+    {
+      "date": "2026-11-04",
+      "start_time": "14:15",
+      "end_time": "15:15",
+      "description": "Review 13 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 52,
+      "page": 6,
+      "in_page_offset": 508,
+      "file_offset": 6652,
+      "row_length": 44,
+      "index_offset": 5322
+    },
+    {
+      "date": "2026-11-05",
+      "start_time": "09:45",
+      "end_time": "10:30",
+      "description": "Plan 14 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 51,
+      "page": 6,
+      "in_page_offset": 466,
+      "file_offset": 6610,
+      "row_length": 42,
+      "index_offset": 5328
+    },
+    {
+      "date": "2026-11-05",
+      "start_time": "14:30",
+      "end_time": "15:30",
+      "description": "Call 14 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 50,
+      "page": 6,
+      "in_page_offset": 424,
+      "file_offset": 6568,
+      "row_length": 42,
+      "index_offset": 5334
+    },
+    {
+      "date": "2026-11-06",
+      "start_time": "10:00",
+      "end_time": "10:45",
+      "description": "Plan 15 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 49,
+      "page": 6,
+      "in_page_offset": 382,
+      "file_offset": 6526,
+      "row_length": 42,
+      "index_offset": 5340
+    },
+    {
+      "date": "2026-11-06",
+      "start_time": "14:45",
+      "end_time": "15:45",
+      "description": "Read 15 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 48,
+      "page": 6,
+      "in_page_offset": 340,
+      "file_offset": 6484,
+      "row_length": 42,
+      "index_offset": 5346
+    },
+    {
+      "date": "2026-11-07",
+      "start_time": "09:30",
+      "end_time": "10:15",
+      "description": "Plan 16 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 47,
+      "page": 6,
+      "in_page_offset": 298,
+      "file_offset": 6442,
+      "row_length": 42,
+      "index_offset": 5352
+    },
+    {
+      "date": "2026-11-07",
+      "start_time": "15:00",
+      "end_time": "16:00",
+      "description": "Review 16 / allocator trial",
+      "alarm_enabled": true,
+      "record_id": 46,
+      "page": 6,
+      "in_page_offset": 254,
+      "file_offset": 6398,
+      "row_length": 44,
+      "index_offset": 5358
+    },
+    {
+      "date": "2026-11-08",
+      "start_time": "09:45",
+      "end_time": "10:30",
+      "description": "Plan 17 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 45,
+      "page": 6,
+      "in_page_offset": 212,
+      "file_offset": 6356,
+      "row_length": 42,
+      "index_offset": 5364
+    },
+    {
+      "date": "2026-11-08",
+      "start_time": "14:15",
+      "end_time": "15:15",
+      "description": "Call 17 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 44,
+      "page": 6,
+      "in_page_offset": 170,
+      "file_offset": 6314,
+      "row_length": 42,
+      "index_offset": 5370
+    },
+    {
+      "date": "2026-11-09",
+      "start_time": "10:00",
+      "end_time": "10:45",
+      "description": "Plan 18 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 43,
+      "page": 6,
+      "in_page_offset": 128,
+      "file_offset": 6272,
+      "row_length": 42,
+      "index_offset": 5376
+    },
+    {
+      "date": "2026-11-09",
+      "start_time": "14:30",
+      "end_time": "15:30",
+      "description": "Read 18 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 42,
+      "page": 6,
+      "in_page_offset": 86,
+      "file_offset": 6230,
+      "row_length": 42,
+      "index_offset": 5382
+    },
+    {
+      "date": "2026-11-10",
+      "start_time": "09:30",
+      "end_time": "10:15",
+      "description": "Plan 19 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 41,
+      "page": 6,
+      "in_page_offset": 44,
+      "file_offset": 6188,
+      "row_length": 42,
+      "index_offset": 5388
+    },
+    {
+      "date": "2026-11-10",
+      "start_time": "14:45",
+      "end_time": "15:45",
+      "description": "Review 19 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 40,
+      "page": 6,
+      "in_page_offset": 0,
+      "file_offset": 6144,
+      "row_length": 44,
+      "index_offset": 5394
+    },
+    {
+      "date": "2026-11-11",
+      "start_time": "09:45",
+      "end_time": "10:30",
+      "description": "Plan 20 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 39,
+      "page": 4,
+      "in_page_offset": 951,
+      "file_offset": 5047,
+      "row_length": 42,
+      "index_offset": 5400
+    },
+    {
+      "date": "2026-11-11",
+      "start_time": "15:00",
+      "end_time": "16:00",
+      "description": "Call 20 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 38,
+      "page": 4,
+      "in_page_offset": 909,
+      "file_offset": 5005,
+      "row_length": 42,
+      "index_offset": 5406
+    },
+    {
+      "date": "2026-11-12",
+      "start_time": "10:00",
+      "end_time": "10:45",
+      "description": "Plan 21 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 37,
+      "page": 4,
+      "in_page_offset": 867,
+      "file_offset": 4963,
+      "row_length": 42,
+      "index_offset": 5412
+    },
+    {
+      "date": "2026-11-12",
+      "start_time": "14:15",
+      "end_time": "15:15",
+      "description": "Read 21 / allocator trial",
+      "alarm_enabled": true,
+      "record_id": 36,
+      "page": 4,
+      "in_page_offset": 825,
+      "file_offset": 4921,
+      "row_length": 42,
+      "index_offset": 5418
+    },
+    {
+      "date": "2026-11-13",
+      "start_time": "09:30",
+      "end_time": "10:15",
+      "description": "Plan 22 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 35,
+      "page": 4,
+      "in_page_offset": 783,
+      "file_offset": 4879,
+      "row_length": 42,
+      "index_offset": 5424
+    },
+    {
+      "date": "2026-11-13",
+      "start_time": "14:30",
+      "end_time": "15:30",
+      "description": "Review 22 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 34,
+      "page": 4,
+      "in_page_offset": 739,
+      "file_offset": 4835,
+      "row_length": 44,
+      "index_offset": 5430
+    },
+    {
+      "date": "2026-11-14",
+      "start_time": "09:45",
+      "end_time": "10:30",
+      "description": "Plan 23 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 33,
+      "page": 4,
+      "in_page_offset": 697,
+      "file_offset": 4793,
+      "row_length": 42,
+      "index_offset": 5436
+    },
+    {
+      "date": "2026-11-14",
+      "start_time": "14:45",
+      "end_time": "15:45",
+      "description": "Call 23 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 32,
+      "page": 4,
+      "in_page_offset": 655,
+      "file_offset": 4751,
+      "row_length": 42,
+      "index_offset": 5442
+    },
+    {
+      "date": "2026-11-15",
+      "start_time": "10:00",
+      "end_time": "10:45",
+      "description": "Plan 24 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 31,
+      "page": 4,
+      "in_page_offset": 613,
+      "file_offset": 4709,
+      "row_length": 42,
+      "index_offset": 5448
+    },
+    {
+      "date": "2026-11-15",
+      "start_time": "15:00",
+      "end_time": "16:00",
+      "description": "Read 24 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 30,
+      "page": 4,
+      "in_page_offset": 571,
+      "file_offset": 4667,
+      "row_length": 42,
+      "index_offset": 5454
+    },
+    {
+      "date": "2026-11-16",
+      "start_time": "09:30",
+      "end_time": "10:15",
+      "description": "Plan 25 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 29,
+      "page": 4,
+      "in_page_offset": 529,
+      "file_offset": 4625,
+      "row_length": 42,
+      "index_offset": 5460
+    },
+    {
+      "date": "2026-11-16",
+      "start_time": "14:15",
+      "end_time": "15:15",
+      "description": "Review 25 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 28,
+      "page": 4,
+      "in_page_offset": 485,
+      "file_offset": 4581,
+      "row_length": 44,
+      "index_offset": 5466
+    },
+    {
+      "date": "2026-11-17",
+      "start_time": "09:45",
+      "end_time": "10:30",
+      "description": "Plan 26 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 27,
+      "page": 4,
+      "in_page_offset": 443,
+      "file_offset": 4539,
+      "row_length": 42,
+      "index_offset": 5472
+    },
+    {
+      "date": "2026-11-17",
+      "start_time": "14:30",
+      "end_time": "15:30",
+      "description": "Call 26 / allocator trial",
+      "alarm_enabled": true,
+      "record_id": 26,
+      "page": 4,
+      "in_page_offset": 401,
+      "file_offset": 4497,
+      "row_length": 42,
+      "index_offset": 5478
+    },
+    {
+      "date": "2026-11-18",
+      "start_time": "10:00",
+      "end_time": "10:45",
+      "description": "Plan 27 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 25,
+      "page": 4,
+      "in_page_offset": 359,
+      "file_offset": 4455,
+      "row_length": 42,
+      "index_offset": 5484
+    },
+    {
+      "date": "2026-11-18",
+      "start_time": "14:45",
+      "end_time": "15:45",
+      "description": "Read 27 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 24,
+      "page": 4,
+      "in_page_offset": 317,
+      "file_offset": 4413,
+      "row_length": 42,
+      "index_offset": 5490
+    },
+    {
+      "date": "2026-11-19",
+      "start_time": "09:30",
+      "end_time": "10:15",
+      "description": "Plan 28 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 23,
+      "page": 4,
+      "in_page_offset": 275,
+      "file_offset": 4371,
+      "row_length": 42,
+      "index_offset": 5496
+    },
+    {
+      "date": "2026-11-19",
+      "start_time": "15:00",
+      "end_time": "16:00",
+      "description": "Review 28 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 22,
+      "page": 4,
+      "in_page_offset": 231,
+      "file_offset": 4327,
+      "row_length": 44,
+      "index_offset": 5502
+    },
+    {
+      "date": "2026-11-20",
+      "start_time": "09:45",
+      "end_time": "10:30",
+      "description": "Plan 29 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 21,
+      "page": 4,
+      "in_page_offset": 189,
+      "file_offset": 4285,
+      "row_length": 42,
+      "index_offset": 5508
+    },
+    {
+      "date": "2026-11-20",
+      "start_time": "14:15",
+      "end_time": "15:15",
+      "description": "Call 29 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 20,
+      "page": 4,
+      "in_page_offset": 147,
+      "file_offset": 4243,
+      "row_length": 42,
+      "index_offset": 5514
+    },
+    {
+      "date": "2026-11-21",
+      "start_time": "10:00",
+      "end_time": "10:45",
+      "description": "Plan 30 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 19,
+      "page": 4,
+      "in_page_offset": 105,
+      "file_offset": 4201,
+      "row_length": 42,
+      "index_offset": 5520
+    },
+    {
+      "date": "2026-11-21",
+      "start_time": "14:30",
+      "end_time": "15:30",
+      "description": "Read 30 / allocator trial",
+      "alarm_enabled": false,
+      "record_id": 18,
+      "page": 4,
+      "in_page_offset": 63,
+      "file_offset": 4159,
+      "row_length": 42,
+      "index_offset": 5526
+    }
+  ],
+  "distinct_dates": 30,
+  "data_chain": [
+    4,
+    6,
+    7
+  ],
+  "original_rows_preserved": true,
+  "unknown_source_bytes_preserved": true,
+  "native_opened": false,
+  "native_saved": false,
+  "additions": [
+    {
+      "date": "2026-11-21",
+      "start_minutes": 870,
+      "end_minutes": 930,
+      "description": "Read 30 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-21",
+      "start_minutes": 600,
+      "end_minutes": 645,
+      "description": "Plan 30 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-20",
+      "start_minutes": 855,
+      "end_minutes": 915,
+      "description": "Call 29 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-20",
+      "start_minutes": 585,
+      "end_minutes": 630,
+      "description": "Plan 29 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-19",
+      "start_minutes": 900,
+      "end_minutes": 960,
+      "description": "Review 28 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-19",
+      "start_minutes": 570,
+      "end_minutes": 615,
+      "description": "Plan 28 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-18",
+      "start_minutes": 885,
+      "end_minutes": 945,
+      "description": "Read 27 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-18",
+      "start_minutes": 600,
+      "end_minutes": 645,
+      "description": "Plan 27 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-17",
+      "start_minutes": 870,
+      "end_minutes": 930,
+      "description": "Call 26 / allocator trial",
+      "alarm_enabled": true
+    },
+    {
+      "date": "2026-11-17",
+      "start_minutes": 585,
+      "end_minutes": 630,
+      "description": "Plan 26 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-16",
+      "start_minutes": 855,
+      "end_minutes": 915,
+      "description": "Review 25 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-16",
+      "start_minutes": 570,
+      "end_minutes": 615,
+      "description": "Plan 25 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-15",
+      "start_minutes": 900,
+      "end_minutes": 960,
+      "description": "Read 24 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-15",
+      "start_minutes": 600,
+      "end_minutes": 645,
+      "description": "Plan 24 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-14",
+      "start_minutes": 885,
+      "end_minutes": 945,
+      "description": "Call 23 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-14",
+      "start_minutes": 585,
+      "end_minutes": 630,
+      "description": "Plan 23 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-13",
+      "start_minutes": 870,
+      "end_minutes": 930,
+      "description": "Review 22 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-13",
+      "start_minutes": 570,
+      "end_minutes": 615,
+      "description": "Plan 22 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-12",
+      "start_minutes": 855,
+      "end_minutes": 915,
+      "description": "Read 21 / allocator trial",
+      "alarm_enabled": true
+    },
+    {
+      "date": "2026-11-12",
+      "start_minutes": 600,
+      "end_minutes": 645,
+      "description": "Plan 21 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-11",
+      "start_minutes": 900,
+      "end_minutes": 960,
+      "description": "Call 20 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-11",
+      "start_minutes": 585,
+      "end_minutes": 630,
+      "description": "Plan 20 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-10",
+      "start_minutes": 885,
+      "end_minutes": 945,
+      "description": "Review 19 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-10",
+      "start_minutes": 570,
+      "end_minutes": 615,
+      "description": "Plan 19 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-09",
+      "start_minutes": 870,
+      "end_minutes": 930,
+      "description": "Read 18 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-09",
+      "start_minutes": 600,
+      "end_minutes": 645,
+      "description": "Plan 18 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-08",
+      "start_minutes": 855,
+      "end_minutes": 915,
+      "description": "Call 17 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-08",
+      "start_minutes": 585,
+      "end_minutes": 630,
+      "description": "Plan 17 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-07",
+      "start_minutes": 900,
+      "end_minutes": 960,
+      "description": "Review 16 / allocator trial",
+      "alarm_enabled": true
+    },
+    {
+      "date": "2026-11-07",
+      "start_minutes": 570,
+      "end_minutes": 615,
+      "description": "Plan 16 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-06",
+      "start_minutes": 885,
+      "end_minutes": 945,
+      "description": "Read 15 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-06",
+      "start_minutes": 600,
+      "end_minutes": 645,
+      "description": "Plan 15 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-05",
+      "start_minutes": 870,
+      "end_minutes": 930,
+      "description": "Call 14 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-05",
+      "start_minutes": 585,
+      "end_minutes": 630,
+      "description": "Plan 14 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-04",
+      "start_minutes": 855,
+      "end_minutes": 915,
+      "description": "Review 13 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-04",
+      "start_minutes": 570,
+      "end_minutes": 615,
+      "description": "Plan 13 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-03",
+      "start_minutes": 900,
+      "end_minutes": 960,
+      "description": "Read 12 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-03",
+      "start_minutes": 600,
+      "end_minutes": 645,
+      "description": "Plan 12 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-02",
+      "start_minutes": 885,
+      "end_minutes": 945,
+      "description": "Call 11 / allocator trial",
+      "alarm_enabled": true
+    },
+    {
+      "date": "2026-11-02",
+      "start_minutes": 585,
+      "end_minutes": 630,
+      "description": "Plan 11 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-01",
+      "start_minutes": 870,
+      "end_minutes": 930,
+      "description": "Review 10 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-11-01",
+      "start_minutes": 570,
+      "end_minutes": 615,
+      "description": "Plan 10 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-31",
+      "start_minutes": 855,
+      "end_minutes": 915,
+      "description": "Read 09 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-31",
+      "start_minutes": 600,
+      "end_minutes": 645,
+      "description": "Plan 09 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-30",
+      "start_minutes": 900,
+      "end_minutes": 960,
+      "description": "Call 08 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-30",
+      "start_minutes": 585,
+      "end_minutes": 630,
+      "description": "Plan 08 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-29",
+      "start_minutes": 885,
+      "end_minutes": 945,
+      "description": "Review 07 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-29",
+      "start_minutes": 570,
+      "end_minutes": 615,
+      "description": "Plan 07 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-28",
+      "start_minutes": 870,
+      "end_minutes": 930,
+      "description": "Read 06 / allocator trial",
+      "alarm_enabled": true
+    },
+    {
+      "date": "2026-10-28",
+      "start_minutes": 600,
+      "end_minutes": 645,
+      "description": "Plan 06 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-27",
+      "start_minutes": 855,
+      "end_minutes": 915,
+      "description": "Call 05 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-27",
+      "start_minutes": 585,
+      "end_minutes": 630,
+      "description": "Plan 05 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-26",
+      "start_minutes": 900,
+      "end_minutes": 960,
+      "description": "Review 04 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-26",
+      "start_minutes": 570,
+      "end_minutes": 615,
+      "description": "Plan 04 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-25",
+      "start_minutes": 885,
+      "end_minutes": 945,
+      "description": "Read 03 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-25",
+      "start_minutes": 600,
+      "end_minutes": 645,
+      "description": "Plan 03 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-24",
+      "start_minutes": 870,
+      "end_minutes": 930,
+      "description": "Call 02 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-24",
+      "start_minutes": 585,
+      "end_minutes": 630,
+      "description": "Plan 02 / allocator trial",
+      "alarm_enabled": false
+    },
+    {
+      "date": "2026-10-23",
+      "start_minutes": 855,
+      "end_minutes": 915,
+      "description": "Review 01 / allocator trial",
+      "alarm_enabled": true
+    },
+    {
+      "date": "2026-10-23",
+      "start_minutes": 570,
+      "end_minutes": 615,
+      "description": "Plan 01 / allocator trial",
+      "alarm_enabled": false
+    }
+  ],
+  "time_notation": "24-hour local wall time; no timezone encoded",
+  "control_record": {
+    "record_id": 16,
+    "page": 4,
+    "in_page_offset": 0,
+    "index_offset": 5160
+  },
+  "page_usage": [
+    {
+      "page": 4,
+      "indexed_rows": 24,
+      "first_id": 16,
+      "last_id": 39,
+      "marker_file_offset": 5089,
+      "zero_tail_bytes": 30
+    },
+    {
+      "page": 6,
+      "indexed_rows": 24,
+      "first_id": 40,
+      "last_id": 63,
+      "marker_file_offset": 7160,
+      "zero_tail_bytes": 7
+    },
+    {
+      "page": 7,
+      "indexed_rows": 14,
+      "first_id": 64,
+      "last_id": 77,
+      "marker_file_offset": 7762,
+      "zero_tail_bytes": 429
+    }
+  ],
+  "appointment_count": 61
+}
