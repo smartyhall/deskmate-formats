@@ -27,6 +27,8 @@ supervisor = ["jsonschema>=4.23,<5"]
 [project.scripts]
 deskmate-calendar = "deskmate_formats.calendar.cli:main"
 deskmate-calendar-append = "deskmate_formats.calendar.writer:main"
+deskmate-addressbook = "deskmate_formats.addressbook.cli:main"
+deskmate-addressbook-create = "deskmate_formats.addressbook.cli:create_main"
 deskmate-86box-mcp = "deskmate_formats.automation.mcp_server:main"
 deskmate-86box-observer = "deskmate_formats.observer.demo:main"
 deskmate-observer-event = "deskmate_formats.observer.event_cli:main"

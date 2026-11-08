@@ -1,8 +1,9 @@
-include README.md AGENTS.md CONTRIBUTING.md LICENSE-DECISION.md LICENSING.md LICENSE
+include README.md PROJECT_STATUS.md AGENTS.md CONTRIBUTING.md LICENSE-DECISION.md LICENSING.md LICENSE
 include *.license
 include .gitattributes .gitignore
 recursive-include LICENSES *.txt
 recursive-include docs *.md *.json *.license
+recursive-include examples *.json *.license
 recursive-include tests *.py *.md *.license
 recursive-include tests/fixtures/codex-exec-0.166.0 *.jsonl
 recursive-include tests/fixtures/application-generated *.json
