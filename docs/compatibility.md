@@ -85,6 +85,20 @@ reconstruction or network synchronization. The operator-reported Calendar
 display inspection does not establish native save persistence or Address Book
 multicontact compatibility.
 
+## Separate experimental new-file Calendar builder
+
+The explicitly opt-in `calendar.experimental_new.build_new(..., experimental=True)`
+starts only from exact hash-pinned E02, can append fresh data pages 6 and 7, and
+rejects a ninth page, existing multipage inputs, ties, unsupported fields and more
+than 100 additions. It is separate from the six-page `observed`/`sdk` append APIs,
+which are unchanged. Static DMDB 3.05 paths decode MSB-first packed-12 page chains
+and reproduce both published E15/E19 header transitions. Reuse, deletion, packing,
+index growth and general allocator support are not enabled.
+
+A deterministic 61-appointment / 30-date / eight-page candidate passes a separate
+raw-byte checker. It is **tool-generated; native open/save acceptance pending**.
+See [source locations, commands, exact hash and limits](research/dmdb-page-allocator.md).
+
 ## Manual UI time-normalization evidence (not a native codec claim)
 
 In a separately observed DOSBox-X Add Event experiment, full-minute input

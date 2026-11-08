@@ -1,0 +1,207 @@
+{
+  "recorded_date": "2026-11-07",
+  "timezone": "America/New_York",
+  "base": "8c1e7aa6f6aac04c3167d141f981e10f1d3b860e",
+  "branch": "codex/dmdb-page-allocator",
+  "draft_pr": "https://github.com/smartyhall/deskmate-formats/pull/75",
+  "implementation_commit": "0cd6ee8a837ce84c8af2518c9dd660a2f95ad518",
+  "source_investigation_commit": "ccf3aa2a2e3ce4cfac189cba4b1827ce2a648886",
+  "evidence_class": "pinned executable/static findings; published historical deltas; independent offline checks; new tool-generated candidate",
+  "machine": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.13.17",
+    "decoder": "Capstone 5.0.7, x86 16-bit; existing private SDK crosswalk venv"
+  },
+  "inputs": [
+    {
+      "path": "sdk-3.03/Development-Disk-1/DMDB.H",
+      "size": 14093,
+      "sha256": "47c2ff4638d8ab1bcc12aeab3e2dd5b51ccfeef9bbddb1a014912c831df4d5aa"
+    },
+    {
+      "path": "sdk-3.03/Development-Disk-1/DMDB.INC",
+      "size": 13275,
+      "sha256": "2ea33422d68ab2402ca2b83a1c1f5d7fee80db9c36000a8609d42712ce299a29"
+    },
+    {
+      "path": "deskmate/dm305dk4/DMDB.R89",
+      "size": 1109,
+      "sha256": "799444bb8c04632d261f61498ba269f9352e5528718f2e0a89512bf6ef7b808f"
+    },
+    {
+      "path": "deskmate/dm305dk4/DMDBUPD.RES",
+      "size": 13740,
+      "sha256": "9e77a2081ebb3a9549903f5d337580c65d6e0a3f603185064d4c82e16327cf4f"
+    },
+    {
+      "path": "deskmate/dm305dk4/DMDBRD.RES",
+      "size": 21955,
+      "sha256": "c4bc9f5699bfaf1ac5adb57a011b04dcec00a2ae75edb2baf603c8001fa99cee"
+    },
+    {
+      "path": "deskmate/dm305dk5/DMDBBLD.RES",
+      "size": 11858,
+      "sha256": "91ada27c026de823aef6a9aae541bafcb6a312552cc5bd612ec8b0e90e53aeed"
+    }
+  ],
+  "allocation": {
+    "map_file_offset": 32,
+    "map_bytes": 992,
+    "entry_bits": 12,
+    "bit_order": "MSB first",
+    "end_of_chain": 4088,
+    "first_outside_extent_marker": 4095,
+    "zero_available_slot": 0,
+    "update_resource_file_offsets": {
+      "add_selector_dispatch": "0x0235/0x025E",
+      "append_row": "0x1277",
+      "append_chain": "0x18E5",
+      "packed_entry_writer": "0x1978",
+      "select_page": "0x1A96",
+      "map_flush": "0x2F8B",
+      "page_write": "0x3001"
+    },
+    "reader_resource_file_offsets": {
+      "packed_entry_decoder": "0x4058",
+      "chain_tail": "0x40AA",
+      "map_read": "0x360C",
+      "callbacks": "0x482B"
+    },
+    "published_transitions_reproduced": [
+      "E15: map[4]=6; map[6]=0xFF8; map[7]=0xFFF",
+      "E19: map[6]=7; map[7]=0xFF8; map[8]=0xFFF"
+    ],
+    "original_e15_e19_files_measured": false,
+    "runtime_loader_binding_traced": false,
+    "reuse_policy_qualified": false
+  },
+  "writer": {
+    "implemented": true,
+    "explicit_opt_in": "experimental=True / --experimental-new-pages",
+    "source": "exact hash-pinned E02 only",
+    "max_pages": 8,
+    "max_additions": 100,
+    "existing_six_page_writer_unchanged": true,
+    "accepts_native_multipage_source": false,
+    "reuses_storage": false,
+    "index_growth": false,
+    "headroom_beyond_marker": 2
+  },
+  "candidate": {
+    "evidence_class": "tool-generated; independently checked offline; native acceptance pending",
+    "source_sha256": "0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9",
+    "output_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+    "bytes": 8192,
+    "pages": 8,
+    "appointments": 61,
+    "distinct_dates": 30,
+    "data_chain": [
+      4,
+      6,
+      7
+    ],
+    "original_rows_preserved": true,
+    "unknown_source_bytes_preserved": true,
+    "native_opened": false,
+    "native_saved": false,
+    "page_usage": [
+      {
+        "page": 4,
+        "indexed_rows": 24,
+        "first_id": 16,
+        "last_id": 39,
+        "marker_file_offset": 5089,
+        "zero_tail_bytes": 30
+      },
+      {
+        "page": 6,
+        "indexed_rows": 24,
+        "first_id": 40,
+        "last_id": 63,
+        "marker_file_offset": 7160,
+        "zero_tail_bytes": 7
+      },
+      {
+        "page": 7,
+        "indexed_rows": 14,
+        "first_id": 64,
+        "last_id": 77,
+        "marker_file_offset": 7762,
+        "zero_tail_bytes": 429
+      }
+    ],
+    "index_entries": 62,
+    "index_slots_remaining": 101,
+    "first_user_id": 17,
+    "last_user_id": 77,
+    "next_id": 78
+  },
+  "addressbook": {
+    "new_native_second_contact_specimen": false,
+    "multicontact_writer_enabled": false,
+    "existing_A01_trial_unchanged": true,
+    "issues_70_71_read_with_comments": true
+  },
+  "preservation": {
+    "database-campaign-20261107": 106,
+    "database-phase-ii-20261107": 46,
+    "pinned_inputs_content_and_mtime_unchanged": 6,
+    "fixtures_reverified": 4,
+    "existing_six_page_writer_changed": false
+  },
+  "validation": {
+    "portable_initial": {
+      "passed": 329,
+      "elapsed_seconds": 126.918
+    },
+    "final_focused": {
+      "passed": 9,
+      "elapsed_seconds": 1.491,
+      "command": "python -m unittest discover -s tests/portable -p test_calendar_multipage.py -v"
+    },
+    "private_source_anchors": {
+      "passed": 4,
+      "elapsed_seconds": 0.003,
+      "command": "python -m unittest discover -s tests/private -p test_dmdb_allocator_source.py -v",
+      "explicit_pinned_root": true
+    },
+    "portable_final": {
+      "command": "python -m unittest discover -s tests/portable -v",
+      "passed": 330,
+      "elapsed_seconds": 138.855
+    },
+    "ruff": "passed",
+    "reuse": "passed: 290/290 authored files",
+    "wheel_sdist": "passed",
+    "wheel_only_generation": "exact candidate hash reproduced",
+    "repository_audit": "passed: 587 source files, four committed database fixtures and four synthetic JSONL fixtures",
+    "package_content_audit": "passed: no excluded binary/private content in wheel or sdist"
+  },
+  "native_requested_emulated_ms": 0,
+  "native_guest_clock_delta_ms": null,
+  "emulator_launched_or_connected": false,
+  "durable_private_archive": "dmdb-allocator-20261107 under documented lab private-evidence directory",
+  "source_artifacts": [
+    {
+      "path": "src/deskmate_formats/calendar/experimental_new.py",
+      "sha256": "30abc2e6fc3da7a2f0494d89b6b3d886222b7ce3ef58fecb0f3d0d846b0692d1"
+    },
+    {
+      "path": "tools/experimental/check_calendar_multipage.py",
+      "sha256": "6be888915e7de8385319089fbdfe41add83de9c6cee32dcfb184ae63ac5276ab"
+    },
+    {
+      "path": "tools/experimental/generate_calendar_month.py",
+      "sha256": "f419850e4ecc2892e01ee990d783be053f4cc71c06ec1a782a4358dae117bb86"
+    },
+    {
+      "path": "tests/portable/test_calendar_multipage.py",
+      "sha256": "11c4f5b5f30ef96da3cf4538e7ec1dd475c9e14093257d6d1b8f710b3b0a9978"
+    },
+    {
+      "path": "tests/private/test_dmdb_allocator_source.py",
+      "sha256": "85c8bd84b3af84d3bef1d6ca8ae6dec0cd2091cc2a7bc266456e6ca47d477383"
+    }
+  ],
+  "next_experiment": "Separately authorized pinned-month native traversal across data pages 4/6/7 and all 30 dates, then one predeclared edit/save with full before/after bytes and installation manifests"
+}

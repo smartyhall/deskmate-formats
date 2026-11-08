@@ -13,6 +13,19 @@ The immediate objective is **useful Calendar and Address Book files**, validated
 independently in DeskMate. Tests in which our reader accepts our writer's output
 do not by themselves establish native compatibility.
 
+**Allocator continuation on `codex/dmdb-page-allocator`
+([draft #75](https://github.com/smartyhall/deskmate-formats/pull/75), unmerged):** fetched
+`origin/main` verified at `8c1e7aa6f6aac04c3167d141f981e10f1d3b860e`.
+[Static DMDB investigation](docs/research/dmdb-page-allocator.md) decoded packed
+12-bit page chains and reproduced both published E15/E19 header transitions;
+original E15/E19 bytes remain unavailable. A separate E02-only, opt-in new-file
+builder now produces an independently checked **61-appointment / 30-date /
+eight-page candidate**. Existing six-page append profiles stay unchanged.
+This is tool-generated and **native open/save acceptance is pending**. No emulator
+or Address Book trial was run. See the successor report/receipt for exact source,
+candidate and validation identities; the released capability table below retains
+the merged Phase II checkpoint.
+
 ## Evidence vocabulary
 
 - **Implemented:** checked-in source; only the documented test scopes are claimed.
