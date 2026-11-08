@@ -9,9 +9,23 @@ from deskmate_formats.calendar.writer import Appointment, append_appointment
 from deskmate_formats.addressbook import Contact, parse_bytes as addressbook
 from database_synthetic import addressbook as adr
 from synthetic import build, assemble, INTERNAL, event
+from multicalendar_synthetic import two_calendars
 
 
 class InterchangeTests(unittest.TestCase):
+    def test_multicalendar_export_refuses_to_flatten_table_scoped_ids(self):
+        from pathlib import Path
+        fixtures = Path(__file__).parents[1] / 'fixtures/application-generated/calendar'
+        sources = [two_calendars()] + [(fixtures / name).read_bytes() for name in (
+            'native-second-empty-calendar-operator.cln', 'native-second-first-event-operator.cln')]
+        for source in sources:
+            db = calendar(source, profile='sdk')
+            for lossy in (False, True):
+                with self.subTest(sha256=db.sha256, lossy=lossy), self.assertRaises(api.InterchangeError) as caught:
+                    api.export_calendar(db, lossy=lossy)
+                self.assertEqual(caught.exception.code, 'unsupported_calendars')
+                self.assertEqual(caught.exception.path, '$.native.calendars')
+
     def test_calendar_semantic_round_trip_and_snapshot_identity(self):
         data = append_appointment(build('empty'), Appointment(date(2028, 2, 29), 795, 855, 'Leap', protected_raw=b'q'), profile='sdk')
         result = api.export_calendar(calendar(data, profile='sdk'))

@@ -52,7 +52,9 @@ class Case:
     def build(self):
         rows = [(16, INTERNAL)] + [(17 + i, item.row(17 + i))
                                     for i, item in enumerate(self.events)]
-        return assemble(rows, [16] + [17 + i for i in self.index_order])
+        # Preserve the historical corpus bytes, whose invented opaque header
+        # intentionally predates page-map validation in the SDK/common reader.
+        return assemble(rows, [16] + [17 + i for i in self.index_order], page_map=False)
 
 
 def specimen_cases(seed=DEFAULT_SEED, count=NORMAL_COUNT):

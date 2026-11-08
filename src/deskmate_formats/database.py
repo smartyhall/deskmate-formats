@@ -2,7 +2,8 @@
 
 One directory page and one index page per table; low-ID, page-local rows only.
 Unknown header bytes, descriptor tokens and field values are retained verbatim.
-Application codecs and next-ID policy deliberately do not live here.
+Packed-12 data chains and four index subdivisions are validated. Application
+codecs, general collation and next-ID policy deliberately do not live here.
 """
 from __future__ import annotations
 
@@ -14,6 +15,9 @@ import struct
 PAGE_SIZE = 1024
 INDEX_HEADER_SIZE = 40
 INDEX_HEADER = (b'\xff' * 9 + b'\x00') * 4
+INDEX_SENTINEL = INDEX_HEADER[:10]
+INDEX_GROUP_BYTES = 246
+INDEX_GROUP_CAPACITY = 41
 MAX_PAGES = 64
 SELF_SCHEMA = (('cname', 80, 'C'), ('owner', 80, 'C'), ('pos', 4, 'N'),
                ('len', 4, 'N'), ('type', 1, 'C'), ('uniq', 1, 'N'))
@@ -74,6 +78,13 @@ class Row:
 
 
 @dataclass(frozen=True)
+class IndexGroup:
+    routing_offset: int
+    routing_key: bytes
+    entries: tuple[IndexEntry, ...]
+
+
+@dataclass(frozen=True)
 class Table:
     name: str
     descriptor_offset: int
@@ -88,6 +99,8 @@ class Table:
     columns: tuple[Column, ...] = ()
     rows: tuple[Row, ...] = ()
     retired_rows: tuple[Row, ...] = ()
+    index_groups: tuple[IndexGroup, ...] = ()
+    data_pages: tuple[int, ...] = ()
 
     def token_offset(self, index):
         return self.descriptor_offset + sum(len(t) + 1 for t in self.tokens[:index])
@@ -136,30 +149,63 @@ def _directory(data):
     return result
 
 
+def page_link(data, page):
+    """Read an MSB-first packed-12 link from the bounded header page."""
+    at = 0x20 + page + page // 2
+    word = int.from_bytes(data[at:at + 2], 'big')
+    return word & 0xFFF if page % 2 else word >> 4
+
+
+def _chain(data, start):
+    pages, seen = [], set()
+    page = start
+    while True:
+        require(2 <= page < len(data) // PAGE_SIZE and page not in seen,
+                'invalid_chain', 'cyclic or out-of-file page chain', 0x20 + page + page // 2)
+        pages.append(page)
+        seen.add(page)
+        link = page_link(data, page)
+        if link == 0xFF8:
+            return tuple(pages)
+        require(2 <= link < len(data) // PAGE_SIZE, 'invalid_chain',
+                'unsupported/free/extent marker inside page chain', 0x20 + page + page // 2)
+        page = link
+
+
 def _index(data, table):
     base = table.index_page * PAGE_SIZE
     limit = base + PAGE_SIZE
-    require(data[base:base + INDEX_HEADER_SIZE] == INDEX_HEADER,
-            'unsupported_layout', 'unknown index header', base)
-    cursor, entries, ids, targets = base + INDEX_HEADER_SIZE, [], set(), set()
-    while cursor + 6 <= limit:
-        page, offset, ident = struct.unpack_from('<HHH', data, cursor)
-        if (page, offset, ident) == (0, 0, 0):
-            break
-        require(2 <= page < len(data) // PAGE_SIZE and offset < PAGE_SIZE,
-                'invalid_index', 'index target outside file/page', cursor)
-        require(0x10 <= ident < 0x80, 'unsupported_layout', 'long/unknown record ID framing', cursor)
-        entry = IndexEntry(cursor, page, offset, ident)
-        require(ident not in ids and entry.address not in targets,
-                'invalid_index', 'duplicate record ID or target', cursor)
-        entries.append(entry)
-        ids.add(ident)
-        targets.add(entry.address)
-        cursor += 6
-    require(cursor + 6 <= limit and not any(data[cursor:limit]),
-            'unsupported_layout', 'missing zero sentinel or index holes/trailing data', cursor)
+    entries, groups, ids, targets = [], [], set(), set()
+    empty_seen = False
+    for group in range(4):
+        cursor = base + INDEX_HEADER_SIZE + INDEX_GROUP_BYTES * group
+        end = cursor + INDEX_GROUP_BYTES
+        live = []
+        while cursor < end:
+            page, offset, ident = struct.unpack_from('<HHH', data, cursor)
+            if (page, offset, ident) == (0, 0, 0):
+                require(not any(data[cursor:end]), 'invalid_index',
+                        'index holes or nonzero subdivision tail', cursor)
+                break
+            require(not empty_seen and page in table.data_pages and offset < PAGE_SIZE,
+                    'invalid_index', 'index target outside owning chain or nonempty group after gap', cursor)
+            require(0x10 <= ident < 0x80, 'unsupported_layout', 'long/unknown record ID framing', cursor)
+            entry = IndexEntry(cursor, page, offset, ident)
+            require(ident not in ids and entry.address not in targets,
+                    'invalid_index', 'duplicate record ID or target', cursor)
+            live.append(entry)
+            ids.add(ident)
+            targets.add(entry.address)
+            cursor += 6
+        empty_seen |= not live
+        routing = base + 10 * group
+        key = data[routing:routing + 10]
+        require(live or key == INDEX_SENTINEL, 'invalid_index', 'finite route for empty group', routing)
+        groups.append(IndexGroup(routing, key, tuple(live)))
+        entries.extend(live)
+    require(end == limit, 'unsupported_layout', 'index subdivision size mismatch', base)
     require(len(entries) == table.record_count, 'invalid_index', 'count disagrees with index', base)
-    return tuple(entries)
+    return tuple(entries), tuple(groups)
 
 
 def _row(data, start, fields, *, index_offset=None, retired=False):
@@ -178,9 +224,9 @@ def _row(data, start, fields, *, index_offset=None, retired=False):
 
 def _rows(data, table, entries, reserved, page_owners, allow_retired):
     targets = {e.address: e for e in entries}
-    pages = {table.data_page} | {e.page for e in entries}
+    pages = table.data_pages
     live, retired = {}, []
-    for page in sorted(pages):
+    for page in pages:
         require(page not in reserved and page not in page_owners,
                 'invalid_index', 'data page aliases metadata/index/another table', page * PAGE_SIZE)
         page_owners.add(page)
@@ -203,10 +249,44 @@ def _rows(data, table, entries, reserved, page_owners, allow_retired):
     return tuple(live[e.address] for e in entries), tuple(retired)
 
 
+def index_prefix(fields, ordinals):
+    """UPD 11C8: at most five fields, ten bytes including final separator."""
+    key = bytearray()
+    for ordinal in ordinals[:5]:
+        room = 9 - len(key)
+        if room < 0:
+            break
+        key.extend(fields[ordinal - 1][:room])
+        key.append(1)
+    key.extend(bytes(10 - len(key)))
+    return bytes(key)
+
+
+def _routing(table):
+    """Finite keys must be the native ten-byte prefix of a group's last row.
+
+    Sentinel groups can remain populated: the native routing path falls back
+    to full-row comparison. No inferred balancing or DOS K collation is used.
+    """
+    finite = [g for g in table.index_groups if g.routing_key != INDEX_SENTINEL]
+    if not finite:
+        return
+    ordinals = tuple(decimal(t, table.descriptor_offset) for t in table.tokens[8:])
+    require(1 <= len(ordinals) <= 5 and len(set(ordinals)) == len(ordinals)
+            and all(1 <= n <= table.column_count for n in ordinals),
+            'unsupported_layout', 'finite routes need bounded sort ordinals', table.descriptor_offset)
+    by_address = {r.offset: r for r in table.rows}
+    for group in finite:
+        fields = by_address[group.entries[-1].address].fields
+        key = index_prefix(fields, ordinals)
+        require(group.routing_key == key, 'invalid_index',
+                'routing prefix disagrees with subdivision endpoint', group.routing_offset)
+
+
 def parse_bytes(source, *, allow_retired=False, max_pages=MAX_PAGES):
     """Read known framing, preserving opaque content; no universal ID/allocation policy.
 
-    Retired-row scanning covers only starting and live-index-targeted data pages.
+    Retired-row scanning follows each validated packed-12 data-page chain.
     Unreferenced pages stay opaque in ``Database.data``; they are not free space.
     """
     from dataclasses import replace
@@ -219,16 +299,24 @@ def parse_bytes(source, *, allow_retired=False, max_pages=MAX_PAGES):
             'unsupported_layout', 'partial page or file exceeds bounded profile')
     require(data[:4] in (b'\x03FIL', b'\x03\x00\x00\x00'), 'invalid_header', 'unknown database header', 0)
     tables = _directory(data)
+    require(page_link(data, 0) == page_link(data, 1) == 0xFF8
+            and page_link(data, len(data) // PAGE_SIZE) == 0xFFF,
+            'invalid_chain', 'unsupported header/directory chains or extent marker', 0x20)
     reserved = {0, 1}
     for table in tables:
         require(table.index_page not in reserved, 'invalid_index', 'shared index page')
+        require(_chain(data, table.index_page) == (table.index_page,),
+                'unsupported_layout', 'multiple index pages unsupported', table.index_page * PAGE_SIZE)
         reserved.add(table.index_page)
     page_owners = set()
     parsed = []
     for table in tables:
-        entries = _index(data, table)
+        table = replace(table, data_pages=_chain(data, table.data_page))
+        entries, groups = _index(data, table)
         rows, retired = _rows(data, table, entries, reserved, page_owners, allow_retired)
-        parsed.append(replace(table, entries=entries, rows=rows, retired_rows=retired))
+        table = replace(table, entries=entries, rows=rows, retired_rows=retired, index_groups=groups)
+        _routing(table)
+        parsed.append(table)
     db = Database(data, hashlib.sha256(data).hexdigest(), tuple(parsed))
     schema = db.table('DBCOLS')
     require(schema.column_count == 6 and not schema.retired_rows,

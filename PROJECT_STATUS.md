@@ -1,5 +1,16 @@
 # Project status — DeskMate formats
 
+**Unmerged branch checkpoint, 2026-11-08:** `codex/calendar-multicalendar`
+reads native A/B as two named calendars with 61 PERSONAL appointments and zero/one
+SECOND appointment, plus separate configurations. B was supplied at existing
+commit `59e601200641232bf67207c3b4ab7a2f0a9f36e0`. New exact-source experimental
+creation/first-append writers reproduce all A/B bytes; the actual generated
+binaries are included separately with explicit tool-generated provenance.
+[Campaign, commands and limits](docs/research/calendar-multicalendar-reader-writer.md).
+This branch result is offline checked and is not a released capability or an
+independently captured native acceptance trial. The older merged snapshot below
+retains its original date and scope.
+
 **Snapshot:** 2026-11-07 (America/New_York), after publication of the
 30-day Calendar in [PR #78](https://github.com/smartyhall/deskmate-formats/pull/78),
 merged as `0cba552411d96376cce5db3c6d4907cc8e9b4ace` on `main`.

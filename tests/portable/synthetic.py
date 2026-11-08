@@ -20,6 +20,17 @@ def event(ident,description,day=b'\x90lb',weekday=b'c',start=b'\xa5',end=b'\xa9'
 
 INTERNAL = row(16, [b'  \xff', b'', b'', b'', b'', b'0', b'ie'+b'a'*12+b'@PaSsWoRd@='])
 
+def allocation(data, chains=()):
+    """Independent bitstring model of the documented small-file page map."""
+    count = len(data) // 1024
+    links = [4088] * count + [4095]
+    for chain in chains:
+        for previous, following in zip(chain, chain[1:]):
+            links[previous] = following
+    bits = ''.join(f'{link:012b}' for link in links)
+    bits += '0' * (-len(bits) % 8)
+    data[32:32 + len(bits) // 8] = int(bits, 2).to_bytes(len(bits) // 8, 'big')
+
 def build(kind='one'):
     if kind not in ('empty','one','two','five'):raise ValueError(kind)
     rows=[(16,INTERNAL)]
@@ -32,10 +43,15 @@ def build(kind='one'):
     order=[16,19,21,20,17,18] if kind=='five' else [i for i,_ in rows]
     return assemble(rows, order)
 
-def assemble(rows, order):
+def assemble(rows, order, *, page_map=True):
     """Assemble physical rows and a separate index order."""
     d=bytearray(6144);d[:4]=b'\x03FIL'
-    marker=b'INDEPENDENT SYNTHETIC TEST';d[64:64+len(marker)]=marker
+    marker=b'INDEPENDENT SYNTHETIC TEST'
+    at = 384 if page_map else 64
+    d[at:at+len(marker)]=marker
+    if page_map:
+        allocation(d)
+        d[0x15] = 1
     metadata=[[b'T',b'DBCOLS',b'2',b'06',b'00013',b'000',b'00029',b'3',b'2',b'3'],
               [b'T',b'PERSONAL',b'4',b'07',f'{len(rows):05d}'.encode(),b'000',
                f'{max(i for i,_ in rows)+1:05d}'.encode(),b'5',b'1',b'2',b'4',b'5',b'7']]

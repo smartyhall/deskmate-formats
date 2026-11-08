@@ -125,6 +125,11 @@ def write_new(path,data, *, profile='observed'):
         capacity(data, profile=profile)
     else:
         parse_bytes(data, profile=profile)
+    _publish_new(path, data)
+
+
+def _publish_new(path, data):
+    """Publish already validated bytes without replacing any destination."""
     path=Path(path)
     fd,temp=tempfile.mkstemp(prefix='.calendar-',suffix='.tmp',dir=path.parent)
     try:

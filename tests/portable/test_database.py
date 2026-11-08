@@ -5,7 +5,7 @@ import unittest
 
 from deskmate_formats.database import DatabaseError, parse_bytes
 from database_synthetic import addressbook
-from synthetic import build
+from synthetic import allocation, build
 
 
 class DatabaseTests(unittest.TestCase):
@@ -29,10 +29,7 @@ class DatabaseTests(unittest.TestCase):
                 db = parse_bytes((root / name).read_bytes())
                 self.assertEqual(len(db.table('PERSONAL').rows), 2)
 
-    def test_native_second_calendar_fixture_is_pinned_and_parser_limit_explicit(self):
-        # The application rebalances PERSONAL's index-page routing header.
-        # The strict common reader has not been extended to that layout yet;
-        # do not silently drop this specimen from testing.
+    def test_native_second_calendar_fixture_is_pinned_and_parses(self):
         import hashlib
         root = Path(__file__).parents[1] / 'fixtures/application-generated/calendar'
         native = (root / 'native-second-empty-calendar-operator.cln').read_bytes()
@@ -45,10 +42,13 @@ class DatabaseTests(unittest.TestCase):
         for page in (4, 6, 7):
             self.assertEqual(native[page*1024:(page+1)*1024],
                              source[page*1024:(page+1)*1024])
-        with self.assertRaises(DatabaseError) as error:
-            parse_bytes(native)
-        self.assertEqual(error.exception.code, 'unsupported_layout')
-        self.assertEqual(error.exception.offset, 0x1400)
+        db = parse_bytes(native)
+        self.assertEqual([t.name for t in db.tables], ['DBCOLS', 'PERSONAL', 'SECOND'])
+        self.assertEqual([len(t.rows) for t in db.tables], [20, 62, 1])
+        self.assertEqual([len(g.entries) for g in db.table('PERSONAL').index_groups], [20, 21, 21, 0])
+        self.assertEqual(db.table('PERSONAL').data_pages, (4, 6, 7))
+        self.assertEqual(db.table('SECOND').data_pages, (8,))
+        self.assertEqual(db.data, native)
 
     def test_tool_generated_calendar_candidate(self):
         root = Path(__file__).parents[1] / 'fixtures/application-generated/calendar'
@@ -65,6 +65,7 @@ class DatabaseTests(unittest.TestCase):
         first_end = 4096 + len(parse_bytes(data).table('PERSONAL').rows[0].raw)
         row = parse_bytes(data).table('PERSONAL').rows[-1]
         data.extend(bytes(1024))
+        allocation(data, ((4, 6),))
         data[6144:6144 + len(row.raw)] = row.raw
         data[6144 + len(row.raw)] = 3
         data[row.offset:5120] = b'\x03' + bytes(5120 - row.offset - 1)

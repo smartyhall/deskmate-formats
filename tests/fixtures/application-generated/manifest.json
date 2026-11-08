@@ -108,6 +108,59 @@
         "page": 8,
         "in_page_offset": 39
       }
+    },
+    {
+      "path": "calendar/second-empty-calendar-tool-generated.cln",
+      "size": 10240,
+      "sha256": "338487558d9992452db15858de1ba9cf790c26abf990ba70b47bbc9dc8d011f5",
+      "application": "Tandy DeskMate Calendar",
+      "version": "03.05.00",
+      "experiment": "2026-11-08 exact-month-source, SECOND-only structural creation reproduction",
+      "origin": "Tool-generated, NOT application-produced or native-accepted. Created from the exact committed eight-page month source by serializing seven schema rows, a SECOND descriptor, source-derived separate configuration, data/index pages, packed-12 links and counters. Replays only the measured full-first-subdivision split (41 to 20/21, prior second group shifted intact). Independently raw-byte checked against every PERSONAL expected field and the exact native A oracle; complete output bytes equal native A. This does not prove the native trigger or a general balancing/name/selection algorithm.",
+      "source_path": "calendar/sdk-30-days-allocator-tool-generated.cln",
+      "source_size": 8192,
+      "source_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+      "generation_method": "$env:PYTHONPATH='src'\npython tools/experimental/generate_calendar_second_table.py tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.cln tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.expected.json tests/fixtures/application-generated/calendar/second-empty-calendar-tool-generated.cln --experimental-create-second",
+      "generator_api": "deskmate_formats.calendar.experimental_create.create_second(..., experimental=True)",
+      "independent_validator": "tools/experimental/check_calendar_multicalendar.py",
+      "expected_personal_appointments": "calendar/sdk-30-days-allocator-tool-generated.expected.json",
+      "expected_contents": "DBCOLS has 20 schema rows; PERSONAL has 61 unchanged appointments and one configuration; SECOND has zero appointments and one separate configuration at page 8/offset 0/ID 16; index page 9. PERSONAL logical index unchanged, physical groups 20/21/21/0.",
+      "native_byte_oracle": "calendar/native-second-empty-calendar-operator.cln",
+      "native_byte_oracle_equal": true,
+      "evidence_class": "tool-generated, independently checked offline; not application-produced or native-accepted",
+      "synthetic_data": true,
+      "native_opened": false,
+      "native_saved": false
+    },
+    {
+      "path": "calendar/second-first-event-tool-generated.cln",
+      "size": 10240,
+      "sha256": "b9c9a4cae3cffac1bc337f7b378ea25df74efd3b6771e117c6e0fc3f81b77084",
+      "application": "Tandy DeskMate Calendar",
+      "version": "03.05.00",
+      "experiment": "2026-11-08 exact-native-A-source first SECOND appointment append",
+      "origin": "Tool-generated, NOT application-produced or native-accepted. Genuine ordinary SDK row serialization, table-local locator insertion and descriptor counter updates from exact native A; no target-file copy or hardcoded patch table. Independently checked offline before publication. Complete output bytes equal independently supplied native B; exactly 38 byte positions differ from A. PERSONAL and its index, all existing configuration bytes and page allocation remain unchanged.",
+      "source_path": "calendar/native-second-empty-calendar-operator.cln",
+      "source_size": 10240,
+      "source_sha256": "338487558d9992452db15858de1ba9cf790c26abf990ba70b47bbc9dc8d011f5",
+      "generation_method": "$env:PYTHONPATH='src'\npython tools/experimental/generate_calendar_second.py tests/fixtures/application-generated/calendar/native-second-empty-calendar-operator.cln tests/fixtures/application-generated/calendar/second-first-event-tool-generated.cln --experimental-first-second",
+      "generator_api": "deskmate_formats.calendar.experimental_second.append_first_second(..., experimental=True)",
+      "independent_validator": "tools/experimental/check_calendar_multicalendar.py",
+      "expected_personal_appointments": "calendar/sdk-30-days-allocator-tool-generated.expected.json",
+      "expected_contents": "Three database tables, two named calendars, 61 unchanged PERSONAL appointments and two configuration records; one SECOND appointment, ID 17 at page 8/offset 39, locator at 0x242E, row count 2 and next ID 18.",
+      "expected_second_appointment": {
+        "date": "2026-10-24",
+        "start_minutes": 660,
+        "end_minutes": 720,
+        "description": "SECOND ONLY 001",
+        "alarm_enabled": false
+      },
+      "native_byte_oracle": "calendar/native-second-first-event-operator.cln",
+      "native_byte_oracle_equal": true,
+      "evidence_class": "tool-generated, independently checked offline; not application-produced or native-accepted",
+      "synthetic_data": true,
+      "native_opened": false,
+      "native_saved": false
     }
   ]
 }

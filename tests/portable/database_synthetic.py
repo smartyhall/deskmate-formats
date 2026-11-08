@@ -1,5 +1,6 @@
 """Independent database scaffolding; structural tests, never native fixtures."""
 import struct
+from synthetic import allocation
 
 SELF = [('cname', 80, 'C'), ('owner', 80, 'C'), ('pos', 4, 'N'),
         ('len', 4, 'N'), ('type', 1, 'C'), ('uniq', 1, 'N')]
@@ -19,7 +20,8 @@ def addressbook(fields=None, *, contact_rows=None):
     """Invented header/config; measured schema names, widths and table roles."""
     d = bytearray(10240)
     d[0] = 3
-    d[64:64 + 21] = b'SYNTHETIC ADR HEADER!'
+    d[384:384 + 21] = b'SYNTHETIC ADR HEADER!'
+    allocation(d)
     definitions = [('DBCOLS', SELF), ('DATA', CONTACT),
                    ('NAMES', [('Internal', 20, 'K'), ('Users', 20, 'K')]),
                    ('CONFIG', [('UserId', 10, 'K'), ('LastList', 20, 'K'), ('ConfigInfo', 200, 'K')])]

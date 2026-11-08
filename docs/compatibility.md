@@ -29,13 +29,13 @@ live DeskMate. Historical local results remain in [verification.md](verification
 
 E15 observed a seven-page application-produced file after one allocation. The
 default parser and both writer profiles reject it; the explicit `sdk` reader can
-read bounded additional data pages without decoding allocation metadata.
+read bounded additional data pages with validated packed-12 chain ownership.
 The accepted six-page near-capacity preflight remains supported. See
 [the E15 report](experiments/e15-page-boundary.md).
 
 E16 observed deletion without truncation: the seven-page file retains a 44-prefixed
 unindexed row and descriptor token001. The default profile rejects it. The shared
-reader recognizes observed retired-row framing on starting/live-targeted pages;
+reader recognizes observed retired-row framing on validated data-chain pages;
 unreferenced pages remain opaque. No reclamation is implemented. See
 [E16](experiments/e16-page-reclamation.md).
 
@@ -51,11 +51,26 @@ same keyword, or CLI `--profile sdk`. Existing calls retain their measured limit
 - Empty Duration and exact Protected `31`/`71` for writing ordinary events.
   Midnight, blank-time sentinels, overnight, reminders and annual events remain
   unsupported for generation. No timezone, recurrence or arbitrary text encoding.
-- Reader: 6–64 complete pages, one directory page/two known tables, one index
-  page per table, low IDs; additional live-index-targeted data pages and observed
-  retired-row framing. Full source bytes must be retained to preserve opaque pages.
+- Reader: 6–64 complete pages, one directory page, DBCOLS then PERSONAL and
+  additional named calendars with the known schema, one index page per table,
+  low IDs, validated packed-12 data chains, four index subdivisions with checked
+  finite endpoint prefixes, and observed retired-row framing. Each calendar has
+  its own configuration. IDs are scoped by calendar. Full bytes are retained in
+  `CalendarDatabase.data`; unknown metadata and unreferenced pages remain opaque.
 - Writer: six pages, no retired rows, original known schema and append policy;
   no allocation, editing, deletion or general index growth. Tied starts rejected.
+
+The [multicalendar campaign](research/calendar-multicalendar-reader-writer.md)
+reads both published native two-calendar specimens: 61 PERSONAL appointments,
+zero/one SECOND appointment, and two separate configurations. Separate opt-in
+APIs reproduce the exact native A/B bytes: `experimental_second.append_first_second`
+accepts only hash-pinned native A and one first SECOND event;
+`experimental_create.create_second` accepts only the exact month source, exact
+SECOND name and measured repartition profile. Neither enables a general
+allocator/balancer or establishes native reopen/selection acceptance. Both
+complete generated binaries are published with explicit tool-generated provenance.
+Version-1 interchange export explicitly rejects multiple calendars, because its
+schema has no calendar-ownership field; lossy mode cannot silently flatten them.
 
 [SDK/source findings](research/sdk-calendar-database.md) support the codec formulas;
 the [campaign report](research/database-campaign.md) records generated artifacts

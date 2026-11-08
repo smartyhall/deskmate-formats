@@ -20,7 +20,7 @@ remain archived outside Git.
 
 | Area | Status | What is available or being investigated |
 |---|---|---|
-| **Calendar 3.05** (`PERSONAL.CLN`) | **Experimental tools** | Measured default profile plus explicit SDK-derived ordinary codecs, bounded multipage reading and six-page append generation; 29-event/14-day sample validated offline |
+| **Calendar 3.05** (`PERSONAL.CLN`) | **Experimental tools** | Measured default plus SDK multipage/multicalendar reader; exact-source SECOND creation and first-event writers reproduce both native two-calendar byte oracles; general creation/allocation remains unsupported |
 | **Calendar storage research** | **Ongoing** | E15–E19 document page growth, retained deletion data, and append behavior; no general allocator or deleted-record recovery implementation |
 | **DeskMate screen-state research** | **Exploratory** | Partial Calendar schedule text recovered from read-only emulator RAM captures; not a general screen reader or automation interface |
 | **Address Book 3.05** (`PERSONAL.ADR`) | **Conservative codec** | Schema-aware reader and experimental empty-to-one writer; all four A01–A04 native hashes reproduced offline; multicontact insertion remains unsupported |
@@ -83,6 +83,15 @@ For ordinary SDK-derived Calendar values, pass `profile='sdk'` or CLI
 14-day sample with `tools/generate_calendar_sample.py SOURCE.cln NEW-OUTPUT.cln`.
 The source must be an appropriate six-page disposable template; the documented
 sample uses the committed synthetic E02 native fixture.
+
+The SDK reader exposes `db.calendars` and `db.calendar(name)`, with separate
+configuration records and calendar-scoped IDs. Both native two-calendar fixtures
+parse correctly. The separate, explicitly experimental SECOND creation and
+first-appointment APIs reproduce their exact A/B bytes from pinned sources.
+See the [multicalendar campaign](docs/research/calendar-multicalendar-reader-writer.md)
+for complete generated binary downloads, independent validation, commands and
+strict limits. General balancing, arbitrary names and native reopen/selection
+acceptance remain unresolved.
 
 Address Book API: `deskmate_formats.addressbook.Contact`, `parse_bytes/parse_file`,
 `create_contact` and `write_new`. CLIs: `deskmate-addressbook SOURCE.adr` and

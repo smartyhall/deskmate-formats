@@ -35,7 +35,7 @@ Observed changed-byte counts in original pages 0–7: `5,48,207,28,0,237,0,0`. T
 
 ## Current reader compatibility boundary
 
-The existing common `database.parse_bytes` reader rejects this genuine native
+At the original publication checkpoint, common `database.parse_bytes` rejected this genuine native
 specimen with `unsupported_layout` at file offset `0x1400`, because its
 originally measured `INDEX_HEADER` constant requires four empty `FF×9/00`
 routing-header slots. DeskMate rewrote the PERSONAL index routing boundaries
@@ -43,8 +43,11 @@ while preserving all 62 logical index triples. This is a **known reader
 limitation, not corruption in the native file**. The fixture is retained
 unchanged. A portable regression checks the exact specimen hash and raw
 PERSONAL page preservation while explicitly documenting the current parser
-rejection; future multi-table read support should replace that rejection test
-with successful native parsing and verified table isolation.
+rejection. The [reader/writer successor](calendar-multicalendar-reader-writer.md)
+now resolves this limitation with validated subdivisions, endpoint prefixes and
+packed-12 ownership. The regression now verifies successful native parsing,
+61 PERSONAL appointments, empty SECOND, separate configurations and all locators.
+The specimen bytes and original provenance are unchanged.
 
 ## What remains unknown
 

@@ -6,12 +6,15 @@ from .personal import CalendarParseError, parse_file
 
 
 def format_listing(database):
-    lines = [f'PERSONAL.CLN: {len(database.appointments)} user appointment(s), '
+    lines = [f'Calendar database: {len(database.appointments)} user appointment(s), '
              f'{len(database.internal_records)} internal/control record(s)',
              f'Source: {database.source or "<bytes>"}', f'SHA-256: {database.sha256}', '']
+    for calendar in database.calendars:
+        lines.append(f'Calendar {calendar.name}: {len(calendar.appointments)} appointment(s), '
+                     f'{len(calendar.internal_records)} internal/control record(s)')
     for record in database.appointments:
         value = lambda v: '<undecoded>' if v is None else v
-        lines.append(f'ID 0x{record.record_id:02X} | {value(record.date)} '
+        lines.append(f'{record.calendar_name} ID 0x{record.record_id:02X} | {value(record.date)} '
                      f'{value(record.day_of_week)} | {value(record.start_time)} - '
                      f'{value(record.end_time)} | {value(record.description)}')
         lines.append(f'  Record 0x{record.offset:04X}, {record.length} bytes; '
@@ -21,7 +24,7 @@ def format_listing(database):
         for warning in record.warnings:
             lines.append(f'  Note: {warning}')
     for record in database.internal_records:
-        lines.append(f'Internal/control ID 0x{record.record_id:02X}: '
+        lines.append(f'{record.calendar_name} internal/control ID 0x{record.record_id:02X}: '
                      f'0x{record.offset:04X}, {record.length} bytes; opaque, excluded from appointments.')
         lines.append(f'  Raw: {record.raw_hex}')
     lines.extend(f'Note: {warning}' for warning in database.warnings)
