@@ -1,7 +1,11 @@
 # Filer F00–F02: minimal native operator runbook
 
-**Prepared only. No Filer native experiment has run.** This runbook adds sharper
-questions without replacing the preserved F00 baseline or its original report.
+**The F00–F02 stages described here remain unperformed.** This runbook adds
+sharper questions without replacing the preserved F00 baseline or its original
+report. A **separate**, later native observation opened the shipped CARMAINT
+sample, inspected the disabled print commands and exited with a byte-identical
+disk; it did **not** perform F00–F02. See [issue #54](https://github.com/smartyhall/deskmate-formats/issues/54)
+and [project status](../../PROJECT_STATUS.md).
 
 ## Preparation and evidence
 
