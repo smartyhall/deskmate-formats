@@ -45,6 +45,26 @@
       "source_sha256": "0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9",
       "evidence_class": "tool-generated derived candidate, offline validated; operator-reported native display/read inspection; not native application output",
       "synthetic_data": true
+    },
+    {
+      "path": "calendar/sdk-30-days-allocator-tool-generated.cln",
+      "size": 8192,
+      "sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+      "application": "Tandy DeskMate Calendar",
+      "version": "03.05.00",
+      "experiment": "2026-11-07 30-day allocator candidate publication; native acceptance pending, issue #71",
+      "origin": "Tool-generated, NOT application-generated and NOT native-accepted. Exact archived dmdb-allocator-20261107 candidate independently regenerated from committed E02 using the merged PR #75 experimental builder, then checked by the separate raw-byte oracle. Adds 60 invented appointments in reverse chronological physical order to unchanged E02 LPHa124. No personal data; native structural facts are preserved without an ownership claim. No emulator or guest operations in the publication run.",
+      "source_path": "calendar/e02-86box-historical-match.cln",
+      "source_size": 6144,
+      "source_sha256": "0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9",
+      "generator_revision": "32a099e09504bfca1c668b253d325f4e6f54109e",
+      "generation_method": "PYTHONPATH=src; python tools/experimental/generate_calendar_month.py tests/fixtures/application-generated/calendar/e02-86box-historical-match.cln NEW-MONTH.cln --experimental-new-pages > NEW-MONTH.json",
+      "independent_check": "python tools/experimental/check_calendar_multipage.py tests/fixtures/application-generated/calendar/e02-86box-historical-match.cln tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.cln tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.expected.json",
+      "expected_appointments": "calendar/sdk-30-days-allocator-tool-generated.expected.json",
+      "evidence_class": "tool-generated synthetic candidate; byte-exact archive/regeneration match; independently checked offline; native open/display, edit/save persistence and alarm firing unverified",
+      "synthetic_data": true,
+      "native_opened": false,
+      "native_saved": false
     }
   ]
 }

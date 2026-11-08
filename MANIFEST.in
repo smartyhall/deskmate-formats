@@ -11,4 +11,5 @@ recursive-include tools *.py *.license
 recursive-include experiments *.asm *.license
 recursive-include .github *.yml *.yaml *.license
 global-exclude *.pyc
+global-exclude *.cln *.adr *.fil *.pcl
 global-exclude task-queue.sqlite3 task-queue.sqlite3-journal task-queue.sqlite3-wal task-queue.sqlite3-shm

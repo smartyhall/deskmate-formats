@@ -17,6 +17,8 @@ from deskmate_formats.calendar.writer import Appointment, append_appointment
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / 'tests/fixtures/application-generated/calendar/e02-86box-historical-match.cln'
 TOOLS = ROOT / 'tools/experimental'
+MONTH = SOURCE.with_name('sdk-30-days-allocator-tool-generated.cln')
+MONTH_SHA256 = 'd35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106'
 spec = importlib.util.spec_from_file_location('raw_month_checker', TOOLS / 'check_calendar_multipage.py')
 checker = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(checker)
@@ -36,6 +38,71 @@ class MultipageTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.source = SOURCE.read_bytes()
+
+    def test_committed_month_binary_and_expected_listing(self):
+        data = MONTH.read_bytes()
+        listing = json.loads(MONTH.with_suffix('.expected.json').read_text(encoding='utf-8'))
+        self.assertEqual(len(data), 8192)
+        self.assertEqual(hashlib.sha256(data).hexdigest(), MONTH_SHA256)
+        # This oracle scans physical rows independently of the production reader,
+        # verifies every added raw field, all map bytes and index/row relationships.
+        report = checker.check(self.source, data, listing['additions'])
+        self.assertEqual(report, {key: listing['appointment_count' if key == 'appointments' else key]
+                                  for key in report})
+        self.assertEqual((report['appointments'], report['distinct_dates'], report['pages']), (61, 30, 8))
+        self.assertEqual(report['data_chain'], [4, 6, 7])
+        db = parse_bytes(data, profile='sdk')
+        actual = [{'date': r.date, 'start_time': r.start_time, 'end_time': r.end_time,
+                   'description': r.description, 'alarm_enabled': r.alarm_enabled,
+                   'record_id': r.record_id, 'page': r.offset // 1024,
+                   'in_page_offset': r.offset % 1024, 'file_offset': r.offset,
+                   'row_length': r.length, 'index_offset': r.index_offset}
+                  for r in db.appointments]
+        self.assertEqual(actual, listing['appointments'])
+        self.assertEqual([r['date'] for r in actual], sorted(r['date'] for r in actual))
+        self.assertEqual({r['date'] for r in actual},
+                         {(date(2026, 10, 23) + timedelta(days=n)).isoformat() for n in range(30)})
+        self.assertEqual(actual[0]['description'], 'LPHa124')
+        self.assertEqual((actual[0]['start_time'], actual[0]['end_time'], actual[0]['alarm_enabled']),
+                         ('09:00', '10:00', False))
+        # Connect the static physical-order oracle inputs to the public logical listing.
+        by_id = {r['record_id']: r for r in actual}
+        for rid, event in enumerate(listing['additions'], 18):
+            row = by_id[rid]
+            self.assertEqual({key: row[key] for key in ('date', 'description', 'alarm_enabled')},
+                             {key: event[key] for key in ('date', 'description', 'alarm_enabled')})
+            for field in ('start', 'end'):
+                hour, minute = map(int, row[field + '_time'].split(':'))
+                self.assertEqual(hour * 60 + minute, event[field + '_minutes'])
+        control, = db.internal_records
+        self.assertEqual(listing['control_record'],
+                         {'record_id': control.record_id, 'page': control.offset // 1024,
+                          'in_page_offset': control.offset % 1024, 'index_offset': control.index_offset})
+        for usage in listing['page_usage']:
+            rows = [r for r in db.records if r.offset // 1024 == usage['page']]
+            self.assertEqual((len(rows), min(r.record_id for r in rows), max(r.record_id for r in rows)),
+                             (usage['indexed_rows'], usage['first_id'], usage['last_id']))
+            marker = max(r.offset + r.length for r in rows)
+            self.assertEqual(marker, usage['marker_file_offset'])
+            self.assertEqual(data[marker], 3)
+            tail = data[marker + 1:(usage['page'] + 1) * 1024]
+            self.assertEqual(tail, bytes(usage['zero_tail_bytes']))
+
+    def test_month_regeneration_matches_committed_bytes_and_preserves_prior_fixtures(self):
+        spec = importlib.util.spec_from_file_location('month_generator', TOOLS / 'generate_calendar_month.py')
+        module = importlib.util.module_from_spec(spec)
+        # The experiment CLI imports its adjacent standalone checker.
+        sys.path.insert(0, str(TOOLS))
+        try:
+            spec.loader.exec_module(module)
+            regenerated, _ = module.generate(self.source)
+        finally:
+            sys.path.pop(0)
+        self.assertEqual(regenerated, MONTH.read_bytes())
+        self.assertEqual(hashlib.sha256(self.source).hexdigest(),
+                         '0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9')
+        self.assertEqual(hashlib.sha256(SOURCE.with_name('sdk-14-days-tool-generated.cln').read_bytes()).hexdigest(),
+                         '85ad05d6bf58540e32349bbb559301d36aced164741b03b09b30d63f22d636ac')
 
     def test_published_header_transitions_are_exact_not_native_specimens(self):
         header = bytearray(self.source[:1024])
