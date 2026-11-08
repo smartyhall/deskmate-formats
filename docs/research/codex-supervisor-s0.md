@@ -4,6 +4,8 @@ This is the offline portion of [issue 58](https://github.com/smartyhall/deskmate
 based on DeskMate Formats commit `92e29550efd1453dcaa26936813e7100d4afaab0`.
 See the [supervisor design](codex-supervisor-design.md) and
 [Observatory event contract](observatory-v2-spec.md).
+The [first live canary runbook](codex-supervisor-s0-live-canary.md) separates
+operator-authorized execution from preparation and records current API gaps.
 
 ## Installed inputs
 
