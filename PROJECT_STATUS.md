@@ -1,8 +1,8 @@
 # Project status — DeskMate formats
 
-**Snapshot:** 2026-11-07 (America/New_York), after Phase II
-[PR #73](https://github.com/smartyhall/deskmate-formats/pull/73) merged at
-`fb6e1d9fdbfe682403e645575707a9d020d8e326` on `main`.
+**Snapshot:** 2026-11-07 (America/New_York), after allocator
+[PR #75](https://github.com/smartyhall/deskmate-formats/pull/75) merged at
+`eff3373f34c0bd27bf0b8877ea9c94902dd60115` on `main`.
 
 This is a concise, public **capability and handoff snapshot**, not a reconstruction
 of an older missing `PROJECT_STATUS.md`, a substitute for private experiment
@@ -14,17 +14,17 @@ independently in DeskMate. Tests in which our reader accepts our writer's output
 do not by themselves establish native compatibility.
 
 **Allocator continuation on `codex/dmdb-page-allocator`
-([draft #75](https://github.com/smartyhall/deskmate-formats/pull/75), unmerged):** fetched
-`origin/main` verified at `8c1e7aa6f6aac04c3167d141f981e10f1d3b860e`.
+([merged #75](https://github.com/smartyhall/deskmate-formats/pull/75)):** campaign base
+`8c1e7aa6f6aac04c3167d141f981e10f1d3b860e`.
 [Static DMDB investigation](docs/research/dmdb-page-allocator.md) decoded packed
 12-bit page chains and reproduced both published E15/E19 header transitions;
 original E15/E19 bytes remain unavailable. A separate E02-only, opt-in new-file
 builder now produces an independently checked **61-appointment / 30-date /
 eight-page candidate**. Existing six-page append profiles stay unchanged.
 This is tool-generated and **native open/save acceptance is pending**. No emulator
-or Address Book trial was run. See the successor report/receipt for exact source,
-candidate and validation identities; the released capability table below retains
-the merged Phase II checkpoint.
+or Address Book trial was run. The separate experimental builder is now merged,
+while the established six-page writer and native-accepted scope are unchanged.
+See the successor report/receipt for exact source, candidate and validation identities.
 
 ## Evidence vocabulary
 
@@ -46,8 +46,8 @@ the [README](README.md) for commands.
 
 | Area | Implemented or observed | Remaining limits |
 | --- | --- | --- |
-| Calendar `PERSONAL.CLN` | [Reader and writer](docs/compatibility.md) support the measured default profile and an opt-in SDK-derived date/time profile. The operator reports all **29 appointments / 14 dates**, including displayed alarm states, appear as expected in DeskMate 3.05. The committed six-page tool-generated file also has independent offline checks. [Report and limits](docs/research/calendar-14-days-operator-report.md). | Guest-loaded bytes were not independently rehashed; no native edit/rewrite specimen or alarm-firing result was supplied. Writer remains six-page, append-only and rejects tied starts, sentinel times and unsupported opaque values. A complete full-month file is blocked by allocation. |
-| Calendar page behavior | E15 allocated page 6; E16 retained an unindexed deleted row; E17/E18 appended rather than reused its slot; E19 allocated page 7 under pressure. [Reports](docs/experiments/e15-page-boundary.md), [E19](docs/experiments/e19-space-pressure.md). | Extended reader handles bounded indexed pages, but these observations do **not** yet specify a safe multipage allocator or deletion/reclamation writer. |
+| Calendar `PERSONAL.CLN` | [Reader and writer](docs/compatibility.md) retain the measured default and SDK profiles; the operator reports **29 appointments / 14 dates** displayed correctly with alarm states in DeskMate. A **separate opt-in E02-only experimental builder** generates an offline-checked **61-appointment / 30-date** candidate ([allocator report](docs/research/dmdb-page-allocator.md)). | Six-page append profiles are unchanged. The 30-day candidate has **not** been opened or saved in DeskMate; native page traversal, persistence and alarm firing remain unverified. Experimental growth is limited to eight pages and rejects unsupported operations. |
+| Calendar page behavior | Static 3.05 reader/writer routines identify **packed 12-bit page chains** and reproduce E15/E19 header deltas; a bounded new-file builder now links pages 4→6→7. E16–E18 remain evidence of retained deletions and append behavior. [Source report](docs/research/dmdb-page-allocator.md). | The original E15/E19 files were unavailable in this run; there is no native test of the new 8-page file, no general allocator, and no deletion/reclamation or index-growth writer. |
 | Address Book `PERSONAL.ADR` | [Reader](docs/research/addressbook-codec.md) preserves the ten-page/four-table layout, 16 raw contact fields and opaque tables. Empty-to-one writer reproduces **all four** A01–A04 application-produced whole-file SHA-256 hashes using a pinned source template. | 25 fictional contacts were generated in **25 separate one-contact files**, not one populated book. A second insertion, sort/collation rules, additional pages and broad optional field semantics are unverified. |
 | Shared DMDB database structures | [Common structural reader](src/deskmate_formats/database.py) and [cross-application evidence](docs/research/cross-application-db.md) cover page framing, schemas, records and indexes. [Call study](docs/research/database-call-review.md) finds code-backed DMDB binding/call thunks in Calendar, Address Book and Filer. | No universal allocation writer or proven runtime DMDB export binding. Shared call interfaces do not establish identical application policies. |
 | Interchange | [Version-1 semantic Python/JSON contract](docs/interoperability.md), explicit loss reports, source-snapshot IDs and example files are implemented. | No general native edit/delete, lossless reconstruction, stable external UID mapping or CalDAV/CardDAV network synchronization. |
@@ -110,9 +110,11 @@ milestone is recorded separately below; it does not establish save persistence.
 2. **Second Address Book contact:** a controlled, freshly cloned A01 scenario
    must establish index ordering/counters/physical append before a multi-contact
    writer is generalized. [Discriminating trial](docs/research/addressbook-codec.md).
-3. **Calendar page growth:** compare E15/E19 allocation-associated header bytes
-   against original fixtures and new targeted controls before adding a writer
-   allocator or claiming a complete 60–90-event month.
+3. **Calendar native multipage acceptance:** verify the hash-pinned 61-appointment,
+   30-date candidate on a separately authorized disposable DeskMate installation,
+   including records on pages 4, 6 and 7. Distinguish display/read traversal from
+   an independently approved one-edit/save persistence test. [Runbook](docs/research/dmdb-page-allocator.md).
+   A tool-generated full month exists; **native compatibility is not yet established**.
 4. **Future sync semantics:** preserve high-precision original CalDAV times when
    the native projected representation is unchanged; interpret confirmed changes
    at the supported quarter-hour granularity, with conflict and tied-start
