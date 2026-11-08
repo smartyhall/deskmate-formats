@@ -7,7 +7,7 @@
       "application": "Tandy DeskMate Calendar",
       "version": "03.05.00",
       "experiment": "E01 86Box RSX/DOS 5.00 reproduction",
-      "origin": "From the installed default database, opened Add Event from the October 23, 2026 month view, entered 09:00â€“10:00 AM and LPHa123 with the alarm off, saved once, and exited Calendar from month view before copying the database from the held DOS disk.",
+      "origin": "From the installed default database, opened Add Event from the October 23, 2026 month view, entered 09:00–10:00 AM and LPHa123 with the alarm off, saved once, and exited Calendar from month view before copying the database from the held DOS disk.",
       "historical_comparison": "Exact SHA-256 match to the historical E01 specimen.",
       "synthetic_data": true
     },
@@ -18,7 +18,7 @@
       "application": "Tandy DeskMate Calendar",
       "version": "03.05.00",
       "experiment": "E02 86Box RSX/DOS 5.00 reproduction",
-      "origin": "Reopened E01, entered the October 23, 2026 day view, opened the existing appointment in Change Event, and used End, Backspace and 4 to replace the last description character. Verified 09:00â€“10:00 AM, LPHa124 and alarm off, saved once, and exited Calendar from day view before copying the database from the held DOS disk.",
+      "origin": "Reopened E01, entered the October 23, 2026 day view, opened the existing appointment in Change Event, and used End, Backspace and 4 to replace the last description character. Verified 09:00–10:00 AM, LPHa124 and alarm off, saved once, and exited Calendar from day view before copying the database from the held DOS disk.",
       "historical_comparison": "Exact SHA-256 match to the historical E02 specimen.",
       "synthetic_data": true
     },
@@ -29,7 +29,7 @@
       "application": "Tandy DeskMate Calendar",
       "version": "03.05.00",
       "experiment": "2026-11-06 Calendar Alarm differential, trial C on 86Box RSX/DOS 5.00",
-      "origin": "Started from the E02 sibling with the synthetic October 23, 2026 appointment LPHa124 at 09:00â€“10:00 AM. Checked Alarm in Change Event, saved, acknowledged the global Alarm Is Off warning, and exited from day view. Copied the original PERSONAL.CLN extracted from the closed trial C disk.",
+      "origin": "Started from the E02 sibling with the synthetic October 23, 2026 appointment LPHa124 at 09:00–10:00 AM. Checked Alarm in Change Event, saved, acknowledged the global Alarm Is Off warning, and exited from day view. Copied the original PERSONAL.CLN extracted from the closed trial C disk.",
       "closed_disk_sha256": "9619c9e8e848f315899bcfbe431d1f47747405554f8bb13a06a6ae5adf0c373d",
       "evidence_index_sha256": "f6cfbfe878f3495f81822c8b3fa54a6055e2a109f7aa29c2bf5b1949c9171ded",
       "synthetic_data": true

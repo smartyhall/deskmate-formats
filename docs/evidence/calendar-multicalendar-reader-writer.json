@@ -223,7 +223,8 @@
     "resolved_during_development": [
       "Initial synthetic helper update changed the historical observed corpus fingerprint; restored its exact original opaque-header profile and retained the original fingerprint. Common/SDK synthetic scaffolding separately supplies valid chains.",
       "Initial staged build-source comparison included existing Windows CRLF text; normalized declared text only, retaining strict binary equality.",
-      "Generated binary REUSE sidecars were added before publication; final checks have no licensing failures."
+      "Generated binary REUSE sidecars were added before publication; final checks have no licensing failures.",
+      "A final Windows default-text decoding rewrite changed three old manifest strings; restored every one of the seven prior provenance entries directly from original commit 59e6012 and verified equality before push. Subsequent JSON reads/writes explicitly use UTF-8."
     ],
     "remaining_failures": [],
     "final_reuse": {
@@ -283,9 +284,11 @@
       "preservation-before-final-checks.json": "80d88088191f510594c5f6726a00100a8cc995f6cbf16826f927c9a14e453836",
       "reuse-final.txt": "7e35f4e0bb1838ca87f5759b018349e5d640594bf5b8b0b4bd413cf28fafd52b",
       "audit-final.txt": "4b38b70bdbf357dc567d4017bafab52f274053c399a9d2e0b2e7d6706654aaaa",
-      "preservation-after-final-checks.json": "80d88088191f510594c5f6726a00100a8cc995f6cbf16826f927c9a14e453836"
+      "preservation-after-final-checks.json": "80d88088191f510594c5f6726a00100a8cc995f6cbf16826f927c9a14e453836",
+      "original-provenance-final-check.json": "8753fa8d044bee16b6534dbb240b72c8649cf3e3f533f88f111335a28f515a6e"
     },
-    "fixture_contents_and_mtimes_unchanged_during_final_checks": true
+    "fixture_contents_and_mtimes_unchanged_during_final_checks": true,
+    "prior_manifest_entries_identical_to_b_publication": true
   },
   "remaining_limits": [
     "Only the measured exact-source SECOND creation repartition is reproduced, not a general balancing algorithm or proof of its native trigger.",
