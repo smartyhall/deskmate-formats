@@ -124,3 +124,6 @@ class SDKCalendarTests(unittest.TestCase):
             parse_bytes(data)
         with self.assertRaisesRegex(ValueError, 'additional-page'):
             append_appointment(data, profile='sdk')
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaisesRegex(ValueError, 'additional-page'):
+                write_new(Path(temp) / 'new.cln', data, profile='sdk')

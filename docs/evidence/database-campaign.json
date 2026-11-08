@@ -341,5 +341,29 @@
         }
       }
     ]
+  },
+  "independent_validation": {
+    "checker_sha256": "52dbf3c03b3ccac00401cb07cd1ce73eddcf4ec224c7e2556d285fefd7dc339f",
+    "calendar_appointments": 29,
+    "contact_files": 25,
+    "contacts_per_file": 1,
+    "malformed_outputs_rejected": 6,
+    "native_opened": false
+  },
+  "calendar_capacity_prefix": {
+    "classification": "incomplete capacity prefix, not a full-month schedule",
+    "attempted_additions": 60,
+    "successful_additions": 39,
+    "total_appointments": 40,
+    "distinct_dates": 21,
+    "output_sha256": "c59b898ab28b6e958c52a2d69ac658da702cf8636a1a4fbd586902104914e6f6",
+    "capacity": {
+      "data_bytes": 12,
+      "index_entries": 122,
+      "next_id": 57,
+      "low_ids_remaining": 71
+    },
+    "failure": "additional data/index page required; unsupported",
+    "native_opened": false
   }
 }

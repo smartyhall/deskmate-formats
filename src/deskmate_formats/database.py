@@ -210,6 +210,8 @@ def parse_bytes(source, *, allow_retired=False, max_pages=MAX_PAGES):
     Unreferenced pages stay opaque in ``Database.data``; they are not free space.
     """
     from dataclasses import replace
+    require(isinstance(source, (bytes, bytearray, memoryview)), 'invalid_input', 'expected byte snapshot')
+    require(type(max_pages) is int, 'unsupported_layout', 'page bound must be an integer')
     data = bytes(source)
     require(2 <= max_pages <= MAX_PAGES, 'unsupported_layout', 'invalid page bound')
     require(len(data) >= 6 * PAGE_SIZE, 'truncated_file', 'at least six complete pages required')

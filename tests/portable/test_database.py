@@ -78,3 +78,11 @@ class DatabaseTests(unittest.TestCase):
             data[at:at + len(value)] = value
             with self.subTest(at=at), self.assertRaises(DatabaseError):
                 parse_bytes(data)
+
+    def test_input_types_and_bounds_are_checked_before_copying(self):
+        for source in (None, 65536, 'not bytes'):
+            with self.subTest(source=source), self.assertRaises(DatabaseError):
+                parse_bytes(source)
+        for bound in (True, 10.0, 1, 65):
+            with self.subTest(bound=bound), self.assertRaises(DatabaseError):
+                parse_bytes(build(), max_pages=bound)

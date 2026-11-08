@@ -104,3 +104,82 @@ Eight portable tests and two focused private oracle tests passed. All four
 published native hashes match. Twenty-five fictional contacts were generated in
 25 separate files; multicontact and preferred 50–100-contact book targets remain
 unmet. No optional field meanings or index sorting rules were invented.
+
+## M4: compatibility assessment
+
+`tools/validate_database_campaign.py` imports no production parser/writer. It
+independently scans physical row framing, LE16 index slots, count/next-ID values
+for these fixed experimental profiles, weekday correspondence and chronological
+uniqueness. It checks all source rows/unknown-byte preservation and all 25 ADR
+contacts against their receipts. All checks passed. Six altered Calendar outputs
+(header, original row, page pointer, offset, index tail and count) were rejected.
+The script is an experiment checker, not another supported general database API.
+Checker hash and derived counts are in [campaign metadata](../evidence/database-campaign.json).
+
+| Claim | Evidence class / confidence | Limit |
+| --- | --- | --- |
+| Common directory/schema/index/framing | Existing actual Calendar fixtures and local original-byte ADR/CARMAINT reads; high within declared profile | INVNTORY omitted trailing schema value rejected |
+| Ordinary general date/weekday codec | Prior pinned SDK and 3.05 static findings, literal-vector and Gregorian boundary tests | New combinations and representable year bounds not UI-qualified |
+| Ordinary quarter hours | SDK bitfields; six historical runtime values; new independent literal/offline tests | Midnight/blank/sentinel contexts excluded |
+| 29-event / 14-day Calendar | Tool-generated and independently checked offline, source rows/header/schema preserved | No native open/navigation/save |
+| Address Book empty-to-one | Four exact independently published whole-file native hash matches; high byte confidence | Newly generated reconstructions, not recovered historical originals |
+| 25 varied contacts | 25 separate one-contact generated files, raw values and unknown bytes checked | No native 25-contact book or multiple-contact insertion policy |
+| Additional-page/retired reading | Published E15–E19 structures plus independent synthetic page-6/retired controls | Original E15–E19 files unavailable; opaque retired-only pages not discovered |
+| Allocation-header semantics | Unresolved | No bitmap/free-list algorithm or writer growth claimed |
+
+The incomplete 30-day attempt is also preserved: 39 additions, **40 total events**,
+21 distinct dates, 12 row bytes free. SHA-256
+`c59b898ab28b6e958c52a2d69ac658da702cf8636a1a4fbd586902104914e6f6`.
+It is a reverse-insertion capacity prefix, not a complete 30-day schedule. The
+independent checker also accepted its structural postconditions.
+
+New native validation remains **NOT RUN**. A separately authorized Calendar
+trial should use an identified disposable clone and pinned generated-file hash,
+verify all fourteen dates/morning/afternoon values through the authenticated socket,
+then preserve before/after manifests across one explicitly identified controlled
+save. A no-op OK cannot prove a backend write occurred. Any actual edit must be
+specified beforehand and compared for logical preservation even if IDs relocate.
+Alarm storage is covered; alarm delivery is not. Address Book's smallest second
+contact discriminant is in its [codec report](addressbook-codec.md).
+No uncertain guest action may be replayed, and no existing emulator ownership is
+assumed. No exact-stop runtime backend trace or new RAM inspection was attempted.
+
+## M5: interoperability-facing API
+
+`deskmate_formats.interchange` supplies version-1 semantic JSON envelopes,
+CalendarItem/ContactItem data objects, strict import validation and explicit
+ConversionIssue loss reports. Seven focused tests passed, including versioned
+examples with 29 events and 25 contacts, strict unknown-property/type rejection,
+snapshot IDs, supported semantic round trips and rejection/reporting of opaque
+field loss. The [contract](../interoperability.md) separates implemented APIs
+from future CalDAV/CardDAV work and corrects the stale E15 roadmap statement.
+No recurrence, timezone, text normalization or external UID is invented.
+Native snapshots remain the preservation unit; native edit/delete and full
+byte-preserving JSON reconstruction remain unsupported.
+
+## Final validation and preservation
+
+- Complete portable suite: **313 passed**, 125.563 seconds, using `PYTHONPATH=src`.
+- Focused private Address Book oracle: **2 passed**, 0.060 seconds, with an
+  explicitly selected hash-pinned empty source. No full historical private suite.
+- Ruff passed for source, portable tests, tools and the new private oracle test.
+- REUSE passed: **274/274** authored files covered. Repository/archive audit:
+  **555** source files, three unchanged application-generated fixtures and four
+  unchanged synthetic JSONL fixtures; wheel/source archive checks passed.
+- `python -m build` built the wheel and source distribution. An isolated
+  `python -I` wheel-only import/generation smoke check reproduced the 14-day
+  Calendar hash and A01 native hash, checked CLI targets and source examples.
+- Updated Markdown relative links/fences and `git diff --check` passed.
+
+The initial non-isolated build failed because host setuptools was absent; the
+standard disposable build backend environment succeeded without changing host
+dependencies. Early REUSE/audit checks exposed an untracked log/cache and a
+Windows text-encoding/newline issue; these were corrected before successful
+checks/commits. A private-oracle invocation without its explicit environment
+skipped; the subsequent explicit-baseline run above executed both tests.
+
+Actual generated files, receipts, independent positive/negative checks, tool/source
+snapshots, hashes and validation logs are durably retained in the private campaign
+archive. The public [evidence metadata](../evidence/database-campaign.json)
+contains only non-sensitive hashes/counts/synthetic values. Original commercial
+inputs, public native fixtures and historical private evidence are unchanged.

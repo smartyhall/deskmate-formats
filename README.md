@@ -77,6 +77,20 @@ Python API: `deskmate_formats.calendar.personal.parse_bytes/parse_file` and
 The reader exposes `alarm_enabled` on records and in JSON, with the complete
 Protected field retained in the raw output.
 
+For ordinary SDK-derived Calendar values, pass `profile='sdk'` or CLI
+`--profile sdk`; default calls keep the measured limits. Generate the reproducible
+14-day sample with `tools/generate_calendar_sample.py SOURCE.cln NEW-OUTPUT.cln`.
+The source must be an appropriate six-page disposable template; the documented
+sample uses the committed synthetic E02 native fixture.
+
+Address Book API: `deskmate_formats.addressbook.Contact`, `parse_bytes/parse_file`,
+`create_contact` and `write_new`. CLIs: `deskmate-addressbook SOURCE.adr` and
+`deskmate-addressbook-create EMPTY.adr NEW-OUTPUT.adr --contact contact.json`.
+The JSON object requires `first_name`, `last_name`, `city` and `work_phone`.
+Only empty-to-one creation is implemented. See the
+[Address Book checkpoint](docs/research/addressbook-codec.md) and
+[versioned interchange API/examples](docs/interoperability.md).
+
 ## Reproducible Windows 10 laboratory (experimental)
 
 The [Windows 10 Pro ISO deployment recipe](deployment/windows10/README.md) tracks
@@ -151,8 +165,9 @@ publication steps, external paid services or AI dependencies.
 * [Interoperability roadmap](docs/interoperability.md), [contributing](CONTRIBUTING.md)
 
 [E15](docs/experiments/e15-page-boundary.md) observed Calendar allocating one extra
-data page for a 24-byte BOUND12 record when 17 bytes remained. The parser and
-writer retain their conservative six-page scope; no general allocator is implemented.
+data page for a 24-byte BOUND12 record when 17 bytes remained. The default parser
+and writers retain their conservative six-page scope; the explicit SDK reader
+can enumerate bounded additional data pages. No general allocator is implemented.
 
 [E16](docs/experiments/e16-page-reclamation.md) observed that deleting the sole
 page-6 event leaves the seven-page file and retired payload on disk. Page-reuse

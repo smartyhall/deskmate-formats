@@ -50,6 +50,9 @@ def capacity(source, *, profile='observed'):
     db=parse_bytes(source, profile=profile);t=db.metadata['tables']['PERSONAL']
     if db.size != FILE_SIZE:
         raise ValueError('writing additional-page layouts requires unresolved allocation policy')
+    if (db.metadata.get('retired_rows') or t['raw_tokens_hex'][5] != '30 30 30'
+            or t['next_id_candidate'] != max(r.record_id for r in db.records) + 1):
+        raise ValueError('capacity requires the verified non-retired append profile')
     end=max(r.offset+r.length for r in db.records)
     index=t['index_page']*PAGE_SIZE+INDEX_HEADER_SIZE
     return {'data_bytes':(t['data_page']+1)*PAGE_SIZE-end-1,
@@ -118,7 +121,11 @@ def write_new(path,data, *, profile='observed'):
     fallback on filesystems without hard-link support. Directory durability is
     filesystem dependent. The temporary link is removed in all cases.
     """
-    parse_bytes(data, profile=profile);path=Path(path)
+    if profile == 'sdk':
+        capacity(data, profile=profile)
+    else:
+        parse_bytes(data, profile=profile)
+    path=Path(path)
     fd,temp=tempfile.mkstemp(prefix='.calendar-',suffix='.tmp',dir=path.parent)
     try:
         with os.fdopen(fd,'wb') as handle:

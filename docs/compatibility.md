@@ -62,3 +62,17 @@ the [campaign report](research/database-campaign.md) records generated artifacts
 and evidence levels. A 29-appointment, 14-day output passes offline independent
 structural checks. **It has not been opened or saved in DeskMate.** Historical
 five-event acceptance does not qualify these newly generated combinations.
+
+## Address Book profile and interchange
+
+The [Address Book codec](research/addressbook-codec.md) reads the observed
+10,240-byte four-table schema, preserving all sixteen contact fields and the full
+source. Four populated field meanings are exposed; other schema names remain raw.
+The experimental writer accepts an empty DATA table and creates exactly one
+contact. It reproduces all four independently published A01–A04 whole-file hashes.
+It refuses second insertion, extra pages, retired rows and unknown schemas.
+Twenty-five synthetic contacts exist as 25 separate files, not one populated book.
+
+[Version 1 interchange](interoperability.md) provides strict Python/JSON semantic
+values and explicit loss reporting. It does not provide byte-preserving native
+reconstruction or network synchronization. New native open/save tests were not run.
