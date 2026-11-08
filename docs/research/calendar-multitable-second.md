@@ -33,6 +33,19 @@ The new `SECOND` descriptor declares seven columns and has its own page 8 data a
 
 Observed changed-byte counts in original pages 0–7: `5,48,207,28,0,237,0,0`. The native specimen adds exactly two 1,024-byte pages. See [structured evidence](../evidence/calendar-multitable-second.json).
 
+## Current reader compatibility boundary
+
+The existing common `database.parse_bytes` reader rejects this genuine native
+specimen with `unsupported_layout` at file offset `0x1400`, because its
+originally measured `INDEX_HEADER` constant requires four empty `FF×9/00`
+routing-header slots. DeskMate rewrote the PERSONAL index routing boundaries
+while preserving all 62 logical index triples. This is a **known reader
+limitation, not corruption in the native file**. The fixture is retained
+unchanged. A portable regression checks the exact specimen hash and raw
+PERSONAL page preservation while explicitly documenting the current parser
+rejection; future multi-table read support should replace that rejection test
+with successful native parsing and verified table isolation.
+
 ## What remains unknown
 
 This specimen establishes the native on-disk existence of two named Calendar tables and their page allocations **for this file**. It does not prove the complete general create/delete/rename algorithm, assignment of active-calendar UI selection or other sidecar settings, case-insensitive name collation, calendar count limits, index partition rules or write persistence after editing appointments. A single-file comparison cannot establish that no other installed files changed.
