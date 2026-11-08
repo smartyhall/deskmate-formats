@@ -1,10 +1,13 @@
 # Architecture and scope boundaries
 
-The current package is `src/deskmate_formats/calendar`: `personal.py` is the parser,
-`writer.py` the experimental append writer, and `cli.py` the read/list/export CLI.
-Writer CLI stays with the writer to preserve the verified implementation during
-packaging. Only imports and private-test fixture selection were adapted; no format
-algorithm was generalized during migration.
+The application-format implementation currently lives under
+`src/deskmate_formats/calendar`: `personal.py` is the reader,
+`writer.py` the experimental append writer and writer CLI, and `cli.py` the
+read/list/export CLI. This is the **only implemented application codec** on
+this baseline. Other package namespaces implement emulator automation,
+read-only observation and offline-tested supervisor components; they are not
+general DeskMate format codecs. See the [project status](../PROJECT_STATUS.md)
+for their respective maturity and remaining live gates.
 
 Conceptual layers guide later work:
 
@@ -35,3 +38,14 @@ continuity per instance and prepares browser images outside its native lock.
 The optional loopback HTTP listener reads the registry, which has no reference
 to a native socket or guest control. See the [observatory architecture and
 operator boundaries](research/86box-observer-design.md#native-mcp-integration-and-security).
+
+## Agent activity and task authority
+
+`observer` implements bounded private event storage and an explicitly read-only
+HTTP projection; optional Codex CLI telemetry reports only observable activity.
+The offline-tested `supervisor` S0 app-server protocol/ledger and S1 Git task
+queue are separate from that observer. S1 acceptance cannot launch a model turn.
+The real S0 canary, automatic dispatch, worktree/resource leases and unattended
+restart are not implemented or validated on this baseline. See the
+[supervisor design](research/codex-supervisor-design.md), [S0](research/codex-supervisor-s0.md),
+[S1](research/codex-supervisor-s1.md) and the [reuse assessment](research/agent-orchestrator-reuse-assessment.md).
