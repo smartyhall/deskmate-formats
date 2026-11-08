@@ -33,7 +33,12 @@ M2 partial: explicit SDK profile, multipage reading and a generated 14-day,
 default validation is preserved. 42 Calendar-focused and 37 adversarial tests
 passed. Actual output and receipt are durably archived privately; hashes are in
 docs/evidence/database-campaign.json. Allocation/full-month output remains blocked.
-M3 is next.
+M2 commit `5067da5` was pushed and remote-verified.
+
+M3 partial: ten-page Address Book reader and empty-to-one writer implemented;
+eight portable tests and two focused private tests passed. All four A01–A04
+whole-file native hashes reproduced. Generated 25 contacts in 25 separate files,
+not a multicontact book. See docs/research/addressbook-codec.md. M4/M5 are next.
 
 ## Gates and next steps
 

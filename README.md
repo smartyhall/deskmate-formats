@@ -23,7 +23,7 @@ remain archived outside Git.
 | **Calendar 3.05** (`PERSONAL.CLN`) | **Experimental tools** | Measured default profile plus explicit SDK-derived ordinary codecs, bounded multipage reading and six-page append generation; 29-event/14-day sample validated offline |
 | **Calendar storage research** | **Ongoing** | E15–E19 document page growth, retained deletion data, and append behavior; no general allocator or deleted-record recovery implementation |
 | **DeskMate screen-state research** | **Exploratory** | Partial Calendar schedule text recovered from read-only emulator RAM captures; not a general screen reader or automation interface |
-| **Address Book 3.05** (`PERSONAL.ADR`) | **Initial research** | A00–A04 no-edit, one-contact and independent field-length controls; no parser or writer |
+| **Address Book 3.05** (`PERSONAL.ADR`) | **Conservative codec** | Schema-aware reader and experimental empty-to-one writer; all four A01–A04 native hashes reproduced offline; multicontact insertion remains unsupported |
 | **Cross-application database architecture** | **Offline structural and call evidence** | Named DMDB binding/call thunks in all three applications and a conditional DESK INT E0 dispatch path; actual runtime vector, callback selection and record-operation dispatch remain unresolved |
 | **Filer 3.05** | **Native experiments prepared** | Static sample/component comparison and F00–F02 operator runbook; no native Filer experiment or implementation yet |
 | **86Box automation** | **DOS baseline validated** | Authenticated native client, verified Tandy RSX DOS 5.00 baseline, original guest canary, and a read-only MCP bridge tested with a synthetic native peer |
@@ -166,7 +166,10 @@ These experiments do not establish a general allocation or reclamation algorithm
 
 [Address Book Phase I](docs/research/addressbook-phase1.md) documents a no-edit
 control and two independent, synthetic single-contact observations, including
-measured variable-length first-name storage. No Address Book implementation exists.
+measured variable-length first-name storage. That report predates implementation.
+The later [codec checkpoint](docs/research/addressbook-codec.md) implements the
+verified field subset and generates 25 separate single-contact files. A single
+populated multicontact book still requires native index evidence.
 
 [Screen-state research](docs/research/screen-state.md) recovered partial Calendar
 schedule text through read-only RAM captures; it is not a general screen API.

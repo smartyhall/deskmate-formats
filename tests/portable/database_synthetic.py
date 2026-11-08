@@ -15,7 +15,7 @@ def framed(ident, values):
     return bytes((128, ident)) + b'\x01'.join(values) + b'\x01\x02'
 
 
-def addressbook(fields=None):
+def addressbook(fields=None, *, contact_rows=None):
     """Invented header/config; measured schema names, widths and table roles."""
     d = bytearray(10240)
     d[0] = 3
@@ -31,7 +31,9 @@ def addressbook(fields=None):
             ident += 1
     # The real schema index orders by owner/position, independently of physical order.
     index_order = sorted(schemas, key=lambda pair: pair[1][2:].split(b'\x01')[1:3])
-    rows = [schemas, [] if fields is None else [(16, framed(16, fields))],
+    data_rows = ([] if fields is None else [(16, framed(16, fields))]) if contact_rows is None else [
+        (16 + n, framed(16 + n, values)) for n, values in enumerate(contact_rows)]
+    rows = [schemas, data_rows,
             [(16, framed(16, [b'Title', b'Synthetic label']))],
             [(16, framed(16, [b'Test', b'All', b'Opaque']))]]
     cursor = 1024

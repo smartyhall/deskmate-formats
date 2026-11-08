@@ -72,7 +72,8 @@ source preservation and index uniqueness provide independent offline controls.
 The durable private archive retains the actual output and receipt; generated
 bytes are not mislabeled as application-generated Git fixtures.
 
-The 30-day/60-addition attempt fails before publication at the page-capacity
+The 30-day/60-addition attempt succeeds for 39 additions (40 total appointments)
+then fails before publication at the page-capacity
 guard. No partial output is published. Additional-page reading succeeds on
 independently assembled page-6 targets; writers reject multipage/retired layouts.
 E15's four allocation-associated header changes and E19's five differ; neither
@@ -95,3 +96,11 @@ tests passed (0.019 s); Ruff, REUSE and repository audit passed. Commands use
 `PYTHONPATH=src`: `python -m unittest discover -s tests/portable -v`, focused
 `-p test_database.py`, `python -m ruff check src tests/portable tools`,
 `python -m reuse lint`, `python tools/audit_repository.py`, `git diff --check`.
+
+## M3: Address Book checkpoint
+
+See [reader/writer, exact-hash controls and multicontact gate](addressbook-codec.md).
+Eight portable tests and two focused private oracle tests passed. All four
+published native hashes match. Twenty-five fictional contacts were generated in
+25 separate files; multicontact and preferred 50–100-contact book targets remain
+unmet. No optional field meanings or index sorting rules were invented.
