@@ -15,9 +15,12 @@
   separately for each file. Check every candidate's actual bytes and provenance
   first. This grant does NOT cover real personal data, commercial software or
   media, credentials, private screenshots/memory, unreviewed third-party
-  content, or other restricted/confidential inputs. Use a review PR; merging
-  remains subject to separate authorization. Never infer emulator/guest
-  operation authorization from this publication permission.
+  content, or other restricted/confidential inputs. Use a review PR.
+  On 2026-11-08, the operator separately authorized ChatGPT as an independent
+  reviewer to merge completed Codex PRs after scope review and passing checks
+  during routine post-run housekeeping. This does NOT authorize Codex workers
+  to merge their own PRs, bypass tests, operate a VM, spend model quota or
+  publish private/commercial inputs.
 - When a user requests publication of an eligible synthetic-data sample or
   native-acceptance candidate, commit and push the **actual independently checked
   binary bytes**, not just a private archive, SHA-256 digest or semantic JSON.
@@ -28,9 +31,11 @@
   expected semantic contents and accurate REUSE sidecar to the manifest/docs;
   test the committed bytes and ensure binary fixtures remain excluded from
   wheel/sdist. For authorized publication, push a dedicated branch and open a
-  PR for review; do not merge without separate authorization. If publication
-  is not authorized or is unsafe, keep the artifact private and report the
-  precise blocker rather than silently substituting hashes for a usable file.
+  PR for independent review; the 2026-11-08 standing housekeeping grant
+  allows ChatGPT to merge a reviewed, passing PR, but not the producing Codex
+  worker to auto-merge. If publication is not authorized or is unsafe, keep
+  the artifact private and report the precise blocker rather than silently
+  substituting hashes for a usable file.
 - Never commit commercial installers, ROMs, executables, complete installed
   trees, real user databases, private RAM, credentials, or personal information.
   Embedded native schema, indexes, and metadata in application-created test
@@ -54,4 +59,8 @@
   Follow LICENSING.md and add accurate per-file REUSE sidecars.
 - Inspect status/diffs, preserve local changes, fetch without resetting, and work
   on a dedicated branch. Run applicable portable checks before local commits.
-  Do not push, merge or change a remote PR without explicit authorization.
+  Push and open eligible synthetic research PRs only under the standing
+  publication grant or other explicit authorization. Codex must not merge
+  its own PRs; ChatGPT may independently merge ready PRs under the operator's
+  2026-11-08 post-run housekeeping grant. Do not infer approval for unrelated
+  repository mutations, unattended dispatch, emulator control or paid calls.

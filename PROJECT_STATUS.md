@@ -1,15 +1,37 @@
 # Project status — DeskMate formats
 
-**Unmerged branch checkpoint, 2026-11-08:** `codex/calendar-multicalendar`
-reads native A/B as two named calendars with 61 PERSONAL appointments and zero/one
-SECOND appointment, plus separate configurations. B was supplied at existing
-commit `59e601200641232bf67207c3b4ab7a2f0a9f36e0`. New exact-source experimental
-creation/first-append writers reproduce all A/B bytes; the actual generated
-binaries are included separately with explicit tool-generated provenance.
-[Campaign, commands and limits](docs/research/calendar-multicalendar-reader-writer.md).
-This branch result is offline checked and is not a released capability or an
-independently captured native acceptance trial. The older merged snapshot below
-retains its original date and scope.
+**Current merged checkpoint — 2026-11-08 (America/New_York):**
+[PR #83](https://github.com/smartyhall/deskmate-formats/pull/83) published
+the exact operator-produced, synthetic-data FIRST SECOND appointment fixture
+(merged `30e5db48de104c844e935049364174d13ce5050a`).
+[PR #84](https://github.com/smartyhall/deskmate-formats/pull/84) implemented
+bounded SDK-profile reading of named PERSONAL and SECOND calendars and two
+explicitly experimental exact-source writers (merged
+`43a6a5734408ef81c010a004c2e4a44ac34f4def`). The reader reports
+61 PERSONAL and zero/one SECOND appointments in the two original native
+specimens. Both generated whole files reproduce their corresponding original
+native file SHA-256 **exactly**, with separately retained native/operator versus
+tool-generated provenance. This is released offline-validated source code,
+**not** broad writer support, an independently instrumented native save/reopen
+or a proven general index balancer. All four GitHub CI jobs passed for #83/#84.
+[Campaign and limitations](docs/research/calendar-multicalendar-reader-writer.md).
+
+[PR #80](https://github.com/smartyhall/deskmate-formats/pull/80)
+(merged `8b47ab08698ea601308707703e14fe98d342dd8c`) adds the
+source-pinned Address Book LastName/FirstName insertion trace and conservative
+two-contact byte predictions, **not** a new native two-contact file or writer.
+Its four CI jobs passed; issue #70 remains open for actual native verification.
+
+The operator granted standing authority on 2026-11-08 for ChatGPT to merge
+ready, passing Codex PRs after independent review. This does not authorize
+Codex workers to self-merge or to execute paid Codex turns or native guest actions.
+S0 app-server and S1 trusted Git intake remain offline-tested components;
+a real supervisor-owned Codex canary and S2 dispatch have not yet been proven.
+[Supervisor design and rollout](docs/research/codex-supervisor-design.md).
+
+**Historical snapshot below — 2026-11-07:** preserved for its dated context,
+including now-superseded statements about native Calendar display and current
+implementation scope.
 
 **Snapshot:** 2026-11-07 (America/New_York), after publication of the
 30-day Calendar in [PR #78](https://github.com/smartyhall/deskmate-formats/pull/78),
