@@ -1,4 +1,4 @@
-> Historical lab parser notes; package commands and current limitations are documented in the root README and compatibility.md. Relative lab evidence stays private.
+> **Historical parser checkpoint (E00–E14).** Paths and test counts below describe the original DOSLAB implementation. The installed package now includes a separate bounded append writer; E15–E19 have since been performed and are documented independently. For current behavior see the [README](../../../README.md), [compatibility](../../compatibility.md), and [project status](../../../PROJECT_STATUS.md). Relative lab evidence stays private.
 
 The current package exposes `Record.alarm_enabled` and the corresponding
 JSON key. An ordinary timed appointment with a decoded date, weekday and
@@ -53,9 +53,12 @@ an impossible date or a conflicting decoded weekday is an error.
 Printable ASCII descriptions within the declared 120-byte limit are decoded;
 non-ASCII/non-printable descriptions remain raw. This does not establish a
 general text/escape codec or experimentally validate all description lengths.
-Duration and Protected are **always undecoded**, even when empty or `31`.
-**Alarm is not decoded:** alarm-off UI observations do not identify its storage.
-An exit-0 result can contain undecoded values; consumers must inspect warnings.
+Duration and Protected bytes remain available as raw fields; there is no
+general decoder for their undocumented values. A later controlled differential
+established a separate, **narrow** `alarm_enabled` interpretation for ordinary
+timed appointments with empty Duration and Protected `31` (off) or `71` (on).
+Other cases yield `null`. An exit-0 result can still contain undecoded values;
+consumers must inspect warnings.
 
 The internal row is recognized by its observed field signature and ID, not by
 an invalid date alone. An unknown variant is rejected rather than silently
@@ -71,8 +74,10 @@ checks without changing parsing logic. E12 also supports deletion of a physicall
 renumbering. Other layouts and deletion patterns remain unverified and can
 invalidate these relations. E10's same-sized replacement
 addition reused ID0x12, record0x103F and index0x1434 without parser changes. This
-supports the observed tail-reuse case, not general free-space allocation. There is no writer, salvage mode,
-GUI dependency or speculative/extrapolating decoding option.
+supports the observed tail-reuse case, not general free-space allocation. At
+this checkpoint there was no writer; a separate **bounded, six-page append
+writer** was later implemented. There is still no salvage mode, GUI dependency
+or speculative/extrapolating decoding option.
 
 ## Tests
 
@@ -130,9 +135,10 @@ layout and differs from the simple remove/compact/append hypothesis B;
 intermediate operations are still unobserved. New relocation tests derive
 addresses from parsed E11 rows, not fixed appointment locations.
 
-Next proposed experiment: a controlled first data-page allocation boundary,
-adding fixed seven-character appointments through Calendar with preserved
-before/after boundary checkpoints. Observe actual new page references, index
-targets, metadata, record framing and size; no allocation outcome is assumed.
-The current parser intentionally rejects unsupported multi-page layouts and
-must only be extended after new evidence. No E15 experiment has been performed.
+**Historical next-step plan:** a controlled first data-page allocation boundary
+with before/after checkpoints. That work was subsequently performed in
+[E15](../../experiments/e15-page-boundary.md), followed by
+[E16–E19](../../experiments/e19-space-pressure.md). The parser and writer on
+the baseline documented in [compatibility](../../compatibility.md) still
+reject those unsupported multi-page layouts; their observed allocation outcomes
+must not be mistaken for implemented support.
