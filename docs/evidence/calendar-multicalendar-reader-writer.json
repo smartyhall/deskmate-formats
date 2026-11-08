@@ -1,0 +1,300 @@
+{
+  "recorded_date": "2026-11-08",
+  "timezone": "America/New_York",
+  "branch": "codex/calendar-multicalendar",
+  "initial_fetched_main": "7f47ef744d7fe02b4385f77e93e20fb2b64c5568",
+  "incorporated_original_b_commit": "59e601200641232bf67207c3b4ab7a2f0a9f36e0",
+  "implementation_revision": "af7bc0d80be3f7568492d98cbbf9d907abccdcda",
+  "inspected_before_changes": [
+    "PR #82 (merged)",
+    "issue #81 and comments",
+    "PR #80 (open draft, left unchanged)"
+  ],
+  "evidence_classes": {
+    "native_inputs": "Original A/B files, operator-reported native creation/save; exact bytes independently checked. B explicitly supplied by pinned public URL during this campaign. No original native bytes reconstructed.",
+    "source_findings": "Hash-pinned static original 3.05 resource routines, not executed runtime paths.",
+    "generated_outputs": "Tool-generated, independently checked offline; not application-produced or native-accepted, despite complete byte equality to separate A/B oracles.",
+    "synthetic_controls": "Unrelated invented 2030 SECOND event, boundary values, malformed bytes and source guards; never labeled native specimens.",
+    "hypotheses": "Native split trigger, arbitrary name normalization and active selection remain unqualified."
+  },
+  "machine": {
+    "os": "Microsoft Windows 10 Pro",
+    "version": "10.0.19045",
+    "build": "1.6.1",
+    "architecture": "64-bit",
+    "python": "CPython 3.13.17 AMD64 MSC 1944",
+    "capstone": "5.0.7, x86-16, existing private crosswalk venv",
+    "ruff": "0.17.3",
+    "reuse": "6.3.0",
+    "wheel_generator": "setuptools 84.2.1 in isolated build environment",
+    "emulator": "Not launched, connected or controlled; no guest machine/ROM used by these checks."
+  },
+  "native_validation": {
+    "evidence_class": "native A bytes independently validated; creation operator-reported",
+    "sha256": "338487558d9992452db15858de1ba9cf790c26abf990ba70b47bbc9dc8d011f5",
+    "bytes": 10240,
+    "database_tables": 3,
+    "named_calendars": 2,
+    "personal_appointments": 61,
+    "second_appointments": 0,
+    "configuration_records": 2,
+    "personal_index_groups": [
+      20,
+      21,
+      21,
+      0
+    ],
+    "personal_locators": 62,
+    "source_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+    "first_second": {
+      "sha256": "b9c9a4cae3cffac1bc337f7b378ea25df74efd3b6771e117c6e0fc3f81b77084",
+      "bytes": 10240,
+      "changed_positions": 38,
+      "personal_appointments": 61,
+      "second_appointments": 1,
+      "original_b_verified": true
+    }
+  },
+  "results": {
+    "named_calendars": [
+      "PERSONAL",
+      "SECOND"
+    ],
+    "database_table_count": 3,
+    "a_appointment_counts": [
+      61,
+      0
+    ],
+    "b_appointment_counts": [
+      61,
+      1
+    ],
+    "configurations_per_file": 2,
+    "personal_locators": 62,
+    "personal_index_subdivision_counts": [
+      20,
+      21,
+      21,
+      0
+    ],
+    "data_chains": {
+      "PERSONAL": [
+        4,
+        6,
+        7
+      ],
+      "SECOND": [
+        8
+      ]
+    },
+    "finite_first_route_hex": "8f6b80016801b901bd01",
+    "append_exact_native_b": true,
+    "creation_exact_native_a": true,
+    "composition_exact_native_b": true,
+    "general_calendar_creation_or_balancing": false
+  },
+  "generated_binaries": [
+    {
+      "path": "tests/fixtures/application-generated/calendar/second-empty-calendar-tool-generated.cln",
+      "bytes": 10240,
+      "sha256": "338487558d9992452db15858de1ba9cf790c26abf990ba70b47bbc9dc8d011f5",
+      "source_path": "calendar/sdk-30-days-allocator-tool-generated.cln",
+      "source_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+      "generator_command": "$env:PYTHONPATH='src'\npython tools/experimental/generate_calendar_second_table.py tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.cln tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.expected.json tests/fixtures/application-generated/calendar/second-empty-calendar-tool-generated.cln --experimental-create-second",
+      "evidence_class": "tool-generated, independently checked offline; not application-produced or native-accepted",
+      "native_opened": false,
+      "native_saved": false
+    },
+    {
+      "path": "tests/fixtures/application-generated/calendar/second-first-event-tool-generated.cln",
+      "bytes": 10240,
+      "sha256": "b9c9a4cae3cffac1bc337f7b378ea25df74efd3b6771e117c6e0fc3f81b77084",
+      "source_path": "calendar/native-second-empty-calendar-operator.cln",
+      "source_sha256": "338487558d9992452db15858de1ba9cf790c26abf990ba70b47bbc9dc8d011f5",
+      "generator_command": "$env:PYTHONPATH='src'\npython tools/experimental/generate_calendar_second.py tests/fixtures/application-generated/calendar/native-second-empty-calendar-operator.cln tests/fixtures/application-generated/calendar/second-first-event-tool-generated.cln --experimental-first-second",
+      "evidence_class": "tool-generated, independently checked offline; not application-produced or native-accepted",
+      "native_opened": false,
+      "native_saved": false
+    }
+  ],
+  "source_anchors": [
+    {
+      "path": "deskmate/dm305dk4/DMDBRD.RES",
+      "bytes": 21955,
+      "sha256": "c4bc9f5699bfaf1ac5adb57a011b04dcec00a2ae75edb2baf603c8001fa99cee"
+    },
+    {
+      "path": "deskmate/dm305dk4/DMDBUPD.RES",
+      "bytes": 13740,
+      "sha256": "9e77a2081ebb3a9549903f5d337580c65d6e0a3f603185064d4c82e16327cf4f"
+    },
+    {
+      "path": "deskmate/dm305dk5/DMDBBLD.RES",
+      "bytes": 11858,
+      "sha256": "91ada27c026de823aef6a9aae541bafcb6a312552cc5bd612ec8b0e90e53aeed"
+    },
+    {
+      "path": "deskmate/dm305dk4/CALENDAR.PDM",
+      "bytes": 72593,
+      "sha256": "819df5658b663aa69b15584abf805062679e97f587f3404738f6e82876e4bd23"
+    }
+  ],
+  "committed_code_sha256": {
+    "src/deskmate_formats/database.py": "386eb4e4d460b0bec3ed2bd308df4b570401f4376557151da75a7cfb8f778a43",
+    "src/deskmate_formats/calendar/personal.py": "51f687e13ff69f6cd4842c4e154bc57e2df33d46e6933848931360255968f1a0",
+    "src/deskmate_formats/calendar/experimental_create.py": "f9b2e64868cd0eaa14d1db35cb37ffd40d220cc127601b367d3995d3f526e09d",
+    "src/deskmate_formats/calendar/experimental_second.py": "36929ffb8f2a55c3702654372cee046415d6e10f7b12805e26d101f9fcdb6e62",
+    "tools/experimental/check_calendar_multicalendar.py": "8ea2c1965d43d2e4c223e7dbbbc8d48cba15a7d35e64e8bc58a8b060cd1fb32f",
+    "tools/experimental/generate_calendar_second.py": "4367996b150e90dd125c2f35a71d9260ddcf954b3fbc0fcb40a3a5c0ff7794ef",
+    "tools/experimental/generate_calendar_second_table.py": "ad002dce819638770cbd08603b841829b1cfb0083e6140dd571ce9ea2830bb4f",
+    "tests/portable/test_calendar_multicalendar.py": "55cf053530ad377e023d9d12f6a9056d2e0d15f4c861c51d06c518b063aade68",
+    "tests/private/test_calendar_multicalendar_source.py": "7361a6bf07c22d12f63460f2e76c2200f27ed31ba61dc675534124720d3b0cf8"
+  },
+  "validation": {
+    "portable": {
+      "command": "python -m unittest discover -s tests/portable -v",
+      "tests": 353,
+      "seconds": 169.845,
+      "result": "passed",
+      "environment": {
+        "PYTHONPATH": "src;tests/portable"
+      }
+    },
+    "focused_committed_binary_tests": {
+      "command": "python -m unittest discover -s tests/portable -p test_calendar_multicalendar.py -v",
+      "tests": 17,
+      "seconds": 3.336,
+      "result": "passed",
+      "environment": {
+        "PYTHONPATH": "src;tests/portable"
+      }
+    },
+    "private_allocator_source": {
+      "command": "python -m unittest discover -s tests/private -p test_dmdb_allocator_source.py -v",
+      "tests": 4,
+      "seconds": 0.049,
+      "result": "passed",
+      "environment": {
+        "DESKMATE_REFERENCE_EXTRACTED": "<preserved extracted root>"
+      }
+    },
+    "private_index_source": {
+      "command": "python -m unittest discover -s tests/private -p test_calendar_multicalendar_source.py -v",
+      "tests": 4,
+      "seconds": 0.002,
+      "result": "passed",
+      "environment": {
+        "DESKMATE_REFERENCE_EXTRACTED": "<preserved extracted root>"
+      }
+    },
+    "deployment": {
+      "command": "python -m unittest discover -s deployment/windows10/tests -v",
+      "tests": 31,
+      "skipped": 2,
+      "seconds": 7.798,
+      "result": "passed, synthetic only"
+    },
+    "ruff": {
+      "command": "python -m ruff check src tests/portable tools",
+      "result": "passed"
+    },
+    "reuse_before_receipt": {
+      "command": "python -m reuse lint",
+      "authored_files": 312,
+      "result": "passed; final receipt sidecar checked again before commit"
+    },
+    "repository_and_package_audits": {
+      "result": "passed",
+      "source_files_at_build_snapshot": 631,
+      "database_fixtures": 9,
+      "synthetic_jsonl": 4,
+      "binary_fixtures_in_wheel_or_sdist": 0
+    },
+    "isolated_wheel": {
+      "result": "passed",
+      "method": "Fresh private venv; installed built wheel without dependencies; PYTHONPATH removed; create A from month input then append event to produce B; both complete hashes match. No native A/B oracle read by generation script."
+    },
+    "git_fixture_checks": {
+      "result": "passed",
+      "staged_manifest_binaries": 9,
+      "unchanged_prior_binary_and_sidecar_files": 14,
+      "line_endings": "Twelve existing source/package text files differ between Windows build snapshot and Git only by declared CRLF normalization. All source/package text otherwise matches; binary fixtures strictly byte-identical."
+    },
+    "resolved_during_development": [
+      "Initial synthetic helper update changed the historical observed corpus fingerprint; restored its exact original opaque-header profile and retained the original fingerprint. Common/SDK synthetic scaffolding separately supplies valid chains.",
+      "Initial staged build-source comparison included existing Windows CRLF text; normalized declared text only, retaining strict binary equality.",
+      "Generated binary REUSE sidecars were added before publication; final checks have no licensing failures."
+    ],
+    "remaining_failures": [],
+    "final_reuse": {
+      "result": "passed",
+      "authored_files": 313
+    },
+    "final_repository_audit": {
+      "result": "passed",
+      "source_files_checked": 633,
+      "database_fixtures": 9,
+      "synthetic_jsonl": 4
+    }
+  },
+  "build_artifacts": [
+    {
+      "filename": "deskmate_formats-0.1.0.dev0-py3-none-any.whl",
+      "bytes": 191267,
+      "sha256": "035f2ccf1d26b0f5d2a4d70b7dc7f12a1459d83adb02f76a04a33b5137204f92",
+      "wheel_metadata": "Wheel-Version: 1.0\nGenerator: setuptools (84.2.1)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
+      "binary_privacy_checked": true
+    },
+    {
+      "filename": "deskmate_formats-0.1.0.dev0.tar.gz",
+      "bytes": 775217,
+      "sha256": "2e62ecd19ce8906146442226f12d7c79e4dcc8f765e06279b9e5ab5b32ed4062",
+      "binary_privacy_checked": true
+    }
+  ],
+  "build_snapshot_note": "Fresh private source copy avoids altering pre-existing repository build/dist. Snapshot precedes README/status updates and this validation receipt; its implementation matches the committed revision after declared text line-ending normalization. Artifact identities are pinned, not claimed reproducible across timestamps.",
+  "preservation": {
+    "archive": "private-evidence/calendar-multicalendar-20261108",
+    "original_fixtures_unchanged": true,
+    "native_provenance_unchanged": true,
+    "tokens_or_commercial_bytes_in_git": false,
+    "emulator_changes": false,
+    "requested_emulated_ms": 0,
+    "actual_elapsed_guest_time": "not measured",
+    "archive_file_sha256": {
+      "portable-final.txt": "e3b71ea41a6b29151a5dab4f8caf6fa7874b5cae0d3bfecd5909ed8db8a552f1",
+      "focused-committed.txt": "101e6b5c52301bda25a749c7a1edead88f9387286fc708b36dd2ace62e23b0e6",
+      "private-allocator.txt": "b902ae78950a273dd6716b151c1b00123898b8fd852b366c37073a1b8e038950",
+      "private-index.txt": "04f7525d703983ea4021d03805961cd7a4781f3e55e032b86b4be307771b2400",
+      "deployment.txt": "ba1a5abb5008b3a2c9f878e4c0fcc1a0a903bb8cdaba3e696d78d52809a80e3e",
+      "ruff.txt": "a4443afdcfb6d7363adb285762515ccf7cf50473b1a05c20c1a50f6bed4d26b0",
+      "audit-source.txt": "832ae254b8a71a7df84c61fd6e3e9b5e4de5f22cc7379a6fddcf670d3b2accd5",
+      "audit-packages.txt": "832ae254b8a71a7df84c61fd6e3e9b5e4de5f22cc7379a6fddcf670d3b2accd5",
+      "build.txt": "bd7ec6337fd2f35ea177fac839473ce9d3f92bda27814c3fd8f095c985b1d240",
+      "build-source-sha256.json": "baafa964bacb6917c02257039a430bd5e35bf4f44a8ffcc76552b7a4e66bd96e",
+      "build-identities.json": "cb086c52cb49ed09e4b2e239f54aa0344813e2efb891c64bc4d38ee178af4bcb",
+      "wheel-only-check.py": "e6e1b72fc89b535370227a3ce6e3b45cdb2320782570255e8d0600a426c2775a",
+      "wheel-only-check.txt": "e8887eea3db52e572b5c78829581aff14f9587d166cbad0ac6393250540415e9",
+      "native-validation.json": "fe5f8a152c32c54e33613ab52b538170fd3bdc1d62a50affee149446419f59ad",
+      "generated-creation.json": "1807bf506d4e071122e61ccbd5195b0cce93d138ebda52367bda35f819821471",
+      "generated-append.json": "72b539af8bf4f510104591e9c9148d27680f1548bc3f0e68e464b851d36c6720",
+      "staged-byte-validation.json": "6ac84b097d30c34258f1ad2e626e5a71e1e7605c4994d5c02158200ef245ac5f",
+      "unchanged-original-fixtures.json": "f2f74c0b43d0da1cc98f97dd83627141e7a169e6db0833ed8769272ee7b0da22",
+      "preservation-before-final-checks.json": "80d88088191f510594c5f6726a00100a8cc995f6cbf16826f927c9a14e453836",
+      "reuse-final.txt": "7e35f4e0bb1838ca87f5759b018349e5d640594bf5b8b0b4bd413cf28fafd52b",
+      "audit-final.txt": "4b38b70bdbf357dc567d4017bafab52f274053c399a9d2e0b2e7d6706654aaaa",
+      "preservation-after-final-checks.json": "80d88088191f510594c5f6726a00100a8cc995f6cbf16826f927c9a14e453836"
+    },
+    "fixture_contents_and_mtimes_unchanged_during_final_checks": true
+  },
+  "remaining_limits": [
+    "Only the measured exact-source SECOND creation repartition is reproduced, not a general balancing algorithm or proof of its native trigger.",
+    "First-SECOND append only, exact source A; no subsequent append, allocation, deletion, packing, recurrence or unsupported record types.",
+    "K collation/tied full-field ordering, arbitrary names/case, active selection, general record IDs and allocator behavior remain unqualified.",
+    "Independent native reopen/selection and full installed-tree action ledger remain absent."
+  ],
+  "smallest_next_experiments": [
+    "Separately authorized native reopen/selection verification of the generated first-event candidate, with exact input/output and installed-tree hashes.",
+    "Separately authorized no-create open/close control of the exact eight-page month source to distinguish index maintenance from table creation."
+  ]
+}

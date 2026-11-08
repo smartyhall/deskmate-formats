@@ -193,6 +193,7 @@ bytes and their provenance are preserved separately and unchanged.
 From the repository root, set `PYTHONPATH=src` and use fresh destinations:
 
 ```powershell
+$env:PYTHONPATH = 'src'
 python tools/experimental/generate_calendar_second_table.py tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.cln tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.expected.json NEW-SECOND.cln --experimental-create-second
 python tools/experimental/generate_calendar_second.py tests/fixtures/application-generated/calendar/native-second-empty-calendar-operator.cln NEW-FIRST-EVENT.cln --experimental-first-second
 python tools/experimental/check_calendar_multicalendar.py tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.cln tests/fixtures/application-generated/calendar/native-second-empty-calendar-operator.cln tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.expected.json --first-second tests/fixtures/application-generated/calendar/native-second-first-event-operator.cln
