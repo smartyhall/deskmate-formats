@@ -8,6 +8,16 @@
   eligible Git fixtures under `tests/fixtures/application-generated/`, with
   SHA-256 and experimental provenance. Back up config/NVRAM before changes; use
   disposable media. Format only a newly created, explicitly identified disk.
+- Standing publication permission (granted by the operator 2026-11-08):
+  eligible nonproprietary synthetic research files generated during this project,
+  including newly supplied operator-produced native-format files containing
+  synthetic test records, may be published to this repository without asking
+  separately for each file. Check every candidate's actual bytes and provenance
+  first. This grant does NOT cover real personal data, commercial software or
+  media, credentials, private screenshots/memory, unreviewed third-party
+  content, or other restricted/confidential inputs. Use a review PR; merging
+  remains subject to separate authorization. Never infer emulator/guest
+  operation authorization from this publication permission.
 - When a user requests publication of an eligible synthetic-data sample or
   native-acceptance candidate, commit and push the **actual independently checked
   binary bytes**, not just a private archive, SHA-256 digest or semantic JSON.

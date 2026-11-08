@@ -1,0 +1,93 @@
+{
+  "recorded_date": "2026-11-08",
+  "timezone": "America/New_York",
+  "evidence_class": "native application result from operator-supplied synthetic data, independently raw-byte verified; action/save operator-reported",
+  "user_publication_authorized": true,
+  "standing_publication_authorization": "2026-11-08, for eligible synthetic nonproprietary project files; never for private/restricted material",
+  "fixture": "tests/fixtures/application-generated/calendar/native-second-first-event-operator.cln",
+  "uploaded_original_name": "PERSONAL(3).CLN",
+  "input": {
+    "path": "tests/fixtures/application-generated/calendar/native-second-empty-calendar-operator.cln",
+    "size": 10240,
+    "sha256": "338487558d9992452db15858de1ba9cf790c26abf990ba70b47bbc9dc8d011f5"
+  },
+  "output": {
+    "size": 10240,
+    "sha256": "b9c9a4cae3cffac1bc337f7b378ea25df74efd3b6771e117c6e0fc3f81b77084",
+    "git_blob_sha1": "8a270493d9aba135cc78ca87e0d7a1796aa000ce"
+  },
+  "changed_byte_count": 38,
+  "changed_ranges": [
+    {
+      "start": "0x0464",
+      "before": "31",
+      "after": "32"
+    },
+    {
+      "start": "0x046e",
+      "before": "37",
+      "after": "38"
+    },
+    {
+      "start": "0x2027",
+      "before": "030000000000000000000000000000000000000000000000000000000000000000",
+      "after": "80118f6b7901680101ac01b00131015345434f4e44204f4e4c5920303031010203"
+    },
+    {
+      "start": "0x242e",
+      "before": "00",
+      "after": "08"
+    },
+    {
+      "start": "0x2430",
+      "before": "00",
+      "after": "27"
+    },
+    {
+      "start": "0x2432",
+      "before": "00",
+      "after": "11"
+    }
+  ],
+  "unchanged_pages": [
+    0,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "second_calendar": {
+    "appointment_count": 1,
+    "internal_config_count": 1,
+    "record_count": 2,
+    "next_id": 18,
+    "data_page": 8,
+    "index_page": 9
+  },
+  "appointment": {
+    "date": "2026-10-24",
+    "start": "11:00",
+    "end": "12:00",
+    "description": "SECOND ONLY 001",
+    "alarm_enabled": false,
+    "id": 17,
+    "row_length": 32,
+    "page": 8,
+    "in_page_offset": 39,
+    "absolute_offset": 8231,
+    "index_offset": 9262,
+    "index_locator": [
+      8,
+      39,
+      17
+    ]
+  },
+  "limitations": [
+    "No independently observed emulator controls or save ledger",
+    "No complete installed-tree before/after manifests",
+    "No independent post-save exit/reopen result",
+    "No demonstrated generic writer"
+  ]
+}
