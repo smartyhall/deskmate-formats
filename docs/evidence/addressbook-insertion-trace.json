@@ -1,0 +1,296 @@
+{
+  "recorded_date": "2026-11-07",
+  "timezone": "America/New_York",
+  "base": "a41bed1b7a4efa5d8763145de4c0dc42468dfa6b",
+  "branch": "codex/addressbook-insertion-trace",
+  "calendar_pr_78": {
+    "merged": true,
+    "merge_commit": "0cba552411d96376cce5db3c6d4907cc8e9b4ace",
+    "also_verified_via": "GitHub connector PR metadata; fetched origin/main ancestry"
+  },
+  "evidence_class": "verified executable instructions and existing reconstructed A01 bytes; SDK statements; conditional predictions; no new native observation",
+  "machine": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.13.17",
+    "decoder": "Capstone 5.0.7, x86 16-bit; existing private crosswalk venv"
+  },
+  "inputs": [
+    {
+      "path": "extracted/deskmate/dm305dk4/ADDRESS.PDM",
+      "size": 61025,
+      "sha256": "ef685b20e259f0932378668d9b120882468dc0da157a015e2df95d4ce61a60fb"
+    },
+    {
+      "path": "extracted/deskmate/dm305dk4/DMDB.R89",
+      "size": 1109,
+      "sha256": "799444bb8c04632d261f61498ba269f9352e5528718f2e0a89512bf6ef7b808f"
+    },
+    {
+      "path": "extracted/deskmate/dm305dk4/DMDBRD.RES",
+      "size": 21955,
+      "sha256": "c4bc9f5699bfaf1ac5adb57a011b04dcec00a2ae75edb2baf603c8001fa99cee"
+    },
+    {
+      "path": "extracted/deskmate/dm305dk4/DMDBUPD.RES",
+      "size": 13740,
+      "sha256": "9e77a2081ebb3a9549903f5d337580c65d6e0a3f603185064d4c82e16327cf4f"
+    },
+    {
+      "path": "extracted/sdk-3.03/Development-Disk-1/DMDB.H",
+      "size": 14093,
+      "sha256": "47c2ff4638d8ab1bcc12aeab3e2dd5b51ccfeef9bbddb1a014912c831df4d5aa"
+    },
+    {
+      "path": "extracted/sdk-3.03/Development-Disk-1/DMDB.INC",
+      "size": 13275,
+      "sha256": "2ea33422d68ab2402ca2b83a1c1f5d7fee80db9c36000a8609d42712ce299a29"
+    },
+    {
+      "path": "originals/sdk-3.03/DeskMate-Development-Guide.pdf",
+      "size": 16801017,
+      "sha256": "8081d5cd34305982844ab3598ebfbdf8887e7e369d1174a88a7631cba08439e0"
+    }
+  ],
+  "existing_A01": {
+    "source_class": "existing tool-generated reconstruction, hash matches published native A01",
+    "size": 10240,
+    "sha256": "19215ea147c65b259eb963fd240e9931d96e77f92d1001f0f7edf89024076ac8",
+    "mtime_ns": 1794102838240339600,
+    "descriptor_offset": 1061,
+    "raw_descriptor_hex": "5401444154410134013136013030303031013030300130303031370135013301320102",
+    "token_offsets": [
+      1061,
+      1063,
+      1068,
+      1070,
+      1073,
+      1079,
+      1083,
+      1089,
+      1091,
+      1093,
+      1095
+    ],
+    "sort_ordinals": [
+      3,
+      2
+    ],
+    "old_row_size": 61,
+    "index_header_hex": "ffffffffffffffffff00ffffffffffffffffff00ffffffffffffffffff00ffffffffffffffffff00",
+    "index_tuple": [
+      4,
+      0,
+      16
+    ],
+    "first_last_types": [
+      "K",
+      "K"
+    ],
+    "old_prefix_derived_hex": "55534552204101544501",
+    "new_prefix_derived_hex": "414c504841015a554c01"
+  },
+  "new_findings": {
+    "add_route": [
+      "ADDRESS 0AA0 -> 3B5F (new inline entry)",
+      "ADDRESS 07A5 -> 3A44 -> 3B2A -> 43F5 (pending save)",
+      "ADDRESS 45C6 -> 8C05 -> 0F38 -> 9A3E -> A9B9 -> far DS:29C4"
+    ],
+    "conditional_reader_update_route": [
+      "RD table 18D0 -> 1938; table 1993 -> 19E4 -> far DS:0128",
+      "UPD selector 7: 025E -> 02B0 -> 1277 -> 1F8E"
+    ],
+    "sort_ordinals_loader": "RD 2261-22AB: descriptor field 9 onward -> object +0x0C",
+    "routing_prefix": "UPD 11C8-1276: ten bytes including field separators; not full comparison truncation",
+    "full_comparison": "UPD 1BFC -> 29E5 -> 2942; K -> callback 0x2C -> RD 4502",
+    "index_insertion": "UPD 26B7-2849: binary search, six-byte shift, location/ID stores",
+    "bounded_tie_finding": "UPD 2773 <= searches earlier; no ID tie-break in selected full comparator/search; global duplicate policy unqualified",
+    "next_id": "UPD 036D/0373 increments ordinary ID by one; 0394 -> 30A8",
+    "descriptor_count": "UPD 30E9-3108 -> 2E3F increments field 5; 3111-3126 writes field 7 width five"
+  },
+  "prediction": {
+    "source_profile": "exact 10-page A01; success path; ordinary A-before-U DOS collation; observed 16-field defaults",
+    "new_row_id": 17,
+    "new_row_offset": 4157,
+    "new_row_bytes": 56,
+    "new_marker_offset": 4213,
+    "index_entries": [
+      [
+        4,
+        61,
+        17
+      ],
+      [
+        4,
+        0,
+        16
+      ]
+    ],
+    "count_offset": 1073,
+    "count_after": "00002",
+    "next_id_offset": 1083,
+    "next_id_after": "00018",
+    "opaque_offset": 1079,
+    "opaque_after": "000",
+    "new_page_or_map_update": false,
+    "old_row_preserved": true,
+    "index_boundary_change_expected": false
+  },
+  "unresolved": [
+    "actual far-indirect loaded module/callback identities",
+    "actual K collation table and fallback/error behavior",
+    "all UI-default branches and additional save work",
+    "native saved two-contact bytes and reopen persistence",
+    "global ties/duplicates, index splitting and broad profiles"
+  ],
+  "prototype_created": false,
+  "new_database_samples_created": false,
+  "validation": {
+    "portable_addressbook": {
+      "passed": 8,
+      "elapsed_seconds": 0.311
+    },
+    "portable_trial_report": {
+      "passed": 7,
+      "elapsed_seconds": 0.099
+    },
+    "private_insertion_source": {
+      "passed": 4,
+      "elapsed_seconds": 0.002
+    },
+    "private_allocator_source": {
+      "passed": 4,
+      "elapsed_seconds": 0.003
+    },
+    "full_suite_repeated": false,
+    "scope": "focused static research; no production-code change",
+    "ruff": "passed: new private source regression",
+    "reuse": "passed: 297/297 authored files",
+    "repository_audit": "passed: 601 source files, five database fixtures, four JSONL fixtures",
+    "git_diff_check": "passed",
+    "calendar_merge_ancestry": "passed",
+    "wheel_sdist_rebuilt": false,
+    "packaging_reason": "documentation and opt-in private tests only; no package or fixture changes"
+  },
+  "preservation": {
+    "pinned_source_files_reverified": 7,
+    "existing_fixture_files_equal_to_base": 16,
+    "historical_reports_changed": false
+  },
+  "native_requested_emulated_ms": 0,
+  "native_guest_clock_delta_ms": null,
+  "emulator_launched_or_connected": false,
+  "new_app_server_process": false,
+  "durable_private_archive": "addressbook-insertion-20261107 under documented private-evidence directory",
+  "commands": [
+    "git fetch origin",
+    "git switch -c codex/addressbook-insertion-trace origin/main",
+    "existing crosswalk venv Python investigate.py (private, archived source and selected instruction windows)",
+    "DESKMATE_REFERENCE_EXTRACTED=<preserved extraction root> python -m unittest discover -s tests/private -p test_addressbook_insertion_source.py -v",
+    "DESKMATE_REFERENCE_EXTRACTED=<preserved extraction root> python -m unittest discover -s tests/private -p test_dmdb_allocator_source.py -v",
+    "PYTHONPATH=src python -m unittest discover -s tests/portable -p test_addressbook.py -v",
+    "PYTHONPATH=src python -m unittest discover -s tests/portable -p test_database_trial_report.py -v",
+    "python -m ruff check tests/private/test_addressbook_insertion_source.py",
+    "python -m reuse lint",
+    "python tools/audit_repository.py",
+    "git diff --check",
+    "git merge-base --is-ancestor 0cba552411d96376cce5db3c6d4907cc8e9b4ace HEAD"
+  ],
+  "private_artifacts": [
+    {
+      "path": "ADDRESS.PDM.asm",
+      "size": 1212948,
+      "sha256": "dc0d53dc76eb8970c9f5f00b43ace2bd12a6ed986608103a2cdbf0130bb58de2"
+    },
+    {
+      "path": "audit.log",
+      "size": 229,
+      "sha256": "4a0abca2a1f7c6d61d0df74fa55b8748b0ef5e2353a2754ba298aff350d61aac"
+    },
+    {
+      "path": "checkpoint.py",
+      "size": 5531,
+      "sha256": "200f82f1433c381d599a10f74c5591f0395a2fe59c58fcc3f5aea4063060b0eb"
+    },
+    {
+      "path": "finalize.py",
+      "size": 2690,
+      "sha256": "0b336ac389c785f91084bd6ae6b94ac3554b3983acd2896a98844a932906cdc4"
+    },
+    {
+      "path": "investigate.log",
+      "size": 2665,
+      "sha256": "3261dbd1b17b942e8991fee2d5d795ec3057751cb6f3035bf6e3f1686f86d809"
+    },
+    {
+      "path": "investigate.py",
+      "size": 3392,
+      "sha256": "c8e3c0bd451cfe182958193e652f8a6cb3909aec367acd2d733aa1672e5e7e1d"
+    },
+    {
+      "path": "measurements.json",
+      "size": 2665,
+      "sha256": "3261dbd1b17b942e8991fee2d5d795ec3057751cb6f3035bf6e3f1686f86d809"
+    },
+    {
+      "path": "portable-addressbook.log",
+      "size": 1125,
+      "sha256": "f7250acbeee68977b92830caa9942c7256571d414883e85de7bd754b28863911"
+    },
+    {
+      "path": "portable-trial-report.log",
+      "size": 1301,
+      "sha256": "c3013ce3ea8b86e820470fbfdaf0dc5ffdcb08fdc1782444fa931ec4f0c3cd35"
+    },
+    {
+      "path": "preservation.json",
+      "size": 3366,
+      "sha256": "ee93197ba14fe40413dadba3cc2a73619ee0884fcdead4e1e00fea93d9bb4ef1"
+    },
+    {
+      "path": "private-allocator.log",
+      "size": 647,
+      "sha256": "a88f23db5877397277dfae91eb8d08456d140d604cd393702f498b235309f1ad"
+    },
+    {
+      "path": "private-source.log",
+      "size": 709,
+      "sha256": "14412ad6e5196733bd7ac2454a2da2711f552139e588d713d87288282805712d"
+    },
+    {
+      "path": "README.txt",
+      "size": 591,
+      "sha256": "ed30292fd8074c81ccf31169e0b8c4872cd29faa138248ea366ed7f0977682db"
+    },
+    {
+      "path": "reuse.log",
+      "size": 456,
+      "sha256": "aadf3652a2da5d55168e8b0b5056e70e32d5770e5de6ad68f3076b0d6ed90e8a"
+    },
+    {
+      "path": "ruff.log",
+      "size": 20,
+      "sha256": "a4443afdcfb6d7363adb285762515ccf7cf50473b1a05c20c1a50f6bed4d26b0"
+    },
+    {
+      "path": "selected-instructions.txt",
+      "size": 107161,
+      "sha256": "7ec86b8a42e6369b98320399d117b3e800d2d06dc2af4d3d3b2fc0547d937e72"
+    },
+    {
+      "path": "tables.py",
+      "size": 676,
+      "sha256": "eba30bbbf02d910c79a48cbf94ace88d603bd4cb48b2c137e747191f8c7224f3"
+    },
+    {
+      "path": "trace.py",
+      "size": 1206,
+      "sha256": "4d251b3428a2c3cfab50ab64e59c93f85c44d1007b2cc36f13c80e87ca3ba916"
+    }
+  ],
+  "next_step": "separately authorize existing single A01 second-contact Add/save trial; retain complete before/after ADR and installed-tree manifests; reuse Phase II diagnostic",
+  "guest_configuration_and_ROM": "not used or measured: offline file analysis only; no guest configuration changed",
+  "authored_source_sha256": {
+    "docs/research/addressbook-insertion-trace.md": "d6b1a74fe18da86f0c72fb0ac61bf456116e5de04b8bbf309896e0fa1e4b8bba",
+    "tests/private/test_addressbook_insertion_source.py": "32f66b6b396a8cf788e1c058fb364b6ce5396397a86afd29735bca39f10cd975"
+  }
+}
