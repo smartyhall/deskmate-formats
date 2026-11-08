@@ -98,6 +98,12 @@ index growth and general allocator support are not enabled.
 A deterministic 61-appointment / 30-date / eight-page candidate passes a separate
 raw-byte checker. It is **tool-generated; native open/save acceptance pending**.
 See [source locations, commands, exact hash and limits](research/dmdb-page-allocator.md).
+The complete [30-day binary](../tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.cln)
+and [expected appointments](../tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.expected.json)
+are now included in Git for review; they remain excluded from wheel/sdist.
+The [operator guide](research/calendar-30-day-native-acceptance.md) covers all
+30 dates and data pages 4, 6 and 7, with a separate optional persistence trial.
+Publication and independent offline validation do not establish native acceptance.
 
 ## Manual UI time-normalization evidence (not a native codec claim)
 

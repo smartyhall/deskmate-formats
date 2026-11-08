@@ -1,0 +1,218 @@
+{
+  "recorded_date": "2026-11-07",
+  "timezone": "America/New_York",
+  "base": "32a099e09504bfca1c668b253d325f4e6f54109e",
+  "branch": "codex/publish-calendar-30-days",
+  "policy": {
+    "pr": 77,
+    "merged": true,
+    "merge_commit": "32a099e09504bfca1c668b253d325f4e6f54109e",
+    "present_in_AGENTS": true
+  },
+  "evidence_class": "tool-generated synthetic candidate; independent offline verification; not application-generated or native-accepted",
+  "machine": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.13.17",
+    "ruff": "0.17.3",
+    "reuse": "6.3.0",
+    "build": "1.6.1"
+  },
+  "candidate": {
+    "path": "calendar/sdk-30-days-allocator-tool-generated.cln",
+    "size": 8192,
+    "sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+    "application": "Tandy DeskMate Calendar",
+    "version": "03.05.00",
+    "experiment": "2026-11-07 30-day allocator candidate publication; native acceptance pending, issue #71",
+    "origin": "Tool-generated, NOT application-generated and NOT native-accepted. Exact archived dmdb-allocator-20261107 candidate independently regenerated from committed E02 using the merged PR #75 experimental builder, then checked by the separate raw-byte oracle. Adds 60 invented appointments in reverse chronological physical order to unchanged E02 LPHa124. No personal data; native structural facts are preserved without an ownership claim. No emulator or guest operations in the publication run.",
+    "source_path": "calendar/e02-86box-historical-match.cln",
+    "source_size": 6144,
+    "source_sha256": "0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9",
+    "generator_revision": "32a099e09504bfca1c668b253d325f4e6f54109e",
+    "generation_method": "PYTHONPATH=src; python tools/experimental/generate_calendar_month.py tests/fixtures/application-generated/calendar/e02-86box-historical-match.cln NEW-MONTH.cln --experimental-new-pages > NEW-MONTH.json",
+    "independent_check": "python tools/experimental/check_calendar_multipage.py tests/fixtures/application-generated/calendar/e02-86box-historical-match.cln tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.cln tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.expected.json",
+    "expected_appointments": "calendar/sdk-30-days-allocator-tool-generated.expected.json",
+    "evidence_class": "tool-generated synthetic candidate; byte-exact archive/regeneration match; independently checked offline; native open/display, edit/save persistence and alarm firing unverified",
+    "synthetic_data": true,
+    "native_opened": false,
+    "native_saved": false
+  },
+  "regeneration": {
+    "archived_candidate": "dmdb-allocator-20261107/calendar-30-days-tool-generated.cln under documented lab private-evidence directory",
+    "archived_size": 8192,
+    "archived_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+    "regenerated_matches_archive_bytes": true,
+    "generation_receipt_matches_archive": true,
+    "independent_checker": "tools/experimental/check_calendar_multipage.py; no production codec imports",
+    "source_revision": "32a099e09504bfca1c668b253d325f4e6f54109e",
+    "source_artifacts": [
+      {
+        "path": "src/deskmate_formats/calendar/experimental_new.py",
+        "git_blob_sha256": "30abc2e6fc3da7a2f0494d89b6b3d886222b7ce3ef58fecb0f3d0d846b0692d1"
+      },
+      {
+        "path": "src/deskmate_formats/calendar/samples.py",
+        "git_blob_sha256": "b71fc8efd98129fbe2e2adce49985695ad6464c75c944f30a836238eb2555c82"
+      },
+      {
+        "path": "tools/experimental/generate_calendar_month.py",
+        "git_blob_sha256": "f419850e4ecc2892e01ee990d783be053f4cc71c06ec1a782a4358dae117bb86"
+      },
+      {
+        "path": "tools/experimental/check_calendar_multipage.py",
+        "git_blob_sha256": "6be888915e7de8385319089fbdfe41add83de9c6cee32dcfb184ae63ac5276ab"
+      }
+    ],
+    "archived_independent_receipt_sha256": "084147dc46895a598f40e5dc5fe0fe463862a8a891622a85f85ed4f753ff7ccd"
+  },
+  "expected_listing": "tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.expected.json",
+  "contents": {
+    "appointments": 61,
+    "additions": 60,
+    "distinct_dates": 30,
+    "first_date": "2026-10-23",
+    "last_date": "2026-11-21",
+    "pages": 8,
+    "data_chain": [
+      4,
+      6,
+      7
+    ],
+    "index_entries": 62,
+    "next_id": 78,
+    "page_usage": [
+      {
+        "page": 4,
+        "indexed_rows": 24,
+        "first_id": 16,
+        "last_id": 39,
+        "marker_file_offset": 5089,
+        "zero_tail_bytes": 30
+      },
+      {
+        "page": 6,
+        "indexed_rows": 24,
+        "first_id": 40,
+        "last_id": 63,
+        "marker_file_offset": 7160,
+        "zero_tail_bytes": 7
+      },
+      {
+        "page": 7,
+        "indexed_rows": 14,
+        "first_id": 64,
+        "last_id": 77,
+        "marker_file_offset": 7762,
+        "zero_tail_bytes": 429
+      }
+    ]
+  },
+  "controls": {
+    "native_executed": false,
+    "emulator_launched_or_connected": false,
+    "guest_media_modified": false,
+    "native_save": false,
+    "requested_emulated_ms": 0,
+    "actual_guest_clock_delta_ms": null
+  },
+  "preservation": {
+    "prior_archive_files": 65,
+    "prior_fixture_files": 4,
+    "verification": "passed: all prior archive and fixture contents, sizes and mtimes unchanged",
+    "E02_sha256": "0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9",
+    "prior_14_day_sha256": "85ad05d6bf58540e32349bbb559301d36aced164741b03b09b30d63f22d636ac"
+  },
+  "validation": {
+    "portable": {
+      "command": "python -m unittest discover -s tests/portable -v",
+      "exit_code": 0,
+      "elapsed_seconds": 132.639,
+      "log_sha256": "c7b4cb475b191d2bc0831f7b8634ef3e08256f08c42751510305ef06164c60ca",
+      "tests_run": 332,
+      "suite_elapsed_seconds": 131.302,
+      "skipped": 0
+    },
+    "deployment": {
+      "command": "python -m unittest discover -s deployment/windows10/tests -v",
+      "exit_code": 0,
+      "elapsed_seconds": 14.185,
+      "log_sha256": "991b491d38866e048b3f8123fe9540423dc5ade05fd0d71d30295af9fd5662ff",
+      "tests_run": 31,
+      "suite_elapsed_seconds": 13.535,
+      "skipped": 2
+    },
+    "ruff": {
+      "command": "python -m ruff check src tests/portable tools",
+      "exit_code": 0,
+      "elapsed_seconds": 0.361,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "reuse": {
+      "command": "python -m reuse lint",
+      "exit_code": 0,
+      "elapsed_seconds": 4.713,
+      "log_sha256": "98222fb54545ae38c99686813a370df6b5a825826b1d7bd5170ff58131da6f85"
+    },
+    "build": {
+      "command": "python -m build --outdir NEW-PRIVATE-ARCHIVE/dist",
+      "exit_code": 0,
+      "elapsed_seconds": 30.463,
+      "log_sha256": "be2d9f93fbcfc5cbb8fb74403abb613e038b689bb4d72d241193bc01b30fc262"
+    },
+    "audit": {
+      "command": "python tools/audit_repository.py",
+      "exit_code": 0,
+      "elapsed_seconds": 2.814,
+      "log_sha256": "08fde531c4747d36ce33643b024cacb56632c7ff39157ac4160cc118ea34b436",
+      "counts": {
+        "source_files": 595,
+        "database_fixtures": 5,
+        "synthetic_jsonl_fixtures": 4
+      }
+    },
+    "isolated_wheel_and_package_checks": {
+      "isolated_wheel_install_and_CLI_check": "passed",
+      "wheel_only_candidate_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+      "elapsed_seconds": 22.191,
+      "artifacts": [
+        {
+          "name": "deskmate_formats-0.1.0.dev0-py3-none-any.whl",
+          "size": 183554,
+          "sha256": "2c040697784ea91c81accc2472424882b51a5ee8ba79464ee1c33b4f853ee128",
+          "members": 115,
+          "excluded_binary_fixtures": true,
+          "privacy_scan": "passed"
+        },
+        {
+          "name": "deskmate_formats-0.1.0.dev0.tar.gz",
+          "size": 740870,
+          "sha256": "8c8c7bd94a36adb313925f483d29af51eb2c8c07b1226c2ad1ad83f17e2868b1",
+          "members": 548,
+          "excluded_binary_fixtures": true,
+          "privacy_scan": "passed"
+        }
+      ]
+    },
+    "guide_appointment_table": "all 60 additions match expected listing; original E02 event separately specified",
+    "initial_focused_run": "10 passed, 1 failed due to a receipt count/list key collision in the new test; corrected public listing appointment_count key, no binary/hash change; subsequent 11 passed and full suite passed"
+  },
+  "durable_private_archive": "calendar-30-day-publication-20261107 under documented lab private-evidence directory",
+  "limits": [
+    "No native open/display, edit/save persistence or alarm firing result for this candidate.",
+    "Original E15/E19 bytes remain unavailable; historical reports are unchanged.",
+    "No general allocation, deleted-row reuse/reclamation or arbitrary page/index growth claim."
+  ],
+  "next_native_experiment": "Separately authorized hash-pinned open/display across all 30 dates and data pages 4/6/7; optional one-edit/save persistence is a separate trial.",
+  "artifact_commit": "e9ca441a2adaf260239cf50d3deae07c65a90dbc",
+  "binary_download_url": "https://raw.githubusercontent.com/smartyhall/deskmate-formats/e9ca441a2adaf260239cf50d3deae07c65a90dbc/tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.cln",
+  "published_content": [
+    {
+      "path": "tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.cln",
+      "git_blob_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106"
+    },
+    {
+      "path": "tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.expected.json",
+      "git_blob_sha256": "4aec43cca0c1f15bd29e0578a1fc0aba09af5f04fef56443eb36c21e9ccdb99f"
+    }
+  ]
+}

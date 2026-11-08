@@ -2,7 +2,21 @@
 
 **Snapshot:** 2026-11-07 (America/New_York), after allocator
 [PR #75](https://github.com/smartyhall/deskmate-formats/pull/75) merged at
-`eff3373f34c0bd27bf0b8877ea9c94902dd60115` on `main`.
+`eff3373f34c0bd27bf0b8877ea9c94902dd60115` on `main`. Publication work is based
+on verified `origin/main` `32a099e09504bfca1c668b253d325f4e6f54109e`, including
+the standing synthetic-candidate publication policy merged in PR #77.
+
+**30-day publication on `codex/publish-calendar-30-days` (review pending):**
+the complete [8,192-byte Calendar](tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.cln)
+has been regenerated and matched byte for byte against the preserved allocator
+candidate, SHA-256 `d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106`.
+The [61-appointment listing](tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.expected.json),
+[operator download/inspection guide](docs/research/calendar-30-day-native-acceptance.md)
+and [publication receipt](docs/evidence/calendar-30-day-publication.json) prepare
+native acceptance across all 30 dates and pages 4, 6 and 7. This is **tool-generated,
+independently checked offline, not application-produced or native-accepted**.
+No emulator/guest operation or native save occurred. Source E02 and the prior
+14-day fixture are unchanged. This branch's publication is not a merged capability.
 
 This is a concise, public **capability and handoff snapshot**, not a reconstruction
 of an older missing `PROJECT_STATUS.md`, a substitute for private experiment
@@ -113,7 +127,7 @@ milestone is recorded separately below; it does not establish save persistence.
 3. **Calendar native multipage acceptance:** verify the hash-pinned 61-appointment,
    30-date candidate on a separately authorized disposable DeskMate installation,
    including records on pages 4, 6 and 7. Distinguish display/read traversal from
-   an independently approved one-edit/save persistence test. [Runbook](docs/research/dmdb-page-allocator.md).
+   an independently approved one-edit/save persistence test. [Download and checklist](docs/research/calendar-30-day-native-acceptance.md).
    A tool-generated full month exists; **native compatibility is not yet established**.
 4. **Future sync semantics:** preserve high-precision original CalDAV times when
    the native projected representation is unchanged; interpret confirmed changes
