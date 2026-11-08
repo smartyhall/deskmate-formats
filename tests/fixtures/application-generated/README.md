@@ -8,7 +8,7 @@ verified bytes are necessary for a native acceptance test. Test records must
 be synthetic or otherwise authorized for publication. Never normalize or
 reconstruct a file and call it an original application-generated fixture.
 Tool-generated candidates must explicitly say they are **not** application
-output and **not** yet accepted by the native program.
+output and describe their actual native validation status, including limits.
 
 Record each file under a named subdirectory (e.g. `calendar/E02.cln`).
 Update `manifest.json` with its relative path, size, SHA-256, target
@@ -32,4 +32,7 @@ compatibility candidate**, not a DeskMate-produced original: 29 appointments
 across October 23–November 5, 2026. Its hash matches the prior privately
 archived generated output. The E02 source fixture is unchanged. See
 [issue #69](https://github.com/smartyhall/deskmate-formats/issues/69) for the
-separately authorized native application acceptance procedure.
+remaining hash-pinned controlled-save acceptance procedure. The operator reports
+all 29 appointments and displayed alarm states appear as expected in DeskMate
+3.05; [the dated report](../../../docs/research/calendar-14-days-operator-report.md)
+records the successful display milestone and untested persistence/alarm firing.

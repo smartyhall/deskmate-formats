@@ -106,11 +106,14 @@ reader can read bounded indexed pages, but opaque allocation-header changes stil
 block a general writer. [E15](experiments/e15-page-boundary.md),
 [E19](experiments/e19-space-pressure.md).
 
-The newly generated 14-day Calendar has independent offline validation. Four
-Address Book reconstructions match published native hashes. No new generated
-file was opened or saved in DeskMate in this campaign. Native confirmation of
-SDK date/time combinations and multicontact indexing is a separate authorized
-experiment. Timezones, recurrence rules, non-ASCII encoding, all-day events,
+The committed tool-generated 14-day Calendar has independent offline validation.
+The operator subsequently reports that all 29 appointments and their displayed
+alarm states appeared as expected in DeskMate 3.05. [Report and exact candidate](research/calendar-14-days-operator-report.md).
+The guest-loaded bytes were not independently rehashed and no native edit/save
+specimen or alarm-delivery result was supplied. Four Address Book reconstructions
+match published native hashes; multicontact indexing remains unverified.
+Broader SDK date/time combinations require separate evidence. Timezones,
+recurrence rules, non-ASCII encoding, all-day events,
 date-only contacts, collation/ties, native edits/deletions and stable external-ID
 mapping need explicit future designs and evidence before bridge implementation.
 
