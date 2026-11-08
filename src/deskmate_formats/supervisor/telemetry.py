@@ -65,6 +65,12 @@ class AppServerTelemetry:
             self._exited = True
             self._publish("process.exited", "Host observed app-server process exit")
 
+    def driver_outcome(self, state):
+        """Fixed operator-driver outcome, separate from the observed turn lifecycle."""
+        if state not in ("completed", "blocked"):
+            raise ProtocolError("unsupported driver outcome")
+        self._publish("agent.note", "S0 driver completed" if state == "completed" else "S0 driver blocked; operator inspection required")
+
     def observe(self, event):
         if self._disconnected or self._terminal or self._turn is None:
             return

@@ -34,11 +34,13 @@ The prompt is a behavioral request, not a security boundary: review the actual
 child configuration before authorization. Never inherit emulator tokens,
 automation configuration or privileged tool access.
 
-**Execution readiness:** the APIs below exist, but there is no integrated S0
-operator command. A small reviewed experiment driver and isolated launch
-configuration are prerequisites for a repeatable live run. This document
-provides the sequence and API contract, not an executable production CLI.
-Stop at an unmet gate; do not patch private attributes or borrow fixture helpers.
+**Execution readiness:** an installable operator command and synthetic-only S2
+bridge now exist; see the [operator driver runbook](codex-supervisor-operator-driver.md).
+That document supplies exact preparation, status, explicit execution and failure
+commands. The fragments below explain the original API sequence. Effective live
+launch isolation still needs review, and **new explicit single-model-canary
+authorization remains required**. No live run was performed by implementing the
+driver. Stop at an unmet gate; do not patch private attributes or borrow fixture helpers.
 
 ## 1. Preflight and private preparation (no model calls)
 
@@ -118,7 +120,8 @@ with open_ledger(root / 'receipts', create=True):
 Get-Acl -LiteralPath $env:S0_CANARY_ROOT | Format-List
 ```
 
-This creates private files only; it is not a launch command. Never rerun it over
+This historical API example creates private files only; prefer the driver's
+`prepare` command for a new integrated run. Never rerun it over
 an existing run. The later owner opens the ledger with `create=False`.
 Back up any existing configuration before changing it; preferably change none.
 Have the operator provision authentication privately for the dedicated home,
@@ -126,7 +129,7 @@ using an existing authorized account with sufficient included allocation.
 Do not print/copy credentials into this repository, browser or transcript.
 No authentication bootstrap or paid-credit fallback is authorized here.
 
-**Launch configuration gap:** `AppServer(argv, timeout=..., cwd=..., env=...)`
+**Launch configuration review gate:** `AppServer(argv, timeout=..., cwd=..., env=...)`
 can set the scratch cwd and an explicitly constructed environment. Its RPC
 allowlist cannot set model, sandbox, approval policy, tools or turn budgets.
 Before execution, review the pinned binary's local non-launch help and
@@ -135,7 +138,9 @@ with a read-only sandbox, no approval escalation, no MCP/native tools and an
 operator-selected available model. Record exact argv, safe environment names,
 model/effort and effective policy privately. A dedicated `CODEX_HOME` alone
 does not prove isolation from machine/project settings or inherited secrets.
-This runbook does not supply unverified config switches. If effective isolation
+The driver supplies a hashed template and sanitized environment, with a distinct
+exact-plan isolation-review gate. Its template alone does not qualify effective
+machine settings or tool isolation. If effective isolation
 cannot be established, stop before launch. Check the `thread/start` result's
 cwd/model/provider/sandbox/approval policy before sending any model input.
 

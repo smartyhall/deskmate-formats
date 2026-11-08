@@ -34,6 +34,8 @@ deskmate-86box-observer = "deskmate_formats.observer.demo:main"
 deskmate-observer-event = "deskmate_formats.observer.event_cli:main"
 deskmate-observer-codex = "deskmate_formats.observer.codex_cli:main"
 deskmate-supervisor-task = "deskmate_formats.supervisor.task_cli:main"
+deskmate-supervisor-s0 = "deskmate_formats.supervisor.driver_cli:main"
+deskmate-supervisor-s2 = "deskmate_formats.supervisor.bridge_cli:main"
 
 [tool.setuptools.package-data]
 "*" = ["*.license"]

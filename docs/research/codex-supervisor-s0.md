@@ -1,5 +1,9 @@
 # Supervisor S0 app-server protocol
 
+Current operator integration: [installable driver and offline S2 foundation](codex-supervisor-operator-driver.md).
+The historical acceptance below remains synthetic evidence. A real model canary
+has not been executed by this work and requires new explicit authorization.
+
 This is the offline portion of [issue 58](https://github.com/smartyhall/deskmate-formats/issues/58),
 based on DeskMate Formats commit `92e29550efd1453dcaa26936813e7100d4afaab0`.
 See the [supervisor design](codex-supervisor-design.md) and

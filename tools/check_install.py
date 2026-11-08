@@ -34,6 +34,8 @@ for command in (
     "deskmate-observer-event",
     "deskmate-observer-codex",
     "deskmate-supervisor-task",
+    "deskmate-supervisor-s0",
+    "deskmate-supervisor-s2",
 ):
     matches = [entry for entry in dist.entry_points if entry.name == command]
     assert len(matches) == 1 and callable(matches[0].load())
@@ -46,4 +48,4 @@ for command in (
                   b'"title":"Check install","description":"Synthetic task","category":"verification",'
                   b'"profile":"offline","resources":["source-read"],"dependencies":[]}')
         subprocess.run([str(executable), "validate"], input=sample, check=True, stdout=subprocess.DEVNULL)
-print("Installed package, observer assets, and all seven CLI entry points passed", sys.version.split()[0])
+print("Installed package, observer assets, and all CLI entry points passed", sys.version.split()[0])
