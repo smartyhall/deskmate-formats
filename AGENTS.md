@@ -8,6 +8,19 @@
   eligible Git fixtures under `tests/fixtures/application-generated/`, with
   SHA-256 and experimental provenance. Back up config/NVRAM before changes; use
   disposable media. Format only a newly created, explicitly identified disk.
+- When a user requests publication of an eligible synthetic-data sample or
+  native-acceptance candidate, commit and push the **actual independently checked
+  binary bytes**, not just a private archive, SHA-256 digest or semantic JSON.
+  Put an approved tool-generated candidate under
+  `tests/fixtures/application-generated/<application>/`, clearly marked
+  **tool-generated, not application-produced or native-accepted** until tested.
+  Add the exact size/hash, source hash, generator command, evidence limits,
+  expected semantic contents and accurate REUSE sidecar to the manifest/docs;
+  test the committed bytes and ensure binary fixtures remain excluded from
+  wheel/sdist. For authorized publication, push a dedicated branch and open a
+  PR for review; do not merge without separate authorization. If publication
+  is not authorized or is unsafe, keep the artifact private and report the
+  precise blocker rather than silently substituting hashes for a usable file.
 - Never commit commercial installers, ROMs, executables, complete installed
   trees, real user databases, private RAM, credentials, or personal information.
   Embedded native schema, indexes, and metadata in application-created test
