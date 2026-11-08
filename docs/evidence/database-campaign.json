@@ -1,0 +1,30 @@
+{
+  "campaign_base": "0d8c9e9cb538c65c382cd4f5478048e4397c6bb7",
+  "evidence_class": "offline generated output and independent structural tests",
+  "calendar_14_days": {
+    "receipt_version": 1,
+    "profile": "sdk",
+    "source_sha256": "0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9",
+    "output_sha256": "85ad05d6bf58540e32349bbb559301d36aced164741b03b09b30d63f22d636ac",
+    "size": 6144,
+    "added_appointments": 28,
+    "total_appointments": 29,
+    "distinct_dates": 14,
+    "start": "2026-10-23",
+    "days": 14,
+    "capacity": {
+      "data_bytes": 278,
+      "index_entries": 133,
+      "next_id": 46,
+      "low_ids_remaining": 82
+    },
+    "native_opened": false,
+    "native_save_tested": false
+  },
+  "inputs": {
+    "SDK_Development_Guide_sha256": "8081d5cd34305982844ab3598ebfbdf8887e7e369d1174a88a7631cba08439e0",
+    "Calendar_3_05_PDM_sha256": "819df5658b663aa69b15584abf805062679e97f587f3404738f6e82876e4bd23"
+  },
+  "native_requested_emulated_ms": 0,
+  "native_guest_clock_delta_ms": null
+}

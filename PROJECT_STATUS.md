@@ -25,7 +25,15 @@ not a reconstruction of the absent historical PROJECT_STATUS.md.
 M1 complete: shared bounded structural reader, retaining opaque bytes and avoiding a
 universal next-ID rule (the Filer DBCOLS counterexample is decisive). Six new
 portable tests passed; unchanged baseline: 284 tests passed in 130.787 seconds.
-See docs/research/database-campaign.md. M2 is next.
+See docs/research/database-campaign.md. M1 commit `0158cf8` was pushed and
+remote-verified; draft PR [#67](https://github.com/smartyhall/deskmate-formats/pull/67).
+
+M2 partial: explicit SDK profile, multipage reading and a generated 14-day,
+29-appointment file are implemented and independently checked offline. Existing
+default validation is preserved. 42 Calendar-focused and 37 adversarial tests
+passed. Actual output and receipt are durably archived privately; hashes are in
+docs/evidence/database-campaign.json. Allocation/full-month output remains blocked.
+M3 is next.
 
 ## Gates and next steps
 

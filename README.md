@@ -20,7 +20,7 @@ remain archived outside Git.
 
 | Area | Status | What is available or being investigated |
 |---|---|---|
-| **Calendar 3.05** (`PERSONAL.CLN`) | **Experimental tools** | Read-only parsing, indexed record inspection, text/JSON output, and a narrowly bounded append writer for verified six-page layouts |
+| **Calendar 3.05** (`PERSONAL.CLN`) | **Experimental tools** | Measured default profile plus explicit SDK-derived ordinary codecs, bounded multipage reading and six-page append generation; 29-event/14-day sample validated offline |
 | **Calendar storage research** | **Ongoing** | E15–E19 document page growth, retained deletion data, and append behavior; no general allocator or deleted-record recovery implementation |
 | **DeskMate screen-state research** | **Exploratory** | Partial Calendar schedule text recovered from read-only emulator RAM captures; not a general screen reader or automation interface |
 | **Address Book 3.05** (`PERSONAL.ADR`) | **Initial research** | A00–A04 no-edit, one-contact and independent field-length controls; no parser or writer |
@@ -43,10 +43,13 @@ The tools are experimental and support only explicitly measured cases. See
   unchanged-event OK and clean exit, all database bytes and installed-file contents
   were identical. This is narrow application evidence, not general compatibility.
 
-The reader decodes four dates, six quarter-hour time values and the stored Alarm
+The default reader decodes four dates, six quarter-hour time values and the stored Alarm
 setting for ordinary timed appointments. Multi-page allocation, long IDs,
 editing, deletion, arbitrary text, tied index keys and general conversion are
-outside the supported scope. See [compatibility](docs/compatibility.md).
+outside the default scope. The explicit `--profile sdk` adds ordinary date/time
+codecs and additional-page reading; it does not allocate pages. New combinations
+remain offline-verified only. See [compatibility](docs/compatibility.md) and
+[campaign progress](PROJECT_STATUS.md).
 
 ## Installation and use
 
