@@ -57,3 +57,13 @@ class AllocatorSourceAnchors(unittest.TestCase):
                         (0x12FE, 'e8e405'), (0x137C, 'c60703'),
                         (0x141F, '2dff03'), (0x3039, 'b80004')):
             self.assertEqual(data[at:at + len(bytes.fromhex(raw))], bytes.fromhex(raw), hex(at))
+
+    def test_new_page_initialization_and_decimal_counter(self):
+        reader = self.inputs['DMDBRD.RES']
+        for at, raw in ((0x3C32, '3d4e00'), (0x3C3F, 'b80004'),
+                        (0x3C4F, 'c60703'), (0x43F3, '2b4604')):
+            self.assertEqual(reader[at:at + len(bytes.fromhex(raw))], bytes.fromhex(raw), hex(at))
+        update = self.inputs['DMDBUPD.RES']
+        for at, raw in ((0x30E9, 'bb0500'), (0x3111, 'b80700'),
+                        (0x2F35, 'b90a00'), (0x2F3A, '80c230')):
+            self.assertEqual(update[at:at + len(bytes.fromhex(raw))], bytes.fromhex(raw), hex(at))

@@ -48,6 +48,8 @@ from explicit entry/call targets. Padding and data tables can misalign a sweep.
 | RD 20D4–20F6; 360C–3673 | Allocate 0x3E0 map bytes at object +4; read those bytes from file offset 0x20. | Establishes the map's disk base, not merely a fitted header offset. |
 | UPD 2F8B–3000; 3001–3075 | Seek to 0x20 and write 0x3E0 map bytes; page write seeks to `page << 10` and writes 0x400 bytes. DOS write at 31C6 uses AH=40h. | File extension follows the new page write; no separate file-length field update found on this path. Unknown first 32 header bytes preserved. |
 | RD callback table 482B; dispatcher 48AD–48C2 | Entries 0x16/0x17/0x19/0x32/0x35 resolve to 4058/40AA/45AB/43E3/4575. UPD thunks 3347/334D/3359/33EF/3401 select those callback numbers and jump through DS:011C at 3449. | Conditional intercomponent continuation; external service binding is still not a runtime-proven edge. |
+| RD 3D1D→3B0E, 3C32–3C4F | The cache request 0x4E used by UPD 1310 creates a zero-filled 1024-byte page with initial marker 03. | Explains the new-page row offset and zero tail without inventing page-local linkage. |
+| UPD 30A8–3161; 2F0A–2F4B | Table-descriptor update locates the count token, uses width 5, and selects the next-ID token with ordinal 7; recursive division by 10 emits ASCII digits. | Corroborates the measured count/next-ID changes. The descriptor data-page start stays unchanged. |
 
 DMDB.R89 remains the previously identified small name-binding/forwarding stub;
 the allocation arithmetic is in the update resource, with reader callbacks.
@@ -84,5 +86,87 @@ native-file multipage append, reuse, deletion, pack, schema creation, index grow
 tie/collation or >=0x154-page support is implied. Existing six-page profiles stay
 unchanged. Generated output requires a separately authorized native open/save.
 
-Implementation, candidate and final verification results follow in this successor
-report; historical E15/E19 and Phase II reports remain unchanged.
+## Implemented experiment and reproducibility
+
+`calendar.experimental_new.build_new(source, events, experimental=True)` requires
+the exact 6,144-byte E02 SHA-256
+`0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9`.
+It rejects its own output as a subsequent source, an omitted/non-boolean opt-in,
+empty or >100 additions, unsupported values, ties and a ninth page. It builds
+everything in memory; the CLI publishes through a flushed same-directory
+temporary file and atomic hard-link creation, with no overwrite fallback.
+The existing six-page writer source is unchanged.
+
+From the repository root, with `PYTHONPATH=src`, use fresh destination paths:
+
+```powershell
+python tools/experimental/generate_calendar_month.py tests/fixtures/application-generated/calendar/e02-86box-historical-match.cln NEW-MONTH.cln --experimental-new-pages > NEW-MONTH.json
+python tools/experimental/check_calendar_multipage.py tests/fixtures/application-generated/calendar/e02-86box-historical-match.cln NEW-MONTH.cln NEW-MONTH.json
+python -m unittest discover -s tests/portable -p test_calendar_multipage.py -v
+```
+
+The candidate is **tool-generated, not application-generated or native-accepted**:
+61 appointments / 30 dates (October 23–November 21, 2026), including unchanged
+original LPHa124, with 60 additions in reverse chronological physical insertion
+order. Descriptions append ` / allocator trial` to the existing sample schedule;
+all date/time/alarm values are in the receipt. It is 8,192 bytes, SHA-256
+`d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106`.
+The complete file, expected additions, independent report, source snapshots and
+test logs are retained in the new durable private archive. No generated binary
+was added to the application-generated fixture directory.
+
+The independent checker imports no production parser, writer, map setter or
+date/time codec. It compares a bitstream model with all 992 map bytes; scans all
+data pages independently of index targets; checks every raw field against the
+receipt using separate SDK arithmetic; checks chronological unique LE16 triples,
+original row addresses/bytes, ASCII counters, marker/zero tails and all unchanged
+header/directory/schema/index-header bytes. Production SDK parsing is an additional
+check, not the independent oracle. No native success follows from either check.
+Portable tests cover published deltas, adjacent-nibble preservation, both sides
+and equality of the source space guard, input/size/tie/opaque-value limits, reverse
+insertion across both new pages, corrupted bytes and no-overwrite/source-mtime.
+
+Four opt-in private tests hash-verify SDK/modules and assert selected instruction
+operands and callback-table words. Run with `DESKMATE_REFERENCE_EXTRACTED`
+explicitly set to the preserved extraction root:
+
+```powershell
+python -m unittest discover -s tests/private -p test_dmdb_allocator_source.py -v
+```
+
+## Native gates and remaining uncertainty
+
+No emulator was launched, connected or controlled; no guest media/config/NVRAM
+or native save changed. Requested emulated execution **0 ms**; actual guest-clock
+delta **not measured**. This establishes static code semantics and offline
+consistency, not live loader binding, a full allocator specification, or native
+acceptance. Unknown header bytes, schema, descriptor tokens and original indexing
+rules remain preserved. No Address Book specimen arrived and no multicontact
+writer was enabled; its prepared A01→two-contact trial is unchanged.
+
+The highest-value next experiment is a **separately authorized native trial of
+the pinned month candidate** on an identified disposable installation and owned
+emulator epoch: verify the installed candidate hash, inspect appointments whose
+receipt/index targets lie on pages 4, 6 and 7 and all 30 dates, then perform one
+predeclared edit/save on a copied candidate and retain complete before/after files
+and installed-tree manifests. The exact edit, input, save and reopen scope must
+be authorized first. This distinguishes offline consistency from native traversal
+and persistence. The A01→two-contact trial remains the smallest Address Book gate.
+
+Validation/preservation totals and artifact identities are in the successor
+[receipt](../evidence/dmdb-page-allocator.json). Historical reports stay unchanged.
+
+Final portable run: **330 passed (138.855 s)**; nine focused allocator tests
+passed (1.491 s), and four hash-pinned private source tests passed (0.003 s).
+Ruff, REUSE (290/290 authored files), repository audit (587 files, four database
+fixtures/four synthetic JSONL fixtures), wheel/sdist build, package privacy checks
+and isolated wheel-only generation passed. The wheel-only builder reproduced
+the exact month hash. An initial host-interpreter probe lacked Capstone; using
+the existing crosswalk venv resolved it without installing dependencies.
+
+All six input contents **and mtimes**, all four committed database fixtures,
+106 prior campaign archive members and 46 prior Phase II archive members were
+rehash-verified unchanged. The new candidate has 62 index entries including the
+control row, IDs 0x10–0x4D, next-ID 78 decimal and 101 free index slots. Data-page
+row counts are 24/24/14 on pages 4/6/7, with 30/7/429 zero bytes after their 03
+markers. These are raw offline measurements of the generated candidate.
