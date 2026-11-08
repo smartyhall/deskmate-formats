@@ -1,0 +1,64 @@
+{
+  "recorded_date": "2026-11-08",
+  "timezone": "America/New_York",
+  "file": "tests/fixtures/application-generated/calendar/native-second-empty-calendar-operator.cln",
+  "uploaded_filename": "PERSONAL(2).CLN",
+  "user_publication_authorized": true,
+  "evidence_class": "operator-supplied native-modified synthetic fixture; bytes and differential checked independently; UI creation operator-reported",
+  "native_app": "Tandy DeskMate 3.05 Calendar",
+  "source": {
+    "path": "tests/fixtures/application-generated/calendar/sdk-30-days-allocator-tool-generated.cln",
+    "size": 8192,
+    "sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106"
+  },
+  "output": {
+    "size": 10240,
+    "sha256": "338487558d9992452db15858de1ba9cf790c26abf990ba70b47bbc9dc8d011f5",
+    "git_blob_sha1": "3d31a622774975882e96807a7ab0dccb010c7135"
+  },
+  "new_calendar_name": "SECOND",
+  "observed": {
+    "calendar_count_before": 1,
+    "calendar_count_after": 2,
+    "dbcols_records_before": 13,
+    "dbcols_records_after": 20,
+    "dbcols_next_id_before": 29,
+    "dbcols_next_id_after": 36,
+    "personal_data_pages_unchanged": [
+      4,
+      6,
+      7
+    ],
+    "personal_logical_index_unchanged": true,
+    "personal_index_groups_before": [
+      41,
+      21,
+      0,
+      0
+    ],
+    "personal_index_groups_after": [
+      20,
+      21,
+      21,
+      0
+    ],
+    "second_data_page": 8,
+    "second_index_page": 9,
+    "second_record_count_including_config": 1,
+    "second_appointment_count": 0,
+    "second_config_id": 16,
+    "second_config_matches_personal": true,
+    "second_index_locator": [
+      8,
+      0,
+      16
+    ],
+    "new_extent_marker_entry": 10
+  },
+  "limitations": [
+    "No independent exact guest input hash or full emulator/installed-tree ledger",
+    "No separate confirmation that all other installed files remained unchanged",
+    "No native edit/save/reopen persistence experiment for a SECOND appointment",
+    "Index repartition trigger and general rules unresolved"
+  ]
+}
