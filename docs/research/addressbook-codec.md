@@ -91,3 +91,20 @@ row preservation and all other installed files. Last-name sorting predicts the
 new index entry before USER A, TEST, unlike physical append or first-name sorting.
 A later same-last-name contact would distinguish secondary ordering. Stop on
 ambiguous acknowledgement; no replay. No multipage or mixed-case claim follows.
+
+## Phase II successor: source finding and ready-to-run diagnostic
+
+2026-11-07: rehashed SDK 3.03 Development Guide
+`8081d5cd34305982844ab3598ebfbdf8887e7e369d1174a88a7631cba08439e0`,
+PDF page 477 (one-based), explicitly describes DATA sorting by LastName, then
+FirstName. This is **source evidence**, not a new 3.05 runtime observation.
+The same page describes version-dependent field widths, so it does not override
+the observed 3.05 DBCOLS schema. It strengthens the last-name hypothesis but
+does not establish physical insertion, counters, ties or collation. No new
+two-contact specimen is available; the writer's second-insertion rejection stays.
+
+The [Phase II runbook](database-phase-ii.md) predeclares both index-order outcomes,
+the 56-byte new row, append address, counters and preservation checks. The
+independent [read-only trial diagnostic](../../tools/experimental/database_trial_report.py)
+reports every byte delta, raw row/index/counter values, page hashes and policy
+mismatches without importing production codecs or guessing sorting rules.

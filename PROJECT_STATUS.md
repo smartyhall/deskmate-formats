@@ -66,6 +66,19 @@ full-month deliverable is not claimed. The 14-day result is 6,144 bytes with
 SHA-256 `85ad05d6bf58540e32349bbb559301d36aced164741b03b09b30d63f22d636ac`.
 See the [public hashes and provenance](docs/evidence/database-campaign.json).
 
+Phase II on `codex/database-phase-ii`, [draft #73](https://github.com/smartyhall/deskmate-formats/pull/73):
+[source findings, independent diagnostic and operator runbooks](docs/research/database-phase-ii.md)
+are prepared for #70/#71. SDK source documents LastName/FirstName ordering;
+native second-contact insertion remains unmeasured. The diagnostic checks E15/E19
+published hash/delta predictions without treating synthetic controls as originals.
+No multicontact writer or page allocator was enabled; no new Calendar generated.
+Current validation: **321 portable tests passed (135.970 s)** and **2 focused
+private oracle tests passed (0.059 s)**. Seven diagnostic tests were rerun after
+making their synthetic header vectors independent of the diagnostic's constants;
+all passed (0.100 s). Ruff, REUSE, repository audit and wheel/sdist build passed.
+See the [Phase II receipt](docs/evidence/database-phase-ii.json). This run requested
+**0 ms** of emulated execution; actual guest-clock delta was **not measured**.
+
 Reported campaign validation: **313 portable tests passed**, **two private
 pinned-baseline hash-oracle tests passed**, plus independent output checks, Ruff,
 REUSE, repository audit and isolated wheel smoke tests. The original E15–E19
