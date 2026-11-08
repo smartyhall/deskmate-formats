@@ -196,6 +196,132 @@
     "supervisor-validation-ac85874",
     "s2-offline-20261108-final"
   ],
+  "private_peer_followup": {
+    "change": "Create synthetic peer state exclusively with owner-only permissions, flush/fsync before replacement; test through private evidence reader.",
+    "demonstration": {
+      "acceptance_state": "accepted",
+      "browser_preserved_private_hashes": true,
+      "child_status": "stopped",
+      "dispatch_plan_sha256": "94e856b2fea2eeb54dc66ca0f79de923b61e15075ee25b502d9b1750eae406c8",
+      "dispatch_state": "completed",
+      "elapsed_host_seconds": 0.386163499992108,
+      "emulated_time": "not measured; no emulator launched or connected",
+      "experiment": "S2 offline synthetic-only",
+      "git_anchor": "d7b89a38b670b71df6d75e0a70781b1006418b29",
+      "git_blob": "57a58c5df7df58c5b1f6021da209a9275d306dea",
+      "git_commit": "6e79a5a417994dedeb5c82a7786cfd89c61ad2d9",
+      "http_checks": [
+        {
+          "body_sha256": "b7c27bdf78941cb7b7dea6ddeb334fcac888e0431a8e5148722912dd9053206c",
+          "method": "GET",
+          "path": "/api/v1/events",
+          "status": 200
+        },
+        {
+          "body_sha256": "748dc531cff248b45ea9252c2fcbe7b267a1bc3aa0f43307c4f88d8efe19ce79",
+          "method": "GET",
+          "path": "/api/v1/agents",
+          "status": 200
+        },
+        {
+          "body_sha256": "07d90ac0bb037489b159ee3fc691b2db8a624a6363b8bddacdfa0a929a39b716",
+          "method": "POST",
+          "path": "/api/v1/events",
+          "status": 405
+        },
+        {
+          "body_sha256": "79d5b8e0a243f3bbe0e62e6d4e6f6ac055400c17f0f318e0bd7f58c6908983e9",
+          "method": "GET",
+          "path": "/api/v1/dispatch",
+          "status": 404
+        },
+        {
+          "body_sha256": "79d5b8e0a243f3bbe0e62e6d4e6f6ac055400c17f0f318e0bd7f58c6908983e9",
+          "method": "GET",
+          "path": "/api/v1/operations",
+          "status": 404
+        }
+      ],
+      "manifest": {
+        "category": "verification",
+        "dependencies": [],
+        "description": "Inspect synthetic metadata only.",
+        "id": "s2-demo",
+        "idempotency_key": "s2-demo-1",
+        "profile": "offline",
+        "resources": [
+          "synthetic-fixtures"
+        ],
+        "revision": 1,
+        "schema_version": 1,
+        "title": "Synthetic S2 demonstration"
+      },
+      "manifest_sha256": "0721517346befae87a276957d3f3e24972652a62b5ac91358fbb3ff4756f5057",
+      "manifest_size": 264,
+      "mutation_methods": [
+        "thread/start",
+        "turn/start"
+      ],
+      "native_emulator_connections": 0,
+      "operation_states": [
+        "completed",
+        "completed"
+      ],
+      "prepared_dispatched": false,
+      "private_artifact_sha256": {
+        "outcome": "127d1d8feffeea4b6d87c10e36ba982cfda2bc0c46bde3d6fb28fe16d7767ca1",
+        "s0_ledger": "6671be35f2b1e0e4e85751412e4ed540f1824a56775321a05e6b5f1c4704bca4",
+        "s1_queue": "eb3960fc7f38e280bb6f6efe33224b499cc5004baefae1ad474efe4545de8afc",
+        "synthetic_peer": "5a5d0ceeb999e4da547949dfe909781c6d20336477166c4d3f6d0911e27cd65d"
+      },
+      "real_model_turns": 0,
+      "schema_version": 1,
+      "synthetic_turn_count": 1
+    },
+    "implementation_commit": "a0842d3bbbb31539b1a654049105942cbec6dad9",
+    "packages": {
+      "deskmate_formats-0.1.0.dev0-py3-none-any.whl": {
+        "sha256": "7e221cf63557528c2a522e472f5cfdb11e3f0431b44798eddf28c902f485cebf",
+        "size": 206328
+      },
+      "deskmate_formats-0.1.0.dev0.tar.gz": {
+        "sha256": "bfb1cda57a8771f421c844478c925b1fd02bc18f703797502a138e32a2a3c676",
+        "size": 819465
+      }
+    },
+    "predecessor_ci": {
+      "commit": "13fd66393739e04a290a08fd63f4669e965e733b",
+      "result": "four jobs passed: Windows/Ubuntu, Python 3.13/3.14",
+      "run_id": 42468225457,
+      "url": "https://github.com/smartyhall/deskmate-formats/actions/runs/42468225457"
+    },
+    "private_archive_ids": [
+      "supervisor-private-peer-validation",
+      "s2-offline-20261108-private-peer"
+    ],
+    "source_sha256": {
+      "pyproject.toml": "ab3e0d9fb2a49fb7e12399b44563240f29710aa5d73ca1e767220af290127b02",
+      "src/deskmate_formats/supervisor/bridge.py": "7fe80ee0c754c0f7b6fcc2b61abb46ba5b0ace4e9c294f755509d8d6bd1efee7",
+      "src/deskmate_formats/supervisor/bridge_cli.py": "eb1aee41d3ae4f5161c028dc7bc7d7369216c9ce7d35c1e55838212a46c26774",
+      "src/deskmate_formats/supervisor/driver.py": "ec6b467b440f5ca306711853dbbe1d1637b1c50a12d5ee1632bb0a7ae906f5df",
+      "src/deskmate_formats/supervisor/driver_cli.py": "45262f21a0149a404b99400d142b8492434d499b28c36d13a56e78a1987ed310",
+      "src/deskmate_formats/supervisor/ledger.py": "b08832b9fbe031f9b70790b32decdd871c6cdd1aa6e4164c7ada9af1ced36809",
+      "src/deskmate_formats/supervisor/operations.py": "d417c6ad7803c9ab40793c37869d62877f435acb9b117746e6a4ac965c06be4f",
+      "src/deskmate_formats/supervisor/protocol.py": "75f001d1c99aeeeeec3dfe42cfb438e674e37389bf6239aecb7527f95ef49778",
+      "src/deskmate_formats/supervisor/synthetic_peer.py": "1d91bd1e82b35f74ff735e378225f055cb642c7bc13e810a48c63eaeb3ad717a",
+      "src/deskmate_formats/supervisor/telemetry.py": "a6ab8d67810acbd3895f08b6cb121e5dd33c970530acb170aba23d20bfd5e119",
+      "tests/portable/test_supervisor_bridge.py": "b9357a3dc45085aa4805788c202b9222161f33360e6fb5b57a0f2d20170a72a2",
+      "tests/portable/test_supervisor_driver.py": "4484e1568ca9b3f5cae2244bc03ca88bfa93579b0be3315e5f6642221762f5ff",
+      "tools/experimental/supervisor_offline_demo.py": "da3b2127cb82212ccd161dfa85bd71b2ee8dff382de87df2836ffa9c22befab1"
+    },
+    "validation": {
+      "command": "python -m unittest discover -s tests/portable -v",
+      "elapsed_host_seconds": 177.45,
+      "log_sha256": "c707329d6839d01fbc7219409a51aa954815c67effa693c6d89aef13ee9a49f8",
+      "result": "passed",
+      "test_count": 375
+    }
+  },
   "schema_version": 1,
   "source_sha256": {
     "pyproject.toml": "ab3e0d9fb2a49fb7e12399b44563240f29710aa5d73ca1e767220af290127b02",

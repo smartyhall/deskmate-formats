@@ -228,6 +228,15 @@ host seconds in that run. Actual HTTP checks returned 200 for events/agents,
 peer-state hashes were unchanged by the HTTP reads. These are synthetic local
 runtime observations, not evidence of real Codex execution or emulator timing.
 
+Follow-up implementation `a0842d3bbbb31539b1a654049105942cbec6dad9` creates peer
+state exclusively with owner-only file permissions and flushes/fsyncs it before
+replacement. The success regression now reads that state through the private
+evidence reader, including on Unix. All 375 portable tests passed again in
+177.450 host seconds, and the CLI/HTTP demo completed again with unchanged
+private hashes across browser reads. The receipt's `private_peer_followup`
+preserves this run separately, with updated source/package/log hashes. The prior
+evidence checkpoint also passed all four Windows/Ubuntu Python 3.13/3.14 CI jobs.
+
 ## Next separately authorized single live canary
 
 **STOP before `live`. This document, tests, PR and prior grants do not authorize it.**
