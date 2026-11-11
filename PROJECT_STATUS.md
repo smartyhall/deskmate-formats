@@ -1,5 +1,31 @@
 # Project status — DeskMate formats
 
+**S0 live-readiness completed — 2026-11-11 (America/New_York):**
+[PR #89](https://github.com/smartyhall/deskmate-formats/pull/89)
+(merged `06b29bd620f0ebe61576083fdc42f1781dccb81e`) completed the
+credit-interrupted audit of the S0 operator driver with a real Windows 10
+**offline** preflight and stricter synthetic checks. Pinned native Codex
+0.166.0 and two 321-file schema inventories match recorded hashes; Codex
+reported 387 passed portable tests, and all four final-head GitHub Windows/
+Ubuntu CI jobs passed. No actual app-server/model session, guest operation
+or auth provisioning was performed.
+
+**Decision: BLOCKED — SPECIFIC REMEDIATION REQUIRED.** The S0 driver now
+refuses live execution *before child launch*, irrespective of an operator
+plan-digest attestation. Synthetic evidence confirms that environment/cwd
+sanitization alone does not contain filesystem or loopback access. Real
+OS-enforced file/network/descendant isolation, effective Codex tool/config
+restrictions and secure auth provisioning remain unresolved. Do not treat
+late event/history checks as containment. [Research report](docs/research/codex-supervisor-s0-readiness.md)
+and [structured receipt](docs/evidence/supervisor-readiness-20261111.json).
+Next scoped decision [issue #90](https://github.com/smartyhall/deskmate-formats/issues/90)
+compares disposable Windows execution environments with low-privilege host
+containment and synthetic denial tests; [issue #58](https://github.com/smartyhall/deskmate-formats/issues/58)
+retains the real S0 authorization gate and [issue #86](https://github.com/smartyhall/deskmate-formats/issues/86)
+retains the subsequent real S2 dispatch gate.
+
+**Earlier merged milestone below — 2026-11-08:** preserved for its dated scope.
+
 **Supervisor merged checkpoint — 2026-11-08 (America/New_York):**
 [PR #87](https://github.com/smartyhall/deskmate-formats/pull/87)
 (merged `825f9bde92aec087f20fa2a7dcbc82229d532a88`)
