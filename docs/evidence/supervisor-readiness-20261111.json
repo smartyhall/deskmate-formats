@@ -1,0 +1,940 @@
+{
+  "activity": {
+    "additional_model_turns": 0,
+    "attributable_emulated_ms": 0,
+    "credential_reads_or_copies": 0,
+    "emulator_connections": 0,
+    "guest_counter_delta_ms": null,
+    "guest_counter_limit": "Not measured; no emulator connection",
+    "real_app_server_sessions": 0
+  },
+  "blockers": [
+    {
+      "blocks_first_live_canary": true,
+      "id": "A",
+      "minimum_remediation": "Separately authorize contained identity, resource/network restrictions and pre-execution descendant ownership; prove with synthetic tests",
+      "name": "OS containment",
+      "unknown": "Actual backend, descendant containment and inherited Job policy",
+      "verified": "No driver-installed boundary; sanitized synthetic child accessed disposable outside-scratch files and owned loopback peer"
+    },
+    {
+      "blocks_first_live_canary": true,
+      "id": "B",
+      "minimum_remediation": "Freeze relevant config/tool inputs; verify effective settings before model input inside already-established OS containment",
+      "name": "Effective configuration/tools",
+      "unknown": "Effective merged config, tool catalog, provider endpoints and sandbox behavior",
+      "verified": "Layered configuration and recursive table merge; empty MCP table does not delete inherited entries; built-in features exist"
+    },
+    {
+      "blocks_first_live_canary": true,
+      "id": "C",
+      "minimum_remediation": "Operator-approved minimal auth provisioning into contained identity/home; no credential copying or bootstrap in this campaign",
+      "name": "Authentication isolation",
+      "unknown": "Authorized credential availability, effective storage and runtime acceptance",
+      "verified": "Home-scoped file/keyring lookup source inspected; no credential material accessed or provisioned"
+    }
+  ],
+  "branch": "codex/s0-live-readiness",
+  "campaign": "S0 offline Windows readiness completion",
+  "checkpoint_ci": {
+    "conclusion": "success",
+    "head_sha": "96864b6cd74f510e6307b15c64eecd9b899fff8f",
+    "jobs": [
+      {
+        "conclusion": "success",
+        "name": "ubuntu-latest / Python 3.14"
+      },
+      {
+        "conclusion": "success",
+        "name": "windows-latest / Python 3.14"
+      },
+      {
+        "conclusion": "success",
+        "name": "windows-latest / Python 3.13"
+      },
+      {
+        "conclusion": "success",
+        "name": "ubuntu-latest / Python 3.13"
+      }
+    ],
+    "run_id": 42511499540,
+    "status": "completed",
+    "url": "https://github.com/smartyhall/deskmate-formats/actions/runs/42511499540"
+  },
+  "checks": [
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-p",
+        "test_supervisor_driver.py",
+        "-v"
+      ],
+      "elapsed_host_seconds": 59.09390869998606,
+      "exit_code": 1,
+      "id": "focused",
+      "output_sha256": "fa2cefd7db1e1af7c246acc8d53036dc9c653859aba4e157a4702d7eac7d441c",
+      "private_log": "resume-20261111/focused.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-p",
+        "test_supervisor_readiness_probe.py",
+        "-v"
+      ],
+      "elapsed_host_seconds": 0.622337199980393,
+      "exit_code": 0,
+      "id": "probe-tests",
+      "output_sha256": "b8e731ac8898d4e926ed7ccc424131120cffc22b61d79e71edcf2f61b19f4b6d",
+      "private_log": "resume-20261111/probe-tests.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-p",
+        "test_supervisor_protocol.py",
+        "-v"
+      ],
+      "elapsed_host_seconds": 6.154077700048219,
+      "exit_code": 0,
+      "id": "protocol",
+      "output_sha256": "8c9b4e001b006052f8314a67efb9da6ea06785277bc73f31f234022f82931c19",
+      "private_log": "resume-20261111/protocol.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-p",
+        "test_supervisor_driver.py",
+        "-v"
+      ],
+      "elapsed_host_seconds": 33.16450499999337,
+      "exit_code": 1,
+      "id": "focused-corrected",
+      "output_sha256": "93aec5e424fd6332504a264c6fd543603a8dd76179f75056f2f975c104cfdf37",
+      "private_log": "resume-20261111/focused-corrected.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-p",
+        "test_supervisor_driver.py",
+        "-k",
+        "owner_termination",
+        "-v"
+      ],
+      "elapsed_host_seconds": 2.806155199999921,
+      "exit_code": 0,
+      "id": "owner-focused",
+      "output_sha256": "2f223635d3e31cd0b1ce25df507f3d243fad02d74deb0afd8c7d63f400f5084e",
+      "private_log": "resume-20261111/owner-focused.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-p",
+        "test_supervisor_readiness_probe.py",
+        "-v"
+      ],
+      "elapsed_host_seconds": 0.6423376000020653,
+      "exit_code": 0,
+      "id": "probe-tests-final",
+      "output_sha256": "6256cca5165b13d1d836f883ee80e65c50ec31e9819049523dc579c0407c1e90",
+      "private_log": "resume-20261111/probe-tests-final.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-v"
+      ],
+      "elapsed_host_seconds": 234.770627699967,
+      "exit_code": 0,
+      "id": "portable",
+      "output_sha256": "2bc2caeee38cb9d1ef69cc4bd7339fb4dd6ed8528a03ca706134b819d2b3729a",
+      "private_log": "resume-20261111/portable.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "deployment/windows10/tests",
+        "-v"
+      ],
+      "elapsed_host_seconds": 23.500662800041027,
+      "exit_code": 0,
+      "id": "deployment",
+      "output_sha256": "0ec00dfa214ad6b3771d6062a1ec438813ee334e2534d042cbf559b3e69a3c5e",
+      "private_log": "resume-20261111/deployment.log"
+    },
+    {
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-File",
+        "deployment/windows10/tests/test_appraiser_state.ps1"
+      ],
+      "elapsed_host_seconds": 1.6993186000036076,
+      "exit_code": 1,
+      "id": "appraiser",
+      "output_sha256": "0502e8cc175b732178dede1969fd1f99e233bd9bee3a340ef8a3a41a7b9eec98",
+      "private_log": "resume-20261111/appraiser.log"
+    },
+    {
+      "command": [
+        "pwsh.EXE",
+        "-NoProfile",
+        "-File",
+        "deployment/windows10/tests/test_appraiser_state.ps1"
+      ],
+      "elapsed_host_seconds": 2.476301799993962,
+      "exit_code": 0,
+      "id": "appraiser-pwsh",
+      "output_sha256": "f1e522482f27442b693cdbba09e1c09e08fcb097448009d9d307e9363b965a16",
+      "private_log": "resume-20261111/appraiser-pwsh.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "tools/check_install.py"
+      ],
+      "elapsed_host_seconds": 7.350933099980466,
+      "exit_code": 0,
+      "id": "installed",
+      "output_sha256": "32424ecc648477d48a78688fd27b7559226db51072854045787ac51211eb5719",
+      "private_log": "resume-20261111/installed.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "-m",
+        "build",
+        "--no-isolation"
+      ],
+      "elapsed_host_seconds": 0.8301637999829836,
+      "exit_code": 1,
+      "id": "build-no-isolation",
+      "output_sha256": "a14c4bc439e021aafa88c6d08ed07234c9c5e20e5782c9c1fa176c13e08da7de",
+      "private_log": "resume-20261111/build-no-isolation.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "-m",
+        "ruff",
+        "check",
+        "src",
+        "tests/portable",
+        "tools"
+      ],
+      "elapsed_host_seconds": 1.1753289999905974,
+      "exit_code": 0,
+      "id": "ruff",
+      "output_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "private_log": "resume-20261111/ruff.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "-m",
+        "reuse",
+        "lint"
+      ],
+      "elapsed_host_seconds": 14.253507399989758,
+      "exit_code": 0,
+      "id": "reuse",
+      "output_sha256": "cd2511d264d75c03a0cca8981eb8f72dae96e7858cebdea8a79cce498dda3cd3",
+      "private_log": "resume-20261111/reuse.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "tools/audit_repository.py"
+      ],
+      "elapsed_host_seconds": 6.09220929996809,
+      "exit_code": 1,
+      "id": "audit",
+      "output_sha256": "b5109d9e1d8097cbcd1dcf8d96327c0efe8f114e50d825971f3bad71b4c421fe",
+      "private_log": "resume-20261111/audit.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "tools/audit_repository.py"
+      ],
+      "elapsed_host_seconds": 9.868941400025506,
+      "exit_code": 0,
+      "id": "audit-prose-corrected",
+      "output_sha256": "edc62dd12b81577cbfe935d4854f40267e4a9b94b74d20548b02985971205188",
+      "private_log": "resume-20261111/audit-prose-corrected.log"
+    },
+    {
+      "command": [
+        "gh.EXE",
+        "run",
+        "view",
+        "42511499540",
+        "--json",
+        "headSha,status,conclusion,jobs,url"
+      ],
+      "elapsed_host_seconds": 1.6234427000163123,
+      "exit_code": 0,
+      "id": "checkpoint-ci-current",
+      "output_sha256": "edc8d7d2e75da839754d0c31235a95f6e9bff8c6a0123654613fa019625054b3",
+      "private_log": "resume-20261111/checkpoint-ci-current.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "-m",
+        "ruff",
+        "check",
+        "src",
+        "tests/portable",
+        "tools"
+      ],
+      "elapsed_host_seconds": 0.2634074999950826,
+      "exit_code": 0,
+      "id": "ruff-final",
+      "output_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "private_log": "resume-20261111/ruff-final.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "-m",
+        "reuse",
+        "lint"
+      ],
+      "elapsed_host_seconds": 3.2549441999872215,
+      "exit_code": 0,
+      "id": "reuse-final",
+      "output_sha256": "cc5b84b9ad108be05772ba32a46d33e581b5fc8787c4cfba5e2c924520219944",
+      "private_log": "resume-20261111/reuse-final.log"
+    },
+    {
+      "command": [
+        "$VERIFY_PYTHON",
+        "tools/audit_repository.py"
+      ],
+      "elapsed_host_seconds": 2.6630551000125706,
+      "exit_code": 0,
+      "id": "audit-final",
+      "output_sha256": "40e11707624bd7143e2af274dffeb432558a49e919708ee9a771f77bbcde2cd4",
+      "private_log": "resume-20261111/audit-final.log"
+    }
+  ],
+  "classification": {
+    "runtime_observations": [
+      "native version/hash",
+      "two offline schema exports",
+      "policy path presence",
+      "current token/Job flags"
+    ],
+    "source_findings": [
+      "layered configuration",
+      "recursive merge",
+      "auth storage",
+      "Windows backend selection",
+      "generator dispatch"
+    ],
+    "synthetic_tests": [
+      "protocol lifecycle and no replay",
+      "outside-directory and owned-loopback access",
+      "redaction",
+      "teardown"
+    ],
+    "unverified": [
+      "real app-server behavior",
+      "auth/model availability",
+      "effective configuration/tools",
+      "descendant containment",
+      "cloud cancellation/spend cap"
+    ]
+  },
+  "completion_ci": "See PR 89 checks for the final documentation head; checkpoint CI does not validate later changes.",
+  "date": "2026-11-11",
+  "decision": "BLOCKED — SPECIFIC REMEDIATION REQUIRED",
+  "environment": {
+    "dependencies_installed": false,
+    "local_setuptools_available": false,
+    "packages": {
+      "Pillow": "13.0.0",
+      "build": "1.6.1",
+      "deskmate-formats": "0.1.0.dev0",
+      "jsonschema": "4.26.0",
+      "mcp": "2.3.0",
+      "reuse": "6.3.0",
+      "ruff": "0.17.3"
+    },
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)]",
+    "python_executable_sha256": "4e67d9e9a3673aa7b6219f1280d5ec3f1b6c0d5bd98ea8688c72d0cb7582d664",
+    "security_settings_changed": false,
+    "sqlite": "3.50.4"
+  },
+  "evidence": {
+    "artifacts": [
+      {
+        "private_archive_relative_path": "resume-20261111/native-probe-final/probe.json",
+        "sha256": "1abac1164dec3af1c10b70adbc9b0a98cef66f4bce4b76274615b2611ac55138",
+        "size": 6718
+      },
+      {
+        "private_archive_relative_path": "resume-20261111/native-probe-final/profile-1.json",
+        "sha256": "c28048281174969346b83cfc30bd05523da1d608a73375abfcc86040309b5bb9",
+        "size": 55179
+      },
+      {
+        "private_archive_relative_path": "resume-20261111/native-probe-final/profile-2.json",
+        "sha256": "c28048281174969346b83cfc30bd05523da1d608a73375abfcc86040309b5bb9",
+        "size": 55179
+      },
+      {
+        "private_archive_relative_path": "resume-20261111/native-probe-final/inventory-1.json",
+        "sha256": "994ccd7691cdb81096b5c83bb2a4ce67c01ba5b935339367aedae7bb77839f24",
+        "size": 35315
+      },
+      {
+        "private_archive_relative_path": "resume-20261111/native-probe-final/inventory-2.json",
+        "sha256": "994ccd7691cdb81096b5c83bb2a4ce67c01ba5b935339367aedae7bb77839f24",
+        "size": 35315
+      },
+      {
+        "private_archive_relative_path": "resume-20261111/os-inspection.py",
+        "sha256": "2ada37499fd6c76d6c91640f4f9326ac26dbe2b6f22969828666261ee4fa1802",
+        "size": 3617
+      },
+      {
+        "private_archive_relative_path": "resume-20261111/os-inspection.json",
+        "sha256": "b90c6f6d6ec695e2ae188cfbf297498711de21a30733d4e4602b4b2300c2c690",
+        "size": 775
+      },
+      {
+        "private_archive_relative_path": "resume-20261111/source-verification.json",
+        "sha256": "6c32b52b4a3e2795eba2e2213a5f7e31c1fa62e82e29d87ca246715ada17c91c",
+        "size": 5601
+      },
+      {
+        "private_archive_relative_path": "resume-20261111/package-check.json",
+        "sha256": "e36afe53b094630e60b8d1a82979b3f709923eada688ecb1dd0051c172d06870",
+        "size": 6273
+      },
+      {
+        "private_archive_relative_path": "resume-20261111/validate.py",
+        "sha256": "ed610585a8b81fdcb4b561d75ab101cfd4ff7b60665bbd116bd0649282530850",
+        "size": 2288
+      },
+      {
+        "private_archive_relative_path": "resume-20261111/package-check.py",
+        "sha256": "44683d8a6e63d5178aa46d5feda74ec36c548623715148af483cab6dac5ff9dc",
+        "size": 2202
+      },
+      {
+        "private_archive_relative_path": "native-probe/probe.json",
+        "sha256": "6443b32d5e0dae1236bb6c0b209505f20b4ff76d4ef3cd291640faad5e4c354b",
+        "size": 5752
+      },
+      {
+        "private_archive_relative_path": "source-inventory.json",
+        "sha256": "44bbe8a4ec00b6ab31bcf447f7e3b589a27bc35a1e0db068413dd92b98b1ba80",
+        "size": 5242
+      },
+      {
+        "private_archive_relative_path": "upstream-tree.json",
+        "sha256": "f0f0afd5d662183f0ccee686e6a0673022da14c8c853d5f567125c59d30fe2e8",
+        "size": 2818780
+      },
+      {
+        "private_archive_relative_path": "packaging-verification.json",
+        "sha256": "8f8313598f1335db9daf9593f41bb10eb81b5e3a66abe329b4de73d80c6d5a9a",
+        "size": 807
+      },
+      {
+        "private_archive_relative_path": "portable-final.json",
+        "sha256": "49467bf6fb9c6efde30a5584a6521c4f7095a9aea8853193d99dad2c35045004",
+        "size": 360
+      },
+      {
+        "private_archive_relative_path": "portable-final.log",
+        "sha256": "f6c68cd0d805360bc2d6fc826c6803fbc05f40e976c9eec951db7ba24cea3405",
+        "size": 55671
+      },
+      {
+        "private_archive_relative_path": "live-preflight.json",
+        "sha256": "2bbb5af06087d000350de667105fb6a9a11728cb3c32c3f6fb6f5651ce562efa",
+        "size": 534
+      },
+      {
+        "private_archive_relative_path": "live-preflight.stdout",
+        "sha256": "a9cfc4760d784dbd596a92b86cc69194cd1e1c0072b8c3382fef416411534d6c",
+        "size": 7872
+      }
+    ],
+    "completion_subdirectory": "resume-20261111",
+    "original_evidence_preserved": true,
+    "private_archive": "s0-readiness-20261108",
+    "uncommitted_files_backed_up": true
+  },
+  "implementation_revision": "90291b931615fdea96d15bb38f24e00b05c01c05",
+  "native_probe": {
+    "command": [
+      "$VERIFY_PYTHON",
+      "tools/experimental/supervisor_readiness_probe.py",
+      "--archive",
+      "$RESUME_ARCHIVE/native-probe-final",
+      "--executable",
+      "$PINNED_CODEX_EXE",
+      "--checkout",
+      "$CHECKOUT"
+    ],
+    "commands": [
+      {
+        "argv": [
+          "git.EXE",
+          "-C",
+          "$CHECKOUT",
+          "rev-parse",
+          "HEAD"
+        ],
+        "elapsed_host_seconds": 0.18495149997761473,
+        "returncode": 0,
+        "sanitized_environment": true,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "2c396afcecbb72014397dfb21200e8cb6afc02d4862a79f145cf31671ec67097"
+      },
+      {
+        "argv": [
+          "git.EXE",
+          "-C",
+          "$CHECKOUT",
+          "status",
+          "--short"
+        ],
+        "elapsed_host_seconds": 0.18003300001146272,
+        "returncode": 0,
+        "sanitized_environment": true,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "e664adbe30cbfbf94531e055324412e851caa498f82f694584f18aff4d8ded2d"
+      },
+      {
+        "argv": [
+          "$PINNED_CODEX_EXE",
+          "--version"
+        ],
+        "elapsed_host_seconds": 0.09702859999379143,
+        "returncode": 0,
+        "sanitized_environment": true,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "728b255fa6d47ac8019747aaf2876baaafacdb93dfba1e4697257224bbc75a5c"
+      },
+      {
+        "argv": [
+          "$PINNED_CODEX_EXE",
+          "app-server",
+          "generate-json-schema",
+          "--out",
+          "$RESUME_ARCHIVE/native-probe-final/schema-1"
+        ],
+        "elapsed_host_seconds": 0.886372399982065,
+        "returncode": 0,
+        "sanitized_environment": true,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "argv": [
+          "$VERIFY_PYTHON",
+          "-I",
+          "$CHECKOUT/tools/pin_app_server_schema.py",
+          "$RESUME_ARCHIVE/native-probe-final/schema-1",
+          "$RESUME_ARCHIVE/native-probe-final/profile-1.json",
+          "$RESUME_ARCHIVE/native-probe-final/inventory-1.json"
+        ],
+        "elapsed_host_seconds": 0.40987730002962053,
+        "returncode": 0,
+        "sanitized_environment": true,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "argv": [
+          "$PINNED_CODEX_EXE",
+          "app-server",
+          "generate-json-schema",
+          "--out",
+          "$RESUME_ARCHIVE/native-probe-final/schema-2"
+        ],
+        "elapsed_host_seconds": 0.5081596000236459,
+        "returncode": 0,
+        "sanitized_environment": true,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "argv": [
+          "$VERIFY_PYTHON",
+          "-I",
+          "$CHECKOUT/tools/pin_app_server_schema.py",
+          "$RESUME_ARCHIVE/native-probe-final/schema-2",
+          "$RESUME_ARCHIVE/native-probe-final/profile-2.json",
+          "$RESUME_ARCHIVE/native-probe-final/inventory-2.json"
+        ],
+        "elapsed_host_seconds": 0.5540288999909535,
+        "returncode": 0,
+        "sanitized_environment": true,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "configuration_presence": {
+      "registry_override": false,
+      "scope": "Final probe scratch ancestor chain only; no contents, credential or cloud queries",
+      "scratch_ancestor_configs_present": false,
+      "system_config_present": false,
+      "system_requirements_present": false
+    },
+    "effective_configuration": "unverified",
+    "elapsed_host_seconds": 6.728845200035721,
+    "native_sha256": "9d563ee4e0441ff9d59d612013e0460ddf8e5709735c2d9f6b98b7ef8ca4eb42",
+    "native_version": "codex-cli 0.166.0",
+    "probe_git_revision": "96864b6cd74f510e6307b15c64eecd9b899fff8f",
+    "profile_sha256": "c28048281174969346b83cfc30bd05523da1d608a73375abfcc86040309b5bb9",
+    "returncode": 0,
+    "schema_exports_equal": true,
+    "schema_file_count": 321,
+    "schema_inventory_sha256": "994ccd7691cdb81096b5c83bb2a4ce67c01ba5b935339367aedae7bb77839f24",
+    "schema_matches_committed": true
+  },
+  "next_action": "Separately authorize synthetic containment remediation and validation; review launcher/config/auth correction, then separately authorize one exact-plan live S0 canary. Keep hard block until reviewed remediation.",
+  "observed_failures": [
+    {
+      "check": "focused",
+      "correction": "Rejection-test handshake bound 2 to 5 seconds; retain result in assertion; production unchanged",
+      "finding": "hook-item subcase KeyError: child_status; constructor failure cause unverified; evidence incomplete"
+    },
+    {
+      "check": "focused-corrected",
+      "correction": "Bounded read-only lock-release wait in test only; never redispatch",
+      "finding": "LockBusy during read-only status immediately after synthetic owner termination"
+    },
+    {
+      "check": "appraiser",
+      "correction": "Passed using already-installed pwsh with no execution-policy override",
+      "finding": "Windows PowerShell script execution policy refused -File"
+    },
+    {
+      "check": "build-no-isolation",
+      "correction": "No dependency install; verify retained artifacts and require fresh CI packaging",
+      "finding": "setuptools.build_meta unavailable"
+    },
+    {
+      "check": "audit",
+      "correction": "Reworded prose with commas; audit passed",
+      "finding": "Prose slash-list matched POSIX home-path detector"
+    }
+  ],
+  "os_observations": {
+    "app_server_sessions": 0,
+    "boundary": "same user and sanitized environment/cwd; no new OS restrictions applied",
+    "current_process_in_job": true,
+    "current_token": {
+      "app_container": false,
+      "elevated": false,
+      "has_restrictions": true
+    },
+    "emulator_connections": 0,
+    "guest_elapsed_ms": null,
+    "job_policy_inspected": false,
+    "model_turns": 0,
+    "platform": "Windows-10-10.0.19045-SP0",
+    "synthetic_sanitized_child": {
+      "outside_scratch_read": true,
+      "outside_scratch_write": true,
+      "owned_loopback_connection": true
+    },
+    "windows_api_symbols": {
+      "AssignProcessToJobObject": true,
+      "CreateJobObjectW": true,
+      "CreateProcessW": true,
+      "SetInformationJobObject": true
+    },
+    "windows_build": 19045
+  },
+  "packaging": {
+    "artifact_source_commit": "96864b6cd74f510e6307b15c64eecd9b899fff8f",
+    "artifacts": {
+      "deskmate_formats-0.1.0.dev0-py3-none-any.whl": {
+        "member_count": 129,
+        "private_archive_relative_path": "frozen-dist/deskmate_formats-0.1.0.dev0-py3-none-any.whl",
+        "sha256": "c4574425455b010dcd11efed13b7e1eede7d031d09c449092f958dd7e0389502",
+        "size": 207831
+      },
+      "deskmate_formats-0.1.0.dev0.tar.gz": {
+        "member_count": 643,
+        "private_archive_relative_path": "frozen-dist/deskmate_formats-0.1.0.dev0.tar.gz",
+        "sha256": "a041e6e5d757f46b6dacc498edbe72c140c838849f83e3cabe4093b551a848c3",
+        "size": 825780
+      }
+    },
+    "binary_fixtures_excluded": true,
+    "completion_build": "Delegated to existing repository CI workflow, linked in PR 89",
+    "fresh_local_build": "blocked: setuptools.build_meta absent; no dependencies installed",
+    "implementation_sha256": {
+      "__init__.py": "8a0d4538e24f4fe8951f1b46f3264e5ad9bddf2f7f785830585421bef597ebdc",
+      "addressbook/__init__.py": "bbed6af1f9a7fd71a32884ed9bb30934f366800fd5137ddc17fcfc72fb5787ef",
+      "addressbook/cli.py": "7357eb2baaafe10144d6a130f825390abb52fddc61c5ffb5312fbb59ccf1edbe",
+      "addressbook/personal.py": "6f4140528486f34c1b01251adf42a14e1298a698a8727f9cc54edea0f4a7f89b",
+      "addressbook/samples.py": "3c7437adba7f3aaa6577bfe845e1a0ecafd3715fe452553342e07af352a81cf7",
+      "addressbook/writer.py": "ccd2773deeedfa683f73ac129ca5de9b589d2869e5ad54c170f879764bf58e5f",
+      "automation/__init__.py": "9b4f431e07c0593be6d5ec17034d6a336f2c5f31d07f6171d9cdd53c81bca270",
+      "automation/client.py": "4495a08cbd123573f7ac51d291c00719ee1d4b41e1b2683a2f8fbe975c0c0db2",
+      "automation/mcp_server.py": "06042a918ead700a602c366e6dd6ddb07a95c003b0d9f004aa1b58cd7fff8042",
+      "automation/observer_bridge.py": "095cc109f5e1123bd95c31fe75eae78676ca3cdca97fcf8f8500c2ff37aafd70",
+      "automation/readonly.py": "9c984a93530ac785aba429fa3b4e69637d1011763f26f91f6e367e07e5a81bf8",
+      "calendar/__init__.py": "e3914e026d07e0a40f6cbcacf7f4c30b9546340b414dec48185e6560e8f9ca99",
+      "calendar/cli.py": "4ed90a8dd64165219ed4c68172ea2504181fc0146e0c5ce2c04210be1f9c83f1",
+      "calendar/codec.py": "a39b83c29135e407500224a9ca60f4dcd1dc7cad45a6255fd3af4a5369ce5525",
+      "calendar/experimental_create.py": "f9b2e64868cd0eaa14d1db35cb37ffd40d220cc127601b367d3995d3f526e09d",
+      "calendar/experimental_new.py": "30abc2e6fc3da7a2f0494d89b6b3d886222b7ce3ef58fecb0f3d0d846b0692d1",
+      "calendar/experimental_second.py": "36929ffb8f2a55c3702654372cee046415d6e10f7b12805e26d101f9fcdb6e62",
+      "calendar/personal.py": "51f687e13ff69f6cd4842c4e154bc57e2df33d46e6933848931360255968f1a0",
+      "calendar/samples.py": "b71fc8efd98129fbe2e2adce49985695ad6464c75c944f30a836238eb2555c82",
+      "calendar/writer.py": "f09ce6daea4d748c1071e5f789d2d618ab80dea0d60cb53fbbabe321a9c346ea",
+      "database.py": "386eb4e4d460b0bec3ed2bd308df4b570401f4376557151da75a7cfb8f778a43",
+      "interchange.py": "5ef52f1e8fe1a16dff457f1e2a4b91ae5173a98e7d7b34658cda210a348850aa",
+      "observer/__init__.py": "fa431f5b4a59f009032bcabc3cda566661797c9bbb3833f7c0bb232c97c9764d",
+      "observer/_private_storage.py": "7b552e8a110959bf3d455deb4876c3e07311fae72b7ce41765f500b02a9c7c78",
+      "observer/agent_feed.py": "d2f995992bff8676167be474fdebe1d87c0291b69585cbfd26c67fa068c18f8e",
+      "observer/agent_http.py": "575f628e12de5a68ebae35d1bc85cec44f2a7d72b8f6fcf86399d0c40de81728",
+      "observer/agent_publication.py": "107191843677153f54410273a99148c686848e228cca42e93913aa0def063629",
+      "observer/agents.py": "3cffc658c0517c79c7dc84642d11e122ac6920a3e45de57afc06207b0bdbb577",
+      "observer/codex_cli.py": "dcf84d476e770b50bc4f355d091c1232c9f734b441e62f9a31ac73af07477e39",
+      "observer/codex_exec.py": "86ca907488bac8e45dc5c5d6ba22bf60b3df964fe25f19163e11e00f5de4fa68",
+      "observer/demo.py": "e873d173768276b1fa66d9464031b7fa9311c1e20cdfa9bf9269ff4ac5716aa9",
+      "observer/event_cli.py": "e8950dca440ac79624164e65941cc6dde47708856022b1c4339cb8b834d88de9",
+      "observer/events.py": "4f31a551474e158cfef0504a11d024c637ba1da67e2c06bdc9733bb29a5d67c3",
+      "observer/frames.py": "af73612030ee13ebed4f464be065f5b4096663bc194074051c2eeed11277b22e",
+      "observer/http.py": "ed3652f0fd639f83b136ff561de39accc0090dbb821212a7296900deab42b6b3",
+      "observer/journal.py": "44b0826cc3cf27454ed50d947010af45902a21f401ce63ac7463a49d16d5cd89",
+      "observer/presentation.py": "7ee384d941fc93389e914fb4e1426cf62604ab4e9d174f7cba40c31751a7234a",
+      "observer/process_health.py": "68805e35079551ee001c96356a35f4fbffcf8b6ae1bd6a9f631daf0ba29ba9b6",
+      "observer/publication.py": "a7c550dba8e61bb13d789d9f9f1b7c7a14c458ef1db80d04c7c472f611dbd246",
+      "supervisor/__init__.py": "799974fa7d958c0fd4a647580fc42f2a2b87c484857e54b63f0b9619ae8b4c59",
+      "supervisor/bridge.py": "7fe80ee0c754c0f7b6fcc2b61abb46ba5b0ace4e9c294f755509d8d6bd1efee7",
+      "supervisor/bridge_cli.py": "eb1aee41d3ae4f5161c028dc7bc7d7369216c9ce7d35c1e55838212a46c26774",
+      "supervisor/driver.py": "2850549e00f04f68eb7a92d813501254eb8067fac48b6965779b393bf1788cb6",
+      "supervisor/driver_cli.py": "a25c18ca48a7a523efae6a49debb2e47ff29eaa9a06b9a123fdcbd07084846d0",
+      "supervisor/ledger.py": "b08832b9fbe031f9b70790b32decdd871c6cdd1aa6e4164c7ada9af1ced36809",
+      "supervisor/operations.py": "d417c6ad7803c9ab40793c37869d62877f435acb9b117746e6a4ac965c06be4f",
+      "supervisor/protocol.py": "7a011796832a3565b3a5293d60ab735d59d794408f0b4786de22ff4a0480a5f2",
+      "supervisor/synthetic_peer.py": "90c7ea50e2f7c7f844f5dcf1ca77e6b521e1e090121dc7dc8ea4fd126c06ce9d",
+      "supervisor/task_cli.py": "7c52348f5c537a9b3a9d4b25346fd53fe650e3ec5da367ba84bb54831e48905f",
+      "supervisor/task_git.py": "4e52875536476e231e0ed8869041c0cd6f3a458b6feb8759cc7e137dd31be581",
+      "supervisor/task_manifest.py": "4f50bf7b42036fd53392f403ff40f28a660b4e4ffbe656af97e252be0f136f67",
+      "supervisor/task_publication.py": "8c70f685b164425d53460b9ec140b93b30edb3bef1a3f012b3675df16b35dda3",
+      "supervisor/task_queue.py": "bc4055d36841393397fe0857bbc44a98104efa76c6bf0f7015f20db597b1bb9a",
+      "supervisor/telemetry.py": "a6ab8d67810acbd3895f08b6cb121e5dd33c970530acb170aba23d20bfd5e119"
+    },
+    "installed_source_matches": true,
+    "limit": "Retained checkpoint artifacts, not a fresh build of completion documentation.",
+    "module_count": 54,
+    "wheel_sdist_source_matches": true
+  },
+  "pinned_upstream_files": {
+    "codex-rs/app-server/src/lib.rs": {
+      "git_blob_matches": true,
+      "sha256": "a44b0266619d6adda0c1e7135d5be18e6581cff44307e78097efecc5195f8b6c"
+    },
+    "codex-rs/cli/src/main.rs": {
+      "git_blob_matches": true,
+      "sha256": "5ee91f58936c04cf1a7a666d583242273e9145484d7628b290ea9b033e210682"
+    },
+    "codex-rs/config/src/config_toml.rs": {
+      "git_blob_matches": true,
+      "sha256": "e8f6b45b73eaca1a89be9524bb02bf069e9715e3aeba270e87285d941405c877"
+    },
+    "codex-rs/config/src/loader/application.rs": {
+      "git_blob_matches": true,
+      "sha256": "2ba93ecbbfbc777ea004a135a2241a4df0ec68c1a7946cb16b51fc853a810da3"
+    },
+    "codex-rs/config/src/loader/layer_io.rs": {
+      "git_blob_matches": true,
+      "sha256": "a090443bc10317e086cd552c29ec4558917bdade0b397abd5229f81f93042022"
+    },
+    "codex-rs/config/src/loader/local.rs": {
+      "git_blob_matches": true,
+      "sha256": "40acaea59f6053cfd7a95edf8c7e659c22c3c737fdf8b32ec71c9334843e93c3"
+    },
+    "codex-rs/config/src/loader/macos.rs": {
+      "git_blob_matches": true,
+      "sha256": "36dd560f67b3b45bf3d63f4e2b962571456c12dc2f9ca55304f8729d49bee0c5"
+    },
+    "codex-rs/config/src/loader/managed_requirements.rs": {
+      "git_blob_matches": true,
+      "sha256": "00595b2320674364053537213638735da20739a8864c92947bd4acb869fcf448"
+    },
+    "codex-rs/config/src/loader/mod.rs": {
+      "git_blob_matches": true,
+      "sha256": "c3aa56395e7e5a2b75e17c670fbfda51a0040f78a95aeb288700dd555e46ed20"
+    },
+    "codex-rs/config/src/loader/project_discovery.rs": {
+      "git_blob_matches": true,
+      "sha256": "5d3ecc932cfd900aad4f2155a0fc1b6de32d4fd6bec7d634c4537e3b0594ed64"
+    },
+    "codex-rs/config/src/loader/windows.rs": {
+      "git_blob_matches": true,
+      "sha256": "7de8e3a097d0d29c76bdac5045eae001342288147cbfaf66f69982d98d141597"
+    },
+    "codex-rs/config/src/merge.rs": {
+      "git_blob_matches": true,
+      "sha256": "926f4dff3c3ed480a2eabd5ed25742813c71f18071a8540c634af28744ac6aca"
+    },
+    "codex-rs/config/src/types.rs": {
+      "git_blob_matches": true,
+      "sha256": "0156d563a22a4d2457fa1e91fde762c083a74249eee319be44c384559d4ecf00"
+    },
+    "codex-rs/core/src/config/mod.rs": {
+      "git_blob_matches": true,
+      "sha256": "e027e9fb2e4cd101abdb3984768eef07d1d0ac7c8aa631989011cd17bda0c6df"
+    },
+    "codex-rs/core/src/config/permission_profile_selection.rs": {
+      "git_blob_matches": true,
+      "sha256": "8f5fb8814985bec37da32f4bc98381dd56c63d5c43ffed0e6381e69dc8e8db49"
+    },
+    "codex-rs/core/src/config/permissions.rs": {
+      "git_blob_matches": true,
+      "sha256": "b65ea4be765ad3fba86084b4f2774934d1702db586ab694e4a9b2cca0f52d1f0"
+    },
+    "codex-rs/core/src/config/windows_sandbox_config.rs": {
+      "git_blob_matches": true,
+      "sha256": "d5c324eeb644a3c4032a49070065c54ddedad9450838592557ebb092442960da"
+    },
+    "codex-rs/core/src/tools/handlers/view_image.rs": {
+      "git_blob_matches": true,
+      "sha256": "f46c951490bacd923ac2e4c48888751ea6e8877068f192d989dc730776ecc25d"
+    },
+    "codex-rs/core/src/tools/registry.rs": {
+      "git_blob_matches": true,
+      "sha256": "4a80e968acd8092278426700e510ab559758e582c76b527a51dc75c541d8cc25"
+    },
+    "codex-rs/core/src/tools/spec_plan.rs": {
+      "git_blob_matches": true,
+      "sha256": "d97205602296e4e27c9f3183b7126fe2d5ca4cf6f4d79ea1ae5761f1da266e6f"
+    },
+    "codex-rs/core/src/windows_sandbox.rs": {
+      "git_blob_matches": true,
+      "sha256": "b120ff04b14577383e9d8229dd17a2ccaa9839caf55230ef37ad03c486eebf1c"
+    },
+    "codex-rs/features/src/feature_configs.rs": {
+      "git_blob_matches": true,
+      "sha256": "baf8c61460990a2c50bb456ce5a437dba6e082cbe7a031cf63bc5273f84187be"
+    },
+    "codex-rs/features/src/legacy.rs": {
+      "git_blob_matches": true,
+      "sha256": "5899d34d8335ccaa45d8f34d9ed3d54e80e7c518c02733ad54e8014e5a5dd52a"
+    },
+    "codex-rs/features/src/lib.rs": {
+      "git_blob_matches": true,
+      "sha256": "092fa6e9bd6b53d4a63aec2130fdfb90b74b28f222135ff34c499b58a53dc963"
+    },
+    "codex-rs/features/src/runtime_auth.rs": {
+      "git_blob_matches": true,
+      "sha256": "95d0c2b8f93f2c617df6bb0364531f468c7ad6965c807761e60fa17b9e1a29ff"
+    },
+    "codex-rs/login/src/auth/storage.rs": {
+      "git_blob_matches": true,
+      "sha256": "0b6c51f6a74f87134b11f24617968ce4871c84799f9aaceaeea05dec00dd2831"
+    },
+    "codex-rs/models-manager/models.json": {
+      "git_blob_matches": true,
+      "sha256": "1384625c0b6b3e67d3c60da29becea2b017f2c283fc1e2d05b8edafb4698eb10"
+    },
+    "codex-rs/protocol/src/config_types.rs": {
+      "git_blob_matches": true,
+      "sha256": "ce9b26223db7cc4b5cf474e571e4509e8cc52536e159510f153f94de0fcd37e8"
+    },
+    "codex-rs/protocol/src/models.rs": {
+      "git_blob_matches": true,
+      "sha256": "753498bc730ba21ded710d9aa2b2f9163e6bbe4eaa18f1c25d998c36138a54f7"
+    },
+    "codex-rs/protocol/src/permissions.rs": {
+      "git_blob_matches": true,
+      "sha256": "ba815705a004571cb1772d9ae97c30075fc6e3ed16c1a1b151ad64c0d459e0dd"
+    },
+    "codex-rs/sandboxing/src/manager.rs": {
+      "git_blob_matches": true,
+      "sha256": "8abe2a5f66f8101a669dd0c1571fb7c5edbab9eff2e80c8d13d9064bc5bc175d"
+    },
+    "codex-rs/sandboxing/src/windows.rs": {
+      "git_blob_matches": true,
+      "sha256": "11e523ccfe343020eb942432fe12a728fa626ff1210613969c6e72ec3a98bf62"
+    }
+  },
+  "pinned_upstream_revision": "6ff1e1ca3b30fc8b914720681fcf5fe62e95f856",
+  "pr": 89,
+  "recovered_checkpoint": "96864b6cd74f510e6307b15c64eecd9b899fff8f",
+  "repository": "smartyhall/deskmate-formats",
+  "repository_file_sha256": {
+    "tests/portable/test_supervisor_driver.py": "a2de46435b1b9995dded7a20ecdafe841a4df6bf68c32ec45d1f6497baccf3aa",
+    "tests/portable/test_supervisor_readiness_probe.py": "20d4325b9528d30ab3f68b5ac1fff124215571628b398f83aed06eae261736a9",
+    "tools/experimental/supervisor_readiness_probe.py": "a8e9c2aafed1c3a1bec5349750fb56ed4033299fb87bb56920235e70cff6a9e9",
+    "tools/pin_app_server_schema.py": "4e97de65b7b09b0046b18faa5acf92858091ba6f8439622734e0382ee86d7f40"
+  },
+  "revision_note": "Tests/probe executed from this exact content before committing it; only reports/receipts/runbook notices follow.",
+  "schema_version": 1,
+  "suite_results": {
+    "deployment": {
+      "passed": true,
+      "skipped": 2,
+      "tests": 31,
+      "unittest_seconds": 22.959
+    },
+    "focused_protocol_tests": 8,
+    "portable": {
+      "passed": true,
+      "skipped": 0,
+      "tests": 387,
+      "unittest_seconds": 230.604
+    },
+    "probe_tests": 4,
+    "supervisor_driver_tests_in_full_suite": 21
+  }
+}

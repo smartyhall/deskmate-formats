@@ -1,5 +1,12 @@
 # Supervisor operator driver and offline S2 foundation
 
+**2026-11-11 completed readiness audit: [BLOCKED](codex-supervisor-s0-readiness.md).**
+`preflight` now records offline pins and explicit isolation findings. `live`
+refuses even matching authorization/isolation digests until a reviewed OS and
+tool containment remedy exists. The historical launch procedure below is not
+currently executable; a new plan and separate authorization are required after
+remediation. Synthetic dispatch remains available.
+
 This implements the offline Stage 1 and synthetic portion of Stage 3 in
 [issue 86](https://github.com/smartyhall/deskmate-formats/issues/86).
 **No live canary has been executed. Real S2 dispatch is disabled.**
@@ -237,9 +244,12 @@ private hashes across browser reads. The receipt's `private_peer_followup`
 preserves this run separately, with updated source/package/log hashes. The prior
 evidence checkpoint also passed all four Windows/Ubuntu Python 3.13/3.14 CI jobs.
 
-## Next separately authorized single live canary
+## Historical live procedure — superseded by blocked readiness audit
 
-**STOP before `live`. This document, tests, PR and prior grants do not authorize it.**
+**STOP before `live`. The readiness audit found the isolation requirement unmet;
+the implementation now disables live launch.** This document, tests, PR and prior
+grants do not authorize it. Follow the [readiness report](codex-supervisor-s0-readiness.md)
+for current preflight and the smallest corrective action.
 Use the original [live runbook](codex-supervisor-s0-live-canary.md) for host and
 private-archive preparation. Review this driver and install the exact reviewed
 wheel first. Preserve Git commit, package hashes, machine build, private evidence

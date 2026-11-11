@@ -1,5 +1,11 @@
 # Supervisor S0 first live canary — operator runbook
 
+**Current decision: [BLOCKED — readiness audit](codex-supervisor-s0-readiness.md).**
+The driver exists, but live launch is disabled pending externally enforced
+isolation and descendant containment. The procedure below retains historical
+experiment design; it does not override that gate. Use the readiness report's
+offline `preflight` command and exact candidate receipt before further decisions.
+
 **Status: preparation only; NOT EXECUTED.** Supports
 [issue 58](https://github.com/smartyhall/deskmate-formats/issues/58).
 Writing, reviewing or merging this document does not authorize execution.
