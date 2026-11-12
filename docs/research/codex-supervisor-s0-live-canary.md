@@ -1,5 +1,15 @@
 # Supervisor S0 first live canary — operator runbook
 
+**Later operator risk acceptance — 2026-11-11:**
+The [lab posture](experimental-lab-operating-posture.md) supersedes the
+earlier **policy** demand for a new VM or extensive OS confinement before a
+one-turn, explicitly authorized S0 protocol experiment. The existing
+research VM is accepted for ordinary local permissions; it is **not a
+proven stronger sandbox**. Preserve rollback, actual host/external exposure
+review, durable protocol evidence and exact model-use authorization.
+Historical procedure below is retained, not a workaround: the driver
+still refuses live launch until a reviewed experimental-mode change.
+
 **Current decision: [BLOCKED — readiness audit](codex-supervisor-s0-readiness.md).**
 The driver exists, but live launch is disabled pending externally enforced
 isolation and descendant containment. The procedure below retains historical

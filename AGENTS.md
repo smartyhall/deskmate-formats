@@ -1,5 +1,25 @@
 # Standing research instructions
 
+## Accepted experimental laboratory risk — operator decision 2026-11-11
+
+**Read [experimental laboratory posture](docs/research/experimental-lab-operating-posture.md)
+when planning supervisor/86Box/Codex tasks.** The current Windows 10 VM is
+a recoverable research lab, not a production vault. DeskMate binaries,
+historical commercial media and other *local* lab resources are normal
+research inputs, not inherently secret. Do not invent additional-VM,
+restricted-user, blanket filesystem/network or exhaustive tool-isolation
+prerequisites for the **separately authorized single-turn S0 canary** just
+to avoid speculative, recoverable VM-local risks.
+
+Prefer a snapshot/rollback, bounded check for actual host/external exposure,
+one owned process, durable receipts, exact operator approval and measured
+progress. Differentiate local software use from **public redistribution**
+(existing commercial-binary Git exclusions remain), and risk acceptance
+from **proved isolation**. Historical negative findings remain valid.
+Existing production `LIVE_BLOCKERS` require a reviewed code change before
+any live launch. This policy is not model-use or emulator authorization.
+Challenge scope drift: evidence, consequence, rollback, minimum control.
+
 - Preserve reproducibility: pin source/ROM/build revisions, machine configuration,
   commands, controlled variables, actual results and SHA-256 hashes. Distinguish
   runtime observations, source findings, synthetic tests and hypotheses.
