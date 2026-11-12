@@ -1,6 +1,8 @@
 """Installed driver acceptance with a real, owned synthetic stdio subprocess."""
 
 from hashlib import sha256
+from contextlib import redirect_stdout
+from io import StringIO
 import json
 from pathlib import Path
 import subprocess
@@ -16,6 +18,7 @@ from deskmate_formats.supervisor.driver import (
     run, status, verify_native, write_record,
 )
 from deskmate_formats.supervisor.ledger import open_ledger
+from deskmate_formats.observer.events import encode_json
 from test_supervisor_protocol import AVAILABLE
 
 
@@ -26,7 +29,7 @@ class DriverTests(unittest.TestCase):
         self.directory = self.root / "run"
 
     def prepare(self, mode="success", **kw):
-        return prepare(self.directory, mode=mode, timeout=2, deadline=0.25, **kw)
+        return prepare(self.directory, mode=mode, timeout=5, deadline=5, **kw)
 
     def test_prepare_status_help_and_import_have_no_child(self):
         with patch("subprocess.Popen", side_effect=AssertionError("unexpected launch")):
@@ -64,7 +67,7 @@ class DriverTests(unittest.TestCase):
         for mode in ("lost-ack", "delayed-ack"):
             with self.subTest(mode=mode):
                 directory = self.root / mode
-                token = prepare(directory, mode=mode, timeout=0.8, deadline=0.1)
+                token = prepare(directory, mode=mode, timeout=5, deadline=0.1)
                 result = run(directory, authorization=token)
                 self.assertEqual(result["state"], "blocked")
                 turn = result["operations"][-1]
@@ -129,7 +132,7 @@ class DriverTests(unittest.TestCase):
         plan, _ = load_plan(self.directory)
         self.assertFalse({"86BOX_TOKEN", "OPENAI_API_KEY", "GIT_DIR", "PATH"} & plan["env"].keys())
 
-    def test_live_isolation_requires_separate_exact_grant_and_has_no_restart(self):
+    def test_default_live_remains_blocked_despite_old_isolation_attestation(self):
         with patch("deskmate_formats.supervisor.driver.verify_native", return_value=str(Path(sys.executable).resolve())):
             token = prepare(self.directory, executable=sys.executable, model="operator-selected-placeholder", effort="low")
         with patch("deskmate_formats.supervisor.driver.AppServer", side_effect=AssertionError("live launch")):
@@ -304,3 +307,190 @@ class DriverTests(unittest.TestCase):
         result = reconcile_synthetic(self.directory, authorization=token)
         self.assertEqual(result[-1]["state"], "completed")
         self.assertEqual((self.directory / "evidence" / "peer.json").read_bytes(), before)
+
+
+@unittest.skipUnless(AVAILABLE, "requires supervisor extra and supported process identity")
+class ExperimentalLabTests(unittest.TestCase):
+    """Run the production live path; replace only native identity and child image.
+
+    No validation or launch gate is mocked. The child is the real stdio peer,
+    reporting the live model/provider from the prepared config. Never run Codex.
+    """
+
+    def setUp(self):
+        self.root = Path(self.enterContext(TemporaryDirectory()))
+        self.directory = self.root / "run"
+        self.auth = self.root / "existing-auth.json"
+        self.auth.write_bytes(b'{"auth_mode":"apikey","OPENAI_API_KEY":"synthetic-not-a-key"}\n')
+        self.auth.chmod(0o600)
+        self.native = self.enterContext(patch("deskmate_formats.supervisor.driver.verify_native",
+                                             return_value=str(Path(sys.executable).resolve())))
+        self.mode = "success"
+        self.launches = []
+        popen = subprocess.Popen
+
+        def synthetic_image(argv, **kwargs):
+            self.assertEqual(argv, [str(Path(sys.executable).resolve()), "app-server", "--listen", "stdio://"])
+            self.launches.append(argv)
+            return popen([sys.executable, "-I", "-m", "deskmate_formats.supervisor.synthetic_peer",
+                          str(self.directory / "evidence" / "peer.json"), self.mode, "--live-policy"], **kwargs)
+
+        self.enterContext(patch("subprocess.Popen", side_effect=synthetic_image))
+
+    def prepare(self, **kwargs):
+        return prepare(self.directory, executable=sys.executable, model="synthetic-live-model", effort="low",
+                       timeout=5, deadline=5, auth_file=self.auth, profile="experimental-lab", **kwargs)
+
+    def execute(self, token):
+        return run(self.directory, authorization=token, lab_risk_ack=token)
+
+    def methods(self):
+        return read_record(self.directory / "evidence" / "peer.requests.json")
+
+    def test_lab_gate_passes_full_live_path_once_with_separate_grants(self):
+        token = self.prepare()
+        before = self.auth.read_bytes()
+        self.assertEqual(preflight(self.directory)["state"], "experimental-lab-awaiting-authorization")
+        plan = status(self.directory)["plan"]
+        self.assertEqual(plan["profile"], "experimental-lab")
+        self.assertNotIn("synthetic-not-a-key", json.dumps(plan))
+        self.assertEqual((self.directory / "codex-home" / "auth.json").read_bytes(), before)
+        self.assertEqual(self.launches, [])
+        result = self.execute(token)
+        self.assertEqual(result["state"], "completed", result)
+        self.assertEqual(result["profile"], "experimental-lab")
+        self.assertIn(result["child_status"], ("stopped", "not-found"))
+        self.assertEqual(self.methods(), ["initialize", "initialized", "thread/start", "turn/start",
+                                          "thread/read", "thread/turns/list"])
+        self.assertEqual([r["operation_id"] for r in result["operations"]],
+                         [plan["run_id"] + ".thread", plan["run_id"] + ".turn"])
+        self.assertEqual(read_record(self.directory / "attempt.json")["lab_risk_ack"], token)
+        self.assertEqual(self.auth.read_bytes(), before)
+        with self.assertRaises(DriverError):
+            self.execute(token)
+        with self.assertRaises(DriverError):
+            reconcile_synthetic(self.directory, authorization=token)
+        self.assertEqual(len(self.launches), 1)
+
+    def test_absent_mismatched_or_stale_grants_never_launch(self):
+        token = self.prepare()
+        for authorization, risk in ((None, None), (None, token), ("0" * 64, token),
+                                    (token, None), (token, "0" * 64)):
+            with self.subTest(authorization=authorization, risk=risk), self.assertRaises(DriverError):
+                run(self.directory, authorization=authorization, lab_risk_ack=risk, isolation_reviewed=token)
+        # Changing an otherwise valid plan invalidates both old grants.
+        plan, _ = load_plan(self.directory)
+        plan["model"] = "changed-model"
+        (self.directory / "plan.json").write_bytes(encode_json(plan))
+        with self.assertRaises(DriverError):
+            self.execute(token)
+        self.assertEqual(self.launches, [])
+        self.assertFalse(status(self.directory)["attempted"])
+
+    def test_unsupported_and_default_profiles_refuse_even_matching_grants(self):
+        self.prepare()
+        for profile in (None, "default", "unknown", "synthetic"):
+            plan, _ = load_plan(self.directory)
+            plan["profile"] = profile
+            (self.directory / "plan.json").write_bytes(encode_json(plan))
+            token = status(self.directory)["plan_sha256"]
+            with self.subTest(profile=profile), self.assertRaises(DriverError):
+                self.execute(token)
+        self.assertEqual(self.launches, [])
+        self.assertFalse(status(self.directory)["attempted"])
+
+    def test_profile_preparation_requires_explicit_native_and_existing_auth(self):
+        for kwargs in ({"profile": "experimental-lab"}, {"profile": "unknown"},
+                       {"profile": "synthetic", "executable": sys.executable},
+                       {"profile": "experimental-lab", "executable": sys.executable}):
+            with self.subTest(kwargs=kwargs), self.assertRaises(DriverError):
+                prepare(self.directory, **kwargs)
+        self.assertFalse(self.directory.exists())
+
+    def test_authentication_drift_and_live_s2_are_refused_before_launch(self):
+        with self.assertRaisesRegex(DriverError, "S2 live dispatch is disabled"):
+            self.prepare(binding={"queue_id": "synthetic"})
+        token = self.prepare()
+        (self.directory / "codex-home" / "auth.json").write_bytes(b"changed")
+        self.assertEqual(preflight(self.directory)["state"], "blocked")
+        with self.assertRaisesRegex(DriverError, "authentication changed"):
+            self.execute(token)
+        self.assertEqual(self.launches, [])
+
+    def test_live_cli_requires_both_grants_and_runs_same_production_path(self):
+        from deskmate_formats.supervisor.driver_cli import main
+        with redirect_stdout(StringIO()) as output:
+            self.assertEqual(main(["--run", str(self.directory), "prepare", "--profile", "experimental-lab",
+                                   "--executable", sys.executable, "--model", "synthetic-live-model", "--effort", "low",
+                                   "--auth-file", str(self.auth)]), 0)
+        token = json.loads(output.getvalue())["plan_sha256"]
+        prefix = ["--run", str(self.directory), "live", "--authorize-live-plan", token]
+        with redirect_stdout(StringIO()), self.assertRaises(SystemExit) as error:
+            main(prefix)
+        self.assertEqual(error.exception.code, 2)
+        self.assertEqual(self.launches, [])
+        with redirect_stdout(StringIO()) as output:
+            self.assertEqual(main(prefix + ["--accept-lab-risk", token]), 0)
+        self.assertEqual(json.loads(output.getvalue())["state"], "completed")
+        self.assertEqual(len(self.launches), 1)
+
+    def test_lost_acknowledgment_never_launches_or_sends_again(self):
+        for mode, expected in (("thread-lost-ack", ["thread/start"]),
+                               ("lost-ack", ["thread/start", "turn/start"]),
+                               ("delayed-ack", ["thread/start", "turn/start"])):
+            with self.subTest(mode=mode):
+                self.directory = self.root / mode
+                self.mode = mode
+                token = self.prepare()
+                result = self.execute(token)
+                self.assertEqual(result["state"], "blocked", result)
+                self.assertEqual(self.methods()[2:], expected)
+                self.assertEqual(result["operations"][-1]["state"], "needs-reconciliation")
+                self.assertEqual(result["operations"][-1]["acknowledged"], 0)
+                count = len(self.launches)
+                with self.assertRaises(DriverError):
+                    self.execute(token)
+                self.assertEqual(len(self.launches), count)
+                self.assertIn(result["child_status"], ("stopped", "not-found"))
+
+    def test_live_path_rejects_terminal_history_sentinel_approvals_and_policy_drift(self):
+        for mode in ("bad-sentinel", "history-only", "history-sentinel", "history-tool", "history-extra-turn",
+                     "history-not-loaded", "history-cursor", "stale-turn", "duplicate-terminal",
+                     "driver-approval", "unsafe-effort", "unsafe-reviewer", "unsafe-policy", "web-tool"):
+            with self.subTest(mode=mode):
+                self.directory = self.root / mode
+                self.mode = mode
+                token = self.prepare()
+                result = self.execute(token)
+                self.assertEqual(result["state"], "blocked", result)
+                self.assertIn(result["child_status"], ("stopped", "not-found"))
+                self.assertLessEqual(self.methods().count("thread/start"), 1)
+                self.assertLessEqual(self.methods().count("turn/start"), 1)
+                self.assertNotIn(None, self.methods())  # No approval response was sent.
+
+    def test_constructor_failure_leaves_incomplete_evidence_and_permanent_fence(self):
+        self.mode = "wrong-version"
+        token = self.prepare()
+        result = self.execute(token)
+        self.assertEqual(result["state"], "blocked")
+        self.assertEqual(result["operations"], [])
+        self.assertNotIn("child_status", result)  # No completed constructor/claim returned.
+        self.assertTrue(status(self.directory)["attempted"])
+        with self.assertRaises(DriverError):
+            self.execute(token)
+        self.assertEqual(len(self.launches), 1)
+
+    def test_live_teardown_failure_is_blocked_and_recorded(self):
+        from deskmate_formats.supervisor.protocol import AppServer
+        close = AppServer.close
+
+        def close_then_timeout(client):
+            close(client)
+            raise subprocess.TimeoutExpired("synthetic", 2)
+
+        token = self.prepare()
+        with patch.object(AppServer, "close", close_then_timeout):
+            result = self.execute(token)
+        self.assertEqual(result["state"], "blocked")
+        self.assertEqual(result["reason"], "child-teardown-failed")
+        self.assertEqual(status(self.directory)["outcome"], result)

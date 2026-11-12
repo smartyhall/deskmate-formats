@@ -9,6 +9,7 @@ import platform
 from pathlib import Path
 import subprocess
 import sqlite3
+import stat
 import sys
 from time import monotonic
 from uuid import uuid4
@@ -28,14 +29,18 @@ NATIVE_SHA256 = "9d563ee4e0441ff9d59d612013e0460ddf8e5709735c2d9f6b98b7ef8ca4eb4
 PROMPT = ("Reply exactly S0_CANARY_OK. Do not use tools, read or write files, "
           "run commands, access the network, or request approval.")
 MAX_EVIDENCE = 4 * 1024 * 1024
-# A digest attestation cannot supply an OS security boundary. Re-enable only in
-# a reviewed change that establishes containment before executing the child.
+# These remain blockers for default/unsupported live profiles. The explicitly
+# selected experimental-lab profile accepts VM-local risk, not OS confinement.
+PROFILES = ("synthetic", "default", "experimental-lab")
 LIVE_BLOCKERS = (
     "no verified OS boundary for the app-server and its descendants",
     "isolated home and empty MCP table do not exclude inherited configuration or built-in tools",
     "effective Windows sandbox, authentication and tool restrictions are unverified",
 )
 CANARY_ITEM_TYPES = {"userMessage", "agentMessage", "reasoning"}
+LAB_RISK = ("Accept ordinary Windows VM permissions, including accessible files, credentials and network; "
+            "no verified OS confinement or descendant containment. Host deadlines do not cap provider usage "
+            "or prove cancellation. One new owned thread and one sentinel turn only; no replay or live S2.")
 
 
 class DriverError(ValueError):
@@ -85,13 +90,20 @@ def verify_native(executable):
 
 
 def prepare(directory, *, executable=None, model=None, effort=None, mode="success", timeout=10, deadline=60,
-            binding=None):
+            binding=None, profile=None, auth_file=None):
     """Freeze a fresh private plan. No app-server or model operation occurs."""
     root = Path(directory).absolute()
     if root.exists():
         raise DriverError("run directory must be new")
     if not 0 < timeout <= 30 or not 0 < deadline <= 60:
         raise DriverError("invalid bounded observation interval")
+    profile = profile or ("synthetic" if executable is None else "default")
+    if profile not in PROFILES or (executable is None) != (profile == "synthetic"):
+        raise DriverError("profile and executable kind differ or profile is unsupported")
+    if auth_file is not None and profile != "experimental-lab":
+        raise DriverError("authentication staging requires explicit experimental-lab profile")
+    if profile == "experimental-lab" and auth_file is None:
+        raise DriverError("select an existing auth.json file; no login/bootstrap fallback")
     if executable is None:
         if mode not in MODES:
             raise DriverError("unsupported synthetic scenario")
@@ -121,14 +133,36 @@ def prepare(directory, *, executable=None, model=None, effort=None, mode="succes
                TMP=str(root / "scratch"))
     config = (f"model = {json.dumps(model)}\nmodel_reasoning_effort = {json.dumps(effort)}\nmodel_provider = \"openai\"\n"
               "approval_policy = \"never\"\nsandbox_mode = \"read-only\"\n"
-              "web_search = \"disabled\"\nmcp_servers = {}\n") if kind == "live" else "# synthetic only\n"
+              "web_search = \"disabled\"\nmcp_servers = {}\n"
+              "cli_auth_credentials_store = \"file\"\n") if kind == "live" else "# synthetic only\n"
     config_path = root / "codex-home" / "config.toml"
     with private_file(config_path, write=True) as stream:
         stream.write(config.encode())
         stream.flush()
         os.fsync(stream.fileno())
+    auth_hash = None
+    if auth_file is not None:
+        # Explicit existing credential only. Never log its contents, copy a home,
+        # log in, or modify the source. The new copy stays in private storage.
+        source = Path(auth_file)
+        info = source.lstat()
+        if (not source.is_absolute() or not stat.S_ISREG(info.st_mode) or info.st_nlink != 1
+                or source.is_symlink() or getattr(info, "st_file_attributes", 0) & 0x400):
+            raise DriverError("authentication source must be an absolute regular local file")
+        with source.open("rb") as stream:
+            auth = stream.read(65537)
+        value = decode_json(auth, 65536)
+        if not isinstance(value, dict) or not (value.get("tokens") or value.get("OPENAI_API_KEY")):
+            raise DriverError("existing authentication file lacks credentials")
+        with private_file(root / "codex-home" / "auth.json", write=True) as stream:
+            stream.write(auth)
+            stream.flush()
+            os.fsync(stream.fileno())
+        auth_hash = sha256(auth).hexdigest()
     plan = {
         "schema_version": 1, "run_id": uuid4().hex, "kind": kind,
+        "profile": profile, "lab_risk": LAB_RISK if profile == "experimental-lab" else None,
+        "authentication_sha256": auth_hash,
         "root": str(root), "argv": argv, "executable_sha256": digest(executable),
         "profile_sha256": PROFILE_SHA256, "codex_version": VERSION,
         "config_sha256": digest(config_path), "env": env, "model": model, "effort": effort,
@@ -172,6 +206,8 @@ def preflight(directory):
         plan, token = load_plan(root)
         Schema()
         checks = {
+            "profile_supported": (plan.get("profile", "synthetic") == "synthetic" if plan["kind"] == "synthetic"
+                                  else plan.get("profile") == "experimental-lab" and plan.get("lab_risk") == LAB_RISK),
             "implementation_matches": plan["implementation_sha256"] == implementation_hashes(),
             "executable_matches": digest(plan["argv"][0]) == plan["executable_sha256"],
             "configuration_matches": digest(root / "codex-home" / "config.toml") == plan["config_sha256"],
@@ -182,18 +218,26 @@ def preflight(directory):
             storage_directory(root / name)
         if plan["kind"] == "live":
             verify_native(plan["argv"][0])  # --version only, after pin verification.
+        lab = plan["kind"] == "live" and plan.get("profile") == "experimental-lab"
+        if lab:
+            checks["authentication_matches"] = _auth_matches(root, plan)
+        ready = all(checks.values())
         return {
-            "state": "blocked" if plan["kind"] == "live" or not all(checks.values()) else "synthetic-only",
+            "state": ("experimental-lab-awaiting-authorization" if lab and ready else
+                      "synthetic-only" if plan["kind"] == "synthetic" and ready else "blocked"),
+            "profile": plan.get("profile", "default"), "accepted_lab_risk": plan.get("lab_risk"),
             "plan_sha256": token, "checks": checks,
             "package": {"version": version("deskmate-formats"), "module": str(Path(__file__).resolve()),
                         "implementation_sha256": implementation_hashes()},
             "requested": {key: plan[key] for key in ("argv", "env", "model", "effort", "timeout", "deadline",
                                                        "config_sha256", "executable_sha256", "profile_sha256")},
             "effective_codex_configuration": "unverified; no app-server session launched",
-            "external_enforcement": ["private storage ACL checks", "one-shot attempt fence",
-                                     "live launch disabled before process creation"],
-            "authentication": "not inspected or provisioned; isolated home alone is not a credential boundary",
-            "live_blockers": list(LIVE_BLOCKERS),
+            "external_enforcement": ["private storage ACL checks", "one-shot attempt fence"],
+            "os_confinement": "not verified or supplied by this driver",
+            "authentication": ("explicit existing file staged privately; runtime acceptance unverified" if lab else
+                               "not inspected or provisioned; isolated home alone is not a credential boundary"),
+            "live_blockers": [] if lab else list(LIVE_BLOCKERS),
+            "required_authorizations": ["authorize-live-plan", "accept-lab-risk"] if lab else [],
             "app_server_launches": 0, "model_turns": 0,
         }
 
@@ -214,12 +258,21 @@ class Evidence:
         write_record(self.root / f"{self.sequence:04d}.json", record)
 
 
-def _validate_plan(root, plan, token, authorization, isolation_reviewed):
+def _auth_matches(root, plan):
+    if not plan.get("authentication_sha256"):
+        return False
+    with private_file(root / "codex-home" / "auth.json") as stream:
+        return file_digest(stream, "sha256").hexdigest() == plan["authentication_sha256"]
+
+
+def _validate_plan(root, plan, token, authorization, isolation_reviewed, lab_risk_ack=None):
     if authorization != token:
         raise DriverError("explicit authorization must match the exact plan digest")
     if plan["implementation_sha256"] != implementation_hashes():
         raise DriverError("driver implementation changed after preparation")
     if plan["kind"] == "synthetic":
+        if plan.get("profile", "synthetic") != "synthetic":
+            raise DriverError("synthetic plan requires synthetic profile")
         argv = plan["argv"]
         if (len(argv) != 6 or argv[0] != str(Path(sys.executable).resolve())
                 or argv[1:4] != ["-I", "-m", "deskmate_formats.supervisor.synthetic_peer"]
@@ -239,12 +292,15 @@ def _validate_plan(root, plan, token, authorization, isolation_reviewed):
     for name in ("evidence", "scratch", "codex-home", "spool", "receipts"):
         storage_directory(root / name)
     if plan["kind"] == "live":
-        if isolation_reviewed != token:
-            raise DriverError("live launch requires separately reviewed effective isolation for this plan")
-        verify_native(plan["argv"][0])
         if plan["binding"] is not None:
             raise DriverError("S2 live dispatch is disabled")
-        raise DriverError("live launch blocked: " + "; ".join(LIVE_BLOCKERS))
+        if plan.get("profile") != "experimental-lab":
+            raise DriverError("live launch blocked: select experimental-lab explicitly; " + "; ".join(LIVE_BLOCKERS))
+        if lab_risk_ack != token or plan.get("lab_risk") != LAB_RISK:
+            raise DriverError("experimental-lab requires separate exact-plan lab-risk acknowledgment")
+        if not _auth_matches(root, plan):
+            raise DriverError("staged authentication changed since preparation")
+        verify_native(plan["argv"][0])
     Schema()
 
 
@@ -290,21 +346,26 @@ def _event(ops, telemetry, evidence, thread_id, turn_id, *, timeout=0):
     return event
 
 
-def run(directory, *, authorization, isolation_reviewed=None, accepted_binding=None):
-    """Perform at most one thread/start and one turn/start. Never retry a run."""
+def run(directory, *, authorization, isolation_reviewed=None, accepted_binding=None, lab_risk_ack=None):
+    """Perform at most one thread/start and one turn/start. Never retry a run.
+
+    isolation_reviewed is retained for old callers but grants no authority.
+    """
     root = storage_directory(directory)
     with journal_lock(root):
         plan, token = load_plan(root)
         if plan["binding"] != accepted_binding:
             raise DriverError("bound S2 plan requires the bridge's current acceptance check")
-        _validate_plan(root, plan, token, authorization, isolation_reviewed)
+        _validate_plan(root, plan, token, authorization, isolation_reviewed, lab_risk_ack)
         if any((root / "scratch").iterdir()):
             raise DriverError("scratch must be empty before dispatch")
         with open_ledger(root / "receipts") as ledger:
             if ledger.receipts():
                 raise DriverError("recorded operations forbid another dispatch")
             # This marker is a permanent fence even if a crash precedes the first RPC.
-            write_record(root / "attempt.json", {"plan_sha256": token, "binding": plan["binding"]})
+            write_record(root / "attempt.json", {"plan_sha256": token, "binding": plan["binding"],
+                         "profile": plan.get("profile", "default"), "authorization": authorization,
+                         "lab_risk_ack": lab_risk_ack})
             return _own(root, plan, ledger)
 
 
@@ -312,7 +373,7 @@ def _own(root, plan, ledger):
     evidence = Evidence(root / "evidence")
     client = ops = telemetry = None
     outcome = {"state": "blocked", "reason": "owner-interrupted", "run_id": plan["run_id"],
-               "binding": plan["binding"], "kind": plan["kind"]}
+               "binding": plan["binding"], "kind": plan["kind"], "profile": plan.get("profile", "default")}
     start = monotonic()
     try:
         evidence.save("launch-intent", plan)
