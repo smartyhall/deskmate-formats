@@ -1,12 +1,20 @@
 # S0 live canary readiness — completed 2026-11-11
 
+**Current implementation (2026-11-12):** the explicitly selected
+`experimental-lab` profile can pass the launch gate with separate exact-plan
+model-use authorization and lab-risk acknowledgment. Default live remains blocked.
+Use the [current canary runbook](codex-supervisor-s0-live-canary.md).
+The findings, blockers and proposed remedies below describe the historical
+November 11 acceptance threshold, not prerequisites for this accepted lab profile.
+No live turn was performed by the implementation campaign.
+
 **Subsequent operator policy decision — 2026-11-11:**
 This historical audit's observations—including tested outside-scratch
 file and loopback access—remain valid. The operator's later
 [experimental lab posture](experimental-lab-operating-posture.md)
 accepts that **VM-local risk** for a single separately authorized S0
 canary, superseding the audit's **recommended additional isolation
-prerequisite**, not its recorded evidence. Current source still has a
+prerequisite**, not its recorded evidence. At audit completion the source had a
 hard-coded live launch block. This report should not be misread as the
 current experiment's unchanged risk-tolerance threshold.
 

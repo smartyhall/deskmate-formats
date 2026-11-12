@@ -10,10 +10,14 @@ a normal **local** lab input; public Git publication is a different boundary.
 Retain snapshots, a brief actual host/share/credential exposure review,
 durable receipts, no uncertain-op replay and a precise model-use grant.
 
-**Implementation remains hard-blocked today:** the old audit's empirical
-finding of unverified isolation is still true, and `LIVE_BLOCKERS` remains
-in source until an independently reviewed experimental profile changes it.
-This documentation does not start or authorize Codex. The earlier
+**Experimental profile implemented — 2026-11-12:** the explicit
+`experimental-lab` profile permits one exact-plan authorized S0 sentinel turn
+with a separate lab-risk acknowledgment. Default live remains blocked and S2
+remains synthetic-only. The [current runbook](docs/research/codex-supervisor-s0-live-canary.md)
+and [validation report](docs/research/codex-supervisor-experimental-lab-validation.md)
+distinguish accepted VM permissions from unverified OS confinement.
+No real model invocation has occurred; implementation review and separate
+operator authorization remain required. The earlier
 `BLOCKED` research record below reflects the **former acceptance gate**;
 issue #90's second-VM/restricted-user comparison is no longer the selected
 first-canary prerequisite.

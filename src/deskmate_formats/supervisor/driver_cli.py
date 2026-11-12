@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import sys
 
-from .driver import preflight, prepare, reconcile_synthetic, run, status
+from .driver import LAB_RISK, PROFILES, preflight, prepare, reconcile_synthetic, run, status
 from .synthetic_peer import MODES
 
 
@@ -15,6 +15,9 @@ def main(argv=None):
     commands = parser.add_subparsers(dest="action", required=True)
     prep = commands.add_parser("prepare", help="freeze plan; no app-server/model launch", allow_abbrev=False)
     prep.add_argument("--executable", type=Path, help="absolute pinned native codex.exe; omit for synthetic peer")
+    prep.add_argument("--profile", choices=PROFILES,
+                      help="synthetic when executable omitted; default live stays blocked; experimental-lab accepts ordinary VM permissions")
+    prep.add_argument("--auth-file", type=Path, help="explicit existing auth.json to copy privately; experimental-lab only; never logs in")
     prep.add_argument("--model", help="operator-selected live model; no default")
     prep.add_argument("--effort", choices=("low", "medium", "high"), help="reviewed live model reasoning effort; no default")
     prep.add_argument("--scenario", choices=MODES, default="success")
@@ -24,14 +27,17 @@ def main(argv=None):
     synthetic.add_argument("--authorize-plan", required=True)
     reconcile = commands.add_parser("reconcile-synthetic", help="read-only synthetic restart only", allow_abbrev=False)
     reconcile.add_argument("--authorize-plan", required=True)
-    live = commands.add_parser("live", help="BLOCKED: effective isolation and descendant containment are not established", allow_abbrev=False)
+    live = commands.add_parser("live", help="one model turn; experimental-lab profile and two exact-plan grants required",
+                               description=LAB_RISK, allow_abbrev=False)
     live.add_argument("--authorize-live-plan", required=True,
                       help="exact digest reviewed in the separately authorized live experiment")
-    live.add_argument("--isolation-reviewed", required=True, help="same plan digest after effective configuration review")
+    live.add_argument("--accept-lab-risk", required=True, help="exact plan digest acknowledging ordinary VM permissions, NOT verified OS isolation")
+    live.add_argument("--isolation-reviewed", help="obsolete; cannot authorize a live launch")
     args = parser.parse_args(argv)
     try:
         if args.action == "prepare":
-            result = {"plan_sha256": prepare(args.run, executable=args.executable, model=args.model, effort=args.effort, mode=args.scenario)}
+            result = {"plan_sha256": prepare(args.run, executable=args.executable, model=args.model, effort=args.effort,
+                                             mode=args.scenario, profile=args.profile, auth_file=args.auth_file)}
         elif args.action == "status":
             result = status(args.run)
         elif args.action == "preflight":
@@ -45,7 +51,8 @@ def main(argv=None):
                 if current["kind"] != expected:
                     parser.error("command and prepared worker kind differ")
                 result = run(args.run, authorization=args.authorize_live_plan if expected == "live" else args.authorize_plan,
-                             isolation_reviewed=getattr(args, "isolation_reviewed", None))
+                             isolation_reviewed=getattr(args, "isolation_reviewed", None),
+                             lab_risk_ack=getattr(args, "accept_lab_risk", None))
         print(json.dumps(result, sort_keys=True, indent=2))
         return 5 if isinstance(result, dict) and result.get("state") == "blocked" else 0
     except KeyboardInterrupt:

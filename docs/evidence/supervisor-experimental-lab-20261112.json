@@ -1,0 +1,547 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-12",
+  "repository": "smartyhall/deskmate-formats",
+  "base_commit": "f119e8ac99626958b71100c17087416192f5afd9",
+  "implementation_commit": "e3b5f37d79c5db67076b503a9491ff807b4e815e",
+  "branch": "codex/s0-experimental-lab",
+  "pr": 93,
+  "activity": {
+    "additional_real_model_turns": 0,
+    "real_app_server_sessions": 0,
+    "offline_schema_exports": 1,
+    "existing_auth_files_staged_privately": 2,
+    "emulator_connections": 0,
+    "attributable_emulated_ms": 0,
+    "guest_counter_delta_ms": null,
+    "host_security_changes": 0,
+    "persistent_services_started": 0
+  },
+  "runtime": {
+    "jsonschema": "4.26.0",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)]",
+    "sqlite": "3.50.4"
+  },
+  "source": {
+    "commit": "e3b5f37d79c5db67076b503a9491ff807b4e815e",
+    "sha256": {
+      "src/deskmate_formats/supervisor/driver.py": "b1acf85fca867adcfd4bad984fe6650b8ff43a32108ce9afbfbb1430760feb16",
+      "src/deskmate_formats/supervisor/driver_cli.py": "0a56fabb1989b34c277440867384ae209c1911639d0478543c06269140ba3044",
+      "src/deskmate_formats/supervisor/synthetic_peer.py": "70649a804489e5e55476d1cbd63617a8b97188874db672a6616f46d52fdadbbc",
+      "tests/portable/test_supervisor_driver.py": "d280d5a922a512617243c5a914355bf134d42017a1a6deea5bc80b250e5a2384"
+    },
+    "working_bytes_equal_git_blobs": true
+  },
+  "private_evidence": {
+    "archive_name": "s0-experimental-lab-20261112",
+    "aliases": {
+      "$LAB": "protected private evidence archive",
+      "$REPO": "research checkout"
+    },
+    "contains": "Private plans, credential copies, complete synthetic evidence, schema export, scripts and all preliminary/final command outputs; not redistributed"
+  },
+  "prepared_candidate": {
+    "plan_sha256": "8226d264f380810230dd6443787dd8d46b17f252322c1a5559588a68dc809085",
+    "profile": "experimental-lab",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "timeout": 10,
+    "deadline": 60,
+    "native_version": "0.166.0",
+    "native_sha256": "9d563ee4e0441ff9d59d612013e0460ddf8e5709735c2d9f6b98b7ef8ca4eb42",
+    "schema_file_count": 321,
+    "schema_inventory_sha256": "994ccd7691cdb81096b5c83bb2a4ce67c01ba5b935339367aedae7bb77839f24",
+    "profile_sha256": "c28048281174969346b83cfc30bd05523da1d608a73375abfcc86040309b5bb9",
+    "bundled_model_catalog_sha256": "1384625c0b6b3e67d3c60da29becea2b017f2c283fc1e2d05b8edafb4698eb10",
+    "preparation_script_sha256": "f7d0fa135141372c51f5150d8f53d83ca74fed26795ddad5bb7dd7e62005e5e6",
+    "all_modules_equal_committed_worktree": true,
+    "attempted": false,
+    "real_app_server_sessions": 0,
+    "real_model_turns": 0,
+    "run_relative_to_private_archive": "canary-reviewed"
+  },
+  "package": {
+    "all_54_package_modules_equal_tested_installation": true,
+    "artifacts": {
+      "deskmate_formats-0.1.0.dev0-py3-none-any.whl": {
+        "sha256": "642d586b35d103e57350419c7171cc99c981c8e3d14c53ca9ed94813fbe46726",
+        "size": 209498
+      },
+      "deskmate_formats-0.1.0.dev0.tar.gz": {
+        "sha256": "e2c982562523a3968fa04151c418abc02f69d221b0773d7dfbd03146826e90b8",
+        "size": 850080
+      }
+    },
+    "binary_fixtures_and_commercial_inputs_excluded": true,
+    "committed_driver_tests_equal_sdist": true,
+    "source_commit": "e3b5f37d79c5db67076b503a9491ff807b4e815e",
+    "verification_script_sha256": "a2ad01723faedb42991e66e13a56ecd2239540b64e1a7d703d2233040c67d580"
+  },
+  "synthetic_initial": {
+    "real_app_server_sessions": 0,
+    "real_model_turns": 0,
+    "scenarios": [
+      {
+        "child_status": "stopped",
+        "elapsed_host_seconds": 0.9500774000189267,
+        "methods": [
+          "initialize",
+          "initialized",
+          "thread/start",
+          "turn/start",
+          "thread/read",
+          "thread/turns/list"
+        ],
+        "operations": [
+          {
+            "acknowledged": 1,
+            "method": "thread/start",
+            "state": "completed"
+          },
+          {
+            "acknowledged": 1,
+            "method": "turn/start",
+            "state": "completed"
+          }
+        ],
+        "outcome_sha256": "91c81ac643193d9a8dbcc64836a6bc49314a66606cf7ef0eba9fb6976e4b1531",
+        "reason": "observed-terminal-and-history",
+        "scenario": "success",
+        "state": "completed"
+      },
+      {
+        "child_status": "stopped",
+        "elapsed_host_seconds": 0.9581780000007711,
+        "methods": [
+          "initialize",
+          "initialized",
+          "thread/start",
+          "turn/start"
+        ],
+        "operations": [
+          {
+            "acknowledged": 1,
+            "method": "thread/start",
+            "state": "completed"
+          },
+          {
+            "acknowledged": 0,
+            "method": "turn/start",
+            "state": "needs-reconciliation"
+          }
+        ],
+        "outcome_sha256": "d2955c00f3572f43e8f1cd71ebbf6c6f7f0cfe34672f1e30ccf8f5b01b1261a4",
+        "reason": "app-server stdout closed",
+        "scenario": "lost-ack",
+        "state": "blocked"
+      }
+    ],
+    "script_sha256": "9df2232d5d57eba324f1c5f7ea409cddc5c013d02b527cbd7291f827d70f1d8b",
+    "test_kind": "synthetic production-live-path adapter; native verification mocked; no real model"
+  },
+  "synthetic_canonical": {
+    "real_app_server_sessions": 0,
+    "real_model_turns": 0,
+    "scenarios": [
+      {
+        "child_status": "stopped",
+        "elapsed_host_seconds": 3.7033220999874175,
+        "methods": [
+          "initialize",
+          "initialized",
+          "thread/start",
+          "turn/start",
+          "thread/read",
+          "thread/turns/list"
+        ],
+        "operations": [
+          {
+            "acknowledged": 1,
+            "method": "thread/start",
+            "state": "completed"
+          },
+          {
+            "acknowledged": 1,
+            "method": "turn/start",
+            "state": "completed"
+          }
+        ],
+        "outcome_sha256": "13674bdaefe8c4462c26011d96539db138a76cd827010fa467aa5e3caeaa7e8a",
+        "reason": "observed-terminal-and-history",
+        "scenario": "success",
+        "state": "completed"
+      },
+      {
+        "child_status": "stopped",
+        "elapsed_host_seconds": 0.7984126000083052,
+        "methods": [
+          "initialize",
+          "initialized",
+          "thread/start",
+          "turn/start"
+        ],
+        "operations": [
+          {
+            "acknowledged": 1,
+            "method": "thread/start",
+            "state": "completed"
+          },
+          {
+            "acknowledged": 0,
+            "method": "turn/start",
+            "state": "needs-reconciliation"
+          }
+        ],
+        "outcome_sha256": "6210c304c7dcf5abc31735a4c367e030ef5f772571d6f1fe66289ed8ee9bfa98",
+        "reason": "app-server stdout closed",
+        "scenario": "lost-ack",
+        "state": "blocked"
+      }
+    ],
+    "script_sha256": "491a240cb25fde475841884e29e79a3ee8af64b3d90c35c214b74d8a4e8dfadf",
+    "test_kind": "synthetic production-live-path adapter; native verification mocked; no real model"
+  },
+  "commands": {
+    "focused-initial": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-p",
+        "test_supervisor_driver.py",
+        "-v"
+      ],
+      "returncode": 1,
+      "elapsed_host_seconds": 6.798106400005054,
+      "log_sha256": "421288bdc7959af0ef147e48416da42004e91d2de14f03266a8c5919a830b6c9"
+    },
+    "focused-development": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-p",
+        "test_supervisor_driver.py",
+        "-v"
+      ],
+      "returncode": 1,
+      "elapsed_host_seconds": 92.82396509998944,
+      "log_sha256": "0a9b40fe35aba857ce45223e909165e729ba15d6fc9dc556b48d6d5357024e03"
+    },
+    "focused-checkpoint": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-p",
+        "test_supervisor*.py",
+        "-v"
+      ],
+      "returncode": 1,
+      "elapsed_host_seconds": 429.8192478999845,
+      "log_sha256": "cc5a92016ec040eaca1a2ad9a8fef2a8ba5da2df8cfbb1ce5f7b03c5be9de0b0"
+    },
+    "focused-corrected": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-p",
+        "test_supervisor*.py",
+        "-v"
+      ],
+      "returncode": 1,
+      "elapsed_host_seconds": 311.40637149999384,
+      "log_sha256": "e953400f738b51a56e280a51c689a359dd5e9120c79406191337005c54cf05c0"
+    },
+    "http-disconnect-recheck": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "-m",
+        "unittest",
+        "-v",
+        "test_supervisor_http.SupervisorHttpTests.test_disconnect_reports_uncertainty_separately_from_live_process"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 2.5926571000018157,
+      "log_sha256": "59255244f5e21691209f9b07d12a33598071884c756167b9970aab4617435c37"
+    },
+    "driver-final": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-p",
+        "test_supervisor_driver.py",
+        "-v"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 100.60519620002015,
+      "log_sha256": "1434ad3d65d9f271dd1a1ed74c67c69f6402af8893d392a9928be16119d6765f"
+    },
+    "portable-final": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-v"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 343.62602830003016,
+      "log_sha256": "c685e45d25829a072255b1022cced01ace5a95b327a90b01a8798995b5765d63"
+    },
+    "deployment-checkpoint": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "deployment/windows10/tests",
+        "-v"
+      ],
+      "returncode": 1,
+      "elapsed_host_seconds": 33.509991300001275,
+      "log_sha256": "b6fe516827bc0ee743dc0c6b86890a6359bbde05fcfd292c59ee6fe383417f80"
+    },
+    "deployment-recheck": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "deployment/windows10/tests",
+        "-v"
+      ],
+      "returncode": 1,
+      "elapsed_host_seconds": 30.79152269999031,
+      "log_sha256": "3b853a50000538840649ae33c99cd2ac916cb026b8ff4eb5ee310b01ef92490e"
+    },
+    "appraiser-checkpoint": {
+      "argv": [
+        "pwsh.exe",
+        "-NoProfile",
+        "-File",
+        "deployment/windows10/tests/test_appraiser_state.ps1"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 2.762189400033094,
+      "log_sha256": "f1e522482f27442b693cdbba09e1c09e08fcb097448009d9d307e9363b965a16"
+    },
+    "build-implementation": {
+      "argv": [
+        "python",
+        "-m",
+        "build"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 45.47814300004393,
+      "log_sha256": "9a9e74f1e8965bc5e8ba721c363cdcd8a94a99a6dc6abed9a94ea6b1070c0461"
+    },
+    "packaging-final": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "$LAB/packaging_check.py"
+      ],
+      "returncode": 1,
+      "elapsed_host_seconds": 0.7743052000296302,
+      "log_sha256": "490c04c07e54a6cfcadb0ff268d23b0f26c4ce6bc988b6a0c2d5526924e43625"
+    },
+    "packaging-canonical": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "$LAB/packaging_check.py"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 0.6580761999939568,
+      "log_sha256": "8546a24f646a18c6dbd3a27189a5f9456e7c53ff14d681b301fc7c416bcead8e"
+    },
+    "artifact-audit": {
+      "argv": [
+        "python",
+        "tools/audit_repository.py"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 3.4944098999840207,
+      "log_sha256": "5dab0925c969967e8572a43641f51b4902785db7ad76894f595e53b593edebdc"
+    },
+    "installed-canonical": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "tools/check_install.py"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 4.5737519999966025,
+      "log_sha256": "32424ecc648477d48a78688fd27b7559226db51072854045787ac51211eb5719"
+    },
+    "ruff-checkpoint": {
+      "argv": [
+        "python",
+        "-m",
+        "ruff",
+        "check",
+        "src",
+        "tests/portable",
+        "tools"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 0.22346839995589107,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "reuse-checkpoint": {
+      "argv": [
+        "python",
+        "-m",
+        "reuse",
+        "lint"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 3.6829356999951415,
+      "log_sha256": "1dd8d04d2243764befad87f73124bc147dde64dbace36b2872bcca2d1fb2d6ef"
+    },
+    "audit-checkpoint": {
+      "argv": [
+        "python",
+        "tools/audit_repository.py"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 7.485318900027778,
+      "log_sha256": "a77ee18cbd2d78b180ef87e27f24d0dd24f3b85390fe5547a097ef5de2d65147"
+    },
+    "prepare-canary": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "$LAB/prepare_canary.py"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 47.127718200033996,
+      "log_sha256": "55d7d4cab5b15c2215f57bc66de56916e3587e6f734a493cba9e03936d5169f8"
+    },
+    "prepare-reviewed": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "$LAB/prepare_reviewed_canary.py"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 7.98904820001917,
+      "log_sha256": "546ee3ad2fdde1e70aa7bc260e65b170b03e9ec5209aaf82dbaceb6c046e3610"
+    },
+    "lab-demo": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "$LAB/lab_demo.py"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 4.051971200038679,
+      "log_sha256": "ccf508c1c414d5772c820e8fe43383b1094b5dd32faefdd02e48a57ac15eb66c"
+    },
+    "canonical-demo": {
+      "argv": [
+        "$LAB/verify/Scripts/python.exe",
+        "$LAB/canonical_lab_demo.py"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 6.061083199980203,
+      "log_sha256": "ec13f080daca44a1cafa3b6318e1e99a07e067acb0fc31ed9a9a084b8542ad41"
+    },
+    "ruff-final": {
+      "argv": [
+        "python",
+        "-m",
+        "ruff",
+        "check",
+        "src",
+        "tests/portable",
+        "tools"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 0.2428123999852687,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "reuse-final": {
+      "argv": [
+        "python",
+        "-m",
+        "reuse",
+        "lint"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 3.382748900039587,
+      "log_sha256": "610f1dbdc09e7da32d6d677b5ccdcf5d3c93aade80beb9b814e872bfbac3e700"
+    },
+    "audit-final": {
+      "argv": [
+        "python",
+        "tools/audit_repository.py"
+      ],
+      "returncode": 0,
+      "elapsed_host_seconds": 3.2470436000148766,
+      "log_sha256": "f894989633880ba1999530162ca990a5d1bda9e590002be3c413c571f1ae2671"
+    }
+  },
+  "tests": {
+    "portable": {
+      "count": 397,
+      "unittest_seconds": 338.36,
+      "state": "passed"
+    },
+    "driver": {
+      "count": 31,
+      "unittest_seconds": 99.946,
+      "state": "passed"
+    },
+    "supervisor_cases_within_portable": 80,
+    "local_deployment": {
+      "count": 31,
+      "skipped": 2,
+      "errors": 1,
+      "error": "Legacy Windows PowerShell child startup exceeded 30 seconds on two runs; pwsh equivalent and original Windows CI deployment passed"
+    }
+  },
+  "implementation_ci": {
+    "commit": "e3b5f37d79c5db67076b503a9491ff807b4e815e",
+    "run_id": 43163794718,
+    "url": "https://github.com/smartyhall/deskmate-formats/actions/runs/43163794718",
+    "jobs": {
+      "windows-3.13": "success",
+      "windows-3.14": "success",
+      "ubuntu-3.13": "success",
+      "ubuntu-3.14": "success"
+    }
+  },
+  "evidence_limits": [
+    "Synthetic peer is not native Codex; native identity verification and subprocess image are mocked only in synthetic live-path tests.",
+    "Runtime auth/model acceptance and effective tool configuration remain unverified.",
+    "Ordinary VM permissions accepted; no driver-provided OS confinement or descendant containment.",
+    "No writable host share or hypervisor-control tool demonstrated by bounded guest inventory; no disk-wide/host audit.",
+    "GitHub CLI configuration location exists; same-user credential access remains possible.",
+    "VMware snapshot restoration procedure documented; actual host snapshot identifiers/restore unverified.",
+    "Canonical clean-wheel alignment replaced one CRLF-only docstring difference; old unattempted plan retained as superseded."
+  ],
+  "repository_audit": {
+    "source_files_checked": 673,
+    "application_generated_fixtures_checked": 9,
+    "synthetic_jsonl_fixtures_checked": 4,
+    "state": "passed"
+  }
+}
