@@ -60,9 +60,11 @@ action.
 
 A reviewed, named **experimental-lab** launch profile may deliberately accept
 the VM's normal permissions instead of claiming a stronger OS sandbox.
-The current source's unconditional `LIVE_BLOCKERS` still prevents live launch;
-a **separate reviewed code change** must replace this gate. Do not bypass it
-through unreviewed flags or private reflection.
+The [experimental profile implementation](codex-supervisor-s0-live-canary.md)
+now replaces the former unconditional gate only for explicitly selected
+`experimental-lab` plans with two exact-plan confirmations. Default live modes
+retain `LIVE_BLOCKERS`. Review/merge of that implementation and separate model-use
+authorization are required; never bypass it through private reflection.
 
 For the first real canary, use a pinned Codex version/schema, one newly owned
 app-server child, one exact approved model/effort, one short harmless turn,
@@ -104,4 +106,4 @@ The [2026-11-11 readiness report](codex-supervisor-s0-readiness.md) remains
 a faithful record of experiments and the requirements applied *at that time*.
 This later **operator policy** supersedes its recommendation to prove a new
 OS-level/second-VM isolation boundary before a narrow S0 canary, but does not
-retract any empirical observation or change the present code gate.
+retract any empirical observation or itself authorize model usage.

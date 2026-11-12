@@ -1,28 +1,19 @@
 # Supervisor operator driver and offline S2 foundation
 
-**Subsequent operator decision — 2026-11-11:**
-The [laboratory posture](experimental-lab-operating-posture.md) accepts the
-existing recoverable Windows VM for a narrowly authorized first S0 canary.
-The [completed audit](codex-supervisor-s0-readiness.md) accurately found
-broad OS confinement unverified, but that is **no longer an operator-required
-prerequisite** solely for the smoke test. Instead review a named experimental
-launch profile and a short actual host/external exposure inventory. Preserve
-one-turn identities, snapshot/rollback, receipts and no-replay behavior.
-**Code is still unconditionally live-blocked** pending a separately reviewed
-change. The historical `live` commands below cannot bypass that gate.
+The explicit **experimental-lab** S0 profile implements the
+[accepted recoverable laboratory posture](experimental-lab-operating-posture.md).
+It permits one separately authorized live canary with ordinary Windows VM
+permissions, without claiming OS confinement. Default live plans remain blocked.
+**No live canary has been executed. Real S2 dispatch remains disabled.**
+See the [current live procedure](codex-supervisor-s0-live-canary.md) for exact
+preparation, risk acknowledgment, model-use authorization and execution commands.
+The [November 11 audit](codex-supervisor-s0-readiness.md) is historical evidence;
+its additional isolation acceptance threshold has been superseded.
 
-**2026-11-11 completed readiness audit: [BLOCKED](codex-supervisor-s0-readiness.md).**
-`preflight` now records offline pins and explicit isolation findings. `live`
-refuses even matching authorization/isolation digests until a reviewed OS and
-tool containment remedy exists. The historical launch procedure below is not
-currently executable; a new plan and separate authorization are required after
-remediation. Synthetic dispatch remains available.
-
-This implements the offline Stage 1 and synthetic portion of Stage 3 in
-[issue 86](https://github.com/smartyhall/deskmate-formats/issues/86).
-**No live canary has been executed. Real S2 dispatch is disabled.**
-The next live run requires new explicit authorization, review of this change,
-and the isolation checks below. S1 acceptance never authorizes dispatch.
+This implements the operator driver and synthetic S2 foundation in
+[issue 86](https://github.com/smartyhall/deskmate-formats/issues/86), and the first
+experimental S0 launch profile for [issue 58](https://github.com/smartyhall/deskmate-formats/issues/58).
+S1 acceptance never authorizes dispatch.
 
 The implementation reuses `AppServer`, `Operations`, the S0 ledger,
 `AppServerTelemetry`, S1 Git discovery/acceptance, private-storage protections,
@@ -99,11 +90,10 @@ There is at most one direct child per driver and one request at a time. The
 existing native process claim binds its PID, creation stamp and generation.
 Normal execution performs exactly `thread/start`, then `turn/start`, then
 read-only `thread/read` and `thread/turns/list`. It checks the returned cwd,
-model/provider, `approvalPolicy=never`, and exact read-only sandbox before the
+model/provider, `approvalPolicy=never`, and reported read-only policy before the
 turn. Unknown approvals are preserved and blocked without any response.
 Unexpected tools, stale identities and malformed/duplicate responses stop the
-canary. Effective configuration and tool restrictions still require operator
-review: reacting to a tool event cannot undo a tool that already executed.
+canary. The reported policy is not verified OS confinement: reacting to a tool event cannot undo a tool that already executed.
 
 A completed canary requires the exact terminal notification, completed durable
 turn receipt, one exact sentinel agent message, and exact completed history.
@@ -255,64 +245,33 @@ private hashes across browser reads. The receipt's `private_peer_followup`
 preserves this run separately, with updated source/package/log hashes. The prior
 evidence checkpoint also passed all four Windows/Ubuntu Python 3.13/3.14 CI jobs.
 
-## Historical live procedure — superseded by blocked readiness audit
+## Experimental live S0 procedure
 
-**STOP before `live`. The readiness audit found the isolation requirement unmet;
-the implementation now disables live launch.** This document, tests, PR and prior
-grants do not authorize it. Follow the [readiness report](codex-supervisor-s0-readiness.md)
-for current preflight and the smallest corrective action.
-Use the original [live runbook](codex-supervisor-s0-live-canary.md) for host and
-private-archive preparation. Review this driver and install the exact reviewed
-wheel first. Preserve Git commit, package hashes, machine build, private evidence
-and the plan digest. Do not attach to desktop Codex.
+Follow the [current canary runbook](codex-supervisor-s0-live-canary.md). Preparation
+must explicitly select `--profile experimental-lab`, the pinned native executable,
+model/effort and an existing `--auth-file`. The latter copies only that credential
+file into the protected new home, preserves its source and binds the copy's
+SHA-256 privately in the plan. Config requests file credential storage; there is
+no credential environment inheritance, login, bootstrap or fallback. Codex may
+refresh the staged copy during execution; it is never copied back automatically.
+Keep the whole run private, including auth, history and evidence.
 
-1. Resolve the absolute native `codex.exe`, not an npm shim or PATH alias. The
-   driver requires version 0.166.0 and the historical native SHA-256
-   `9d563ee4e0441ff9d59d612013e0460ddf8e5709735c2d9f6b98b7ef8ca4eb42`.
-   Drift is a stop, never an invitation to upgrade or replace the schema.
-2. Prepare a new live plan with an explicitly available operator-selected model:
+`live --authorize-live-plan DIGEST --accept-lab-risk DIGEST` requires two distinct
+operator confirmations of the exact frozen plan. A matching old
+`--isolation-reviewed` value grants nothing. Digests are intent confirmations,
+not signatures or proof of confinement. `preflight` reports
+`experimental-lab-awaiting-authorization` when local checks pass; it does not
+assert runtime authentication, tool isolation or model acceptance. Unselected,
+unsupported and default live profiles remain blocked before process creation.
+Original synthetic commands and S2 bindings retain their behavior.
 
-   ```powershell
-   $liveRun = 'C:\PRIVATE-LAB-PARENT\s0-live-UNIQUE'
-   $plan = deskmate-supervisor-s0 --run $liveRun prepare --executable $codexExe --model $operatorSelectedModel --effort $operatorSelectedEffort | ConvertFrom-Json
-   deskmate-supervisor-s0 --run $liveRun status
-   ```
+The attempt receipt records both confirmations and the selected profile before
+launch. The same existing owner then checks the persistent empty thread policy,
+sends exactly the fixed prompt once, observes terminal/sentinel events, verifies
+full persisted history, and tears down its direct child. There is no live resume,
+reconciliation, replay, force-clear or dispatch service. S2 remains synthetic-only
+until real S0 evidence is completed, reviewed and separately authorized.
 
-3. Privately provision existing authorized authentication into the dedicated home,
-   without login/bootstrap, new credits or credential logging in this experiment.
-   Review the generated config and all effective machine/managed/ancestor settings
-   against the pinned binary's non-launch help and version-matched sources. The
-   template selects OpenAI, read-only sandbox, `never` approvals, disabled web search
-   and an empty MCP table. The environment admits only Windows system-directory
-   variables plus private home/temp paths; no inherited PATH, API keys, proxies,
-   emulator credentials or project configuration. **An empty MCP table/dedicated
-   home does not prove machine-policy/tool isolation.** Establish that there are no
-   external/native tools or privileged settings; if that cannot be established,
-   the precise blocker is effective launch isolation, and launch remains prohibited.
-   The official [configuration reference](https://developers.openai.com/codex/config-reference)
-   is current guidance, not proof of the pinned release's effective behavior.
-4. Obtain a **new explicit operator authorization** naming this exact plan digest,
-   model, one persistent new synthetic thread, one short paid/read-only turn,
-   the observation bounds (10 s/RPC, 60 s turn observation) and owned direct-child
-   teardown, including failure cleanup. These are host deadlines, not a provider
-   token or spending cap. Record the authorization privately. The separate
-   isolation-review digest is an operator attestation, not a bypass for step 3.
-5. Only under that new grant, invoke exactly once:
-
-   ```powershell
-   deskmate-supervisor-s0 --run $liveRun live --authorize-live-plan $plan.plan_sha256 --isolation-reviewed $plan.plan_sha256
-   deskmate-supervisor-s0 --run $liveRun status
-   ```
-
-6. Require completed receipt, exact sentinel, history confirmation, verified child
-   exit and bounded private evidence. Validate redaction through the read-only
-   viewer. Preserve failures/uncertainty; never rerun that intent or turn it into
-   a fresh run as recovery. A separate live history/restart/lost-ack experiment
-   is not authorized by this single-run grant. S2 remains synthetic-only even
-   after a successful live S0 canary until separately reviewed and authorized.
-
-If compatibility drift appears, preserve the installed binary/version hashes,
-compare the new release's generated stable schema and source with the pinned
-inventory, review wire/approval/ownership changes, update attribution/profile
-and adversarial fixtures in a dedicated migration PR, and rerun portable/Windows
-validation. Never silently relax the pin or launch a model to discover compatibility.
+If compatibility drift appears, retain executable/version/schema evidence and
+review a dedicated migration. Never relax pins or spend a model turn to discover
+compatibility during preparation.
