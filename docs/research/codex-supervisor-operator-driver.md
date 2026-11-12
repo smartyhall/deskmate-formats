@@ -1,5 +1,16 @@
 # Supervisor operator driver and offline S2 foundation
 
+**Subsequent operator decision — 2026-11-11:**
+The [laboratory posture](experimental-lab-operating-posture.md) accepts the
+existing recoverable Windows VM for a narrowly authorized first S0 canary.
+The [completed audit](codex-supervisor-s0-readiness.md) accurately found
+broad OS confinement unverified, but that is **no longer an operator-required
+prerequisite** solely for the smoke test. Instead review a named experimental
+launch profile and a short actual host/external exposure inventory. Preserve
+one-turn identities, snapshot/rollback, receipts and no-replay behavior.
+**Code is still unconditionally live-blocked** pending a separately reviewed
+change. The historical `live` commands below cannot bypass that gate.
+
 **2026-11-11 completed readiness audit: [BLOCKED](codex-supervisor-s0-readiness.md).**
 `preflight` now records offline pins and explicit isolation findings. `live`
 refuses even matching authorization/isolation digests until a reviewed OS and

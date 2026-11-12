@@ -14,7 +14,11 @@ or complete installed snapshots. Application-generated documents containing
 controlled synthetic test data are eligible for byte-exact preservation as
 [research fixtures](tests/fixtures/application-generated/README.md), including
 native schemas, indexes and metadata. Private inputs and raw lab evidence
-remain archived outside Git.
+remain archived outside Git. Local use, analysis and reverse engineering of
+historical DeskMate software inside the research VM are routine laboratory
+activity, **distinct from public redistribution**. See the operator's
+[experimental laboratory posture](docs/research/experimental-lab-operating-posture.md):
+favor recoverable progress over speculative confinement requirements.
 
 ## Project status
 

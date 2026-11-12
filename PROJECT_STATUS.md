@@ -1,5 +1,23 @@
 # Project status — DeskMate formats
 
+**Revised lab operating policy — 2026-11-11:**
+[Experimental laboratory posture](docs/research/experimental-lab-operating-posture.md)
+accepts ordinary risk inside the existing recoverable Windows 10 VM for one
+separately authorized S0 protocol canary. No new VM, restricted principal,
+or comprehensive OS filesystem/network/descendant confinement is required
+*solely* to remove hypothetical VM-local risk. Historic DeskMate software is
+a normal **local** lab input; public Git publication is a different boundary.
+Retain snapshots, a brief actual host/share/credential exposure review,
+durable receipts, no uncertain-op replay and a precise model-use grant.
+
+**Implementation remains hard-blocked today:** the old audit's empirical
+finding of unverified isolation is still true, and `LIVE_BLOCKERS` remains
+in source until an independently reviewed experimental profile changes it.
+This documentation does not start or authorize Codex. The earlier
+`BLOCKED` research record below reflects the **former acceptance gate**;
+issue #90's second-VM/restricted-user comparison is no longer the selected
+first-canary prerequisite.
+
 **S0 live-readiness completed — 2026-11-11 (America/New_York):**
 [PR #89](https://github.com/smartyhall/deskmate-formats/pull/89)
 (merged `06b29bd620f0ebe61576083fdc42f1781dccb81e`) completed the

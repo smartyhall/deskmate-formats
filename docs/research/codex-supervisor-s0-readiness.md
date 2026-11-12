@@ -1,5 +1,15 @@
 # S0 live canary readiness — completed 2026-11-11
 
+**Subsequent operator policy decision — 2026-11-11:**
+This historical audit's observations—including tested outside-scratch
+file and loopback access—remain valid. The operator's later
+[experimental lab posture](experimental-lab-operating-posture.md)
+accepts that **VM-local risk** for a single separately authorized S0
+canary, superseding the audit's **recommended additional isolation
+prerequisite**, not its recorded evidence. Current source still has a
+hard-coded live launch block. This report should not be misread as the
+current experiment's unchanged risk-tolerance threshold.
+
 **BLOCKED — SPECIFIC REMEDIATION REQUIRED.** The live-execution block remains
 unconditional. Offline compatibility and synthetic regressions do not establish
 containment for a real app-server process. No real app-server session, additional

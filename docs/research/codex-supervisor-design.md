@@ -1,5 +1,16 @@
 # Proposed Codex laboratory supervisor — design and integration plan
 
+**Operator-directed scope correction — 2026-11-11:**
+See [experimental laboratory posture](experimental-lab-operating-posture.md).
+Design first for a recoverable historical-software VM and actual supervised
+work, not mandatory production-enclave confinement. No second VM, OS
+principal or exhaustive tool-denial proof is required as a standing
+prerequisite to an explicitly approved **one-turn S0 canary**. Check actual
+host/external exposure and keep protocol/ledger/rollback evidence rigorous.
+Later tasks can deliberately read local DeskMate binaries or operate
+disposable 86Box guests within their assigned scope. This note does not
+remove the current hard-coded launcher block.
+
 **Status:** Architectural proposal, not an implemented unattended supervisor.
 The [S0 protocol guide](codex-supervisor-s0.md) records an offline-tested
 app-server client/receipt foundation, and [S1](codex-supervisor-s1.md)

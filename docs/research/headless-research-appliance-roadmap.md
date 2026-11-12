@@ -1,5 +1,12 @@
 # Headless, reproducible emulator research appliance — deferred roadmap
 
+**Mission-drift correction — 2026-11-11:**
+Per [experimental laboratory posture](experimental-lab-operating-posture.md),
+the existing Windows research VM is the accepted initial prototype.
+Second-VM isolation, Linux migration and appliance hardening are **not**
+prerequisites for a narrowly authorized first S0 canary. Prove a real
+supervised turn in the working lab before future migration discussions.
+
 **Status:** Long-term design proposal; no migration or implementation authorized by this document.  
 **Recorded:** 2026-11-06.  
 **Primary predecessor:** [DeskMate Observatory v2](observatory-v2-spec.md) and [Codex laboratory supervisor](codex-supervisor-design.md).  
