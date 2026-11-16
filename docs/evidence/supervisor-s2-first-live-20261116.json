@@ -1,0 +1,215 @@
+{
+  "classification": "Sanitized direct native observation projection; not raw wire evidence",
+  "issue": 86,
+  "source_revision": "adc1ba35e883357b2d406f3ef22037da32ddd75a",
+  "task": {
+    "id": "s2-canary-evidence-analysis",
+    "revision": 1,
+    "acceptance_sequence": 1,
+    "accepted_at": "2026-11-16T07:19:16Z",
+    "source": {
+      "blob": "01111e3d274bc10d110f3273796299fb9388b0c6",
+      "branch": "main",
+      "commit": "adc1ba35e883357b2d406f3ef22037da32ddd75a",
+      "path": "ops/tasks/s2-canary-evidence-analysis.json",
+      "repository": "https://github.com/smartyhall/deskmate-formats.git",
+      "sha256": "e27a05ad35a82cd453287362f490f7423b89acaa1094f3b3e3f2f9160eb9286f"
+    },
+    "claim": "8fc2d0c5c0749451d5d27737725dc04dba0fcc1f136aa4f8c16639bb40eb1515"
+  },
+  "canonical_plan_sha256": "dc6a288d9482c783d429aa35257a9e0496b68e075cbb6e394f19cf416524c12c",
+  "plan_file_sha256": "9d33f2051bf68b0b7e975f1d4078c99fcf9ec5436dee253299eb32518e8adb4c",
+  "configuration": {
+    "codex_version": "0.166.0",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "profile": "experimental-lab",
+    "timeout": 10,
+    "deadline": 60,
+    "executable_sha256": "9d563ee4e0441ff9d59d612013e0460ddf8e5709735c2d9f6b98b7ef8ca4eb42",
+    "profile_sha256": "c28048281174969346b83cfc30bd05523da1d608a73375abfcc86040309b5bb9"
+  },
+  "preflight": {
+    "authentication_matches": true,
+    "configuration_matches": true,
+    "executable_matches": true,
+    "implementation_matches": true,
+    "never_attempted": true,
+    "profile_supported": true,
+    "scratch_empty": true,
+    "task_context_matches": true
+  },
+  "prompt_bytes": 17802,
+  "response_bytes": 5363,
+  "response_sha256": "ba5167989b8105ded772a3193000c32d7bcb7abd590735e2b2264f75c68e434f",
+  "timing": {
+    "elapsed_seconds": 67.1885406,
+    "start_utc": "2026-11-16T07:45:28.6348547Z",
+    "exit_code": 0,
+    "end_utc": "2026-11-16T07:46:35.8332809Z"
+  },
+  "owner_elapsed_seconds": 46.222817700007,
+  "history_duration_ms": 44182,
+  "observations": {
+    "native_handshake": "inferred from constructor completion plus handshake telemetry; raw initialize reply not retained",
+    "thread_start_count": 1,
+    "persistent_thread": true,
+    "turn_start_count": 1,
+    "exact_frozen_input_in_history": true,
+    "terminal_agent_and_full_history_response_agree": true,
+    "disk_rollout_response_agrees": true,
+    "full_history_turn_count": 1,
+    "thread_idle": true,
+    "tool_or_approval_activity_observed": false,
+    "outcome": "completed",
+    "reason": "observed-terminal-and-history",
+    "child_status": "stopped",
+    "post_process_identity_check": "not-found",
+    "telemetry_failed": false,
+    "observatory_feed_collector": "ready",
+    "observatory_outcome_note": "Live dispatch completed; answer requires operator review",
+    "publication_failure_marker": false,
+    "attributable_emulated_ms": 0,
+    "guest_counter_delta": "not measured"
+  },
+  "notification_methods": [
+    "thread/started",
+    "turn/started",
+    "item/started",
+    "item/completed",
+    "item/started",
+    "item/completed",
+    "turn/completed"
+  ],
+  "operations": [
+    {
+      "method": "thread/start",
+      "state": "completed"
+    },
+    {
+      "method": "turn/start",
+      "state": "completed"
+    }
+  ],
+  "evidence_records": [
+    {
+      "name": "0001.json",
+      "kind": "launch-intent",
+      "bytes": 44874,
+      "sha256": "0fec43fbc2a9ab402a3dfc56139bf97cc2016e647b5a1bb500a051b89a509dbe"
+    },
+    {
+      "name": "0002.json",
+      "kind": "owned-child",
+      "bytes": 133,
+      "sha256": "d6f6090b75943378ad367df3148941756e37ce77c7731100a01dd2bffdf219cc"
+    },
+    {
+      "name": "0003.json",
+      "kind": "request-intent",
+      "bytes": 806,
+      "sha256": "a002292b87d0d0a0c2b5fe81b2f0359ccdac215f7fdbc272d8e5ffc6ae65b984"
+    },
+    {
+      "name": "0004.json",
+      "kind": "thread-result",
+      "bytes": 2161,
+      "sha256": "90ffb798df516a74085572db239fd63a8cdbaabb77cc808709740cca078ee310"
+    },
+    {
+      "name": "0005.json",
+      "kind": "event",
+      "bytes": 1536,
+      "sha256": "1982e979d59d787c82124424d7589c516c9f077e8dece68d86578ed1ebd8ad35"
+    },
+    {
+      "name": "0006.json",
+      "kind": "request-intent",
+      "bytes": 18448,
+      "sha256": "92c3806e5ef2e2d0df62a8367d05fda55b3c2e020d5b0c8cff4b1ea8c4a3090c"
+    },
+    {
+      "name": "0007.json",
+      "kind": "turn-result",
+      "bytes": 262,
+      "sha256": "dc6254126bcf949e5083dde735c5e74a7444f2a0c7162c94cd0b467588080af3"
+    },
+    {
+      "name": "0008.json",
+      "kind": "event",
+      "bytes": 347,
+      "sha256": "97c60c5a8373cb05b7c1123142096df70ee3b95914b5d92b3d01cccebabc3729"
+    },
+    {
+      "name": "0009.json",
+      "kind": "event",
+      "bytes": 18622,
+      "sha256": "e5575d9f7c7056e724c8b5d5d49bfaff11d644c1bea1ca1180800fc0c701530f"
+    },
+    {
+      "name": "0010.json",
+      "kind": "event",
+      "bytes": 18635,
+      "sha256": "2f2fab4686978df4151c3642babbc3f47231a1a132dcbdf6fe8801ed6592873e"
+    },
+    {
+      "name": "0011.json",
+      "kind": "event",
+      "bytes": 418,
+      "sha256": "cb189646d692a7a0491d368d938a94f39a4028415b5ef940a3c6ee7305098ca4"
+    },
+    {
+      "name": "0012.json",
+      "kind": "event",
+      "bytes": 5831,
+      "sha256": "6a3886283fc3da46cbaa103239b55acc9173fd839692fc15c155818336c56cdc"
+    },
+    {
+      "name": "0013.json",
+      "kind": "event",
+      "bytes": 5984,
+      "sha256": "5955f807d7acbbd3de04096299b9ce88c8ad600473ab5d477850d19889220c7c"
+    },
+    {
+      "name": "0014.json",
+      "kind": "history",
+      "bytes": 44382,
+      "sha256": "3a789a2f7510a2967bd1dae0bdde81c83be3df532ac937cfc33c323feb355f86"
+    }
+  ],
+  "answer_review": {
+    "supported_concrete_findings": 3,
+    "explicit_limit_groups": 4,
+    "cites_both_supplied_paths": true,
+    "distinguishes_S0_from_S2": true,
+    "risk_acceptance_not_isolation": true,
+    "useful_checklist_items": 5,
+    "accuracy_caveat": "Answer says the first Git task specification was unavailable. The supplied manifest does contain the specification. Live authorization and this experiment result were unavailable to the worker. Its no-S2-acceptance statement is valid only when scoped to the historical S0 canary, not current S1 acceptance.",
+    "independent_review": "pending; producing worker review only"
+  },
+  "limits": [
+    "Raw initialize reply, stderr and invalid frames not retained",
+    "Native exit code and EOF-versus-kill cleanup path not retained",
+    "No proof of OS/network isolation, descendant containment, provider cancellation, spending cap or power-loss durability",
+    "Observatory checked via offline AgentJournalFeed publication; no browser or HTTP viewer request",
+    "No native restart/resume or further model invocation"
+  ],
+  "instruction_documents": [
+    {
+      "path": "docs/research/codex-supervisor-s0-second-live-result-20261116.md",
+      "blob": "78e3a1b95120ef286faf0b3be84a11e23ff58cfe",
+      "sha256": "cfb04d5f44d0daac84b63a7fcde92294f9ccf7891cc62b5d6d8f97d4564ce2e8",
+      "bytes": 9291
+    },
+    {
+      "path": "docs/research/experimental-lab-operating-posture.md",
+      "blob": "368583b28f5b5baeec23fb76d565b6c6f8557678",
+      "sha256": "d81c6f555a4d9673028be5fd30802eff671ae82400006798125aa3e57412a972",
+      "bytes": 6265
+    }
+  ],
+  "private_backup": {
+    "files": 300,
+    "all_file_bytes_verified": true
+  }
+}
