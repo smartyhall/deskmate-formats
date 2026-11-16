@@ -1,5 +1,18 @@
 # Project status — DeskMate formats
 
+**S0 LIVE CANARY PASSED — 2026-11-16 UTC:** the separately authorized second
+native experiment used reviewed implementation `fe168c86d650f6e8aa4f3187fc4121cf7910783c`
+and the exact prepared plan. One owned Codex 0.166.0 app-server created one
+persistent thread and submitted one gpt-6-luna/Low turn. The corrected policy
+validator accepted the native reply; `S0_CANARY_OK`, terminal notifications,
+full history and the on-disk rollout agreed. Owned-child exit was verified;
+CLI exit 0, supervisor completed. [Observed report](docs/research/codex-supervisor-s0-second-live-result-20261116.md)
+and [sanitized evidence](docs/evidence/supervisor-s0-second-live-20261116.json).
+Raw evidence remains private. No retry, restart, S2 dispatch or emulator use
+occurred. Issue #58 remains open for broader native restart/resume scope and
+independent review; #86 remains open pending separate real-dispatch authority.
+Earlier dated records below retain their historical scope.
+
 **Revised lab operating policy — 2026-11-11:**
 [Experimental laboratory posture](docs/research/experimental-lab-operating-posture.md)
 accepts ordinary risk inside the existing recoverable Windows 10 VM for one
@@ -16,8 +29,8 @@ with a separate lab-risk acknowledgment. Default live remains blocked and S2
 remains synthetic-only. The [current runbook](docs/research/codex-supervisor-s0-live-canary.md)
 and [validation report](docs/research/codex-supervisor-experimental-lab-validation.md)
 distinguish accepted VM permissions from unverified OS confinement.
-No real model invocation has occurred; implementation review and separate
-operator authorization remain required. The earlier
+At that checkpoint no real model invocation had occurred; the authorized
+second invocation above now passed. The earlier
 `BLOCKED` research record below reflects the **former acceptance gate**;
 issue #90's second-VM/restricted-user comparison is no longer the selected
 first-canary prerequisite.
@@ -90,8 +103,8 @@ The operator granted standing authority on 2026-11-08 for ChatGPT to merge
 ready, passing Codex PRs after independent review. This does not authorize
 Codex workers to self-merge or to execute paid Codex turns or native guest actions.
 S0 now has an installable operator driver; the S1-to-S0 bridge has a separately
-gated synthetic-only demonstration. A real supervisor-owned Codex canary and
-real S2 dispatch have not yet been proven or authorized by this work.
+gated synthetic-only demonstration. The authorized real S0 canary above now
+passed; real S2 dispatch remains unproven and separately gated.
 [Operator driver and next-canary gates](docs/research/codex-supervisor-operator-driver.md).
 [Supervisor design and rollout](docs/research/codex-supervisor-design.md).
 
@@ -167,7 +180,7 @@ the [README](README.md) for commands.
 | Interchange | [Version-1 semantic Python/JSON contract](docs/interoperability.md), explicit loss reports, source-snapshot IDs and example files are implemented. | No general native edit/delete, lossless reconstruction, stable external UID mapping or CalDAV/CardDAV network synchronization. |
 | Filer | Static schema and sample analysis plus a distinct native CARMAINT open/menu/exit observation; disk contents stayed byte-identical and Print record/report were disabled. [Issue #54](https://github.com/smartyhall/deskmate-formats/issues/54). | No Filer codec. Earlier staged F00–F02 schema/record creation work remains unperformed. |
 | 86Box and Observatory | Native authenticated loopback client, held DOS guest evidence, and [Observatory M0/M1](docs/research/observatory-v2-m0-m1.md) read-only publication with [M2](docs/research/observatory-v2-m2.md) opt-in Codex telemetry. Scoped held-canary verification recorded 0 ms guest advance. | No proven unattended service/old-browser acceptance; launcher startup timeout still warrants safe reconciliation [#35](https://github.com/smartyhall/deskmate-formats/issues/35). |
-| Supervisor | [S0](docs/research/codex-supervisor-s0.md) owned protocol/receipts and [installable driver](docs/research/codex-supervisor-operator-driver.md); [S1](docs/research/codex-supervisor-s1.md) trusted Git intake; separate synthetic-only S2 grant/dispatch with read-only Observatory outcome. | No validated live S0 canary or real S2 dispatch. A queued task is not execution authority. The next live canary remains separately authorized and unexecuted. |
+| Supervisor | [S0](docs/research/codex-supervisor-s0.md) owned protocol/receipts and [installable driver](docs/research/codex-supervisor-operator-driver.md); [real single-turn S0 canary passed](docs/research/codex-supervisor-s0-second-live-result-20261116.md); [S1](docs/research/codex-supervisor-s1.md) trusted Git intake; synthetic-only S2 bridge. | Native restart/resume and real S2 dispatch remain unverified. A queued task is not execution authority; further live operations require separate authorization. |
 | Windows lab | Existing Windows 10 Pro research VM and [source-only provisioning work](deployment/windows10/INTEGRATION-STATUS.md). | Fresh full ISO/OOBE and recovery validation incomplete; system modifications need explicit review [#32](https://github.com/smartyhall/deskmate-formats/issues/32). |
 
 Text, Worksheet and Draw remain outside implemented application codecs. See

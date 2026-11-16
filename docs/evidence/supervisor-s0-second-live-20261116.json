@@ -1,0 +1,233 @@
+{
+  "classification": "Sanitized observation projection, not raw wire evidence or a synthetic test",
+  "source_revision": "fe168c86d650f6e8aa4f3187fc4121cf7910783c",
+  "canonical_plan_sha256": "3e2703fee4a9221a97fb98dac7264a6b66d03be5f5ce48b34e7dc2ce8bd48cc6",
+  "plan_file_sha256": "4e636f69b9461cd363dfa84a3c04f0f3531b21db068ea3c9dedc4729eedc4ba2",
+  "configuration": {
+    "profile": "experimental-lab",
+    "codex_version": "0.166.0",
+    "model": "gpt-6-luna",
+    "reasoning_effort": "low",
+    "rpc_timeout_seconds": 10,
+    "turn_observation_seconds": 60,
+    "s2_binding": null
+  },
+  "offline": {
+    "installed_modules_matched_reviewed_git_blobs": 54,
+    "schema_matched_reviewed_git_blob": true,
+    "checks": {
+      "authentication_matches": true,
+      "configuration_matches": true,
+      "executable_matches": true,
+      "implementation_matches": true,
+      "never_attempted": true,
+      "profile_supported": true,
+      "scratch_empty": true
+    },
+    "attempted": false,
+    "operations": [],
+    "outcome": null
+  },
+  "timing": {
+    "started_utc": "2026-11-16T04:58:39.2102210Z",
+    "ended_utc": "2026-11-16T04:58:50.1968878Z",
+    "elapsed_host_seconds": 10.9801671,
+    "execution_exit": 0,
+    "live_invocations": 1
+  },
+  "reported_policy": {
+    "approvalPolicy": "never",
+    "approvalsReviewer": "user",
+    "model": "gpt-6-luna",
+    "modelProvider": "openai",
+    "reasoningEffort": "low",
+    "sandbox": {
+      "networkAccess": false,
+      "type": "readOnly"
+    }
+  },
+  "operations": [
+    {
+      "method": "thread/start",
+      "request_id": 1,
+      "state": "completed",
+      "acknowledged": 1,
+      "evidence": "remote-result"
+    },
+    {
+      "method": "turn/start",
+      "request_id": 2,
+      "state": "completed",
+      "acknowledged": 1,
+      "evidence": "turn-notification"
+    }
+  ],
+  "observations": {
+    "persistent_thread": true,
+    "initial_turn_count": 0,
+    "same_thread_and_turn_in_terminal_history_and_rollout": true,
+    "history_turn_count": 1,
+    "history_items_view": "full",
+    "history_next_cursor": null,
+    "history_item_types": [
+      "userMessage",
+      "agentMessage"
+    ],
+    "sentinel": "S0_CANARY_OK",
+    "terminal_status": "completed",
+    "native_turn_duration_ms": 2374,
+    "native_time_to_first_token_ms": 2208,
+    "rollout_response_item_types": [
+      "additional_tools",
+      "message",
+      "message",
+      "message",
+      "message",
+      "message",
+      "message",
+      "message"
+    ],
+    "usage": {
+      "cache_write_input_tokens": 0,
+      "cached_input_tokens": 0,
+      "input_tokens": 11374,
+      "output_tokens": 9,
+      "reasoning_output_tokens": 0,
+      "total_tokens": 11383
+    },
+    "usage_sources_agree": true,
+    "telemetry_event_types": [
+      "source.reconnected",
+      "process.heartbeat",
+      "turn.started",
+      "turn.completed",
+      "source.disconnected",
+      "process.exited",
+      "agent.note"
+    ]
+  },
+  "outcome": {
+    "state": "completed",
+    "reason": "observed-terminal-and-history",
+    "child_status": "stopped",
+    "elapsed_host_seconds": 6.968057699967176,
+    "telemetry_failed": false
+  },
+  "later_owned_process_identity_check": "not-found",
+  "raw_numbered_evidence_inventory": [
+    {
+      "file": "0001.json",
+      "kind": "launch-intent",
+      "method": null,
+      "sha256": "0ee3cce2a23dc80d7456dba44aedd1513b968554fdf00dbf7cee529e08313c24",
+      "size": 7386
+    },
+    {
+      "file": "0002.json",
+      "kind": "owned-child",
+      "method": null,
+      "sha256": "99f8b77ffb4c4917ec76df5f2ed47cb41aee73beffc445dedf69d1ac25579831",
+      "size": 133
+    },
+    {
+      "file": "0003.json",
+      "kind": "request-intent",
+      "method": "thread/start",
+      "sha256": "127b54a1734d911cbd04da396302bc239d2efe59beedaf3e8c355fc495693ca4",
+      "size": 146
+    },
+    {
+      "file": "0004.json",
+      "kind": "thread-result",
+      "method": null,
+      "sha256": "f7b2ff2b027926e99973330f9d8c10a4d75b18ca0196ecb074c4bf17d40300db",
+      "size": 2065
+    },
+    {
+      "file": "0005.json",
+      "kind": "event",
+      "method": "thread/started",
+      "sha256": "119dbef6ae992978cfcdab0df74fa250133dff52d0876489819a2a2729e23ea5",
+      "size": 1472
+    },
+    {
+      "file": "0006.json",
+      "kind": "request-intent",
+      "method": "turn/start",
+      "sha256": "0518d79689f224c882a1f7f0580c7f82e7c10c872e5bc56df8276e0fdcf65a6e",
+      "size": 331
+    },
+    {
+      "file": "0007.json",
+      "kind": "turn-result",
+      "method": null,
+      "sha256": "622bf76bc5fe09cd577d6d3384be8edce3c51d6df2e6b9808f91f356fba300a8",
+      "size": 262
+    },
+    {
+      "file": "0008.json",
+      "kind": "event",
+      "method": "turn/started",
+      "sha256": "5d7bffeda7cda5d3fa84e3500d17632cc1582256245d0fc28fb0dccf4f0e0f6a",
+      "size": 347
+    },
+    {
+      "file": "0009.json",
+      "kind": "event",
+      "method": "item/started",
+      "sha256": "b24fc45c8afff399e3892d5b2824766c652a786a48575047d456b8e9cd6e71a1",
+      "size": 505
+    },
+    {
+      "file": "0010.json",
+      "kind": "event",
+      "method": "item/completed",
+      "sha256": "df76a8b63705a61af722d8338b4705fcbf534635cb8d0f2526ad27fe2308bebe",
+      "size": 518
+    },
+    {
+      "file": "0011.json",
+      "kind": "event",
+      "method": "item/started",
+      "sha256": "6c5f23be8d1154a547d0cb4a524b2f0ee784e9a88c116d5d2e4f018e775c54a6",
+      "size": 418
+    },
+    {
+      "file": "0012.json",
+      "kind": "event",
+      "method": "item/completed",
+      "sha256": "0480c2f9b8fd6971cc3f77628640b0dfa41e975065719ff0f88534719dbd3e9f",
+      "size": 443
+    },
+    {
+      "file": "0013.json",
+      "kind": "event",
+      "method": "turn/completed",
+      "sha256": "9a36c2ef11e486355b36334276889376a99a095306b5b635df9e941ada3da15b",
+      "size": 595
+    },
+    {
+      "file": "0014.json",
+      "kind": "history",
+      "method": null,
+      "sha256": "869099ccb6cccc69d8f12088f7498ab56085015d0e421bf8d4129074f7ef4657",
+      "size": 2695
+    }
+  ],
+  "redactions": [
+    "account paths",
+    "authentication bytes and hashes",
+    "process identity",
+    "thread/turn/session/generation identifiers",
+    "raw history and model context",
+    "account quota metadata"
+  ],
+  "limits": [
+    "No native restart/resume performed",
+    "No proved OS or network confinement or descendant containment",
+    "No native exit code or EOF-versus-kill record",
+    "No cloud cancellation or spending cap guarantee",
+    "Raw initialize reply, stderr and invalid frames not retained by driver",
+    "No S2 dispatch or emulator operation; 0 ms attributable emulated time; guest counter delta not measured"
+  ]
+}

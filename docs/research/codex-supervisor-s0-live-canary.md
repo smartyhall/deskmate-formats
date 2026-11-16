@@ -1,6 +1,14 @@
 # Supervisor S0 first live canary — experimental lab runbook
 
-**Reviewed implementation merged; first real invocation stopped before a model turn.**
+**Second real invocation passed — November 16, 2026 UTC.** See the
+[second observed result](codex-supervisor-s0-second-live-result-20261116.md) and
+[sanitized evidence](../evidence/supervisor-s0-second-live-20261116.json).
+The authorized second plan is permanently attempted and completed; do not rerun
+it. No additional model invocation, native restart/resume or S2 dispatch is
+authorized by this result. The preparation instructions below describe the
+historical workflow and require a new separate grant for any future experiment.
+
+**Historical first invocation stopped before a model turn.**
 See the [November 15 observed result](codex-supervisor-s0-live-result-20261115.md).
 The historical prepared plan is now permanently attempted; do not execute it again.
 Its digest is `8226d264f380810230dd6443787dd8d46b17f252322c1a5559588a68dc809085`;
