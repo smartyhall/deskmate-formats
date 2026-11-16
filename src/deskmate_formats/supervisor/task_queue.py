@@ -201,7 +201,7 @@ class TaskQueue:
         if self.discover(candidate.source.commit, candidate.source.path) != candidate:
             raise TaskError("accepted source provenance or bytes changed")
         documents = TrustedSource(*self._binding).instruction_documents(candidate)
-        return {"class": "text-analysis-v1", "manifest_utf8": candidate.raw.decode("utf-8"),
+        return {"class": ("source-edit-v1" if candidate.manifest["schema_version"] == 2 else "text-analysis-v1"), "manifest_utf8": candidate.raw.decode("utf-8"),
                 "documents": documents}
 
     def verify_worker(self, commit, hashes):

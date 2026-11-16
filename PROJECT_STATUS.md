@@ -1,5 +1,7 @@
 # Project status — DeskMate formats
 
+**S3 implementation proposed (2026-11-16):** the [bounded editing workflow](docs/research/codex-supervisor-s3.md) adds explicit version-2 source-editing tasks, disposable Git clones, actual portable validation and a provenance-bound local checkpoint. All execution validation uses synthetic peers; native editing remains unexecuted and separately gated. The first live S2 text analysis completed in [merged PR #98](docs/research/codex-supervisor-s2-first-live-result-20261116.md). The proposed Calendar alarm-listing task is neither accepted nor dispatched.
+
 **Manual S2 implementation — 2026-11-16:** the
 [Git-to-Codex text-analysis path](docs/research/codex-supervisor-s2-live-dispatch.md)
 adds frozen task-specific prompts, offline inspection and separate dispatch,

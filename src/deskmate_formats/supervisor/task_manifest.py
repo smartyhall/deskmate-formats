@@ -1,4 +1,4 @@
-"""Version 1 task data. This module has no execution semantics."""
+"""Versioned task data. This module has no execution semantics."""
 
 from datetime import UTC, datetime
 import re
@@ -16,6 +16,7 @@ _EXPIRY = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z")
 _REQUIRED = set("schema_version id revision idempotency_key title description category profile "
                 "resources dependencies".split())
 _OPTIONAL = {"expires_at", "instructions"}
+_EDIT_FIELDS = {"development"}
 _RESOURCES = {"source-read", "synthetic-fixtures", "portable-tests"}
 
 
@@ -106,9 +107,9 @@ def validate_manifest(data):
         value = decode_json(data, MAX_MANIFEST_BYTES)
     except EventError as error:
         raise TaskError(str(error)) from None
-    if type(value) is not dict or not _REQUIRED <= value.keys() <= _REQUIRED | _OPTIONAL:
+    if type(value) is not dict or not _REQUIRED <= value.keys() <= _REQUIRED | _OPTIONAL | (_EDIT_FIELDS if value.get("schema_version") == 2 else set()):
         raise TaskError("missing or unexpected manifest fields")
-    if type(value["schema_version"]) is not int or value["schema_version"] != 1:
+    if type(value["schema_version"]) is not int or value["schema_version"] not in (1, 2):
         raise TaskError("unsupported manifest schema version")
     identifier = task_id(value["id"])
     revision(value["revision"])
@@ -117,10 +118,13 @@ def validate_manifest(data):
     plain_text(value["description"], 2048, "description", multiline=True)
     if value["category"] not in ("research", "verification") or value["profile"] != "offline":
         raise TaskError("unsupported category or execution profile")
-    resources = _array(value["resources"], len(_RESOURCES), "resources")
-    if not resources or any(type(item) is not str or item not in _RESOURCES for item in resources):
+    allowed = _RESOURCES if value["schema_version"] == 1 else {"source-read", "source-edit", "portable-tests"}
+    resources = _array(value["resources"], len(allowed), "resources")
+    if not resources or any(type(item) is not str or item not in allowed for item in resources):
         raise TaskError("unsupported resource requirement")
     _distinct(resources, "resource")
+    if value["schema_version"] == 2:
+        validate_development(value)
     dependencies = _array(value["dependencies"], 16, "dependencies")
     _distinct([_dependency(item, identifier)[0] for item in dependencies], "dependency")
     instructions = _array(value.get("instructions", []), 4, "instruction references")
@@ -139,3 +143,37 @@ def validate_manifest(data):
 def canonical_manifest(data):
     """Deterministic encoding of validated data, separate from the Git bytes."""
     return encode_json(validate_manifest(data))
+
+
+def development_path(path):
+    safe_path(path)
+    if not ((path.startswith("src/") or path.startswith("tests/portable/")) and path.endswith(".py")
+            or path.startswith("docs/") and path.endswith(".md")):
+        raise TaskError("development supports Python source, portable tests and Markdown documentation only")
+    return path
+
+
+def validate_development(manifest):
+    dev = manifest.get("development")
+    _members(dev, {"source_revision", "modify", "create", "acceptance", "test_profiles", "deliverables"}, "development")
+    if not isinstance(dev["source_revision"], str) or not re.fullmatch(r"[a-f0-9]{40}", dev["source_revision"]):
+        raise TaskError("development requires an exact reviewed source commit")
+    paths = []
+    for key in ("modify", "create"):
+        paths.extend(development_path(p) for p in _array(dev[key], 16, key))
+    if not paths:
+        raise TaskError("development requires explicit file scopes")
+    _distinct([p.casefold() for p in paths], "development file")
+    criteria = _array(dev["acceptance"], 8, "acceptance criteria")
+    if not criteria:
+        raise TaskError("development requires acceptance criteria")
+    for criterion in criteria:
+        plain_text(criterion, 512, "acceptance criterion")
+    profiles = _array(dev["test_profiles"], 2, "test profiles")
+    if any(p not in ("portable-full", "synthetic-unit") for p in profiles):
+        raise TaskError("unsupported portable validation profile")
+    _distinct(profiles, "test profile")
+    if set(manifest["resources"]) != {"source-read", "source-edit"} | ({"portable-tests"} if profiles else set()):
+        raise TaskError("development resources differ from requested capabilities")
+    if dev["deliverables"] != ["final-response", "local-checkpoint"]:
+        raise TaskError("unsupported development deliverables")

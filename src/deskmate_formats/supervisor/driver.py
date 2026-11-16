@@ -91,13 +91,18 @@ def verify_native(executable):
 
 
 def prepare(directory, *, executable=None, model=None, effort=None, mode="success", timeout=10, deadline=60,
-            binding=None, profile=None, auth_file=None, task_context=None, dependencies=None):
+            binding=None, profile=None, auth_file=None, task_context=None, dependencies=None, edit_workspace=None):
     """Freeze a fresh private plan. No app-server or model operation occurs."""
     root = Path(directory).absolute()
     if root.exists():
         raise DriverError("run directory must be new")
     if task_context is not None and binding is None:
         raise DriverError("task execution requires an accepted S2 binding")
+    editing = edit_workspace is not None
+    if task_context is not None and (task_context.get("class") == "source-edit-v1") != editing:
+        raise DriverError("editing task and explicit workspace must be selected together")
+    if editing and (task_context is None or task_context.get("class") != "source-edit-v1"):
+        raise DriverError("editing requires explicit source-edit-v1 task")
     prompt = task_prompt(task_context) if task_context is not None else PROMPT
     if not 0 < timeout <= 30 or not 0 < deadline <= 60:
         raise DriverError("invalid bounded observation interval")
@@ -139,6 +144,12 @@ def prepare(directory, *, executable=None, model=None, effort=None, mode="succes
               "approval_policy = \"never\"\nsandbox_mode = \"read-only\"\n"
               "web_search = \"disabled\"\nmcp_servers = {}\n"
               "cli_auth_credentials_store = \"file\"\n") if kind == "live" else "# synthetic only\n"
+    if editing and kind == "live":
+        config = config.replace('sandbox_mode = "read-only"', 'sandbox_mode = "workspace-write"')
+        config += ('[sandbox_workspace_write]\nnetwork_access = false\n'
+                   'exclude_tmpdir_env_var = true\nexclude_slash_tmp = true\n'
+                   '[features]\nshell_tool = false\njs_repl = false\ncode_mode = false\n'
+                   'multi_agent = false\nmulti_agent_v2 = false\ncodex_git_commit = false\n')
     config_path = root / "codex-home" / "config.toml"
     with private_file(config_path, write=True) as stream:
         stream.write(config.encode())
@@ -180,6 +191,12 @@ def prepare(directory, *, executable=None, model=None, effort=None, mode="succes
         plan.update(task_context=task_context, developer_instructions=TASK_POLICY,
                     dependencies=dependencies or [], working_directory=str(root / "scratch"),
                     response_max_bytes=MAX_RESPONSE_BYTES)
+    if editing:
+        from .editing import EDIT_POLICY, EDIT_RISK
+        plan.update(edit_workspace=edit_workspace, developer_instructions=EDIT_POLICY,
+                    working_directory=edit_workspace["path"])
+        if profile == "experimental-lab":
+            plan["lab_risk"] = EDIT_RISK
     with journal_lock(root, write=True):
         write_record(root / "plan.json", plan)
     return sha256(encode_json(plan)).hexdigest()
@@ -277,10 +294,19 @@ def _auth_matches(root, plan):
 
 
 def _lab_risk(plan):
+    if "edit_workspace" in plan:
+        from .editing import EDIT_RISK
+        return EDIT_RISK
     return TASK_LAB_RISK if "task_context" in plan else LAB_RISK
 
 
 def _task_plan_matches(root, plan):
+    if "edit_workspace" in plan:
+        from .editing import EDIT_POLICY
+        return (plan["binding"] is not None and plan["prompt"] == task_prompt(plan["task_context"])
+                and plan.get("developer_instructions") == EDIT_POLICY
+                and plan.get("working_directory") == plan["edit_workspace"]["path"]
+                and plan.get("response_max_bytes") == MAX_RESPONSE_BYTES)
     return (plan["binding"] is not None and plan["prompt"] == task_prompt(plan["task_context"])
             and plan.get("developer_instructions") == TASK_POLICY
             and plan.get("working_directory") == str(root / "scratch")
@@ -329,12 +355,20 @@ def _validate_plan(root, plan, token, authorization, isolation_reviewed, lab_ris
 
 def _effective_policy(result, plan, scratch):
     sandbox = result["sandbox"]
+    editing = "edit_workspace" in plan
+    sandbox_type = "workspaceWrite" if editing else "readOnly"
+    allowed_fields = {"type", "networkAccess"}
+    if editing:
+        allowed_fields |= {"writableRoots", "excludeTmpdirEnvVar", "excludeSlashTmp"}
+        if (sandbox.get("writableRoots", []) != [] or sandbox.get("excludeTmpdirEnvVar") is not True
+                or sandbox.get("excludeSlashTmp") is not True):
+            raise DriverError("editing sandbox policy differs from reviewed plan")
     # The pinned readOnly schema permits omitted or explicit false networkAccess.
     # Identity rejects false-like integers; the allowlist rejects extra fields.
     if (Path(result["cwd"]).resolve() != scratch.resolve()
             or result["approvalPolicy"] != "never"
-            or sandbox.get("type") != "readOnly"
-            or sandbox.keys() - {"type", "networkAccess"}
+            or sandbox.get("type") != sandbox_type
+            or sandbox.keys() - allowed_fields
             or sandbox.get("networkAccess", False) is not False
             or result["model"] != (plan["model"] if plan["kind"] == "live" else "synthetic")
             or result["modelProvider"] != ("openai" if plan["kind"] == "live" else "synthetic")
@@ -345,14 +379,17 @@ def _effective_policy(result, plan, scratch):
         raise DriverError("effective thread policy differs from reviewed plan")
 
 
-def _check_items(items):
+def _check_items(items, plan=None):
+    if plan is not None and "edit_workspace" in plan:
+        from .editing import check_edit_items
+        return check_edit_items(items, plan["edit_workspace"])
     # Positive allowlist: schema-valid web/image/subagent/hook and future item
     # classes must not silently pass a canary that prohibits tools.
     if any(item["type"] not in CANARY_ITEM_TYPES for item in items):
         raise DriverError("unexpected tool or non-canary activity")
 
 
-def _event(ops, telemetry, evidence, thread_id, turn_id, *, timeout=0):
+def _event(ops, telemetry, evidence, thread_id, turn_id, *, timeout=0, plan=None):
     event = ops.next_event(timeout=timeout)
     if event is None:
         return None
@@ -367,16 +404,16 @@ def _event(ops, telemetry, evidence, thread_id, turn_id, *, timeout=0):
         if event.method in ("turn/started", "turn/completed"):
             if (params["threadId"], params["turn"]["id"]) != (thread_id, turn_id):
                 raise DriverError("stale turn notification")
-            _check_items(params["turn"]["items"])
+            _check_items(params["turn"]["items"], plan)
         if event.method in ("item/started", "item/completed"):
             if (params["threadId"], params["turnId"]) != (thread_id, turn_id):
                 raise DriverError("stale item notification")
-            _check_items([params["item"]])
+            _check_items([params["item"]], plan)
     return event
 
 
 def run(directory, *, authorization, isolation_reviewed=None, accepted_binding=None, lab_risk_ack=None,
-        dispatch_authorization=None):
+        dispatch_authorization=None, checkpoint_authorization=None):
     """Perform at most one thread/start and one turn/start. Never retry a run.
 
     isolation_reviewed is retained for old callers but grants no authority.
@@ -388,7 +425,12 @@ def run(directory, *, authorization, isolation_reviewed=None, accepted_binding=N
             raise DriverError("bound S2 plan requires the bridge's current acceptance check")
         if "task_context" in plan and dispatch_authorization != token:
             raise DriverError("task execution requires separate exact-plan dispatch authorization")
+        if "edit_workspace" in plan and checkpoint_authorization != token:
+            raise DriverError("editing requires exact-plan checkpoint authorization")
         _validate_plan(root, plan, token, authorization, isolation_reviewed, lab_risk_ack)
+        if "edit_workspace" in plan:
+            from .workspace import verify_workspace
+            verify_workspace(plan["edit_workspace"], pristine=True)
         if any((root / "scratch").iterdir()):
             raise DriverError("scratch must be empty before dispatch")
         with open_ledger(root / "receipts") as ledger:
@@ -400,6 +442,8 @@ def run(directory, *, authorization, isolation_reviewed=None, accepted_binding=N
                          "lab_risk_ack": lab_risk_ack}
             if "task_context" in plan:
                 attempt["dispatch_authorization"] = dispatch_authorization
+            if "edit_workspace" in plan:
+                attempt["checkpoint_authorization"] = checkpoint_authorization
             write_record(root / "attempt.json", attempt)
             return _own(root, plan, ledger)
 
@@ -412,7 +456,8 @@ def _own(root, plan, ledger):
     start = monotonic()
     try:
         evidence.save("launch-intent", plan)
-        client = AppServer(plan["argv"], timeout=plan["timeout"], cwd=root / "scratch", env=plan["env"])
+        working = Path(plan.get("working_directory", root / "scratch"))
+        client = AppServer(plan["argv"], timeout=plan["timeout"], cwd=working, env=plan["env"])
         ops = Operations(client, ledger)
         evidence.save("owned-child", {"generation": client.generation, "pid": client.pid,
                                       "process_identity": client.process_identity})
@@ -428,16 +473,16 @@ def _own(root, plan, ledger):
         evidence.save("request-intent", {"operation_id": thread_operation, "method": "thread/start", "params": params})
         result = ops.execute(thread_operation, "thread/start", params)
         evidence.save("thread-result", result)
-        _effective_policy(result, plan, root / "scratch")
+        _effective_policy(result, plan, working)
         thread_id = result["thread"]["id"]
         # Drain queued approvals before any dependent mutation.
-        while _event(ops, telemetry, evidence, thread_id, None) is not None:
+        while _event(ops, telemetry, evidence, thread_id, None, plan=plan) is not None:
             pass
         params = {"threadId": thread_id, "input": [{"type": "text", "text": plan["prompt"]}]}
         evidence.save("request-intent", {"operation_id": turn_operation, "method": "turn/start", "params": params})
         result = ops.execute(turn_operation, "turn/start", params)
         evidence.save("turn-result", result)
-        _check_items(result["turn"]["items"])
+        _check_items(result["turn"]["items"], plan)
         turn_id = result["turn"]["id"]
         telemetry.bind(ledger.get(turn_operation))
         terminal = False
@@ -446,7 +491,7 @@ def _own(root, plan, ledger):
         deadline = monotonic() + plan["deadline"]
         while monotonic() < deadline:
             event = _event(ops, telemetry, evidence, thread_id, turn_id,
-                           timeout=min(1, plan["timeout"], max(0, deadline - monotonic())))
+                           timeout=min(1, plan["timeout"], max(0, deadline - monotonic())), plan=plan)
             if isinstance(event, Notification):
                 if event.method == "item/completed" and event.params["item"]["type"] == "agentMessage":
                     answers.append(event.params["item"]["text"])
@@ -455,7 +500,7 @@ def _own(root, plan, ledger):
                     terminal_turn = event.params["turn"]
             if terminal:
                 # Validate already queued duplicate replies/approvals before declaring success.
-                while _event(ops, telemetry, evidence, thread_id, turn_id) is not None:
+                while _event(ops, telemetry, evidence, thread_id, turn_id, plan=plan) is not None:
                     pass
                 break
         if not terminal:
@@ -474,16 +519,21 @@ def _own(root, plan, ledger):
         view = client.request("thread/read", {"threadId": thread_id})
         page = client.request("thread/turns/list", {"threadId": thread_id, "itemsView": "full", "limit": 50})
         evidence.save("history", {"view": view, "page": page})
-        while _event(ops, telemetry, evidence, thread_id, turn_id) is not None:
+        while _event(ops, telemetry, evidence, thread_id, turn_id, plan=plan) is not None:
             pass
         matches = [turn for turn in page["data"] if turn["id"] == turn_id]
         if (view["thread"]["id"] != thread_id or len(matches) != 1 or len(page["data"]) != 1
                 or page.get("nextCursor") or matches[0]["status"] != "completed"
                 or matches[0].get("itemsView") != "full"):
             raise DriverError("history did not confirm the exact completed turn")
-        _check_items(matches[0]["items"])
+        _check_items(matches[0]["items"], plan)
         if [item["text"] for item in matches[0]["items"] if item["type"] == "agentMessage"] != answers:
             raise DriverError("history did not confirm the exact task response" if task else "history did not confirm the exact sentinel")
+        if "edit_workspace" in plan:
+            edits = [item for item in matches[0]["items"] if item["type"] == "fileChange"]
+            if not edits or any(item["status"] != "completed" for item in edits):
+                raise DriverError("history must retain completed native editing activity")
+            outcome["editing_activity"] = edits
         if task:
             users = [item for item in matches[0]["items"] if item["type"] == "userMessage"]
             content = users[0]["content"] if len(users) == 1 else []

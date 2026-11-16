@@ -1,0 +1,36 @@
+{
+  "schema_version": 2,
+  "id": "calendar-listing-alarm",
+  "revision": 1,
+  "idempotency_key": "calendar-listing-alarm-1",
+  "title": "Show decoded alarm state in the Calendar text listing",
+  "description": "Extend format_listing so each user appointment has an Alarm line showing on, off or <undecoded> from alarm_enabled. Add regression coverage using existing synthetic builders. Preserve JSON and parser behavior.",
+  "category": "verification",
+  "profile": "offline",
+  "resources": [
+    "source-read",
+    "source-edit",
+    "portable-tests"
+  ],
+  "dependencies": [],
+  "development": {
+    "source_revision": "9f3e38ee0fa93c6776d2d57d6a51a04c18596e7c",
+    "modify": [
+      "src/deskmate_formats/calendar/cli.py",
+      "tests/portable/test_calendar.py"
+    ],
+    "create": [],
+    "acceptance": [
+      "Text listings show Alarm: on for True, Alarm: off for False and Alarm: <undecoded> for None.",
+      "Regression tests exercise all three states with synthetic records and assert no Alarm line is added to internal/control records.",
+      "Existing JSON output, parser interpretation, appointment ordering and all portable tests remain unchanged."
+    ],
+    "test_profiles": [
+      "portable-full"
+    ],
+    "deliverables": [
+      "final-response",
+      "local-checkpoint"
+    ]
+  }
+}

@@ -36,6 +36,7 @@ for command in (
     "deskmate-supervisor-task",
     "deskmate-supervisor-s0",
     "deskmate-supervisor-s2",
+    "deskmate-supervisor-s3",
 ):
     matches = [entry for entry in dist.entry_points if entry.name == command]
     assert len(matches) == 1 and callable(matches[0].load())
