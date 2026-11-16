@@ -305,8 +305,14 @@ def _validate_plan(root, plan, token, authorization, isolation_reviewed, lab_ris
 
 
 def _effective_policy(result, plan, scratch):
+    sandbox = result["sandbox"]
+    # The pinned readOnly schema permits omitted or explicit false networkAccess.
+    # Identity rejects false-like integers; the allowlist rejects extra fields.
     if (Path(result["cwd"]).resolve() != scratch.resolve()
-            or result["approvalPolicy"] != "never" or result["sandbox"] != {"type": "readOnly"}
+            or result["approvalPolicy"] != "never"
+            or sandbox.get("type") != "readOnly"
+            or sandbox.keys() - {"type", "networkAccess"}
+            or sandbox.get("networkAccess", False) is not False
             or result["model"] != (plan["model"] if plan["kind"] == "live" else "synthetic")
             or result["modelProvider"] != ("openai" if plan["kind"] == "live" else "synthetic")
             or result["approvalsReviewer"] != "user"

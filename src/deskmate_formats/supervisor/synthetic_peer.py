@@ -8,14 +8,29 @@ import tomllib
 from uuid import uuid4
 from time import sleep
 
+POLICY_OVERRIDES = {
+    "readonly-implicit": {"sandbox": {"type": "readOnly"}},
+    "network-enabled": {"sandbox": {"type": "readOnly", "networkAccess": True}},
+    "network-string": {"sandbox": {"type": "readOnly", "networkAccess": "false"}},
+    "network-zero": {"sandbox": {"type": "readOnly", "networkAccess": 0}},
+    "network-one": {"sandbox": {"type": "readOnly", "networkAccess": 1}},
+    "network-null": {"sandbox": {"type": "readOnly", "networkAccess": None}},
+    "sandbox-other": {"sandbox": {"type": "dangerFullAccess"}},
+    "sandbox-extra": {"sandbox": {"type": "readOnly", "networkAccess": False, "unexpected": False}},
+    "unsafe-model": {"model": "different-model"},
+    "unsafe-provider": {"modelProvider": "different-provider"},
+}
+
 MODES = ("success", "lost-ack", "delayed-ack", "approval", "driver-approval", "unknown-request", "mismatch",
          "duplicate", "eof", "normal", "failed", "stale-turn", "history-only", "unsafe-policy", "wrong-version",
          "unsafe-effort", "unsafe-reviewer", "web-tool", "image-tool", "hook-item", "terminal-tool",
          "history-tool", "history-sentinel", "history-not-loaded", "history-extra-turn", "history-cursor",
-         "malformed", "oversized", "partial", "duplicate-terminal", "restart-terminal", "bad-sentinel", "thread-lost-ack")
+         "malformed", "oversized", "partial", "duplicate-terminal", "restart-terminal", "bad-sentinel", "thread-lost-ack",
+         "unsafe-cwd", "ephemeral-thread", "nonempty-thread", *POLICY_OVERRIDES)
 SUCCESS_MODES = {"success", "stale-turn", "history-only", "web-tool", "image-tool", "hook-item",
                  "terminal-tool", "history-tool", "history-sentinel", "history-not-loaded",
-                 "history-extra-turn", "history-cursor", "duplicate-terminal", "restart-terminal", "bad-sentinel"}
+                 "history-extra-turn", "history-cursor", "duplicate-terminal", "restart-terminal", "bad-sentinel",
+                 "readonly-implicit"}
 
 PRIVATE = "private-canary-command-and-result"
 
@@ -127,11 +142,19 @@ def main(state_path, mode, live_policy=None):
                 result = {
                     "thread": thread, "model": policy.get("model", "synthetic"), "modelProvider": policy.get("model_provider", "synthetic"),
                     "cwd": thread["cwd"], "approvalPolicy": "on-request" if mode == "unsafe-policy" else "never", "approvalsReviewer": "user",
-                    "sandbox": {"type": "readOnly"},
+                    # Sanitized policy shape observed in the first native S0 run.
+                    "sandbox": {"type": "readOnly", "networkAccess": False},
                     "reasoningEffort": "high" if mode == "unsafe-effort" else policy.get("model_reasoning_effort", "low"),
                 }
                 if mode == "unsafe-reviewer":
                     result["approvalsReviewer"] = "auto_review"
+                result.update(POLICY_OVERRIDES.get(mode, {}))
+                if mode == "unsafe-cwd":
+                    result["cwd"] = str(path.parent)
+                elif mode == "ephemeral-thread":
+                    result["thread"] = thread | {"ephemeral": True}
+                elif mode == "nonempty-thread":
+                    result["thread"] = thread | {"turns": [{"id": "pre-existing", "status": "completed", "items": []}]}
             elif method == "thread/read":
                 assert params["threadId"] == thread["id"]
                 result = {"thread": thread if params.get("includeTurns") else thread | {"turns": []}}

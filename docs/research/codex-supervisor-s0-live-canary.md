@@ -3,6 +3,9 @@
 **Reviewed implementation merged; first real invocation stopped before a model turn.**
 See the [November 15 observed result](codex-supervisor-s0-live-result-20261115.md).
 The historical prepared plan is now permanently attempted; do not execute it again.
+Its digest is `8226d264f380810230dd6443787dd8d46b17f252322c1a5559588a68dc809085`;
+retain its attempt marker, receipts and authorization unchanged. The November 15
+failure report remains historical evidence and is not revised by this correction.
 Supports [issue 58](https://github.com/smartyhall/deskmate-formats/issues/58) and
 [issue 86](https://github.com/smartyhall/deskmate-formats/issues/86).
 Preparation and offline inspection consume no model turn. The `live` command
@@ -16,6 +19,31 @@ The [November 11 audit](codex-supervisor-s0-readiness.md) remains historical
 negative evidence; its former demand for additional confinement is superseded.
 The [driver guide](codex-supervisor-operator-driver.md) describes receipts,
 telemetry, synthetic reconciliation and the unchanged synthetic-only S2 bridge.
+
+## Policy-validation correction and next experiment
+
+The first native reply reported `{"type":"readOnly","networkAccess":false}`.
+It passed the pinned schema but the driver's exact dictionary comparison rejected
+the optional field. The corrected driver checks meaningful policy properties:
+`type` must be `readOnly`; `networkAccess` may be absent or exactly boolean
+`false`; no other sandbox attributes are accepted. Enabled network access,
+strings, integers and null remain rejected. Schema validation and all other
+model/provider, approval/reviewer, effort, cwd and empty persistent thread checks
+remain in place. Reported policy still does not prove OS/network confinement.
+
+Regression coverage uses an owned synthetic stdio child through the production
+experimental-lab launch path, replacing only native identity and child image.
+Both read-only representations must reach `turn/start`, sentinel completion and
+history verification; invalid policies must stop before model input. These are
+synthetic observations, not a successful native canary. This correction initiates
+no real app-server model turn and changes neither the native nor schema pin.
+
+After independent review and merge, the next step is section 1: build/install
+the corrected reviewed wheel, verify installed source/pins, and prepare a fresh
+directory and plan. Examine its offline status/preflight, then obtain **both new
+exact-plan operator grants** in section 3 before executing section 4 once.
+The old plan and grants cannot be reused. This bug-fix assignment authorizes no
+live invocation; no new security prerequisites or laboratory changes are added.
 
 ## 1. Prepare a fresh experiment — no model usage
 
