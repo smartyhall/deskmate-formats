@@ -196,6 +196,18 @@ class TaskQueue:
             raise TaskError("manifest bytes conflict with the recorded task revision")
         return candidate
 
+    def execution_context(self, candidate):
+        """Revalidate an accepted candidate and return bounded-prompt source material."""
+        if self.discover(candidate.source.commit, candidate.source.path) != candidate:
+            raise TaskError("accepted source provenance or bytes changed")
+        documents = TrustedSource(*self._binding).instruction_documents(candidate)
+        return {"class": "text-analysis-v1", "manifest_utf8": candidate.raw.decode("utf-8"),
+                "documents": documents}
+
+    def verify_worker(self, commit, hashes):
+        self._check_open()
+        TrustedSource(*self._binding).verify_implementation(commit, hashes)
+
     @contextmanager
     def _write(self):
         self._check_open()

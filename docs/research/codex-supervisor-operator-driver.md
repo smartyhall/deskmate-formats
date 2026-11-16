@@ -1,10 +1,15 @@
-# Supervisor operator driver and offline S2 foundation
+# Supervisor operator driver and manual S2 dispatch
+
+The [manual S2 text-analysis extension](codex-supervisor-s2-live-dispatch.md)
+adds explicit live preparation/dispatch after the [verified real S0 milestone](codex-supervisor-s0-second-live-result-20261116.md).
+Its live S2 execution is still unverified and requires a separate exact-plan
+operator grant. The earlier offline evidence below remains synthetic evidence.
 
 The explicit **experimental-lab** S0 profile implements the
 [accepted recoverable laboratory posture](experimental-lab-operating-posture.md).
 It permits one separately authorized live canary with ordinary Windows VM
 permissions, without claiming OS confinement. Default live plans remain blocked.
-**No live canary has been executed. Real S2 dispatch remains disabled.**
+The second real S0 canary passed; no real Git-delivered S2 task has been executed.
 See the [current live procedure](codex-supervisor-s0-live-canary.md) for exact
 preparation, risk acknowledgment, model-use authorization and execution commands.
 The [November 11 audit](codex-supervisor-s0-readiness.md) is historical evidence;
@@ -168,13 +173,14 @@ digest, queue ID, sequence, idempotency key, expiry, superseding revisions and
 unresolved decisions. It holds the bridge lock across the worker, preventing a
 second cooperating child. S1 is read-only throughout dispatch. Direct S0 CLI use
 of a task-bound plan is refused; the bridge supplies the current acceptance check.
-A Git change does nothing by itself. The bridge has no live worker option.
+A Git change does nothing by itself. The current bridge also has a separately
+gated live worker option described in the S2 extension.
 
-This foundation binds and observes a task; it does **not** execute task prose,
-instruction references, portable-test commands or arbitrary Git hooks. Every
-synthetic worker receives the fixed harmless canary prompt. Worktree execution,
-real task prompts, live dispatch and follow-ups await successful authorized S0
-acceptance and later review. No synthetic pass establishes those capabilities.
+The original foundation used a fixed canary prompt. The current S2 commands send
+bounded reviewed manifest/document context for text-only analysis, with no tools
+or repository mutation capability. Standalone S0 canaries still use the fixed
+sentinel. Live task execution requires the separate dispatch/model/lab grants;
+synthetic evidence does not establish native S2 behavior.
 
 ## Observatory and reproduction
 
@@ -269,8 +275,8 @@ The attempt receipt records both confirmations and the selected profile before
 launch. The same existing owner then checks the persistent empty thread policy,
 sends exactly the fixed prompt once, observes terminal/sentinel events, verifies
 full persisted history, and tears down its direct child. There is no live resume,
-reconciliation, replay, force-clear or dispatch service. S2 remains synthetic-only
-until real S0 evidence is completed, reviewed and separately authorized.
+reconciliation, replay, force-clear or dispatch service. The S2 extension reuses
+this owner after reviewed real S0 evidence; each actual task needs separate grants.
 
 If compatibility drift appears, retain executable/version/schema evidence and
 review a dedicated migration. Never relax pins or spend a model turn to discover

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "id": "s2-canary-evidence-analysis",
+  "revision": 1,
+  "idempotency_key": "s2-canary-evidence-analysis-1",
+  "title": "Assess the real S0 evidence before the first Git-driven experiment",
+  "description": "Using only the two supplied documents, assess what the successful second native S0 canary establishes and what remains unproved for a first real Git-delivered text-analysis task. Give at least three concrete observed findings and three explicit limits, cite the supplied paths, distinguish S0 success from S2 task acceptance, explain how accepted VM-local risk affects the next experiment, and propose a short checklist for reviewing the first actual Git-driven result. Do not execute commands or inspect any files beyond the supplied context. Produce a substantive answer for operator review, not a sentinel.",
+  "category": "research",
+  "profile": "offline",
+  "resources": ["source-read"],
+  "dependencies": [],
+  "expires_at": "2027-01-01T00:00:00Z",
+  "instructions": [
+    {
+      "path": "docs/research/codex-supervisor-s0-second-live-result-20261116.md",
+      "sha256": "cfb04d5f44d0daac84b63a7fcde92294f9ccf7891cc62b5d6d8f97d4564ce2e8"
+    },
+    {
+      "path": "docs/research/experimental-lab-operating-posture.md",
+      "sha256": "d81c6f555a4d9673028be5fd30802eff671ae82400006798125aa3e57412a972"
+    }
+  ]
+}

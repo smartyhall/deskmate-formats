@@ -24,7 +24,7 @@ MAX_FRAME = 256 * 1024
 MAX_EVENTS = 64
 PARAM_FIELDS = {
     "initialize": {"clientInfo", "capabilities"},
-    "thread/start": {"ephemeral"},
+    "thread/start": {"ephemeral", "developerInstructions"},
     "thread/resume": {"threadId", "excludeTurns"},
     "thread/read": {"threadId", "includeTurns"},
     "thread/turns/list": {"threadId", "itemsView", "cursor", "limit"},

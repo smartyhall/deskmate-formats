@@ -184,3 +184,29 @@ class TrustedSource:
         self._require_tip(commit)
         return Candidate(Provenance(self.repository, self.branch, commit, path, blob,
                                     sha256(raw).hexdigest()), raw)
+
+    def instruction_documents(self, candidate):
+        """Read documents after discovery, checking hashes and the tip again around reads."""
+        self._require_tip(candidate.source.commit)
+        documents = []
+        for reference in candidate.manifest.get("instructions", []):
+            blob, raw = self._blob(candidate.source.commit, reference["path"], MAX_INSTRUCTION_BYTES)
+            if sha256(raw).hexdigest() != reference["sha256"]:
+                raise TaskError("instruction digest changed")
+            try:
+                text = raw.decode("utf-8")
+            except UnicodeError:
+                raise TaskError("text analysis instructions must be UTF-8") from None
+            documents.append({**reference, "blob": blob, "text": text})
+        self._require_tip(candidate.source.commit)
+        return documents
+
+    def verify_implementation(self, commit, hashes):
+        """Live first slice runs installed project bytes from the reviewed task commit."""
+        self._check_repository()
+        self._require_tip(commit)
+        for relative, expected in hashes.items():
+            _, raw = self._blob(commit, "src/deskmate_formats/" + relative, 1024 * 1024)
+            if sha256(raw).hexdigest() != expected:
+                raise TaskError("installed worker differs from reviewed Git implementation")
+        self._require_tip(commit)

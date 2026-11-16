@@ -1,5 +1,13 @@
 # Project status — DeskMate formats
 
+**Manual S2 implementation — 2026-11-16:** the
+[Git-to-Codex text-analysis path](docs/research/codex-supervisor-s2-live-dispatch.md)
+adds frozen task-specific prompts, offline inspection and separate dispatch,
+model-use and experimental-lab grants using the proven S0 owner. Validation uses
+synthetic peers only. The proposed first task is published for review, not accepted
+or dispatched. Real S2 remains unverified; issue #86 stays open pending a separately
+authorized real Git-delivered model turn and independent answer review.
+
 **S0 LIVE CANARY PASSED — 2026-11-16 UTC:** the separately authorized second
 native experiment used reviewed implementation `fe168c86d650f6e8aa4f3187fc4121cf7910783c`
 and the exact prepared plan. One owned Codex 0.166.0 app-server created one

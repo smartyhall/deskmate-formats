@@ -24,6 +24,7 @@ from .protocol import AppServer, Approval, Notification, PROFILE_SHA256, Protoco
 from .synthetic_peer import MODES
 from .telemetry import AppServerTelemetry
 from .task_manifest import utc_now
+from .task_execution import MAX_RESPONSE_BYTES, TASK_LAB_RISK, TASK_POLICY, task_prompt
 
 NATIVE_SHA256 = "9d563ee4e0441ff9d59d612013e0460ddf8e5709735c2d9f6b98b7ef8ca4eb42"
 PROMPT = ("Reply exactly S0_CANARY_OK. Do not use tools, read or write files, "
@@ -90,11 +91,14 @@ def verify_native(executable):
 
 
 def prepare(directory, *, executable=None, model=None, effort=None, mode="success", timeout=10, deadline=60,
-            binding=None, profile=None, auth_file=None):
+            binding=None, profile=None, auth_file=None, task_context=None, dependencies=None):
     """Freeze a fresh private plan. No app-server or model operation occurs."""
     root = Path(directory).absolute()
     if root.exists():
         raise DriverError("run directory must be new")
+    if task_context is not None and binding is None:
+        raise DriverError("task execution requires an accepted S2 binding")
+    prompt = task_prompt(task_context) if task_context is not None else PROMPT
     if not 0 < timeout <= 30 or not 0 < deadline <= 60:
         raise DriverError("invalid bounded observation interval")
     profile = profile or ("synthetic" if executable is None else "default")
@@ -112,7 +116,7 @@ def prepare(directory, *, executable=None, model=None, effort=None, mode="succes
         argv = [executable, "-I", "-m", "deskmate_formats.supervisor.synthetic_peer",
                 str(root / "evidence" / "peer.json"), mode]
     else:
-        if binding is not None:
+        if binding is not None and task_context is None:
             raise DriverError("S2 live dispatch is disabled")
         executable = verify_native(executable)
         if type(model) is not str or not 0 < len(model) <= 128 or not model.isascii() or not model.isprintable():
@@ -161,17 +165,21 @@ def prepare(directory, *, executable=None, model=None, effort=None, mode="succes
         auth_hash = sha256(auth).hexdigest()
     plan = {
         "schema_version": 1, "run_id": uuid4().hex, "kind": kind,
-        "profile": profile, "lab_risk": LAB_RISK if profile == "experimental-lab" else None,
+        "profile": profile, "lab_risk": (TASK_LAB_RISK if task_context is not None else LAB_RISK) if profile == "experimental-lab" else None,
         "authentication_sha256": auth_hash,
         "root": str(root), "argv": argv, "executable_sha256": digest(executable),
         "profile_sha256": PROFILE_SHA256, "codex_version": VERSION,
         "config_sha256": digest(config_path), "env": env, "model": model, "effort": effort,
-        "timeout": timeout, "deadline": deadline, "prompt": PROMPT, "binding": binding,
+        "timeout": timeout, "deadline": deadline, "prompt": prompt, "binding": binding,
         "prepared_at_utc": utc_now(),
         "runtime": {"python": sys.version, "platform": platform.platform(),
                     "sqlite": sqlite3.sqlite_version, "jsonschema": version("jsonschema")},
         "implementation_sha256": implementation_hashes(),
     }
+    if task_context is not None:
+        plan.update(task_context=task_context, developer_instructions=TASK_POLICY,
+                    dependencies=dependencies or [], working_directory=str(root / "scratch"),
+                    response_max_bytes=MAX_RESPONSE_BYTES)
     with journal_lock(root, write=True):
         write_record(root / "plan.json", plan)
     return sha256(encode_json(plan)).hexdigest()
@@ -207,13 +215,15 @@ def preflight(directory):
         Schema()
         checks = {
             "profile_supported": (plan.get("profile", "synthetic") == "synthetic" if plan["kind"] == "synthetic"
-                                  else plan.get("profile") == "experimental-lab" and plan.get("lab_risk") == LAB_RISK),
+                                  else plan.get("profile") == "experimental-lab" and plan.get("lab_risk") == _lab_risk(plan)),
             "implementation_matches": plan["implementation_sha256"] == implementation_hashes(),
             "executable_matches": digest(plan["argv"][0]) == plan["executable_sha256"],
             "configuration_matches": digest(root / "codex-home" / "config.toml") == plan["config_sha256"],
             "scratch_empty": not any((root / "scratch").iterdir()),
             "never_attempted": not (root / "attempt.json").exists(),
         }
+        if "task_context" in plan:
+            checks["task_context_matches"] = _task_plan_matches(root, plan)
         for name in ("scratch", "codex-home", "evidence", "receipts", "spool"):
             storage_directory(root / name)
         if plan["kind"] == "live":
@@ -237,7 +247,8 @@ def preflight(directory):
             "authentication": ("explicit existing file staged privately; runtime acceptance unverified" if lab else
                                "not inspected or provisioned; isolated home alone is not a credential boundary"),
             "live_blockers": [] if lab else list(LIVE_BLOCKERS),
-            "required_authorizations": ["authorize-live-plan", "accept-lab-risk"] if lab else [],
+            "required_authorizations": (["authorize-dispatch"] if "task_context" in plan else []) +
+                                       (["authorize-live-plan", "accept-lab-risk"] if lab else []),
             "app_server_launches": 0, "model_turns": 0,
         }
 
@@ -265,6 +276,17 @@ def _auth_matches(root, plan):
         return file_digest(stream, "sha256").hexdigest() == plan["authentication_sha256"]
 
 
+def _lab_risk(plan):
+    return TASK_LAB_RISK if "task_context" in plan else LAB_RISK
+
+
+def _task_plan_matches(root, plan):
+    return (plan["binding"] is not None and plan["prompt"] == task_prompt(plan["task_context"])
+            and plan.get("developer_instructions") == TASK_POLICY
+            and plan.get("working_directory") == str(root / "scratch")
+            and plan.get("response_max_bytes") == MAX_RESPONSE_BYTES)
+
+
 def _validate_plan(root, plan, token, authorization, isolation_reviewed, lab_risk_ack=None):
     if authorization != token:
         raise DriverError("explicit authorization must match the exact plan digest")
@@ -280,7 +302,8 @@ def _validate_plan(root, plan, token, authorization, isolation_reviewed, lab_ris
             raise DriverError("synthetic worker must be the installed fixed peer")
     elif plan["argv"][1:] != ["app-server", "--listen", "stdio://"]:
         raise DriverError("unreviewed live arguments")
-    if (plan["prompt"] != PROMPT or not 0 < plan["timeout"] <= 30 or not 0 < plan["deadline"] <= 60
+    if ((not _task_plan_matches(root, plan) if "task_context" in plan else plan["prompt"] != PROMPT)
+            or not 0 < plan["timeout"] <= 30 or not 0 < plan["deadline"] <= 60
             or not plan["env"].keys() <= {"SystemRoot", "WINDIR", "CODEX_HOME", "HOME", "USERPROFILE", "TEMP", "TMP"}
             or any(plan["env"].get(key) != str(root / "codex-home") for key in ("CODEX_HOME", "HOME", "USERPROFILE"))
             or any(plan["env"].get(key) != str(root / "scratch") for key in ("TEMP", "TMP"))):
@@ -292,11 +315,11 @@ def _validate_plan(root, plan, token, authorization, isolation_reviewed, lab_ris
     for name in ("evidence", "scratch", "codex-home", "spool", "receipts"):
         storage_directory(root / name)
     if plan["kind"] == "live":
-        if plan["binding"] is not None:
+        if plan["binding"] is not None and "task_context" not in plan:
             raise DriverError("S2 live dispatch is disabled")
         if plan.get("profile") != "experimental-lab":
             raise DriverError("live launch blocked: select experimental-lab explicitly; " + "; ".join(LIVE_BLOCKERS))
-        if lab_risk_ack != token or plan.get("lab_risk") != LAB_RISK:
+        if lab_risk_ack != token or plan.get("lab_risk") != _lab_risk(plan):
             raise DriverError("experimental-lab requires separate exact-plan lab-risk acknowledgment")
         if not _auth_matches(root, plan):
             raise DriverError("staged authentication changed since preparation")
@@ -352,7 +375,8 @@ def _event(ops, telemetry, evidence, thread_id, turn_id, *, timeout=0):
     return event
 
 
-def run(directory, *, authorization, isolation_reviewed=None, accepted_binding=None, lab_risk_ack=None):
+def run(directory, *, authorization, isolation_reviewed=None, accepted_binding=None, lab_risk_ack=None,
+        dispatch_authorization=None):
     """Perform at most one thread/start and one turn/start. Never retry a run.
 
     isolation_reviewed is retained for old callers but grants no authority.
@@ -362,6 +386,8 @@ def run(directory, *, authorization, isolation_reviewed=None, accepted_binding=N
         plan, token = load_plan(root)
         if plan["binding"] != accepted_binding:
             raise DriverError("bound S2 plan requires the bridge's current acceptance check")
+        if "task_context" in plan and dispatch_authorization != token:
+            raise DriverError("task execution requires separate exact-plan dispatch authorization")
         _validate_plan(root, plan, token, authorization, isolation_reviewed, lab_risk_ack)
         if any((root / "scratch").iterdir()):
             raise DriverError("scratch must be empty before dispatch")
@@ -369,9 +395,12 @@ def run(directory, *, authorization, isolation_reviewed=None, accepted_binding=N
             if ledger.receipts():
                 raise DriverError("recorded operations forbid another dispatch")
             # This marker is a permanent fence even if a crash precedes the first RPC.
-            write_record(root / "attempt.json", {"plan_sha256": token, "binding": plan["binding"],
+            attempt = {"plan_sha256": token, "binding": plan["binding"],
                          "profile": plan.get("profile", "default"), "authorization": authorization,
-                         "lab_risk_ack": lab_risk_ack})
+                         "lab_risk_ack": lab_risk_ack}
+            if "task_context" in plan:
+                attempt["dispatch_authorization"] = dispatch_authorization
+            write_record(root / "attempt.json", attempt)
             return _own(root, plan, ledger)
 
 
@@ -394,6 +423,8 @@ def _own(root, plan, ledger):
         thread_operation = plan["run_id"] + ".thread"
         turn_operation = plan["run_id"] + ".turn"
         params = {"ephemeral": False}
+        if "task_context" in plan:
+            params["developerInstructions"] = plan["developer_instructions"]
         evidence.save("request-intent", {"operation_id": thread_operation, "method": "thread/start", "params": params})
         result = ops.execute(thread_operation, "thread/start", params)
         evidence.save("thread-result", result)
@@ -410,6 +441,7 @@ def _own(root, plan, ledger):
         turn_id = result["turn"]["id"]
         telemetry.bind(ledger.get(turn_operation))
         terminal = False
+        terminal_turn = None
         answers = []
         deadline = monotonic() + plan["deadline"]
         while monotonic() < deadline:
@@ -420,6 +452,7 @@ def _own(root, plan, ledger):
                     answers.append(event.params["item"]["text"])
                 if event.method == "turn/completed":
                     terminal = True
+                    terminal_turn = event.params["turn"]
             if terminal:
                 # Validate already queued duplicate replies/approvals before declaring success.
                 while _event(ops, telemetry, evidence, thread_id, turn_id) is not None:
@@ -427,7 +460,16 @@ def _own(root, plan, ledger):
                 break
         if not terminal:
             raise DriverError("observation deadline; execution outcome remains unresolved")
-        if ledger.get(turn_operation).state != "completed" or answers != ["S0_CANARY_OK"]:
+        task = "task_context" in plan
+        if task:
+            if (len(answers) != 1 or not answers[0].strip()
+                    or len(answers[0].encode("utf-8")) > MAX_RESPONSE_BYTES):
+                raise DriverError("task requires one nonempty bounded final response")
+            terminal_answers = [item["text"] for item in terminal_turn["items"] if item["type"] == "agentMessage"]
+            if (terminal_turn["status"] != "completed" or terminal_turn.get("error")
+                    or terminal_answers and terminal_answers != answers):
+                raise DriverError("terminal task response differs from observed response")
+        if ledger.get(turn_operation).state != "completed" or (not task and answers != ["S0_CANARY_OK"]):
             raise DriverError("terminal receipt or sentinel did not pass canary")
         view = client.request("thread/read", {"threadId": thread_id})
         page = client.request("thread/turns/list", {"threadId": thread_id, "itemsView": "full", "limit": 50})
@@ -440,8 +482,17 @@ def _own(root, plan, ledger):
                 or matches[0].get("itemsView") != "full"):
             raise DriverError("history did not confirm the exact completed turn")
         _check_items(matches[0]["items"])
-        if [item["text"] for item in matches[0]["items"] if item["type"] == "agentMessage"] != ["S0_CANARY_OK"]:
-            raise DriverError("history did not confirm the exact sentinel")
+        if [item["text"] for item in matches[0]["items"] if item["type"] == "agentMessage"] != answers:
+            raise DriverError("history did not confirm the exact task response" if task else "history did not confirm the exact sentinel")
+        if task:
+            users = [item for item in matches[0]["items"] if item["type"] == "userMessage"]
+            content = users[0]["content"] if len(users) == 1 else []
+            if (len(content) != 1 or content[0].get("type") != "text"
+                    or content[0].get("text") != plan["prompt"] or content[0].get("text_elements", [])
+                    or matches[0].get("error") or view["thread"]["status"]["type"] != "idle"):
+                raise DriverError("history did not confirm exact task input and idle completed thread")
+            outcome.update(response=answers[0], response_sha256=sha256(answers[0].encode("utf-8")).hexdigest(),
+                           answer_review="operator-review-required")
         outcome.update(state="completed", reason="observed-terminal-and-history")
     except (OSError, ValueError, RuntimeError) as error:
         # Raw exception strings can contain private data. Full allowed results are saved above.
