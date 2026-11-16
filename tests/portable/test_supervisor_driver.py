@@ -387,6 +387,49 @@ class ExperimentalLabTests(unittest.TestCase):
         self.assertEqual(self.launches, [])
         self.assertFalse(status(self.directory)["attempted"])
 
+    def test_readonly_policy_representations_reach_turn_and_history(self):
+        for mode, sandbox in (("success", {"type": "readOnly", "networkAccess": False}),
+                              ("readonly-implicit", {"type": "readOnly"})):
+            with self.subTest(mode=mode):
+                self.directory = self.root / mode
+                self.mode = mode
+                token = self.prepare()
+                count = len(self.launches)
+                result = self.execute(token)
+                self.assertEqual(result["state"], "completed", result)
+                self.assertEqual(self.methods(), ["initialize", "initialized", "thread/start", "turn/start",
+                                                  "thread/read", "thread/turns/list"])
+                replies = [read_record(p)["value"] for p in (self.directory / "evidence").glob("[0-9]*.json")
+                           if read_record(p)["kind"] == "thread-result"]
+                self.assertEqual([reply["sandbox"] for reply in replies], [sandbox])
+                self.assertIn(result["child_status"], ("stopped", "not-found"))
+                with self.assertRaises(DriverError):
+                    self.execute(token)
+                self.assertEqual(len(self.launches), count + 1)
+
+    def test_invalid_sandbox_and_unrelated_policy_drift_stop_before_turn(self):
+        for mode in ("network-enabled", "network-string", "network-zero", "network-one", "network-null",
+                     "sandbox-other", "sandbox-extra", "unsafe-model", "unsafe-provider", "unsafe-cwd",
+                     "unsafe-policy", "unsafe-reviewer", "unsafe-effort", "ephemeral-thread", "nonempty-thread"):
+            with self.subTest(mode=mode):
+                self.directory = self.root / mode
+                self.mode = mode
+                token = self.prepare()
+                result = self.execute(token)
+                self.assertEqual(result["state"], "blocked", result)
+                self.assertEqual(self.methods(), ["initialize", "initialized", "thread/start"])
+                self.assertEqual([r["method"] for r in result["operations"]], ["thread/start"])
+                self.assertEqual(read_record(self.directory / "evidence" / "peer.json")["turns"], [])
+                # A schema-invalid response invalidates the transport session.
+                expected_error = "TransportError" if mode in {
+                    "network-string", "network-zero", "network-one", "network-null"} else "DriverError"
+                self.assertEqual(result["error_type"], expected_error, result)
+                self.assertIn(result["child_status"], ("stopped", "not-found"))
+                count = len(self.launches)
+                with self.assertRaises(DriverError):
+                    self.execute(token)
+                self.assertEqual(len(self.launches), count)
+
     def test_unsupported_and_default_profiles_refuse_even_matching_grants(self):
         self.prepare()
         for profile in (None, "default", "unknown", "synthetic"):
