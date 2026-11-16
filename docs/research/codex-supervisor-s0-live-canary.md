@@ -1,6 +1,8 @@
 # Supervisor S0 first live canary — experimental lab runbook
 
-**Implementation ready for independent review; real canary NOT EXECUTED.**
+**Reviewed implementation merged; first real invocation stopped before a model turn.**
+See the [November 15 observed result](codex-supervisor-s0-live-result-20261115.md).
+The historical prepared plan is now permanently attempted; do not execute it again.
 Supports [issue 58](https://github.com/smartyhall/deskmate-formats/issues/58) and
 [issue 86](https://github.com/smartyhall/deskmate-formats/issues/86).
 Preparation and offline inspection consume no model turn. The `live` command
