@@ -1,0 +1,424 @@
+{
+  "schema_version": 1,
+  "experiment": "Windows 10 installed S2 text dispatch, synthetic peers only",
+  "implementation_commit": "77f1dca289cf2d0647b9027d17f8b1f97e180cb6",
+  "base_commit": "3f5622d534f800312e1a55a6dac47ba8522cc36c",
+  "runtime": {
+    "python": "3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "sqlite": "3.50.4",
+    "jsonschema": "4.26.0",
+    "git": "git version 2.56.0.windows.4"
+  },
+  "installed_modules_verified_against_committed_blobs": 55,
+  "implementation_sha256": {
+    "__init__.py": "8a0d4538e24f4fe8951f1b46f3264e5ad9bddf2f7f785830585421bef597ebdc",
+    "addressbook/__init__.py": "bbed6af1f9a7fd71a32884ed9bb30934f366800fd5137ddc17fcfc72fb5787ef",
+    "addressbook/cli.py": "7357eb2baaafe10144d6a130f825390abb52fddc61c5ffb5312fbb59ccf1edbe",
+    "addressbook/personal.py": "6f4140528486f34c1b01251adf42a14e1298a698a8727f9cc54edea0f4a7f89b",
+    "addressbook/samples.py": "3c7437adba7f3aaa6577bfe845e1a0ecafd3715fe452553342e07af352a81cf7",
+    "addressbook/writer.py": "ccd2773deeedfa683f73ac129ca5de9b589d2869e5ad54c170f879764bf58e5f",
+    "automation/__init__.py": "9b4f431e07c0593be6d5ec17034d6a336f2c5f31d07f6171d9cdd53c81bca270",
+    "automation/client.py": "4495a08cbd123573f7ac51d291c00719ee1d4b41e1b2683a2f8fbe975c0c0db2",
+    "automation/mcp_server.py": "06042a918ead700a602c366e6dd6ddb07a95c003b0d9f004aa1b58cd7fff8042",
+    "automation/observer_bridge.py": "095cc109f5e1123bd95c31fe75eae78676ca3cdca97fcf8f8500c2ff37aafd70",
+    "automation/readonly.py": "9c984a93530ac785aba429fa3b4e69637d1011763f26f91f6e367e07e5a81bf8",
+    "calendar/__init__.py": "e3914e026d07e0a40f6cbcacf7f4c30b9546340b414dec48185e6560e8f9ca99",
+    "calendar/cli.py": "4ed90a8dd64165219ed4c68172ea2504181fc0146e0c5ce2c04210be1f9c83f1",
+    "calendar/codec.py": "a39b83c29135e407500224a9ca60f4dcd1dc7cad45a6255fd3af4a5369ce5525",
+    "calendar/experimental_create.py": "f9b2e64868cd0eaa14d1db35cb37ffd40d220cc127601b367d3995d3f526e09d",
+    "calendar/experimental_new.py": "30abc2e6fc3da7a2f0494d89b6b3d886222b7ce3ef58fecb0f3d0d846b0692d1",
+    "calendar/experimental_second.py": "36929ffb8f2a55c3702654372cee046415d6e10f7b12805e26d101f9fcdb6e62",
+    "calendar/personal.py": "51f687e13ff69f6cd4842c4e154bc57e2df33d46e6933848931360255968f1a0",
+    "calendar/samples.py": "b71fc8efd98129fbe2e2adce49985695ad6464c75c944f30a836238eb2555c82",
+    "calendar/writer.py": "f09ce6daea4d748c1071e5f789d2d618ab80dea0d60cb53fbbabe321a9c346ea",
+    "database.py": "386eb4e4d460b0bec3ed2bd308df4b570401f4376557151da75a7cfb8f778a43",
+    "interchange.py": "5ef52f1e8fe1a16dff457f1e2a4b91ae5173a98e7d7b34658cda210a348850aa",
+    "observer/__init__.py": "fa431f5b4a59f009032bcabc3cda566661797c9bbb3833f7c0bb232c97c9764d",
+    "observer/_private_storage.py": "7b552e8a110959bf3d455deb4876c3e07311fae72b7ce41765f500b02a9c7c78",
+    "observer/agent_feed.py": "d2f995992bff8676167be474fdebe1d87c0291b69585cbfd26c67fa068c18f8e",
+    "observer/agent_http.py": "575f628e12de5a68ebae35d1bc85cec44f2a7d72b8f6fcf86399d0c40de81728",
+    "observer/agent_publication.py": "107191843677153f54410273a99148c686848e228cca42e93913aa0def063629",
+    "observer/agents.py": "3cffc658c0517c79c7dc84642d11e122ac6920a3e45de57afc06207b0bdbb577",
+    "observer/codex_cli.py": "dcf84d476e770b50bc4f355d091c1232c9f734b441e62f9a31ac73af07477e39",
+    "observer/codex_exec.py": "86ca907488bac8e45dc5c5d6ba22bf60b3df964fe25f19163e11e00f5de4fa68",
+    "observer/demo.py": "e873d173768276b1fa66d9464031b7fa9311c1e20cdfa9bf9269ff4ac5716aa9",
+    "observer/event_cli.py": "e8950dca440ac79624164e65941cc6dde47708856022b1c4339cb8b834d88de9",
+    "observer/events.py": "4f31a551474e158cfef0504a11d024c637ba1da67e2c06bdc9733bb29a5d67c3",
+    "observer/frames.py": "af73612030ee13ebed4f464be065f5b4096663bc194074051c2eeed11277b22e",
+    "observer/http.py": "ed3652f0fd639f83b136ff561de39accc0090dbb821212a7296900deab42b6b3",
+    "observer/journal.py": "44b0826cc3cf27454ed50d947010af45902a21f401ce63ac7463a49d16d5cd89",
+    "observer/presentation.py": "7ee384d941fc93389e914fb4e1426cf62604ab4e9d174f7cba40c31751a7234a",
+    "observer/process_health.py": "68805e35079551ee001c96356a35f4fbffcf8b6ae1bd6a9f631daf0ba29ba9b6",
+    "observer/publication.py": "a7c550dba8e61bb13d789d9f9f1b7c7a14c458ef1db80d04c7c472f611dbd246",
+    "supervisor/__init__.py": "602e45c71c48e7ea3466a182b224728cb34a3ec765b7cdda13ba5beb2f822dcc",
+    "supervisor/bridge.py": "f3bddb20e71dd571a0dafb946d80039ba0a8bb7ea907dbce5107dcd31a60d38c",
+    "supervisor/bridge_cli.py": "adc0dc4973f8feda0bd588a9b468e4d7a7c972641d5c22a0724e5a4d9564b480",
+    "supervisor/driver.py": "2e1e2f80f38b16bfeec4c68a1d80a5296965e478eb6033238e6c27b6237fa1ea",
+    "supervisor/driver_cli.py": "0a56fabb1989b34c277440867384ae209c1911639d0478543c06269140ba3044",
+    "supervisor/ledger.py": "b08832b9fbe031f9b70790b32decdd871c6cdd1aa6e4164c7ada9af1ced36809",
+    "supervisor/operations.py": "d417c6ad7803c9ab40793c37869d62877f435acb9b117746e6a4ac965c06be4f",
+    "supervisor/protocol.py": "8959b134d57e6b3099a16c57fb1e72a6e098a12dd27dd1375818e626617f91d9",
+    "supervisor/synthetic_peer.py": "0e48731a57cf62149c08236ead05812ea547aac12e11e5eb8bf651d32365102c",
+    "supervisor/task_cli.py": "7c52348f5c537a9b3a9d4b25346fd53fe650e3ec5da367ba84bb54831e48905f",
+    "supervisor/task_execution.py": "7cd011df9ede28ee05e60a026265dd094487d25d4e2f995e2cae807f4fc0c2d9",
+    "supervisor/task_git.py": "47017a1c2e13b4038cb17f3eec9fa16da9df8c635ddc13f72a6c76b06573cb6b",
+    "supervisor/task_manifest.py": "4f50bf7b42036fd53392f403ff40f28a660b4e4ffbe656af97e252be0f136f67",
+    "supervisor/task_publication.py": "8c70f685b164425d53460b9ec140b93b30edb3bef1a3f012b3675df16b35dda3",
+    "supervisor/task_queue.py": "0abc7677d5089206087b9225cfa97efe635290c6deab516173415cb6e4763817",
+    "supervisor/telemetry.py": "a6ab8d67810acbd3895f08b6cb121e5dd33c970530acb170aba23d20bfd5e119"
+  },
+  "schema_sha256": "c28048281174969346b83cfc30bd05523da1d608a73375abfcc86040309b5bb9",
+  "tested_build_artifacts": {
+    "deskmate_formats-0.1.0.dev0-py3-none-any.whl": {
+      "size": 215491,
+      "sha256": "a8ef831f3baef5618b82155202b7556311ded256408c210212e044afcb89eb66"
+    },
+    "deskmate_formats-0.1.0.dev0.tar.gz": {
+      "size": 884570,
+      "sha256": "cedc4ddaa8554fc04539b339027fd5386af0088e94f0851f3d6f0620c680a873"
+    }
+  },
+  "validation": {
+    "build-final": {
+      "returncode": 0,
+      "elapsed_host_seconds": 32.69467660004739,
+      "stdout_sha256": "6d280282a5db760eabdeea35e8589f046134fffceb28304042610065141eaaae",
+      "stderr_sha256": "8949bd704e4528540a5ab3876113a675c4dd65220af7507fb354eec1f15175a7",
+      "argv": [
+        "python",
+        "-m",
+        "build"
+      ]
+    },
+    "install-final": {
+      "returncode": 0,
+      "elapsed_host_seconds": 3.8820960999000818,
+      "stdout_sha256": "438cb6baffecf446968117ccb61d82ebfce513317ea423c2902471e0ffe6853b",
+      "stderr_sha256": "ea68631206bd24a05859f7cf1737c2937e7f8518e88cefde59983a31e781c807",
+      "argv": [
+        "python",
+        "tools/install_wheel.py"
+      ]
+    },
+    "install-check": {
+      "returncode": 0,
+      "elapsed_host_seconds": 4.912752699921839,
+      "stdout_sha256": "32424ecc648477d48a78688fd27b7559226db51072854045787ac51211eb5719",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "argv": [
+        "python",
+        "tools/check_install.py"
+      ]
+    },
+    "portable": {
+      "returncode": 0,
+      "elapsed_host_seconds": 537.4069275000365,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "34d1ce15f104125d9ab241faad5225ff012371fdf41cca33df6a7f6485b1b66f",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-v"
+      ],
+      "test_count": 412,
+      "unittest_elapsed_seconds": 536.305
+    },
+    "deployment": {
+      "returncode": 0,
+      "elapsed_host_seconds": 5.423168300068937,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "07a103567e5add46b003fcf7e38a64ce8bb0af1e458f33b1ab055c2a182497f3",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "deployment/windows10/tests",
+        "-v"
+      ],
+      "test_count": 31,
+      "unittest_elapsed_seconds": 4.961,
+      "skipped": 2
+    },
+    "ruff-final": {
+      "returncode": 0,
+      "elapsed_host_seconds": 0.2434341999469325,
+      "stdout_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "argv": [
+        "python",
+        "-m",
+        "ruff",
+        "check",
+        "src",
+        "tests/portable",
+        "tools"
+      ]
+    },
+    "reuse-final": {
+      "returncode": 0,
+      "elapsed_host_seconds": 3.902459800010547,
+      "stdout_sha256": "623918072912a9dcece6276cb34a03e6346059373db4bd817c998003fc6e90e2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "argv": [
+        "python",
+        "-m",
+        "reuse",
+        "lint"
+      ]
+    },
+    "repository-audit": {
+      "returncode": 0,
+      "elapsed_host_seconds": 3.3529257000191137,
+      "stdout_sha256": "cd1b7bf7c3cc2b210715183dc22146c81648c50f1c7b741d8016c1e4d5aeda9c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "argv": [
+        "python",
+        "tools/audit_repository.py"
+      ]
+    },
+    "git-fsck": {
+      "returncode": 0,
+      "elapsed_host_seconds": 19.218356300028972,
+      "stdout_sha256": "b72ca2ad92834048fc931e60a6c0fd1086cab4f53ddd76232d94c0ace86d2379",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "argv": [
+        "git",
+        "fsck",
+        "--full"
+      ]
+    },
+    "diff-check": {
+      "returncode": 0,
+      "elapsed_host_seconds": 0.16178269998636097,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ]
+    },
+    "stale-regression": {
+      "returncode": 0,
+      "elapsed_host_seconds": 8.834518000017852,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "9e11d4146891178b5a0303cf3b43c5648d4790159d006a5eeffa14f530ec52b2",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-p",
+        "test_supervisor_s2_live.py",
+        "-k",
+        "git_tip",
+        "-v"
+      ],
+      "test_count": 1,
+      "unittest_elapsed_seconds": 8.238
+    },
+    "demo": {
+      "returncode": 0,
+      "elapsed_host_seconds": 15.982902600080706,
+      "stdout_sha256": "81dd7d7957d0987cb7d24bab2d21b6e580b3ec3fad18ca235da7bac597b7a54e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "argv": [
+        "python",
+        "tools/experimental/supervisor_offline_demo.py",
+        "--private-root",
+        "<private-archive>\\installed-demo"
+      ]
+    }
+  },
+  "supervisor_tests_in_passing_full_suite": 95,
+  "initial_focused_run": {
+    "test_count": 95,
+    "returncode": 1,
+    "elapsed_host_seconds": 524.9437408000231,
+    "stderr_sha256": "8e83c9d89a4159a3f7393d455a9902ded1c7403e45a13924de8729551e38e102",
+    "finding": "One test expected stale-source refusal from an already prepared claim. The permanent-claim refusal correctly ran first. Test now uses a fresh claim; targeted rerun and full suite pass. No production code changed."
+  },
+  "demonstration": {
+    "acceptance_state": "accepted",
+    "browser_preserved_private_hashes": true,
+    "child_status": "stopped",
+    "dispatch_plan_sha256": "0cd2b656cd3fb48f12bbf4d96be4717b7d49793c520cc79fbdd70cf46e3a2094",
+    "dispatch_state": "completed",
+    "document_blob": "f7b64640d7a626b7c7a5e6d68ebb504496fa95b5",
+    "document_sha256": "90936bf93861b8a0dbfabe7c349a3449874de438fb54268d28c160bb7e4433a7",
+    "duplicate_dispatch_refused": true,
+    "elapsed_host_seconds": 0.4685420000459999,
+    "emulated_time": "not measured; no emulator launched or connected",
+    "experiment": "S2 offline synthetic-only",
+    "git_anchor": "d7b89a38b670b71df6d75e0a70781b1006418b29",
+    "git_blob": "3f9edd86ac4196de4fe3d2885070edf0b7ffc3e3",
+    "git_commit": "4253541a8a33fa52c31591f90c1ed5bb4196943d",
+    "http_checks": [
+      {
+        "body_sha256": "ff9a9b169ccd20a91213ccf4e7048255782876ed0a548a473b1a9721ed20b71f",
+        "method": "GET",
+        "path": "/api/v1/events",
+        "status": 200
+      },
+      {
+        "body_sha256": "7be4e307a4f0383e29f0258006eb5d0f6f40a53502ef9b27c2239ec639276ffe",
+        "method": "GET",
+        "path": "/api/v1/agents",
+        "status": 200
+      },
+      {
+        "body_sha256": "07d90ac0bb037489b159ee3fc691b2db8a624a6363b8bddacdfa0a929a39b716",
+        "method": "POST",
+        "path": "/api/v1/events",
+        "status": 405
+      },
+      {
+        "body_sha256": "79d5b8e0a243f3bbe0e62e6d4e6f6ac055400c17f0f318e0bd7f58c6908983e9",
+        "method": "GET",
+        "path": "/api/v1/dispatch",
+        "status": 404
+      },
+      {
+        "body_sha256": "79d5b8e0a243f3bbe0e62e6d4e6f6ac055400c17f0f318e0bd7f58c6908983e9",
+        "method": "GET",
+        "path": "/api/v1/operations",
+        "status": 404
+      }
+    ],
+    "manifest": {
+      "category": "verification",
+      "dependencies": [],
+      "description": "Compare blue and green records in docs/source.md; cite the supplied content.",
+      "id": "s2-demo",
+      "idempotency_key": "s2-demo-1",
+      "instructions": [
+        {
+          "path": "docs/source.md",
+          "sha256": "90936bf93861b8a0dbfabe7c349a3449874de438fb54268d28c160bb7e4433a7"
+        }
+      ],
+      "profile": "offline",
+      "resources": [
+        "source-read"
+      ],
+      "revision": 1,
+      "schema_version": 1,
+      "title": "Analyze reviewed synthetic metadata"
+    },
+    "manifest_sha256": "1e7321668d403fdd0664999bb3cf4b2e11551d8febc372d35e0848cda76b8008",
+    "manifest_size": 429,
+    "mutation_methods": [
+      "thread/start",
+      "turn/start"
+    ],
+    "native_emulator_connections": 0,
+    "offline_validation_model_turns": 0,
+    "operation_states": [
+      "completed",
+      "completed"
+    ],
+    "prepared_dispatched": false,
+    "private_artifact_sha256": {
+      "outcome": "2a91551469176ec0c8abd28c25eed8603b68caa7e573839054ac4ac45ec6c961",
+      "s0_ledger": "5e6bc2b48abbc9031c8102f0b3a0b2b299159ccf54e5e896ba0d3f4e3bb6e029",
+      "s1_queue": "e457a1d4dd63f308dc75738eb745954540582a8b68911ed35afac7c7dbe77c39",
+      "synthetic_peer": "f4b97073c3eef1e719b5139cacaecb2cee3187e770af4a57cc0d280277075a57"
+    },
+    "prompt_sha256": "532e13daf9eecfb9a4e5b5d70c602bfda109e6a2abd3e8efbd9298299ae33100",
+    "real_model_turns": 0,
+    "response": "Synthetic context analysis: s2-demo revision 1.\nAnalyze reviewed synthetic metadata\nCompare blue and green records in docs/source.md; cite the supplied content.\ndocs/source.md: 2 lines; SHA-256 90936bf93861b8a0dbfabe7c349a3449874de438fb54268d28c160bb7e4433a7; excerpt: # Reviewed synthetic metadata\nBlue records contain 7 fields. Green records contain 9 fields.\n",
+    "response_sha256": "426517d811d91862ce12c22f5a0380c4ad401d9d7c3b13d3da153607672045a1",
+    "schema_version": 1,
+    "synthetic_turn_count": 1,
+    "task_specific_input_verified": true
+  },
+  "private_run_record_sha256": {
+    "attempt.json": {
+      "size": 805,
+      "sha256": "57ac5f2b6152afe118ab84a0fce8e4808c297c535422bcf6054589b5fdb1aaba"
+    },
+    "evidence/0001.json": {
+      "size": 10444,
+      "sha256": "2a228f59af3c48ae68883358ecffbd650363d3a6a872bdca84150e20ebb8b4bf"
+    },
+    "evidence/0002.json": {
+      "size": 133,
+      "sha256": "dd5647467733964f587e66c22a5779f5e7e6a896bc25cb91a289ee53075914d9"
+    },
+    "evidence/0003.json": {
+      "size": 806,
+      "sha256": "b8c72615992ea9c86f4f4f690e59d95afbee47b7abc9aba933972b73e616e1c7"
+    },
+    "evidence/0004.json": {
+      "size": 853,
+      "sha256": "30cc6703872ebb831059a2d0ac636d0bdfbadb54816087213fe9404f9dff0677"
+    },
+    "evidence/0005.json": {
+      "size": 539,
+      "sha256": "5d1fdf97f1daf826982c69fe0acb6436391464f0c48ac90f7e634b8793152b19"
+    },
+    "evidence/0006.json": {
+      "size": 1180,
+      "sha256": "719bc233671408cd5797cfa013e3ac0b1f4add314039353e04c135a640dd4f93"
+    },
+    "evidence/0007.json": {
+      "size": 1641,
+      "sha256": "07e084bd30aabebead71d95d4fb04ae6169b9c11fad12827afdae3f644ebf94f"
+    },
+    "evidence/0008.json": {
+      "size": 1251,
+      "sha256": "85f4cac43bda708245611284f1e0769c3b7c1af86458f7cd404639ba5370219a"
+    },
+    "evidence/0009.json": {
+      "size": 587,
+      "sha256": "4a0f224ee94c83c1f8c2a76d40b38f3439ca71dc5819a4026f502af69bd2a7b7"
+    },
+    "evidence/0010.json": {
+      "size": 1696,
+      "sha256": "4db3c73a982fa60c5cad5aed339e7930dcd9c520383978f6efa37448b359b44c"
+    },
+    "evidence/0011.json": {
+      "size": 2131,
+      "sha256": "ed911d822569ebd9ac13ddd8966846f49ccf9bdfb3921d78ca3f0ff24c2a5bbb"
+    },
+    "evidence/peer.json": {
+      "size": 2111,
+      "sha256": "f4b97073c3eef1e719b5139cacaecb2cee3187e770af4a57cc0d280277075a57"
+    },
+    "outcome.json": {
+      "size": 1919,
+      "sha256": "2a91551469176ec0c8abd28c25eed8603b68caa7e573839054ac4ac45ec6c961"
+    },
+    "plan.json": {
+      "size": 10411,
+      "sha256": "f61f8e5784330f5ec79d2312e93661d584889e77d683420395d45c5dd1f179dd"
+    },
+    "receipts/operations.sqlite3": {
+      "size": 24576,
+      "sha256": "5e6bc2b48abbc9031c8102f0b3a0b2b299159ccf54e5e896ba0d3f4e3bb6e029"
+    }
+  },
+  "private_archive_name": "s2-git-dispatch-20261116",
+  "real_supervisor_model_turns": 0,
+  "real_codex_app_server_launches": 0,
+  "emulator_connections": 0,
+  "emulated_time": {
+    "attributable_milliseconds": 0,
+    "guest_counter_measured": false
+  },
+  "limitations": [
+    "Synthetic peer processing is not model reasoning or native S2 acceptance.",
+    "Native S0 success remains the separate already-published PR 96 observation.",
+    "No actual proposed task acceptance or live dispatch occurred.",
+    "No OS confinement, descendant cleanup, provider cancellation, factual accuracy or power-loss claim."
+  ]
+}

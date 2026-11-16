@@ -237,3 +237,6 @@ summary privately. No emulator is launched: attributable emulated time is 0 ms;
 no guest counter is measured. See the accompanying validation evidence for actual
 Windows 10 observations and hashes. Real S2 remains unverified until separately
 authorized, executed and independently reviewed.
+
+The [2026-11-16 validation report](codex-supervisor-s2-validation-20261116.md)
+records the actual installed Windows demonstration and passing portable checks.
