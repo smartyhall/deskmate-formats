@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import sys
+import tomllib
 from uuid import uuid4
 from time import sleep
 
@@ -11,10 +12,10 @@ MODES = ("success", "lost-ack", "delayed-ack", "approval", "driver-approval", "u
          "duplicate", "eof", "normal", "failed", "stale-turn", "history-only", "unsafe-policy", "wrong-version",
          "unsafe-effort", "unsafe-reviewer", "web-tool", "image-tool", "hook-item", "terminal-tool",
          "history-tool", "history-sentinel", "history-not-loaded", "history-extra-turn", "history-cursor",
-         "malformed", "oversized", "partial", "duplicate-terminal", "restart-terminal")
+         "malformed", "oversized", "partial", "duplicate-terminal", "restart-terminal", "bad-sentinel", "thread-lost-ack")
 SUCCESS_MODES = {"success", "stale-turn", "history-only", "web-tool", "image-tool", "hook-item",
                  "terminal-tool", "history-tool", "history-sentinel", "history-not-loaded",
-                 "history-extra-turn", "history-cursor", "duplicate-terminal", "restart-terminal"}
+                 "history-extra-turn", "history-cursor", "duplicate-terminal", "restart-terminal", "bad-sentinel"}
 
 PRIVATE = "private-canary-command-and-result"
 
@@ -33,12 +34,18 @@ def turn_status(turn, status):
     notify("turn/completed", {"threadId": "test-thread", "turn": turn})
 
 
-def main(state_path, mode):
+def main(state_path, mode, live_policy=None):
     path = Path(state_path)
     thread = json.loads(path.read_bytes()) if path.exists() else None
     initialized = False
     ready = False
     pending = None
+    policy = {}
+    methods = []
+    if live_policy == "--live-policy":
+        # Test adapter only: report the driver's requested live model/provider.
+        # There is still no model, credential reader, tool or network client.
+        policy = tomllib.loads((Path(os.environ["CODEX_HOME"]) / "config.toml").read_text(encoding="utf-8"))
 
     def save():
         temp = path.with_suffix(".tmp")
@@ -54,6 +61,14 @@ def main(state_path, mode):
         identifier = message.get("id")
         method = message.get("method")
         params = message.get("params", {})
+        if live_policy:
+            methods.append(method)
+            request_path = path.with_suffix(".requests.json")
+            descriptor = os.open(request_path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+            with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+                stream.write(json.dumps(methods))
+                stream.flush()
+                os.fsync(stream.fileno())
         if method is None:
             assert pending is not None and type(identifier) is type(pending) and identifier == pending
             assert message == {"id": pending, "result": {"decision": "decline"}}
@@ -104,14 +119,16 @@ def main(state_path, mode):
                     "source": "appServer", "status": {"type": "idle"}, "turns": [],
                 }
                 save()
+                if mode == "thread-lost-ack":
+                    return
                 notify("thread/started", {"thread": thread})
             if method in ("thread/start", "thread/resume"):
                 assert params.get("threadId", thread["id"]) == thread["id"]
                 result = {
-                    "thread": thread, "model": "synthetic", "modelProvider": "synthetic",
+                    "thread": thread, "model": policy.get("model", "synthetic"), "modelProvider": policy.get("model_provider", "synthetic"),
                     "cwd": thread["cwd"], "approvalPolicy": "on-request" if mode == "unsafe-policy" else "never", "approvalsReviewer": "user",
                     "sandbox": {"type": "readOnly"},
-                    "reasoningEffort": "high" if mode == "unsafe-effort" else "low",
+                    "reasoningEffort": "high" if mode == "unsafe-effort" else policy.get("model_reasoning_effort", "low"),
                 }
                 if mode == "unsafe-reviewer":
                     result["approvalsReviewer"] = "auto_review"
@@ -140,7 +157,7 @@ def main(state_path, mode):
                     # The mutation reached durable synthetic state before stdout vanished.
                     return
                 if mode == "delayed-ack":
-                    sleep(1.5)
+                    sleep(6)  # Longer than the driver's five-second test RPC bound.
                 if mode == "lost-ack-live":
                     # Break protocol after the mutation but stay alive until stdin closes.
                     sys.stdout.write("not-json\n")
@@ -176,7 +193,8 @@ def main(state_path, mode):
                         notify("serverRequest/resolved", {"threadId": thread["id"], "requestId": pending})
                         pending = None
                 if mode in SUCCESS_MODES:
-                    agent = {"id": "synthetic-answer", "type": "agentMessage", "text": "S0_CANARY_OK"}
+                    agent = {"id": "synthetic-answer", "type": "agentMessage",
+                             "text": "WRONG" if mode == "bad-sentinel" else "S0_CANARY_OK"}
                     notify("item/completed", {"threadId": thread["id"], "turnId": turn["id"], "item": agent, "completedAtMs": 2})
                     turn["items"] = [agent]
                     turn["itemsView"] = "full"
