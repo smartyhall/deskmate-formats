@@ -36,13 +36,13 @@ def demonstrate(root):
                GIT_COMMITTER_NAME="Synthetic Fixture", GIT_COMMITTER_EMAIL="fixture@example.invalid",
                GIT_AUTHOR_DATE="2026-01-01T00:00:00Z", GIT_COMMITTER_DATE="2026-01-01T00:00:00Z")
 
-    def command(argv, *, data=None, cwd=None):
+    def command(argv, *, data=None, cwd=None, expected=0):
         result = subprocess.run(argv, input=data, cwd=cwd, env=env, capture_output=True, timeout=30)
         commands.append({"argv": argv, "cwd": str(cwd) if cwd else None,
                          "returncode": result.returncode,
                          "stdout": result.stdout.decode("utf-8"), "stderr": result.stderr.decode("utf-8")})
         write_record(root / f"command-{len(commands):02d}.json", commands[-1])
-        if result.returncode:
+        if result.returncode != expected:
             raise RuntimeError("demonstration command failed; inspect private command receipt")
         return result.stdout
 
@@ -55,10 +55,13 @@ def demonstrate(root):
     git("remote", "add", "origin", "https://example.invalid/lab/synthetic.git")
     git("commit", "-q", "--allow-empty", "-m", "Synthetic trust anchor")
     anchor = git("rev-parse", "HEAD")
+    document = b"# Reviewed synthetic metadata\nBlue records contain 7 fields. Green records contain 9 fields.\n"
+    document_blob = git("hash-object", "-w", "--stdin", data=document)
+    git("update-index", "--add", "--cacheinfo", f"100644,{document_blob},docs/source.md")
     manifest = {"schema_version": 1, "id": "s2-demo", "revision": 1, "idempotency_key": "s2-demo-1",
-                "title": "Synthetic S2 demonstration", "description": "Inspect synthetic metadata only.",
-                "category": "verification", "profile": "offline", "resources": ["synthetic-fixtures"],
-                "dependencies": []}
+                "title": "Analyze reviewed synthetic metadata", "description": "Compare blue and green records in docs/source.md; cite the supplied content.",
+                "category": "verification", "profile": "offline", "resources": ["source-read"],
+                "dependencies": [], "instructions": [{"path": "docs/source.md", "sha256": sha256(document).hexdigest()}]}
     raw = encode_json(manifest) + b"\n"
     blob = git("hash-object", "-w", "--stdin", data=raw)
     git("update-index", "--add", "--cacheinfo", f"100644,{blob},ops/tasks/s2-demo.json")
@@ -77,23 +80,33 @@ def demonstrate(root):
     assert accepted["state"] == "accepted"
     assert not (root / "bridge").exists()
 
-    def bridge(*args):
-        return json.loads(command([sys.executable, "-I", "-m", "deskmate_formats.supervisor.bridge_cli",
-                                   "--state", str(root / "bridge"), *args]))
+    def bridge(*args, expected=0):
+        output = command([sys.executable, "-I", "-m", "deskmate_formats.supervisor.bridge_cli",
+                          "--state", str(root / "bridge"), *args], expected=expected)
+        return json.loads(output) if expected == 0 else None
 
     granted = bridge("prepare-synthetic", "--queue", str(root / "queue"), "s2-demo", "1",
                      "--accepted-review-token", discovered["review_token"])
     prepared = bridge("inspect", granted["claim"])
     assert not prepared["attempted"] and prepared["operations"] == []
+    validation = bridge("validate", "--queue", str(root / "queue"), granted["claim"])
+    assert validation["model_turns"] == validation["app_server_launches"] == 0
+    bridge("dispatch-synthetic", "--queue", str(root / "queue"), granted["claim"],
+           "--authorize-dispatch", "0" * 64, expected=4)
     outcome = bridge("dispatch-synthetic", "--queue", str(root / "queue"), granted["claim"],
                      "--authorize-dispatch", granted["dispatch_token"])
     assert outcome["state"] == "completed"
+    assert "Blue records contain 7 fields" in outcome["response"]
+    assert outcome["answer_review"] == "operator-review-required"
     durable = bridge("inspect", granted["claim"])
     assert durable["outcome"] == outcome
     run_dir = root / "bridge" / granted["claim"]
     files = [root / "queue" / "task-queue.sqlite3", run_dir / "receipts" / "operations.sqlite3",
              run_dir / "outcome.json", run_dir / "evidence" / "peer.json"]
     before = [digest(path) for path in files]
+    bridge("dispatch-synthetic", "--queue", str(root / "queue"), granted["claim"],
+           "--authorize-dispatch", granted["dispatch_token"], expected=4)
+    assert before == [digest(path) for path in files]
     registry = ObservationRegistry((Machine("synthetic", "Synthetic only"),))
     replies = []
     with AgentJournalFeed(run_dir / "spool") as feed:
@@ -114,7 +127,7 @@ def demonstrate(root):
                         assert response.status == expected
                         if path == "/api/v1/events" and method == "GET":
                             assert b"Synthetic dispatch completed" in body
-                            for secret in (b"S0_CANARY_OK", b"test-thread", str(root).encode()):
+                            for secret in (b"Blue records", b"S0_CANARY_OK", b"test-thread", str(root).encode()):
                                 assert secret not in body
                         replies.append({"path": path, "method": method, "status": response.status,
                                         "body_sha256": sha256(body).hexdigest()})
@@ -128,10 +141,16 @@ def demonstrate(root):
     assert before == [digest(path) for path in files]
     peer = read_record(run_dir / "evidence" / "peer.json")
     assert len(peer["turns"]) == 1
+    assert peer["turns"][0]["items"][0]["content"][0]["text"] == prepared["plan"]["prompt"]
     summary = {
         "schema_version": 1, "experiment": "S2 offline synthetic-only",
         "git_anchor": anchor, "git_commit": commit, "git_blob": blob,
         "manifest_size": len(raw), "manifest_sha256": sha256(raw).hexdigest(), "manifest": manifest,
+        "document_blob": document_blob, "document_sha256": sha256(document).hexdigest(),
+        "prompt_sha256": sha256(prepared["plan"]["prompt"].encode()).hexdigest(),
+        "response_sha256": outcome["response_sha256"], "response": outcome["response"],
+        "task_specific_input_verified": True, "duplicate_dispatch_refused": True,
+        "offline_validation_model_turns": validation["model_turns"],
         "acceptance_state": accepted["state"], "prepared_dispatched": prepared["attempted"],
         "dispatch_plan_sha256": granted["dispatch_token"], "dispatch_state": outcome["state"],
         "child_status": outcome["child_status"], "operation_states": [r["state"] for r in outcome["operations"]],

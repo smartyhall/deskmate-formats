@@ -129,7 +129,10 @@ describes offline-tested app-server ownership and durable receipts; the
 [S1 task intake guide](docs/research/codex-supervisor-s1.md) covers verified
 Git discovery, manual operator decisions and read-only queue reporting. The
 [operator driver](docs/research/codex-supervisor-operator-driver.md) supplies
-installable S0 commands and a separately gated synthetic-only S2 bridge.
+installable S0 commands and a separately gated S2 bridge. The
+[manual Git-to-Codex runbook](docs/research/codex-supervisor-s2-live-dispatch.md)
+describes bounded text analysis, offline preparation and separate live-dispatch
+grants. Real S0 is verified; real Git-driven S2 remains unverified.
 Real model dispatch requires new explicit authorization and live validation.
 
 ## Tests and development

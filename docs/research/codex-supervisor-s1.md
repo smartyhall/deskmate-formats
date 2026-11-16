@@ -1,7 +1,7 @@
 # Supervisor S1 trusted task intake
 
-The [offline S2 bridge](codex-supervisor-operator-driver.md) now consumes an exact
-accepted receipt through a separate synthetic dispatch grant. S1 itself remains
+The [manual S2 bridge](codex-supervisor-s2-live-dispatch.md) consumes an exact
+accepted receipt through separate synthetic or live dispatch grants. S1 itself remains
 an intake/review queue; acceptance and Git changes never launch a worker.
 
 S1 implements the Git intake and private queue in

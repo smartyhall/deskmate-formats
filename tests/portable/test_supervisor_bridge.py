@@ -99,7 +99,7 @@ class BridgeTests(unittest.TestCase):
         with self.assertRaises(DriverError):
             dispatch(self.queue, self.state, "../escape", "0" * 64)
 
-    def test_no_live_bridge_entry_point_or_worker_switch(self):
+    def test_synthetic_grant_selects_only_installed_peer(self):
         self.accept()
         granted = self.grant()
         plan, _ = load_plan(self.state / granted["claim"])

@@ -8,6 +8,8 @@ import tomllib
 from uuid import uuid4
 from time import sleep
 
+from .task_execution import CONTEXT_PREFIX, MAX_RESPONSE_BYTES
+
 POLICY_OVERRIDES = {
     "readonly-implicit": {"sandbox": {"type": "readOnly"}},
     "network-enabled": {"sandbox": {"type": "readOnly", "networkAccess": True}},
@@ -27,12 +29,27 @@ MODES = ("success", "lost-ack", "delayed-ack", "approval", "driver-approval", "u
          "history-tool", "history-sentinel", "history-not-loaded", "history-extra-turn", "history-cursor",
          "malformed", "oversized", "partial", "duplicate-terminal", "restart-terminal", "bad-sentinel", "thread-lost-ack",
          "unsafe-cwd", "ephemeral-thread", "nonempty-thread", *POLICY_OVERRIDES)
+TASK_MODES = ("empty-answer", "oversize-answer", "history-input", "history-response", "terminal-response", "terminal-empty-items")
+MODES += TASK_MODES
 SUCCESS_MODES = {"success", "stale-turn", "history-only", "web-tool", "image-tool", "hook-item",
                  "terminal-tool", "history-tool", "history-sentinel", "history-not-loaded",
                  "history-extra-turn", "history-cursor", "duplicate-terminal", "restart-terminal", "bad-sentinel",
                  "readonly-implicit"}
+SUCCESS_MODES.update(TASK_MODES)
 
 PRIVATE = "private-canary-command-and-result"
+
+
+def task_answer(prompt):
+    """Deterministic context processing, not a model or factual-analysis oracle."""
+    context = json.loads(prompt.removeprefix(CONTEXT_PREFIX))
+    manifest = json.loads(context["manifest_utf8"])
+    lines = [f"Synthetic context analysis: {manifest['id']} revision {manifest['revision']}.",
+             manifest["title"], manifest["description"]]
+    for document in context["documents"]:
+        lines.append(f"{document['path']}: {len(document['text'].splitlines())} lines; "
+                     f"SHA-256 {document['sha256']}; excerpt: {document['text'][:160]}")
+    return "\n".join(lines)
 
 
 def emit(message):
@@ -171,9 +188,16 @@ def main(state_path, mode, live_policy=None):
                     result["data"].append(thread["turns"][0] | {"id": "extra"})
                 elif mode == "history-cursor":
                     result["nextCursor"] = "more"
+                elif mode == "history-input":
+                    result["data"][0]["items"][0]["content"][0]["text"] = "different task"
+                elif mode == "history-response":
+                    result["data"][0]["items"][-1]["text"] = "different answer"
             elif method == "turn/start":
                 assert params["threadId"] == thread["id"]
-                turn = {"id": str(uuid4()), "status": "inProgress", "items": []}
+                prompt = params["input"][0]["text"]
+                task = prompt.startswith(CONTEXT_PREFIX)
+                user = {"id": "synthetic-input", "type": "userMessage", "content": params["input"]}
+                turn = {"id": str(uuid4()), "status": "inProgress", "items": [user] if task else []}
                 thread["turns"].append(turn)
                 save()
                 if mode == "lost-ack":
@@ -217,9 +241,13 @@ def main(state_path, mode, live_policy=None):
                         pending = None
                 if mode in SUCCESS_MODES:
                     agent = {"id": "synthetic-answer", "type": "agentMessage",
-                             "text": "WRONG" if mode == "bad-sentinel" else "S0_CANARY_OK"}
+                             "text": "WRONG" if mode == "bad-sentinel" else task_answer(prompt) if task else "S0_CANARY_OK"}
+                    if mode == "empty-answer":
+                        agent["text"] = " \n"
+                    elif mode == "oversize-answer":
+                        agent["text"] = "x" * (MAX_RESPONSE_BYTES + 1)
                     notify("item/completed", {"threadId": thread["id"], "turnId": turn["id"], "item": agent, "completedAtMs": 2})
-                    turn["items"] = [agent]
+                    turn["items"] = [user, agent] if task else [agent]
                     turn["itemsView"] = "full"
                     if mode == "terminal-tool":
                         turn["items"].append({"id": "hidden-tool", "type": "webSearch", "query": PRIVATE})
@@ -228,7 +256,12 @@ def main(state_path, mode, live_policy=None):
                     elif mode == "history-only":
                         turn["status"] = "completed"
                     else:
-                        turn_status(turn, "completed")
+                        if mode in ("terminal-response", "terminal-empty-items"):
+                            turn["status"] = "completed"
+                            items = [agent | {"text": "different terminal answer"}] if mode == "terminal-response" else []
+                            notify("turn/completed", {"threadId": "test-thread", "turn": turn | {"items": items}})
+                        else:
+                            turn_status(turn, "completed")
                         if mode == "duplicate-terminal":
                             notify("turn/completed", {"threadId": thread["id"], "turn": turn | {"status": "failed"}})
                         elif mode == "restart-terminal":
