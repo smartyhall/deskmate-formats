@@ -21,10 +21,12 @@ local-results/
 *.adr
 *.fil
 *.pcl
+*.doc
 !tests/fixtures/application-generated/**/*.cln
 !tests/fixtures/application-generated/**/*.adr
 !tests/fixtures/application-generated/**/*.fil
 !tests/fixtures/application-generated/**/*.pcl
+!tests/fixtures/application-generated/text/*.doc
 *.nvr
 *.rom
 *.vhd
