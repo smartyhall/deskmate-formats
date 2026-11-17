@@ -74,11 +74,26 @@ def snapshot(data, name):
     page, columns, count, next_id, index = [int(tokens[n]) for n in (2, 3, 4, 6, 7)]
     check(columns == (7 if name == 'PERSONAL' else 16), 'trial column count')
     check((page, index) == (4, 5), 'trial page roles')
-    check(count <= 163, 'index capacity/sentinel')
+    check(count <= 164, 'index subdivision capacity')
     base = index * PAGE
-    check(data[base:base + 40] == HEADER, 'index header')
-    triples = [list(struct.unpack_from('<HHH', data, base + 40 + 6 * n)) for n in range(count)]
-    check(not any(data[base + 40 + 6 * count:base + PAGE]), 'index sentinel/tail')
+    triples, groups, gap = [], [], False
+    for n in range(4):
+        begin = base + 40 + 246*n
+        entries = []
+        for at in range(begin, begin + 246, 6):
+            entry = list(struct.unpack_from('<HHH', data, at))
+            if entry == [0, 0, 0]:
+                check(not any(data[at:begin + 246]), 'index subdivision hole/tail')
+                break
+            check(not gap, 'populated index subdivision after gap')
+            entries.append(entry)
+        key = data[base + 10*n:base + 10*n + 10]
+        check(entries or key == HEADER[:10], 'finite route for empty subdivision')
+        groups.append(dict(routing_offset=base + 10*n, routing_key_hex=key.hex(),
+                           entry_count=len(entries), endpoint=entries[-1] if entries else None))
+        triples.extend(entries)
+        gap |= not entries
+    check(len(triples) == count, 'index/descriptor count')
     other_pages = {0, 1, index}
     for table, (_, values) in descriptors.items():
         if table != name:
@@ -114,10 +129,22 @@ def snapshot(data, name):
     check(set(rows) == {rid for _, _, rid in triples}, 'physical/index coverage')
     for p, off, rid in triples:
         check(rows[rid]['offset'] == p * PAGE + off, 'index pointer/framing mismatch')
+    for group in groups:
+        if group['routing_key_hex'] == HEADER[:10].hex():
+            continue
+        check(1 <= len(tokens[8:]) <= 5 and all(t.isdigit() for t in tokens[8:]),
+              'finite route sort ordinals')
+        ordinals = [int(t) for t in tokens[8:]]
+        check(len(set(ordinals)) == len(ordinals) and all(1 <= n <= columns for n in ordinals),
+              'finite route sort ordinals')
+        fields = [bytes.fromhex(v) for v in rows[group['endpoint'][2]]['fields_hex']]
+        full = b'\x01'.join(fields[n - 1] for n in ordinals) + b'\x01'
+        prefix = full[:9] + b'\x01' if len(full) >= 10 else full.ljust(10, b'\0')
+        check(group['routing_key_hex'] == prefix.hex(), 'routing endpoint mismatch')
     check(not {r['id'] for r in retired} & set(rows), 'retired/live ID collision')
     return {'sha256': sha(data), 'size': len(data), 'pages': len(data) // PAGE,
             'descriptor_offset': start, 'tokens_hex': [t.hex() for t in tokens],
-            'count': count, 'next_id_candidate': next_id, 'triples': triples,
+            'count': count, 'next_id_candidate': next_id, 'triples': triples, 'index_groups': groups,
             'rows': rows, 'retired_rows': retired, 'page_markers': markers}
 
 
