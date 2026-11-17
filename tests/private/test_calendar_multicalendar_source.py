@@ -17,6 +17,7 @@ class MulticalendarSourceTests(unittest.TestCase):
         if not root:
             raise unittest.SkipTest('Set DESKMATE_REFERENCE_EXTRACTED')
         inputs = {
+            'CALENDAR.PDM': ('deskmate/dm305dk4/CALENDAR.PDM', '819df5658b663aa69b15584abf805062679e97f587f3404738f6e82876e4bd23'),
             'DMDBRD.RES': ('deskmate/dm305dk4/DMDBRD.RES', 'c4bc9f5699bfaf1ac5adb57a011b04dcec00a2ae75edb2baf603c8001fa99cee'),
             'DMDBUPD.RES': ('deskmate/dm305dk4/DMDBUPD.RES', '9e77a2081ebb3a9549903f5d337580c65d6e0a3f603185064d4c82e16327cf4f'),
             'DMDBBLD.RES': ('deskmate/dm305dk5/DMDBBLD.RES', '91ada27c026de823aef6a9aae541bafcb6a312552cc5bd612ec8b0e90e53aeed'),
@@ -70,3 +71,25 @@ class MulticalendarSourceTests(unittest.TestCase):
         for at, raw in ((0x434D, '807e0461'), (0x4353, '807e047a'),
                         (0x4359, '8066045f'), (0x4370, '2ae4'), (0x4377, '2bc1')):
             self.anchor('DMDBRD.RES', at, raw)
+
+    def test_close_configuration_update_is_separate_from_user_event_update(self):
+        # Reverified existing SDK crosswalk: close invokes the three-field
+        # config updater, selector 19, before selector 9 table close. Not a
+        # trace of loaded runtime targets or proof of disk flush timing.
+        self.call('CALENDAR.PDM', 0xA101, 0x9F6D)
+        self.anchor('CALENDAR.PDM', 0x9F79, 'c746e80300')
+        self.anchor('CALENDAR.PDM', 0x9F93, 'c746ec0000')
+        self.anchor('CALENDAR.PDM', 0x9FB3, 'c646f200')
+        self.anchor('CALENDAR.PDM', 0x9FBF, 'b81300')
+        self.call('CALENDAR.PDM', 0x9FC3, 0xCDF8)
+        self.anchor('CALENDAR.PDM', 0xA12C, 'b80900')
+
+    def test_full_slot_guard_precedes_split_and_route_rebuild(self):
+        self.anchor('DMDBUPD.RES', 0x2A5C, '814604f000')
+        self.anchor('DMDBUPD.RES', 0x2A64, '833f00')
+        self.call('DMDBUPD.RES', 0x2197, 0x2A59)
+        self.anchor('DMDBUPD.RES', 0x219F, '7403')
+        self.call('DMDBUPD.RES', 0x21B3, 0x2A72)
+        self.call('DMDBUPD.RES', 0x21D2, 0x284A)
+        self.call('DMDBUPD.RES', 0x2CC8, 0x1C46)
+        self.call('DMDBUPD.RES', 0x2CEB, 0x1C46)

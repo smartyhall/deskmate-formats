@@ -1,5 +1,29 @@
 # Project status — DeskMate formats
 
+## Successor campaign proposed — 2026-11-17, PR #107
+
+[PR #107](https://github.com/smartyhall/deskmate-formats/pull/107) preserves new
+controlled native evidence and proposes a bounded maintenance API; these source
+changes await independent review and are not yet merged. DOS-only boot preserves
+the whole disk. No-edit Calendar open/close rewrites only index page 5: 61 events
+split `[41,21,0,0]` to `[20,21,21,0]`; a 59-event forward-insertion control splits
+`[41,19,0,0]` to `[20,21,19,0]`. Two stop-while-open controls preserve the whole
+disk, including one matched to the clean-exit trial's elapsed time. The durable
+rewrite is associated with clean close; earlier in-memory rebuilding versus
+close-time writeback remains unobserved. The source-pinned config-row UPDATE_ROW
+on table close supplies the strongest explanation. See
+[trigger/timing evidence](docs/research/calendar-index-trigger-20261117.md).
+
+The proposed opt-in API normalizes only the measured single-PERSONAL 59/61-event
+structural profiles and performs same-length ASCII description replacements
+while preserving row addresses/IDs and unrelated bytes. A new normalized writer
+candidate survives native open/detail/cancel unchanged; a separate native
+five-byte description save preserves its index and survives read-only reopen.
+Exact tool/native files and independent raw-byte oracles are published on the PR.
+This is selected-event evidence, not general rebalance or multicontact support.
+[API, native acceptance and local validation](docs/research/calendar-writer-maintenance-20261117.md).
+The earlier merged checkpoint below remains accurate for its dated scope.
+
 ## Current checkpoint — 2026-11-17 (post-merge Calendar campaign)
 
 **Direct interactive development — three PRs merged:** [#103](https://github.com/smartyhall/deskmate-formats/pull/103) adds `Alarm: on/off/<undecoded>` to user-appointment text listings with synthetic regressions, without changing the parser, JSON or internal/control records. [#104](https://github.com/smartyhall/deskmate-formats/pull/104) adds per-index-group routing kind and physical endpoint diagnostics, independently tested against native PERSONAL/SECOND fixtures and synthetic repartitions. The former common-parser rejection at `0x1400` was **already resolved** in [#84](https://github.com/smartyhall/deskmate-formats/pull/84); #104 improves visibility and boundary checks rather than introducing general multicalendar writing. [#105](https://github.com/smartyhall/deskmate-formats/pull/105) preserves the native saved result and reproducible verification of one controlled edit/save/reopen. All four Linux/Windows Python 3.13/3.14 CI jobs passed on the reviewed heads of each PR; all three were independently reviewed and merged.

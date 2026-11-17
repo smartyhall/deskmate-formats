@@ -13,13 +13,15 @@ model session or supervisor dispatch was used.
 | A | `VER`, no DeskMate launch; native quit | Whole disk and all 143 installed files unchanged | 12328 |
 | B | Set date/time, open Calendar, observe October 23 schedule, Escape to DOS, native quit | Only 237 bytes on index page 5 change; `[41,21,0,0]` becomes `[20,21,21,0]` | 20940 |
 | F59 | Same no-dialog open/close, separate 59-appointment forward-insertion candidate | Only 226 bytes on index page 5 change; `[41,19,0,0]` becomes `[20,21,19,0]` | 20940 |
+| I | Original month input; stop emulator while initial schedule remains open, no Escape | Whole disk and installed files unchanged | 19936 |
+| J | Same as I, plus 1004 ms idle time to match B's total elapsed time, no Escape | Whole disk and installed files unchanged | 20940 |
 
 **An event edit, change dialog, explicit save and second-calendar creation are
 unnecessary for the observed rewrite.** Control B does not separate opening,
 initial schedule display and closing internally. Calling it an observed
 open-time rewrite alone would overstate the sampling. Controls C/D/E were
 conditional on B leaving the index unchanged and were therefore unnecessary.
-Total measured emulated time for these three processes: **54208 ms**. This
+Total measured emulated time for these five processes: **95084 ms**. This
 includes time advanced around socket keyboard commands; guest wall-clock
 delta was not independently measured.
 
@@ -28,7 +30,15 @@ LPHa124 09:00–10:00, Plan 01 09:30–10:15, Review 01 14:15–15:15.
 Neither trial entered an event dialog or submitted a save. After Escape, the
 DOS prompt was observed before native socket quit. Each owned PID's termination
 was verified with a Windows process handle before copying or extracting disks.
-PIDs were A **8200**, B **12848**, F59 **13132**, serialized on loopback **8901**.
+PIDs were A **8200**, B **12848**, F59 **13132**, I **8196**, J **10200**,
+serialized on loopback **8901**. I/J deliberately use native emulator quit
+while Calendar remains open instead of a DOS exit; these are disposable
+power-off timing controls, not clean application closes. Their last captures
+show the expected schedule. Their stopped disks remain byte-identical to the
+input disk, including J at **20940 ms**, matching B's total elapsed time.
+Thus initial open/display and matched idle time do not produce a **durable**
+rewrite in these controls. This does not exclude a dirty in-memory rebuilt
+index that is only flushed during close.
 No Computer Use, host input injection, RAM capture or uncertain-operation replay.
 
 ## Exact published bytes
@@ -112,10 +122,26 @@ The pinned static findings in the
 split at byte 120 with a 126-byte suffix, and route construction from the new
 left group's last row. They support the measured transformation, not a general
 rebalance algorithm or proof of loaded runtime call targets. The earlier
-UPDATE_ROW path remains a possible internal mechanism even without a user edit;
-this campaign has not yet traced which native caller requests maintenance.
+UPDATE_ROW path remains relevant even without a user edit. Reverification of
+the existing [SDK crosswalk](sdk-calendar-database.md) pins Calendar's table-close
+path: `A101` calls the three-column config updater `9F6D`; `9FBF/9FC3` submit
+selector 19 through wrapper `CDF8`, with a null old values pointer (`9F93`) and
+verify 0 (`9FB3`), before selector 9 table close at `A12C`. This is separate from
+the six-column user event update at `B22F..B2C1`.
+
+The pinned UPD code checks the last locator at subdivision offset 240 (`2A59`),
+calls that full-slot guard at `2197`, reaches split helper `2A72` at `21B3` and
+route rebuild `284A` at `21D2`. Existing half-copy anchors explain the 20/21
+split and whole-subdivision shift. Six opt-in private source tests now pin these
+source relationships, including new close/guard checks. Original resources and
+selected disassemblies stay private. These are conditional static paths, not
+observed loaded runtime targets.
 
 The best-supported explanation is **a native index-maintenance split of a full
-first subdivision during the open/display/close lifecycle**, rather than equal
-three-way balancing or a required event edit. General split selection, multiple
-full groups, cascading splits, K collation and exact internal timing remain open.
+first subdivision associated with clean Calendar close**, rather than equal
+three-way balancing or a required event edit. The close-path configuration-row
+update is the strongest source-supported explanation: it can invoke index
+maintenance while leaving the configuration payload unchanged. I/J narrow the
+durable-write boundary but do not distinguish earlier in-memory rebuilding from
+close-time writeback. General split selection, multiple full groups, cascading
+splits, K collation and loaded runtime call tracing remain open.

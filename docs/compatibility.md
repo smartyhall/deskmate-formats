@@ -111,6 +111,17 @@ multicontact compatibility.
 
 ## Separate experimental new-file Calendar builder
 
+The separate opt-in `calendar.maintenance` API supports same-length ASCII
+description replacement and native-measured first-group normalization for the
+eight-page, single-PERSONAL 59/61-appointment structural profiles. It preserves
+rows/IDs/addresses and unrelated bytes, rejects tied starts and unmeasured
+layouts, and never overwrites a source. A newly generated normalized candidate
+survived controlled native open/detail/cancel unchanged, followed by a separate
+native edit/save/reopen that preserved its index. This qualifies that exact
+selected-event trial; other accepted variants remain offline-tested. See
+[API, fixture hashes and native acceptance](research/calendar-writer-maintenance-20261117.md).
+The six-page append APIs retain their original limits.
+
 The explicitly opt-in `calendar.experimental_new.build_new(..., experimental=True)`
 starts only from exact hash-pinned E02, can append fresh data pages 6 and 7, and
 rejects a ninth page, existing multipage inputs, ties, unsupported fields and more

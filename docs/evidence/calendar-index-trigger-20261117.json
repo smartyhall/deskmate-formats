@@ -277,6 +277,187 @@
       },
       "launch_config_sha256": "efa01586f7aeb6167eb9df1dbcf8236135aecc8c8081b6adf8fb79759d90b108",
       "executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d"
+    },
+    {
+      "trial": "I",
+      "pid": 8196,
+      "port": 8901,
+      "before": {
+        "disk_sha256": "4c835a9acd5734ffac89cc1878cbb11afc8fdbf4b5d83c37ae010c711459c5e8",
+        "calendar_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+        "config_sha256": "a48199f61165f815883e90f5652999b19a92ff43379bbcb8b4ea23d454fe7826",
+        "nvr_sha256": "a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2"
+      },
+      "after": {
+        "trial": "I",
+        "disk_sha256": "4c835a9acd5734ffac89cc1878cbb11afc8fdbf4b5d83c37ae010c711459c5e8",
+        "calendar_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+        "bytes": 8192,
+        "config_sha256": "6fee1e1c8525962026420ec1ae9be51fd8408d5a5aca5670cfa91115c4b2dac9",
+        "nvr_sha256": "1c8ef4a47e1b880812ddc7d5e3a568d4f0a38e9d79f95ae9f74df09c06abaabd",
+        "installed_files_changed": [],
+        "installed_tree_before_sha256": "fe4544dc0cb5fbdad286a58abdb291bf01327dd766562c3f4b61a6102947234e",
+        "installed_tree_after_sha256": "fe4544dc0cb5fbdad286a58abdb291bf01327dd766562c3f4b61a6102947234e",
+        "changed_bytes": 0,
+        "page_deltas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "groups": [
+          {
+            "routing_offset": 5120,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 41,
+            "routing_kind": "sentinel",
+            "endpoint": {
+              "index_offset": 5400,
+              "record_offset": 5047,
+              "record_id": 39
+            }
+          },
+          {
+            "routing_offset": 5130,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 21,
+            "routing_kind": "sentinel",
+            "endpoint": {
+              "index_offset": 5526,
+              "record_offset": 4159,
+              "record_id": 18
+            }
+          },
+          {
+            "routing_offset": 5140,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 0,
+            "routing_kind": "sentinel",
+            "endpoint": null
+          },
+          {
+            "routing_offset": 5150,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 0,
+            "routing_kind": "sentinel",
+            "endpoint": null
+          }
+        ],
+        "elapsed": {
+          "ok": true,
+          "protocol": 1,
+          "version": "7.0",
+          "ms": 19936,
+          "frames": 1321,
+          "held": true,
+          "paused": false,
+          "ff": false,
+          "w": 640,
+          "h": 480,
+          "bios_mode": 18,
+          "quantum_ms": 1
+        },
+        "quit_verified": true
+      },
+      "launch_config_sha256": "efa01586f7aeb6167eb9df1dbcf8236135aecc8c8081b6adf8fb79759d90b108",
+      "executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+      "stop_method": "Native socket emulator quit while Calendar remained held open; no Escape/application close"
+    },
+    {
+      "trial": "J",
+      "pid": 10200,
+      "port": 8901,
+      "before": {
+        "disk_sha256": "4c835a9acd5734ffac89cc1878cbb11afc8fdbf4b5d83c37ae010c711459c5e8",
+        "calendar_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+        "config_sha256": "a48199f61165f815883e90f5652999b19a92ff43379bbcb8b4ea23d454fe7826",
+        "nvr_sha256": "a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2"
+      },
+      "after": {
+        "trial": "J",
+        "disk_sha256": "4c835a9acd5734ffac89cc1878cbb11afc8fdbf4b5d83c37ae010c711459c5e8",
+        "calendar_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+        "bytes": 8192,
+        "config_sha256": "d2ba6c74c24cf0a0502e176616c29477c939998ebbab82c34b1f65837a3f2e5b",
+        "nvr_sha256": "0dff68a6ebd18e28a34fcb87b7aa226a9b339fa384f9678165895653a0e8b40b",
+        "installed_files_changed": [],
+        "installed_tree_before_sha256": "fe4544dc0cb5fbdad286a58abdb291bf01327dd766562c3f4b61a6102947234e",
+        "installed_tree_after_sha256": "fe4544dc0cb5fbdad286a58abdb291bf01327dd766562c3f4b61a6102947234e",
+        "changed_bytes": 0,
+        "page_deltas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "groups": [
+          {
+            "routing_offset": 5120,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 41,
+            "routing_kind": "sentinel",
+            "endpoint": {
+              "index_offset": 5400,
+              "record_offset": 5047,
+              "record_id": 39
+            }
+          },
+          {
+            "routing_offset": 5130,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 21,
+            "routing_kind": "sentinel",
+            "endpoint": {
+              "index_offset": 5526,
+              "record_offset": 4159,
+              "record_id": 18
+            }
+          },
+          {
+            "routing_offset": 5140,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 0,
+            "routing_kind": "sentinel",
+            "endpoint": null
+          },
+          {
+            "routing_offset": 5150,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 0,
+            "routing_kind": "sentinel",
+            "endpoint": null
+          }
+        ],
+        "elapsed": {
+          "ok": true,
+          "protocol": 1,
+          "version": "7.0",
+          "ms": 20940,
+          "frames": 1382,
+          "held": true,
+          "paused": false,
+          "ff": false,
+          "w": 640,
+          "h": 480,
+          "bios_mode": 18,
+          "quantum_ms": 1
+        },
+        "quit_verified": true
+      },
+      "launch_config_sha256": "efa01586f7aeb6167eb9df1dbcf8236135aecc8c8081b6adf8fb79759d90b108",
+      "executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+      "stop_method": "Native socket emulator quit while Calendar remained held open; no Escape/application close"
     }
-  ]
+  ],
+  "timing_limit": "Clean Calendar exit is associated with durable rewrite; in-memory rebuilding versus close-time writeback is unobserved.",
+  "private_native_evidence_index_sha256": "dccfd65c17cf6a0f1628ea4734b3aa24a24b5814b78efa37a8b3ac938925cf74",
+  "private_native_evidence_index_files": 2516
 }

@@ -155,6 +155,12 @@ publication steps, external paid services or AI dependencies.
 
 ## Documentation
 
+New bounded Calendar maintenance: [same-length description edits, measured
+index normalization and native writer acceptance](docs/research/calendar-writer-maintenance-20261117.md).
+The [no-edit controls](docs/research/calendar-index-trigger-20261117.md) show the
+full first index group splitting during native open/display/close, without an
+event edit or explicit save.
+
 * [Format inventory](docs/inventory.md) and [architecture](docs/architecture.md)
 * [Observed container structures](docs/containers/README.md)
 * [Cross-application architecture and comparison matrix](docs/research/cross-application-db.md),
