@@ -1,0 +1,309 @@
+{
+  "repository_base": "67572e4eae2a69eba419c3f8fad9d1bb1b0cfa33",
+  "evidence_class": "controlled native insertion/save/reopen and independent raw diagnostic",
+  "trial_checks": {
+    "before_is_published_A01": true,
+    "ten_pages_unchanged_size": true,
+    "counts_1_to_2_next_17_to_18": true,
+    "exactly_new_id_17": true,
+    "new_fields_match": true,
+    "physical_append_prediction_matches": true,
+    "old_rows_preserved": true,
+    "other_descriptor_tokens_preserved": true,
+    "unrelated_changed_offsets": []
+  },
+  "controls": [
+    {
+      "trial": "insert1",
+      "pid": 5404,
+      "port": 8902,
+      "before": {
+        "disk_sha256": "fd2e3a97f63655f55e72893a246cf176e63c95291ebfd64fe889392dad405c6a",
+        "adr_sha256": "19215ea147c65b259eb963fd240e9931d96e77f92d1001f0f7edf89024076ac8",
+        "config_sha256": "12bb7f7699f85c1eb094bd17da5994f5fc2a0c7bc74de27117b904ce5e5d1773",
+        "nvr_sha256": "a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2"
+      },
+      "after": {
+        "trial": "insert1",
+        "disk_sha256": "7b7a21d7d0a0e197b08b446fa2d9a93c0d3cc133ec9bf7e43096c8ec939c62e6",
+        "adr_sha256": "c37c62bf2fb16963f910c4d4c80e395d3a42305b55e954435d30ca0f9d3cdf40",
+        "bytes": 10240,
+        "config_sha256": "d55765af7be38bbd84c7e99936498d1ff3cd0cbf95bb9d175bae12e81a232f80",
+        "nvr_sha256": "b9fc0568ba7a8e357671adf17a3bd0179cff2d0619bc3da56374562163169712",
+        "installed_files_changed": [
+          "PERSONAL.ADR"
+        ],
+        "installed_tree_before_sha256": "024290a246a85e8d801d95aef2359e3e31548b2a4ed2a0c793cf7867bcb76bb1",
+        "installed_tree_after_sha256": "3fed56bfd6f42ee95c0acd274fd188094b29fcec885d3d7951c40783e6769396",
+        "changed_bytes": 63,
+        "page_deltas": [
+          0,
+          2,
+          0,
+          0,
+          57,
+          4,
+          0,
+          0,
+          0,
+          0
+        ],
+        "contacts": [
+          {
+            "storage_record_id": 17,
+            "offset": 4157,
+            "index_offset": 5160,
+            "length": 56,
+            "known_fields": {
+              "first_name": "ZULU",
+              "last_name": "ALPHA",
+              "city": "",
+              "work_phone": "555-0100"
+            },
+            "raw_fields_hex": {
+              "Title": "",
+              "FirstName": "5a 55 4c 55",
+              "LastName": "41 4c 50 48 41",
+              "Address": "",
+              "City": "",
+              "State": "",
+              "Zip": "",
+              "CompanyName": "",
+              "WorkPhone": "35 35 35 2d 30 31 30 30",
+              "HomePhone": "",
+              "DateOne": "",
+              "NoteOne": "42 69 72 74 68 64 61 79",
+              "DateTwo": "",
+              "NoteTwo": "41 6e 6e 69 76 65 72 73 61 72 79",
+              "Notes": "",
+              "Christmas": "6e"
+            },
+            "opaque_fields_hex": {
+              "Title": "",
+              "Address": "",
+              "State": "",
+              "Zip": "",
+              "CompanyName": "",
+              "HomePhone": "",
+              "DateOne": "",
+              "NoteOne": "42 69 72 74 68 64 61 79",
+              "DateTwo": "",
+              "NoteTwo": "41 6e 6e 69 76 65 72 73 61 72 79",
+              "Notes": "",
+              "Christmas": "6e"
+            },
+            "raw_hex": "80 11 01 5a 55 4c 55 01 41 4c 50 48 41 01 01 01 01 01 01 35 35 35 2d 30 31 30 30 01 01 01 42 69 72 74 68 64 61 79 01 01 41 6e 6e 69 76 65 72 73 61 72 79 01 01 6e 01 02"
+          },
+          {
+            "storage_record_id": 16,
+            "offset": 4096,
+            "index_offset": 5166,
+            "length": 61,
+            "known_fields": {
+              "first_name": "TEST",
+              "last_name": "USER A",
+              "city": "",
+              "work_phone": "202-555-0142"
+            },
+            "raw_fields_hex": {
+              "Title": "",
+              "FirstName": "54 45 53 54",
+              "LastName": "55 53 45 52 20 41",
+              "Address": "",
+              "City": "",
+              "State": "",
+              "Zip": "",
+              "CompanyName": "",
+              "WorkPhone": "32 30 32 2d 35 35 35 2d 30 31 34 32",
+              "HomePhone": "",
+              "DateOne": "",
+              "NoteOne": "42 69 72 74 68 64 61 79",
+              "DateTwo": "",
+              "NoteTwo": "41 6e 6e 69 76 65 72 73 61 72 79",
+              "Notes": "",
+              "Christmas": "6e"
+            },
+            "opaque_fields_hex": {
+              "Title": "",
+              "Address": "",
+              "State": "",
+              "Zip": "",
+              "CompanyName": "",
+              "HomePhone": "",
+              "DateOne": "",
+              "NoteOne": "42 69 72 74 68 64 61 79",
+              "DateTwo": "",
+              "NoteTwo": "41 6e 6e 69 76 65 72 73 61 72 79",
+              "Notes": "",
+              "Christmas": "6e"
+            },
+            "raw_hex": "80 10 01 54 45 53 54 01 55 53 45 52 20 41 01 01 01 01 01 01 32 30 32 2d 35 35 35 2d 30 31 34 32 01 01 01 42 69 72 74 68 64 61 79 01 01 41 6e 6e 69 76 65 72 73 61 72 79 01 01 6e 01 02"
+          }
+        ],
+        "elapsed": {
+          "ok": true,
+          "protocol": 1,
+          "version": "7.0",
+          "ms": 24076,
+          "frames": 1565,
+          "held": true,
+          "paused": false,
+          "ff": false,
+          "w": 720,
+          "h": 400,
+          "bios_mode": 3,
+          "quantum_ms": 1
+        },
+        "quit_verified": true
+      },
+      "launch_config_sha256": "f7ce05fffe7dc34bbf509b196bc202d28bab3ea16c14dfd112bbc8b7a69a8f95",
+      "executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d"
+    },
+    {
+      "trial": "reopen",
+      "pid": 11196,
+      "port": 8902,
+      "before": {
+        "disk_sha256": "7b7a21d7d0a0e197b08b446fa2d9a93c0d3cc133ec9bf7e43096c8ec939c62e6",
+        "adr_sha256": "c37c62bf2fb16963f910c4d4c80e395d3a42305b55e954435d30ca0f9d3cdf40",
+        "config_sha256": "d55765af7be38bbd84c7e99936498d1ff3cd0cbf95bb9d175bae12e81a232f80",
+        "nvr_sha256": "b9fc0568ba7a8e357671adf17a3bd0179cff2d0619bc3da56374562163169712"
+      },
+      "after": {
+        "trial": "reopen",
+        "disk_sha256": "bf6691ee0c6abc59b8e968502e830f8c585e6f118a830e0af1d982639b55aa9c",
+        "adr_sha256": "c37c62bf2fb16963f910c4d4c80e395d3a42305b55e954435d30ca0f9d3cdf40",
+        "bytes": 10240,
+        "config_sha256": "8ed95166ca56b232d0ca6ed2abbcc5528945348a03380065dd6a1180df3970df",
+        "nvr_sha256": "5da996aa685ba49a36674f82516037fae1f5ed83b9b3f29ac378d5de892d6b0e",
+        "installed_files_changed": [],
+        "installed_tree_before_sha256": "3fed56bfd6f42ee95c0acd274fd188094b29fcec885d3d7951c40783e6769396",
+        "installed_tree_after_sha256": "3fed56bfd6f42ee95c0acd274fd188094b29fcec885d3d7951c40783e6769396",
+        "changed_bytes": 0,
+        "page_deltas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "contacts": [
+          {
+            "storage_record_id": 17,
+            "offset": 4157,
+            "index_offset": 5160,
+            "length": 56,
+            "known_fields": {
+              "first_name": "ZULU",
+              "last_name": "ALPHA",
+              "city": "",
+              "work_phone": "555-0100"
+            },
+            "raw_fields_hex": {
+              "Title": "",
+              "FirstName": "5a 55 4c 55",
+              "LastName": "41 4c 50 48 41",
+              "Address": "",
+              "City": "",
+              "State": "",
+              "Zip": "",
+              "CompanyName": "",
+              "WorkPhone": "35 35 35 2d 30 31 30 30",
+              "HomePhone": "",
+              "DateOne": "",
+              "NoteOne": "42 69 72 74 68 64 61 79",
+              "DateTwo": "",
+              "NoteTwo": "41 6e 6e 69 76 65 72 73 61 72 79",
+              "Notes": "",
+              "Christmas": "6e"
+            },
+            "opaque_fields_hex": {
+              "Title": "",
+              "Address": "",
+              "State": "",
+              "Zip": "",
+              "CompanyName": "",
+              "HomePhone": "",
+              "DateOne": "",
+              "NoteOne": "42 69 72 74 68 64 61 79",
+              "DateTwo": "",
+              "NoteTwo": "41 6e 6e 69 76 65 72 73 61 72 79",
+              "Notes": "",
+              "Christmas": "6e"
+            },
+            "raw_hex": "80 11 01 5a 55 4c 55 01 41 4c 50 48 41 01 01 01 01 01 01 35 35 35 2d 30 31 30 30 01 01 01 42 69 72 74 68 64 61 79 01 01 41 6e 6e 69 76 65 72 73 61 72 79 01 01 6e 01 02"
+          },
+          {
+            "storage_record_id": 16,
+            "offset": 4096,
+            "index_offset": 5166,
+            "length": 61,
+            "known_fields": {
+              "first_name": "TEST",
+              "last_name": "USER A",
+              "city": "",
+              "work_phone": "202-555-0142"
+            },
+            "raw_fields_hex": {
+              "Title": "",
+              "FirstName": "54 45 53 54",
+              "LastName": "55 53 45 52 20 41",
+              "Address": "",
+              "City": "",
+              "State": "",
+              "Zip": "",
+              "CompanyName": "",
+              "WorkPhone": "32 30 32 2d 35 35 35 2d 30 31 34 32",
+              "HomePhone": "",
+              "DateOne": "",
+              "NoteOne": "42 69 72 74 68 64 61 79",
+              "DateTwo": "",
+              "NoteTwo": "41 6e 6e 69 76 65 72 73 61 72 79",
+              "Notes": "",
+              "Christmas": "6e"
+            },
+            "opaque_fields_hex": {
+              "Title": "",
+              "Address": "",
+              "State": "",
+              "Zip": "",
+              "CompanyName": "",
+              "HomePhone": "",
+              "DateOne": "",
+              "NoteOne": "42 69 72 74 68 64 61 79",
+              "DateTwo": "",
+              "NoteTwo": "41 6e 6e 69 76 65 72 73 61 72 79",
+              "Notes": "",
+              "Christmas": "6e"
+            },
+            "raw_hex": "80 10 01 54 45 53 54 01 55 53 45 52 20 41 01 01 01 01 01 01 32 30 32 2d 35 35 35 2d 30 31 34 32 01 01 01 42 69 72 74 68 64 61 79 01 01 41 6e 6e 69 76 65 72 73 61 72 79 01 01 6e 01 02"
+          }
+        ],
+        "elapsed": {
+          "ok": true,
+          "protocol": 1,
+          "version": "7.0",
+          "ms": 20828,
+          "frames": 1372,
+          "held": true,
+          "paused": false,
+          "ff": false,
+          "w": 720,
+          "h": 400,
+          "bios_mode": 3,
+          "quantum_ms": 1
+        },
+        "quit_verified": true
+      },
+      "launch_config_sha256": "6d2778bfe5ffc6ab2aa61d848067476acd76b26b63ad74aa3a9f6801476d149c",
+      "executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d"
+    }
+  ],
+  "private_native_evidence_index_sha256": "1be76444e5a360adfe54f1c5cf1918fa467dd324a81539e25734674aca5db2ae",
+  "private_native_evidence_index_files": 658
+}

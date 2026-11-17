@@ -101,9 +101,14 @@ Address Book API: `deskmate_formats.addressbook.Contact`, `parse_bytes/parse_fil
 `create_contact` and `write_new`. CLIs: `deskmate-addressbook SOURCE.adr` and
 `deskmate-addressbook-create EMPTY.adr NEW-OUTPUT.adr --contact contact.json`.
 The JSON object requires `first_name`, `last_name`, `city` and `work_phone`.
-Only empty-to-one creation is implemented. See the
+The default writer supports empty-to-one creation. See the
 [Address Book checkpoint](docs/research/addressbook-codec.md) and
 [versioned interchange API/examples](docs/interoperability.md).
+
+A separate opt-in [ALPHA second-contact writer](docs/research/addressbook-two-contact-native-20261117.md)
+reproduces a newly controlled native ZULU/ALPHA insertion and read-only reopen
+from exact A01. General multicontact and secondary/tied name ordering remain
+unsupported.
 
 ## Reproducible Windows 10 laboratory (experimental)
 
