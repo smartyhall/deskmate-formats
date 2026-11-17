@@ -13,6 +13,12 @@ The immediately preceding Filer/Text campaign is [PR #110](https://github.com/sm
 
 The key principle is to compare **three representations of a controlled graphic**: a native Draw file, its Text clipboard-pasted representation, and a comparable Form Setup/Filer graphic. Raw whole-file equality is neither expected nor required.
 
+## Read the manufacturer-derived reference layer first
+
+The [Appendix A crosswalk](../reference/tandy-format-crosswalk.md) indexes the manufacturer guide's exact technical material. Before native work, read the [common header](../reference/tandy-common-headers.md), [Draw](../reference/tandy-draw-format.md), [Filer/Form Setup](../reference/tandy-filer-format.md), and [Text](../reference/tandy-text-format.md) reference notes. These are **documented predictions**, not additional native observations. The references include concrete offsets, logical table fields, picture framing and known version discrepancies to use as discriminating test targets.
+
+A related possible tool is **Drawlist**, documented elsewhere in the guide as a converter of clipboard-copied Draw graphics to generated C arrays. Check whether the development utility is available in the lab; a Drawlist output could be an independent picture-payload comparison. This is a useful optional probe, not a prerequisite to native Draw→Text paste.
+
 ## Primary documentation already available to the operator
 
 The operator-provided *DeskMate Development System 03.05.00 Development Guide*, Appendix A, **DeskMate 3 File Formats**, contains relevant sections on **Draw**, **Filer/Form Setup**, and **Text** (in the operator's 493-page PDF, approximately PDF pages 482–491). This document is not committed to the repository and must not be assumed present in the Windows lab. These are **historical documentation claims**, not yet native evidence from this campaign:
