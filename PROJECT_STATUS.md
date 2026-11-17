@@ -1,5 +1,9 @@
 # Project status — DeskMate formats
 
+## Manufacturer-derived Appendix A reference layer — 2026-11-17
+
+The [Tandy format crosswalk](docs/reference/tandy-format-crosswalk.md) now indexes [common Page Setup headers](docs/reference/tandy-common-headers.md), [Address Book](docs/reference/tandy-addressbook-format.md), [Calendar](docs/reference/tandy-calendar-format.md), [Draw](docs/reference/tandy-draw-format.md), [Filer/Form Setup](docs/reference/tandy-filer-format.md), [Text](docs/reference/tandy-text-format.md), and [Worksheet](docs/reference/tandy-worksheet-format.md). These are original technical paraphrases from the operator-provided DeskMate Development System 03.05.00 Development Guide, Appendix A, with page references, uncertainties and specific native-test targets. They **do not add new experimental evidence** or expand measured reader/writer support. The proprietary manual is not redistributed.
+
 ## Proposed next research — Draw, Filer graphics and Text embedding (2026-11-17)
 
 The next cross-application campaign is documented in [the graphical-format research plan](docs/research/graphics-cross-application-plan-20261117.md). The operator-provided DeskMate Development System 03.05.00 Development Guide, Appendix A, explicitly describes Draw graphics forms, Filer's ASCII-constrained GRAPHICS storage and Draw pictures pasted into Text (length-delimited picture paragraphs). The plan prioritizes a native Draw corpus, early Draw-to-Text embedding controls and separately created Form Setup graphics for three-way comparison. **This is a proposal, not completed native evidence.** [PR #110](https://github.com/smartyhall/deskmate-formats/pull/110) contains the preceding Filer/Text campaign and was open when the plan was written; recheck its integration state before execution.
