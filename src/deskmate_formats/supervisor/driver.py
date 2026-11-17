@@ -30,6 +30,7 @@ NATIVE_SHA256 = "9d563ee4e0441ff9d59d612013e0460ddf8e5709735c2d9f6b98b7ef8ca4eb4
 PROMPT = ("Reply exactly S0_CANARY_OK. Do not use tools, read or write files, "
           "run commands, access the network, or request approval.")
 MAX_EVIDENCE = 4 * 1024 * 1024
+S3_MAX_OBSERVATION_SECONDS = 300
 # These remain blockers for default/unsupported live profiles. The explicitly
 # selected experimental-lab profile accepts VM-local risk, not OS confinement.
 PROFILES = ("synthetic", "default", "experimental-lab")
@@ -90,6 +91,13 @@ def verify_native(executable):
     return str(path.resolve())
 
 
+def valid_observation_bounds(timeout, deadline, *, editing=False):
+    """Only explicitly selected editing plans may observe longer than S0/S2."""
+    maximum = S3_MAX_OBSERVATION_SECONDS if editing else 60
+    return (type(timeout) in (int, float) and type(deadline) in (int, float)
+            and 0 < timeout <= 30 and 0 < deadline <= maximum)
+
+
 def prepare(directory, *, executable=None, model=None, effort=None, mode="success", timeout=10, deadline=60,
             binding=None, profile=None, auth_file=None, task_context=None, dependencies=None, edit_workspace=None):
     """Freeze a fresh private plan. No app-server or model operation occurs."""
@@ -104,7 +112,7 @@ def prepare(directory, *, executable=None, model=None, effort=None, mode="succes
     if editing and (task_context is None or task_context.get("class") != "source-edit-v1"):
         raise DriverError("editing requires explicit source-edit-v1 task")
     prompt = task_prompt(task_context) if task_context is not None else PROMPT
-    if not 0 < timeout <= 30 or not 0 < deadline <= 60:
+    if not valid_observation_bounds(timeout, deadline, editing=editing):
         raise DriverError("invalid bounded observation interval")
     profile = profile or ("synthetic" if executable is None else "default")
     if profile not in PROFILES or (executable is None) != (profile == "synthetic"):
@@ -329,7 +337,7 @@ def _validate_plan(root, plan, token, authorization, isolation_reviewed, lab_ris
     elif plan["argv"][1:] != ["app-server", "--listen", "stdio://"]:
         raise DriverError("unreviewed live arguments")
     if ((not _task_plan_matches(root, plan) if "task_context" in plan else plan["prompt"] != PROMPT)
-            or not 0 < plan["timeout"] <= 30 or not 0 < plan["deadline"] <= 60
+            or not valid_observation_bounds(plan["timeout"], plan["deadline"], editing="edit_workspace" in plan)
             or not plan["env"].keys() <= {"SystemRoot", "WINDIR", "CODEX_HOME", "HOME", "USERPROFILE", "TEMP", "TMP"}
             or any(plan["env"].get(key) != str(root / "codex-home") for key in ("CODEX_HOME", "HOME", "USERPROFILE"))
             or any(plan["env"].get(key) != str(root / "scratch") for key in ("TEMP", "TMP"))):

@@ -7,7 +7,8 @@ from deskmate_formats.observer._private_storage import journal_lock, storage_dir
 from deskmate_formats.observer.events import encode_json
 from deskmate_formats.observer.journal import publish_event
 from .bridge import accepted, _claim, _state
-from .driver import DriverError, implementation_hashes, load_plan, prepare, run, write_record
+from .driver import (DriverError, S3_MAX_OBSERVATION_SECONDS, implementation_hashes, load_plan,
+                     prepare, run, valid_observation_bounds, write_record)
 from .protocol import PROFILE_SHA256
 from .task_git import TrustedSource
 from .task_manifest import validate_manifest
@@ -93,9 +94,11 @@ def material(queue, binding):
 
 def grant(queue_directory, state_directory, identifier, revision, review_token, *, task_class,
           authorize_checkpoint=False, mode="success", executable=None, model=None, effort=None,
-          profile=None, auth_file=None, timeout=10, deadline=60):
+          profile=None, auth_file=None, timeout=10, deadline=S3_MAX_OBSERVATION_SECONDS):
     if task_class != "source-edit-v1" or authorize_checkpoint is not True:
         raise DriverError("explicit editing class and local checkpoint plan selection required")
+    if not valid_observation_bounds(timeout, deadline, editing=True):
+        raise DriverError("invalid bounded S3 observation interval")
     with open_queue(queue_directory) as queue:
         binding = accepted(queue, identifier, revision, review_token)
         root = storage_directory(state_directory, create=True)

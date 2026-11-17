@@ -6,7 +6,7 @@ from pathlib import Path
 import sys
 
 from .editing import dispatch, grant, inspect
-from .driver import DriverError
+from .driver import DriverError, S3_MAX_OBSERVATION_SECONDS
 from .task_manifest import TaskError
 from .synthetic_peer import MODES
 
@@ -29,6 +29,8 @@ def main(argv=None):
         prep.add_argument("--accepted-review-token", required=True)
         prep.add_argument("--task-class", choices=("source-edit-v1",), required=True)
         prep.add_argument("--plan-local-checkpoint", action="store_true", required=True)
+        prep.add_argument("--observation-seconds", type=int, default=S3_MAX_OBSERVATION_SECONDS,
+                          help="S3 turn observation, 1..300 seconds (default: 300); frozen in the plan")
         if name == "prepare-synthetic":
             prep.add_argument("--scenario", choices=MODES, default="success")
         else:
@@ -54,11 +56,11 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         if args.action == "prepare-synthetic":
-            result = grant(args.queue, args.state, args.id, args.revision, args.accepted_review_token, mode=args.scenario, task_class=args.task_class, authorize_checkpoint=args.plan_local_checkpoint)
+            result = grant(args.queue, args.state, args.id, args.revision, args.accepted_review_token, mode=args.scenario, task_class=args.task_class, authorize_checkpoint=args.plan_local_checkpoint, deadline=args.observation_seconds)
         elif args.action == "prepare-live":
             result = grant(args.queue, args.state, args.id, args.revision, args.accepted_review_token,
                            executable=args.executable, profile=args.profile, model=args.model,
-                           effort=args.effort, auth_file=args.auth_file, task_class=args.task_class, authorize_checkpoint=args.plan_local_checkpoint)
+                           effort=args.effort, auth_file=args.auth_file, task_class=args.task_class, authorize_checkpoint=args.plan_local_checkpoint, deadline=args.observation_seconds)
         elif args.action == "dispatch-synthetic":
             result = dispatch(args.queue, args.state, args.claim, args.authorize_dispatch, checkpoint_authorization=args.authorize_checkpoint)
         elif args.action == "dispatch-live":

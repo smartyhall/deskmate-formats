@@ -118,6 +118,22 @@ remain runtime assumptions for separately authorized review. Post-event checks
 cannot prevent a side effect that already happened. OS confinement, cancellation,
 spending caps, descendants and power-loss durability remain unproved.
 
+## Operator-selected S3 observation bound
+
+S3 preparation defaults to **300 seconds** of turn observation. The operator may
+select an integer **1..300** with `--observation-seconds` on either S3 preparation
+command. The selected value is frozen in `plan.deadline`, displayed by offline
+inspection/validation, and covered by the exact authorization digest. Preparation
+and dispatch both refuse out-of-bound values. This limit applies only to an
+explicit source-edit-v1 task with its frozen edit workspace; **S0/S2 retain their
+60-second maximum**. RPC timeout remains separately bounded at 30 seconds.
+
+Observation expiry still stops the owner, retains evidence/workspace and
+permanently fences the attempt. A longer selected interval introduces no retry,
+resume, provider cancellation or spending-cap guarantee. Existing plans stay
+immutable; implementation pins require normal fresh review/preparation after an
+implementation change. No real claim is prepared by this timeout correction.
+
 ## Validation and checkpoint
 
 After verified owned-worker completion/teardown, the supervisor inventories the
@@ -137,7 +153,11 @@ The packaged audit is an exact copy of tools/audit_repository.py, checked by a
 regression test; it includes existing proprietary/binary/credential/fixture
 checks. Worker changes cannot replace the installed auditor. Each step retains
 argv, absolute interpreter/hash, cwd, exit status or timeout and output/hash
-privately, with a 600-second per-command deadline. All requested steps receive
+privately, including the applied `timeout_seconds` on success or timeout.
+The fixed **portable-full** profile has a **1,800-second** per-command deadline;
+synthetic-unit, publication audit and REUSE retain **600 seconds** each. The limits
+are supervisor-owned constants pinned by the plan's installed-code hashes, not
+manifest durations or arbitrary command arguments. All requested steps receive
 outcomes even if an earlier step fails. Arbitrary Python tests inherently run
 code with VM permissions; operator review/test-profile selection is meaningful.
 A failure retains diagnostics without discard or corrective model turn.
@@ -187,7 +207,7 @@ $candidate = deskmate-supervisor-task --queue $queue discover $tip $path | Conve
 # optional documents, scopes, acceptance criteria and selected tests.
 'Reviewed exact source-editing task and inputs' | deskmate-supervisor-task --queue $queue accept $tip $path --review-token $candidate.review_token --reason-stdin
 # Explicit operator selections, not values from Git prose:
-$grant = deskmate-supervisor-s3 --state $state prepare-live --queue $queue $task 1 --accepted-review-token $candidate.review_token --task-class source-edit-v1 --plan-local-checkpoint --executable $native --profile experimental-lab --auth-file $auth --model $operatorModel --effort $operatorEffort | ConvertFrom-Json
+$grant = deskmate-supervisor-s3 --state $state prepare-live --queue $queue $task 1 --accepted-review-token $candidate.review_token --task-class source-edit-v1 --plan-local-checkpoint --observation-seconds 300 --executable $native --profile experimental-lab --auth-file $auth --model $operatorModel --effort $operatorEffort | ConvertFrom-Json
 deskmate-supervisor-s3 --state $state inspect $grant.claim
 deskmate-supervisor-s3 --state $state validate --queue $queue $grant.claim
 # STOP for independent exact-plan review and separate operator authorization.
@@ -198,7 +218,9 @@ deskmate-supervisor-s3 --state $state inspect $grant.claim
 
 The operator must separately approve S1 acceptance, exact-plan dispatch, one
 selected-model/effort invocation, experimental VM-local risk and a scoped local
-checkpoint. The four digest arguments are intent confirmations, not signatures
+checkpoint. The proposed handoff must explicitly review the selected 300-second
+observation interval and fixed 1,800-second portable-full validation bound. The
+four digest arguments are intent confirmations, not signatures
 or authority conveyed by learning a hash. The final dispatch command is **not
 authorized by this implementation assignment**. No S0 canary is repeated.
 For offline rehearsal, use the installed synthetic demo and a fresh disposable

@@ -20,6 +20,9 @@ TEST_PROFILES = {
     "portable-full": ["-m", "unittest", "discover", "-s", "tests/portable", "-v"],
     "synthetic-unit": ["-m", "unittest", "discover", "-s", "tests/portable", "-p", "test_s3_sample.py", "-v"],
 }
+# Supervisor-owned limits, pinned by the exact plan's implementation hashes.
+COMMAND_TIMEOUTS = {"test-portable-full": 1800}
+DEFAULT_COMMAND_TIMEOUT = 600
 AUDIT = ("from pathlib import Path; from deskmate_formats.supervisor import repository_audit as a; "
          "a.ROOT=Path.cwd(); print(a.audit())")
 
@@ -141,6 +144,7 @@ def changes(record):
 
 def command(root, workspace, label, args):
     """Fixed supervisor-selected Python argv. Actual output retained, never agent claims."""
+    timeout = COMMAND_TIMEOUTS.get(label, DEFAULT_COMMAND_TIMEOUT)
     output = root / (label + ".output")
     argv = [str(Path(sys.executable).resolve()), *args]
     from deskmate_formats.observer._private_storage import private_file
@@ -149,12 +153,13 @@ def command(root, workspace, label, args):
     with private_file(output, write=True) as stream:
         try:
             result = subprocess.run(argv, cwd=workspace, env=env, stdout=stream,
-                                    stderr=subprocess.STDOUT, timeout=600)
+                                    stderr=subprocess.STDOUT, timeout=timeout)
             code = result.returncode
         except subprocess.TimeoutExpired:
             code = "timeout"
     receipt = {"argv": argv, "interpreter_sha256": digest(argv[0]), "cwd": str(workspace),
-               "exit_status": code, "output_sha256": digest(output), "output_path": str(output)}
+               "exit_status": code, "timeout_seconds": timeout,
+               "output_sha256": digest(output), "output_path": str(output)}
     write_record(root / (label + ".json"), receipt)
     return receipt
 
