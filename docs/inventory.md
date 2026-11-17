@@ -1,5 +1,7 @@
 # DeskMate format inventory
 
+The [Tandy Appendix A format crosswalk](reference/tandy-format-crosswalk.md) contains manufacturer-documented common headers and application-specific technical references for Address Book, Calendar, Draw, Filer, Text and Worksheet. These are **documentation-derived leads**, not new native-verified capabilities; the inventory table below continues to distinguish research already integrated into the repository from open PR work.
+
 | Application/family | Evidence status | Implemented capabilities |
 |---|---|---|
 | Calendar 3.05 PERSONAL.CLN | E00–E19, Phase III-A and SDK-derived ordinary time/date profile | Measured read/index/append, bounded additional-page reading, 29-event/14-day offline sample; no multipage writer |
