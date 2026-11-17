@@ -103,6 +103,13 @@ contact. It reproduces all four independently published A01–A04 whole-file has
 It refuses second insertion, extra pages, retired rows and unknown schemas.
 Twenty-five synthetic contacts exist as 25 separate files, not one populated book.
 
+The separate exact-A01, ALPHA-only second-contact API in
+`addressbook.experimental_second` reproduces a newly controlled native
+ZULU/ALPHA/555-0100 save and byte-invariant read-only reopen. Physical append,
+ALPHA-before-USER-A index ordering and the two counters are native-observed for
+that pair; arbitrary names, secondary/tied collation and third insertions stay
+unsupported. See [native evidence, exact fixtures and API limits](research/addressbook-two-contact-native-20261117.md).
+
 [Version 1 interchange](interoperability.md) provides strict Python/JSON semantic
 values and explicit loss reporting. It does not provide byte-preserving native
 reconstruction or network synchronization. The operator-reported Calendar
