@@ -94,11 +94,13 @@ def material(queue, binding):
 
 def grant(queue_directory, state_directory, identifier, revision, review_token, *, task_class,
           authorize_checkpoint=False, mode="success", executable=None, model=None, effort=None,
-          profile=None, auth_file=None, timeout=10, deadline=S3_MAX_OBSERVATION_SECONDS):
+          profile=None, auth_file=None, windows_sandbox=None, timeout=10, deadline=S3_MAX_OBSERVATION_SECONDS):
     if task_class != "source-edit-v1" or authorize_checkpoint is not True:
         raise DriverError("explicit editing class and local checkpoint plan selection required")
     if not valid_observation_bounds(timeout, deadline, editing=True):
         raise DriverError("invalid bounded S3 observation interval")
+    if executable is not None and windows_sandbox != "unelevated":
+        raise DriverError("live S3 requires explicit Windows sandbox unelevated; review setup before preparation")
     with open_queue(queue_directory) as queue:
         binding = accepted(queue, identifier, revision, review_token)
         root = storage_directory(state_directory, create=True)
@@ -123,7 +125,7 @@ def grant(queue_directory, state_directory, identifier, revision, review_token, 
             token = prepare(run_root, binding=binding, task_context=context, edit_workspace=workspace,
                             mode=mode, executable=executable, model=model if executable else "synthetic",
                             effort=effort if executable else "low", profile=profile, auth_file=auth_file,
-                            timeout=timeout, deadline=deadline)
+                            timeout=timeout, deadline=deadline, windows_sandbox=windows_sandbox)
             return {"claim": run_root.name, "plan_sha256": token, "binding": binding,
                     "workspace": workspace["path"], "dispatched": False}
 

@@ -207,7 +207,7 @@ $candidate = deskmate-supervisor-task --queue $queue discover $tip $path | Conve
 # optional documents, scopes, acceptance criteria and selected tests.
 'Reviewed exact source-editing task and inputs' | deskmate-supervisor-task --queue $queue accept $tip $path --review-token $candidate.review_token --reason-stdin
 # Explicit operator selections, not values from Git prose:
-$grant = deskmate-supervisor-s3 --state $state prepare-live --queue $queue $task 1 --accepted-review-token $candidate.review_token --task-class source-edit-v1 --plan-local-checkpoint --observation-seconds 300 --executable $native --profile experimental-lab --auth-file $auth --model $operatorModel --effort $operatorEffort | ConvertFrom-Json
+$grant = deskmate-supervisor-s3 --state $state prepare-live --queue $queue $task 2 --accepted-review-token $candidate.review_token --task-class source-edit-v1 --plan-local-checkpoint --observation-seconds 300 --executable $native --profile experimental-lab --auth-file $auth --windows-sandbox unelevated --model $operatorModel --effort $operatorEffort | ConvertFrom-Json
 deskmate-supervisor-s3 --state $state inspect $grant.claim
 deskmate-supervisor-s3 --state $state validate --queue $queue $grant.claim
 # STOP for independent exact-plan review and separate operator authorization.
@@ -238,3 +238,33 @@ python tools/install_wheel.py
 python tools/check_install.py
 python tools/audit_repository.py
 ```
+
+## Windows backend prerequisite after the first live failure
+
+See [the pinned-source diagnosis](codex-supervisor-s3-windows-backend-20261117.md).
+Live S3 preparation now requires operator selection `--windows-sandbox unelevated`.
+It freezes `[windows] sandbox = "unelevated"` and the backend identity in the plan;
+inspect exposes it and offline validate checks the selection. This does not run
+setup or prove ACL/write capability. S0/S2 read-only configuration is unchanged.
+The existing native effective-policy check remains mandatory before turn/start.
+A reported readOnly fallback, changed approvals or broader policy stops the owner.
+
+Before accepting/preparing revision 2, independently review/merge the correction
+and install its reviewed wheel under the usual separate authority. Separately
+authorize Windows backend setup/verification if needed: the unelevated legacy
+preflight and runtime can persist capability SIDs and modify allow/deny ACLs for
+the exact workspace/home. Verify an actual bounded synthetic write under that
+backend, the relevant ACL behavior, and the selected native effective policy,
+without a model turn; retain commands, identities and output. No such probe or
+setup is authorized by this implementation PR. Do not infer success from TOML,
+a setup-complete marker, or a workspaceWrite response alone. New disposable roots
+and a new staged home require their own scope review; old-home setup cannot simply
+be assumed to transfer. If setup/write access is unavailable, stop before model
+submission and report the incompatibility. No automatic elevation or backend swap.
+
+The revision 2 manifest is a proposal only: unchanged two-file Calendar objective,
+source parent 8fd15221e0f5ae4f5ca9a625da9ed08025ca5f0e (verify exact SHA in the
+manifest), portable-full and local checkpoint. Discovery/acceptance, plan
+preparation, native use, risk acceptance and checkpoint grants are all still
+separate future actions. Use the full source SHA in the manifest as authoritative;
+never reuse revision 1's claim, review token or authorization digest.

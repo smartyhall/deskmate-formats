@@ -37,6 +37,8 @@ def main(argv=None):
             prep.add_argument("--executable", type=Path, required=True)
             prep.add_argument("--profile", choices=("experimental-lab",), required=True)
             prep.add_argument("--auth-file", type=Path, required=True)
+            prep.add_argument("--windows-sandbox", choices=("unelevated",), required=True,
+                              help="explicit RestrictedToken backend; does not provision or verify write access")
             prep.add_argument("--model", required=True, help="exact operator-selected model; no fallback")
             prep.add_argument("--effort", choices=("low", "medium", "high"), required=True)
     for name in ("dispatch-synthetic", "dispatch-live"):
@@ -60,7 +62,7 @@ def main(argv=None):
         elif args.action == "prepare-live":
             result = grant(args.queue, args.state, args.id, args.revision, args.accepted_review_token,
                            executable=args.executable, profile=args.profile, model=args.model,
-                           effort=args.effort, auth_file=args.auth_file, task_class=args.task_class, authorize_checkpoint=args.plan_local_checkpoint, deadline=args.observation_seconds)
+                           effort=args.effort, auth_file=args.auth_file, windows_sandbox=args.windows_sandbox, task_class=args.task_class, authorize_checkpoint=args.plan_local_checkpoint, deadline=args.observation_seconds)
         elif args.action == "dispatch-synthetic":
             result = dispatch(args.queue, args.state, args.claim, args.authorize_dispatch, checkpoint_authorization=args.authorize_checkpoint)
         elif args.action == "dispatch-live":
