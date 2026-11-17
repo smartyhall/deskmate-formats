@@ -395,7 +395,13 @@ def _parse_sdk(source, *, source_name=None):
                              'raw_tokens_hex': [t.hex(' ') for t in table.tokens],
                              'index_groups': [{'routing_offset': g.routing_offset,
                                                'routing_key_hex': g.routing_key.hex(' '),
-                                               'entry_count': len(g.entries)}
+                                               'entry_count': len(g.entries),
+                                               'routing_kind': ('sentinel' if g.routing_key == database.INDEX_SENTINEL
+                                                                else 'endpoint-prefix'),
+                                               'endpoint': ({'index_offset': g.entries[-1].index_offset,
+                                                             'record_offset': g.entries[-1].address,
+                                                             'record_id': g.entries[-1].record_id}
+                                                            if g.entries else None)}
                                               for g in table.index_groups]}
     calendars = []
     for table in db.tables[1:]:
