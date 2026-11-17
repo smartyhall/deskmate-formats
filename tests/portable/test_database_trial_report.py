@@ -59,6 +59,79 @@ def growth_control(case):
 
 
 class TrialReportTests(unittest.TestCase):
+    def test_native_month_save_raw_oracle_and_all_61_semantics(self):
+        from hashlib import sha256
+        from deskmate_formats.calendar.personal import parse_bytes
+        fixtures = ROOT / 'tests/fixtures/application-generated/calendar'
+        source = (fixtures / 'sdk-30-days-allocator-tool-generated.cln').read_bytes()
+        saved = (fixtures / 'native-30-day-edit-save-20261117.cln').read_bytes()
+        native_a = (fixtures / 'native-second-empty-calendar-operator.cln').read_bytes()
+        self.assertEqual(len(saved), 8192)
+        self.assertEqual(sha256(saved).hexdigest(),
+                         '4b59c4f30ba21260df8159ac8758077858f1f516efbfc95365c7a5096ccab970')
+        # Whole-file oracle assembled from two prior public specimens, without
+        # the production parser, writer, value codec or new saved-file bytes.
+        expected = bytearray(source)
+        expected[5120:6144] = native_a[5120:6144]
+        self.assertEqual(source.count(b'Plan 01 / allocator trial'), 1)
+        at = source.index(b'Plan 01 / allocator trial')
+        expected[at:at + 25] = b'Plan 01 / allocator saved'
+        self.assertEqual(saved, expected)
+        report = trial.compare(source, saved, 'PERSONAL')
+        self.assertEqual(len(report['changes']), 242)
+        self.assertEqual([len([c for c in report['changes'] if c['offset']//1024 == p])
+                          for p in range(8)], [0, 0, 0, 0, 0, 237, 0, 5])
+        self.assertEqual(report['before']['triples'], report['after']['triples'])
+        self.assertEqual([n for n, kept in report['old_rows_preserved_at_address'].items() if not kept], [77])
+        self.assertEqual([g['entry_count'] for g in report['after']['index_groups']], [20, 21, 21, 0])
+        self.assertEqual(report['new_ids'], [])
+        self.assertEqual(report['after']['retired_rows'], [])
+        original, new = parse_bytes(source, profile='sdk'), parse_bytes(saved, profile='sdk')
+        self.assertEqual(len(new.appointments), 61)
+        for old, now in zip(original.records, new.records, strict=True):
+            self.assertEqual((old.record_id, old.offset, old.length), (now.record_id, now.offset, now.length))
+            want = old.to_dict()
+            want['index_offset'] = now.index_offset
+            want['index_offset_hex'] = f'0x{now.index_offset:04X}'
+            if old.record_id == 77:
+                want['description'] = 'Plan 01 / allocator saved'
+                want['raw_hex'] = now.raw_hex
+                want['raw_fields']['Description'] = now.raw_fields['Description']
+            self.assertEqual(now.to_dict(), want)
+
+    def test_native_routed_index_diagnostic_rejects_corruptions(self):
+        source = (ROOT / 'tests/fixtures/application-generated/calendar/native-30-day-edit-save-20261117.cln').read_bytes()
+        for at, payload in ((0x1400, b'X'), (0x140A, b'X'), (0x141E, b'X'),
+                            (0x142E, bytes(6)), (0x14A0, b'X'),
+                            (0x151E, struct.pack('<HHH', 6, 807, 59)),
+                            (0x435, b'00061')):
+            bad = bytearray(source)
+            bad[at:at + len(payload)] = payload
+            with self.subTest(at=at), self.assertRaises(ValueError):
+                trial.snapshot(bad, 'PERSONAL')
+
+    def test_diagnostic_full_fourth_subdivision_without_padding_locator(self):
+        source = (ROOT / 'tests/fixtures/application-generated/calendar/native-30-day-edit-save-20261117.cln').read_bytes()
+        original = trial.snapshot(source, 'PERSONAL')
+        data = bytearray(source)
+        data[0x1400:0x1800] = trial.HEADER + bytes(984)
+        cursor = 0
+        # Synthetic repartition, never labeled native output. The last locator
+        # occupies the final six bytes of the index page.
+        for n, count in enumerate((1, 1, 19, 41)):
+            for slot in range(count):
+                struct.pack_into('<HHH', data, 0x1428 + 246*n + 6*slot, *original['triples'][cursor])
+                cursor += 1
+        result = trial.snapshot(data, 'PERSONAL')
+        self.assertEqual(result['triples'], original['triples'])
+        self.assertEqual(result['rows'], original['rows'])
+        self.assertEqual(result['index_groups'][-1]['entry_count'], 41)
+        at = 0x17FA
+        page, offset, rid = struct.unpack_from('<HHH', data, at)
+        struct.pack_into('<HHH', data, at, page, offset + 1, rid)
+        with self.assertRaisesRegex(ValueError, 'index pointer/framing'):
+            trial.snapshot(data, 'PERSONAL')
+
     def test_addressbook_distinguishes_order_without_asserting_native_policy(self):
         before = addressbook(FIRST)
         for reverse, observation in ((False, 'first-name or insertion'), (True, 'last-name')):

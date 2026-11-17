@@ -1,0 +1,174 @@
+{
+  "evidence_class": "controlled native one-edit/save plus read-only reopen; synthetic content",
+  "campaign_base": "93e164f4827f2f08685ada512f65924280a756aa",
+  "private_archive": "calendar-campaign-20261117",
+  "private_native_index_sha256": "cb09ada9a6970863950ecf32a40c0c1e430d72940014533e98bd09de1cc14005",
+  "source_calendar_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+  "saved_calendar_sha256": "4b59c4f30ba21260df8159ac8758077858f1f516efbfc95365c7a5096ccab970",
+  "reopened_calendar_sha256": "4b59c4f30ba21260df8159ac8758077858f1f516efbfc95365c7a5096ccab970",
+  "calendar_bytes": 8192,
+  "disks": {
+    "original": "c013712c0cda7628a5a3138047a7d0e9b631098c5c72d41d5b8f717a6f90a281",
+    "before_open": "4c835a9acd5734ffac89cc1878cbb11afc8fdbf4b5d83c37ae010c711459c5e8",
+    "after_save": "37b3cd4ec3ab6d482273998f66abb0bda04d009e3afc2bf2984651161fb9b003",
+    "after_reopen": "924d2ce64c553e45aa2de7607de763f7329eb033a81f3d3e09bc4abbd1884f31"
+  },
+  "environment": {
+    "deskmate_version": "03.05.00",
+    "dos": "5.00",
+    "machine": "tandy1000rsx",
+    "cpu": "i386SX 25 MHz",
+    "ram_kib": 4096,
+    "emulator_revision": "855258da966f1594f568350be59e8e1eca082ed1",
+    "emulator_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+    "rom_revision": "908394b690f7da28f47727d9876774fd672c4ed3",
+    "bios_sha256": "17984fe7c31ab6b51c96272ba8ee89580eb139aab01399a1b865f6743f3334f2",
+    "build_cache_sha256": "bdbc3adcd6f55928050039e008eebb2e0b789f7b52ef39377ee42186252602f5",
+    "calendar_pdm_sha256": "819df5658b663aa69b15584abf805062679e97f587f3404738f6e82876e4bd23"
+  },
+  "selected_event": {
+    "date": "2026-10-23",
+    "start_time": "09:30",
+    "end_time": "10:15",
+    "description": "Plan 01 / allocator trial",
+    "alarm_enabled": false,
+    "record_id": 77
+  },
+  "new_description": "Plan 01 / allocator saved",
+  "ownership": {
+    "save_pid": 12108,
+    "reopen_pid": 1240,
+    "ports": [
+      8897,
+      8898
+    ],
+    "simultaneous_emulator_processes": 1,
+    "visible": true,
+    "control": "authenticated loopback socket only",
+    "exclusive_listener_and_connection_checked_each_action_group": true,
+    "mutations_replayed": false,
+    "process_exit_verified": true
+  },
+  "timing": {
+    "save_session_elapsed_emulated_ms": 25332,
+    "reopen_session_elapsed_emulated_ms": 21572,
+    "total_elapsed_emulated_ms": 46904,
+    "save_session_frames": 1649,
+    "reopen_session_frames": 1417,
+    "guest_wall_clock_delta": "not independently measured; deterministic DOS date/time commands retained in ledger",
+    "requested_step_ms_total": 46096,
+    "non_step_elapsed_ms": 808
+  },
+  "validation": {
+    "native_ui_scope": "October 23 schedule, original LPHa124 detail cancelled, declared Plan 01 detail before edit and after read-only reopen; all 61 details were not visually reviewed",
+    "all_61_semantics_match_single_edit": true,
+    "installed_files_per_snapshot": 143,
+    "installed_files_changed_after_save": [
+      "PERSONAL.CLN"
+    ],
+    "calendar_unchanged_on_reopen": true,
+    "changed_calendar_positions": 242,
+    "changed_calendar_positions_per_page": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      237,
+      0,
+      5
+    ],
+    "logical_locators_preserved": true,
+    "row_ids_addresses_lengths_preserved": true,
+    "unmodified_rows_byte_exact": 61,
+    "edited_record_id": 77,
+    "index_groups_before": [
+      41,
+      21,
+      0,
+      0
+    ],
+    "index_groups_after": [
+      20,
+      21,
+      21,
+      0
+    ],
+    "index_page_matches_native_empty_second_fixture": true,
+    "finite_routing_key_hex": "8f6b80016801b901bd01",
+    "retired_rows": [],
+    "allocated_database_pages": [],
+    "header_and_descriptors_preserved": true
+  },
+  "limits": [
+    "No all-date UI review or alarm firing test",
+    "No arbitrary multicalendar writing, balancing, rename/delete or selection persistence claim",
+    "Repartition observed without creating a calendar; open versus edit/save trigger remains unisolated",
+    "One declared event edit/save only; reopen detail cancelled with Escape"
+  ],
+  "screenshots_published": false,
+  "commercial_inputs_published": false,
+  "configuration": {
+    "source_config_sha256": "12bb7f7699f85c1eb094bd17da5994f5fc2a0c7bc74de27117b904ce5e5d1773",
+    "source_nvr_sha256": "a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2",
+    "run_effective_prelaunch_sha256": "efa01586f7aeb6167eb9df1dbcf8236135aecc8c8081b6adf8fb79759d90b108",
+    "reopen_effective_prelaunch_sha256": "c01eb38015cf66e1da536dda72d3d02ccb13b608d574ae05073066d9aebc32d0",
+    "after_save_config_sha256": "ccfd13bc87e59efaf11897a760f33a8f862888ca2caf47d11b0798788e24eb49",
+    "after_save_nvr_sha256": "ebb8b3ca78ef821bf867c4b7eb5451c9987a6672dd505c4a6ced8ac4cead637c",
+    "after_reopen_config_sha256": "b33d0062bee7cb16d4bb4d250cd3174e082074ca6c284228942b2c8b5aeca342",
+    "after_reopen_nvr_sha256": "fc24007bf34189e5d75251244dd18431275f4f532974a931d39715197de04840"
+  },
+  "all_original_source_pins_unchanged_after_collection": true,
+  "automation_source_sha256": {
+    "tools/86box_launch.py": "307b9d6cbd7bb335eada73e1bd3801d78e61f2bd2fcad6c48f8c08679ec68ab1",
+    "tools/86box_client.py": "9f3782c39ee02c8f6b7b8fd12dcf4a5556ff7e85e79ce08b26079d39d1768c1f",
+    "tools/experimental/run_guest_canary.py": "df3893e3b7cdb83fd766a8d0c90b8617faf0dd8e74743c929b773a2a76d77d02",
+    "src/deskmate_formats/automation/client.py": "4495a08cbd123573f7ac51d291c00719ee1d4b41e1b2683a2f8fbe975c0c0db2"
+  },
+  "static_update_corroboration": {
+    "evidence_class": "bounded source findings; not runtime target observation or proved repartition trigger",
+    "source_name": "DMDBUPD.RES",
+    "source_size": 13740,
+    "source_sha256": "9e77a2081ebb3a9549903f5d337580c65d6e0a3f603185064d4c82e16327cf4f",
+    "source_result_sha256": "cfbf701f8d51e0e1aaf5514afab403dea4e4bf51810826512c4ab43585bd4a00",
+    "probe_script_sha256": "4c8398df6eba0bf5d985e3e2a1f86a9277685cb2d102921e8c64c8f15810f79d",
+    "private_disassembly_sha256": "3e8cb3cb408ec72270dfbfa03de65f2b12ecfcad11ab215f18f093c1a11f6679",
+    "absolute_file_offsets": [
+      "023F",
+      "0242",
+      "0270",
+      "0CD7",
+      "14A0",
+      "14AC",
+      "14E8",
+      "14EB",
+      "150F",
+      "1568"
+    ],
+    "finding": "The source equal-length UPDATE_ROW path can still reach ordinary index insertion; it need not relocate its row."
+  },
+  "installed_tree_manifest_sha256": {
+    "original": "3c8d3fa9597d4e67adf962471a7c49e0a0e2eed519bd623524d047ad985bb40d",
+    "before_open": "fe4544dc0cb5fbdad286a58abdb291bf01327dd766562c3f4b61a6102947234e",
+    "after_save": "954864e22fd304373a72d0555634d2feb709693d876d7c1cef8a539a8b490852",
+    "after_reopen": "954864e22fd304373a72d0555634d2feb709693d876d7c1cef8a539a8b490852"
+  },
+  "local_validation": {
+    "python": "3.13.17",
+    "platform": "Windows 10 build 19045",
+    "environment": "dedicated matching-wheel venv with existing system-site development dependencies",
+    "portable_tests": 438,
+    "portable_seconds": 912.079,
+    "focused_diagnostic_tests": 10,
+    "focused_calendar_tests": 73,
+    "deployment_tests_run": 31,
+    "deployment_platform_skips": 2,
+    "ruff": "passed",
+    "reuse": "passed",
+    "build": "passed",
+    "installed_wheel_imports_and_cli_checks": "passed",
+    "repository_and_binary_package_exclusion_audit": "passed",
+    "staged_diff_check": "passed",
+    "prior_failure": "One unchanged isolated-owner test refused a different worktree installed wheel. Original failure logs, mismatching hashes and matching-wheel focused/full reruns preserved. No supervisor source or custody changes."
+  }
+}

@@ -1,5 +1,12 @@
 # 30-day Calendar: proposed native acceptance trial
 
+**2026-11-17 follow-up:** the separately authorized [controlled native trial](calendar-native-save-20261117.md)
+verified the exact installed candidate, one selected description edit/save and
+read-only reopen persistence. All 61 appointments are preserved offline with
+the declared substitution; visual review covered the selected October 23 event,
+not every date/detail. The exact native saved binary is published separately.
+The original proposed checklist and historical preparation below are retained.
+
 Prepared 2026-11-07 (America/New_York). **Tool-generated, independently checked
 offline; not application-generated or native-accepted.** This runbook prepares a
 future operator trial; it grants no emulator, guest-media or save authorization.

@@ -41,6 +41,15 @@ unreferenced pages remain opaque. No reclamation is implemented. See
 
 ## Experimental SDK Calendar profile
 
+The [2026-11-17 controlled native trial](research/calendar-native-save-20261117.md)
+opened the exact 61-appointment month candidate, saved one selected same-length
+description edit in DeskMate 03.05.00 and verified it on read-only reopen. All
+61 appointments and alarms match offline with the declared substitution; the
+saved Calendar is byte-exact after reopen. Visual coverage was the selected
+October 23 event and schedule, not an all-date review or alarm-firing test. The
+exact application-saved synthetic fixture and independent whole-file oracle are
+published. General allocator and multicalendar writer limits remain unchanged.
+
 Opt in with `parse_bytes(data, profile='sdk')`, `parse_file(path, profile='sdk')`,
 `append_appointment(data, event, profile='sdk')`, `capacity`/`write_new` with the
 same keyword, or CLI `--profile sdk`. Existing calls retain their measured limits.
