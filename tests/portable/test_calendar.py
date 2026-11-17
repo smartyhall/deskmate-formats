@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 import io,json,tempfile,unittest
 from deskmate_formats.calendar.personal import parse_bytes,parse_file,CalendarParseError
-from deskmate_formats.calendar.cli import main as read_main
+from deskmate_formats.calendar.cli import format_listing, main as read_main
 from deskmate_formats.calendar.writer import Appointment,TARGET,append_appointment,capacity,write_new,main
 from synthetic import INTERNAL, assemble, build, event
 
@@ -13,6 +13,29 @@ SAMPLE=[TARGET,Appointment(date(2026,10,23),540,600,'EARLY26'),
         Appointment(date(2026,11,1),600,660,'MID2026'),Appointment(date(2026,10,24),555,615,'LATEOCT')]
 
 class PortableCalendarTests(unittest.TestCase):
+    def test_listing_alarm_states_preserve_order_raw_fields_and_internal_exclusion(self):
+        data = assemble([(16, INTERNAL),
+                         (17, event(17, 'ON', protected=b'\x71')),
+                         (18, event(18, 'OFF', protected=b'\x31')),
+                         (19, event(19, 'UNKNOWN', protected=b'\x70'))], [16, 19, 17, 18])
+        db = parse_bytes(data)
+        before = db.to_dict()
+        listing = format_listing(db)
+        self.assertEqual([line for line in listing.splitlines() if line.startswith('  Alarm:')],
+                         ['  Alarm: <undecoded>', '  Alarm: on', '  Alarm: off'])
+        self.assertLess(listing.index('| UNKNOWN'), listing.index('| ON'))
+        self.assertLess(listing.index('| ON'), listing.index('| OFF'))
+        internal = listing.split('PERSONAL internal/control ID', 1)[1]
+        self.assertNotIn('Alarm:', internal)
+        self.assertIn(f'  Raw: {db.internal_records[0].raw_hex}', internal)
+        for record in db.appointments:
+            self.assertIn(f'  Undecoded Protected: {record.raw_fields["Protected"]}', listing)
+        self.assertEqual(db.to_dict(), before)
+        self.assertEqual([r['alarm_enabled'] for r in before['appointments']], [None, True, False])
+
+    def test_listing_empty_calendar_has_no_alarm_line(self):
+        self.assertNotIn('Alarm:', format_listing(parse_bytes(build('empty'))))
+
     def test_synthetic_profiles_and_internal_exclusion(self):
         for kind,count in [('empty',0),('one',1),('two',2),('five',5)]:
             with self.subTest(kind=kind):

@@ -17,6 +17,8 @@ def format_listing(database):
         lines.append(f'{record.calendar_name} ID 0x{record.record_id:02X} | {value(record.date)} '
                      f'{value(record.day_of_week)} | {value(record.start_time)} - '
                      f'{value(record.end_time)} | {value(record.description)}')
+        alarm = 'on' if record.alarm_enabled is True else 'off' if record.alarm_enabled is False else '<undecoded>'
+        lines.append(f'  Alarm: {alarm}')
         lines.append(f'  Record 0x{record.offset:04X}, {record.length} bytes; '
                      f'index 0x{record.index_offset:04X}')
         for name, raw in record.undecoded_fields.items():
