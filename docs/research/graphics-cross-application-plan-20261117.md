@@ -1,7 +1,7 @@
 # Proposed campaign: DeskMate Draw, Filer graphics and Text picture embedding
 
 **Planning checkpoint: 2026-11-17. This is not a completed native experiment.**
-The immediately preceding Filer/Text campaign is [PR #110](https://github.com/smartyhall/deskmate-formats/pull/110); at the time of this plan it was under review and not integrated into `main`. Recheck the repository/PR state when starting. Do not describe PR-only observations as merged results.
+The immediately preceding Filer/Text campaign is [PR #110](https://github.com/smartyhall/deskmate-formats/pull/110); it has since been **merged into `main`** as `eccdf2c85c3c1382096d140c0bec8e9892016c32`. Begin from a fresh branch off the latest `main`; the native Filer/Text specimens and readers are now integrated.
 
 ## Research questions
 
@@ -78,7 +78,7 @@ Suggested descendants:
 
 For each, preserve the independent Draw source, Text source/parent, clipboard interaction trace, stopped-disk Text bytes, screenshots/visible result, file size/hash and semantic/byte difference. Isolate the **picture span** using the documented 0x01/0x02 framing and leading/trailing length checks. Compare the embedded drawing payload to the relevant portion of the Draw file; note clipboard translation, palette treatment and placement metadata. Distinguish visual equivalence from exact payload identity.
 
-**Reader safety:** `src/deskmate_formats/text.py` in PR #110 deliberately fails closed on unsupported controls. Do not silently strip embedded pictures or treat an internal `0x1A` as EOF. First implement an optional bounded structural *inspector* that validates recorded lengths and identifies picture spans without decoding them. Only extend extraction once native cases establish how to handle omitted/placeholder picture content. Add adversarial tests for truncated lengths, mismatched trailing length, internal `0x02`/`0x1A`, and malformed picture-paragraph placement.
+**Reader safety:** `src/deskmate_formats/text.py` on `main` deliberately fails closed on unsupported controls. Do not silently strip embedded pictures or treat an internal `0x1A` as EOF. First implement an optional bounded structural *inspector* that validates recorded lengths and identifies picture spans without decoding them. Only extend extraction once native cases establish how to handle omitted/placeholder picture content. Add adversarial tests for truncated lengths, mismatched trailing length, internal `0x02`/`0x1A`, and malformed picture-paragraph placement.
 
 ## Phase D — cross-application analysis and outputs
 
@@ -95,7 +95,7 @@ Deliver a documented Draw corpus, controlled Form Setup graphics specimens, at l
 
 ## Working priority order
 
-1. Recheck/complete the PR #110 baseline review and avoid conflicting unfinished work.
+1. Refresh `main`, verify the merged PR #110 Filer/Text research and test baseline, and avoid conflicting unfinished work.
 2. Generate D00–D05 and locate Draw's form/palette structure.
 3. Attempt native D01→Text paste immediately; identify/validate the embedded-picture envelope.
 4. Generate minimal Form Setup graphics and compare all three representations.
