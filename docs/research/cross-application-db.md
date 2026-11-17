@@ -1,5 +1,16 @@
 # DeskMate 3.05 cross-application database investigation
 
+**Native follow-up, 2026-11-17.** The new [Filer campaign](filer-native-20261117.md)
+confirms DMDB-style indexed rows in a fresh native form and in CARMAINT,
+including a packed DATA page chain extended from page 8 to page 14. Two
+measured Filer deletions produced dense, renumbered or truncated DATA at
+close. Calendar E16 retained an unindexed `44` row. The operation and profile
+matter when comparing allocation and ID behavior. The [Text corpus](text-native-20261117.md)
+has CRLF-delimited plain and formatted streams with DOS EOF. The default
+formatted prefix shares bytes with the new Form Setup file at `0x0D–0x15`.
+Their signatures and file bodies differ. The earlier analysis below
+records the historical static checkpoint.
+
 2026-11-01. Offline research; no application launch, GUI, keyboard, DOSBox,
 OCR, native mutation or service recovery was attempted.
 

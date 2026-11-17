@@ -75,6 +75,34 @@ class FixtureAuditTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'executable disguised'):
             self.audit()
 
+    def test_text_specimens_are_manifested_and_git_only(self):
+        text = self.base / 'text'
+        text.mkdir()
+        native, exported = b'\rDOC\x00native\x1a', b'document \x1a'
+        (text / 'page.doc').write_bytes(native)
+        (text / 'page.txt').write_bytes(exported)
+        self.manifest([self.entry('text/page.doc', native), self.entry('text/page.txt', exported)])
+        self.assertEqual(self.audit()['application_generated_fixtures_checked'], 2)
+
+        dist = self.root / 'dist'
+        dist.mkdir()
+        with ZipFile(dist / 'test.whl', 'w') as wheel:
+            wheel.writestr('tests/fixtures/application-generated/text/page.txt', exported)
+        with self.assertRaisesRegex(ValueError, 'excluded file in archive'):
+            self.audit()
+
+    def test_unlisted_text_documents_and_exports_rejected(self):
+        self.manifest([])
+        (self.root / 'private.doc').write_bytes(b'document')
+        with self.assertRaisesRegex(ValueError, 'excluded evidence/software type'):
+            self.audit()
+        (self.root / 'private.doc').unlink()
+        text = self.base / 'text'
+        text.mkdir()
+        (text / 'unlisted.txt').write_bytes(b'document')
+        with self.assertRaisesRegex(ValueError, 'excluded evidence/software type'):
+            self.audit()
+
     def test_traversal_rejected(self):
         self.manifest([self.entry('../outside.cln', b'data')])
         with self.assertRaisesRegex(ValueError, 'unsafe fixture path'):
