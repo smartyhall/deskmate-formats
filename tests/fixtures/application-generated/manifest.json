@@ -332,6 +332,35 @@
       "source_path": "addressbook/a01-historical-match-tool-generated.adr",
       "source_size": 10240,
       "source_sha256": "19215ea147c65b259eb963fd240e9931d96e77f92d1001f0f7edf89024076ac8"
+    },
+    {
+      "path": "filer/qrecord-empty.fil",
+      "size": 8192,
+      "sha256": "c8da80395059f2b9d981bd7a1bae2a161a85670c781f479404c1a7a1ad4a37f6",
+      "application": "Tandy DeskMate Filer",
+      "version": "03.05.00",
+      "experiment": "2026-11-17 Filer and Text native campaign; f-clean",
+      "origin": "Exact application-produced QRECORD.FIL, verified by independent FAT16 and 7-Zip extraction.",
+      "expected_content": "Empty native Form Setup schema with one 22-byte K field FTXT_A and no GRAPHICS table.",
+      "evidence_class": "native application-produced synthetic data",
+      "synthetic_data": true,
+      "native_saved": true,
+      "native_opened": true
+    },
+    {
+      "path": "filer/qrecord-one.fil",
+      "size": 8192,
+      "sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476",
+      "application": "Tandy DeskMate Filer",
+      "version": "03.05.00",
+      "experiment": "2026-11-17 Filer and Text native campaign; f-clean-one",
+      "origin": "Exact application-produced QRECORD.FIL, verified by independent FAT16 and 7-Zip extraction.",
+      "expected_content": "One FTXT_A value F7Q9, indexed ID 16 at page 6 offset 0.",
+      "evidence_class": "native application-produced synthetic data",
+      "synthetic_data": true,
+      "native_saved": true,
+      "native_opened": false,
+      "parent": "filer/qrecord-empty.fil"
     }
   ]
 }

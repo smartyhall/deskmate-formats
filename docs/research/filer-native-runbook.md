@@ -1,5 +1,10 @@
 # Filer F00–F02: minimal native operator runbook
 
+**2026-11-17 follow-up.** The [completed campaign](filer-native-20261117.md)
+ran new no-edit, Form Setup and insertion controls, then measured native
+edits, deletions and allocation. The checklist below preserves the original
+preflight plan and conditions.
+
 **The F00–F02 stages described here remain unperformed.** This runbook adds
 sharper questions without replacing the preserved F00 baseline or its original
 report. A **separate**, later native observation opened the shipped CARMAINT
