@@ -104,7 +104,7 @@ class EditingTests(unittest.TestCase):
 
     def test_failure_scenarios_retain_and_never_replay(self):
         self.accept()
-        for scenario in ('s3-unauthorized', 's3-test-fail', 's3-audit-fail', 'web-tool', 'normal', 'driver-approval', 'lost-ack', 'eof'):
+        for scenario in ('s3-unauthorized', 's3-test-fail', 's3-audit-fail', 'web-tool', 'normal', 'driver-approval', 'lost-ack', 'eof', 'readonly-implicit'):
             with self.subTest(scenario=scenario):
                 self.state = self.root / scenario
                 g = self.prepare(scenario)
@@ -114,6 +114,10 @@ class EditingTests(unittest.TestCase):
                 self.assertTrue(Path(g['workspace']).is_dir())
                 self.assertEqual(workspace.git(g['workspace'], 'rev-parse', 'HEAD').decode().strip(), self.source)
                 with self.assertRaises(DriverError): self.send(g)
+                if scenario == 'readonly-implicit':
+                    worker = read_record(self.state / g['claim'] / 'outcome.json')
+                    self.assertEqual([op['method'] for op in worker['operations']], ['thread/start'])
+                    self.assertEqual(read_record(self.state / g['claim'] / 'evidence/peer.json')['turns'], [])
                 if scenario == 's3-test-fail':
                     self.assertNotEqual(result['validation'][0]['exit_status'], 0)
                 if scenario == 's3-audit-fail':
@@ -185,7 +189,7 @@ class EditingTests(unittest.TestCase):
             g = editing.grant(self.queue, self.state, "sample", 1, self.candidate.review_token,
                               task_class="source-edit-v1", authorize_checkpoint=True,
                               executable=sys.executable, profile="experimental-lab", auth_file=auth,
-                              model="synthetic-selected-model", effort="low", timeout=2, deadline=4)
+                              model="synthetic-selected-model", effort="low", windows_sandbox="unelevated", timeout=2, deadline=4)
             run_root = self.state / g['claim']
             token = g['plan_sha256']
             for dispatch, checkpoint, model, risk in [(None,token,token,token),(token,None,token,token),
@@ -201,6 +205,32 @@ class EditingTests(unittest.TestCase):
             config = (run_root / 'codex-home/config.toml').read_text()
             self.assertIn('shell_tool = false',config)
             self.assertIn('sandbox_mode = "workspace-write"',config)
+
+    def test_original_claim_attempt_marker_permanently_refuses_without_launch(self):
+        # Reproduce the consumed identity only in this test's temporary synthetic queue.
+        # Never read, edit or dispatch the real private claim.
+        from deskmate_formats.supervisor import driver
+        claim = '883aa0e5db4fbc586a788caff894273fae0deb24ce144163ed8de290bc8bade5'
+        self.accept()
+        with patch.object(editing, '_claim', return_value=claim):
+            g = self.prepare()
+        marker = self.state / claim / 'attempt.json'
+        marker.write_text('{"plan_sha256":"a6efdbe7e569014cc2c486723eb9aadc7b239b31e017fc7925352a139c9f9fd6"}')
+        before = marker.read_bytes()
+        with patch.object(driver, 'AppServer', side_effect=AssertionError('no launch')), \
+                self.assertRaisesRegex(DriverError, 'permanent attempt fence'):
+            self.send(g)
+        self.assertEqual(marker.read_bytes(), before)
+        self.assertFalse((self.state / claim / 'checkpoint-intent.json').exists())
+
+    def test_missing_backend_refused_before_reserving_workspace(self):
+        import sys
+        self.accept()
+        with self.assertRaisesRegex(DriverError, "explicit Windows sandbox"):
+            editing.grant(self.queue, self.state, "sample", 1, self.candidate.review_token,
+                          task_class="source-edit-v1", authorize_checkpoint=True,
+                          executable=sys.executable, profile="experimental-lab")
+        self.assertFalse(self.state.exists())
 
     def test_manifest_scope_and_capability_rejections(self):
         value = self.candidate.manifest

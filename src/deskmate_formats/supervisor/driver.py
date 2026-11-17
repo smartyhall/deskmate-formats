@@ -11,6 +11,7 @@ import subprocess
 import sqlite3
 import stat
 import sys
+import tomllib
 from time import monotonic
 from uuid import uuid4
 
@@ -99,7 +100,7 @@ def valid_observation_bounds(timeout, deadline, *, editing=False):
 
 
 def prepare(directory, *, executable=None, model=None, effort=None, mode="success", timeout=10, deadline=60,
-            binding=None, profile=None, auth_file=None, task_context=None, dependencies=None, edit_workspace=None):
+            binding=None, profile=None, auth_file=None, task_context=None, dependencies=None, edit_workspace=None, windows_sandbox=None):
     """Freeze a fresh private plan. No app-server or model operation occurs."""
     root = Path(directory).absolute()
     if root.exists():
@@ -111,6 +112,10 @@ def prepare(directory, *, executable=None, model=None, effort=None, mode="succes
         raise DriverError("editing task and explicit workspace must be selected together")
     if editing and (task_context is None or task_context.get("class") != "source-edit-v1"):
         raise DriverError("editing requires explicit source-edit-v1 task")
+    if editing and executable is not None and windows_sandbox != "unelevated":
+        raise DriverError("live S3 requires explicit Windows sandbox unelevated; setup/write access must be reviewed separately")
+    if windows_sandbox is not None and (not editing or executable is None):
+        raise DriverError("Windows backend selection is only supported for live S3")
     prompt = task_prompt(task_context) if task_context is not None else PROMPT
     if not valid_observation_bounds(timeout, deadline, editing=editing):
         raise DriverError("invalid bounded observation interval")
@@ -154,7 +159,8 @@ def prepare(directory, *, executable=None, model=None, effort=None, mode="succes
               "cli_auth_credentials_store = \"file\"\n") if kind == "live" else "# synthetic only\n"
     if editing and kind == "live":
         config = config.replace('sandbox_mode = "read-only"', 'sandbox_mode = "workspace-write"')
-        config += ('[sandbox_workspace_write]\nnetwork_access = false\n'
+        config += ('[windows]\nsandbox = "unelevated"\n'
+                   '[sandbox_workspace_write]\nnetwork_access = false\n'
                    'exclude_tmpdir_env_var = true\nexclude_slash_tmp = true\n'
                    '[features]\nshell_tool = false\njs_repl = false\ncode_mode = false\n'
                    'multi_agent = false\nmulti_agent_v2 = false\ncodex_git_commit = false\n')
@@ -203,6 +209,8 @@ def prepare(directory, *, executable=None, model=None, effort=None, mode="succes
         from .editing import EDIT_POLICY, EDIT_RISK
         plan.update(edit_workspace=edit_workspace, developer_instructions=EDIT_POLICY,
                     working_directory=edit_workspace["path"])
+        if kind == "live":
+            plan["windows_sandbox"] = windows_sandbox
         if profile == "experimental-lab":
             plan["lab_risk"] = EDIT_RISK
     with journal_lock(root, write=True):
@@ -247,6 +255,8 @@ def preflight(directory):
             "scratch_empty": not any((root / "scratch").iterdir()),
             "never_attempted": not (root / "attempt.json").exists(),
         }
+        if plan["kind"] == "live" and "edit_workspace" in plan:
+            checks["windows_backend_selected"] = _windows_editing_matches(root, plan)
         if "task_context" in plan:
             checks["task_context_matches"] = _task_plan_matches(root, plan)
         for name in ("scratch", "codex-home", "evidence", "receipts", "spool"):
@@ -321,6 +331,17 @@ def _task_plan_matches(root, plan):
             and plan.get("response_max_bytes") == MAX_RESPONSE_BYTES)
 
 
+def _windows_editing_matches(root, plan):
+    """Offline selection check only; never provisions or asserts operational ACLs."""
+    try:
+        config = tomllib.loads((root / "codex-home" / "config.toml").read_text(encoding="utf-8"))
+        return (plan.get("windows_sandbox") == "unelevated"
+                and config.get("windows") == {"sandbox": "unelevated"}
+                and config.get("sandbox_mode") == "workspace-write")
+    except (OSError, ValueError):
+        return False
+
+
 def _validate_plan(root, plan, token, authorization, isolation_reviewed, lab_risk_ack=None):
     if authorization != token:
         raise DriverError("explicit authorization must match the exact plan digest")
@@ -357,6 +378,8 @@ def _validate_plan(root, plan, token, authorization, isolation_reviewed, lab_ris
             raise DriverError("experimental-lab requires separate exact-plan lab-risk acknowledgment")
         if not _auth_matches(root, plan):
             raise DriverError("staged authentication changed since preparation")
+        if "edit_workspace" in plan and not _windows_editing_matches(root, plan):
+            raise DriverError("live S3 Windows backend missing or unsupported; no model turn permitted")
         verify_native(plan["argv"][0])
     Schema()
 
