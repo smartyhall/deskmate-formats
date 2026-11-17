@@ -11,7 +11,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUDED = {'.git', 'build', 'dist', 'local-results', 'private-fixtures', '.ruff_cache'}
 FIXTURE_DIR = Path('tests/fixtures/application-generated')
-DATA_EXT = {'.cln', '.adr', '.fil', '.pcl'}
+DATA_EXT = {'.cln', '.adr', '.fil', '.pcl', '.doc'}
 PRIVATE_SPOOL_FILES = {'events.jsonl', 'writer.lock'}
 PRIVATE_SPOOL_FILES.update(
     database + suffix for database in ('operations.sqlite3', 'task-queue.sqlite3')
@@ -26,7 +26,7 @@ TELEMETRY_FIXTURES = {
 }
 BAD_EXT = {'.exe', '.com', '.dll', '.img', '.ima', '.iso', '.zip', '.7z', '.cln',
            '.png', '.pdf', '.pdm', '.res', '.r89', '.fil', '.adr', '.pcl', '.hlp',
-           '.tut', '.nvr', '.rom', '.vhd', '.vhdx', '.hdi', '.raw', '.token'}
+           '.tut', '.nvr', '.rom', '.vhd', '.vhdx', '.hdi', '.raw', '.token', '.doc'}
 PATTERNS = {
     'host Windows user path': r'(?i)[a-z]:[\\/]Users[\\/]',
     'host POSIX user path': r'/(?:home|Users)/[^/\s]+',
@@ -49,6 +49,10 @@ def source_files():
             yield path
 
 
+def native_text_export(path):
+    return path.parent == FIXTURE_DIR / 'text' and path.suffix.lower() == '.txt'
+
+
 def fixture_manifest():
     entries = json.loads((ROOT / FIXTURE_DIR / 'manifest.json').read_text(encoding='utf-8'))['fixtures']
     if not isinstance(entries, list):
@@ -63,7 +67,7 @@ def fixture_manifest():
         rel = PurePosixPath(name)
         if rel.is_absolute() or '..' in rel.parts or len(rel.parts) < 2:
             raise ValueError('unsafe fixture path: ' + name)
-        if rel.suffix.lower() not in DATA_EXT:
+        if rel.suffix.lower() not in DATA_EXT and not native_text_export(FIXTURE_DIR / rel):
             raise ValueError('unexpected fixture extension: ' + name)
         if (FIXTURE_DIR / name).as_posix() in index or not re.fullmatch(r'[0-9a-f]{64}', str(item.get('sha256', ''))):
             raise ValueError('duplicate or invalid fixture digest: ' + name)
@@ -100,7 +104,7 @@ def audit():
             raise ValueError('private Observatory spool file: ' + rel)
         data = path.read_bytes()
         telemetry_count += check_telemetry_file(rel, data)
-        if rel in allowed and rel_path.suffix.lower() in DATA_EXT:
+        if rel in allowed:
             if data.startswith(b'MZ'):
                 raise ValueError('executable disguised as fixture: ' + rel)
             entry = allowed[rel]
@@ -115,7 +119,7 @@ def audit():
             found.add(rel)
             count += 1
             continue
-        if path.suffix.lower() in BAD_EXT or path.name.startswith('.env'):
+        if path.suffix.lower() in BAD_EXT or native_text_export(rel_path) or path.name.startswith('.env'):
             raise ValueError('excluded evidence/software type: ' + rel)
         if data.startswith((b'MZ', bytes((3, 70, 73, 76)))):
             raise ValueError('software/database bytes outside fixture area: ' + rel)
@@ -145,7 +149,9 @@ def audit():
         for name, data in members:
             if any(part in EXCLUDED or part.startswith('.venv') for part in Path(name).parts):
                 raise ValueError('excluded directory in archive: ' + name)
-            if Path(name).suffix.lower() in BAD_EXT:
+            if (Path(name).suffix.lower() in BAD_EXT
+                    or native_text_export(Path(name.partition('/')[2]))
+                    or native_text_export(Path(name))):
                 raise ValueError('excluded file in archive: ' + name)
             if PurePosixPath(name).name.lower() in PRIVATE_SPOOL_FILES:
                 raise ValueError('private Observatory spool file in archive: ' + name)
