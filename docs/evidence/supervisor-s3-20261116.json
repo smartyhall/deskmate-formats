@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "experiment": "S3 bounded editing, synthetic-only",
+  "source_commit": "b6cbd6ba935618f8cc7c81299ea95359d45802e3",
+  "base_commit": "9f3e38ee0fa93c6776d2d57d6a51a04c18596e7c",
+  "source_tree": "aeada9e2dabfa81a5c9bc4c0df3cbcbfb91fdc4c",
+  "runtime": {
+    "jsonschema": "4.26.0",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)]",
+    "sqlite": "3.50.4"
+  },
+  "test_results": {
+    "portable": {
+      "count": 422,
+      "elapsed_host_seconds": 806.663,
+      "skipped": 0,
+      "log_sha256": "5ecd938cddd57bfb7d083bcefef4f9b2d4615a15d98db92de97f88c31f66773b",
+      "status": "passed",
+      "supervisor_cases": 105
+    },
+    "focused_s3": {
+      "count": 10,
+      "elapsed_host_seconds": 262.692,
+      "skipped": 0,
+      "log_sha256": "707b8e9b4b88df64070a2fec6582a0d594b222ccb4a541a09753c1c51ae2715b",
+      "status": "passed"
+    },
+    "deployment": {
+      "count": 31,
+      "elapsed_host_seconds": 4.442,
+      "skipped": 2,
+      "log_sha256": "1d3b981a71466f7d8c449616730815e3359443a9e20cbcee6484041ad42279fa",
+      "status": "passed"
+    }
+  },
+  "packages": [
+    {
+      "name": "deskmate_formats-0.1.0.dev0-py3-none-any.whl",
+      "size": 231458,
+      "sha256": "baa95f8fc5432e698525f6fca50af6a52289ede344077fce9058cb36d359b275"
+    },
+    {
+      "name": "deskmate_formats-0.1.0.dev0.tar.gz",
+      "size": 923018,
+      "sha256": "4299e4446c4d86ae76d352e864cc9c5d3ea6aa3e372d5d3f150d4e42a661ab21"
+    }
+  ],
+  "installed_python_module_count": 59,
+  "installed_module_sha256": {
+    "__init__.py": "8a0d4538e24f4fe8951f1b46f3264e5ad9bddf2f7f785830585421bef597ebdc",
+    "database.py": "386eb4e4d460b0bec3ed2bd308df4b570401f4376557151da75a7cfb8f778a43",
+    "interchange.py": "5ef52f1e8fe1a16dff457f1e2a4b91ae5173a98e7d7b34658cda210a348850aa",
+    "addressbook/__init__.py": "bbed6af1f9a7fd71a32884ed9bb30934f366800fd5137ddc17fcfc72fb5787ef",
+    "addressbook/cli.py": "7357eb2baaafe10144d6a130f825390abb52fddc61c5ffb5312fbb59ccf1edbe",
+    "addressbook/personal.py": "6f4140528486f34c1b01251adf42a14e1298a698a8727f9cc54edea0f4a7f89b",
+    "addressbook/samples.py": "3c7437adba7f3aaa6577bfe845e1a0ecafd3715fe452553342e07af352a81cf7",
+    "addressbook/writer.py": "ccd2773deeedfa683f73ac129ca5de9b589d2869e5ad54c170f879764bf58e5f",
+    "automation/__init__.py": "9b4f431e07c0593be6d5ec17034d6a336f2c5f31d07f6171d9cdd53c81bca270",
+    "automation/client.py": "4495a08cbd123573f7ac51d291c00719ee1d4b41e1b2683a2f8fbe975c0c0db2",
+    "automation/mcp_server.py": "06042a918ead700a602c366e6dd6ddb07a95c003b0d9f004aa1b58cd7fff8042",
+    "automation/observer_bridge.py": "095cc109f5e1123bd95c31fe75eae78676ca3cdca97fcf8f8500c2ff37aafd70",
+    "automation/readonly.py": "9c984a93530ac785aba429fa3b4e69637d1011763f26f91f6e367e07e5a81bf8",
+    "calendar/__init__.py": "e3914e026d07e0a40f6cbcacf7f4c30b9546340b414dec48185e6560e8f9ca99",
+    "calendar/cli.py": "4ed90a8dd64165219ed4c68172ea2504181fc0146e0c5ce2c04210be1f9c83f1",
+    "calendar/codec.py": "a39b83c29135e407500224a9ca60f4dcd1dc7cad45a6255fd3af4a5369ce5525",
+    "calendar/experimental_create.py": "f9b2e64868cd0eaa14d1db35cb37ffd40d220cc127601b367d3995d3f526e09d",
+    "calendar/experimental_new.py": "30abc2e6fc3da7a2f0494d89b6b3d886222b7ce3ef58fecb0f3d0d846b0692d1",
+    "calendar/experimental_second.py": "36929ffb8f2a55c3702654372cee046415d6e10f7b12805e26d101f9fcdb6e62",
+    "calendar/personal.py": "51f687e13ff69f6cd4842c4e154bc57e2df33d46e6933848931360255968f1a0",
+    "calendar/samples.py": "b71fc8efd98129fbe2e2adce49985695ad6464c75c944f30a836238eb2555c82",
+    "calendar/writer.py": "f09ce6daea4d748c1071e5f789d2d618ab80dea0d60cb53fbbabe321a9c346ea",
+    "observer/__init__.py": "fa431f5b4a59f009032bcabc3cda566661797c9bbb3833f7c0bb232c97c9764d",
+    "observer/_private_storage.py": "7b552e8a110959bf3d455deb4876c3e07311fae72b7ce41765f500b02a9c7c78",
+    "observer/agent_feed.py": "d2f995992bff8676167be474fdebe1d87c0291b69585cbfd26c67fa068c18f8e",
+    "observer/agent_http.py": "575f628e12de5a68ebae35d1bc85cec44f2a7d72b8f6fcf86399d0c40de81728",
+    "observer/agent_publication.py": "107191843677153f54410273a99148c686848e228cca42e93913aa0def063629",
+    "observer/agents.py": "3cffc658c0517c79c7dc84642d11e122ac6920a3e45de57afc06207b0bdbb577",
+    "observer/codex_cli.py": "dcf84d476e770b50bc4f355d091c1232c9f734b441e62f9a31ac73af07477e39",
+    "observer/codex_exec.py": "86ca907488bac8e45dc5c5d6ba22bf60b3df964fe25f19163e11e00f5de4fa68",
+    "observer/demo.py": "e873d173768276b1fa66d9464031b7fa9311c1e20cdfa9bf9269ff4ac5716aa9",
+    "observer/event_cli.py": "e8950dca440ac79624164e65941cc6dde47708856022b1c4339cb8b834d88de9",
+    "observer/events.py": "4f31a551474e158cfef0504a11d024c637ba1da67e2c06bdc9733bb29a5d67c3",
+    "observer/frames.py": "af73612030ee13ebed4f464be065f5b4096663bc194074051c2eeed11277b22e",
+    "observer/http.py": "ed3652f0fd639f83b136ff561de39accc0090dbb821212a7296900deab42b6b3",
+    "observer/journal.py": "44b0826cc3cf27454ed50d947010af45902a21f401ce63ac7463a49d16d5cd89",
+    "observer/presentation.py": "7ee384d941fc93389e914fb4e1426cf62604ab4e9d174f7cba40c31751a7234a",
+    "observer/process_health.py": "68805e35079551ee001c96356a35f4fbffcf8b6ae1bd6a9f631daf0ba29ba9b6",
+    "observer/publication.py": "a7c550dba8e61bb13d789d9f9f1b7c7a14c458ef1db80d04c7c472f611dbd246",
+    "supervisor/__init__.py": "602e45c71c48e7ea3466a182b224728cb34a3ec765b7cdda13ba5beb2f822dcc",
+    "supervisor/bridge.py": "a68680c543418f075001bba3f1abf7bf254dd4cc25cb426b0bd9d3408bdc20c0",
+    "supervisor/bridge_cli.py": "adc0dc4973f8feda0bd588a9b468e4d7a7c972641d5c22a0724e5a4d9564b480",
+    "supervisor/driver.py": "53259588213128e6ecc95afc73c4f284b77e97085ee8a29beb12ba1402b93c7e",
+    "supervisor/driver_cli.py": "0a56fabb1989b34c277440867384ae209c1911639d0478543c06269140ba3044",
+    "supervisor/editing.py": "1b1ce440ad07d79fe1874946c0953429ea8935c3fabf65ec424e8d3d636d4bc8",
+    "supervisor/editing_cli.py": "08e18c3a2f0719084bbf6cdd5148bde9377bc1a357cbebc31258cc52e54f23ba",
+    "supervisor/ledger.py": "b08832b9fbe031f9b70790b32decdd871c6cdd1aa6e4164c7ada9af1ced36809",
+    "supervisor/operations.py": "d417c6ad7803c9ab40793c37869d62877f435acb9b117746e6a4ac965c06be4f",
+    "supervisor/protocol.py": "8959b134d57e6b3099a16c57fb1e72a6e098a12dd27dd1375818e626617f91d9",
+    "supervisor/repository_audit.py": "ff8055953d978e4e61661a2ebb3d796604976c3b4e03a164ffdcf33ae95cee83",
+    "supervisor/synthetic_peer.py": "7ba50b34ea2ecb771577d695257ca03e123cd495a267778978ad098b6e50e86b",
+    "supervisor/task_cli.py": "7c52348f5c537a9b3a9d4b25346fd53fe650e3ec5da367ba84bb54831e48905f",
+    "supervisor/task_execution.py": "20eb9796acb7537569dab175f964ebb52d7a1bc1de7cc22ad0702f78ce60d0ff",
+    "supervisor/task_git.py": "47017a1c2e13b4038cb17f3eec9fa16da9df8c635ddc13f72a6c76b06573cb6b",
+    "supervisor/task_manifest.py": "1fee9bc8bbe623ac666f5f4c39d6ffcd60f1fe732a7bb5148ffa6cba810ac706",
+    "supervisor/task_publication.py": "8c70f685b164425d53460b9ec140b93b30edb3bef1a3f012b3675df16b35dda3",
+    "supervisor/task_queue.py": "ee4d8130c56c244dae6c33e9075c37793d01ceee148e9b5b2a09d07a4a8084b4",
+    "supervisor/telemetry.py": "a6ab8d67810acbd3895f08b6cb121e5dd33c970530acb170aba23d20bfd5e119",
+    "supervisor/workspace.py": "f26e7f37a24b0e2f57a0cc7fcbd5ca1a7e4b91b3941da5aa1e8ef5b113e843bb"
+  },
+  "all_installed_modules_match_source_git_blobs": true,
+  "binary_research_fixtures_excluded_from_packages": true,
+  "upstream_revision": "6ff1e1ca3b30fc8b914720681fcf5fe62e95f856",
+  "upstream_inspected_files": [
+    {
+      "path": "codex-rs/features/src/lib.rs",
+      "sha256": "092fa6e9bd6b53d4a63aec2130fdfb90b74b28f222135ff34c499b58a53dc963",
+      "size": 80316
+    },
+    {
+      "path": "codex-rs/core/src/tools/spec_plan.rs",
+      "sha256": "d97205602296e4e27c9f3183b7126fe2d5ca4cf6f4d79ea1ae5761f1da266e6f",
+      "size": 66423
+    },
+    {
+      "path": "codex-rs/core/src/tools/handlers/apply_patch.rs",
+      "sha256": "17ac10916bfb719850fcbf57ff7add094ca61fdb5f28f4b709d57e20f3749f4b",
+      "size": 22672
+    }
+  ],
+  "native_codex_version": "0.166.0",
+  "schema_profile_sha256": "c28048281174969346b83cfc30bd05523da1d608a73375abfcc86040309b5bb9",
+  "native_editing_executed": false,
+  "real_model_turns": 0,
+  "emulator_connections": 0,
+  "requested_emulated_time_ms": 0,
+  "measured_guest_clock_delta_ms": null,
+  "synthetic_git": {
+    "git_anchor": "d7b89a38b670b71df6d75e0a70781b1006418b29",
+    "source_commit": "5769479b69fa25ef6ed11619a594994ac20fac51",
+    "git_commit": "63100c0ca1325d09860ed4f6360581f453dc051f",
+    "git_blob": "6be91798185467bdf43eefb3c21208983d0476a3",
+    "manifest_sha256": "4f49c57cb8cee280a61c960cebcb6222138b75e40e5b0111dc0bb582bd86c324",
+    "manifest_size": 743
+  },
+  "local_checkpoint": {
+    "commit": "ac0a5af3596daa339b4d2037249dc924db35213c",
+    "parent": "5769479b69fa25ef6ed11619a594994ac20fac51",
+    "tree": "69dd56d2afdc3ae8d914399bca048c65a3767896",
+    "files": {
+      "src/sample.py": {
+        "executable": false,
+        "sha256": "f760ecee8d16c1da2171e50cb1143db3102e4f71e0e307d28c85331dd0a07306",
+        "size": 27
+      },
+      "tests/portable/test_s3_sample.py": {
+        "executable": false,
+        "sha256": "31110bdbba3b0f7cc48448405a9e140441fe4b707b0760d7c89999e101337da8",
+        "size": 144
+      }
+    },
+    "state": "completed",
+    "reason": "validated-local-checkpoint"
+  },
+  "checkpoint_parent_files_and_exact_contents_independently_verified": true,
+  "validation_steps": [
+    {
+      "step": "test-synthetic-unit",
+      "arguments": [
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/portable",
+        "-p",
+        "test_s3_sample.py",
+        "-v"
+      ],
+      "interpreter_sha256": "4e67d9e9a3673aa7b6219f1280d5ec3f1b6c0d5bd98ea8688c72d0cb7582d664",
+      "exit_status": 0,
+      "output_sha256": "bfb61bd30ead5f1c5512ae370c89d3aa1b909d07edd05634bbe365ab424cb301"
+    },
+    {
+      "step": "publication-audit",
+      "arguments": [
+        "-I",
+        "-c",
+        "from pathlib import Path; from deskmate_formats.supervisor import repository_audit as a; a.ROOT=Path.cwd(); print(a.audit())"
+      ],
+      "interpreter_sha256": "4e67d9e9a3673aa7b6219f1280d5ec3f1b6c0d5bd98ea8688c72d0cb7582d664",
+      "exit_status": 0,
+      "output_sha256": "b53d2f3a32526504e9160f0d2a82a334ddb45e2692473feb179eceec53fada56"
+    },
+    {
+      "step": "reuse",
+      "arguments": [
+        "-m",
+        "reuse",
+        "lint"
+      ],
+      "interpreter_sha256": "4e67d9e9a3673aa7b6219f1280d5ec3f1b6c0d5bd98ea8688c72d0cb7582d664",
+      "exit_status": 0,
+      "output_sha256": "02017ef0d53ad31d20f8630da61499faf6426273ad688019fd7e8c276543aa76"
+    }
+  ],
+  "one_synthetic_turn": true,
+  "mutations": [
+    "thread/start",
+    "turn/start"
+  ],
+  "operation_states": [
+    "completed",
+    "completed"
+  ],
+  "worker_child_status": "stopped",
+  "worker_elapsed_host_seconds": 0.7632183000678197,
+  "observatory_http_checks": [
+    {
+      "body_sha256": "d02b5813d56c3a8f0fec21360b15758b8e3982fac8758040d5524241d27be19d",
+      "method": "GET",
+      "path": "/api/v1/events",
+      "status": 200
+    },
+    {
+      "body_sha256": "14bb350c98a05b39a5f8086678781e381681bba085304086bed4077e87b4bf83",
+      "method": "GET",
+      "path": "/api/v1/agents",
+      "status": 200
+    },
+    {
+      "body_sha256": "07d90ac0bb037489b159ee3fc691b2db8a624a6363b8bddacdfa0a929a39b716",
+      "method": "POST",
+      "path": "/api/v1/events",
+      "status": 405
+    },
+    {
+      "body_sha256": "79d5b8e0a243f3bbe0e62e6d4e6f6ac055400c17f0f318e0bd7f58c6908983e9",
+      "method": "GET",
+      "path": "/api/v1/dispatch",
+      "status": 404
+    },
+    {
+      "body_sha256": "79d5b8e0a243f3bbe0e62e6d4e6f6ac055400c17f0f318e0bd7f58c6908983e9",
+      "method": "GET",
+      "path": "/api/v1/operations",
+      "status": 404
+    }
+  ],
+  "duplicate_dispatch_refused": true,
+  "browser_and_duplicate_preserved_private_hashes": true,
+  "private_receipt_sha256": {
+    "checkpoint_outcome": "42373fe110fd96ebf4ed9f49cd80e1ec6077e0488088e56ad55e4a8d099dcd10",
+    "s0_ledger": "50af70e9d551b6551ba6a1e4c7fcaaaf805fa1af70c92515272c3d7b9d79d255",
+    "s1_queue": "085bbba7d38ca7c105385001cdd38f85de322cfd96c2ddb49b0eb6cddecaff7b",
+    "synthetic_peer": "241507968c71ba4d5be5a0401d84d388276506e0b043973af6e0efda90ec1970",
+    "worker_outcome": "3e7dd05420d66c18f77926f57604174c423f3ca9fe3dd37ea2d81b8f3a7bc320"
+  },
+  "validation_log_sha256": {
+    "build-release.log": "dd8b74a7f85efb5f18c59160773b9d6a1cbc2738d54749f92e69990b3925316f",
+    "install-release.log": "bb54298400e200f2859ec6d25a836ea97c06dfeba8891e2e73f026fba8f41683",
+    "check-install-release.log": "32424ecc648477d48a78688fd27b7559226db51072854045787ac51211eb5719",
+    "ruff-final.log": "a4443afdcfb6d7363adb285762515ccf7cf50473b1a05c20c1a50f6bed4d26b0",
+    "reuse-source.log": "17bb80015d757457c061f9fd7d2d6308e74aaebafced7b27002d634579bbee72",
+    "audit-source.log": "98691d6e5dbe3376d43a23cc8decb1b5061285f0e03a8c48faab897f59583ef8",
+    "appraiser-mocks.log": "f1e522482f27442b693cdbba09e1c09e08fcb097448009d9d307e9363b965a16"
+  },
+  "retained_s2_response": {
+    "retrieved": true,
+    "utf8_bytes": 5363,
+    "sha256": "ba5167989b8105ded772a3193000c32d7bcb7abd590735e2b2264f75c68e434f",
+    "public_text_included": false
+  },
+  "limits": [
+    "Native editing has not been invoked; apply_patch availability and effective features depend on the selected model/runtime.",
+    "Scoped policy and post-event/diff checks do not prove OS confinement or prevent already-performed side effects.",
+    "Direct-child exit does not prove descendant containment, provider cancellation, spending caps or power-loss durability.",
+    "No real task accepted/dispatched, remote publication by supervisor, emulator action or restart/resume investigation."
+  ],
+  "native_executable_pin_sha256": "9d563ee4e0441ff9d59d612013e0460ddf8e5709735c2d9f6b98b7ef8ca4eb42",
+  "accepted_synthetic_task": {
+    "id": "s3-demo",
+    "revision": 1,
+    "state": "accepted",
+    "acceptance_sequence": 1
+  },
+  "installed_retained_failure_cases": [
+    {
+      "duplicate_refused": true,
+      "outcome_sha256": "d710fa4baa0040a037fc1652f107de68fee014ea299d893e960e03e7531db986",
+      "reason": "checkpoint-failed-inspect-private-evidence",
+      "scenario": "s3-unauthorized",
+      "state": "blocked",
+      "workspace_retained": true
+    },
+    {
+      "duplicate_refused": true,
+      "outcome_sha256": "c1853fcb5a67c080b89ac450492ac6712f48a561d41dce6633841a855d56525b",
+      "reason": "validation failed; changes and diagnostics retained",
+      "scenario": "s3-test-fail",
+      "state": "blocked",
+      "workspace_retained": true
+    },
+    {
+      "duplicate_refused": true,
+      "outcome_sha256": "9e571c73d1e5619bebe0354752eefec5f9540bfc4c322312463941b094e93452",
+      "reason": "validation failed; changes and diagnostics retained",
+      "scenario": "s3-audit-fail",
+      "state": "blocked",
+      "workspace_retained": true
+    },
+    {
+      "duplicate_refused": true,
+      "outcome_sha256": "a16e415700879e78c66dec1e4afbfb56ee39ce6dc7101822014e4185a6760a2f",
+      "reason": "worker incomplete; changes retained",
+      "scenario": "lost-ack",
+      "state": "blocked",
+      "workspace_retained": true
+    }
+  ]
+}

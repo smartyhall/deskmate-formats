@@ -73,6 +73,8 @@ def _dependencies(queue, root, manifest, *, live=False):
 def _material(queue, root, binding, *, live=False):
     row = queue.get(binding["id"], binding["revision"])
     context = queue.execution_context(row.candidate)
+    if context["class"] != "text-analysis-v1":
+        raise DriverError("S2 text-analysis bridge refuses editing tasks; select S3 explicitly")
     task_prompt(context)  # Refuse unsupported resource requests and overlarge context before staging.
     return context, _dependencies(queue, root, row.candidate.manifest, live=live)
 

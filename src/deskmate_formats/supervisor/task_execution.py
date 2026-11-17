@@ -27,6 +27,9 @@ CONTEXT_PREFIX = "Analyze this exact reviewed Git task and its supplied document
 
 def task_prompt(context):
     """Validate frozen bytes and render deterministically, without consulting the worktree."""
+    if isinstance(context, dict) and context.get("class") == "source-edit-v1":
+        from .editing import edit_prompt
+        return edit_prompt(context)
     if not isinstance(context, dict) or context.keys() != {"class", "manifest_utf8", "documents"}:
         raise TaskError("unsupported task context")
     if context["class"] != "text-analysis-v1":

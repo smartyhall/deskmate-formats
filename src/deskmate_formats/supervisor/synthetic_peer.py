@@ -30,12 +30,13 @@ MODES = ("success", "lost-ack", "delayed-ack", "approval", "driver-approval", "u
          "malformed", "oversized", "partial", "duplicate-terminal", "restart-terminal", "bad-sentinel", "thread-lost-ack",
          "unsafe-cwd", "ephemeral-thread", "nonempty-thread", *POLICY_OVERRIDES)
 TASK_MODES = ("empty-answer", "oversize-answer", "history-input", "history-response", "terminal-response", "terminal-empty-items")
-MODES += TASK_MODES
+EDIT_MODES = ("s3-unauthorized", "s3-test-fail", "s3-audit-fail")
+MODES += TASK_MODES + EDIT_MODES
 SUCCESS_MODES = {"success", "stale-turn", "history-only", "web-tool", "image-tool", "hook-item",
                  "terminal-tool", "history-tool", "history-sentinel", "history-not-loaded",
                  "history-extra-turn", "history-cursor", "duplicate-terminal", "restart-terminal", "bad-sentinel",
                  "readonly-implicit"}
-SUCCESS_MODES.update(TASK_MODES)
+SUCCESS_MODES.update(TASK_MODES + EDIT_MODES)
 
 PRIVATE = "private-canary-command-and-result"
 
@@ -165,6 +166,10 @@ def main(state_path, mode, live_policy=None):
                 }
                 if mode == "unsafe-reviewer":
                     result["approvalsReviewer"] = "auto_review"
+                instructions = params.get("developerInstructions", "")
+                if "source-edit-v1" in instructions:
+                    result["sandbox"] = {"type": "workspaceWrite", "writableRoots": [], "networkAccess": False,
+                                         "excludeTmpdirEnvVar": True, "excludeSlashTmp": True}
                 result.update(POLICY_OVERRIDES.get(mode, {}))
                 if mode == "unsafe-cwd":
                     result["cwd"] = str(path.parent)
@@ -196,6 +201,8 @@ def main(state_path, mode, live_policy=None):
                 assert params["threadId"] == thread["id"]
                 prompt = params["input"][0]["text"]
                 task = prompt.startswith(CONTEXT_PREFIX)
+                editing = task and json.loads(prompt.removeprefix(CONTEXT_PREFIX)).get("class") == "source-edit-v1"
+                edit_item = None
                 user = {"id": "synthetic-input", "type": "userMessage", "content": params["input"]}
                 turn = {"id": str(uuid4()), "status": "inProgress", "items": [user] if task else []}
                 thread["turns"].append(turn)
@@ -239,6 +246,25 @@ def main(state_path, mode, live_policy=None):
                     if mode == "stale-approval":
                         notify("serverRequest/resolved", {"threadId": thread["id"], "requestId": pending})
                         pending = None
+                if editing and mode in SUCCESS_MODES:
+                    # Fixed synthetic fixture edit. Never evaluates commands or code from task prose.
+                    edits = {"src/sample.py": "def answer():\n    return 2\n",
+                             "tests/portable/test_s3_sample.py":
+                             "import unittest\nfrom src.sample import answer\nclass Sample(unittest.TestCase):\n"
+                             "    def test_answer(self):\n        self.assertEqual(answer(), 2)\n"}
+                    if mode == "s3-test-fail":
+                        edits["src/sample.py"] = "def answer():\n    return 3\n"
+                    if mode == "s3-audit-fail":
+                        edits["src/sample.py"] += "# " + "sk-" + "A" * 30 + "\n"
+                    for name, text in edits.items():
+                        Path(name).write_text(text, encoding="utf-8", newline="\n")
+                    if mode == "s3-unauthorized":
+                        Path("unexpected.txt").write_text("synthetic unexpected file", encoding="utf-8")
+                    edit_item = {"id": "synthetic-edit", "type": "fileChange", "status": "completed",
+                                 "changes": [{"path": str(Path(name).absolute()), "kind": {"type": "update"},
+                                              "diff": "synthetic change; inspect actual Git bytes"} for name in edits]}
+                    notify("item/completed", {"threadId": thread["id"], "turnId": turn["id"],
+                                              "item": edit_item, "completedAtMs": 2})
                 if mode in SUCCESS_MODES:
                     agent = {"id": "synthetic-answer", "type": "agentMessage",
                              "text": "WRONG" if mode == "bad-sentinel" else task_answer(prompt) if task else "S0_CANARY_OK"}
@@ -247,7 +273,7 @@ def main(state_path, mode, live_policy=None):
                     elif mode == "oversize-answer":
                         agent["text"] = "x" * (MAX_RESPONSE_BYTES + 1)
                     notify("item/completed", {"threadId": thread["id"], "turnId": turn["id"], "item": agent, "completedAtMs": 2})
-                    turn["items"] = [user, agent] if task else [agent]
+                    turn["items"] = ([user] + ([edit_item] if edit_item else []) + [agent]) if task else [agent]
                     turn["itemsView"] = "full"
                     if mode == "terminal-tool":
                         turn["items"].append({"id": "hidden-tool", "type": "webSearch", "query": PRIVATE})
