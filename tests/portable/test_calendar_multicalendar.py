@@ -362,6 +362,70 @@ class MulticalendarTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 checker.check_first_second(self.native, data)
 
+    def test_raw_native_endpoint_metadata_distinguishes_populated_sentinels(self):
+        for raw in (self.native, self.native_b):
+            db = parse_bytes(raw, profile='sdk')
+            for name, base, counts in (('PERSONAL', 0x1400, [20, 21, 21, 0]),
+                                       ('SECOND', 0x2400, [1 if raw == self.native else 2, 0, 0, 0])):
+                groups = db.metadata['tables'][name]['index_groups']
+                for n, (group, count) in enumerate(zip(groups, counts, strict=True)):
+                    self.assertEqual(group['entry_count'], count)
+                    route = raw[base + 10*n:base + 10*n + 10]
+                    self.assertEqual(group['routing_key_hex'], route.hex(' '))
+                    self.assertEqual(group['routing_kind'], 'endpoint-prefix'
+                                     if name == 'PERSONAL' and n == 0 else 'sentinel')
+                    if count:
+                        at = base + 40 + 246*n + 6*(count - 1)
+                        page, offset, rid = struct.unpack_from('<HHH', raw, at)
+                        self.assertEqual(group['endpoint'], dict(index_offset=at,
+                                         record_offset=1024*page + offset, record_id=rid))
+                    else:
+                        self.assertIsNone(group['endpoint'])
+
+    def test_synthetic_repartition_of_native_locators_at_all_group_boundaries(self):
+        # Repack actual native locators; these variants are synthetic controls,
+        # not evidence of native balancing or native acceptance of every partition.
+        native = checker.inspect(self.native)['PERSONAL']
+        triples = native['triples']
+        for counts in ((41, 21, 0, 0), (1, 41, 20, 0), (20, 1, 41, 0),
+                       (20, 20, 21, 1), (1, 20, 20, 21), (1, 1, 19, 41)):
+            for finite in (False, True):
+                with self.subTest(counts=counts, finite=finite):
+                    data = bytearray(self.native)
+                    data[0x1400:0x1800] = checker.SENTINEL * 4 + bytes(984)
+                    cursor = 0
+                    boundaries = []
+                    for n, count in enumerate(counts):
+                        start = 0x1428 + 246*n
+                        for slot in range(count):
+                            struct.pack_into('<HHH', data, start + 6*slot, *triples[cursor])
+                            cursor += 1
+                        if count:
+                            boundaries.extend([start, start + 6*(count - 1)])
+                            if finite:
+                                fields = native['physical'][triples[cursor - 1][:2]][1]
+                                data[0x1400 + 10*n:0x140A + 10*n] = checker.prefix(fields, [1, 2, 4, 5, 7])
+                    self.assertEqual(cursor, 62)
+                    self.assertEqual(checker.inspect(data)['PERSONAL']['triples'], triples)
+                    common = database.parse_bytes(data).table('PERSONAL')
+                    self.assertEqual([len(g.entries) for g in common.index_groups], list(counts))
+                    db = parse_bytes(data, profile='sdk')
+                    self.assertEqual(db.calendar('PERSONAL').records,
+                                     tuple(replace(r, index_offset=e.index_offset)
+                                           for r, e in zip(parse_bytes(self.native, profile='sdk').calendar('PERSONAL').records,
+                                                           common.entries, strict=True)))
+                    for at in set(boundaries):
+                        bad = bytearray(data)
+                        # A target one byte into the same native row must fail,
+                        # including the last slot of a completely full group.
+                        offset, = struct.unpack_from('<H', bad, at + 2)
+                        struct.pack_into('<H', bad, at + 2, offset + 1)
+                        self.assert_both_reject(bad)
+                    for n in range(4):
+                        bad = bytearray(data)
+                        bad[0x1400 + 10*n] ^= 1
+                        self.assert_both_reject(bad)
+
 
 if __name__ == '__main__':
     unittest.main()
