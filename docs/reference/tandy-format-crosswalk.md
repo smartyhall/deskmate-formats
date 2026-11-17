@@ -33,7 +33,7 @@ The highest-priority three-way comparison is **native Draw picture → clipboard
 
 ## Important discrepancies and boundaries
 
-- **Text plain files:** The guide's generic 22-byte header statement has an explicit ASCII Text exception. Native T00–T16 experiments include headerless plain files and 22-byte-header formatted files. See [PR #110](https://github.com/smartyhall/deskmate-formats/pull/110) and [Text campaign](../research/text-native-20261117.md) **after it merges**. (The latter file may not yet exist on `main`.)
+- **Text plain files:** The guide's generic 22-byte header statement has an explicit ASCII Text exception. Native T00–T16 experiments include headerless plain files and 22-byte-header formatted files. See [PR #110](https://github.com/smartyhall/deskmate-formats/pull/110) and [Text campaign on PR #110](https://github.com/smartyhall/deskmate-formats/blob/codex/filer-text-native-20261117/docs/research/text-native-20261117.md).
 - **Calendar filename:** The guide spells the illustrative data file `PERSONAL.CAL`; our native corpus uses `PERSONAL.CLN`. Do not alter measured extensions based on the guide.
 - **Database table counts:** Tandy describes three Address Book tables and two-or-three Filer user tables. Actual shared databases also contain `DBCOLS`; in the controlled new QRECORD file, the physical table names were DBCOLS/LAYOUTS/DATA. Count the self-schema table explicitly when comparing.
 - **Filer GRAPHICS:** The guide uses the word “encrypted” because database fields can contain only ASCII. No encoding algorithm is specified; do not interpret this as proof of cryptographic encryption.
