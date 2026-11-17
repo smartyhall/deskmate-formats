@@ -1,0 +1,463 @@
+{
+  "repository_base": "67572e4eae2a69eba419c3f8fad9d1bb1b0cfa33",
+  "evidence_class": "controlled native experiments and independent offline byte checks",
+  "controls": [
+    {
+      "trial": "A",
+      "pid": 8200,
+      "port": 8901,
+      "before": {
+        "disk_sha256": "4c835a9acd5734ffac89cc1878cbb11afc8fdbf4b5d83c37ae010c711459c5e8",
+        "calendar_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+        "config_sha256": "a48199f61165f815883e90f5652999b19a92ff43379bbcb8b4ea23d454fe7826",
+        "nvr_sha256": "a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2"
+      },
+      "after": {
+        "trial": "A",
+        "disk_sha256": "4c835a9acd5734ffac89cc1878cbb11afc8fdbf4b5d83c37ae010c711459c5e8",
+        "calendar_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+        "bytes": 8192,
+        "config_sha256": "86bf0d766108e29e20f2875889c1b67d63ed4fbd8278deee6b6577ded8110223",
+        "nvr_sha256": "56be51ee56211ecace10ef37e022470ed48d7e83f0aa7480aab578116cb8d3d2",
+        "installed_files_changed": [],
+        "installed_tree_before_sha256": "fe4544dc0cb5fbdad286a58abdb291bf01327dd766562c3f4b61a6102947234e",
+        "installed_tree_after_sha256": "fe4544dc0cb5fbdad286a58abdb291bf01327dd766562c3f4b61a6102947234e",
+        "changed_bytes": 0,
+        "page_deltas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "groups": [
+          {
+            "routing_offset": 5120,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 41,
+            "routing_kind": "sentinel",
+            "endpoint": {
+              "index_offset": 5400,
+              "record_offset": 5047,
+              "record_id": 39
+            }
+          },
+          {
+            "routing_offset": 5130,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 21,
+            "routing_kind": "sentinel",
+            "endpoint": {
+              "index_offset": 5526,
+              "record_offset": 4159,
+              "record_id": 18
+            }
+          },
+          {
+            "routing_offset": 5140,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 0,
+            "routing_kind": "sentinel",
+            "endpoint": null
+          },
+          {
+            "routing_offset": 5150,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 0,
+            "routing_kind": "sentinel",
+            "endpoint": null
+          }
+        ],
+        "elapsed": {
+          "ok": true,
+          "protocol": 1,
+          "version": "7.0",
+          "ms": 12328,
+          "frames": 846,
+          "held": true,
+          "paused": false,
+          "ff": false,
+          "w": 720,
+          "h": 400,
+          "bios_mode": 3,
+          "quantum_ms": 1
+        },
+        "quit_verified": true
+      },
+      "launch_config_sha256": "efa01586f7aeb6167eb9df1dbcf8236135aecc8c8081b6adf8fb79759d90b108",
+      "executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d"
+    },
+    {
+      "trial": "B",
+      "pid": 12848,
+      "port": 8901,
+      "before": {
+        "disk_sha256": "4c835a9acd5734ffac89cc1878cbb11afc8fdbf4b5d83c37ae010c711459c5e8",
+        "calendar_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+        "config_sha256": "a48199f61165f815883e90f5652999b19a92ff43379bbcb8b4ea23d454fe7826",
+        "nvr_sha256": "a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2"
+      },
+      "after": {
+        "trial": "B",
+        "disk_sha256": "a75d5071c73dbb167769480f59ab417784bbd820e60f11630feb0c8d828d4b87",
+        "calendar_sha256": "8ba8a9b45fe2da1f0c685a4b1b0e3a8ad0c1672bc8429390d2e456f5acc99b8d",
+        "bytes": 8192,
+        "config_sha256": "834f4794d10fe76ecdbcd737728d65af2eb7c5cd691fbf2fdc78d4d39c4b8977",
+        "nvr_sha256": "0dff68a6ebd18e28a34fcb87b7aa226a9b339fa384f9678165895653a0e8b40b",
+        "installed_files_changed": [
+          "PERSONAL.CLN"
+        ],
+        "installed_tree_before_sha256": "fe4544dc0cb5fbdad286a58abdb291bf01327dd766562c3f4b61a6102947234e",
+        "installed_tree_after_sha256": "92e3c24e5b37ea99f062ace8d1ddcfdbdc91cc8f8bf96943cdbae5b89a0274c7",
+        "changed_bytes": 237,
+        "page_deltas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          237,
+          0,
+          0
+        ],
+        "groups": [
+          {
+            "routing_offset": 5120,
+            "routing_key_hex": "8f 6b 80 01 68 01 b9 01 bd 01",
+            "entry_count": 20,
+            "routing_kind": "endpoint-prefix",
+            "endpoint": {
+              "index_offset": 5274,
+              "record_offset": 6992,
+              "record_id": 60
+            }
+          },
+          {
+            "routing_offset": 5130,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 21,
+            "routing_kind": "sentinel",
+            "endpoint": {
+              "index_offset": 5526,
+              "record_offset": 5047,
+              "record_id": 39
+            }
+          },
+          {
+            "routing_offset": 5140,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 21,
+            "routing_kind": "sentinel",
+            "endpoint": {
+              "index_offset": 5772,
+              "record_offset": 4159,
+              "record_id": 18
+            }
+          },
+          {
+            "routing_offset": 5150,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 0,
+            "routing_kind": "sentinel",
+            "endpoint": null
+          }
+        ],
+        "elapsed": {
+          "ok": true,
+          "protocol": 1,
+          "version": "7.0",
+          "ms": 20940,
+          "frames": 1390,
+          "held": true,
+          "paused": false,
+          "ff": false,
+          "w": 720,
+          "h": 400,
+          "bios_mode": 3,
+          "quantum_ms": 1
+        },
+        "quit_verified": true
+      },
+      "launch_config_sha256": "efa01586f7aeb6167eb9df1dbcf8236135aecc8c8081b6adf8fb79759d90b108",
+      "executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d"
+    },
+    {
+      "trial": "F59",
+      "pid": 13132,
+      "port": 8901,
+      "before": {
+        "disk_sha256": "77dd498dfd2e251e0557a5299826a6129743c12cc65676b612d916ca23c0cf14",
+        "calendar_sha256": "74ef8274793da77faf3cca6afe15cf4631f3ae4fa025b579a019a514e73e852f",
+        "config_sha256": "a48199f61165f815883e90f5652999b19a92ff43379bbcb8b4ea23d454fe7826",
+        "nvr_sha256": "a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2"
+      },
+      "after": {
+        "trial": "F59",
+        "disk_sha256": "1956755d100c32457c5d7c22d788e24ccf8252c9c461d069c7dd6279602c6778",
+        "calendar_sha256": "90fb11730967dc3957c6f8a33313073a20de0fc9916efd94164e661046ccf2e7",
+        "bytes": 8192,
+        "config_sha256": "c0a4ed7479baa77ceef15b3fe97653ef2c92beb03792c32612e294d030c26845",
+        "nvr_sha256": "0dff68a6ebd18e28a34fcb87b7aa226a9b339fa384f9678165895653a0e8b40b",
+        "installed_files_changed": [
+          "PERSONAL.CLN"
+        ],
+        "installed_tree_before_sha256": "7648543d3c12f697e3dc1fab258b83a11957bafd86aeb252cb3bbae996e9beac",
+        "installed_tree_after_sha256": "b2563b673053745486b529b87cda829b47fd79df3a3e0989c01ac0075c464c1d",
+        "changed_bytes": 226,
+        "page_deltas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          226,
+          0,
+          0
+        ],
+        "groups": [
+          {
+            "routing_offset": 5120,
+            "routing_key_hex": "8f 6b 80 01 68 01 b9 01 bd 01",
+            "entry_count": 20,
+            "routing_kind": "endpoint-prefix",
+            "endpoint": {
+              "index_offset": 5274,
+              "record_offset": 4879,
+              "record_id": 35
+            }
+          },
+          {
+            "routing_offset": 5130,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 21,
+            "routing_kind": "sentinel",
+            "endpoint": {
+              "index_offset": 5526,
+              "record_offset": 6822,
+              "record_id": 56
+            }
+          },
+          {
+            "routing_offset": 5140,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 19,
+            "routing_kind": "sentinel",
+            "endpoint": {
+              "index_offset": 5760,
+              "record_offset": 7634,
+              "record_id": 75
+            }
+          },
+          {
+            "routing_offset": 5150,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 0,
+            "routing_kind": "sentinel",
+            "endpoint": null
+          }
+        ],
+        "elapsed": {
+          "ok": true,
+          "protocol": 1,
+          "version": "7.0",
+          "ms": 20940,
+          "frames": 1390,
+          "held": true,
+          "paused": false,
+          "ff": false,
+          "w": 720,
+          "h": 400,
+          "bios_mode": 3,
+          "quantum_ms": 1
+        },
+        "quit_verified": true
+      },
+      "launch_config_sha256": "efa01586f7aeb6167eb9df1dbcf8236135aecc8c8081b6adf8fb79759d90b108",
+      "executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d"
+    },
+    {
+      "trial": "I",
+      "pid": 8196,
+      "port": 8901,
+      "before": {
+        "disk_sha256": "4c835a9acd5734ffac89cc1878cbb11afc8fdbf4b5d83c37ae010c711459c5e8",
+        "calendar_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+        "config_sha256": "a48199f61165f815883e90f5652999b19a92ff43379bbcb8b4ea23d454fe7826",
+        "nvr_sha256": "a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2"
+      },
+      "after": {
+        "trial": "I",
+        "disk_sha256": "4c835a9acd5734ffac89cc1878cbb11afc8fdbf4b5d83c37ae010c711459c5e8",
+        "calendar_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+        "bytes": 8192,
+        "config_sha256": "6fee1e1c8525962026420ec1ae9be51fd8408d5a5aca5670cfa91115c4b2dac9",
+        "nvr_sha256": "1c8ef4a47e1b880812ddc7d5e3a568d4f0a38e9d79f95ae9f74df09c06abaabd",
+        "installed_files_changed": [],
+        "installed_tree_before_sha256": "fe4544dc0cb5fbdad286a58abdb291bf01327dd766562c3f4b61a6102947234e",
+        "installed_tree_after_sha256": "fe4544dc0cb5fbdad286a58abdb291bf01327dd766562c3f4b61a6102947234e",
+        "changed_bytes": 0,
+        "page_deltas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "groups": [
+          {
+            "routing_offset": 5120,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 41,
+            "routing_kind": "sentinel",
+            "endpoint": {
+              "index_offset": 5400,
+              "record_offset": 5047,
+              "record_id": 39
+            }
+          },
+          {
+            "routing_offset": 5130,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 21,
+            "routing_kind": "sentinel",
+            "endpoint": {
+              "index_offset": 5526,
+              "record_offset": 4159,
+              "record_id": 18
+            }
+          },
+          {
+            "routing_offset": 5140,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 0,
+            "routing_kind": "sentinel",
+            "endpoint": null
+          },
+          {
+            "routing_offset": 5150,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 0,
+            "routing_kind": "sentinel",
+            "endpoint": null
+          }
+        ],
+        "elapsed": {
+          "ok": true,
+          "protocol": 1,
+          "version": "7.0",
+          "ms": 19936,
+          "frames": 1321,
+          "held": true,
+          "paused": false,
+          "ff": false,
+          "w": 640,
+          "h": 480,
+          "bios_mode": 18,
+          "quantum_ms": 1
+        },
+        "quit_verified": true
+      },
+      "launch_config_sha256": "efa01586f7aeb6167eb9df1dbcf8236135aecc8c8081b6adf8fb79759d90b108",
+      "executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+      "stop_method": "Native socket emulator quit while Calendar remained held open; no Escape/application close"
+    },
+    {
+      "trial": "J",
+      "pid": 10200,
+      "port": 8901,
+      "before": {
+        "disk_sha256": "4c835a9acd5734ffac89cc1878cbb11afc8fdbf4b5d83c37ae010c711459c5e8",
+        "calendar_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+        "config_sha256": "a48199f61165f815883e90f5652999b19a92ff43379bbcb8b4ea23d454fe7826",
+        "nvr_sha256": "a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2"
+      },
+      "after": {
+        "trial": "J",
+        "disk_sha256": "4c835a9acd5734ffac89cc1878cbb11afc8fdbf4b5d83c37ae010c711459c5e8",
+        "calendar_sha256": "d35b10c8e8f0b04e41cd6d16a27b9825531353b00ab503e94b7abd3a11499106",
+        "bytes": 8192,
+        "config_sha256": "d2ba6c74c24cf0a0502e176616c29477c939998ebbab82c34b1f65837a3f2e5b",
+        "nvr_sha256": "0dff68a6ebd18e28a34fcb87b7aa226a9b339fa384f9678165895653a0e8b40b",
+        "installed_files_changed": [],
+        "installed_tree_before_sha256": "fe4544dc0cb5fbdad286a58abdb291bf01327dd766562c3f4b61a6102947234e",
+        "installed_tree_after_sha256": "fe4544dc0cb5fbdad286a58abdb291bf01327dd766562c3f4b61a6102947234e",
+        "changed_bytes": 0,
+        "page_deltas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "groups": [
+          {
+            "routing_offset": 5120,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 41,
+            "routing_kind": "sentinel",
+            "endpoint": {
+              "index_offset": 5400,
+              "record_offset": 5047,
+              "record_id": 39
+            }
+          },
+          {
+            "routing_offset": 5130,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 21,
+            "routing_kind": "sentinel",
+            "endpoint": {
+              "index_offset": 5526,
+              "record_offset": 4159,
+              "record_id": 18
+            }
+          },
+          {
+            "routing_offset": 5140,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 0,
+            "routing_kind": "sentinel",
+            "endpoint": null
+          },
+          {
+            "routing_offset": 5150,
+            "routing_key_hex": "ff ff ff ff ff ff ff ff ff 00",
+            "entry_count": 0,
+            "routing_kind": "sentinel",
+            "endpoint": null
+          }
+        ],
+        "elapsed": {
+          "ok": true,
+          "protocol": 1,
+          "version": "7.0",
+          "ms": 20940,
+          "frames": 1382,
+          "held": true,
+          "paused": false,
+          "ff": false,
+          "w": 640,
+          "h": 480,
+          "bios_mode": 18,
+          "quantum_ms": 1
+        },
+        "quit_verified": true
+      },
+      "launch_config_sha256": "efa01586f7aeb6167eb9df1dbcf8236135aecc8c8081b6adf8fb79759d90b108",
+      "executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+      "stop_method": "Native socket emulator quit while Calendar remained held open; no Escape/application close"
+    }
+  ],
+  "timing_limit": "Clean Calendar exit is associated with durable rewrite; in-memory rebuilding versus close-time writeback is unobserved.",
+  "private_native_evidence_index_sha256": "dccfd65c17cf6a0f1628ea4734b3aa24a24b5814b78efa37a8b3ac938925cf74",
+  "private_native_evidence_index_files": 2516
+}
