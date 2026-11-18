@@ -114,3 +114,19 @@ class WorksheetPreservationTest(unittest.TestCase):
             with self.assertRaises(PreservationError) as raised:
                 bundle.verify(another)
             self.assertEqual(raised.exception.code, 'invalid_manifest')
+
+    def test_verifier_rejects_an_identical_but_linked_artifact(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            output = root / 'bundle'
+            bundle.export(FIXTURES / 'w01.wks', output)
+            artifact = output / 'original.wks'
+            external = root / 'same-bytes.wks'
+            artifact.rename(external)
+            try:
+                artifact.symlink_to(external)
+            except OSError as exc:
+                self.skipTest(f'File symlinks are unavailable: {exc}')
+            with self.assertRaises(PreservationError) as raised:
+                bundle.verify(output)
+            self.assertEqual(raised.exception.code, 'missing_or_unsafe_artifact')

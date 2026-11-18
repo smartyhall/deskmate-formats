@@ -12,6 +12,12 @@ The [Tandy Appendix A format crosswalk](reference/tandy-format-crosswalk.md) con
 | Draw 3.05 installation | [Native FIG files and comparative controls](research/graphics-native-20261117.md) | Bounded `14 FIG` reader and SVG geometry preview for supported primitives. |
 | Supporting DeskMate database structures | DMDB components, common DBCOLS/index framing and code-backed service thunks studied | Bounded read-only [shared parser](../src/deskmate_formats/database.py); no universal allocator or runtime loader binding proved |
 
+The [DeskMate Preservation Workbench](preservation-workbench.md) uses these
+readers to produce verifiable bundles and modern previews for all six families.
+Practical exports cover Worksheet and Filer CSV, Text and Draw SVG, Calendar
+iCalendar and Address Book vCard. The compatibility profile for each source
+still governs inspection and conversion.
+
 Names are scope categories, not claims about extensions or encodings. File signatures,
 application versions and each application's storage model need independent evidence.
 Related `.FIL` metadata, records and index structures have been observed in

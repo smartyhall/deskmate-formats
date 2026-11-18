@@ -3,12 +3,13 @@ from dataclasses import asdict, dataclass
 from hashlib import sha256
 import json
 import ntpath
+from os import scandir
 from pathlib import Path
 import re
 import stat
 
 from .. import __version__
-from . import native, sheet
+from . import graphic_docs, native, pim, sheet
 from .model import PreservationError
 from .render import json_bytes
 
@@ -18,9 +19,12 @@ VERSION = 1
 MANIFEST = 'manifest.json'
 MAX_MANIFEST_BYTES = 4 * 1024 * 1024
 MAX_ARTIFACT_BYTES = 64 * 1024 * 1024
+MAX_BUNDLE_BYTES = 96 * 1024 * 1024
 MAX_ARTIFACTS = 256
 EFFECTS = ('approximation', 'omission', 'opaque', 'notice')
-CONVERTERS = {'worksheet': sheet.convert}
+CONVERTERS = {'worksheet': sheet.convert, 'text': graphic_docs.convert_text,
+              'draw': graphic_docs.convert_draw, 'filer': graphic_docs.convert_filer,
+              'calendar': pim.convert_calendar, 'addressbook': pim.convert_addressbook}
 
 
 @dataclass(frozen=True)
@@ -117,6 +121,10 @@ def _string(value):
     return isinstance(value, str) and bool(value)
 
 
+def _filename(value):
+    return _string(value) and value not in ('.', '..') and '/' not in value and '\x00' not in value
+
+
 def _portable_path(value):
     return isinstance(value, str) and re.fullmatch(
         r'(?:assets/)?[a-z0-9][a-z0-9-]*\.[a-z0-9]+', value,
@@ -148,8 +156,7 @@ def _validate_manifest(value):
     source = value['source']
     _entry(source, source=True)
     _require(source['path'] == 'original.' + native.EXTENSIONS[application]
-             and _string(source['filename']) and source['filename'] not in ('.', '..')
-             and '/' not in source['filename'] and '\x00' not in source['filename'],
+             and _filename(source['filename']),
              'Invalid source identity.')
     diagnostics = value['diagnostics']
     _require(isinstance(diagnostics, list), 'Expected a diagnostics list.')
@@ -167,6 +174,8 @@ def _validate_manifest(value):
         _require(artifact['path'] not in paths, 'Duplicate artifact path.')
         paths.add(artifact['path'])
     _require('content.json' in paths, 'Missing content.json entry.')
+    _require(source['size'] + sum(item['size'] for item in artifacts) <= MAX_BUNDLE_BYTES,
+             'The bundle byte count exceeds the verification limit.')
 
 
 def _unique_object(pairs):
@@ -195,11 +204,21 @@ def regular_directory(path):
     return not (path.is_symlink() or path.is_junction()) and path.is_dir()
 
 
+def regular_file(path):
+    return not (path.is_symlink() or path.is_junction()) and path.is_file()
+
+
+def check_inventory(directory, expected, *, prefix=''):
+    with scandir(directory) as children:
+        for child in children:
+            if child.name not in expected:
+                raise PreservationError('unexpected_artifact', f'Unlisted item: {prefix}{child.name}')
+
+
 def verify_file(root, entry):
     rel = entry['path']
     target = root / rel
-    if (target.is_symlink() or target.is_junction() or not target.is_file()
-            or target.parent != root and not regular_directory(target.parent)):
+    if ((target.parent != root and not regular_directory(target.parent)) or not regular_file(target)):
         raise PreservationError('missing_or_unsafe_artifact', f'Missing or linked file: {rel}')
     with target.open('rb') as stream:
         remaining = entry['size']
@@ -225,7 +244,7 @@ def verify(output):
     if not regular_directory(root):
         raise PreservationError('invalid_bundle', 'Expected a real bundle directory.')
     manifest_path = root / MANIFEST
-    if manifest_path.is_symlink() or manifest_path.is_junction() or not manifest_path.is_file():
+    if not regular_file(manifest_path):
         raise PreservationError('invalid_bundle', f'Missing or linked {MANIFEST}.')
     manifest = read_json(manifest_path)
     _validate_manifest(manifest)
@@ -235,15 +254,11 @@ def verify(output):
     root_names = {name for name in names if '/' not in name} | {MANIFEST}
     if assets:
         root_names.add('assets')
-    for child in root.iterdir():
-        if child.name not in root_names:
-            raise PreservationError('unexpected_artifact', f'Unlisted item: {child.name}')
+    check_inventory(root, root_names)
     if assets:
         if not regular_directory(root / 'assets'):
             raise PreservationError('missing_or_unsafe_artifact', 'Missing or linked assets directory.')
-        for child in (root / 'assets').iterdir():
-            if child.name not in assets:
-                raise PreservationError('unexpected_artifact', f'Unlisted item: assets/{child.name}')
+        check_inventory(root / 'assets', assets, prefix='assets/')
     for entry in entries:
         verify_file(root, entry)
     return manifest

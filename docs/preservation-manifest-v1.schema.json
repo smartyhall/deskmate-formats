@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DeskMate Preservation Workbench version 1 manifests",
+  "oneOf": [
+    {"$ref": "#/$defs/bundle"},
+    {"$ref": "#/$defs/collection"}
+  ],
+  "$defs": {
+    "application": {
+      "enum": ["worksheet", "text", "draw", "filer", "calendar", "addressbook"]
+    },
+    "filename": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[^/\u0000]+$",
+      "not": {"enum": [".", ".."]}
+    },
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$", "minLength": 64, "maxLength": 64},
+    "path": {"type": "string", "pattern": "^(assets/)?[a-z0-9][a-z0-9-]*\\.[a-z0-9]+$"},
+    "identity": {
+      "type": "object",
+      "required": ["path", "size", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {"$ref": "#/$defs/path"},
+        "size": {"type": "integer", "minimum": 0, "maximum": 67108864},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["filename", "path", "size", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "filename": {"$ref": "#/$defs/filename"},
+        "path": {"enum": ["original.wks", "original.doc", "original.fig", "original.fil", "original.cln", "original.adr"]},
+        "size": {"type": "integer", "minimum": 0, "maximum": 1048576},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "required": ["code", "effect", "message", "location"],
+      "additionalProperties": false,
+      "properties": {
+        "code": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+        "effect": {"enum": ["approximation", "omission", "opaque", "notice"]},
+        "message": {"type": "string", "minLength": 1},
+        "location": {"type": ["null", "string"], "minLength": 1}
+      }
+    },
+    "parser": {
+      "type": "object",
+      "required": ["entry_point", "package_version"],
+      "additionalProperties": false,
+      "properties": {
+        "entry_point": {"type": "string", "minLength": 1},
+        "package_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "bundle": {
+      "type": "object",
+      "required": ["format", "version", "source", "application", "profile", "parser", "inspection", "diagnostics", "artifacts"],
+      "additionalProperties": false,
+      "properties": {
+        "format": {"const": "deskmate-preservation-bundle"},
+        "version": {"const": 1},
+        "source": {"$ref": "#/$defs/source"},
+        "application": {"$ref": "#/$defs/application"},
+        "profile": {"type": "string", "minLength": 1},
+        "parser": {"$ref": "#/$defs/parser"},
+        "inspection": {"const": "measured_profile"},
+        "diagnostics": {"type": "array", "items": {"$ref": "#/$defs/diagnostic"}},
+        "artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "items": {"$ref": "#/$defs/identity"},
+          "contains": {"properties": {"path": {"const": "content.json"}}}
+        }
+      }
+    },
+    "exported": {
+      "type": "object",
+      "required": ["filename", "status", "directory", "application", "manifest"],
+      "additionalProperties": false,
+      "properties": {
+        "filename": {"$ref": "#/$defs/filename"},
+        "status": {"const": "exported"},
+        "directory": {"type": "string", "pattern": "^[0-9]{4}-[a-z0-9-]{1,52}$"},
+        "application": {"$ref": "#/$defs/application"},
+        "manifest": {
+          "$ref": "#/$defs/identity",
+          "properties": {"path": {"const": "manifest.json"}, "size": {"maximum": 4194304}}
+        }
+      }
+    },
+    "failed": {
+      "type": "object",
+      "required": ["filename", "status", "failure"],
+      "additionalProperties": false,
+      "properties": {
+        "filename": {"$ref": "#/$defs/filename"},
+        "status": {"const": "failed"},
+        "failure": {
+          "type": "object",
+          "required": ["error", "message"],
+          "additionalProperties": false,
+          "properties": {
+            "error": {"type": "string", "minLength": 1},
+            "message": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "collection": {
+      "type": "object",
+      "required": ["format", "version", "entries", "index"],
+      "additionalProperties": false,
+      "properties": {
+        "format": {"const": "deskmate-preservation-collection"},
+        "version": {"const": 1},
+        "entries": {
+          "type": "array",
+          "maxItems": 1024,
+          "items": {"oneOf": [{"$ref": "#/$defs/exported"}, {"$ref": "#/$defs/failed"}]}
+        },
+        "index": {"$ref": "#/$defs/identity", "properties": {"path": {"const": "index.html"}}}
+      }
+    }
+  }
+}

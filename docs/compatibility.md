@@ -1,5 +1,17 @@
 # Compatibility and supported versions
 
+## Preservation Workbench
+
+The [workbench](preservation-workbench.md) covers the measured 3.05 profiles
+for Worksheet WKS, formatted and explicitly selected headerless Text, Draw
+`14 FIG`, bounded Filer DMDB, Calendar SDK and ten-page Address Book. It
+validates bytes with the existing readers. The supported native profile is
+reported separately from browser approximations and omissions in modern
+formats. Every accepted source is copied byte-for-byte to the bundle.
+The Calendar tooling below also offers the narrower `observed` profile.
+
+## Default Calendar profile
+
 The table below describes the unchanged default Calendar `observed` profile.
 The explicit experimental `sdk` profile is described after it.
 

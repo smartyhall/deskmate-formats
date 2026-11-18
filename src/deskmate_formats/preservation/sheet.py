@@ -9,12 +9,12 @@ from .render import csv_bytes, html_page, html_text
 SHEET_STYLE = """
 .sheet { table-layout: fixed; }
 .sheet th, .sheet td { white-space: pre-wrap; overflow-wrap: anywhere; }
-.sheet thead th, .sheet tbody th { text-align: center; }
+.sheet thead th, .sheet tbody th { text-align: center; white-space: nowrap; }
 .sheet .number { text-align: right; font-variant-numeric: tabular-nums; }
 .formula { background: #edf3fc; }
 .input { background: #f6f0dc; }
 .text_block { background: #f5f6f0; }
-.sheet .small { color: #3a5259; }
+.sheet .small { color: #3a5259; line-height: 1.35; display: inline-block; }
 .error { color: #8e2639; font-weight: 600; }
 """
 
@@ -60,6 +60,7 @@ def _cell_html(cell, *, merged):
     if cell is None:
         return '<td></td>'
     label = html_text(cell.text)
+    stored_number = html_text(cell.numeric_value) if cell.numeric_value is not None else 'Unavailable'
     span = ''
     if cell.category == 'formula':
         if cell.error_flag:
@@ -69,12 +70,13 @@ def _cell_html(cell, *, merged):
         else:
             display = 'No usable stored result'
         label = (f'<details><summary>{display}</summary><code>{label}</code><br>'
-                 f'<span class="small">Stored numeric field {html_text(cell.numeric_value)} · '
-                 f'Result flag {cell.result_flag} · Status 0x{cell.status:04X}</span></details>')
+                 f'<span class="small">Stored {stored_number}<br>'
+                 f'Result flag {"set" if cell.result_flag else "clear"}<br>'
+                 f'Status 0x{cell.status:04X}</span></details>')
     elif cell.category == 'input':
         state = 'Stored value' if cell.result_flag else 'Result flag clear'
         label = (f'<strong>{label}</strong><br><span class="small">{state} · '
-                 f'{html_text(cell.numeric_value)}</span>')
+                 f'{stored_number}</span>')
     elif cell.category == 'text_block' and merged:
         span = f' rowspan="{cell.row_span}" colspan="{cell.column_span}"'
     return f'<td class="{cell.category}"{span}>{label}</td>'
@@ -94,10 +96,10 @@ def _grid(sheet, cells, covered):
             for c in range(1, columns + 1) if covered is None or (r, c) not in covered
         )
         table.append(f'<tr><th scope="row">R{r}</th>{columns_html}</tr>')
-    width = 5 + sum(sheet.column_widths[1:columns + 1]) + 2 * columns
+    width = 6 + sum(sheet.column_widths[1:columns + 1]) + 2 * columns
     return (f'<div class="scroller" tabindex="0" aria-label="Worksheet grid">'
             f'<table class="sheet" style="width:{width}ch"><caption>Used grid · {rows} × {columns}</caption>'
-            f'<colgroup><col style="width:5ch">{"".join(widths)}</colgroup>'
+            f'<colgroup><col style="width:6ch">{"".join(widths)}</colgroup>'
             f'<thead><tr><th scope="col">Row</th>{headings}</tr></thead>'
             f'<tbody>{"".join(table)}</tbody></table></div>')
 

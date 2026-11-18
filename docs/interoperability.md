@@ -6,6 +6,14 @@ No CalDAV/CardDAV transport, server behavior or synchronization engine exists.
 The [compatibility profiles](compatibility.md) and [campaign progress](../PROJECT_STATUS.md)
 are authoritative about native format limits.
 
+The [Preservation Workbench](preservation-workbench.md) includes
+`interchange-v1.json` when the strict export succeeds and records a diagnostic
+when that contract cannot represent the source. Its archival `content.json`
+and checksum manifest are separate formats. The workbench also projects measured
+ordinary appointments to floating-time iCalendar and known contact fields to
+vCard 4.0. iCalendar UIDs are scoped to one source snapshot. Those projections
+have their own diagnostics and leave the version-1 schema and validation intact.
+
 ## Working Python interfaces
 
 ```python

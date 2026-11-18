@@ -8,6 +8,14 @@ class PreservationError(ValueError):
         super().__init__(message)
 
 
+def error_report(exc):
+    if isinstance(exc, PreservationError):
+        return {'error': exc.code, 'message': str(exc)}
+    if isinstance(exc, FileExistsError):
+        return {'error': 'output_exists', 'message': 'The output path already exists.'}
+    return {'error': 'io_error', 'message': exc.strerror or 'The operating system reported an I/O error.'}
+
+
 @dataclass(frozen=True)
 class Diagnostic:
     code: str

@@ -40,6 +40,15 @@ def html_text(value):
     return escape(str(value).translate(HTML_CONTROLS))
 
 
+def html_table(headings, rows, caption):
+    header = ''.join(f'<th scope="col">{html_text(value)}</th>' for value in headings)
+    records = ''.join('<tr>' + ''.join(f'<td>{html_text(value)}</td>' for value in row) + '</tr>'
+                      for row in rows)
+    return (f'<div class="scroller" tabindex="0" aria-label="{html_text(caption)}">'
+            f'<table><caption>{html_text(caption)}</caption><thead><tr>{header}</tr></thead>'
+            f'<tbody>{records}</tbody></table></div>')
+
+
 STYLE = """
 :root { color-scheme: light; font: 16px/1.55 system-ui, sans-serif;
   color: #202c30; background: #f1f4f3; }
@@ -50,7 +59,8 @@ h2 { font-size: 1.2rem; margin-top: 1.6rem; }
 header p, figure, figcaption { margin: .45rem 0; }
 figure { min-width: 0; }
 a { color: #185c51; }
-.scroller { overflow: auto; border: 1px solid #b5c8c2; }
+.scroller { overflow: auto; width: fit-content; max-width: 100%; box-sizing: border-box;
+  border: 1px solid #b5c8c2; }
 table { border-collapse: collapse; background: white; }
 th, td { border: 1px solid #d1dbd8; padding: .35rem .6rem; text-align: left; vertical-align: top; }
 th { background: #e4ede9; }
@@ -89,4 +99,4 @@ def html_page(title, subtitle, body, *, diagnostics=(), style=''):
 <main>{body}{notes}</main>
 </body>
 </html>
-""".encode('utf-8')
+""".encode('utf-8', errors='replace')

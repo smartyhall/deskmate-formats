@@ -77,6 +77,24 @@ class StrokeGlyph:
     paths: tuple[tuple[tuple[int, int], ...], ...]
 
 
+@dataclass(frozen=True)
+class SvgOmission:
+    """Location and reason for an element excluded from the geometry preview."""
+
+    offset: int
+    kind_hex: str
+    reason: str
+
+
+@dataclass(frozen=True)
+class SvgPreview:
+    svg: str
+    view_box: tuple[float, float, float, float]
+    rendered_bounds: tuple[float, float, float, float] | None
+    rendered_elements: int
+    omissions: tuple[SvgOmission, ...]
+
+
 def _require(condition, message):
     if not condition:
         raise GraphicsFormatError(message)
@@ -246,8 +264,8 @@ def _svg_stroke_text(element, glyphs, colors):
             f'fill="none" stroke="{color}" stroke-width="1">' + ''.join(paths) + '</g>')
 
 
-def render_svg(form, palette=()):
-    """Return a geometry preview of lines, rectangles, ellipses and polylines.
+def preview_svg(form, palette=()):
+    """Return the geometry preview, dimensions and omitted element locations.
 
     Palette entries are (index, red, green, blue). Stroke styles and patterned
     fills use solid approximations. Unrotated T text with a complete embedded
@@ -264,20 +282,25 @@ def render_svg(form, palette=()):
             pass
     point_costs = {key: sum(map(len, glyph.paths)) for key, glyph in glyphs.items()}
     point_budget = MAX_PREVIEW_STROKE_POINTS
-    shapes, bounds, missing = [], [], set()
+    shapes, bounds, missing = [], [], []
     for element in leaves:
+        if element.kind == 'UP' and len(element.points) < 2:
+            missing.append(SvgOmission(element.offset, '5550', 'polyline_has_too_few_points'))
+            continue
         if element.kind in PREVIEW_KINDS:
             shape = _svg_element(element, colors)
         elif (element.kind == 'T' and element.text_bytes and element.raw[21] == 0
               and all((element.modifier, code) in glyphs for code in element.text_bytes)):
             cost = sum(point_costs[element.modifier, code] for code in element.text_bytes)
             if cost > point_budget:
-                missing.add('54')
+                missing.append(SvgOmission(element.offset, '54', 'stroke_point_limit'))
                 continue
             point_budget -= cost
             shape = _svg_stroke_text(element, glyphs, colors)
         else:
-            missing.add(element.kind.encode('latin-1').hex())
+            reason = {'T': 'unsupported_glyphs_or_rotation', 'Uf': 'external_font_reference'}.get(
+                element.kind, 'unsupported_element')
+            missing.append(SvgOmission(element.offset, element.kind.encode('latin-1').hex(), reason))
             continue
         shapes.append(shape)
         bounds.append(element.bounds)
@@ -288,11 +311,19 @@ def render_svg(form, palette=()):
     view = ' '.join(map(_number, box))
     description = 'DeskMate geometry preview with approximate fills, stroke styles and text spacing.'
     if missing:
-        description += ' Omitted element type bytes (hex) ' + ', '.join(sorted(missing)) + '.'
+        kinds = sorted({item.kind_hex for item in missing})
+        description += ' Omitted element type bytes (hex) ' + ', '.join(kinds) + '.'
     if colors.get(0):
         background = [f'<rect x="{_number(box[0])}" y="{_number(box[1])}" width="{_number(box[2])}" '
                       f'height="{_number(box[3])}" fill="{colors[0]}"/>']
     else:
         background = []
-    return '\n'.join([f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{view}">',
-                      f'<desc>{escape(description)}</desc>', *background, *shapes, '</svg>\n'])
+    svg = '\n'.join([f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{view}">',
+                     f'<desc>{escape(description)}</desc>', *background, *shapes, '</svg>\n'])
+    geometry = (min(xs), min(ys), max(xs), max(ys)) if bounds else None
+    return SvgPreview(svg, box, geometry, len(shapes), tuple(missing))
+
+
+def render_svg(form, palette=()):
+    """Return the stand-alone SVG string for the measured geometry preview."""
+    return preview_svg(form, palette).svg
