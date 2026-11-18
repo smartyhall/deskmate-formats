@@ -66,6 +66,37 @@ Official integration references:
 [Non-interactive execution](https://learn.chatgpt.com/docs/non-interactive-mode),
 [Codex developer commands](https://learn.chatgpt.com/docs/developer-commands).
 
+### 2a. Quota-aware supervision — operator direction 2026-11-18
+
+Treat account usage as a shared, independently metered resource in addition
+to per-worker token usage. The central [usage receipt and backfill
+contract](../evidence/codex-usage/README.md) is the common source for both
+manual Codex runs and future dispatch. Investigate read-only
+`account/rateLimits/read`, `account/rateLimits/updated`, and version-supported
+token usage events (including `thread/tokenUsage/updated`). Verify the
+installed app-server schema; these are integration candidates, not claims
+that the pinned S0 protocol already supports them. Local rollout
+`event_msg` / `token_count` records are a possible historical source.
+
+Keep raw session records and account-only state in the private ledger. Add a
+normalized, read-only quota feed and sanitized project checkpoint receipts.
+Use numeric window durations instead of assuming primary/secondary order;
+handle shared-account concurrency, missing or stale samples, reset boundaries,
+and non-linear accounting explicitly. Per-turn token counts do not establish
+the charged quota. Before dispatch or steering, the scheduler should consult
+fresh snapshots, predict the limiting window conservatively, and preserve
+coherent checkpoints before depletion. On exhaustion, retain the task,
+worktree and pending-push state; do not retry model calls in a loop. On a
+freshly observed replenishment, re-evaluate eligibility under existing
+operator authorization and lease rules. No automatic reset redemption or
+credit purchase. Add synthetic tests for missed updates, stale data, multiple
+windows, changes in schema and process recovery before any live adoption.
+Display usage through a read-only observer projection, never raw rollout
+content, authentication, or account identifiers.
+
+This is a deferred design requirement, not a new dispatch capability or
+permission to bypass S0–S3 gates.
+
 ## 3. Process boundaries
 
 ~~~mermaid

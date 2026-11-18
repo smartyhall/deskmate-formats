@@ -84,3 +84,24 @@ Challenge scope drift: evidence, consequence, rollback, minimum control.
   its own PRs; ChatGPT may independently merge ready PRs under the operator's
   2026-11-08 post-run housekeeping grant. Do not infer approval for unrelated
   repository mutations, unattended dispatch, emulator control or paid calls.
+
+## Codex usage receipts — operator decision 2026-11-18
+
+For every Codex research campaign, record available usage telemetry at startup,
+each meaningful Git checkpoint, and completion/earliest safe stop in the
+[central usage ledger](docs/evidence/codex-usage/README.md). Use a deterministic,
+read-only collector rather than repeated model-driven monitoring. Capture what
+the installed version actually exposes: model/effort, token counters, and
+account quota windows identified by duration and reset epoch. If a source is
+unavailable, record the gap; do not invent values. Import recoverable
+project-attributable historical telemetry incrementally and deduplicate it.
+
+Only allowlisted, sanitized project usage receipts belong in Git. Raw rollout
+logs, prompts, responses, account/session identifiers, authentication material,
+unrelated projects and exact banked-reset inventory stay private. Preserve
+the receipt with each publishable checkpoint, especially near exhaustion.
+When little quota remains, checkpoint earlier and stop at a coherent boundary;
+do not wait for an additional model turn to preserve existing work. Never
+redeem a usage reset, purchase credits, or launch extra model turns merely to
+measure quota without separate operator authorization. This policy does not
+authorize unattended dispatch or expand existing live-launch gates.
