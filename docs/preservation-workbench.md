@@ -166,7 +166,7 @@ deskmate-preserve export tests/fixtures/application-generated/text/tp06.doc --ou
 deskmate-preserve verify text-demo
 ```
 
-For a six-family collection, copy the following committed native synthetic
+For an eight-family collection, copy the following committed native synthetic
 specimens into a new directory. Run the collection example above with that
 directory as the input.
 
@@ -178,6 +178,8 @@ directory as the input.
 | [Filer G18](../tests/fixtures/application-generated/filer/g18.fil) | A card form with 36 lines from a multi-chunk GRAPHICS stream |
 | [Calendar alarm trial](../tests/fixtures/application-generated/calendar/alarm-on-86box-trial-c.cln) | One appointment with the measured alarm enabled |
 | [Address Book two-contact save](../tests/fixtures/application-generated/addressbook/native-two-contact-20261117.adr) | Two native contacts and their core vCard fields |
+| [Sound 440 Hz tone](../tests/fixtures/application-generated/sound/tone-native-pcm.snd) | One uncompressed native Save As control and its exact PCM waveform |
+| [Music tempo control](../tests/fixtures/application-generated/music/mtempo.sng) | Seven notes, a rest, six base durations and an explicit 140 BPM tempo |
 
 The [portable end-to-end test](../tests/portable/test_preservation.py) builds
 and verifies this collection. [The Worksheet regression](../tests/portable/test_preservation_worksheet.py)
