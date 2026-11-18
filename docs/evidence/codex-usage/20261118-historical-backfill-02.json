@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "historical-backfill-02",
+  "source": "codex_desktop_state_index",
+  "coverage": {
+    "missing_rollout_sessions": 25
+  },
+  "cutoff": "2026-11-18T22:00:00+00:00",
+  "sessions": {
+    "02d4a6dcddb9cd947c5f27b2": {
+      "created_at": "2026-11-05T20:10:42+00:00",
+      "updated_at": "2026-11-05T20:46:10+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 8399574
+    },
+    "06c8f8fd182e3e0876192eaf": {
+      "created_at": "2026-11-08T04:23:02+00:00",
+      "updated_at": "2026-11-08T04:34:03+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 2637528
+    },
+    "06f000e32241aa5e716149fb": {
+      "created_at": "2026-11-08T03:16:28+00:00",
+      "updated_at": "2026-11-08T03:33:50+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 4209715
+    },
+    "09c8913ae367bfdafdc8f0fc": {
+      "created_at": "2026-11-08T01:17:27+00:00",
+      "updated_at": "2026-11-08T01:21:39+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "medium",
+      "indexed_total_tokens": 1537488
+    },
+    "0f54d6f6ccfae50bcf72ff86": {
+      "created_at": "2026-11-05T01:48:57+00:00",
+      "updated_at": "2026-11-05T16:45:04+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 42010100
+    },
+    "1ea35c1b0f00f8973a00f6b4": {
+      "created_at": "2026-11-06T09:23:41+00:00",
+      "updated_at": "2026-11-06T09:46:16+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 12242922
+    },
+    "4536e0b4544ecd0feb34b62d": {
+      "created_at": "2026-11-06T10:05:54+00:00",
+      "updated_at": "2026-11-06T10:40:04+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 11669812
+    },
+    "501cd0fe13ab754e59558b75": {
+      "created_at": "2026-11-06T19:26:51+00:00",
+      "updated_at": "2026-11-06T19:59:20+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 7152681
+    },
+    "5b8db8b69ae3526b93efa11b": {
+      "created_at": "2026-11-06T14:56:13+00:00",
+      "updated_at": "2026-11-06T19:09:47+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 7579714
+    },
+    "5e7106f2008afb6d5128750f": {
+      "created_at": "2026-11-05T15:59:04+00:00",
+      "updated_at": "2026-11-05T15:59:06+00:00",
+      "archived": true,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": null
+    },
+    "62d05b08c56816f1ace239e6": {
+      "created_at": "2026-11-07T18:10:47+00:00",
+      "updated_at": "2026-11-07T18:16:46+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "medium",
+      "indexed_total_tokens": 1212639
+    },
+    "832411fd3f34c59478c2f87a": {
+      "created_at": "2026-11-06T04:14:35+00:00",
+      "updated_at": "2026-11-06T04:25:51+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "low",
+      "indexed_total_tokens": 4178132
+    },
+    "8f7335a4e4054e8c943afd74": {
+      "created_at": "2026-11-08T09:13:30+00:00",
+      "updated_at": "2026-11-08T09:52:03+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 16297757
+    },
+    "9c2a30e581a4007a0c5c1793": {
+      "created_at": "2026-11-06T14:12:33+00:00",
+      "updated_at": "2026-11-06T14:44:05+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 6460351
+    },
+    "9c76a109f37deaa1fba330f7": {
+      "created_at": "2026-11-08T07:36:37+00:00",
+      "updated_at": "2026-11-08T08:20:07+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 16917507
+    },
+    "9f79e67929f58f6e4d007e22": {
+      "created_at": "2026-11-08T17:02:51+00:00",
+      "updated_at": "2026-11-08T18:40:06+00:00",
+      "archived": false,
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "indexed_total_tokens": 8436264
+    },
+    "bda48ed20899ff7795a9df6e": {
+      "created_at": "2026-11-06T20:39:34+00:00",
+      "updated_at": "2026-11-06T21:01:15+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 4121483
+    },
+    "c1d5b3743ce8af296132858c": {
+      "created_at": "2026-11-06T00:50:54+00:00",
+      "updated_at": "2026-11-06T03:46:02+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 88180647
+    },
+    "cd19d78cebf6a279aa8d34e8": {
+      "created_at": "2026-11-05T21:08:52+00:00",
+      "updated_at": "2026-11-06T00:45:20+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 31566511
+    },
+    "e143141064d570399b910a11": {
+      "created_at": "2026-11-06T21:19:37+00:00",
+      "updated_at": "2026-11-06T21:29:30+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "medium",
+      "indexed_total_tokens": 3285013
+    },
+    "e838547cb47cd09ac7b41129": {
+      "created_at": "2026-11-08T01:38:30+00:00",
+      "updated_at": "2026-11-08T02:12:19+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 8586791
+    },
+    "eb5981ea68b5e215e80f2b17": {
+      "created_at": "2026-11-06T08:48:58+00:00",
+      "updated_at": "2026-11-06T09:10:22+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 9327112
+    },
+    "eeec8e624a58ca49039add8c": {
+      "created_at": "2026-11-06T10:58:23+00:00",
+      "updated_at": "2026-11-06T11:35:26+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 22723465
+    },
+    "fc3a064e672688da9d71a011": {
+      "created_at": "2026-11-08T03:48:04+00:00",
+      "updated_at": "2026-11-08T04:08:53+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 8557521
+    },
+    "fcf75b58553e990bc7faad88": {
+      "created_at": "2026-11-08T04:44:26+00:00",
+      "updated_at": "2026-11-08T04:55:34+00:00",
+      "archived": false,
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "indexed_total_tokens": 5880842
+    }
+  }
+}

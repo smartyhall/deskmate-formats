@@ -107,6 +107,19 @@ supervisor run directories. Public milestone attribution requires separate
 evidence because the starting checkout can still be on an earlier campaign's
 branch.
 
+[Historical batch 02](20261118-historical-backfill-02.json) covers
+25 additional project sessions with missing rollout files in the desktop
+state index, from 2026-11-05 01:48:57 to 2026-11-08 18:40:06 UTC.
+Run the collector with `--state-index` and an explicitly selected
+`state_5.sqlite` to reproduce. The database is opened read-only. For 20
+indexed project sessions with readable rollouts, the indexed total exactly
+matched the last rollout total in every session. The second batch keeps the
+indexed field separate from the rollout counters. It has no per-request
+usage fields or meter observations. A zero index value is recorded as null
+because an empty/default value cannot be distinguished from a measured zero.
+The created and updated timestamps are session metadata. Existing rollout
+files and matching rollout identities in the selected stores are excluded.
+
 Token observations include UTC time, reviewed model and effort from turn
 context, cumulative counters, the reported last increment, and counter state.
 Repeated totals can carry the same last increment. A decreased total indicates

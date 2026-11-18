@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 import re
+import sqlite3
 import tempfile
 
 
@@ -20,7 +21,7 @@ TOKENS = {
     "reasoning_output": ("reasoning_output_tokens", "reasoningOutputTokens"),
     "total": ("total_tokens", "totalTokens"),
 }
-MODELS = {"gpt-6-luna", "gpt-6.1-sol", "gpt-6.2-sol"}
+MODELS = {"gpt-6-astra", "gpt-6-luna", "gpt-6.1-sol", "gpt-6.2-sol"}
 EFFORTS = {"none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra"}
 
 
@@ -96,6 +97,23 @@ def pseudonym(key, identity):
     return hmac.digest(key, identity.encode(), "sha256").hex()[:24]
 
 
+def normal_path(path):
+    resolved = str(path.resolve())
+    if os.name == "nt":
+        if resolved.startswith("\\\\?\\UNC\\"):
+            resolved = "\\\\" + resolved[8:]
+        else:
+            resolved = resolved.removeprefix("\\\\?\\")
+    return Path(resolved)
+
+
+def project_cwd(cwd, roots):
+    if not isinstance(cwd, str) or not Path(cwd).is_absolute():
+        return False
+    directory = normal_path(Path(cwd))
+    return any(directory.is_relative_to(root) for root in roots)
+
+
 def rows(path, coverage):
     with path.open("rb") as source:
         for line in source:
@@ -114,7 +132,7 @@ def collect(homes, roots, key, *, cutoff=None):
     observed = {}
     index = {}
     coverage = Counter()
-    roots = [root.resolve() for root in roots]
+    roots = [normal_path(root) for root in roots]
     for store in ("sessions", "archived_sessions"):
         paths = {path.resolve() for home in homes for path in (home / store).rglob("rollout-*.jsonl")}
         for path in sorted(paths):
@@ -125,8 +143,7 @@ def collect(homes, roots, key, *, cutoff=None):
                 identity = next((meta[k] for k in ("session_id", "id")
                                  if isinstance(meta.get(k), str) and meta[k]), None)
                 if (header.get("type") != "session_meta" or not identity
-                        or not isinstance(cwd, str) or not Path(cwd).is_absolute()
-                        or not any(Path(cwd).resolve().is_relative_to(root) for root in roots)):
+                        or not project_cwd(cwd, roots)):
                     continue
                 session = pseudonym(key, "session:" + identity)
                 index.setdefault(session, []).append({"id": identity, "path": str(path)})
@@ -162,6 +179,35 @@ def collect(homes, roots, key, *, cutoff=None):
                         bucket[signature] = event
             coverage.update(diagnostics)
     return {session: annotate(events.values()) for session, events in sorted(observed.items())}, index, coverage
+
+
+def index_history(database, roots, key, rollout_sessions, cutoff):
+    roots = [normal_path(root) for root in roots]
+    observations = {}
+    index = {}
+    with closing(sqlite3.connect(database.resolve().as_uri() + "?mode=ro", uri=True)) as db:
+        query = """SELECT id, rollout_path, cwd, created_at, updated_at, archived,
+                          tokens_used, model, reasoning_effort FROM threads"""
+        for identity, rollout, cwd, created, updated, archived, total, model, effort in db.execute(query):
+            if (not isinstance(identity, str) or not identity or not isinstance(rollout, str)
+                    or not project_cwd(cwd, roots)):
+                continue
+            if not all(type(value) is int and 0 <= value <= cutoff.timestamp()
+                       for value in (created, updated)):
+                continue
+            session = pseudonym(key, "session:" + identity)
+            if session in rollout_sessions or Path(rollout).is_file():
+                continue
+            observations[session] = {
+                "created_at": datetime.fromtimestamp(created, timezone.utc).isoformat(),
+                "updated_at": datetime.fromtimestamp(updated, timezone.utc).isoformat(),
+                "archived": bool(archived),
+                "model": model if model in MODELS else None,
+                "effort": effort if effort in EFFORTS else None,
+                "indexed_total_tokens": integer(total) or None,
+            }
+            index[session] = {"id": identity, "path": rollout}
+    return dict(sorted(observations.items())), index
 
 
 def annotate(events):
@@ -265,7 +311,11 @@ def main():
                         help="Private sanitized account/rateLimits/read snapshot")
     parser.add_argument("--compact-history", action="store_true",
                         help="Export event history with declared positional columns")
+    parser.add_argument("--state-index", type=Path,
+                        help="Export missing-rollout session totals from a known desktop state database")
     args = parser.parse_args()
+    if args.state_index and (args.checkpoint or args.compact_history or args.account_snapshot):
+        parser.error("export the state index as a separate historical batch")
     for label in (args.label, args.checkpoint):
         if label is not None and not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}", label):
             parser.error("use a public slug for campaign and milestone labels")
@@ -283,6 +333,8 @@ def main():
            for home in homes
            for store in ("sessions", "archived_sessions")):
         parser.error("keep outputs outside the input stores")
+    if args.state_index and args.output.resolve() == args.state_index.resolve():
+        parser.error("keep the output separate from the state index")
     private.mkdir(parents=True, exist_ok=True)
     keyfile = private / "pseudonym-key"
     try:
@@ -299,7 +351,13 @@ def main():
         "schema_version": 1, "collector_version": 1, "label": args.label,
         "source": "codex_rollout", "coverage": dict(coverage, sessions=len(sessions)),
     }
-    if args.checkpoint:
+    if args.state_index:
+        historical, missing = index_history(args.state_index, args.root, key, index, at)
+        write_json(private / "state-source-index.json", missing)
+        receipt.update(source="codex_desktop_state_index", cutoff=at.isoformat(),
+                       coverage={"missing_rollout_sessions": len(historical)},
+                       sessions=historical)
+    elif args.checkpoint:
         receipt.update(checkpoint=args.checkpoint, collected_at=at.isoformat(),
                        commit=args.commit, observation=checkpoint(sessions, at, 900))
     elif args.compact_history:
@@ -318,7 +376,7 @@ def main():
             "source": "account/rateLimits/read", "measured_at": measured.isoformat(),
             "windows": windows(limits, measured),
         }
-    write_json(args.output, receipt, compact=not args.checkpoint)
+    write_json(args.output, receipt, compact=not (args.checkpoint or args.state_index))
 
 
 if __name__ == "__main__":

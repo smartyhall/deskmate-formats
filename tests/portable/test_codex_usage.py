@@ -1,7 +1,9 @@
+from contextlib import closing
 from datetime import datetime, timezone
 import importlib.util
 import json
 from pathlib import Path
+import sqlite3
 from tempfile import TemporaryDirectory
 import unittest
 
@@ -83,3 +85,33 @@ class UsageTests(unittest.TestCase):
         event = {"kind": "token_count", "measured_at": "2025-12-31T23:00:00+00:00",
                  "windows": {300: {"status": "observed", "reset_epoch": None}}}
         assert usage.checkpoint({"opaque": [event]}, at, 900)["windows"][300]["status"] == "stale"
+
+    def test_index_backfill_is_read_only_and_excludes_rollouts(self):
+        with TemporaryDirectory() as private:
+            root = Path(private) / "project"
+            root.mkdir()
+            db_path = Path(private) / "state.sqlite"
+            existing = root / "session.jsonl"
+            existing.touch()
+            with closing(sqlite3.connect(db_path)) as db, db:
+                db.execute("""CREATE TABLE threads (id, rollout_path, cwd, created_at, updated_at,
+                                                    archived, tokens_used, model, reasoning_effort)""")
+                for identity, path, cwd, total in (
+                    ("index-only", root / "missing.jsonl", root, 31),
+                    ("empty", root / "empty.jsonl", root, 0),
+                    ("existing", existing, root, 999),
+                    ("copied", root / "copied.jsonl", root, 999),
+                    ("unrelated", root / "unrelated.jsonl", root.parent, 500),
+                ):
+                    db.execute("INSERT INTO threads VALUES (?,?,?,?,?,?,?,?,?)",
+                               (identity, str(path), str(cwd), 1, 2, 1, total, "gpt-6-astra", "high"))
+            before = db_path.read_bytes()
+            cutoff = datetime(2026, 1, 1, tzinfo=timezone.utc)
+            already_imported = {usage.pseudonym(b"key", "session:copied")}
+            sessions, index = usage.index_history(db_path, [root], b"key", already_imported, cutoff)
+            self.assertEqual(len(sessions), 2)
+            self.assertEqual({row["indexed_total_tokens"] for row in sessions.values()}, {31, None})
+            self.assertEqual({row["model"] for row in sessions.values()}, {"gpt-6-astra"})
+            self.assertNotIn("missing.jsonl", usage.encode(sessions))
+            self.assertEqual({row["id"] for row in index.values()}, {"index-only", "empty"})
+            self.assertEqual(before, db_path.read_bytes())

@@ -12,6 +12,11 @@ local command evidence for the first two campaign checkpoints, `8ffb8e3` and
 [S2 experiment](codex-supervisor-s2-first-live-result-20261116.md) ·
 [Audio PR](https://github.com/smartyhall/deskmate-formats/pull/115)
 
+The separate [desktop-index batch](../evidence/codex-usage/20261118-historical-backfill-02.json)
+extends attributable sessions back to November 5. Its 25 index-only rows
+supply session totals where available. The statistics below require rollout
+increments or paired meter snapshots, so they use batch 01.
+
 ## Account windows
 
 Of 2,417 adjacent within-session pairs where both meters were observed and
