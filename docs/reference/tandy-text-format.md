@@ -30,7 +30,12 @@ The format name **“non-ASCII” does not mean the text itself is an opaque bin
 
 **Important:** Bytes inside picture payloads or margin data may collide with these codes. Decode controls **contextually**; a global byte replacement or naive scan to the first `0x1A` will corrupt valid documents. The guide's original scanning example is illustrative and its OCR is unreliable; prefer length-bounded state machines.
 
-## Embedded Draw picture (documented framing, native verification pending)
+## Embedded Draw picture
+
+The [native graphics study](../research/graphics-native-20261117.md) confirms
+little-endian lengths and columns, an initial picture immediately after the
+header, adjacent picture envelopes, and an extra byte inside the measured
+graphics payload. The framing below describes the manufacturer prediction.
 
 A picture is a paragraph preceded by CRLF or another picture end. The manufacturer gives this envelope, where `n` is the clipboard-picture length and `col` is the display column:
 

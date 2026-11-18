@@ -208,7 +208,7 @@ def _index(data, table):
     return tuple(entries), tuple(groups)
 
 
-def _row(data, start, fields, *, index_offset=None, retired=False):
+def _row(data, start, fields, *, index_offset=None, retired=False, allow_missing_uniq=False):
     limit = (start // PAGE_SIZE + 1) * PAGE_SIZE
     require(start + 2 <= limit and data[start] == (0x44 if retired else 0x80)
             and 0x10 <= data[start + 1] < 0x80,
@@ -218,11 +218,12 @@ def _row(data, start, fields, *, index_offset=None, retired=False):
     payload = data[start + 2:end]
     require(not any(c in payload for c in (0, 2, 3)), 'invalid_record', 'reserved byte inside row', start)
     values = tuple(payload.split(b'\x01'))
-    require(len(values) == fields, 'invalid_record', 'field count disagrees with schema', start)
+    legacy = allow_missing_uniq and len(values) == 5 and values[1] != b'DBCOLS'
+    require(len(values) == fields or legacy, 'invalid_record', 'field count disagrees with schema', start)
     return Row(start, data[start + 1], data[start:end + 2], values, index_offset, retired)
 
 
-def _rows(data, table, entries, reserved, page_owners, allow_retired):
+def _rows(data, table, entries, reserved, page_owners, allow_retired, allow_missing_uniq):
     targets = {e.address: e for e in entries}
     pages = table.data_pages
     live, retired = {}, []
@@ -234,7 +235,8 @@ def _rows(data, table, entries, reserved, page_owners, allow_retired):
         while cursor < limit and data[cursor] != 3:
             entry = targets.get(cursor)
             if entry is not None:
-                row = _row(data, cursor, table.column_count, index_offset=entry.index_offset)
+                row = _row(data, cursor, table.column_count, index_offset=entry.index_offset,
+                           allow_missing_uniq=allow_missing_uniq)
                 require(row.record_id == entry.record_id, 'invalid_record', 'index/row ID mismatch', cursor)
                 live[cursor] = row
             else:
@@ -283,7 +285,7 @@ def _routing(table):
                 'routing prefix disagrees with subdivision endpoint', group.routing_offset)
 
 
-def parse_bytes(source, *, allow_retired=False, max_pages=MAX_PAGES):
+def parse_bytes(source, *, allow_retired=False, max_pages=MAX_PAGES, allow_legacy_filer_schema=False):
     """Read known framing, preserving opaque content; no universal ID/allocation policy.
 
     Retired-row scanning follows each validated packed-12 data-page chain.
@@ -313,7 +315,9 @@ def parse_bytes(source, *, allow_retired=False, max_pages=MAX_PAGES):
     for table in tables:
         table = replace(table, data_pages=_chain(data, table.data_page))
         entries, groups = _index(data, table)
-        rows, retired = _rows(data, table, entries, reserved, page_owners, allow_retired)
+        legacy = (allow_legacy_filer_schema and data[:4] == b'\x03FIL'
+                  and table.name == 'DBCOLS' and table.column_count == 6)
+        rows, retired = _rows(data, table, entries, reserved, page_owners, allow_retired, legacy)
         table = replace(table, entries=entries, rows=rows, retired_rows=retired, index_groups=groups)
         _routing(table)
         parsed.append(table)
@@ -324,12 +328,12 @@ def parse_bytes(source, *, allow_retired=False, max_pages=MAX_PAGES):
     columns = {table.name: {} for table in db.tables}
     for row in schema.rows:
         try:
-            name, owner, pos, width, kind, unique = (v.decode('ascii') for v in row.fields)
+            name, owner, pos, width, kind, *unique = (v.decode('ascii') for v in row.fields)
         except UnicodeDecodeError as exc:
             raise DatabaseError('invalid_schema', 'non-ASCII column definition', row.offset) from exc
         position, size = decimal(row.fields[2], row.offset), decimal(row.fields[3], row.offset)
         require(owner in columns and position not in columns[owner] and name
-                and size > 0 and len(kind) == 1 and unique == '0',
+                and size > 0 and len(kind) == 1 and unique in ([], ['0']),
                 'unsupported_schema', 'unknown/duplicate column definition', row.offset)
         columns[owner][position] = Column(name, size, kind, row.fields)
     result = []

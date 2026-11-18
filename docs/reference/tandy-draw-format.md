@@ -1,6 +1,6 @@
 # Tandy Appendix A: DeskMate Draw format
 
-**Source:** *DeskMate Development System 03.05.00 Development Guide*, Appendix A Draw (printed A-9; operator-supplied PDF p. 482), plus the common header (p. 476) and a Drawlist tool example (p. 470). **Status: manufacturer-documented, not yet verified with a native Draw corpus.** See [crosswalk](tandy-format-crosswalk.md) and [graphical campaign](../research/graphics-cross-application-plan-20261117.md).
+**Source:** *DeskMate Development System 03.05.00 Development Guide*, Appendix A Draw (printed A-9; operator-supplied PDF p. 482), plus the common header (p. 476) and a Drawlist tool example (p. 470). The [native Draw study](../research/graphics-native-20261117.md) confirms the prefix lengths in the installed `14 FIG` profile and found a two-byte palette count and a one-byte file trailer. The layout below summarizes the manufacturer reference. See the [crosswalk](tandy-format-crosswalk.md).
 
 ## Outer file layout
 

@@ -29,9 +29,10 @@ favor recoverable progress over speculative confinement requirements.
 | **DeskMate screen-state research** | **Exploratory** | Partial Calendar schedule text recovered from read-only emulator RAM captures; not a general screen reader or automation interface |
 | **Address Book 3.05** (`PERSONAL.ADR`) | **Conservative codec** | Schema-aware reader and experimental empty-to-one writer; all four A01–A04 native hashes reproduced offline; multicontact insertion remains unsupported |
 | **Cross-application database architecture** | **Offline structural and call evidence** | Named DMDB binding/call thunks in all three applications and a conditional DESK INT E0 dispatch path; actual runtime vector, callback selection and record-operation dispatch remain unresolved |
-| **Filer 3.05** | **Static research and one scoped native observation** | Shipped CARMAINT sample opened and exited without disk changes; disabled print commands remain unexplained. F00–F02 schema/record experiments and Filer codec are not complete |
+| **Filer 3.05** | **Native records and forms** | Bounded DMDB inspection and reconstruction of GRAPHICS card and report payloads |
+| **Draw and Text** | **Native graphics transfer confirmed** | Read the measured FIG container and embedded DOC pictures. Preview supported graphics-form geometry as SVG. |
 | **86Box automation** | **DOS baseline validated** | Authenticated native client, verified Tandy RSX DOS 5.00 baseline, original guest canary, and a read-only MCP bridge tested with a synthetic native peer |
-| **Other DeskMate applications** | **Future work** | Text, Worksheet and Draw have no validated storage models or implementations yet |
+| **Worksheet** | **Future work** | Manufacturer-derived format reference |
 
 These experimental capabilities include SDK-derived, offline-tested cases that
 have **not** all been accepted in the native application. See the dated
@@ -39,6 +40,9 @@ have **not** all been accepted in the native application. See the dated
 for exact limits and [format inventory](docs/inventory.md) for scope.
 
 ## Current functionality
+
+See the [Draw, Text and Filer graphics study](docs/research/graphics-native-20261117.md)
+for native fixture provenance and commands to inspect the three containers.
 
 * A read-only DeskMate 3.05 Calendar PERSONAL.CLN parser: validated six-page layout,
   indexed record enumeration, opaque internal row, raw fields and text/JSON output.

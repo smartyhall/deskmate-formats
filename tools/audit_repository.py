@@ -11,7 +11,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUDED = {'.git', 'build', 'dist', 'local-results', 'private-fixtures', '.ruff_cache'}
 FIXTURE_DIR = Path('tests/fixtures/application-generated')
-DATA_EXT = {'.cln', '.adr', '.fil', '.pcl', '.doc'}
+DATA_EXT = {'.cln', '.adr', '.fil', '.pcl', '.doc', '.fig'}
 PRIVATE_SPOOL_FILES = {'events.jsonl', 'writer.lock'}
 PRIVATE_SPOOL_FILES.update(
     database + suffix for database in ('operations.sqlite3', 'task-queue.sqlite3')
@@ -26,7 +26,7 @@ TELEMETRY_FIXTURES = {
 }
 BAD_EXT = {'.exe', '.com', '.dll', '.img', '.ima', '.iso', '.zip', '.7z', '.cln',
            '.png', '.pdf', '.pdm', '.res', '.r89', '.fil', '.adr', '.pcl', '.hlp',
-           '.tut', '.nvr', '.rom', '.vhd', '.vhdx', '.hdi', '.raw', '.token', '.doc'}
+           '.tut', '.nvr', '.rom', '.vhd', '.vhdx', '.hdi', '.raw', '.token', '.doc', '.fig'}
 PATTERNS = {
     'host Windows user path': r'(?i)[a-z]:[\\/]Users[\\/]',
     'host POSIX user path': r'/(?:home|Users)/[^/\s]+',
