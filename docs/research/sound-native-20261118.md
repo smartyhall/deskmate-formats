@@ -237,7 +237,9 @@ The capture excludes the PSG path, speakers and room acoustics. The VM still
 had zero WinMM endpoints. Use the source patch and commands under the private
 campaign archive to rebuild the probe. The executable, source diff, input
 floppy, DAC stream, and selected screenshots are identified in the native
-receipt. The first probe attached the nonbootable floppy before boot and did
+evidence. The [DAC reproduction guide](pssj-dac-capture-20261118.md) records
+the build commands and an independent offline reanalysis.
+The first probe attached the nonbootable floppy before boot and did
 not reach DOS. The successful clone booted to DOS before floppy insertion.
 [Native receipt](../evidence/audio-native-20261118.json)
 
@@ -256,6 +258,9 @@ MIDI timeline and direct PCM export. The DAC evidence verifies sample use,
 octave transposition and sustained output on this configuration.
 
 ## Next sampled-playback controls
+
+The [sampled playback experiment plan](music-sampled-playback-experiments.md)
+specifies matched comparisons and the corresponding measurements.
 
 1. Keep LABINST's slot and loop words, and replace its uniform sine with
    different signals in frames 0–1099, 1100–2199 and 2200 onward. First

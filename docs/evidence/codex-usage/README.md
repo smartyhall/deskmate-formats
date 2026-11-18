@@ -75,6 +75,73 @@ See also the [standing research instructions](../../../AGENTS.md) and
 [supervisor design](../../research/codex-supervisor-design.md), which treats
 usage as an input to future dispatch and early checkpoint policy.
 
-References to verify against the installed release:
+## Local collector and receipt schema v1
+
+Run from the checkout with Python 3.13 or newer. Review the receipt before
+publication and choose a new filename for each milestone.
+
+```powershell
+python tools/experimental/codex_usage.py --root . --private-dir $private --label campaign-slug --checkpoint milestone-slug --output $receipt
+```
+
+Repeat `--root` for known project worktrees and repeat `--home` to include
+multiple known homes. Omit `--checkpoint` for event history. Reuse the same private directory
+to retain opaque session labels. Merge histories by session and observation
+contents or regenerate the batch from source. `--at` is an inclusive ISO
+timestamp cutoff with timezone. Attach a known public Git SHA with `--commit`.
+The campaign checkpoints use the already committed HEAD at collection.
+
+`--compact-history` declares positional row fields in `history.columns`. Each
+session label maps to its ordered rows. Token and window arrays use
+`token_columns` and `window_columns`, respectively. Compaction rows end after
+the event type. Each batch regenerates deterministically for fixed inputs,
+cutoff and key.
+
+[Historical batch 01](20261118-historical-backfill-01.json) covers
+2026-11-11 23:12:27 to 2026-11-18 17:45:23 UTC, with 2,457 token observations
+across 21 sessions. The default home contributed 19 historical sessions.
+Its archive directory had no rollouts. Two reviewed supervisor homes
+under private evidence contributed one session each. The cutoff excluded the
+active campaign. Attribution comes from the project checkout or the documented
+supervisor run directories. Public milestone attribution requires separate
+evidence because the starting checkout can still be on an earlier campaign's
+branch.
+
+[Historical batch 02](20261118-historical-backfill-02.json) covers
+25 additional project sessions with missing rollout files in the desktop
+state index, from 2026-11-05 01:48:57 to 2026-11-08 18:40:06 UTC.
+Run the collector with `--state-index` and an explicitly selected
+`state_5.sqlite` to reproduce. The database is opened read-only. For 20
+indexed project sessions with readable rollouts, the indexed total exactly
+matched the last rollout total in every session. The second batch keeps the
+indexed field separate from the rollout counters. It has no per-request
+usage fields or meter observations. A zero index value is recorded as null
+because an empty/default value cannot be distinguished from a measured zero.
+The created and updated timestamps are session metadata. Existing rollout
+files and matching rollout identities in the selected stores are excluded.
+
+Token observations include UTC time, reviewed model and effort from turn
+context, cumulative counters, the reported last increment, and counter state.
+Repeated totals can carry the same last increment. A decreased total indicates
+a discontinuity. Compaction observations carry only a timestamp and event type.
+
+Window keys are durations in minutes. Each carries used percent, reset epoch
+in Unix seconds, and an observation status. Missing values are null. A window
+whose epoch has passed is expired. The latest rollout checkpoint becomes stale
+after 900 seconds or when its epoch has passed. An advanced epoch marks a meter
+boundary and can reflect a rolling window. Regressed epochs or percentage
+decreases are recorded as discontinuities. Account meter movement can include
+other work.
+
+CLI 0.166.0 rollout collection was verified locally. The installed generated
+app-server schema includes `account/rateLimits/read`, `account/rateLimits/updated`
+and `thread/tokenUsage/updated`. The read returned a startup snapshot through
+an owned stdio client. The notifications were schema-verified only. The
+supervisor's pinned profile excludes these methods.
+`--account-snapshot` attaches a separately measured, sanitized read response
+with `measured_at` and a `windows` list of at most two entries
+(`windowDurationMins`, `usedPercent`, `resetsAt`).
+
+References for the installed release:
 [Codex App Server](https://learn.chatgpt.com/docs/app-server);
 [Codex upstream discussion on rollout rate-limit snapshots](https://github.com/openai/codex/discussions/56932).

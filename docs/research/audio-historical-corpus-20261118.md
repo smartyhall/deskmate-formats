@@ -42,6 +42,8 @@ the conservative MIDI projection. Header bytes and optional alignment
 and trailing bytes distinguish subprofiles. Song
 identity cannot be determined from the basename alone. See the audio
 research reports for the narrower playback and MIDI claims.
+The [Music control inventory](music-control-inventory-20261118.md) ranks
+the remaining event families and records their placement by stream.
 
 ## Documentation and converters
 
@@ -97,3 +99,7 @@ GIFCERT1, GIFCERT2, HHEELLPP and the three `stuff.zip` illustrations as
 private picture comparators for fill, embedded strokes and grouping. Their
 Workbench manifests and SVGs live in `draw-comparison`. Match any public
 regression fixture to a newly drawn synthetic control.
+
+Later bounded analysis located the failures independently in
+[PIPES group slots](draw-pipes-20261118.md) and a
+[BRIDESHW arc extent](draw-brideshw-20261118.md).

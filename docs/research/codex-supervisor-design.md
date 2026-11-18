@@ -94,6 +94,14 @@ windows, changes in schema and process recovery before any live adoption.
 Display usage through a read-only observer projection, never raw rollout
 content, authentication, or account identifiers.
 
+The [initial usage analysis](codex-usage-20261118.md) found that the two meters
+frequently advanced on different observations even within unchanged epochs.
+Use both windows independently and record the limiting one at checkpoint.
+Use 5% remaining as an initial trigger for smaller assignments and immediate
+pushes after verification. Treat the trigger as an operating heuristic.
+Preserve receipt fields for recent compaction and cache behavior when
+available. Model choice still needs comparisons on equivalent work.
+
 This is a deferred design requirement, not a new dispatch capability or
 permission to bypass S0–S3 gates.
 
