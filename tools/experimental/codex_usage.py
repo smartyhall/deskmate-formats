@@ -20,7 +20,7 @@ TOKENS = {
     "reasoning_output": ("reasoning_output_tokens", "reasoningOutputTokens"),
     "total": ("total_tokens", "totalTokens"),
 }
-MODELS = {"gpt-6.1-sol", "gpt-6.2-sol"}
+MODELS = {"gpt-6-luna", "gpt-6.1-sol", "gpt-6.2-sol"}
 EFFORTS = {"none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra"}
 
 
@@ -303,6 +303,7 @@ def main():
         receipt.update(checkpoint=args.checkpoint, collected_at=at.isoformat(),
                        commit=args.commit, observation=checkpoint(sessions, at, 900))
     elif args.compact_history:
+        receipt["cutoff"] = at.isoformat()
         receipt["history"] = compact_history(sessions)
     else:
         receipt["sessions"] = sessions
