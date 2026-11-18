@@ -21,10 +21,11 @@ and hashes of DESK.EXE, WRKSHEET.PDM and DMGUF.R89.
 | formats | 163,808 | 10,087 | Width and number formats, insertion, absolute references, far cell, Text clipboard and nested reopen |
 | reopen | 74,230 | 4,664 | Pointer rebase, stale reopen, error, input recalculation and row deletion |
 | growth | 52,994 | 3,315 | Fresh large block, paced soft-wrap control and large-file reopen |
+| precision | 87,262 | 5,445 | Precision and alignment differentials, deletion of a referenced column and recalculation |
 
-The total was 499,279 ms of emulated time. All guest input and observations
-used the authenticated loopback socket. The formats and reopen clones used
-the serial-mouse setting established for the previous graphics campaign.
+The total was 586,541 ms of emulated time. All guest input and observations
+used the authenticated loopback socket. The formats, reopen and precision
+clones used the serial-mouse setting from the previous graphics campaign.
 All sessions returned to DOS before shutdown. Independent FAT16
 directory/cluster extraction agreed with 7-Zip for every published file.
 Complete action transitions, PNGs, inventories, images and stopped-disk
@@ -59,7 +60,7 @@ click after a keyboard-only attempt left All selected.
 
 ## Native corpus
 
-Each name below identifies one archived file. The 38 public files appear
+Each name below identifies one archived file. The 44 public files appear
 under [worksheet fixtures](../../tests/fixtures/application-generated/worksheet/)
 with size, SHA-256, parent provenance and expected contents in the
 [manifest](../../tests/fixtures/application-generated/manifest.json).
@@ -79,12 +80,14 @@ Aliases with identical bytes preserve separate native save histories.
 | W14, W15, WEMPTY | Clear the second label, independently reopen/resave the one-label file, then clear its only label. W14 and W15 equal W01. WEMPTY equals W00. |
 | WNUM | Zero, one and 123456789. The last value overflows its display column and remains intact in storage. |
 | WINT, WLEFT | Integer choice and separate Left choice on 12.5. The status words become `0040` and `004A`; the latter dialog retained its selected type. Stored double and numeric string remain intact. |
+| WDP2, WDP4, WDL4, WCU | Explicit Decimal with two places, four-place precision, Left at four places and Currency. WDP4 reopened as `12.5000`. |
 | WFCOPY, WABS, WABSC | Relative formula copy and side-by-side relative/absolute reference controls. |
 | WMIX, WMIX2 | All five cell categories together. Changing RATE7 during Calculate raises its dependent formula result from 40.5 to 67.5. |
 | WROW, WCOL, WBACK | Independent insertion before row 1 and column 1, then deletion of the inserted row on a reopened copy. |
 | WSPARSE | Find Cell to R99C99 and type `FAR99`. Both extent bytes are 99. |
 | WCTX, WFIX | No-edit resaves under a nested Text launch and after a private memory-pointer rebase. |
 | WERR | Division by zero visibly yields `*ERROR`. The expression and error-state word persist. |
+| WREF, WREFC | Delete a referenced column and separately recalculate. Both visibly show `*ERROR`, and the old text and cache survive. |
 | WGRW | 63-row by seven-column block with GROWTH and CONTROL. Saved file is 5,094 bytes across three 2,048-byte FAT clusters. Both lines remained visible on reopen. |
 
 W08, WLARGE and WWRAP are archived privately because their dummy records
@@ -187,8 +190,13 @@ formula and input fields after Calculate, which prompts for named inputs.
 | WERR | 3 | `R1C1/0` | 0 | `0192` |
 
 The observed `0080` bit accompanies displayed result or error state. It
-does not indicate freshness. The error control sets `0100` along with
-it. Other bits remain available raw. W06 visibly reopened with the stale
+does not indicate freshness. Division by zero sets `0100`. WREF
+uses a separate `0020` flag after the "Formula reference made out of
+bounds" warning. The formula moves to R1C2 and keeps the original
+`R1C1+R1C2` expression and cached 11. Its status is `00B2`, and
+Calculate changes it to `00A2` while the error stays visible. The reader
+reports either of these measured formula error bits and preserves the cache.
+Other bits remain available raw. W06 visibly reopened with the stale
 5, and recalculation changes a single binary64 byte at file offset 236.
 For the mixed sheet, raising RATE7 from 4.5 to 7.5 during the Calculate
 prompt changes the numeric value and its dependent cache, with just three
@@ -198,6 +206,14 @@ Copying `R1C1+R1C2` down a row produced `R2C1+R2C2`. In WABSC the
 relative expression calculates to 10, and the copied absolute
 `#R1C1+#R1C2` remains unchanged and calculates to 11. Inserting a row or
 column ahead of the original coordinates also rewrites relative references.
+
+The number-format differentials change only byte 184 of W03. Selecting
+explicit Decimal with two places changes `02 → 42`. Four places yields
+`44`; Left while keeping four places yields `4C`. All four records
+retain the old string `12.50` and the same binary64 value. The observed
+low precision values and bit `08` track digits and left alignment. The
+Currency control WCU matches WDP2 byte-for-byte. Those two choices do
+not establish separate stored type codes.
 
 ## Inspect a worksheet
 
@@ -210,7 +226,7 @@ The JSON reader emits identity, Page Setup bytes, column widths, extents,
 TOPLIST descriptors and exclusive cell bounds, original records and
 strings, and numeric caches with measured flags. The compact listing keeps
 each expression visible beside its stored number. Structural checks reject
-truncation, inconsistent pad size, invalid counts or dummies, overlapping
+truncation, inconsistent pad size, invalid counts or dummies, duplicate
 cell coordinates, misaligned pool references and invalid text-block extents.
 The same reader checked the shipped LOAN and TVM files privately, recovering
 355 and 34 real cells respectively. Their bytes are commercial comparators

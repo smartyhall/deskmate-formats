@@ -125,7 +125,8 @@ def _cell(raw, category, offset, dummy, strings, extreme, seen):
         number = stored if isfinite(stored) else None
         if category != 'number':
             result_flag = bool(status & 0x80)
-            error_flag = bool(status & 0x100)
+        if category == 'formula':
+            error_flag = bool(status & 0x0120)
     return Cell(category, offset, row, col, status, ref, raw, False,
                 text, value, number, result_flag, error_flag, rows, columns)
 
@@ -135,9 +136,9 @@ def parse_bytes(source):
 
     Grid coordinates are one based. File offsets are absolute and ends
     exclusive. A cell's string offset is relative to TOPLIST_START. The
-    result and error flags record status bits 0x80 and 0x100 on formula and
-    input records. Numeric caches always come from the file. They may be
-    stale, uncalculated or associated with an error state.
+    result flag records bit 0x80 on formulas and inputs. The formula error
+    flag interprets the measured out-of-bounds and arithmetic error bits.
+    Numeric caches come from the file and may be stale or uncalculated.
     """
     _require(isinstance(source, (bytes, bytearray, memoryview)), 'expected worksheet bytes')
     _require(MIN_BYTES <= memoryview(source).nbytes <= MAX_BYTES, 'invalid worksheet size')
@@ -187,6 +188,8 @@ def main(argv=None):
         for cell in sorted((c for c in sheet.cells if not c.dummy), key=lambda c: (c.row, c.column)):
             number = f'  stored={cell.numeric_value!r}' if cell.numeric_value is not None else ''
             status = f'  status=0x{cell.status:04X}' if cell.result_flag is not None else ''
+            if cell.error_flag:
+                status += ' (error)'
             print(f'R{cell.row}C{cell.column}  {cell.category:<10} {cell.text!r}{number}{status}')
     else:
         print(json.dumps(asdict(sheet), default=bytes.hex, indent=2))

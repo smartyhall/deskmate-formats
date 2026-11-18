@@ -2,7 +2,7 @@
 
 ## Worksheet research checkpoint — 2026-11-17
 
-The dedicated Worksheet branch preserves 38 exact native synthetic WKS
+The dedicated Worksheet branch preserves 44 exact native synthetic WKS
 files and a bounded reader for all five cell categories. Controls establish
 the packed TOPLIST layout, counted dummies, rebased memory pointers,
 one-based grid, NUL string pool and binary64 values. Native formula

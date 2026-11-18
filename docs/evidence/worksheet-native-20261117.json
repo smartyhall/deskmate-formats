@@ -142,6 +142,29 @@
           "sha256": "d35c8d241f1f5e3f910df08a6c353689e2029adaa59f3322e5e3c962bf97dd6b"
         }
       }
+    },
+    "precision": {
+      "parent": "reopen",
+      "disk_sha256": "0de3770feefeef7bafe127a82680de6246591332199f927c4f991633968b8c2a",
+      "config_sha256": "af99f8cf9b4dbbe094c86e0159d3d892beafd40a4e808b83bfeb5912c44475b6",
+      "nvr_sha256": "48fccd0291877a00863e7196271b1c8e284c264fcd324dda7b1b10049c7bf505",
+      "stopped_disk_sha256": "8078a06d38bbd84039d73cb1ffd7bd030f4f3f94bf823351dc89da2ff3c5bf45",
+      "elapsed_emulated_ms": 87262,
+      "frame_count": 5445,
+      "installed_modules": {
+        "DESK.EXE": {
+          "size": 19047,
+          "sha256": "0f2a40243c997276904d2555a117c60eedf0016dde073285e8d63c8345a2eba3"
+        },
+        "WRKSHEET.PDM": {
+          "size": 59590,
+          "sha256": "f41bd48aac9328432fb814bc0636de3dab37080d1fd2d97dc3c2bf7d7a24eccc"
+        },
+        "DMGUF.R89": {
+          "size": 15066,
+          "sha256": "d35c8d241f1f5e3f910df08a6c353689e2029adaa59f3322e5e3c962bf97dd6b"
+        }
+      }
     }
   },
   "specimens": {
@@ -2862,6 +2885,272 @@
         ],
         "parent_size": 232,
         "child_size": 279
+      }
+    },
+    "WDP2.WKS": {
+      "size": 252,
+      "sha256": "6da7f4e1d3d8203a23ec7e9326e61bc93a83f0af06682693c3ed3e5d73a6c061",
+      "trial": "precision",
+      "framebuffer_capture": "wdp2-wdp4-setup",
+      "framebuffer_sha256": "38facf7a675cd7011d7b4c369953a8a0222e4b18b0615b26c865ee9fc5459d01",
+      "expected_contents": "Explicitly select Decimal with two places. Stored number and number string stay unchanged.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W03",
+        "size": 252,
+        "sha256": "a7ceb1df7116483c43f6c1f032ba3818a97f247312a5a94079eb8f07e192f804"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            184,
+            185
+          ]
+        ],
+        "parent_size": 252,
+        "child_size": 252
+      }
+    },
+    "WDP4.WKS": {
+      "size": 252,
+      "sha256": "450679eb5afd1b90c6c6e4faa8d50a224939a0fc776eb9a6477b74f0c2babd0f",
+      "trial": "precision",
+      "framebuffer_capture": "wdp4-wdl4",
+      "framebuffer_sha256": "0ce1df0008ae900c64ada8274c86036b649aeb792d56df2b842792dd6b5754a2",
+      "expected_contents": "Change decimal precision to four places at the same value. Reopen displays 12.5000.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "WDP2",
+        "size": 252,
+        "sha256": "6da7f4e1d3d8203a23ec7e9326e61bc93a83f0af06682693c3ed3e5d73a6c061"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            184,
+            185
+          ]
+        ],
+        "parent_size": 252,
+        "child_size": 252
+      }
+    },
+    "WDL4.WKS": {
+      "size": 252,
+      "sha256": "e58ededc342a6000444c4e56cc908d1819ad3dfc5bfdae496bc5e26f414e5148",
+      "trial": "precision",
+      "framebuffer_capture": "wdp4-wdl4",
+      "framebuffer_sha256": "0ce1df0008ae900c64ada8274c86036b649aeb792d56df2b842792dd6b5754a2",
+      "expected_contents": "Select Left on the four-place decimal. Precision, numeric cache and number string stay unchanged.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "WDP4",
+        "size": 252,
+        "sha256": "450679eb5afd1b90c6c6e4faa8d50a224939a0fc776eb9a6477b74f0c2babd0f"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            184,
+            185
+          ]
+        ],
+        "parent_size": 252,
+        "child_size": 252
+      }
+    },
+    "WCU.WKS": {
+      "size": 252,
+      "sha256": "6da7f4e1d3d8203a23ec7e9326e61bc93a83f0af06682693c3ed3e5d73a6c061",
+      "trial": "precision",
+      "framebuffer_capture": "wcu-and-reference-delete",
+      "framebuffer_sha256": "132bf826937c505379e747360504f188c92be5413145b942d8a04b68d3f34291",
+      "expected_contents": "Select Currency on the four-place control. Saved file equals the explicit two-place decimal control WDP2.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "WDP4",
+        "size": 252,
+        "sha256": "450679eb5afd1b90c6c6e4faa8d50a224939a0fc776eb9a6477b74f0c2babd0f"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            184,
+            185
+          ]
+        ],
+        "parent_size": 252,
+        "child_size": 252
+      }
+    },
+    "WREF.WKS": {
+      "size": 275,
+      "sha256": "8e2bc6dce7ab199c2c33b7233cf842efae00073986b2fd7903b0fd11235bba7b",
+      "trial": "precision",
+      "framebuffer_capture": "wref-broken-reference",
+      "framebuffer_sha256": "e1ecc5738b4aaf2f4b274aedc9fd33d4db334326463cbfd2b0c634c63affb517",
+      "expected_contents": "Delete the first column containing a referenced value. Native warns, moves the formula to R1C2, and displays *ERROR with the old expression and stored value 11.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 1,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W06C",
+        "size": 294,
+        "sha256": "4ef9a1755df3e881cfd2786ea34c67ea4c8697adea730188e7434cec701bcbc7"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            123,
+            126
+          ],
+          [
+            138,
+            139
+          ],
+          [
+            144,
+            145
+          ],
+          [
+            146,
+            147
+          ],
+          [
+            148,
+            149
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            194,
+            195
+          ],
+          [
+            196,
+            199
+          ],
+          [
+            200,
+            201
+          ],
+          [
+            208,
+            213
+          ],
+          [
+            214,
+            215
+          ],
+          [
+            222,
+            227
+          ],
+          [
+            228,
+            229
+          ],
+          [
+            236,
+            238
+          ],
+          [
+            250,
+            252
+          ],
+          [
+            260,
+            264
+          ],
+          [
+            265,
+            275
+          ]
+        ],
+        "parent_size": 294,
+        "child_size": 275
+      }
+    },
+    "WREFC.WKS": {
+      "size": 275,
+      "sha256": "3feabda129b839c069b44960d0ee9f46314db43827bb59d4b2d255974fd97ba8",
+      "trial": "precision",
+      "framebuffer_capture": "wrefc-save-precision-reopen",
+      "framebuffer_sha256": "2cc5ceccc4025b1725442e55945ab3a950629d0ea777f502a75dca7b4b3defb0",
+      "expected_contents": "Recalculate the out-of-bounds control and save. The error persists and only one status byte changes.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 1,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "WREF",
+        "size": 275,
+        "sha256": "8e2bc6dce7ab199c2c33b7233cf842efae00073986b2fd7903b0fd11235bba7b"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            212,
+            213
+          ]
+        ],
+        "parent_size": 275,
+        "child_size": 275
       }
     }
   },

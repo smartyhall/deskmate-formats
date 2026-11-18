@@ -83,6 +83,18 @@ class NativeWorksheetTest(unittest.TestCase):
         self.assertEqual(raw('w06c'), raw('wrecalc'))
         self.assertEqual(populated('w06')[1, 2].numeric_value, 9.0)
 
+    def test_reference_error_preserves_expression_and_old_cache(self):
+        for name, status in (('wref', 0xB2), ('wrefc', 0xA2)):
+            cell = populated(name)[1, 2]
+            self.assertEqual((cell.text, cell.numeric_value, cell.status), ('R1C1+R1C2', 11.0, status))
+            self.assertTrue(cell.error_flag)
+
+    def test_decimal_precision_and_alignment_status_controls(self):
+        for name, status in (('wdp2', 0x42), ('wdp4', 0x44), ('wdl4', 0x4C)):
+            cell = populated(name)[1, 1]
+            self.assertEqual((cell.text, cell.numeric_value, cell.status), ('12.50', 12.5, status))
+        self.assertEqual(raw('wcu'), raw('wdp2'))
+
     def test_formula_copy_rewrites_relative_references_only(self):
         p = populated('wabsc')
         relative, absolute = p[2, 3], p[2, 4]
