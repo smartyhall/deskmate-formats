@@ -1,0 +1,80 @@
+# Codex research usage ledger
+
+**Established:** 2026-11-18, by operator request.
+**Scope:** DeskMate research campaigns; sanitized, reproducible usage receipts
+only. This directory is the central tracked destination, not a dump of the
+operator's account history.
+
+## Collection and publication contract
+
+- At campaign start, each useful checkpoint, and completion (or an early stop),
+  record available measurements. Prefer a reusable non-model collector which
+  can also run after model exhaustion; do not spend inference on polling.
+- For historical backfill, inspect the actual local Codex home
+  (`CODEX_HOME` when set, otherwise normally `~/.codex`), including the
+  `sessions/` and, if present, archived session stores. Local rollout JSONL
+  may contain `event_msg` records with `payload.type == "token_count"`,
+  token totals/deltas and optional `rate_limits`. Determine available fields
+  and relevant project cwd/repo from local metadata without copying raw content.
+  Inspect schema variants and use project-attributable records only; quarantine
+  uncertain or unrelated records privately. Never modify source logs.
+- For current limits, verify the installed app-server version and generated
+  schema before using documented read-only `account/rateLimits/read` and
+  `account/rateLimits/updated` or `thread/tokenUsage/updated` where supported.
+  No added model turn is required just to query usage. If starting a separate
+  read-only client is unsupported or would interfere with a live session, use
+  the local logs or a manual observation and label it honestly.
+- Do not access or export authentication files or tokens. Never publish raw
+  rollout records, prompts, tool outputs, conversations, absolute paths,
+  account/email/plan identifiers, raw thread/session IDs, or unrelated work.
+  Exact banked-reset inventory and expirations remain in private account
+  telemetry; no reset redemption or purchases are authorized by this ledger.
+- Use reviewed, allowlisted aggregate/project data only. Retain source receipts
+  and the stable mapping of local session/event identities in a private lab
+  directory. Use a stable private pseudonym or opaque campaign/run label for
+  published attribution. Do not confuse a public receipt with a complete
+  account-wide usage history.
+
+## Suggested v1 layout
+
+Store one small JSON file per campaign or backfill batch in this directory,
+using a unique filename such as `20261118-audio-native.json` or
+`20261118-historical-backfill-01.json`, with an accurate REUSE sidecar.
+Update existing campaign receipts at checkpoints, or use separate immutable
+batch files if concurrent writers would conflict. Keep a versioned schema and
+document any revisions. Initial suggested fields:
+
+- `schema_version`, campaign/run label, source kind, collector version, and
+  relevant Git commit/checkpoint where known.
+- Measurement UTC timestamp; model and reasoning effort if actually known;
+  token counters (input, cached input, output, reasoning output, total) labeled
+  as cumulative or incremental, with explicit nulls for unknowns.
+- Quota window entries with duration in minutes, observed used percentage and
+  reset timestamp when retained for analysis; distinguish used from remaining
+  (do not assume primary means five hours). Record missing/stale observations.
+- Coverage/limitations: source record count, deduplicated count, current versus
+  historical source, gaps, attribution quality, and whether a checkpoint was
+  completed. Optional milestone labels or public commit references.
+
+Normalize and validate types/ranges; preserve source semantics. Do not sum
+cumulative counts across events, double count reasoning or cached tokens, or
+attribute a shared account's quota change to one worker without evidence.
+Deduplicate using private stable source/event identities; ensure re-running the
+import does not inflate totals. Distinguish quota decreases due to resets or
+source changes from negative consumption. Do not invent an accounting ratio,
+guess missing model names, or extrapolate a precise cost from rounded meters.
+
+The first implementation should include deterministic extraction and synthetic
+tests (null fields, differing schemas, repeated cumulative totals, duplicate
+records, mixed projects, malformed/truncated input and a reset boundary).
+Build an incremental backfill with a private input index and small reviewed
+public receipts, and summarize coverage by date/campaign/model/effort when
+available. Avoid reading private conversation text into model context.
+
+See also the [standing research instructions](../../../AGENTS.md) and
+[supervisor design](../../research/codex-supervisor-design.md), which treats
+usage as an input to future dispatch and early checkpoint policy.
+
+References to verify against the installed release:
+[Codex App Server](https://learn.chatgpt.com/docs/app-server);
+[Codex upstream discussion on rollout rate-limit snapshots](https://github.com/openai/codex/discussions/56932).
