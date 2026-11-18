@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "usage-research-20261118",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 20,
+    "token_records": 2510,
+    "sessions": 20
+  },
+  "checkpoint": "music",
+  "collected_at": "2026-11-18T22:47:08.156988+00:00",
+  "commit": "04171e31ffac56c2bc9b463b48a9d162818bdf40",
+  "observation": {
+    "session": "0b7d90e73253d2b03c583843",
+    "measured_at": "2026-11-18T22:47:07.088000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 3461857,
+      "cached_input": 3362688,
+      "output": 30073,
+      "reasoning_output": 3151,
+      "total": 3491930
+    },
+    "reported_last": {
+      "input": 104598,
+      "cached_input": 103040,
+      "output": 1451,
+      "reasoning_output": 95,
+      "total": 106049
+    },
+    "windows": {
+      "300": {
+        "used_percent": 8.0,
+        "reset_epoch": 1795058908,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 97.0,
+        "reset_epoch": 1795404940,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  }
+}

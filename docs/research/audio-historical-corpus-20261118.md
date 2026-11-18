@@ -42,6 +42,8 @@ the conservative MIDI projection. Header bytes and optional alignment
 and trailing bytes distinguish subprofiles. Song
 identity cannot be determined from the basename alone. See the audio
 research reports for the narrower playback and MIDI claims.
+The [Music control inventory](music-control-inventory-20261118.md) ranks
+the remaining event families and records their placement by stream.
 
 ## Documentation and converters
 
