@@ -75,6 +75,43 @@ See also the [standing research instructions](../../../AGENTS.md) and
 [supervisor design](../../research/codex-supervisor-design.md), which treats
 usage as an input to future dispatch and early checkpoint policy.
 
-References to verify against the installed release:
+## Local collector and receipt schema v1
+
+Run from the checkout with Python 3.13 or newer. Review the receipt before
+publication and choose a new filename for each milestone.
+
+```powershell
+python tools/experimental/codex_usage.py --root . --private-dir $private --label campaign-slug --checkpoint milestone-slug --output $receipt
+```
+
+Repeat `--root` for known project worktrees and set `--home` for another known
+store. Omit `--checkpoint` for event history. Reuse the same private directory
+to retain opaque session labels. Merge histories by session and observation
+contents or regenerate the batch from source. `--at` is an inclusive ISO
+timestamp cutoff with timezone. Attach a known public Git SHA with `--commit`.
+
+Token observations include UTC time, reviewed model and effort from turn
+context, cumulative counters, the reported last increment, and counter state.
+Repeated totals can carry the same last increment. A decreased total indicates
+a discontinuity. Compaction observations carry only a timestamp and event type.
+
+Window keys are durations in minutes. Each carries used percent, reset epoch
+in Unix seconds, and an observation status. Missing values are null. A window
+whose epoch has passed is expired. The latest rollout checkpoint becomes stale
+after 900 seconds or when its epoch has passed. An advanced epoch marks a meter
+boundary and can reflect a rolling window. Regressed epochs or percentage
+decreases are recorded as discontinuities. Account meter movement can include
+other work.
+
+CLI 0.166.0 rollout collection was verified locally. The installed generated
+app-server schema includes `account/rateLimits/read`, `account/rateLimits/updated`
+and `thread/tokenUsage/updated`. The read returned a startup snapshot through
+an owned stdio client. The notifications were schema-verified only. The
+supervisor's pinned profile excludes these methods.
+`--account-snapshot` attaches a separately measured, sanitized read response
+with `measured_at` and a `windows` list of at most two entries
+(`windowDurationMins`, `usedPercent`, `resetsAt`).
+
+References for the installed release:
 [Codex App Server](https://learn.chatgpt.com/docs/app-server);
 [Codex upstream discussion on rollout rate-limit snapshots](https://github.com/openai/codex/discussions/56932).
