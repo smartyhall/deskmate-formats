@@ -4,17 +4,17 @@ from dataclasses import asdict
 import json
 import sys
 
-from . import database
+from . import database, filer_graphics
 
 
 def parse_bytes(source):
     """Return the common database snapshot, including any retained 0x44 rows."""
-    return _filer(database.parse_bytes(source, allow_retired=True))
+    return _filer(database.parse_bytes(source, allow_retired=True, allow_legacy_filer_schema=True))
 
 
 def parse_file(path):
     """Read a bounded Filer snapshot from disk."""
-    return _filer(database.parse_file(path, allow_retired=True))
+    return _filer(database.parse_file(path, allow_retired=True, allow_legacy_filer_schema=True))
 
 
 def _filer(snapshot):
@@ -36,11 +36,11 @@ def _display_row(row):
     }
 
 
-def inspect_file(path):
+def inspect_file(path, *, include_graphics=False):
     """Return JSON-compatible table definitions and Filer DATA in index order."""
     snapshot = parse_file(path)
     data = snapshot.table('DATA')
-    return {
+    result = {
         'sha256': snapshot.sha256,
         'size': len(snapshot.data),
         'tables': [
@@ -61,18 +61,22 @@ def inspect_file(path):
         'data_rows': [_display_row(row) for row in data.rows],
         'retired_data_rows': [_display_row(row) for row in data.retired_rows],
     }
+    if include_graphics:
+        result['graphics'] = [asdict(section) for section in filer_graphics.decode(snapshot)]
+    return result
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source')
+    parser.add_argument('--graphics', action='store_true', help='decode measured GRAPHICS sections')
     args = parser.parse_args(argv)
     try:
-        result = inspect_file(args.source)
+        result = inspect_file(args.source, include_graphics=args.graphics)
     except (OSError, ValueError) as exc:
         print(str(exc), file=sys.stderr)
         return 2
-    print(json.dumps(result, indent=2))
+    print(json.dumps(result, default=bytes.hex, indent=2))
     return 0
 
 

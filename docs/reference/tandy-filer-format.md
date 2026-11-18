@@ -79,7 +79,12 @@ The guide describes a maximum of 22 user-defined DATA columns, each linked to a 
 
 A controlled *new* form with one field, then two fields (including different field types), provides a better schema baseline than extrapolation from the shipped car/inventory examples.
 
-## GRAPHICS: essential unresolved encoding
+## GRAPHICS encoding reference
+
+The [native graphics study](../research/graphics-native-20261117.md)
+identifies the transform on measured files and correlates its `F`, `R`
+and `&` records with complete card and report forms. The historical
+predictions and validation questions below describe the manufacturer source.
 
 The guide says GRAPHICS stores **binary graphics data encoded in an “encrypted” format** because the database permits only ASCII data. It gives no transformation algorithm, graphics primitive grammar, or coordinate representation. **“Encrypted” is the manufacturer's word; this is not evidence of a cryptographic cipher.** The scanned section labels possible fields `RECORD` and `BITS` but gives no recoverable sizes or full semantics; treat their meaning and schema as unresolved until verified against native DBCOLS.
 

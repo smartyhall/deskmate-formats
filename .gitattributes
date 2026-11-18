@@ -18,4 +18,5 @@ tests/fixtures/application-generated/**/*.cln -text
 tests/fixtures/application-generated/filer/*.fil -text
 tests/fixtures/application-generated/text/*.doc binary
 tests/fixtures/application-generated/text/*.txt binary
+tests/fixtures/application-generated/draw/*.fig binary
 docs/research/codex-app-server-0.166.0.json text eol=lf
