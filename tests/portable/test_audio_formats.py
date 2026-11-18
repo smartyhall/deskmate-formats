@@ -192,6 +192,52 @@ class MusicTests(unittest.TestCase):
         self.assertEqual([item.word for item in after.voices[0]], words[:1] + words[2:])
         self.assertEqual((music.project(before).written_ticks, music.project(after).written_ticks), (792, 768))
 
+    def test_native_mid_score_tempo_and_meter(self):
+        score = music.parse_bytes((FIXTURES / 'music/mtimes.sng').read_bytes())
+        sequence = music.project(score)
+        _, tempo, meter, _ = sequence.conductor
+        self.assertEqual((tempo.tick, tempo.tempo_bpm, tempo.tempo_note_denominator, tempo.quarter_bpm),
+                         (24, 75, 2, 150))
+        self.assertEqual((meter.tick, meter.meter_numerator, meter.meter_denominator), (24, 6, 8))
+        midi = music.to_midi(sequence)
+        self.assertIn(bytes.fromhex('00 ff 51 03 09 27 c0 18 ff 51 03 06 1a 80'), midi)
+        self.assertIn(bytes.fromhex('00 ff 58 04 06 03 18 08'), midi)
+
+    def test_odd_eighth_tempo_preserves_fractional_quarter_bpm(self):
+        source = score_bytes(((0xea1c, 0xea23), (), ()), (0x2018, 0x1297, 0x2018))
+        sequence = music.project(music.parse_bytes(source))
+        tempo = sequence.conductor[1]
+        self.assertEqual((tempo.tick, tempo.tempo_note_denominator, tempo.quarter_bpm), (24, 8, 75.5))
+        self.assertIn(b'\x18\xff\x51\x03' + round(60_000_000 / 75.5).to_bytes(3, 'big'),
+                      music.to_midi(sequence))
+
+    def test_native_repeat_is_preserved_in_written_order(self):
+        source = (FIXTURES / 'music/mloop.sng').read_bytes()
+        sequence = music.project(music.parse_bytes(source))
+        start, _, end = sequence.conductor
+        self.assertEqual((start.kind, start.tick, start.repeat_count), ('repeat_start', 0, 2))
+        self.assertEqual((end.kind, end.tick), ('repeat_end', 48))
+        with self.assertRaisesRegex(music.MusicFormatError, 'score repeats'):
+            music.to_midi(sequence)
+
+    def test_native_tie_slur_and_key_signature(self):
+        keys = ('m12', 'm13', 'm14')
+        tie, slur, key = (music.project(music.parse_bytes((FIXTURES / f'music/{n}.sng').read_bytes()))
+                          for n in keys)
+        self.assertEqual([event.connection for event in tie.voices[0]], ['start', 'continue', 'end'])
+        self.assertIn(bytes.fromhex('00 90 3c 40 48 80 3c 00 00 ff 2f 00'), music.to_midi(tie))
+        self.assertIn(bytes.fromhex('00 90 3c 40 18 80 3c 00 00 90 43 40 18 80 43 00'), music.to_midi(slur))
+        self.assertEqual(key.conductor[0].key_code, 9)
+        self.assertEqual([(event.midi_pitch, event.accidental_flags) for event in key.voices[0]],
+                         [(60, 0), (67, 0), (66, 0), (65, 0xc0)])
+
+    def test_rejects_unpaired_note_connections(self):
+        for word in (0xca1c, 0x8a1c, 0xaa1c):
+            with self.subTest(word=word):
+                score = score_bytes(((word,), (), ()), (0x2018,))
+                with self.assertRaisesRegex(music.MusicFormatError, 'tie or slur'):
+                    music.to_midi(music.project(music.parse_bytes(score)))
+
     def test_opaque_music_projects_to_json_with_no_midi_asset(self):
         source = score_bytes(((0xea1c, 0x7320, 0xea1d), (), ()), (0x2030, 0x7400))
         with tempfile.TemporaryDirectory() as folder:

@@ -37,8 +37,9 @@ use the original table (one PCM and seven music-compressed). Eight use the
 later linked container (two PCM, five music-compressed and one
 speech-compressed). Both profiles pass the bounded Sound reader and PCM
 extraction on all 16 files. The 90 Music occurrences reduce to 62 unique
-files. All 62 pass the same four-stream structural reader. Header bytes
-and optional alignment and trailing bytes distinguish subprofiles. Song
+files. All 62 pass the same four-stream structural reader, and 15 pass
+the conservative MIDI projection. Header bytes and optional alignment
+and trailing bytes distinguish subprofiles. Song
 identity cannot be determined from the basename alone. See the audio
 research reports for the narrower playback and MIDI claims.
 

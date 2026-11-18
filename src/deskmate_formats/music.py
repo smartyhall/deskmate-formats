@@ -23,6 +23,9 @@ NOTE_TICKS = {
     0xec: 18, 0xed: 16, 0xee: 12, 0xf0: 9, 0xf1: 8, 0xf2: 6,
     0xf5: 4, 0xf6: 3, 0xf7: 2,
 }
+NOTE_CONNECTION = {0x00: 'continue', 0x20: 'end', 0x40: 'start', 0x60: None}
+TEMPO_DENOMINATORS = {0x10: 2, 0x11: 4, 0x12: 8}
+METER_DENOMINATORS = (2, 4, 8, 16, 32)
 
 
 class MusicFormatError(ValueError):
@@ -54,10 +57,18 @@ class Event:
     tick: int | None
     duration_ticks: int | None = None
     midi_pitch: int | None = None
-    quarter_bpm: int | None = None
+    quarter_bpm: int | float | None = None
     instrument_slot: int | None = None
     dynamic_index: int | None = None
     bar_number: int | None = None
+    connection: str | None = None
+    accidental_flags: int | None = None
+    tempo_bpm: int | None = None
+    tempo_note_denominator: int | None = None
+    meter_numerator: int | None = None
+    meter_denominator: int | None = None
+    key_code: int | None = None
+    repeat_count: int | None = None
 
 
 @dataclass(frozen=True)
@@ -127,16 +138,20 @@ def project(score):
         tick = 0
         for item in stream:
             code, value = item.word >> 8, item.word & 0xff
+            duration_code = code | 0x60
+            pitch, accidental = value & 0x3f, value & 0xc0
+            connection = NOTE_CONNECTION[code & 0x60]
             if code == 0x73 and value < 32:
                 events.append(Event(item.offset, item.word, 'instrument', tick, instrument_slot=value + 1))
             elif code == 0x72 and value < 6:
                 events.append(Event(item.offset, item.word, 'dynamic', tick, dynamic_index=value))
-            elif code in NOTE_TICKS and value < 128 and value != 64:
-                duration = NOTE_TICKS[code]
-                pitch = value & 0x3f
+            elif (duration_code in NOTE_TICKS and accidental != 0x80
+                  and (pitch or (not value and connection is None))):
+                duration = NOTE_TICKS[duration_code]
                 kind = 'note' if pitch else 'rest'
                 midi_pitch = 32 + pitch if pitch else None
-                events.append(Event(item.offset, item.word, kind, tick, duration, midi_pitch))
+                events.append(Event(item.offset, item.word, kind, tick, duration, midi_pitch,
+                                    connection=connection, accidental_flags=accidental if pitch else None))
                 if tick is not None:
                     tick += duration
             else:
@@ -148,14 +163,30 @@ def project(score):
     conductor = []
     tick = 0
     for item in score.conductor:
-        if item.word & 0xf000 == 0x2000:
+        code, value = item.word >> 8, item.word & 0xff
+        family = item.word & 0xf000
+        numerator, denominator = (item.word >> 6) & 0x3f, item.word & 0x3f
+        if family == 0x2000:
             duration = item.word & 0xfff
             conductor.append(Event(item.offset, item.word, 'advance', tick, duration))
             tick += duration
-        elif item.word >> 8 == 0x11 and item.word & 0xff:
-            conductor.append(Event(item.offset, item.word, 'tempo', tick, quarter_bpm=item.word & 0xff))
-        elif item.word >> 8 == 0x71:
-            conductor.append(Event(item.offset, item.word, 'barline', tick, bar_number=(item.word & 0xff) + 1))
+        elif code in TEMPO_DENOMINATORS and value:
+            beat = TEMPO_DENOMINATORS[code]
+            whole, remainder = divmod(value * 4, beat)
+            quarter_bpm = whole + remainder / beat if remainder else whole
+            conductor.append(Event(item.offset, item.word, 'tempo', tick, quarter_bpm=quarter_bpm,
+                                   tempo_bpm=value, tempo_note_denominator=beat))
+        elif family == 0x6000 and 2 <= numerator <= 32 and denominator in METER_DENOMINATORS:
+            conductor.append(Event(item.offset, item.word, 'meter', tick,
+                                   meter_numerator=numerator, meter_denominator=denominator))
+        elif code == 0x70 and value < 32:
+            conductor.append(Event(item.offset, item.word, 'key', tick, key_code=value))
+        elif code == 0x71:
+            conductor.append(Event(item.offset, item.word, 'barline', tick, bar_number=value + 1))
+        elif code == 0x30 and value >= 2:
+            conductor.append(Event(item.offset, item.word, 'repeat_start', tick, repeat_count=value))
+        elif item.word == 0x50ff:
+            conductor.append(Event(item.offset, item.word, 'repeat_end', tick))
         else:
             conductor.append(Event(item.offset, item.word, 'opaque', tick))
     return Sequence(tuple(voices), tuple(conductor), tick, tuple(voice_ticks))
@@ -202,8 +233,34 @@ def _midi_track(events, end):
 
 
 def _midi_tempo(bpm):
-    micros = (60_000_000 + bpm // 2) // bpm
+    micros = round(60_000_000 / bpm)
     return b'\xff\x51\x03' + micros.to_bytes(3, 'big')
+
+
+def _midi_notes(voice):
+    pending = None
+    for event in voice:
+        if event.kind != 'note':
+            if pending is not None:
+                raise MusicFormatError(f'interrupted tie or slur at {event.offset}')
+            continue
+        note = (event.tick, event.tick + event.duration_ticks, event.midi_pitch)
+        if event.connection in ('continue', 'end'):
+            if pending is None:
+                raise MusicFormatError(f'tie or slur has no start at {event.offset}')
+            if pending[2] == event.midi_pitch:
+                note = (pending[0], note[1], note[2])
+            else:
+                yield pending
+        elif pending is not None:
+            raise MusicFormatError(f'tie or slur has no end before {event.offset}')
+        if event.connection in ('start', 'continue'):
+            pending = note
+        else:
+            yield note
+            pending = None
+    if pending is not None:
+        raise MusicFormatError('tie or slur ends outside the voice stream')
 
 
 def to_midi(sequence):
@@ -212,9 +269,12 @@ def to_midi(sequence):
     if opaque:
         first = opaque[0]
         raise MusicFormatError(f'{len(opaque)} unsupported score word(s), first {first.word:04x} at {first.offset}')
+    if any(event.kind in ('repeat_start', 'repeat_end') for event in sequence.conductor):
+        raise MusicFormatError('score repeats require a playback interpretation')
     if any(tick > sequence.written_ticks for tick in sequence.voice_ticks):
         raise MusicFormatError('voice duration exceeds the conductor timeline')
     tempos = [(0, _midi_tempo(DEFAULT_QUARTER_BPM))]
+    meters = []
     for event in sequence.conductor:
         if event.kind == 'tempo':
             if event.quarter_bpm < 4:
@@ -224,13 +284,16 @@ def to_midi(sequence):
                 tempos[-1] = entry
             else:
                 tempos.append(entry)
-    tracks = [_midi_track(tempos, sequence.written_ticks)]
+        elif event.kind == 'meter':
+            exponent = event.meter_denominator.bit_length() - 1
+            meters.append((event.tick, b'\xff\x58\x04' + bytes((event.meter_numerator, exponent, 24, 8))))
+    conductor = sorted(tempos + meters, key=lambda item: item[0])
+    tracks = [_midi_track(conductor, sequence.written_ticks)]
     for channel, voice in enumerate(sequence.voices):
         messages = []
-        for event in voice:
-            if event.kind == 'note':
-                messages.append((event.tick, bytes((0x90 | channel, event.midi_pitch, 64))))
-                messages.append((event.tick + event.duration_ticks, bytes((0x80 | channel, event.midi_pitch, 0))))
+        for start, end, pitch in _midi_notes(voice):
+            messages.append((start, bytes((0x90 | channel, pitch, 64))))
+            messages.append((end, bytes((0x80 | channel, pitch, 0))))
         tracks.append(_midi_track(messages, sequence.written_ticks))
     return pack('>4sIHHH', b'MThd', 6, 1, len(tracks), TICKS_PER_QUARTER) + b''.join(tracks)
 

@@ -32,7 +32,7 @@ establishes the modeled hardware. UI launch and waveform display establish
 native interpretation of the opened file. Windows WinMM enumerated zero
 host audio input and output endpoints in this session. Audio output
 fidelity and live microphone capture need their own observations.
-[86Box device source](https://github.com/86Box/86Box/blob/master/src/sound/snd_pssj.c)
+[86Box device source](https://github.com/86Box/86Box/blob/855258da966f1594f568350be59e8e1eca082ed1/src/sound/snd_pssj.c)
 
 ## Container grammar
 
@@ -225,6 +225,48 @@ output. The recovered bytes differ from the starting tone at 3,078 of
 LABINST's descriptor stores pitch 28 for native C3, range codes 25–63,
 and the two sustain words. The copied waveform still has a physical
 frequency of 440 Hz. Setting the nominal note changed metadata and kept
-those PCM bytes identical. Music's rendered transposition, selection among
-overlapping ranges and sustain-release behavior require playback evidence.
+those PCM bytes identical.
 [Cross-application slot control](music-native-20261118.md)
+
+## Emulated playback
+
+An instrumented build from the same pinned 86Box revision records the RSX
+PSSJ DAC contribution in `pssj_get_buffer` before host mixing. It appends
+signed 16-bit mono values at `SOUND_FREQ` (48,000 Hz), with a 96-second cap.
+The capture excludes the PSG path, speakers and room acoustics. The VM still
+had zero WinMM endpoints. Use the source patch and commands under the private
+campaign archive to rebuild the probe. The executable, source diff, input
+floppy, DAC stream, and selected screenshots are identified in the native
+receipt. The first probe attached the nonbootable floppy before boot and did
+not reach DOS. The successful clone booted to DOS before floppy insertion.
+[Native receipt](../evidence/audio-native-20261118.json)
+
+| Control | DAC observation |
+| --- | --- |
+| Sound plays TONERAWO | About 448 Hz and 0.50 seconds of signal. The stored PCM is 440 Hz at its declared rate. |
+| Music plays M11 with slot 7 | About 445 Hz for C4 and 891 Hz for C5. The active windows span 0.42 and 0.37 seconds. The second onset follows the first by about 0.57 seconds. |
+| SLOT8 changes only the instrument to 8 | The same frequencies and active durations. For these two notes the second sample with unspecified range did not displace the first sample, whose range covers both pitches. |
+| HELD7 gives slot 7 a whole C4 note | About 445 Hz for 1.82 seconds, exceeding the source sample's 0.50-second length. The fixture has a defined sustain loop. |
+| REP7 repeats C4 and G4, count 2 | Four active intervals at about 445, 665, 445 and 665 Hz, with onsets approximately 0.57 seconds apart. |
+| MID7 and EIGHTH change tempo at the second quarter | The second active window spans about 0.16 seconds at 75 half notes per minute, and 0.58 seconds at 151 eighth notes per minute. The first active window spans about 0.42 seconds in both. |
+
+Active intervals use 10-ms bins and frequencies use short-window spectral
+estimates. The playback clock and native envelopes differ from the written
+MIDI timeline and direct PCM export. The DAC evidence verifies sample use,
+octave transposition and sustained output on this configuration.
+
+## Next sampled-playback controls
+
+1. Keep LABINST's slot and loop words, and replace its uniform sine with
+   different signals in frames 0–1099, 1100–2199 and 2200 onward. First
+   reopen and save it in Sound and record the bytes. Then use HELD7 to
+   measure the actual loop boundaries, cycling order and release tail.
+2. Start with S10 and give its two samples distinguishable frequencies.
+   Compare explicit disjoint ranges with overlapping ranges, then reverse
+   descriptor order. Keep pitch, note duration and volume fixed initially.
+   The captured SLOT8 result supplies the unset-range control.
+3. Repeat M11 at two dynamics and with a second active voice. Capture DAC
+   rate, mixing and gate changes before building an independent sampled-song
+   renderer. Use a one- or two-voice synthetic score for the first parity
+   check. A separate encoder control can save the same pulse train and long
+   silence in both compression modes to characterize their encoder choices.

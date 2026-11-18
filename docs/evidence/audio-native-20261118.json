@@ -64,6 +64,14 @@
       "size": 1447,
       "sha256": "ae4c09dad33c7f2ccb314cc4b1a1990ee19c57fbf4db5b038d3493ea0829b7af"
     },
+    "banjo.zip::BANJO.SND": {
+      "size": 9637,
+      "sha256": "53510333218503b8134b4f6fa251279515494fa7df407b58bba4378a3bcaf150"
+    },
+    "BNV6.SND (native linked resave of Banjo)": {
+      "size": 9753,
+      "sha256": "6f95dd1f21c662ce5158578708a4d558fa3cdb1eafeea67bd8b5e5a465012966"
+    },
     "pipes.zip::PIPES.FIG": {
       "size": 7521,
       "sha256": "34b0389df187edbd4618c4561c8843b2928acec39fdaf5eea643a82b3987f5c6"
@@ -373,11 +381,262 @@
         "size": 791,
         "sha256": "c82bfee4bf9be5fabde3fc6c15a267acbd9723f3899bac36bc9408b78f424127"
       }
+    },
+    "followup": {
+      "parent": "serial",
+      "input_disk_sha256": "3c9c8eb92d2f45d7c0284ee2d664faad8d6383b687cf96e4194ff10519ff493c",
+      "config_parent_sha256": "01f4c6158fd394d27ce127b4132a0fdce4c44596d8cefc1799f2ed335fc55061",
+      "nvr_parent_sha256": "e4bcf98891cfde327284ee8584ccfcdaac8b7e7206d9e54b898fcc19d6e5095c",
+      "input_floppy": {
+        "size": 1474560,
+        "sha256": "6bc89932917e9baf32570344a63bb8bf0e25e2959fe35d670938c5f9f03e2fb7"
+      },
+      "selected_captures": [
+        {
+          "name": "historical-chooser",
+          "ms": 24524,
+          "frames": 1588,
+          "png_sha256": "2048acfa3c3e4b5cde2240ea2b7ef25b855f9ac117628d8380e3b0fc538f9f34"
+        },
+        {
+          "name": "m11-save",
+          "ms": 83678,
+          "frames": 5191,
+          "png_sha256": "f96cf8aae6a872de450993caa415e2a4bdf4fd3f58a8f97f220f68ce76b3987d"
+        },
+        {
+          "name": "mmid-save",
+          "ms": 113760,
+          "frames": 7021,
+          "png_sha256": "74bb3a533ce7d1edd7a2c3f700289d53ee066d17bd9a461eed404f434085ce4d"
+        },
+        {
+          "name": "times-save",
+          "ms": 140880,
+          "frames": 8647,
+          "png_sha256": "2e68af303096f7e5d806a56355fce927a11cb81839beef4c4e78533802390b19"
+        },
+        {
+          "name": "tie-save",
+          "ms": 164518,
+          "frames": 10091,
+          "png_sha256": "525ff999e9def2922b73e42b3417b930c89a41107bc7f65cc33800e2f4310c91"
+        },
+        {
+          "name": "slur-save",
+          "ms": 185584,
+          "frames": 11376,
+          "png_sha256": "a00d8cb0045d1592ddbd524f7fed583afdf7715a2f5de4029748f4247646eb5e"
+        },
+        {
+          "name": "banjo-other",
+          "ms": 201170,
+          "frames": 12332,
+          "png_sha256": "8bdaa36526f7d3b5a1aaca11dd5730903216719f981b0768d9bf188bd5d428db"
+        },
+        {
+          "name": "banjo-resave",
+          "ms": 206842,
+          "frames": 12672,
+          "png_sha256": "fa96164ff4340650136d34018bdeb7862151928c6f4e21ebe780c171dd194ec8"
+        },
+        {
+          "name": "banjo-converted-chooser",
+          "ms": 220758,
+          "frames": 13541,
+          "png_sha256": "27a7dac3cfb51c88d3eefdfaabfc66c00cb55db01f25abde7c0919e04c27ef77"
+        },
+        {
+          "name": "key-save",
+          "ms": 246734,
+          "frames": 15117,
+          "png_sha256": "26e3878d9a37550e28eaef125c77717db30dbbebac9262ea4ac91c2fec719f0c"
+        },
+        {
+          "name": "repeat-save",
+          "ms": 271268,
+          "frames": 16614,
+          "png_sha256": "ac55cfb2b86c811204dcec61f93f85372487cf90178dbf7a92233b3698671059"
+        },
+        {
+          "name": "exit-finished",
+          "ms": 273992,
+          "frames": 16804,
+          "png_sha256": "ee5ec14821278f18551b18f5f40ab0d82f749b5a5b8ed08c433b97cdf301d8ad"
+        }
+      ],
+      "final_emulated_ms": 273992,
+      "final_frames": 16804,
+      "output_disk_sha256": "3570cc700d0d0f1c92c034451d8e427e36b2dfca7389aa98f20e2eb424096010",
+      "files_before": 293,
+      "files_after": 301,
+      "changed_config": {
+        "size": 791,
+        "sha256": "d58eab194416f898cdce4b0e2e42ee11eac40804a370a5c602dd23856ffc0f10"
+      }
+    },
+    "tap": {
+      "parent": "followup",
+      "input_disk_sha256": "3570cc700d0d0f1c92c034451d8e427e36b2dfca7389aa98f20e2eb424096010",
+      "config_parent_sha256": "b2209ab9c9168355263c6b31b902dfe75fe39271c2348280360bbf98d93d82c6",
+      "nvr_parent_sha256": "6e3a5c9688697c3ccd310d2eca1d67faab530ee39a973b6bbb81a96f48615cee",
+      "input_floppy": {
+        "size": 1474560,
+        "sha256": "a856d9dbeae8698f9aae2a03dbd566c7783f751cce0648fdda4eb0acd26969bb"
+      },
+      "selected_captures": [
+        {
+          "name": "tap-boot",
+          "ms": 13672,
+          "frames": 940,
+          "png_sha256": "018efd411db5fe37dc1c8976bcacee9af031e6a06bd760680b14ecaa0ceb902e"
+        }
+      ],
+      "final_emulated_ms": 21756,
+      "final_frames": 1507,
+      "output_disk_sha256": "3570cc700d0d0f1c92c034451d8e427e36b2dfca7389aa98f20e2eb424096010",
+      "files_before": 301,
+      "files_after": 301,
+      "changed_config": {
+        "size": 791,
+        "sha256": "cb08653966acb043e47c62f7250fefc6cd414b0a0167dec51ec8b84787a1fe20"
+      },
+      "emulated_dac_capture": {
+        "size": 2087040,
+        "sha256": "e5fb4ad5196855a59bbb7912c61f4ec7e299ede29f367028e5ec81ae527af109"
+      },
+      "outcome": "Synthetic data floppy was attached before boot and the BIOS did not reach DOS."
+    },
+    "tap-run": {
+      "parent": "followup",
+      "input_disk_sha256": "3570cc700d0d0f1c92c034451d8e427e36b2dfca7389aa98f20e2eb424096010",
+      "config_parent_sha256": "b2209ab9c9168355263c6b31b902dfe75fe39271c2348280360bbf98d93d82c6",
+      "nvr_parent_sha256": "6e3a5c9688697c3ccd310d2eca1d67faab530ee39a973b6bbb81a96f48615cee",
+      "input_floppy": {
+        "size": 1474560,
+        "sha256": "a856d9dbeae8698f9aae2a03dbd566c7783f751cce0648fdda4eb0acd26969bb"
+      },
+      "selected_captures": [
+        {
+          "name": "boot-dos",
+          "ms": 10500,
+          "frames": 718,
+          "png_sha256": "cbe46e27917b73ce4442f4b27024f5d9a77ecbede7b7ff45ee22958d16e1026b"
+        },
+        {
+          "name": "copy-probes",
+          "ms": 14324,
+          "frames": 986,
+          "png_sha256": "48c6dd37a01c3278b92d868bca7772371c382d6ee2de2d4c186fd0f08a46cdc3"
+        },
+        {
+          "name": "sound-reopened",
+          "ms": 30502,
+          "frames": 2044,
+          "png_sha256": "36a1244476f4ecc4a9befc9fe16f143c37cc61c9471d7bde0efeb9202692022d"
+        },
+        {
+          "name": "sound-start",
+          "ms": 30620,
+          "frames": 2051,
+          "png_sha256": "a8f3c87660078df78a453243afd656eb72e1c42afcfd871c1a985e908b929cf7"
+        },
+        {
+          "name": "m11-ready",
+          "ms": 39086,
+          "frames": 2571,
+          "png_sha256": "23eaab1e5afb8d5f654c6c8a688e06e5ff67901bcd7ad9487f159e3b386b0038"
+        },
+        {
+          "name": "m11-start",
+          "ms": 39254,
+          "frames": 2581,
+          "png_sha256": "83717a9352f3e64c2accf727384379b4ecb67b37f623b19f8533c2e8151ebe42"
+        },
+        {
+          "name": "slot8-ready",
+          "ms": 48640,
+          "frames": 3151,
+          "png_sha256": "47848431c6e472b152be96e14cf71a12fe9e6a1ecb5a63bab3073fc0268c3d39"
+        },
+        {
+          "name": "held7-ready",
+          "ms": 57384,
+          "frames": 3679,
+          "png_sha256": "de69bbb5e6a925600a6ce2503e3fe423bac48ba17a6c6616683c7fa591e3039c"
+        },
+        {
+          "name": "rep7-reopen",
+          "ms": 74310,
+          "frames": 4780,
+          "png_sha256": "a2ff23d8200e6427f788221a509a7410823034b22f6109aab91f0fa9bb0907d4"
+        },
+        {
+          "name": "mid7-ready",
+          "ms": 83626,
+          "frames": 5348,
+          "png_sha256": "eec931835fdb6f048d37eb56d49d853e0e2a6ecb842368d42e7cc790fd3609f5"
+        },
+        {
+          "name": "eighth-ready",
+          "ms": 92062,
+          "frames": 5868,
+          "png_sha256": "76a4e30258c575a104067cde9fb889a436842c43a5cdc626e2674b988aa92199"
+        },
+        {
+          "name": "eighth-play",
+          "ms": 93670,
+          "frames": 5964,
+          "png_sha256": "eb3f5c603e7c80284c1c7b965e3642f510b9ea53a184bbbc06e27245542f3aa8"
+        }
+      ],
+      "final_emulated_ms": 95094,
+      "final_frames": 6050,
+      "output_disk_sha256": "98c42082d9dc1abfe0ac56371f742e9235a5fbef6f7bcd56521ad9fddf8b0c90",
+      "files_before": 301,
+      "files_after": 306,
+      "changed_config": {
+        "size": 791,
+        "sha256": "cb08653966acb043e47c62f7250fefc6cd414b0a0167dec51ec8b84787a1fe20"
+      },
+      "emulated_dac_capture": {
+        "size": 9127680,
+        "sha256": "13ff8ed509df0ffe2efad192725a7913e33fc802a48ca8e09c5ad731b2216369"
+      },
+      "outcome": "DOS booted before the synthetic data floppy was attached. Playback only after probe files were copied."
     }
   },
-  "total_emulated_ms": 750374,
+  "total_emulated_ms": 1141216,
   "native_fixture_check": "Files were independently read from the stopped FAT16 image and matched against 7-Zip extraction.",
   "fixtures": {
+    "music/m11.sng": {
+      "size": 90,
+      "sha256": "07993101fcae1fbcaaacab71396a956b80085874ab1015e20395c2ac7a7d1309"
+    },
+    "music/m12.sng": {
+      "size": 90,
+      "sha256": "5c10d8ac17da3dab65562a900879a70fd0fe4d10e90502f353ac4ce8b5f44e9b"
+    },
+    "music/m13.sng": {
+      "size": 88,
+      "sha256": "e66de9fefe0b57a6dc3e0bf07d1c831260fa1bf78cfb90177976835c88fbd0cc"
+    },
+    "music/m14.sng": {
+      "size": 94,
+      "sha256": "abfe9959ac4af7c1dc8d3abdf3ef0f10e4f2ad3acdfdc1ad371a227cb81e15c1"
+    },
+    "music/mmid.sng": {
+      "size": 92,
+      "sha256": "2050f37735b4ebd62fa668e96e61e035efbc257e242488004dc1b85a356319c7"
+    },
+    "music/mtimes.sng": {
+      "size": 94,
+      "sha256": "97139a6973d972adbbcfc89715e5c9ad5c5c578864db32aaa80a8a9933608c6e"
+    },
+    "music/mloop.sng": {
+      "size": 92,
+      "sha256": "7ed2d9e967aea872c78714ea8db6a154a4267f0bb033c4a5c2b22ac4a8652015"
+    },
     "sound/tone-original-tool-generated.snd": {
       "size": 5544,
       "sha256": "f6f9c074f298fda46097b24d144af8be07c2b117399e2cb45652eec849be98ac"
@@ -497,6 +756,93 @@
     "sound/tone-native-pcm.snd": {
       "size": 5660,
       "sha256": "9f62938169ecf09c1134bf3aa3feb805c64acf43d57355e63d908b23713cc71a"
+    }
+  },
+  "playback_check": {
+    "instrumented_86box": {
+      "size": 70905409,
+      "sha256": "348df44531bea6ab349a487af6b7e46171b9b90652448ad5816d5a9c6301ce59"
+    },
+    "private_source_diff": {
+      "size": 1640,
+      "sha256": "20c1d526f42fc8345ae1a7df2e56c078534131eea31e825f9408b741ed4db174"
+    },
+    "private_probe_manifest": {
+      "sha256": "a856d9dbeae8698f9aae2a03dbd566c7783f751cce0648fdda4eb0acd26969bb",
+      "files": {
+        "EIGHTH.SNG": {
+          "size": 94,
+          "sha256": "3db8546a9af699d345ca45c43fce203c86dbac679c9505e1583ba0e49eaa31bc"
+        },
+        "HELD7.SNG": {
+          "size": 88,
+          "sha256": "b5790945626e2e7b0087fde877e18e161b8fa65edf9c9bb04be2aef006684894"
+        },
+        "MID7.SNG": {
+          "size": 94,
+          "sha256": "839c5f0537621d2d21db7a3b211a016c91ce336bceda50ad800954678cc05589"
+        },
+        "REP7.SNG": {
+          "size": 94,
+          "sha256": "0ec6e1340dacb7a91703069d4b8093153f32d90867da4d1f85e353ddada0bd67"
+        },
+        "SLOT8.SNG": {
+          "size": 90,
+          "sha256": "3818dd6a88a50914762ad41330afa49071c83b0df9fea369868c20ed448329be"
+        }
+      }
+    },
+    "rate_hz": 48000,
+    "channels": 1,
+    "bits": 16,
+    "signal_source": "PSSJ DAC mono contribution from pssj_get_buffer before final emulator mixing and operating-system audio.",
+    "private_measurements": {
+      "size": 11381,
+      "sha256": "99ec9a9cead8403cb6cadbc5c4cb6f37b0e521f964cdb13ab76f850c19319e00"
+    },
+    "external_neutral_midi_validation": {
+      "midi_duration": 4.232138624999999,
+      "rate": 22050,
+      "frames": 160768,
+      "render_duration": 7.291065759637188,
+      "sha256": "3af477660372153b9fbffe5f8428b2e3669b931f3de02dc6f497409ea1905320",
+      "events": [
+        {
+          "time": 0.0,
+          "midi_pitch": 60,
+          "window_rms": 134.36928446356615
+        },
+        {
+          "time": 0.4285709999999999,
+          "midi_pitch": 67,
+          "window_rms": 149.4779931827965
+        },
+        {
+          "time": 1.2857129999999999,
+          "midi_pitch": 64,
+          "window_rms": 133.8512432844693
+        },
+        {
+          "time": 1.4999984999999998,
+          "midi_pitch": 69,
+          "window_rms": 155.50042106817895
+        },
+        {
+          "time": 2.3571405,
+          "midi_pitch": 65,
+          "window_rms": 139.6449687928136
+        },
+        {
+          "time": 4.071424499999999,
+          "midi_pitch": 62,
+          "window_rms": 135.07036742830917
+        },
+        {
+          "time": 4.1785672499999995,
+          "midi_pitch": 71,
+          "window_rms": 214.55145074992257
+        }
+      ]
     }
   }
 }

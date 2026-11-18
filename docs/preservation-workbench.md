@@ -98,7 +98,7 @@ outside this byte-preservation format.
 | Calendar | `preview.html`, one `.ics` per nonempty supported calendar, strict `interchange-v1.json` when representable | SDK-derived ordinary date and quarter-hour time codecs. All parsed rows, raw fields and control records are available in the archival JSON. |
 | Address Book | `preview.html`, `contacts.vcf`, strict `interchange-v1.json` when representable | The measured ten-page profile exposes first name, last name, city and work phone. The archival JSON includes the opaque contact bytes. |
 | Sound | `preview.html`, `assets/sample-01.wav` and additional sample WAVs | Independently decoded mono PCM at the stored rate. Preserves original sample offsets, compressed regions and pitch/range/sustain metadata. |
-| Music | `preview.html`, `composition.mid` when representable | Three voice streams and a conductor, with measured notes, rests and quarter-note tempo. Original and event JSON are also preserved for scores with opaque words. |
+| Music | `preview.html`, `composition.mid` when representable | Three voice streams and a conductor, with measured notes, rests, ties, meter and tempo changes. Original and event JSON remain available for scores with opaque words or unexpanded repeats. |
 
 **Worksheet.** A formula's expression, binary64 cache, raw status word and
 measured result/error flags remain together in `content.json` and the detailed

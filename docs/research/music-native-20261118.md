@@ -36,6 +36,11 @@ and ancestry are in the [fixture manifest](../../tests/fixtures/application-gene
 | MVOL and MBAR | Insert forte in voice 1 at Home, producing `7204`. Then move to End and insert a barline with Ctrl+B, producing `7100` at tick 174. |
 | M10 | Change title to `Lab Arcs` and composer to `Lab Control`. The reader retains the native alignment byte `62`. Both voice and conductor words agree with MBAR. |
 | MGROW and MEDIT | Rapid queued entry delivered a longer key sequence, of which Music stored 33 quarter notes in MGROW. It used a single `2318` delay for 792 ticks. Home, Right, Shift+Right and Delete remove the second note. MEDIT has 32 quarter notes and `2300` for 768 ticks. |
+| M11 | Open M00, enter C4 and C5 as consecutive quarters in voice 1, press Home and select slot 7 LABTON. The voice is `7306 EA1C EA28`. |
+| M12 and M13 | For M12 enter three C4 quarters. For M13 reopen M02 and press End. In each case select back to Home with Shift+Home and choose Modify → Tie/slur. M12 saves `CA1C 8A1C AA1C`. M13 saves `CA1C AA23`. |
+| M14 | Open M02 and insert G major at Home. At End enter `F`, then Shift+F. The conductor starts `7009` and the resulting pitches are C4, G4, F-sharp4 and F-natural4. The last two voice words are `EA22 EAE1`. |
+| MMID and MTIMES | In M02 move Right to tick 24, then Insert → Tempo and choose 75 half-note beats per minute. MMID saves `2018 104B 2018`. Insert the 6/8 time signature at the same cursor to add `6188` after `104B` in MTIMES. |
+| MLOOP | At End in M02 select back to Home with Shift+Home and choose Modify → Repeat with the default count of two. The conductor saves `3002 2030 50FF`. |
 
 In the keyboard automation run, F2 followed by O, two Down keys and Enter
 selects Save As. Type the new filename in the focused field and confirm.
@@ -73,14 +78,27 @@ image offset `47E9h` indexes it with the high byte's lower five bits. The
 same positive values occur in the corresponding TL/2 and Personal DeskMate 2
 modules. Three entries, `EF`, `F3` and `F4`, are signed special values
 and remain opaque. The C-sharp4 control sets bit `40h` in the low byte
-while its lower six bits retain its pitch value of 29.
+while its lower six bits retain pitch value 29. M14 stores the sounding
+pitch explicitly under the key signature. Its natural uses `C0h` in the
+upper two bits of the low byte. The standalone `80h` accidental flag
+remains unresolved. For note connections, mask high-byte bits `60h` to
+read the duration code. Those bits are `40h` for the start, `00h` for
+continuation, `20h` for the end and `60h` for a standalone note.
 
 Conductor words `2xxx` advance the common cursor by the lower 12 bits.
 This space can express a score duration and delays between control words.
-A word `11xx` gives the quarter-note tempo in its low byte at the current
-cursor position. The native default of 100 BPM corresponds to 600,000
-microseconds per quarter. MTEMPO uses `8C` (140 decimal) without changing
-any voice duration. The controlled `7100` marker identifies the first barline
+Tempo words `10xx`, `11xx` and `12xx` give half-note, quarter-note and
+eighth-note beats per minute at the current cursor. A private probe changed
+MMID's tempo word to `1297`, copied it through a disposable data floppy,
+and opened it in Music. The UI displayed 151 eighth notes per minute at
+tick 24. The MIDI timing is therefore 75.5 quarter notes per minute after
+that point. MMID sets 75 half notes per
+minute, equivalent to 150 quarter notes per minute. The native default
+of 100 quarter notes per minute corresponds to 600,000 microseconds per
+quarter. MTEMPO uses `8C` (140 decimal) and leaves the written voice durations
+unchanged. Time signature words in the `6xxx` family store the numerator
+in bits 6–11 and the denominator in bits 0–5. The `70xx` key marker stores
+an index. The controlled `7100` marker identifies the first barline
 at the current cursor, without advancing it. The forte event's index is 4.
 The native dialog presents six dynamics from pp through ff. The reader
 retains the dynamic index and score word.
@@ -88,9 +106,10 @@ retains the dynamic index and score word.
 Historical scores contain further voice encodings and conductor instructions.
 The reader retains the original word and location for each. The preview
 indicates missing projections and leaves subsequent voice ticks unknown
-after an unclassified voice word. Repeat execution, alternate endings,
-key and time signatures, tie/slur flags, the special duration entries
-and additional articulation or pitch flags remain outside MIDI projection.
+after an unclassified voice word. The reader labels the measured `30xx`
+repeat start and `50FF` repeat end in written order. Alternate endings,
+repeat expansion, the special duration entries and additional articulation
+or pitch flags still require controls before MIDI export.
 For an earlier release check, the distinct 1,447-byte BACH from `dm2tun.zip`
 opened in the later native Music module. The application displayed its
 title and author, F major, an indicated tempo of 110, and a 3/4 change
@@ -112,16 +131,20 @@ preserved the complete score bytes. Renaming the same file to
 **Instrument Not Found** for slot 7 and offered substitution. Cancelling the
 prompt and restoring the file left the original note and instrument controls
 available. The tested resolution uses the numeric slot and discovers the
-sample separately from the score. Playback button state and the missing-file
-prompt supply runtime evidence. The host lacked audio endpoints for an
-acoustic comparison.
+sample separately from the score. The follow-up grabbed the resulting
+emulated DAC contribution for the synthetic sample. [Playback measurements](sound-native-20261118.md#emulated-playback)
 
 The original module `NMUSIC.RES` contains a `*.SND` search pattern and
 `PMUSIC.RES` consumes the low byte of `73xx` in an instrument table path
 at module image offset `1FA5h`. Duplicate-slot priority and file search
 scope outside the measured guest directory need separate controls. The
 native chooser displayed Marimba for slot 6 when both later Marimba and
-earlier Banjo declared 6. A keyboard selection in the first trial produced
+earlier Banjo declared 6. Hiding Marimba left slot 6 absent even though the
+original Banjo remained. Sound opened the 9,637-byte Banjo using Other
+(No adjustment) and saved a 9,753-byte linked profile under `BNV6.SND`.
+With Marimba hidden, Music then listed `6 banjo`. All 9,593 compressed bytes,
+the 18,331 decoded samples, instrument number, pitch and note range agree
+between the two Banjo files. Their bytes remain private. A keyboard selection in the first trial produced
 `7320` and displayed 33 after aiming for slot 6. The reader keeps the word
 opaque because its index is outside 0–31. Historical stock slot meanings
 differ between Personal DeskMate 2 and the later module.
@@ -141,12 +164,14 @@ events, source offsets and recognized timing. Workbench keeps the original
 SNG and includes an offline table for each stream. The preview limits
 each stream to 120 rows. The original and JSON retain the full score.
 
-Standard MIDI File type 1 uses 24 PPQ and four tracks, one for tempo and
-three for the voice slots. Note On and Note Off preserve the note pitches
-and written timing in the measured profile. The end of every track uses
+Standard MIDI File type 1 uses 24 PPQ and four tracks, one for timing and
+meter and three for the voice slots. Note On and Note Off preserve the note
+pitches and written timing in the measured profile. Equal-pitch ties merge
+into a single MIDI note. Pitch changes under a slur produce adjacent MIDI
+notes. The end of every track uses
 the conductor's total ticks. The projection uses velocity 64 and the
 playback device's default MIDI instrument. Original instrument-slot changes,
-dynamics and barlines stay in the JSON and preview. When a word or timing consistency
+dynamics, key codes and barlines stay in the JSON and preview. When a word or timing consistency
 check falls outside the supported projection, the Workbench gives a
 `midi_omitted` diagnostic and still preserves the original and its score
 streams.
@@ -154,4 +179,28 @@ streams.
 Mido 1.3.3 independently read the MTEMPO export as type 1 with four
 tracks, 24 ticks per beat, seven notes and a written duration of
 approximately 4.23214 seconds. It reported pitches 60, 67, 64, 69, 65,
-62 and 71, with the 24-tick rest between 67 and 64.
+62 and 71, with the 24-tick rest between 67 and 64. FluidSynth 2.6.2 rendered
+the exported score with TimGM6mb at 22,050 Hz. The seven expected onsets had
+nonzero signal. That independent MIDI playback check uses a General MIDI
+soundfont.
+
+The independent MIDI exporter accepts 15 of the 62 unique historical
+scores. All 62 retain structurally verified original bytes and four ordered
+streams. The native repeat playback capture in the Sound report confirms
+two passes for `3002 2030 50FF`.
+
+## Next Music controls
+
+1. Start with `music/mloop.sng` and the private `REP7.SNG` DAC control.
+   Test a repeat inside a longer score, then an initial tempo marker and a
+   tempo change inside the repeat. Native captures can establish whether
+   timing and instruments reset each pass. Compare `40xx` alternate endings
+   with and without the first pass. Add bounded expansion after those checks.
+2. Reuse M14 to measure the dedicated flats setting and the standalone
+   `80h` low-byte flag. Compare explicit flat, natural and sharp in at least
+   two keys. Add one native major/minor control for the `70xx` key-index
+   table and one Score Marker control for the historical `74xx` family.
+3. Test single and double dots on sixteenth and thirty-second notes in the
+   native editor to determine whether the signed `EF`, `F3` and `F4` table
+   entries are playable durations or rejected choices. Keep malformed or
+   unexplained cases in event JSON.

@@ -64,6 +64,9 @@ def convert_music(score, filename):
             'neutral_midi_playback', 'notice',
             'MIDI uses neutral velocity and default playback instruments. '
             'Native instrument and dynamic changes remain in the score metadata.'))
+        if any(event.connection for voice in sequence.voices for event in voice):
+            diagnostics.append(Diagnostic('midi_connected_notes', 'notice',
+                                          'MIDI joins ties and schedules slurred pitches without a rest.'))
     body = (f'<p>{html_text(score.author)}</p>' if score.author else '')
     body += f'<p>{music.TICKS_PER_QUARTER} ticks per quarter note. Default tempo {music.DEFAULT_QUARTER_BPM} BPM.</p>'
     if 'composition.mid' in artifacts:
@@ -81,11 +84,15 @@ def convert_music(score, filename):
 
 def _music_row(event):
     details = {
-        'note': f'MIDI pitch {event.midi_pitch}',
+        'note': f'MIDI pitch {event.midi_pitch}' + (f' · connection {event.connection}' if event.connection else ''),
         'tempo': f'{event.quarter_bpm} BPM',
+        'meter': f'Time signature {event.meter_numerator}/{event.meter_denominator}',
+        'key': f'Key code {event.key_code}',
         'instrument': f'Instrument slot {event.instrument_slot}',
         'dynamic': f'Dynamic index {event.dynamic_index}',
         'barline': f'Barline {event.bar_number}',
+        'repeat_start': f'Repeat start, count {event.repeat_count}',
+        'repeat_end': 'Repeat end',
     }
     return (event.tick if event.tick is not None else '', details.get(event.kind, event.kind),
             event.duration_ticks if event.duration_ticks is not None else '', f'{event.word:04X}')
