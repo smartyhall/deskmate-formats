@@ -87,9 +87,11 @@ element exceeds the reader's record bounds.
 | `pipes/PIPES.FIG` | 7,521 | `34b0389df187edbd4618c4561c8843b2928acec39fdaf5eea643a82b3987f5c6` |
 | `rsxdisks/DISK4/DOCUMENT/NOTICES/BRIDESHW.FIG` | 6,101 | `59d76d4a94350adaca1d47423119e23ed6817c2a8e4af658789f01449e4e91bf` |
 
-Begin the renderer follow-up by reopening PIPES and BRIDESHW in native Draw.
-For PIPES, compare the native tree and group ownership to the rejected
-reference path before loosening the cycle check. Use NCC1701, ARAZI, CASTLE,
+The installed Draw opened and visibly rendered both PIPES and BRIDESHW from
+the untouched floppy inputs. These are useful reader-coverage cases. For
+PIPES, compare the native tree and group ownership to the rejected reference
+path before loosening the cycle check. For BRIDESHW, inspect the record
+size and the resource it references. Use NCC1701, ARAZI, CASTLE,
 GIFCERT1, GIFCERT2, HHEELLPP and the three `stuff.zip` illustrations as
 private picture comparators for fill, embedded strokes and grouping. Their
 Workbench manifests and SVGs live in `draw-comparison`. Match any public

@@ -69,10 +69,11 @@ meaning as data. Other rates have no native playback qualification.
 | Sustain endpoints, two dwords | `14h`, `18h` | `16h`, `1Ah` |
 
 The sustain fields store positions relative to the sample. The original
-positions follow Hayes's description. The later positions are nonzero in all
-three shipped Clarinet samples with plausible in-sample start/end pairs.
+positions follow Hayes's description. In the later LABINST control, a
+native 1,100 to 2,200 sample selection produces those exact two values.
+The three shipped Clarinet samples also contain in-sample start/end pairs.
 The reader exposes the numbers and retains the rest of the descriptor.
-WAV loop semantics need an independent endpoint and playback experiment.
+WAV loop playback and endpoint inclusion need an independent experiment.
 Pitch codes 1–63 run from A1 to B6, with 1 mapping to MIDI 33. The application
 labels octaves from A, so its C3 is standard C4. Unset triplets can use
 `FF` and the following flag varies between specimens. MARIMBA's note ranges
@@ -97,11 +98,11 @@ stream. Start a sample with the predictor at 128.
 
 | Nibbles | Output |
 | --- | --- |
-| `0–D` | Add the indexed delta, clip to 0–255 and emit the resulting predictor. |
+| `0–D` | Add the indexed delta with signed 16-bit arithmetic, clip to 0–255 and emit the resulting predictor. |
 | `E h l` | Set and emit the literal byte `16*h+l`. |
 | `F 0–D` | Repeat the current predictor 1–14 times. |
 | `F F h l` | Repeat the current predictor `14 + 16*h + l` times. |
-| `F E h l` | Set the predictor to 128 and emit it `base + 1 + 16*h + l` times. |
+| `F E h l` | Set the predictor to 128 and emit it `base + 1 + 16*h + l` times, with a 16-bit run count. |
 
 This grammar was recovered by examining the 16-bit OEM `COMPRESS.RES`
 (`3c07b618046092080f3eb2dd3e186fb325b81dd5ad562f14d24a55ad7daf549a`).
@@ -180,3 +181,50 @@ An independent libsndfile 1.2.2 read confirms the exported WAVE subtype
 The same library verified the frames, rates and full payload bytes of all
 35 WAVs from the 16 distinct historical Sound files. Those bundles are
 available in the private lab under `historical-sound-bundles`.
+
+## Native recording and instrument differentials
+
+The second disposable boot cloned the stopped first trial, changed the
+mouse device from PS/2 to serial, and copied OEM `MEMORY.RES` into the guest
+DeskMate directory. All key and relative mouse events used the authenticated
+86Box socket. The graphics-mode controls were verified from held frames.
+The stopped images, rollback identities, exact emulated times
+and verified extractions are in the [native receipt](../evidence/audio-native-20261118.json).
+
+| Control | Saved result |
+| --- | --- |
+| S00 | Native Sound saved the empty recording as 160 bytes. It has one descriptor with data offset 160, zero stored and decoded length, and 11,000 Hz. |
+| S01 and S02 | The earlier tool-generated TONEOLD opened with a recording-machine prompt. It offered TL, SL, TL/2-family or Other. Choosing Other (No adjustment) and choosing the default 1000 TL in a separate load both yielded the same later-format 5,500-frame resave. It differs from the later tool input only at header offset 92, which is 3 instead of 0. PCM matches exactly in both cases. |
+| S03 | The 5,500 Hz input was 111 copies of the unsigned byte pattern `80 00 FF 01 FE`. The native save preserved all 555 frames. WAVE's data chunk stays odd and its padding byte sits outside the frame count. |
+| S04 | At 22,000 Hz the source was 255 center frames, then `00 FF 01 FE`, then 252 center frames. Native Sound showed the four-frame pulse region in a 511-frame recording. |
+| S05 | Ctrl+R opened Record. A 0.100-second request at 11,000 Hz produced 1,104 frames and a horizontal centerline. Every saved byte is `80`. This exercises the emulated recording path under the no-input condition. Its exact frame duration is 1,104 / 11,000 seconds. |
+| TONEMUS and TONESPK | Two independent opens of the same PCM input, with File → Data compression set to Music or Speech before Save As. Both stored 3,001 bytes for 5,500 decoded frames. |
+| S06 and S07 | Reopen each compressed file, select No compression and save separately. These two PCM resaves are byte-identical. The independent decoder recovers their exact 5,500 data bytes from both compressed sources. |
+| LABINST | Copy all of S01, create a new instrument file and paste. Name it LABTON, set number 7, choose C3 and set the range to A3–B6. From Home, Right and Shift+Right with a 0.1-second unit select samples 1,100–2,200. Options → Define sustain stores both positions. |
+| S10 | Copy the selected 1,100-frame region, add a note, paste, and assign pitch C4 and instrument number 8. The first 5,500-frame sample retains C3, range A3–B6 and its loop. The next link points to a second descriptor at 160. It has C4, 1,100 frames and unset range and loop fields. |
+
+The earlier synthetic input can be regenerated independently. This command
+writes the exact 44-byte original prefix and the 5,500 PCM bytes. The Git
+file is marked **tool-generated** with native import and later-profile save
+evidence.
+[Original-format tone fixture](../../tests/fixtures/application-generated/sound/tone-original-tool-generated.snd)
+
+```sh
+python -c "from math import sin,tau; from struct import pack; p=bytes(128+round(63*sin(tau*i/25)) for i in range(25))*220; open('TONEOLD.SND','xb').write(pack('<4B10sH4B6I',26,0,1,0,b'LAB TONE',11000,255,0,255,255,44,0,0,len(p),0,0)+p)"
+```
+
+The two compressed tone files differ in exactly three bytes. Header byte
+66 is 1 or 2, and the big-endian run base at offsets 188–189 is 25 or 3,060.
+The remaining compressed data is identical for this tone. Stored regions
+are 54.56% of the PCM length. Both contain `-256` in unused delta entries,
+so a decoder that rejects values outside `[-255, 255]` rejects genuine native
+output. The recovered bytes differ from the starting tone at 3,078 of
+5,500 sample positions, by at most one amplitude unit. RMS error is
+0.74809 units. Other waveforms can produce different tables and stream lengths.
+
+LABINST's descriptor stores pitch 28 for native C3, range codes 25–63,
+and the two sustain words. The copied waveform still has a physical
+frequency of 440 Hz. Setting the nominal note changed metadata and kept
+those PCM bytes identical. Music's rendered transposition, selection among
+overlapping ranges and sustain-release behavior require playback evidence.
+[Cross-application slot control](music-native-20261118.md)

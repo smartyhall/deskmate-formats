@@ -153,6 +153,45 @@ class MusicTests(unittest.TestCase):
         self.assertIn(bytes.fromhex('00 90 3c 40 18 80 3c 00 00 90 43 40'), midi)
         self.assertIn(bytes.fromhex('18 90 40 40'), midi)
 
+    def test_native_three_voices_and_external_slot(self):
+        source = (FIXTURES / 'music/m08.sng').read_bytes()
+        score = music.parse_bytes(source)
+        sequence = music.project(score)
+        self.assertEqual(source, (FIXTURES / 'music/mreopen.sng').read_bytes())
+        change = sequence.voices[0][0]
+        self.assertEqual((change.kind, change.tick, change.word, change.instrument_slot),
+                         ('instrument', 0, 0x7306, 7))
+        instrument = sound.parse_bytes((FIXTURES / 'sound/labinst-native.snd').read_bytes())
+        self.assertEqual(change.instrument_slot, instrument.instrument_number)
+        notes = [[(e.tick, e.midi_pitch, e.duration_ticks) for e in voice if e.kind == 'note']
+                 for voice in sequence.voices]
+        self.assertEqual(notes, [[(0, 60, 24), (24, 67, 24)], [(0, 64, 24)], [(0, 69, 48)]])
+        self.assertEqual(sequence.voice_ticks, (48, 48, 48))
+        midi = music.to_midi(sequence)
+        for track in ('00 90 3c 40 18 80 3c 00', '00 91 40 40 18 81 40 00', '00 92 45 40 30 82 45 00'):
+            self.assertIn(bytes.fromhex(track), midi)
+
+    def test_native_modifiers_barline_and_text_alignment(self):
+        score = music.parse_bytes((FIXTURES / 'music/m10.sng').read_bytes())
+        self.assertEqual((score.title, score.author, score.text_padding), ('Lab Arcs', 'Lab Control', b'b'))
+        sequence = music.project(score)
+        events = sequence.voices[0]
+        self.assertEqual((events[0].kind, events[0].dynamic_index), ('dynamic', 4))
+        self.assertEqual([e.duration_ticks for e in events[1:]], [36, 42, 16, 16, 16, 24, 24])
+        self.assertEqual([e.midi_pitch for e in events[1:]], [60, 62, 64, 65, 67, 61, 72])
+        self.assertEqual(sequence.written_ticks, 174)
+        line = sequence.conductor[-1]
+        self.assertEqual((line.kind, line.bar_number, line.tick), ('barline', 1, 174))
+        self.assertTrue(music.to_midi(sequence).startswith(b'MThd'))
+
+    def test_native_growth_and_middle_deletion(self):
+        before, after = (music.parse_bytes((FIXTURES / f'music/{n}.sng').read_bytes())
+                         for n in ('mgrow', 'medit'))
+        words = [item.word for item in before.voices[0]]
+        self.assertEqual(len(words), 33)
+        self.assertEqual([item.word for item in after.voices[0]], words[:1] + words[2:])
+        self.assertEqual((music.project(before).written_ticks, music.project(after).written_ticks), (792, 768))
+
     def test_opaque_music_projects_to_json_with_no_midi_asset(self):
         source = score_bytes(((0xea1c, 0x7320, 0xea1d), (), ()), (0x2030, 0x7400))
         with tempfile.TemporaryDirectory() as folder:
@@ -180,3 +219,42 @@ class NativeSoundTests(unittest.TestCase):
                          'e5788ae0618e3167842ee0de426973800c06ad85f48b01228a6cd3e7b868b795')
         with wave.open(BytesIO(document.wav(0)), 'rb') as reader:
             self.assertEqual(reader.readframes(5500), source[160:])
+
+    def test_native_codec_modes_match_native_uncompressed_resaves(self):
+        directory = FIXTURES / 'sound'
+        for mode in ('music', 'speech'):
+            with self.subTest(mode=mode):
+                encoded = sound.parse_bytes((directory / f'tone-native-{mode}.snd').read_bytes())
+                native_pcm = sound.parse_bytes((directory / f'tone-{mode}-decoded-native.snd').read_bytes())
+                self.assertEqual(encoded.samples[0].stored_length, 3001)
+                self.assertEqual(unpack_from('>h', encoded.stored_sample(0), 26)[0], -256)
+                self.assertEqual(encoded.pcm(0), native_pcm.pcm(0))
+                self.assertEqual(len(encoded.pcm(0)), 5500)
+
+    def test_native_empty_silence_odd_lengths_and_instrument_regions(self):
+        directory = FIXTURES / 'sound'
+        for name, rate, frames in (('empty', 11000, 0), ('recorded-silence', 11000, 1104),
+                                   ('odd-5500', 5500, 555), ('pulses-22000', 22000, 511)):
+            with self.subTest(name=name):
+                document = sound.parse_bytes((directory / f'{name}-native.snd').read_bytes())
+                with wave.open(BytesIO(document.wav(0)), 'rb') as reader:
+                    self.assertEqual((reader.getframerate(), reader.getnframes()), (rate, frames))
+                    self.assertEqual(reader.readframes(frames), document.stored_sample(0))
+                if name == 'recorded-silence':
+                    self.assertEqual(document.pcm(0), b'\x80' * 1104)
+
+        instrument = sound.parse_bytes((directory / 'two-sample-native.snd').read_bytes())
+        first, second = instrument.samples
+        self.assertEqual(instrument.instrument_number, 8)
+        self.assertEqual((first.pitch, first.low_note, first.high_note), (28, 25, 63))
+        self.assertEqual((first.sustain_start, first.sustain_end), (1100, 2200))
+        self.assertEqual((second.pitch, second.offset, second.sample_count), (40, 5706, 1100))
+        self.assertEqual(instrument.pcm(1), instrument.pcm(0)[1100:2200])
+
+    def test_original_profile_native_import_controls(self):
+        directory = FIXTURES / 'sound'
+        original = sound.parse_bytes((directory / 'tone-original-tool-generated.snd').read_bytes())
+        other = (directory / 'original-unadjusted-resave.snd').read_bytes()
+        self.assertEqual(other, (directory / 'original-tl-resave.snd').read_bytes())
+        self.assertEqual(original.profile, 'sound-original-table')
+        self.assertEqual(sound.parse_bytes(other).pcm(0), original.pcm(0))

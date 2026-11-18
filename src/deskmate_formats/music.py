@@ -15,7 +15,14 @@ STREAM_START = 0x7ffe
 STREAM_END = 0x7fff
 TICKS_PER_QUARTER = 24
 DEFAULT_QUARTER_BPM = 100
-NOTE_TICKS = {0xe2: 96, 0xe6: 48, 0xea: 24, 0xee: 12, 0xf2: 6, 0xf6: 3}
+# Positive tick counts in the OEM duration lookup. Three signed entries
+# need their own rounding/notation study before projection.
+NOTE_TICKS = {
+    0xe0: 168, 0xe1: 144, 0xe2: 96, 0xe3: 84, 0xe4: 72, 0xe5: 64,
+    0xe6: 48, 0xe7: 42, 0xe8: 36, 0xe9: 32, 0xea: 24, 0xeb: 21,
+    0xec: 18, 0xed: 16, 0xee: 12, 0xf0: 9, 0xf1: 8, 0xf2: 6,
+    0xf5: 4, 0xf6: 3, 0xf7: 2,
+}
 
 
 class MusicFormatError(ValueError):
@@ -48,6 +55,9 @@ class Event:
     duration_ticks: int | None = None
     midi_pitch: int | None = None
     quarter_bpm: int | None = None
+    instrument_slot: int | None = None
+    dynamic_index: int | None = None
+    bar_number: int | None = None
 
 
 @dataclass(frozen=True)
@@ -116,9 +126,14 @@ def project(score):
         events = []
         tick = 0
         for item in stream:
-            code, pitch = item.word >> 8, item.word & 0xff
-            if code in NOTE_TICKS and pitch <= 63:
+            code, value = item.word >> 8, item.word & 0xff
+            if code == 0x73 and value < 32:
+                events.append(Event(item.offset, item.word, 'instrument', tick, instrument_slot=value + 1))
+            elif code == 0x72 and value < 6:
+                events.append(Event(item.offset, item.word, 'dynamic', tick, dynamic_index=value))
+            elif code in NOTE_TICKS and value < 128 and value != 64:
                 duration = NOTE_TICKS[code]
+                pitch = value & 0x3f
                 kind = 'note' if pitch else 'rest'
                 midi_pitch = 32 + pitch if pitch else None
                 events.append(Event(item.offset, item.word, kind, tick, duration, midi_pitch))
@@ -139,6 +154,8 @@ def project(score):
             tick += duration
         elif item.word >> 8 == 0x11 and item.word & 0xff:
             conductor.append(Event(item.offset, item.word, 'tempo', tick, quarter_bpm=item.word & 0xff))
+        elif item.word >> 8 == 0x71:
+            conductor.append(Event(item.offset, item.word, 'barline', tick, bar_number=(item.word & 0xff) + 1))
         else:
             conductor.append(Event(item.offset, item.word, 'opaque', tick))
     return Sequence(tuple(voices), tuple(conductor), tick, tuple(voice_ticks))

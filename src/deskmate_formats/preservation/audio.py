@@ -62,22 +62,30 @@ def convert_music(score, filename):
     else:
         diagnostics.append(Diagnostic(
             'neutral_midi_playback', 'notice',
-            'MIDI uses neutral velocity and the playback device’s default instrument.'))
+            'MIDI uses neutral velocity and default playback instruments. '
+            'Native instrument and dynamic changes remain in the score metadata.'))
     body = (f'<p>{html_text(score.author)}</p>' if score.author else '')
     body += f'<p>{music.TICKS_PER_QUARTER} ticks per quarter note. Default tempo {music.DEFAULT_QUARTER_BPM} BPM.</p>'
     if 'composition.mid' in artifacts:
         body += '<p><a href="composition.mid">Download MIDI</a></p>'
     streams = (*sequence.voices, sequence.conductor)
     for label, events in zip(('Voice 1', 'Voice 2', 'Voice 3', 'Conductor'), streams, strict=True):
-        rows = ((event.tick if event.tick is not None else '', event.kind,
-                 event.duration_ticks if event.duration_ticks is not None else '',
-                 event.midi_pitch if event.midi_pitch is not None else '',
-                 event.quarter_bpm if event.quarter_bpm is not None else '',
-                 f'{event.word:04X}') for event in events[:MUSIC_PREVIEW_EVENTS])
-        body += html_table(('Tick', 'Event', 'Duration', 'MIDI pitch', 'Tempo (BPM)', 'Native word'),
-                           rows, label)
+        rows = (_music_row(event) for event in events[:MUSIC_PREVIEW_EVENTS])
+        body += html_table(('Tick', 'Event', 'Duration', 'Native word'), rows, label)
         if len(events) > MUSIC_PREVIEW_EVENTS:
             diagnostics.append(Diagnostic(
                 'music_preview_limit', 'omission', f'All {len(events)} words are available in content.json.', label))
     artifacts['preview.html'] = html_page(score.title or filename, 'DeskMate Music score', body, diagnostics=diagnostics)
     return Conversion(content, diagnostics, artifacts)
+
+
+def _music_row(event):
+    details = {
+        'note': f'MIDI pitch {event.midi_pitch}',
+        'tempo': f'{event.quarter_bpm} BPM',
+        'instrument': f'Instrument slot {event.instrument_slot}',
+        'dynamic': f'Dynamic index {event.dynamic_index}',
+        'barline': f'Barline {event.bar_number}',
+    }
+    return (event.tick if event.tick is not None else '', details.get(event.kind, event.kind),
+            event.duration_ticks if event.duration_ticks is not None else '', f'{event.word:04X}')

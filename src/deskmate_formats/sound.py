@@ -111,8 +111,6 @@ def _decode_pcm(data, count):
     if len(data) < 30:
         raise SoundFormatError('truncated compression table')
     *deltas, silence_base = unpack_from('>14hH', data)
-    if any(not -255 <= value <= 255 for value in deltas):
-        raise SoundFormatError('delta table is outside the unsigned PCM profile')
     nibbles = iter(value for byte in memoryview(data)[30:] for value in (byte >> 4, byte & 15))
     pcm = bytearray()
     sample = 128
@@ -120,7 +118,9 @@ def _decode_pcm(data, count):
         while len(pcm) < count:
             code = next(nibbles)
             if code < 14:
-                sample = min(255, max(0, sample + deltas[code]))
+                # The native predictor adds a signed 16-bit word before clipping.
+                value = ((sample + deltas[code] + 32768) & 0xffff) - 32768
+                sample = min(255, max(0, value))
                 pcm.append(sample)
             elif code == 14:
                 sample = next(nibbles) * 16 + next(nibbles)
@@ -133,7 +133,7 @@ def _decode_pcm(data, count):
                     length = next(nibbles) * 16 + next(nibbles)
                     if mode == 14:
                         sample = 128
-                        length += silence_base + 1
+                        length = (length + silence_base + 1) & 0xffff
                     else:
                         length += 14
                 pcm.extend(bytes([sample]) * min(length, count - len(pcm)))

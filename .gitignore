@@ -24,10 +24,10 @@ local-results/
 *.doc
 *.fig
 *.wks
-*.snd
-*.sng
-*.wav
-*.mid
+*.[sS][nN][dD]
+*.[sS][nN][gG]
+*.[wW][aA][vV]
+*.[mM][iI][dD]
 !tests/fixtures/application-generated/**/*.cln
 !tests/fixtures/application-generated/**/*.adr
 !tests/fixtures/application-generated/**/*.fil
