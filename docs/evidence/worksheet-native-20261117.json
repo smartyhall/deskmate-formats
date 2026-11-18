@@ -1,0 +1,3189 @@
+{
+  "base": "a5d3a713e808fd0e73fbc6ae6c09104a90020260",
+  "emulator": {
+    "source_revision": "855258da966f1594f568350be59e8e1eca082ed1",
+    "binary_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+    "rom_revision": "908394b690f7da28f47727d9876774fd672c4ed3",
+    "rsx_bios_sha256": "17984fe7c31ab6b51c96272ba8ee89580eb139aab01399a1b865f6743f3334f2"
+  },
+  "pointer_rebase": {
+    "original_sha256": "3f5d1224cce491314d021d5b8cf00b0bc5d92731d421ebae3eacf6895ab1bcfb",
+    "tool_input_sha256": "aaabb6f873f8da81f5ae97eeda4c3bd8d987b10d328172bfb60da84aa6965b87",
+    "disk_before": "722998e028627a6d7594eab7380e61bd00731007c7446b54212902ee4540682c",
+    "disk_at_launch": "25c6eb8ec6c2fd2a11d465ade5bf2355383b9573d0b7261d35707b8ce19fd565",
+    "disk_file_start": 5324288,
+    "delta": -1280,
+    "changed_file_bytes": [
+      127,
+      129,
+      137,
+      139,
+      147,
+      149,
+      157,
+      159,
+      167,
+      169
+    ]
+  },
+  "runs": {
+    "initial": {
+      "parent": "original",
+      "disk_sha256": "c013712c0cda7628a5a3138047a7d0e9b631098c5c72d41d5b8f717a6f90a281",
+      "config_sha256": "12bb7f7699f85c1eb094bd17da5994f5fc2a0c7bc74de27117b904ce5e5d1773",
+      "nvr_sha256": "a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2",
+      "stopped_disk_sha256": "83e3d10112f597074f378fe19125096172014579860f8841b2322abb236a4026",
+      "elapsed_emulated_ms": 77964,
+      "frame_count": 4799,
+      "installed_modules": {
+        "DESK.EXE": {
+          "size": 19047,
+          "sha256": "0f2a40243c997276904d2555a117c60eedf0016dde073285e8d63c8345a2eba3"
+        },
+        "WRKSHEET.PDM": {
+          "size": 59590,
+          "sha256": "f41bd48aac9328432fb814bc0636de3dab37080d1fd2d97dc3c2bf7d7a24eccc"
+        },
+        "DMGUF.R89": {
+          "size": 15066,
+          "sha256": "d35c8d241f1f5e3f910df08a6c353689e2029adaa59f3322e5e3c962bf97dd6b"
+        }
+      }
+    },
+    "edits": {
+      "parent": "initial",
+      "disk_sha256": "83e3d10112f597074f378fe19125096172014579860f8841b2322abb236a4026",
+      "config_sha256": "c11b4c64bcbc93488e592e003b14675718ada09584167ff24f91ef6f972d91b4",
+      "nvr_sha256": "7658633fe73f0891bdf28818fbd00e832e706c14a54c5abafbcae41a6cbd01d0",
+      "stopped_disk_sha256": "35d1214ee58edeee8eb82b25b32285e1568c296c7d2473a5a69ceb8a55dd129c",
+      "elapsed_emulated_ms": 130283,
+      "frame_count": 8054,
+      "installed_modules": {
+        "DESK.EXE": {
+          "size": 19047,
+          "sha256": "0f2a40243c997276904d2555a117c60eedf0016dde073285e8d63c8345a2eba3"
+        },
+        "WRKSHEET.PDM": {
+          "size": 59590,
+          "sha256": "f41bd48aac9328432fb814bc0636de3dab37080d1fd2d97dc3c2bf7d7a24eccc"
+        },
+        "DMGUF.R89": {
+          "size": 15066,
+          "sha256": "d35c8d241f1f5e3f910df08a6c353689e2029adaa59f3322e5e3c962bf97dd6b"
+        }
+      }
+    },
+    "formats": {
+      "parent": "edits",
+      "disk_sha256": "35d1214ee58edeee8eb82b25b32285e1568c296c7d2473a5a69ceb8a55dd129c",
+      "config_sha256": "33983f235425792c9fbcd6c1b0dd6c39dba135f63a586ae2bc950043ca69e354",
+      "nvr_sha256": "df6a3a54d1786907aa37992e99d7a24fcb781e23a0e5c41ddff73cc28cea8fcd",
+      "stopped_disk_sha256": "722998e028627a6d7594eab7380e61bd00731007c7446b54212902ee4540682c",
+      "elapsed_emulated_ms": 163808,
+      "frame_count": 10087,
+      "installed_modules": {
+        "DESK.EXE": {
+          "size": 19047,
+          "sha256": "0f2a40243c997276904d2555a117c60eedf0016dde073285e8d63c8345a2eba3"
+        },
+        "WRKSHEET.PDM": {
+          "size": 59590,
+          "sha256": "f41bd48aac9328432fb814bc0636de3dab37080d1fd2d97dc3c2bf7d7a24eccc"
+        },
+        "DMGUF.R89": {
+          "size": 15066,
+          "sha256": "d35c8d241f1f5e3f910df08a6c353689e2029adaa59f3322e5e3c962bf97dd6b"
+        }
+      },
+      "launch_config_sha256": "738fc80def3a3943cdc7d890ecef0223885301375d428061e96555fbd39474f4"
+    },
+    "reopen": {
+      "parent": "formats",
+      "disk_sha256": "722998e028627a6d7594eab7380e61bd00731007c7446b54212902ee4540682c",
+      "config_sha256": "87903afe901e356af65d628ed2a9daf4410672326973c8490931f325825994f1",
+      "nvr_sha256": "2d55ac07b357c249b5abdad0115533bfca5d8e7bc53bf678a3e93d4450c6df85",
+      "stopped_disk_sha256": "0de3770feefeef7bafe127a82680de6246591332199f927c4f991633968b8c2a",
+      "elapsed_emulated_ms": 74230,
+      "frame_count": 4664,
+      "installed_modules": {
+        "DESK.EXE": {
+          "size": 19047,
+          "sha256": "0f2a40243c997276904d2555a117c60eedf0016dde073285e8d63c8345a2eba3"
+        },
+        "WRKSHEET.PDM": {
+          "size": 59590,
+          "sha256": "f41bd48aac9328432fb814bc0636de3dab37080d1fd2d97dc3c2bf7d7a24eccc"
+        },
+        "DMGUF.R89": {
+          "size": 15066,
+          "sha256": "d35c8d241f1f5e3f910df08a6c353689e2029adaa59f3322e5e3c962bf97dd6b"
+        }
+      }
+    },
+    "growth": {
+      "parent": "original",
+      "disk_sha256": "c013712c0cda7628a5a3138047a7d0e9b631098c5c72d41d5b8f717a6f90a281",
+      "config_sha256": "12bb7f7699f85c1eb094bd17da5994f5fc2a0c7bc74de27117b904ce5e5d1773",
+      "nvr_sha256": "a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2",
+      "stopped_disk_sha256": "e39184abed6ff909bfc1ddec03f89c9cd096169f4d2b11f8bebea24145c48f8a",
+      "elapsed_emulated_ms": 52994,
+      "frame_count": 3315,
+      "installed_modules": {
+        "DESK.EXE": {
+          "size": 19047,
+          "sha256": "0f2a40243c997276904d2555a117c60eedf0016dde073285e8d63c8345a2eba3"
+        },
+        "WRKSHEET.PDM": {
+          "size": 59590,
+          "sha256": "f41bd48aac9328432fb814bc0636de3dab37080d1fd2d97dc3c2bf7d7a24eccc"
+        },
+        "DMGUF.R89": {
+          "size": 15066,
+          "sha256": "d35c8d241f1f5e3f910df08a6c353689e2029adaa59f3322e5e3c962bf97dd6b"
+        }
+      }
+    },
+    "precision": {
+      "parent": "reopen",
+      "disk_sha256": "0de3770feefeef7bafe127a82680de6246591332199f927c4f991633968b8c2a",
+      "config_sha256": "af99f8cf9b4dbbe094c86e0159d3d892beafd40a4e808b83bfeb5912c44475b6",
+      "nvr_sha256": "48fccd0291877a00863e7196271b1c8e284c264fcd324dda7b1b10049c7bf505",
+      "stopped_disk_sha256": "8078a06d38bbd84039d73cb1ffd7bd030f4f3f94bf823351dc89da2ff3c5bf45",
+      "elapsed_emulated_ms": 87262,
+      "frame_count": 5445,
+      "installed_modules": {
+        "DESK.EXE": {
+          "size": 19047,
+          "sha256": "0f2a40243c997276904d2555a117c60eedf0016dde073285e8d63c8345a2eba3"
+        },
+        "WRKSHEET.PDM": {
+          "size": 59590,
+          "sha256": "f41bd48aac9328432fb814bc0636de3dab37080d1fd2d97dc3c2bf7d7a24eccc"
+        },
+        "DMGUF.R89": {
+          "size": 15066,
+          "sha256": "d35c8d241f1f5e3f910df08a6c353689e2029adaa59f3322e5e3c962bf97dd6b"
+        }
+      }
+    }
+  },
+  "specimens": {
+    "W00.WKS": {
+      "size": 232,
+      "sha256": "9e756a9a49c54b00309b328c42144565e41931ee68f252efae845ca30c7986cd",
+      "trial": "initial",
+      "framebuffer_capture": "w00-save",
+      "framebuffer_sha256": "d28d08bef632f648524e8226f7781e526ee154260dd775568156a4943ceef7fe",
+      "expected_contents": "Save As from the initial empty Worksheet. Five dummy entries and no strings.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 0,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "comparison_only": "W00 empty reference, no on-disk worksheet loaded for this creation",
+      "from_empty_reference": {
+        "changed_spans": [],
+        "parent_size": 232,
+        "child_size": 232
+      }
+    },
+    "W01.WKS": {
+      "size": 245,
+      "sha256": "3f5d1224cce491314d021d5b8cf00b0bc5d92731d421ebae3eacf6895ab1bcfb",
+      "trial": "initial",
+      "framebuffer_capture": "w01-through-w04",
+      "framebuffer_sha256": "fb1401f4113e4552288b159b25493b0fa3afe69c8c02f11e7053b457179f9934",
+      "expected_contents": "Type ALPHA7 at R1C1 and Save As.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 1,
+        "number": 0,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W00",
+        "size": 232,
+        "sha256": "9e756a9a49c54b00309b328c42144565e41931ee68f252efae845ca30c7986cd"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            122,
+            125
+          ],
+          [
+            128,
+            129
+          ],
+          [
+            134,
+            135
+          ],
+          [
+            136,
+            137
+          ],
+          [
+            138,
+            139
+          ],
+          [
+            146,
+            147
+          ],
+          [
+            148,
+            149
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            176,
+            179
+          ],
+          [
+            180,
+            181
+          ],
+          [
+            188,
+            190
+          ],
+          [
+            196,
+            198
+          ],
+          [
+            202,
+            204
+          ],
+          [
+            210,
+            212
+          ],
+          [
+            216,
+            218
+          ],
+          [
+            224,
+            226
+          ],
+          [
+            230,
+            232
+          ]
+        ],
+        "parent_size": 232,
+        "child_size": 245
+      }
+    },
+    "W02.WKS": {
+      "size": 253,
+      "sha256": "233ffd900d8e4fcf23e01b52ccd3c734292394410d1ebdf1761bd7810dda9394",
+      "trial": "initial",
+      "framebuffer_capture": "w01-through-w04",
+      "framebuffer_sha256": "fb1401f4113e4552288b159b25493b0fa3afe69c8c02f11e7053b457179f9934",
+      "expected_contents": "File New, enter 123 at R1C1, and Save As.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "comparison_only": "W00 empty reference, no on-disk worksheet loaded for this creation",
+      "from_empty_reference": {
+        "changed_spans": [
+          [
+            122,
+            125
+          ],
+          [
+            138,
+            140
+          ],
+          [
+            144,
+            145
+          ],
+          [
+            146,
+            149
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            178,
+            179
+          ],
+          [
+            182,
+            185
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            193,
+            196
+          ],
+          [
+            206,
+            208
+          ],
+          [
+            222,
+            224
+          ]
+        ],
+        "parent_size": 232,
+        "child_size": 253
+      }
+    },
+    "W03.WKS": {
+      "size": 252,
+      "sha256": "a7ceb1df7116483c43f6c1f032ba3818a97f247312a5a94079eb8f07e192f804",
+      "trial": "initial",
+      "framebuffer_capture": "w01-through-w04",
+      "framebuffer_sha256": "fb1401f4113e4552288b159b25493b0fa3afe69c8c02f11e7053b457179f9934",
+      "expected_contents": "File New, enter 12.5 at R1C1, and Save As.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "comparison_only": "W00 empty reference, no on-disk worksheet loaded for this creation",
+      "from_empty_reference": {
+        "changed_spans": [
+          [
+            122,
+            125
+          ],
+          [
+            138,
+            140
+          ],
+          [
+            144,
+            145
+          ],
+          [
+            146,
+            149
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            178,
+            179
+          ],
+          [
+            182,
+            185
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            194,
+            196
+          ],
+          [
+            222,
+            224
+          ]
+        ],
+        "parent_size": 232,
+        "child_size": 252
+      }
+    },
+    "W04.WKS": {
+      "size": 252,
+      "sha256": "1d572c6b44342f7b44ec8c61e0a75e183a821086d21fcdae2a23c963c1caf965",
+      "trial": "initial",
+      "framebuffer_capture": "w01-through-w04",
+      "framebuffer_sha256": "fb1401f4113e4552288b159b25493b0fa3afe69c8c02f11e7053b457179f9934",
+      "expected_contents": "File New, enter -7 at R1C1, and Save As.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "comparison_only": "W00 empty reference, no on-disk worksheet loaded for this creation",
+      "from_empty_reference": {
+        "changed_spans": [
+          [
+            122,
+            125
+          ],
+          [
+            138,
+            140
+          ],
+          [
+            144,
+            145
+          ],
+          [
+            146,
+            149
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            178,
+            179
+          ],
+          [
+            182,
+            185
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            194,
+            196
+          ],
+          [
+            222,
+            224
+          ]
+        ],
+        "parent_size": 232,
+        "child_size": 252
+      }
+    },
+    "WBASE.WKS": {
+      "size": 270,
+      "sha256": "2f35c10c6f2800ec21574cfe1e821fb1859ebf2e43725b0f70d1f72892ee8f5b",
+      "trial": "initial",
+      "framebuffer_capture": "formula-dialog",
+      "framebuffer_sha256": "5e19f2fbb9b905fa370d0fe1decde2c3597f16f10d09df8268f373c6d16ff02c",
+      "expected_contents": "File New, enter 2 and 3 at R1C1 and R1C2, and Save As before entering a formula.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 2,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "comparison_only": "W00 empty reference, no on-disk worksheet loaded for this creation",
+      "from_empty_reference": {
+        "changed_spans": [
+          [
+            122,
+            125
+          ],
+          [
+            138,
+            140
+          ],
+          [
+            144,
+            145
+          ],
+          [
+            146,
+            149
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            178,
+            179
+          ],
+          [
+            182,
+            185
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            195,
+            199
+          ],
+          [
+            200,
+            201
+          ],
+          [
+            208,
+            210
+          ]
+        ],
+        "parent_size": 232,
+        "child_size": 270
+      }
+    },
+    "W05.WKS": {
+      "size": 294,
+      "sha256": "f21b7daf2b2574b179a8fbdbb3f4c2a96b282df90b8a671b3012a1c40a42edf8",
+      "trial": "initial",
+      "framebuffer_capture": "w05-formula",
+      "framebuffer_sha256": "4410f0b5ba793ffcd0fd66ee91e85cd7bde48636835873e19b2986d40d958ef0",
+      "expected_contents": "Set R1C3 formula R1C1+R1C2 and Save As before calculation.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 2,
+        "formula": 1,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "WBASE",
+        "size": 270,
+        "sha256": "2f35c10c6f2800ec21574cfe1e821fb1859ebf2e43725b0f70d1f72892ee8f5b"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            123,
+            126
+          ],
+          [
+            148,
+            149
+          ],
+          [
+            154,
+            155
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            200,
+            201
+          ],
+          [
+            224,
+            227
+          ],
+          [
+            228,
+            229
+          ],
+          [
+            236,
+            238
+          ],
+          [
+            250,
+            252
+          ],
+          [
+            260,
+            264
+          ],
+          [
+            265,
+            269
+          ]
+        ],
+        "parent_size": 270,
+        "child_size": 294
+      }
+    },
+    "W05C.WKS": {
+      "size": 294,
+      "sha256": "8eda295ccc8982c4e22216fd7e9b0a27292b840c2b64bfbd1cd719837cf215aa",
+      "trial": "initial",
+      "framebuffer_capture": "w05-calculated",
+      "framebuffer_sha256": "a742a9b8d78692610a5795503d5dd0d4c3f16549c99d0ef67de30f9f2d7e60c0",
+      "expected_contents": "Calculate and Save As. R1C3 displays and stores 5.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 2,
+        "formula": 1,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W05",
+        "size": 294,
+        "sha256": "f21b7daf2b2574b179a8fbdbb3f4c2a96b282df90b8a671b3012a1c40a42edf8"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            226,
+            227
+          ],
+          [
+            236,
+            238
+          ]
+        ],
+        "parent_size": 294,
+        "child_size": 294
+      }
+    },
+    "W06.WKS": {
+      "size": 294,
+      "sha256": "8e2c21281207ce59a0f46328782066dc3eeed0c3c0e7ce9539f728b70297b302",
+      "trial": "initial",
+      "framebuffer_capture": "w06-changed-source",
+      "framebuffer_sha256": "c8b90aba005d8932a3c1f92f2eafb23f5ee96a7eb2e2659ae43795076afa5bd7",
+      "expected_contents": "Replace R1C2 with 9 and Save As with stale R1C3 cache 5.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 2,
+        "formula": 1,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W05C",
+        "size": 294,
+        "sha256": "8eda295ccc8982c4e22216fd7e9b0a27292b840c2b64bfbd1cd719837cf215aa"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            200,
+            201
+          ],
+          [
+            208,
+            209
+          ],
+          [
+            228,
+            229
+          ],
+          [
+            274,
+            279
+          ],
+          [
+            282,
+            288
+          ]
+        ],
+        "parent_size": 294,
+        "child_size": 294
+      }
+    },
+    "W06C.WKS": {
+      "size": 294,
+      "sha256": "4ef9a1755df3e881cfd2786ea34c67ea4c8697adea730188e7434cec701bcbc7",
+      "trial": "initial",
+      "framebuffer_capture": "w07-input-dialog",
+      "framebuffer_sha256": "3b7fea99b43f6c9a20f6b6c27a74e80adda14e5dcc636e224ee909132b3777ad",
+      "expected_contents": "Calculate and Save As before File New and Input dialog. R1C3 stores 11.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 2,
+        "formula": 1,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W06",
+        "size": 294,
+        "sha256": "8e2c21281207ce59a0f46328782066dc3eeed0c3c0e7ce9539f728b70297b302"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            236,
+            237
+          ]
+        ],
+        "parent_size": 294,
+        "child_size": 294
+      }
+    },
+    "W07.WKS": {
+      "size": 252,
+      "sha256": "b68a300a85c7411c734e67ba8b59260d125e40ad066f2b6b2f43a75146f76721",
+      "trial": "initial",
+      "framebuffer_capture": "w07-saved",
+      "framebuffer_sha256": "4f0976c559fdfc2800aa4e613d89b8cf043cb26afb9058cfb9a23f9f3005ba8c",
+      "expected_contents": "File New and Cells Input. Define RATE7 with value 6.25 at R1C1.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 0,
+        "formula": 0,
+        "input": 1,
+        "text_block": 0
+      },
+      "comparison_only": "W00 empty reference, no on-disk worksheet loaded for this creation",
+      "from_empty_reference": {
+        "changed_spans": [
+          [
+            122,
+            125
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            164,
+            165
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            178,
+            179
+          ],
+          [
+            184,
+            186
+          ],
+          [
+            208,
+            213
+          ],
+          [
+            214,
+            215
+          ],
+          [
+            222,
+            224
+          ]
+        ],
+        "parent_size": 232,
+        "child_size": 252
+      }
+    },
+    "W08M.WKS": {
+      "size": 287,
+      "sha256": "b48f932c4a379170387e0e4ee44a3aa32d30561afba6e3808fbf05e3329339ab",
+      "trial": "edits",
+      "framebuffer_capture": "w08m-save",
+      "framebuffer_sha256": "90b18ae506b630618ee97d6dbcf9b84137882c04b50d839957dc0bd51479db1a",
+      "expected_contents": "File New. Select R1C1 through R2C2, start text, type FIRST and SECOND separated by Enter, end text and Save As.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 0,
+        "formula": 0,
+        "input": 0,
+        "text_block": 1
+      },
+      "comparison_only": "W00 empty reference, no on-disk worksheet loaded for this creation",
+      "from_empty_reference": {
+        "changed_spans": [
+          [
+            122,
+            126
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            174,
+            175
+          ],
+          [
+            178,
+            179
+          ],
+          [
+            184,
+            186
+          ],
+          [
+            188,
+            189
+          ],
+          [
+            224,
+            227
+          ],
+          [
+            228,
+            229
+          ],
+          [
+            230,
+            232
+          ]
+        ],
+        "parent_size": 232,
+        "child_size": 287
+      }
+    },
+    "W09.WKS": {
+      "size": 258,
+      "sha256": "01360cf4c592a32b6f805eeef8b1163f47923afc77abc76a7d915265fe0d212f",
+      "trial": "edits",
+      "framebuffer_capture": "w09-two-labels",
+      "framebuffer_sha256": "9060a847da9d08ada8bd09f53b97d60ce7fe60afea6fb7ae2e6cff992b9c02bb",
+      "expected_contents": "Reopen ALPHA7 worksheet and add the same label at R3C4.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 2,
+        "number": 0,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W01",
+        "size": 245,
+        "sha256": "3f5d1224cce491314d021d5b8cf00b0bc5d92731d421ebae3eacf6895ab1bcfb"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            122,
+            125
+          ],
+          [
+            128,
+            129
+          ],
+          [
+            134,
+            135
+          ],
+          [
+            136,
+            137
+          ],
+          [
+            138,
+            140
+          ],
+          [
+            146,
+            149
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            180,
+            181
+          ],
+          [
+            182,
+            185
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            194,
+            196
+          ],
+          [
+            202,
+            204
+          ],
+          [
+            208,
+            210
+          ],
+          [
+            216,
+            218
+          ],
+          [
+            222,
+            224
+          ],
+          [
+            230,
+            232
+          ],
+          [
+            236,
+            245
+          ]
+        ],
+        "parent_size": 245,
+        "child_size": 258
+      }
+    },
+    "W10.WKS": {
+      "size": 271,
+      "sha256": "74289da7b56950c93e3ed8073448fa26c14ecf0f1c3f4e8c87d415a3e5477ed1",
+      "trial": "edits",
+      "framebuffer_capture": "w10-copy-label",
+      "framebuffer_sha256": "b9d1e2917e24311329d687aadaf348a96c374ee34efdd8309b32ad19f68e23a4",
+      "expected_contents": "Copy R3C4 label to R5C2 and save all three labels.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 3,
+        "number": 0,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W09",
+        "size": 258,
+        "sha256": "01360cf4c592a32b6f805eeef8b1163f47923afc77abc76a7d915265fe0d212f"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            122,
+            123
+          ],
+          [
+            124,
+            125
+          ],
+          [
+            128,
+            129
+          ],
+          [
+            134,
+            135
+          ],
+          [
+            136,
+            137
+          ],
+          [
+            138,
+            139
+          ],
+          [
+            146,
+            147
+          ],
+          [
+            148,
+            149
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            180,
+            181
+          ],
+          [
+            182,
+            184
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            188,
+            191
+          ],
+          [
+            192,
+            193
+          ],
+          [
+            200,
+            202
+          ],
+          [
+            208,
+            210
+          ],
+          [
+            214,
+            216
+          ],
+          [
+            222,
+            224
+          ],
+          [
+            228,
+            230
+          ],
+          [
+            236,
+            238
+          ],
+          [
+            242,
+            258
+          ]
+        ],
+        "parent_size": 258,
+        "child_size": 271
+      }
+    },
+    "W12.WKS": {
+      "size": 245,
+      "sha256": "58123c373da9ac865c5222f9a79013831b5c6a29fb30c87c7ff014f6d526ac57",
+      "trial": "edits",
+      "framebuffer_capture": "w12-w13-label-edits",
+      "framebuffer_sha256": "738a90ac86f16eb334f708d10b07e8b0f2f490a4c2c8b40e0be5819e8f267fbd",
+      "expected_contents": "Reopen and replace ALPHA7 with the same-length BETA77.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 1,
+        "number": 0,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W01",
+        "size": 245,
+        "sha256": "3f5d1224cce491314d021d5b8cf00b0bc5d92731d421ebae3eacf6895ab1bcfb"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            238,
+            243
+          ]
+        ],
+        "parent_size": 245,
+        "child_size": 245
+      }
+    },
+    "W13.WKS": {
+      "size": 249,
+      "sha256": "689b81190833fe6e9187951c3e8f14089c9f3aa6cbf78f054dbdd8da40fc5277",
+      "trial": "edits",
+      "framebuffer_capture": "w12-w13-label-edits",
+      "framebuffer_sha256": "738a90ac86f16eb334f708d10b07e8b0f2f490a4c2c8b40e0be5819e8f267fbd",
+      "expected_contents": "Independently reopen and replace ALPHA7 with the longer ALPHA7LONG.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 1,
+        "number": 0,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W01",
+        "size": 245,
+        "sha256": "3f5d1224cce491314d021d5b8cf00b0bc5d92731d421ebae3eacf6895ab1bcfb"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            124,
+            125
+          ],
+          [
+            244,
+            245
+          ]
+        ],
+        "parent_size": 245,
+        "child_size": 249
+      }
+    },
+    "W14.WKS": {
+      "size": 245,
+      "sha256": "3f5d1224cce491314d021d5b8cf00b0bc5d92731d421ebae3eacf6895ab1bcfb",
+      "trial": "edits",
+      "framebuffer_capture": "w14-delete-and-width-dialog",
+      "framebuffer_sha256": "d078eccea738099c2d87e472202b29ed41419a781fe740a49943b63c03c392eb",
+      "expected_contents": "Reopen and clear R3C4. The result is byte-identical to W01.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 1,
+        "number": 0,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W09",
+        "size": 258,
+        "sha256": "01360cf4c592a32b6f805eeef8b1163f47923afc77abc76a7d915265fe0d212f"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            122,
+            125
+          ],
+          [
+            128,
+            129
+          ],
+          [
+            134,
+            135
+          ],
+          [
+            136,
+            137
+          ],
+          [
+            138,
+            140
+          ],
+          [
+            146,
+            149
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            180,
+            181
+          ],
+          [
+            182,
+            185
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            194,
+            196
+          ],
+          [
+            202,
+            204
+          ],
+          [
+            208,
+            210
+          ],
+          [
+            216,
+            218
+          ],
+          [
+            222,
+            224
+          ],
+          [
+            230,
+            232
+          ],
+          [
+            236,
+            245
+          ]
+        ],
+        "parent_size": 258,
+        "child_size": 245
+      }
+    },
+    "W15.WKS": {
+      "size": 245,
+      "sha256": "3f5d1224cce491314d021d5b8cf00b0bc5d92731d421ebae3eacf6895ab1bcfb",
+      "trial": "edits",
+      "framebuffer_capture": "w15-resave-wempty",
+      "framebuffer_sha256": "09dadb1478f07a7d29fd9a8558887f7b6bdb5e57df1f6747c7cc320be5b05b6d",
+      "expected_contents": "Reopen from DOS after a separate boot and Save As without edits. Byte-identical to W01.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 1,
+        "number": 0,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W01",
+        "size": 245,
+        "sha256": "3f5d1224cce491314d021d5b8cf00b0bc5d92731d421ebae3eacf6895ab1bcfb"
+      },
+      "byte_difference": {
+        "changed_spans": [],
+        "parent_size": 245,
+        "child_size": 245
+      }
+    },
+    "WEMPTY.WKS": {
+      "size": 232,
+      "sha256": "9e756a9a49c54b00309b328c42144565e41931ee68f252efae845ca30c7986cd",
+      "trial": "edits",
+      "framebuffer_capture": "w15-resave-wempty",
+      "framebuffer_sha256": "09dadb1478f07a7d29fd9a8558887f7b6bdb5e57df1f6747c7cc320be5b05b6d",
+      "expected_contents": "Clear the sole ALPHA7 label and Save As. Byte-identical to W00.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 0,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W15",
+        "size": 245,
+        "sha256": "3f5d1224cce491314d021d5b8cf00b0bc5d92731d421ebae3eacf6895ab1bcfb"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            122,
+            125
+          ],
+          [
+            128,
+            129
+          ],
+          [
+            134,
+            135
+          ],
+          [
+            136,
+            137
+          ],
+          [
+            138,
+            139
+          ],
+          [
+            146,
+            147
+          ],
+          [
+            148,
+            149
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            176,
+            179
+          ],
+          [
+            180,
+            181
+          ],
+          [
+            188,
+            190
+          ],
+          [
+            196,
+            198
+          ],
+          [
+            202,
+            204
+          ],
+          [
+            210,
+            212
+          ],
+          [
+            216,
+            218
+          ],
+          [
+            224,
+            226
+          ],
+          [
+            230,
+            232
+          ]
+        ],
+        "parent_size": 245,
+        "child_size": 232
+      }
+    },
+    "WNUM.WKS": {
+      "size": 297,
+      "sha256": "bcd7c8065ab9891c77cb9c42ea6150c9b32a063f8571d1640071a7852ee3b221",
+      "trial": "edits",
+      "framebuffer_capture": "wnum-zero-one-large",
+      "framebuffer_sha256": "487ad6c723110ad1a6be0264a274432ae7b9122c74e25c08932ab7d458a17424",
+      "expected_contents": "File New. Store 0, 1, and 123456789 at R1C1 through R1C3.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 3,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "comparison_only": "W00 empty reference, no on-disk worksheet loaded for this creation",
+      "from_empty_reference": {
+        "changed_spans": [
+          [
+            122,
+            126
+          ],
+          [
+            138,
+            140
+          ],
+          [
+            144,
+            145
+          ],
+          [
+            146,
+            149
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            182,
+            185
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            196,
+            199
+          ],
+          [
+            200,
+            201
+          ],
+          [
+            208,
+            213
+          ],
+          [
+            214,
+            215
+          ],
+          [
+            219,
+            224
+          ]
+        ],
+        "parent_size": 232,
+        "child_size": 297
+      }
+    },
+    "WFCOPY.WKS": {
+      "size": 318,
+      "sha256": "64bf1363b11798bc785432b77d17c0817a059ebfc0a71aeb280592efaec89ef4",
+      "trial": "edits",
+      "framebuffer_capture": "w06c-reopen-copy-formula",
+      "framebuffer_sha256": "855989f1ce6b58c0f2e7f4f70234d012537249d4960e27524e8d344ec840a752",
+      "expected_contents": "Reopen and copy the formula to R2C3. It now refers to R2C1+R2C2.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 2,
+        "formula": 2,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W06C",
+        "size": 294,
+        "sha256": "4ef9a1755df3e881cfd2786ea34c67ea4c8697adea730188e7434cec701bcbc7"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            122,
+            123
+          ],
+          [
+            124,
+            125
+          ],
+          [
+            148,
+            149
+          ],
+          [
+            154,
+            155
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            200,
+            201
+          ],
+          [
+            228,
+            229
+          ],
+          [
+            238,
+            241
+          ],
+          [
+            242,
+            243
+          ],
+          [
+            250,
+            252
+          ],
+          [
+            264,
+            266
+          ],
+          [
+            274,
+            278
+          ],
+          [
+            279,
+            289
+          ],
+          [
+            290,
+            294
+          ]
+        ],
+        "parent_size": 294,
+        "child_size": 318
+      }
+    },
+    "WMIX.WKS": {
+      "size": 404,
+      "sha256": "c28a2ebe61953b140c251cff1f1b47411323a091e3e2ad8fc8d1149a01db9a07",
+      "trial": "edits",
+      "framebuffer_capture": "wmix-five-kinds",
+      "framebuffer_sha256": "b0c530ad2742c3a61cb9d9e2e8f1a1151778c0f11821a1345785dee88f1f7727",
+      "expected_contents": "Add input RATE7 at R2C1 and R2C2 formula R2C1*R1C2. Calculate with 4.5. Add MIX7 and two-line TOP/BOTTOM block.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 1,
+        "number": 2,
+        "formula": 2,
+        "input": 1,
+        "text_block": 1
+      },
+      "parent": {
+        "name": "W06C",
+        "size": 294,
+        "sha256": "4ef9a1755df3e881cfd2786ea34c67ea4c8697adea730188e7434cec701bcbc7"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            122,
+            123
+          ],
+          [
+            124,
+            125
+          ],
+          [
+            128,
+            129
+          ],
+          [
+            134,
+            135
+          ],
+          [
+            136,
+            137
+          ],
+          [
+            138,
+            139
+          ],
+          [
+            146,
+            147
+          ],
+          [
+            148,
+            149
+          ],
+          [
+            154,
+            155
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            164,
+            165
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            174,
+            175
+          ],
+          [
+            176,
+            178
+          ],
+          [
+            180,
+            181
+          ],
+          [
+            182,
+            185
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            188,
+            191
+          ],
+          [
+            192,
+            194
+          ],
+          [
+            195,
+            199
+          ],
+          [
+            200,
+            205
+          ],
+          [
+            206,
+            212
+          ],
+          [
+            214,
+            218
+          ],
+          [
+            224,
+            227
+          ],
+          [
+            228,
+            229
+          ],
+          [
+            230,
+            233
+          ],
+          [
+            234,
+            235
+          ],
+          [
+            236,
+            240
+          ],
+          [
+            241,
+            247
+          ],
+          [
+            248,
+            254
+          ],
+          [
+            256,
+            260
+          ],
+          [
+            266,
+            268
+          ],
+          [
+            270,
+            278
+          ],
+          [
+            279,
+            288
+          ],
+          [
+            289,
+            293
+          ]
+        ],
+        "parent_size": 294,
+        "child_size": 404
+      }
+    },
+    "W11.WKS": {
+      "size": 245,
+      "sha256": "21707b1bd9b9dfd2357460b1ca5e54c13330b9c268e31731bbe5dbaaa50c4648",
+      "trial": "formats",
+      "framebuffer_capture": "w11-save-number-format",
+      "framebuffer_sha256": "44df9f2a11c81e9a4564c67fc85eab1701cd343c1ce9c0c83afa735688635af7",
+      "expected_contents": "Change only the current column width to 16. ALPHA7 remains at R1C1.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 1,
+        "number": 0,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W01",
+        "size": 245,
+        "sha256": "3f5d1224cce491314d021d5b8cf00b0bc5d92731d421ebae3eacf6895ab1bcfb"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            23,
+            24
+          ]
+        ],
+        "parent_size": 245,
+        "child_size": 245
+      }
+    },
+    "WINT.WKS": {
+      "size": 252,
+      "sha256": "c186951c151f861e0d382b7c363b93ffbe39b0906a670112157b60e6fb67c40e",
+      "trial": "formats",
+      "framebuffer_capture": "wint-save-left-dialog",
+      "framebuffer_sha256": "44df9f2a11c81e9a4564c67fc85eab1701cd343c1ce9c0c83afa735688635af7",
+      "expected_contents": "Reopen 12.5 and choose Integer in Cells Format.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W03",
+        "size": 252,
+        "sha256": "a7ceb1df7116483c43f6c1f032ba3818a97f247312a5a94079eb8f07e192f804"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            184,
+            185
+          ]
+        ],
+        "parent_size": 252,
+        "child_size": 252
+      }
+    },
+    "WLEFT.WKS": {
+      "size": 252,
+      "sha256": "13d2424d4a63c712dab561633015b3742e0d1499f2c806eafef60497667e39ff",
+      "trial": "formats",
+      "framebuffer_capture": "wleft-save-wrow",
+      "framebuffer_sha256": "cca5d8c13c11bd64f2eb1a319f341aa892144885f3303ae94de67e34061cf757",
+      "expected_contents": "Reopen 12.5 and choose Left in Cells Format. The dialog retained its selected Type.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W03",
+        "size": 252,
+        "sha256": "a7ceb1df7116483c43f6c1f032ba3818a97f247312a5a94079eb8f07e192f804"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            184,
+            185
+          ]
+        ],
+        "parent_size": 252,
+        "child_size": 252
+      }
+    },
+    "WROW.WKS": {
+      "size": 294,
+      "sha256": "25629f8c480b5e428d566bfd607411c8ece250a30f9fbef15e0649eaa052a0bb",
+      "trial": "formats",
+      "framebuffer_capture": "wrow-wcol-saves",
+      "framebuffer_sha256": "dc1e0bbc8574f1c54884d8ed6496f158a764a89637ef87e7a52b8b14bddeee3d",
+      "expected_contents": "Insert a row before row 1 and Save As. Row references in the formula shift to 2.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 2,
+        "formula": 1,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W06C",
+        "size": 294,
+        "sha256": "4ef9a1755df3e881cfd2786ea34c67ea4c8697adea730188e7434cec701bcbc7"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            122,
+            123
+          ],
+          [
+            182,
+            183
+          ],
+          [
+            196,
+            197
+          ],
+          [
+            200,
+            201
+          ],
+          [
+            224,
+            225
+          ],
+          [
+            228,
+            229
+          ],
+          [
+            274,
+            279
+          ],
+          [
+            280,
+            281
+          ],
+          [
+            282,
+            288
+          ]
+        ],
+        "parent_size": 294,
+        "child_size": 294
+      }
+    },
+    "WCOL.WKS": {
+      "size": 294,
+      "sha256": "75885728fd12d1b8326ee50c3554eff93b4e8e05b1ee949711aba5002655a41d",
+      "trial": "formats",
+      "framebuffer_capture": "wrow-wcol-saves",
+      "framebuffer_sha256": "dc1e0bbc8574f1c54884d8ed6496f158a764a89637ef87e7a52b8b14bddeee3d",
+      "expected_contents": "Independently insert a column before column 1. Formula moves to R1C4 and refers to the shifted columns.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 2,
+        "formula": 1,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W06C",
+        "size": 294,
+        "sha256": "4ef9a1755df3e881cfd2786ea34c67ea4c8697adea730188e7434cec701bcbc7"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            123,
+            124
+          ],
+          [
+            183,
+            184
+          ],
+          [
+            197,
+            198
+          ],
+          [
+            200,
+            201
+          ],
+          [
+            225,
+            226
+          ],
+          [
+            228,
+            229
+          ],
+          [
+            274,
+            279
+          ],
+          [
+            282,
+            288
+          ]
+        ],
+        "parent_size": 294,
+        "child_size": 294
+      }
+    },
+    "WABS.WKS": {
+      "size": 320,
+      "sha256": "a60c3371b5dbf0c9338f6fc954f668f3c2193fe45a812a176007934b88d6074c",
+      "trial": "formats",
+      "framebuffer_capture": "wabs-copy-and-calculate",
+      "framebuffer_sha256": "4afdaf85c20423db6f947430d46cbc876b5dc5e4b3c7f7437576b36aa904e420",
+      "expected_contents": "Add an absolute #R1C1+#R1C2 formula, calculate, and Save As before copying the formulas down.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 2,
+        "formula": 2,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W06C",
+        "size": 294,
+        "sha256": "4ef9a1755df3e881cfd2786ea34c67ea4c8697adea730188e7434cec701bcbc7"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            123,
+            125
+          ],
+          [
+            148,
+            149
+          ],
+          [
+            154,
+            155
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            200,
+            201
+          ],
+          [
+            228,
+            229
+          ],
+          [
+            238,
+            241
+          ],
+          [
+            242,
+            243
+          ],
+          [
+            250,
+            252
+          ],
+          [
+            264,
+            266
+          ],
+          [
+            274,
+            278
+          ],
+          [
+            279,
+            294
+          ]
+        ],
+        "parent_size": 294,
+        "child_size": 320
+      }
+    },
+    "WABSC.WKS": {
+      "size": 408,
+      "sha256": "4920a1a6de6a561e73867b6e98e128a206d31fd28ee500a3eb81ed134fa191d6",
+      "trial": "formats",
+      "framebuffer_capture": "wabs-copy-and-calculate",
+      "framebuffer_sha256": "4afdaf85c20423db6f947430d46cbc876b5dc5e4b3c7f7437576b36aa904e420",
+      "expected_contents": "Copy both formulas down and enter 4 and 6 as row 2 inputs. Calculate to compare relative 10 and absolute 11.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 4,
+        "formula": 4,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "WABS",
+        "size": 320,
+        "sha256": "a60c3371b5dbf0c9338f6fc954f668f3c2193fe45a812a176007934b88d6074c"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            122,
+            123
+          ],
+          [
+            124,
+            125
+          ],
+          [
+            138,
+            139
+          ],
+          [
+            144,
+            145
+          ],
+          [
+            146,
+            147
+          ],
+          [
+            148,
+            149
+          ],
+          [
+            154,
+            155
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            186,
+            188
+          ],
+          [
+            196,
+            198
+          ],
+          [
+            200,
+            201
+          ],
+          [
+            208,
+            209
+          ],
+          [
+            210,
+            213
+          ],
+          [
+            214,
+            216
+          ],
+          [
+            222,
+            227
+          ],
+          [
+            228,
+            229
+          ],
+          [
+            236,
+            237
+          ],
+          [
+            238,
+            241
+          ],
+          [
+            242,
+            243
+          ],
+          [
+            250,
+            255
+          ],
+          [
+            256,
+            258
+          ],
+          [
+            264,
+            269
+          ],
+          [
+            270,
+            271
+          ],
+          [
+            278,
+            283
+          ],
+          [
+            284,
+            285
+          ],
+          [
+            288,
+            299
+          ],
+          [
+            300,
+            304
+          ],
+          [
+            305,
+            314
+          ],
+          [
+            315,
+            319
+          ]
+        ],
+        "parent_size": 320,
+        "child_size": 408
+      }
+    },
+    "WSPARSE.WKS": {
+      "size": 420,
+      "sha256": "d4f7cd6c163f223cfbd7a94d689a9003dc4f4d9bb2e8e832ef2794aaec578c99",
+      "trial": "formats",
+      "framebuffer_capture": "wsparse-cell-99",
+      "framebuffer_sha256": "acdbfb0aa63c6b22c40056ace3339ad365cb5a267d4b5bddb399423d175598fe",
+      "expected_contents": "After Find Cell selects R99C99, add FAR99 and save.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 1,
+        "number": 4,
+        "formula": 4,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "WABSC",
+        "size": 408,
+        "sha256": "4920a1a6de6a561e73867b6e98e128a206d31fd28ee500a3eb81ed134fa191d6"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            122,
+            125
+          ],
+          [
+            128,
+            129
+          ],
+          [
+            134,
+            135
+          ],
+          [
+            136,
+            137
+          ],
+          [
+            138,
+            139
+          ],
+          [
+            146,
+            147
+          ],
+          [
+            148,
+            149
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            176,
+            178
+          ],
+          [
+            180,
+            181
+          ],
+          [
+            182,
+            185
+          ],
+          [
+            186,
+            191
+          ],
+          [
+            192,
+            194
+          ],
+          [
+            195,
+            199
+          ],
+          [
+            200,
+            205
+          ],
+          [
+            206,
+            207
+          ],
+          [
+            208,
+            213
+          ],
+          [
+            215,
+            219
+          ],
+          [
+            220,
+            227
+          ],
+          [
+            228,
+            233
+          ],
+          [
+            234,
+            235
+          ],
+          [
+            236,
+            240
+          ],
+          [
+            242,
+            246
+          ],
+          [
+            252,
+            255
+          ],
+          [
+            256,
+            261
+          ],
+          [
+            262,
+            269
+          ],
+          [
+            270,
+            275
+          ],
+          [
+            276,
+            283
+          ],
+          [
+            284,
+            289
+          ],
+          [
+            290,
+            291
+          ],
+          [
+            292,
+            297
+          ],
+          [
+            298,
+            303
+          ],
+          [
+            304,
+            305
+          ],
+          [
+            306,
+            310
+          ],
+          [
+            312,
+            316
+          ],
+          [
+            320,
+            324
+          ],
+          [
+            326,
+            330
+          ],
+          [
+            336,
+            338
+          ],
+          [
+            342,
+            348
+          ],
+          [
+            349,
+            365
+          ],
+          [
+            378,
+            396
+          ],
+          [
+            397,
+            408
+          ]
+        ],
+        "parent_size": 408,
+        "child_size": 420
+      }
+    },
+    "WCTX.WKS": {
+      "size": 245,
+      "sha256": "3f5d1224cce491314d021d5b8cf00b0bc5d92731d421ebae3eacf6895ab1bcfb",
+      "trial": "formats",
+      "framebuffer_capture": "wctx-nested-resave",
+      "framebuffer_sha256": "2aa33e5de533166e1cd332e919c22c3bf602dd41083dc7c15528a24e91cc05cd",
+      "expected_contents": "Reopen using Text File Run. Save As unchanged. Byte-identical to W01.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 1,
+        "number": 0,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W01",
+        "size": 245,
+        "sha256": "3f5d1224cce491314d021d5b8cf00b0bc5d92731d421ebae3eacf6895ab1bcfb"
+      },
+      "byte_difference": {
+        "changed_spans": [],
+        "parent_size": 245,
+        "child_size": 245
+      }
+    },
+    "WFIX.WKS": {
+      "size": 245,
+      "sha256": "3f5d1224cce491314d021d5b8cf00b0bc5d92731d421ebae3eacf6895ab1bcfb",
+      "trial": "reopen",
+      "framebuffer_capture": "wfix-native-pointer-reopen",
+      "framebuffer_sha256": "c076f8fabbf84383811800aa7f812374a01532f739630545573f063ad62f8335",
+      "expected_contents": "Open private pointer-rebased W15 input, display ALPHA7, and Save As. Native output equals W01.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 1,
+        "number": 0,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "private-rebase",
+        "size": 245,
+        "sha256": "aaabb6f873f8da81f5ae97eeda4c3bd8d987b10d328172bfb60da84aa6965b87"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            127,
+            128
+          ],
+          [
+            129,
+            130
+          ],
+          [
+            137,
+            138
+          ],
+          [
+            139,
+            140
+          ],
+          [
+            147,
+            148
+          ],
+          [
+            149,
+            150
+          ],
+          [
+            157,
+            158
+          ],
+          [
+            159,
+            160
+          ],
+          [
+            167,
+            168
+          ],
+          [
+            169,
+            170
+          ]
+        ],
+        "parent_size": 245,
+        "child_size": 245
+      }
+    },
+    "WRECALC.WKS": {
+      "size": 294,
+      "sha256": "4ef9a1755df3e881cfd2786ea34c67ea4c8697adea730188e7434cec701bcbc7",
+      "trial": "reopen",
+      "framebuffer_capture": "wrecalc-werr-entry",
+      "framebuffer_sha256": "89b1090fefee8aeb0a2e03522737867d3b294d20bda4cef143e172e37495c155",
+      "expected_contents": "Cold reopen of stale W06, then Calculate and Save As. Matches W06C.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 2,
+        "formula": 1,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W06",
+        "size": 294,
+        "sha256": "8e2c21281207ce59a0f46328782066dc3eeed0c3c0e7ce9539f728b70297b302"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            236,
+            237
+          ]
+        ],
+        "parent_size": 294,
+        "child_size": 294
+      }
+    },
+    "WERR.WKS": {
+      "size": 291,
+      "sha256": "97f0eae6da77365a6ec3b148c12f684eb97ddde253383d3c2bc03e536964533e",
+      "trial": "reopen",
+      "framebuffer_capture": "werr-saved-wmix-calc",
+      "framebuffer_sha256": "e7b2fccc925cd8ce7ff566462c1e0e1a3974303ad1786ee9bf6c70f31984f573",
+      "expected_contents": "Reopen WBASE, add R1C1/0 in R1C3 and Calculate. Native output displays *ERROR.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 2,
+        "formula": 1,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "WBASE",
+        "size": 270,
+        "sha256": "2f35c10c6f2800ec21574cfe1e821fb1859ebf2e43725b0f70d1f72892ee8f5b"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            123,
+            126
+          ],
+          [
+            148,
+            149
+          ],
+          [
+            154,
+            155
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            200,
+            201
+          ],
+          [
+            224,
+            229
+          ],
+          [
+            236,
+            238
+          ],
+          [
+            250,
+            252
+          ],
+          [
+            260,
+            264
+          ],
+          [
+            265,
+            269
+          ]
+        ],
+        "parent_size": 270,
+        "child_size": 291
+      }
+    },
+    "WMIX2.WKS": {
+      "size": 404,
+      "sha256": "0cd381b0ba408057e40388c96589be6e1c7c43b90932affaf82f0ed40c00a194",
+      "trial": "reopen",
+      "framebuffer_capture": "wmix2-input-change",
+      "framebuffer_sha256": "99d9c7e394b8176bef94a5b96ebc34b96bce3386260bdd953ec9b88bf4a8e539",
+      "expected_contents": "Reopen and Calculate, replacing RATE7 with 7.5 when prompted. The dependent result is 67.5.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 1,
+        "number": 2,
+        "formula": 2,
+        "input": 1,
+        "text_block": 1
+      },
+      "parent": {
+        "name": "WMIX",
+        "size": 404,
+        "sha256": "c28a2ebe61953b140c251cff1f1b47411323a091e3e2ad8fc8d1149a01db9a07"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            241,
+            243
+          ],
+          [
+            284,
+            285
+          ]
+        ],
+        "parent_size": 404,
+        "child_size": 404
+      }
+    },
+    "WBACK.WKS": {
+      "size": 294,
+      "sha256": "09cb48e4f9395c823203fa15c328faafbd28a0a5cbdba8b65c67b6920cea6df0",
+      "trial": "reopen",
+      "framebuffer_capture": "wback-save",
+      "framebuffer_sha256": "cc171ad74f711aed91147c438d89799a7c88a41ce3b84abe9bd79ccd205865b0",
+      "expected_contents": "Reopen and delete the leading empty row. The W06C semantics return with reordered pool bytes.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 2,
+        "formula": 1,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "WROW",
+        "size": 294,
+        "sha256": "25629f8c480b5e428d566bfd607411c8ece250a30f9fbef15e0649eaa052a0bb"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            122,
+            123
+          ],
+          [
+            182,
+            183
+          ],
+          [
+            196,
+            197
+          ],
+          [
+            224,
+            225
+          ],
+          [
+            275,
+            276
+          ],
+          [
+            280,
+            281
+          ]
+        ],
+        "parent_size": 294,
+        "child_size": 294
+      }
+    },
+    "WGRW.WKS": {
+      "size": 5094,
+      "sha256": "5451478295039d1cff4e58721109ad7b5b2ad2caa98a7741dd157f52088d10ee",
+      "trial": "growth",
+      "framebuffer_capture": "fresh-growth-native-save",
+      "framebuffer_sha256": "3d474dcba9d777f79b0b45fa84e0212337f63236da6d64cc77a503c551f9fea1",
+      "expected_contents": "Fresh boot and new worksheet. Create a 63-row by 7-column text block with GROWTH and CONTROL on separate lines. Reopen and display both lines.",
+      "fat_cluster_count": 3,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 0,
+        "formula": 0,
+        "input": 0,
+        "text_block": 1
+      },
+      "comparison_only": "W00 empty reference, no on-disk worksheet loaded for this creation",
+      "from_empty_reference": {
+        "changed_spans": [
+          [
+            122,
+            126
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            174,
+            175
+          ],
+          [
+            224,
+            227
+          ],
+          [
+            228,
+            229
+          ],
+          [
+            230,
+            232
+          ]
+        ],
+        "parent_size": 232,
+        "child_size": 5094
+      }
+    },
+    "WSOFT.WKS": {
+      "size": 279,
+      "sha256": "f8d5235337749e041fdcc90edb5345577333c9cb8a96fa072993e4a204f33975",
+      "trial": "growth",
+      "framebuffer_capture": "wsoft-native-save",
+      "framebuffer_sha256": "d0cac3ef19723503a6b87bcad593050cd988a99376730eb419f783977c2f0317",
+      "expected_contents": "File New. Type ONE TWO THREE FOUR into a three-row, one-column block with paced keys. Native wrap before THREE is stored as LF.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 0,
+        "formula": 0,
+        "input": 0,
+        "text_block": 1
+      },
+      "comparison_only": "W00 empty reference, no on-disk worksheet loaded for this creation",
+      "from_empty_reference": {
+        "changed_spans": [
+          [
+            122,
+            126
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            174,
+            175
+          ],
+          [
+            198,
+            200
+          ],
+          [
+            202,
+            210
+          ],
+          [
+            212,
+            214
+          ],
+          [
+            216,
+            227
+          ],
+          [
+            228,
+            229
+          ],
+          [
+            230,
+            231
+          ]
+        ],
+        "parent_size": 232,
+        "child_size": 279
+      }
+    },
+    "WDP2.WKS": {
+      "size": 252,
+      "sha256": "6da7f4e1d3d8203a23ec7e9326e61bc93a83f0af06682693c3ed3e5d73a6c061",
+      "trial": "precision",
+      "framebuffer_capture": "wdp2-wdp4-setup",
+      "framebuffer_sha256": "38facf7a675cd7011d7b4c369953a8a0222e4b18b0615b26c865ee9fc5459d01",
+      "expected_contents": "Explicitly select Decimal with two places. Stored number and number string stay unchanged.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W03",
+        "size": 252,
+        "sha256": "a7ceb1df7116483c43f6c1f032ba3818a97f247312a5a94079eb8f07e192f804"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            184,
+            185
+          ]
+        ],
+        "parent_size": 252,
+        "child_size": 252
+      }
+    },
+    "WDP4.WKS": {
+      "size": 252,
+      "sha256": "450679eb5afd1b90c6c6e4faa8d50a224939a0fc776eb9a6477b74f0c2babd0f",
+      "trial": "precision",
+      "framebuffer_capture": "wdp4-wdl4",
+      "framebuffer_sha256": "0ce1df0008ae900c64ada8274c86036b649aeb792d56df2b842792dd6b5754a2",
+      "expected_contents": "Change decimal precision to four places at the same value. Reopen displays 12.5000.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "WDP2",
+        "size": 252,
+        "sha256": "6da7f4e1d3d8203a23ec7e9326e61bc93a83f0af06682693c3ed3e5d73a6c061"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            184,
+            185
+          ]
+        ],
+        "parent_size": 252,
+        "child_size": 252
+      }
+    },
+    "WDL4.WKS": {
+      "size": 252,
+      "sha256": "e58ededc342a6000444c4e56cc908d1819ad3dfc5bfdae496bc5e26f414e5148",
+      "trial": "precision",
+      "framebuffer_capture": "wdp4-wdl4",
+      "framebuffer_sha256": "0ce1df0008ae900c64ada8274c86036b649aeb792d56df2b842792dd6b5754a2",
+      "expected_contents": "Select Left on the four-place decimal. Precision, numeric cache and number string stay unchanged.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "WDP4",
+        "size": 252,
+        "sha256": "450679eb5afd1b90c6c6e4faa8d50a224939a0fc776eb9a6477b74f0c2babd0f"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            184,
+            185
+          ]
+        ],
+        "parent_size": 252,
+        "child_size": 252
+      }
+    },
+    "WCU.WKS": {
+      "size": 252,
+      "sha256": "6da7f4e1d3d8203a23ec7e9326e61bc93a83f0af06682693c3ed3e5d73a6c061",
+      "trial": "precision",
+      "framebuffer_capture": "wcu-and-reference-delete",
+      "framebuffer_sha256": "132bf826937c505379e747360504f188c92be5413145b942d8a04b68d3f34291",
+      "expected_contents": "Select Currency on the four-place control. Saved file equals the explicit two-place decimal control WDP2.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 0,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "WDP4",
+        "size": 252,
+        "sha256": "450679eb5afd1b90c6c6e4faa8d50a224939a0fc776eb9a6477b74f0c2babd0f"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            184,
+            185
+          ]
+        ],
+        "parent_size": 252,
+        "child_size": 252
+      }
+    },
+    "WREF.WKS": {
+      "size": 275,
+      "sha256": "8e2bc6dce7ab199c2c33b7233cf842efae00073986b2fd7903b0fd11235bba7b",
+      "trial": "precision",
+      "framebuffer_capture": "wref-broken-reference",
+      "framebuffer_sha256": "e1ecc5738b4aaf2f4b274aedc9fd33d4db334326463cbfd2b0c634c63affb517",
+      "expected_contents": "Delete the first column containing a referenced value. Native warns, moves the formula to R1C2, and displays *ERROR with the old expression and stored value 11.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 1,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "W06C",
+        "size": 294,
+        "sha256": "4ef9a1755df3e881cfd2786ea34c67ea4c8697adea730188e7434cec701bcbc7"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            123,
+            126
+          ],
+          [
+            138,
+            139
+          ],
+          [
+            144,
+            145
+          ],
+          [
+            146,
+            147
+          ],
+          [
+            148,
+            149
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            158,
+            159
+          ],
+          [
+            166,
+            167
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            194,
+            195
+          ],
+          [
+            196,
+            199
+          ],
+          [
+            200,
+            201
+          ],
+          [
+            208,
+            213
+          ],
+          [
+            214,
+            215
+          ],
+          [
+            222,
+            227
+          ],
+          [
+            228,
+            229
+          ],
+          [
+            236,
+            238
+          ],
+          [
+            250,
+            252
+          ],
+          [
+            260,
+            264
+          ],
+          [
+            265,
+            275
+          ]
+        ],
+        "parent_size": 294,
+        "child_size": 275
+      }
+    },
+    "WREFC.WKS": {
+      "size": 275,
+      "sha256": "3feabda129b839c069b44960d0ee9f46314db43827bb59d4b2d255974fd97ba8",
+      "trial": "precision",
+      "framebuffer_capture": "wrefc-save-precision-reopen",
+      "framebuffer_sha256": "2cc5ceccc4025b1725442e55945ab3a950629d0ea777f502a75dca7b4b3defb0",
+      "expected_contents": "Recalculate the out-of-bounds control and save. The error persists and only one status byte changes.",
+      "fat_cluster_count": 1,
+      "real_cell_counts": {
+        "label": 0,
+        "number": 1,
+        "formula": 1,
+        "input": 0,
+        "text_block": 0
+      },
+      "parent": {
+        "name": "WREF",
+        "size": 275,
+        "sha256": "8e2bc6dce7ab199c2c33b7233cf842efae00073986b2fd7903b0fd11235bba7b"
+      },
+      "byte_difference": {
+        "changed_spans": [
+          [
+            212,
+            213
+          ]
+        ],
+        "parent_size": 275,
+        "child_size": 275
+      }
+    }
+  },
+  "private_specimens": {
+    "W08.WKS": {
+      "trial": "initial",
+      "size": 255,
+      "sha256": "9c9e6adce5e37de8c70a00105b5d74f4d4d271e2826e7f6bac353a26747f8768",
+      "publication": "Retained privately because of unresolved residue in dummy records."
+    },
+    "WLARGE.WKS": {
+      "trial": "formats",
+      "size": 5094,
+      "sha256": "e2e87051135ed00fb1e11f1a56d616365654e47e907fd1d1d2ae6f70dbf5b69f",
+      "publication": "Retained privately because of unresolved residue in dummy records."
+    },
+    "WWRAP.WKS": {
+      "trial": "formats",
+      "size": 279,
+      "sha256": "90b230fb4fb0d640b47879d248e81c1a2b8cce442ac5d2b6de4fefbcb40bb191",
+      "publication": "Retained privately because of unresolved residue in dummy records."
+    },
+    "LOAN.WKS": {
+      "trial": "initial",
+      "size": 9621,
+      "sha256": "c0be31f936d0ae1b6fb571ba68abd4b0b47f91874d5fa29716571edd3e5a820a",
+      "publication": "Shipped comparator, examined privately."
+    },
+    "TVM.WKS": {
+      "trial": "initial",
+      "size": 1177,
+      "sha256": "ff2dccf104708133df0a59e9a7de24c902ec637832001e11551011b31fb751a7",
+      "publication": "Shipped comparator, examined privately."
+    }
+  }
+}

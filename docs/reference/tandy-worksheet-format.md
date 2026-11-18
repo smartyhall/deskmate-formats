@@ -1,6 +1,15 @@
 # Tandy Appendix A: DeskMate Worksheet format
 
-**Source:** *DeskMate Development System 03.05.00 Development Guide*, Appendix A Worksheet (printed A-21 onward, PDF pp. 492–493), plus common file header (p. 476). **Status: Tandy-documented only; the project has not yet produced a controlled native Worksheet corpus.** See [crosswalk](tandy-format-crosswalk.md).
+**Source:** *DeskMate Development System 03.05.00 Development Guide*, Appendix A Worksheet (printed A-21 onward, PDF pp. 492–493), plus common file header (p. 476). The tables below summarize the manufacturer account. The [native Worksheet campaign](../research/worksheet-native-20261117.md) supplies experimental qualifications. See the [crosswalk](tandy-format-crosswalk.md).
+
+The installed `0E WKS` profile has the documented outer boundaries. Native
+controls identify byte 124 as a little-endian pad-size word, show usable
+coordinates starting at 1, and establish record sizes of 6 for labels,
+14 for numbers/formulas/inputs and 8 for text blocks. Each descriptor is
+five little-endian words and its count includes the dummy. A pointer
+rebase followed by native Save As established that the stored addresses
+can be reconstructed. See the native report for offsets, text-block
+padding, and the stale-cache and error controls.
 
 Unlike the database-backed Calendar, Address Book and Filer files, Worksheet is described as a serialized **pad**, five cell lists, cell records and a string pool. It uses GUF high-level file I/O, according to the manual. This should be investigated as its own format, not forced into the shared DMDB page parser.
 
@@ -46,7 +55,7 @@ The guide says the cell region's end is found by summing each list's entry count
 
 The manual contains one example hex dump of a small worksheet; this reference intentionally does not reproduce it. Use the appendix as a comparison source, not as a substitute for native-created fixtures.
 
-## First native experiments
+## Original validation questions
 
 1. Create empty Worksheet and save/reopen; verify `0E WKS` identifier/extension and stable header.
 2. Add exactly one label; compare the label TOPLIST count, dummy cell and NUL string.

@@ -32,7 +32,7 @@ favor recoverable progress over speculative confinement requirements.
 | **Filer 3.05** | **Native records and forms** | Bounded DMDB inspection and reconstruction of GRAPHICS card and report payloads |
 | **Draw and Text** | **Native graphics transfer confirmed** | Read the measured FIG container and embedded DOC pictures. Preview supported graphics-form geometry as SVG. |
 | **86Box automation** | **DOS baseline validated** | Authenticated native client, verified Tandy RSX DOS 5.00 baseline, original guest canary, and a read-only MCP bridge tested with a synthetic native peer |
-| **Worksheet** | **Future work** | Manufacturer-derived format reference |
+| **Worksheet** | **Native WKS corpus** | Read the five cell types, string pool and stored formula result states. See the [Worksheet study](docs/research/worksheet-native-20261117.md). |
 
 These experimental capabilities include SDK-derived, offline-tested cases that
 have **not** all been accepted in the native application. See the dated
