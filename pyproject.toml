@@ -25,6 +25,7 @@ observer = ["Pillow>=13.0.0,<14"]
 supervisor = ["jsonschema>=4.23,<5"]
 
 [project.scripts]
+deskmate-preserve = "deskmate_formats.preservation.cli:main"
 deskmate-calendar = "deskmate_formats.calendar.cli:main"
 deskmate-calendar-append = "deskmate_formats.calendar.writer:main"
 deskmate-addressbook = "deskmate_formats.addressbook.cli:main"

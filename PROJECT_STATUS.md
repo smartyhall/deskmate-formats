@@ -1,5 +1,23 @@
 # Project status — DeskMate formats
 
+## Preservation Workbench Phase I — 2026-11-18
+
+The read-only `deskmate-preserve` command recognizes the measured profiles of
+all six principal DeskMate 3.05 families and exports individually verifiable
+bundles. Worksheet provides a grid and two CSV views, Text interleaves literal
+text with local SVG illustrations, Draw exports SVG with the stored palette,
+and Filer combines ordered DATA records with recovered card/report geometry.
+Calendar and Address Book provide strict interchange where representable,
+with additional iCalendar and vCard projections for the measured fields.
+Batch exports include an offline collection index and per-file outcomes.
+
+Portable regression coverage includes all 44 native Worksheet specimens,
+native Text picture order and formatting, synthetic Form Setup specimens,
+two named Calendars and a native two-contact Address Book. The end-to-end
+demo verifies a six-family collection. The manifest documents the profile,
+opaque fields, approximations and omissions while preserving the original
+bytes. [Workbench guide](docs/preservation-workbench.md)
+
 ## Worksheet research checkpoint — 2026-11-17
 
 The dedicated Worksheet branch preserves 44 exact native synthetic WKS

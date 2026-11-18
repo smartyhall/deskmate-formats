@@ -29,6 +29,15 @@ class Picture:
     payload: bytes
 
 
+@dataclass(frozen=True, slots=True)
+class TextControl:
+    """One measured formatting control at its file and projected text offsets."""
+
+    offset: int
+    text_offset: int
+    raw: bytes
+
+
 @dataclass(frozen=True)
 class Document:
     """The ordinary text projection and ordered pictures in a measured stream."""
@@ -36,6 +45,8 @@ class Document:
     header: bytes
     text: str
     pictures: tuple[Picture, ...]
+    controls: tuple[TextControl, ...] = ()
+    control_count: int = 0
 
 
 def _picture(data, offset, end, text_offset):
@@ -51,12 +62,15 @@ def _picture(data, offset, end, text_offset):
     return Picture(offset, start, limit + 3, column, text_offset, data[start:limit])
 
 
-def parse_bytes(source):
+def parse_bytes(source, *, include_controls=False, control_limit=None):
     """Inspect a measured DOC stream without interpreting the graphics payloads.
 
     Text has LF line endings and one native EOF padding space is suppressed.
     Picture text offsets index the decoded text string, which omits the picture
     paragraphs. File offsets are absolute and end offsets are exclusive.
+    Opt in to collect measured formatting controls, in file order, with both
+    offsets. A control limit caps the recorded list while control_count still
+    reports the total number seen. Both options keep strict stream validation.
     """
     if not isinstance(source, (bytes, bytearray, memoryview)):
         raise TextFormatError('expected a byte snapshot')
@@ -77,6 +91,8 @@ def parse_bytes(source):
     active = set()
     output = bytearray()
     pictures = []
+    controls = []
+    control_count = 0
     picture_allowed = formatted
     while cursor < end:
         byte = data[cursor]
@@ -86,6 +102,7 @@ def parse_bytes(source):
             cursor = picture.end_offset
             continue
         picture_allowed = False
+        control_length = 0
         if byte >= 0x20 and byte != 0x7F:
             output.append(byte)
         elif byte == 0x0D and cursor + 1 < end and data[cursor + 1] == 0x0A:
@@ -94,16 +111,23 @@ def parse_bytes(source):
             picture_allowed = True
         elif formatted and byte in ATTRIBUTE_ON and byte not in active:
             active.add(byte)
+            control_length = 1
         elif formatted and ATTRIBUTE_OFF.get(byte) in active:
             active.remove(ATTRIBUTE_OFF[byte])
+            control_length = 1
         elif formatted and byte == 0x03 and data[cursor:cursor + 5] in LAYOUT_COMMANDS:
-            cursor += 4
+            control_length = 5
         else:
             raise TextFormatError(f'unsupported byte or control 0x{byte:02X} at 0x{cursor:04X}')
-        cursor += 1
+        if control_length and include_controls:
+            control_count += 1
+            if control_limit is None or len(controls) < control_limit:
+                controls.append(TextControl(cursor, len(output), data[cursor:cursor + control_length]))
+        cursor += control_length or 1
     if active:
         raise TextFormatError('unterminated character attribute')
-    return Document(FORMATTED_HEADER if formatted else b'', output.decode('cp437'), tuple(pictures))
+    return Document(FORMATTED_HEADER if formatted else b'', output.decode('cp437'),
+                    tuple(pictures), tuple(controls), control_count)
 
 
 def extract_bytes(source):
@@ -114,10 +138,11 @@ def extract_bytes(source):
     return document.text
 
 
-def parse_file(path):
+def parse_file(path, *, include_controls=False, control_limit=None):
     """Read a bounded file and preserve its picture envelopes and text."""
     with Path(path).open('rb') as handle:
-        return parse_bytes(handle.read(MAX_BYTES + 1))
+        return parse_bytes(handle.read(MAX_BYTES + 1), include_controls=include_controls,
+                           control_limit=control_limit)
 
 
 def extract_file(path):
@@ -134,6 +159,8 @@ def main(argv=None):
     try:
         if args.inspect:
             document = asdict(parse_file(args.source))
+            del document['controls']
+            del document['control_count']
             print(json.dumps(document, default=bytes.hex, indent=2))
         else:
             sys.stdout.write(extract_file(args.source))

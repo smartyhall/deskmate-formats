@@ -64,6 +64,28 @@ remain offline-verified only. See [compatibility](docs/compatibility.md) and
 
 Python 3.13 or 3.14 is the verification target; runtime uses the standard library.
 
+### DeskMate Preservation Workbench
+
+Archive the original bytes and recover practical documents from all six
+measured application families. Every bundle includes an offline HTML preview,
+application-specific JSON and a checksum manifest. Additional exports include
+Worksheet and Filer CSV, Text and Draw SVG, Calendar iCalendar and Address Book
+vCard. The [workbench guide](docs/preservation-workbench.md) covers the measured
+profiles, export limits and reproducible native examples.
+
+```sh
+python -m pip install .
+deskmate-preserve inspect source.wks
+deskmate-preserve export source.wks --output-dir worksheet-archive
+deskmate-preserve verify worksheet-archive
+deskmate-preserve export old-documents --output-dir desk-archive
+```
+
+Open the bundle's `preview.html` or the collection's `index.html`. Select
+`--application text` explicitly for a headerless DeskMate Text stream.
+
+### Native Calendar and Address Book tools
+
 ```sh
 python -m venv .venv
 # Activate with .venv/bin/activate (POSIX) or .venv/Scripts/Activate.ps1 (PowerShell).
