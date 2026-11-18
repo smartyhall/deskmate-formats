@@ -75,7 +75,7 @@ code { overflow-wrap: anywhere; }
 """
 
 
-def html_page(title, subtitle, body, *, diagnostics=(), style=''):
+def html_page(title, subtitle, body, *, diagnostics=(), style='', local_audio=False):
     notes = ''
     if diagnostics:
         items = ''.join(
@@ -85,12 +85,13 @@ def html_page(title, subtitle, body, *, diagnostics=(), style=''):
             for item in diagnostics
         )
         notes = f'<section class="notes"><h2>Conversion notes</h2><ul>{items}</ul></section>'
+    media_policy = " media-src 'self' file:;" if local_audio else ''
     return f"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self' file:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self' file:;{media_policy} base-uri 'none'; form-action 'none'">
 <title>{html_text(title)}</title>
 <style>{STYLE}{style}</style>
 </head>

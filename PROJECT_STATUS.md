@@ -1,5 +1,21 @@
 # Project status — DeskMate formats
 
+## Sound and Music preservation campaign — 2026-11-18
+
+The standalone 3.05.00 distribution lacks the audio modules. The RSX OEM
+Sound and Music applications ran on a disposable Tandy 1000 RSX using
+the 3.05 runtime and measured OEM resources. Exact native synthetic saves
+establish later Sound PCM and three-voice Music's note and tempo framing.
+
+The bounded Sound reader recovers unsigned mono PCM from both generations
+and both compression modes. The Music reader preserves three voice streams,
+conductor instructions and opaque words. The Workbench adds local WAV playback
+and MIDI for supported linear scores. The private collection provides
+16 distinct Sound files, 62 distinct Music scores, and 206 Draw comparators.
+See the [Sound research](docs/research/sound-native-20261118.md),
+[Music research](docs/research/music-native-20261118.md) and
+[historical archive report](docs/research/audio-historical-corpus-20261118.md).
+
 ## Preservation Workbench Phase I — 2026-11-18
 
 The read-only `deskmate-preserve` command recognizes the measured profiles of

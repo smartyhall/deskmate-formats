@@ -11,7 +11,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUDED = {'.git', 'build', 'dist', 'local-results', 'private-fixtures', '.ruff_cache'}
 FIXTURE_DIR = Path('tests/fixtures/application-generated')
-DATA_EXT = {'.cln', '.adr', '.fil', '.pcl', '.doc', '.fig', '.wks'}
+DATA_EXT = {'.cln', '.adr', '.fil', '.pcl', '.doc', '.fig', '.wks', '.snd', '.sng'}
 PRIVATE_SPOOL_FILES = {'events.jsonl', 'writer.lock'}
 PRIVATE_SPOOL_FILES.update(
     database + suffix for database in ('operations.sqlite3', 'task-queue.sqlite3')
@@ -24,9 +24,9 @@ TELEMETRY_FIXTURES = {
     'open-turn.jsonl': 'a7c8cfc883c658b7b3911224832d68b0f7f10433e5c91b088fde88298c0b02ae',
     'success.jsonl': '3a453f3cfa512c9d53e1ff6366112ac102d0bb257f4902ff697f081b3bb216c9',
 }
-BAD_EXT = {'.exe', '.com', '.dll', '.img', '.ima', '.iso', '.zip', '.7z', '.cln',
-           '.png', '.pdf', '.pdm', '.res', '.r89', '.fil', '.adr', '.pcl', '.hlp',
-           '.tut', '.nvr', '.rom', '.vhd', '.vhdx', '.hdi', '.raw', '.token', '.doc', '.fig', '.wks'}
+BAD_EXT = {'.exe', '.com', '.dll', '.img', '.ima', '.iso', '.zip', '.7z',
+           '.png', '.pdf', '.pdm', '.res', '.r89', '.hlp',
+           '.tut', '.nvr', '.rom', '.vhd', '.vhdx', '.hdi', '.raw', '.token', '.wav', '.mid'} | DATA_EXT
 PATTERNS = {
     'host Windows user path': r'(?i)[a-z]:[\\/]Users[\\/]',
     'host POSIX user path': r'/(?:home|Users)/[^/\s]+',

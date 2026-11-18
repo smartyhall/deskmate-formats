@@ -24,6 +24,10 @@ local-results/
 *.doc
 *.fig
 *.wks
+*.snd
+*.sng
+*.wav
+*.mid
 !tests/fixtures/application-generated/**/*.cln
 !tests/fixtures/application-generated/**/*.adr
 !tests/fixtures/application-generated/**/*.fil
@@ -31,6 +35,8 @@ local-results/
 !tests/fixtures/application-generated/text/*.doc
 !tests/fixtures/application-generated/draw/*.fig
 !tests/fixtures/application-generated/worksheet/*.wks
+!tests/fixtures/application-generated/sound/*.snd
+!tests/fixtures/application-generated/music/*.sng
 *.nvr
 *.rom
 *.vhd

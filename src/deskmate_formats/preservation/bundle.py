@@ -9,7 +9,7 @@ import re
 import stat
 
 from .. import __version__
-from . import graphic_docs, native, pim, sheet
+from . import audio, graphic_docs, native, pim, sheet
 from .model import PreservationError
 from .render import json_bytes
 
@@ -24,7 +24,8 @@ MAX_ARTIFACTS = 256
 EFFECTS = ('approximation', 'omission', 'opaque', 'notice')
 CONVERTERS = {'worksheet': sheet.convert, 'text': graphic_docs.convert_text,
               'draw': graphic_docs.convert_draw, 'filer': graphic_docs.convert_filer,
-              'calendar': pim.convert_calendar, 'addressbook': pim.convert_addressbook}
+              'calendar': pim.convert_calendar, 'addressbook': pim.convert_addressbook,
+              'sound': audio.convert_sound, 'music': audio.convert_music}
 
 
 @dataclass(frozen=True)

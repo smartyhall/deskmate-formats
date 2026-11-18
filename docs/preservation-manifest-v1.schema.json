@@ -7,7 +7,7 @@
   ],
   "$defs": {
     "application": {
-      "enum": ["worksheet", "text", "draw", "filer", "calendar", "addressbook"]
+      "enum": ["worksheet", "text", "draw", "filer", "calendar", "addressbook", "sound", "music"]
     },
     "filename": {
       "type": "string",
@@ -33,7 +33,7 @@
       "additionalProperties": false,
       "properties": {
         "filename": {"$ref": "#/$defs/filename"},
-        "path": {"enum": ["original.wks", "original.doc", "original.fig", "original.fil", "original.cln", "original.adr"]},
+        "path": {"enum": ["original.wks", "original.doc", "original.fig", "original.fil", "original.cln", "original.adr", "original.snd", "original.sng"]},
         "size": {"type": "integer", "minimum": 0, "maximum": 1048576},
         "sha256": {"$ref": "#/$defs/sha256"}
       }

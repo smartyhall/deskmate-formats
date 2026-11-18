@@ -33,6 +33,8 @@ favor recoverable progress over speculative confinement requirements.
 | **Draw and Text** | **Native graphics transfer confirmed** | Read the measured FIG container and embedded DOC pictures. Preview supported graphics-form geometry as SVG. |
 | **86Box automation** | **DOS baseline validated** | Authenticated native client, verified Tandy RSX DOS 5.00 baseline, original guest canary, and a read-only MCP bridge tested with a synthetic native peer |
 | **Worksheet** | **Native WKS corpus** | Read the five cell types, string pool and stored formula result states. See the [Worksheet study](docs/research/worksheet-native-20261117.md). |
+| **Sound** (`.SND`) | **WAV export** | Both measured containers, recording and instrument metadata, and music/speech compressed samples. [Sound research](docs/research/sound-native-20261118.md) |
+| **Music** (`.SNG`) | **Event JSON and bounded MIDI** | Three voices, a conductor and a conservative MIDI projection for interpreted linear scores. [Music research](docs/research/music-native-20261118.md) |
 
 These experimental capabilities include SDK-derived, offline-tested cases that
 have **not** all been accepted in the native application. See the dated
@@ -66,11 +68,11 @@ Python 3.13 or 3.14 is the verification target; runtime uses the standard librar
 
 ### DeskMate Preservation Workbench
 
-Archive the original bytes and recover practical documents from all six
-measured application families. Every bundle includes an offline HTML preview,
+Archive the original bytes and recover practical files from the measured
+application profiles. Every bundle includes an offline HTML preview,
 application-specific JSON and a checksum manifest. Additional exports include
-Worksheet and Filer CSV, Text and Draw SVG, Calendar iCalendar and Address Book
-vCard. The [workbench guide](docs/preservation-workbench.md) covers the measured
+Worksheet and Filer CSV, Text and Draw SVG, Calendar iCalendar, Address Book
+vCard, Sound WAV and Music MIDI. The [workbench guide](docs/preservation-workbench.md) covers the measured
 profiles, export limits and reproducible native examples.
 
 ```sh
@@ -83,6 +85,17 @@ deskmate-preserve export old-documents --output-dir desk-archive
 
 Open the bundle's `preview.html` or the collection's `index.html`. Select
 `--application text` explicitly for a headerless DeskMate Text stream.
+
+### Sound and Music inspection
+
+```sh
+deskmate-sound recording.snd --wav sample.wav
+deskmate-music composition.sng --midi composition.mid
+```
+
+Omit the output option to inspect a file as JSON. Music requires a supported
+linear score for MIDI export. The Workbench preserves opaque score words and
+explains skipped projections. [Compatibility](docs/compatibility.md)
 
 ### Native Calendar and Address Book tools
 
