@@ -12,13 +12,13 @@ one fragment of a form containing many display elements.
 [Structured evidence](../evidence/graphics-native-20261117.json) records
 full specimen hashes, parent identities, raw differences and disk lineage.
 The [fixture manifest](../../tests/fixtures/application-generated/manifest.json)
-describes the 36 exact synthetic native files and clipboard source hashes.
+describes the 39 exact synthetic native files and clipboard source hashes.
 The prior QRECORD fixture supplies the graphics-free control with identical bytes.
 
 ## Reproduction and evidence scope
 
 The branch starts at `9001e8864d7b9e1c5d0ec2deea77b3adf2679901`, which
-includes PRs #110 and #111. Six independent boot sessions used lineage-checked
+includes PRs #110 and #111. Seven boot sessions used lineage-checked
 disposable copies of the earlier RSX DOS 5 installation. The machine was a
 Tandy 1000 RSX with a 25 MHz 386SX, 4 MiB RAM and internal VGA. The 86Box
 automation source revision was `855258da966f1594f568350be59e8e1eca082ed1`.
@@ -36,13 +36,14 @@ with RSX BIOS SHA-256
 | serial | 167,797 | 10,387 | Socket mouse selection and coordinate controls, graphics deletions and Form Setup edits |
 | pressure | 70,362 | 4,351 | 36 independently drawn lines, reopen, two-row GRAPHICS storage |
 | boundary | 80,271 | 4,955 | 1,016-byte GRAPHICS chunk, valid grouping and a patterned polygon |
+| glyphs | 62,424 | 3,884 | Compact Draw text transferred to Text and Form Setup, then reopened in Filer |
 
 The controller used authenticated loopback commands with the guest held
 between time steps. It retained request/reply receipts, actual make/break codes,
 relative mouse commands, frame hashes and PNGs. Saves were checked through the
 application title and resulting display, DOS exit, stopped disk extraction with
-7-Zip and an independent FAT16 directory/cluster read. The six terminal times
-sum to 678,001 ms. A captured frame shows only the resulting visible state,
+7-Zip and an independent FAT16 directory/cluster read. The seven terminal times
+sum to 740,425 ms. A captured frame shows only the resulting visible state,
 and menu transitions can repaint after returning to the application.
 
 Original disks, commercial files, modified shipped databases, screenshots,
@@ -66,7 +67,7 @@ in menus.
 
 The baseline configured a PS/2 mouse in 86Box while native F10 → Setup showed
 **Serial mouse, COM1**. Draw F6 → Use keyboard enabled arrow positioning and
-Space start/finish on that baseline. For the last three sessions, the
+Space start/finish on that baseline. For the last four sessions, the
 disposable machines used 86Box's `msserial` device. Relative pointer and button commands
 then worked over the native socket. The ROM, disk contents at clone time and
 DeskMate mouse settings were preserved across that change.
@@ -103,6 +104,7 @@ contains one extra byte after the entries.
 | D18 | 36 independent line drags across a six-by-six grid produced a 979-byte FIG with an 866-byte list. Native reopen displayed the grid. This is a separate clean growth control. |
 | D19 / D21 | Make Object on the compact D17 selection produced one valid group. Selecting it activated Break Object. D21 restores three top-level entries. All three leaf records match D17 byte-for-byte in both controls. |
 | D20 / D22 | Reopening D20 confirms a four-sided outline. Applying diagonal hatching to the selected polygon changes its pattern byte from `FE` to `09` at element offset 24. Its five stored points, including the repeated start, stay identical. |
+| D23 | A standalone `VECTOR 42` label in the Cobb font transfers into TP09 and G23. A native Filer reopen of G23 displays the label. |
 
 ## Shared form payload
 
@@ -133,8 +135,8 @@ inferred.
   pasted picture. Nested groups occur in shipped card artwork.
 - Extended `U` records carry a word size at offset 18. Shipped `UP` records
   match a fixed header with style, two extents, fill/connect bytes and a
-  point count followed by pairs of local 16-bit points. `UA` and the
-  Draw `Uf` subtype remain opaque. Text strokes in shipped forms stay intact.
+  point count followed by pairs of local 16-bit points. `UA` stays opaque.
+  The measured `Uf` profile carries a font reference and literal text.
 
 The 400-world-unit D01 line appears with identical type, modifier, attributes
 and endpoint separation in all three applications. Draw stores its origin as
@@ -144,6 +146,15 @@ the same serialized **record grammar and geometry**, with a transformation
 of coordinates and grouping at clipboard/export boundaries. Complete
 payloads and their reserved form-header words can differ. There is no
 separate FIG palette block in measured Text or Filer payloads.
+
+The D23, TP09 and G23 `Uf` records all contain the same Cobb face name
+and nine text bytes. Within the measured 110-byte record, the face name
+starts at 26, two additional position words at 92 move in sync with the
+element, and the word at 96 counts the bytes beginning at 100. Other
+font parameters stay opaque. The FIG and FIL place only a zero word in
+their stroke sections. Text stores a zero-length stroke section. The native
+display therefore succeeds with the external font available in the
+installation. These records do not supply independent glyph outlines.
 
 ## Draw pictures in Text
 
@@ -224,9 +235,18 @@ each contain five near-concentric ellipses. The outer bounds of the two wheel
 groups project to x about 147–220 and 398–471 at the measured card view scale,
 matching the native wheel positions. The larger `UP` records link to the
 body and shadow contours. Independent SVG previews recover the wheels, car
-outline and inventory border. They retain geometric shapes and use
-approximate styles, with native fonts, arc reconstruction and fill patterns
-still outstanding. The renderer lists omitted element types in SVG metadata.
+outline and inventory border. They use approximate styles. Arc reconstruction
+and native fill patterns are still outstanding.
+
+Both shipped databases also contain older `T` labels whose embedded stroke
+banks carry the glyph outlines. The card title and inventory report each
+carry 18 glyph records. A glyph begins with its byte length, font number
+and character code, then one or more polylines encoded as pairs in a
+1–128 grid. Zero bytes separate pen strokes. A zero word terminates the
+bank. The shared reader recovers the labels and stroke paths. The SVG
+preview draws the unrotated car card title and inventory report heading
+with approximate character advances. The CARMAINT report's extra flags
+are outside that rendering profile, although its label and strokes decode.
 
 Clicking the car selected both the illustration and its card title as a
 single picture. Deleting it from CDEL removed both visible items. The report
@@ -280,11 +300,12 @@ shared payload, with `text_picture=True` for the measured Text trailer.
 `filer_graphics.decode` returns each row location, encoded chunk, binary
 payload and parsed form. The FIG reader validates duplicated sizes, directory
 and group bounds and palette extent. The SVG preview renders lines,
-rectangles, ellipses and polylines in display order, retaining unsupported
-records through the reader API.
+rectangles, ellipses, polylines and supported embedded stroke text in display
+order. It lists omitted record types in SVG metadata and the reader API
+retains the original bytes.
 
 The portable tests use exact published files plus malformed lengths, picture
 placement, escape and group-pointer controls. The readers are read-only.
 The next discriminating experiments are independent arc and brush controls,
-stroke-font reconstruction, and comparison against an actual Drawlist-generated
-array if the utility becomes available.
+the external `Uf` font format and precise character advances, and comparison
+against an actual Drawlist-generated array if the utility becomes available.

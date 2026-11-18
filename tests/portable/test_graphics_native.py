@@ -125,6 +125,17 @@ class TextPictureTest(unittest.TestCase):
             picture, = read_text(name).pictures
             self.assertEqual([e.kind for e in picture_form(picture).draw_order()], kinds)
 
+    def test_native_scalable_text_survives_transfer_without_stroke_bank(self):
+        drawing = read_drawing('d23').form
+        picture, = read_text('tp09').pictures
+        section, = filer_graphics.decode(read_filer('g23'))
+        for form in (drawing, picture_form(picture), section.form):
+            element = leaf(form)
+            self.assertEqual((element.kind, element.font_name, element.text_bytes),
+                             ('Uf', 'Cobb', b'VECTOR 42'))
+            self.assertEqual(graphics.parse_strokes(form.strokes), ())
+            self.assertIn('5566', graphics.render_svg(form))
+
     def test_length_bounds_before_any_embedded_control(self):
         payload = b'\x01\x02\x1a\x03\x0d\x0a\xff'
         envelope = b'\x01' + pack('<HH', len(payload), 3) + payload + pack('<H', len(payload)) + b'\x02'
@@ -209,3 +220,27 @@ class FilerGraphicsTest(unittest.TestCase):
         legacy = filer.parse_bytes(raw)
         modified = next(r for r in legacy.table('DBCOLS').rows if r.offset == row.offset)
         self.assertEqual(modified.fields, row.fields[:5])
+
+
+class EmbeddedStrokeTest(unittest.TestCase):
+    def test_inline_text_and_embedded_glyph_geometry(self):
+        paths = bytes((8, 120, 64, 8, 120, 120, 0, 32, 83, 96, 83))
+        bank = pack('<HBB', len(paths) + 4, 3, ord('A')) + paths + b'\x00\x00'
+        glyph, = graphics.parse_strokes(bank)
+        self.assertEqual(glyph.paths, (((8, 120), (64, 8), (120, 120)), ((32, 83), (96, 83))))
+        label = pack('<BBhHhHhHhHBBBB', ord('T'), 3, 100, 0, 200, 0, 228, 0, 328, 0, 0, 1, 1, 0)
+        listing = pack('<HHH', 1, 3, 1) + label + b'A\x00'
+        header = pack('<2B10H', 1, 0, len(listing) // 2, len(bank), 2, 3, 2, 0, 0, 0,
+                      len(listing), len(bank))
+        form = graphics.parse_bytes(header + listing + bank)
+        self.assertEqual(leaf(form).text_bytes, b'A')
+        preview = ElementTree.fromstring(graphics.render_svg(form))
+        self.assertEqual(preview[1].attrib['aria-label'], 'A')
+        self.assertEqual(preview[1][0].attrib['points'], '108,320 164,208 220,320')
+
+    def test_stroke_bank_rejects_malformed_lengths_and_points(self):
+        for bank in (b'\x04\x00\x03A', b'\x01\x00\x03A\x00\x00',
+                     b'\x08\x00\x03A\x01\x01\x81\x02\x00\x00',
+                     b'\x09\x00\x03A\x01\x01\x02\x02\x03\x00\x00'):
+            with self.subTest(bank=bank), self.assertRaises(graphics.GraphicsFormatError):
+                graphics.parse_strokes(bank)

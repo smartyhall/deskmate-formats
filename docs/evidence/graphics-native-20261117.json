@@ -229,6 +229,44 @@
           "sha256": "1f6e011726884ee1dc73334a5c4fa8b43b05e378191fdb78ee95f6d2c78d9011"
         }
       }
+    },
+    "glyphs": {
+      "parent_disk_sha256": "6e083dace97816a877471e3865af5ee1d263616b85fcfb3e35752c3b8b67731c",
+      "stopped_disk_sha256": "5da3bd24009006ab41c21cabd78b974d982d01a27cac1aa35e38e94a1c98b460",
+      "baseline_config_sha256": "1548e515fd3095f5a182b6e4c162c5d86715c7a4648cd825fccc0f35414ca4b3",
+      "initial_nvram_sha256": "ae215248aecacc4e50d2f3fef48df1c1e4f9257f00969aa7fae158f858a8dbaa",
+      "elapsed_emulated_ms": 62424,
+      "rendered_frames": 3884,
+      "installed_inputs": {
+        "DESK.EXE": {
+          "size": 19047,
+          "sha256": "0f2a40243c997276904d2555a117c60eedf0016dde073285e8d63c8345a2eba3"
+        },
+        "DRAW.PDM": {
+          "size": 78256,
+          "sha256": "abbbaf420f7998480569e06e2c35590a40dfc54dc5656922d1ffe1df34280e65"
+        },
+        "TEXT.PDM": {
+          "size": 75185,
+          "sha256": "44cc8632a2c655659bfe524b83e49bc27f85bd0107a5444590b1446398cc5ea7"
+        },
+        "FORMSET.PDM": {
+          "size": 60163,
+          "sha256": "a57c7e87ad4e2339d4e3231f4cd26b53e9311fec626949326790249e54c7d736"
+        },
+        "FILER.PDM": {
+          "size": 40081,
+          "sha256": "5c62bfcf9676153003753046b223467136659a23ad0883ba56fb312e55b96005"
+        },
+        "DMFORM.RES": {
+          "size": 9853,
+          "sha256": "d2d67eb31fb3bbb3ed197168eb563aaf52a2e21ae293194d47124d817a280dc5"
+        },
+        "DMEFORM.RES": {
+          "size": 11889,
+          "sha256": "1f6e011726884ee1dc73334a5c4fa8b43b05e378191fdb78ee95f6d2c78d9011"
+        }
+      }
     }
   },
   "specimens": {
@@ -474,6 +512,12 @@
         "child_size": 195
       }
     },
+    "D23.FIG": {
+      "native_trial": "glyphs",
+      "size": 229,
+      "sha256": "3a65ae65872af24f5a50291503158bb2b983c3b403aad1838387c043ab893613",
+      "expected_contents": "Draw one standalone Cobb label VECTOR 42. Uf stores the text and font reference with an empty stroke bank."
+    },
     "D22.FIG": {
       "native_trial": "boundary",
       "size": 175,
@@ -595,6 +639,12 @@
       "size": 125,
       "sha256": "68eb5fe2104eae4c4d8a30806b2663f6c30c4b5724f06246a680a40868ca7c12",
       "expected_contents": "SELECTED ELLIPSE followed by a single picture after copying only the D17 ellipse."
+    },
+    "TP09.DOC": {
+      "native_trial": "glyphs",
+      "size": 206,
+      "sha256": "449121ba8bb9949440eed0f6e0f5a69467ca80b0b12bfbb5439e08aa79c3d83c",
+      "expected_contents": "FONT SAMPLE followed by the copied D23 VECTOR 42 label. Text displays it as a picture."
     },
     "TPASCII.DOC": {
       "native_trial": "corpus",
@@ -886,6 +936,22 @@
             8328
           ]
         ]
+      }
+    },
+    "G23.FIL": {
+      "native_trial": "glyphs",
+      "size": 10240,
+      "sha256": "f9f8bbede1d8296b5fd399c7940daf0f82d82e52f819385187e9badf3e28264c",
+      "expected_contents": "Paste the same D23 label in Form Setup and reopen it visibly in Filer. Stored Uf has no embedded glyphs.",
+      "parent": {
+        "native_filename": "G00.FIL",
+        "size": 8192,
+        "sha256": "c8da80395059f2b9d981bd7a1bae2a161a85670c781f479404c1a7a1ad4a37f6"
+      },
+      "byte_difference": {
+        "first_difference": 45,
+        "parent_size": 8192,
+        "child_size": 10240
       }
     },
     "G20.FIL": {

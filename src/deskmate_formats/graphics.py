@@ -10,6 +10,7 @@ MAX_BYTES = PREFIX_SIZE + 2 * 65535 + 1
 ELEMENT_SIZE = 18
 PRIMITIVE_SIZES = {'L': 20, 'R': 24, 'E': 24}
 PREVIEW_KINDS = frozenset((*PRIMITIVE_SIZES, 'UP'))
+MAX_PREVIEW_STROKE_POINTS = 100_000
 
 
 class GraphicsFormatError(ValueError):
@@ -35,6 +36,8 @@ class Element:
     raw: bytes
     children: tuple[int, ...] = ()
     points: tuple[tuple[int, int], ...] = ()
+    text_bytes: bytes | None = None
+    font_name: str | None = None
 
     @property
     def bounds(self):
@@ -65,9 +68,48 @@ class Form:
                 yield element
 
 
+@dataclass(frozen=True)
+class StrokeGlyph:
+    """One font and character from a form's embedded stroke bank."""
+
+    font: int
+    code: int
+    paths: tuple[tuple[tuple[int, int], ...], ...]
+
+
 def _require(condition, message):
     if not condition:
         raise GraphicsFormatError(message)
+
+
+def parse_strokes(source):
+    """Read the measured embedded stroke bank with a zero-size end word."""
+    _require(isinstance(source, (bytes, bytearray, memoryview)), 'expected stroke bytes')
+    _require(memoryview(source).nbytes <= 65535, 'stroke bank exceeds word-size bound')
+    data = bytes(source)
+    if not data:
+        return ()
+    limit = len(data) - 2
+    _require(data[limit:] == b'\x00\x00', 'missing stroke bank terminator')
+    glyphs = {}
+    cursor = 0
+    while cursor < limit:
+        _require(cursor + 4 <= limit, 'truncated glyph header')
+        size, font, code = unpack_from('<HBB', data, cursor)
+        end = cursor + size
+        _require(size >= 4 and end <= limit, 'invalid glyph size')
+        paths = []
+        for raw in data[cursor + 4:end].split(b'\x00'):
+            if not raw:
+                continue
+            _require(len(raw) >= 4 and len(raw) % 2 == 0 and max(raw) <= 128,
+                     'invalid glyph coordinates')
+            paths.append(tuple(zip(raw[::2], raw[1::2])))
+        key = (font, code)
+        _require(key not in glyphs, 'duplicate embedded glyph')
+        glyphs[key] = StrokeGlyph(font, code, tuple(paths))
+        cursor = end
+    return tuple(glyphs.values())
 
 
 def _elements(data, entries, directory_end):
@@ -100,10 +142,14 @@ def _elements(data, entries, directory_end):
         coords = unpack_from('<hHhHhHhH', raw, 2)
         children = groups.get(offset, ())
         points = ()
+        label = font_name = None
         if kind in PRIMITIVE_SIZES:
             _require(len(raw) >= PRIMITIVE_SIZES[kind], f'truncated {kind} element')
         elif kind == 'OO':
             _require(len(raw) >= 20 + 2 * len(children), 'group references overlap an element')
+        elif kind == 'T':
+            _require(len(raw) >= 22 and 22 + raw[20] <= len(raw), 'truncated text element')
+            label = raw[22:22 + raw[20]]
         elif kind.startswith('U'):
             _require(len(raw) >= 20, 'truncated extended element')
             words, = unpack_from('<H', raw, 18)
@@ -114,7 +160,12 @@ def _elements(data, entries, directory_end):
                 _require(words * 2 == 36 + 4 * count, 'polyline point count disagrees with size')
                 flat = unpack_from(f'<{2 * count}H', raw, 36)
                 points = tuple(zip(flat[::2], flat[1::2]))
-        elements.append(Element(offset, kind, raw[1], coords, raw, children, points))
+            elif kind == 'Uf' and words >= 51 and raw[26:31] == b'Cobb\x00':
+                count, = unpack_from('<H', raw, 96)
+                text_end = 100 + count
+                if raw[98:100] == b'\x00\x00' and text_end < words * 2 and raw[text_end] == 0:
+                    label, font_name = raw[100:text_end], 'Cobb'
+        elements.append(Element(offset, kind, raw[1], coords, raw, children, points, label, font_name))
     return tuple(elements)
 
 
@@ -179,32 +230,69 @@ def _svg_element(element, palette):
             f'rx="{_number(width/2)}" ry="{_number(height/2)}" fill="{fill}" {style}/>')
 
 
+def _svg_stroke_text(element, glyphs, colors):
+    x0, y0, x1, y1 = element.bounds
+    advance = (x1 - x0) / len(element.text_bytes)
+    height = y1 - y0
+    paths = []
+    for position, code in enumerate(element.text_bytes):
+        for path in glyphs[element.modifier, code].paths:
+            points = ' '.join(f'{_number(x0 + advance * (position + x / 128))},{_number(y0 + height * y / 128)}'
+                              for x, y in path)
+            paths.append(f'<polyline points="{points}" vector-effect="non-scaling-stroke"/>')
+    color = colors.get(element.raw[19], '#333333')
+    label = ''.join(c if ord(c) >= 0x20 else '\ufffd' for c in element.text_bytes.decode('cp437'))
+    return (f'<g aria-label="{escape(label, quote=True)}" '
+            f'fill="none" stroke="{color}" stroke-width="1">' + ''.join(paths) + '</g>')
+
+
 def render_svg(form, palette=()):
     """Return a geometry preview of lines, rectangles, ellipses and polylines.
 
     Palette entries are (index, red, green, blue). Stroke styles and patterned
-    fills use solid approximations. Unsupported records are listed in the SVG
-    description and remain available on the original Form.
+    fills use solid approximations. Unrotated T text with a complete embedded
+    glyph bank uses fixed cell advances. Unsupported records are listed in the
+    SVG description and remain available on the original Form.
     """
     colors = {i: f'#{r:02x}{g:02x}{b:02x}' for i, r, g, b in palette}
     leaves = tuple(form.draw_order())
-    supported = [element for element in leaves if element.kind in PREVIEW_KINDS]
-    omitted = sorted({element.kind.encode('latin-1').hex() for element in leaves
-                      if element.kind not in PREVIEW_KINDS})
-    bounds = [element.bounds for element in supported]
+    glyphs = {}
+    if any(element.kind == 'T' for element in leaves):
+        try:
+            glyphs = {(glyph.font, glyph.code): glyph for glyph in parse_strokes(form.strokes)}
+        except GraphicsFormatError:
+            pass
+    point_costs = {key: sum(map(len, glyph.paths)) for key, glyph in glyphs.items()}
+    point_budget = MAX_PREVIEW_STROKE_POINTS
+    shapes, bounds, missing = [], [], set()
+    for element in leaves:
+        if element.kind in PREVIEW_KINDS:
+            shape = _svg_element(element, colors)
+        elif (element.kind == 'T' and element.text_bytes and element.raw[21] == 0
+              and all((element.modifier, code) in glyphs for code in element.text_bytes)):
+            cost = sum(point_costs[element.modifier, code] for code in element.text_bytes)
+            if cost > point_budget:
+                missing.add('54')
+                continue
+            point_budget -= cost
+            shape = _svg_stroke_text(element, glyphs, colors)
+        else:
+            missing.add(element.kind.encode('latin-1').hex())
+            continue
+        shapes.append(shape)
+        bounds.append(element.bounds)
     xs = [x for x0, _, x1, _ in bounds for x in (x0, x1)] or [0]
     ys = [y for _, y0, _, y1 in bounds for y in (y0, y1)] or [0]
     pad = max(8, (max(xs) - min(xs)) / 40, (max(ys) - min(ys)) / 40)
     box = (min(xs) - pad, min(ys) - pad, max(xs) - min(xs) + 2*pad, max(ys) - min(ys) + 2*pad)
     view = ' '.join(map(_number, box))
-    description = 'DeskMate geometry preview with approximate fills and stroke styles.'
-    if omitted:
-        description += ' Omitted element type bytes (hex) ' + ', '.join(omitted) + '.'
+    description = 'DeskMate geometry preview with approximate fills, stroke styles and text spacing.'
+    if missing:
+        description += ' Omitted element type bytes (hex) ' + ', '.join(sorted(missing)) + '.'
     if colors.get(0):
         background = [f'<rect x="{_number(box[0])}" y="{_number(box[1])}" width="{_number(box[2])}" '
                       f'height="{_number(box[3])}" fill="{colors[0]}"/>']
     else:
         background = []
     return '\n'.join([f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{view}">',
-                      f'<desc>{escape(description)}</desc>', *background,
-                      *(_svg_element(element, colors) for element in supported), '</svg>\n'])
+                      f'<desc>{escape(description)}</desc>', *background, *shapes, '</svg>\n'])

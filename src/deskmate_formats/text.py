@@ -60,8 +60,10 @@ def parse_bytes(source):
     """
     if not isinstance(source, (bytes, bytearray, memoryview)):
         raise TextFormatError('expected a byte snapshot')
+    if not 2 <= memoryview(source).nbytes <= MAX_BYTES:
+        raise TextFormatError('expected a bounded file ending in DOS EOF (0x1A)')
     data = bytes(source)
-    if not 2 <= len(data) <= MAX_BYTES or not data.endswith(b'\x1a'):
+    if not data.endswith(b'\x1a'):
         raise TextFormatError('expected a bounded file ending in DOS EOF (0x1A)')
 
     formatted = data.startswith(b'\rDOC')
