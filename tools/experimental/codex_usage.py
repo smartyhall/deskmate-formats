@@ -110,13 +110,14 @@ def rows(path, coverage):
             yield record, mapping(record.get("payload"))
 
 
-def collect(home, roots, key, *, cutoff=None):
+def collect(homes, roots, key, *, cutoff=None):
     observed = {}
     index = {}
     coverage = Counter()
     roots = [root.resolve() for root in roots]
     for store in ("sessions", "archived_sessions"):
-        for path in sorted((home / store).rglob("rollout-*.jsonl")):
+        paths = {path.resolve() for home in homes for path in (home / store).rglob("rollout-*.jsonl")}
+        for path in sorted(paths):
             diagnostics = Counter()
             with closing(rows(path, diagnostics)) as records:
                 header, meta = next(records, ({}, {}))
@@ -217,6 +218,26 @@ def checkpoint(sessions, at, max_age):
     return {"session": session, **event}
 
 
+def compact_history(sessions):
+    window_fields = ("used_percent", "reset_epoch", "status", "boundary")
+    columns = ["measured_at", "kind", "model", "effort", "counter_state",
+               "cumulative", "reported_last", *(str(duration) for duration in DURATIONS)]
+    packed = {}
+    for session, events in sessions.items():
+        packed[session] = []
+        for event in events:
+            if event["kind"] == "compaction":
+                row = [event["measured_at"], event["kind"]]
+            else:
+                row = [event[name] for name in columns[:5]]
+                row.extend([event[name][counter] for counter in TOKENS] for name in columns[5:7])
+                row.extend([event["windows"][duration].get(field) for field in window_fields]
+                           for duration in DURATIONS)
+            packed[session].append(row)
+    return {"columns": columns, "token_columns": list(TOKENS), "window_columns": window_fields,
+            "sessions": packed}
+
+
 def write_json(path, data, *, compact=False):
     with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", newline="\n",
                                      dir=path.parent, delete=False) as output:
@@ -230,8 +251,8 @@ def write_json(path, data, *, compact=False):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--home", type=Path,
-                        default=Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex"))
+    parser.add_argument("--home", type=Path, action="append",
+                        help="Known Codex home; repeat for distinct private stores")
     parser.add_argument("--root", action="append", type=Path, required=True,
                         help="Allowlisted project checkout (repeat for additional worktrees)")
     parser.add_argument("--private-dir", required=True, type=Path)
@@ -242,6 +263,8 @@ def main():
     parser.add_argument("--commit", help="Known public Git commit related to this snapshot")
     parser.add_argument("--account-snapshot", type=Path,
                         help="Private sanitized account/rateLimits/read snapshot")
+    parser.add_argument("--compact-history", action="store_true",
+                        help="Export event history with declared positional columns")
     args = parser.parse_args()
     for label in (args.label, args.checkpoint):
         if label is not None and not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}", label):
@@ -254,8 +277,10 @@ def main():
     private = args.private_dir.resolve()
     if any(private.is_relative_to(root.resolve()) for root in args.root):
         parser.error("keep the key and source index outside project checkouts")
-    if any(target.is_relative_to(args.home.resolve() / store)
+    homes = args.home or [Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex")]
+    if any(target.is_relative_to(home.resolve() / store)
            for target in (args.output.resolve(), private)
+           for home in homes
            for store in ("sessions", "archived_sessions")):
         parser.error("keep outputs outside the input stores")
     private.mkdir(parents=True, exist_ok=True)
@@ -268,7 +293,7 @@ def main():
     key = keyfile.read_bytes()
     if len(key) != 32:
         parser.error("invalid private pseudonym key")
-    sessions, index, coverage = collect(args.home, args.root, key, cutoff=at)
+    sessions, index, coverage = collect(homes, args.root, key, cutoff=at)
     write_json(private / "source-index.json", index)
     receipt = {
         "schema_version": 1, "collector_version": 1, "label": args.label,
@@ -277,6 +302,8 @@ def main():
     if args.checkpoint:
         receipt.update(checkpoint=args.checkpoint, collected_at=at.isoformat(),
                        commit=args.commit, observation=checkpoint(sessions, at, 900))
+    elif args.compact_history:
+        receipt["history"] = compact_history(sessions)
     else:
         receipt["sessions"] = sessions
     if args.account_snapshot:

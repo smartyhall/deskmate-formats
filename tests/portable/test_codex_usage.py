@@ -53,7 +53,7 @@ class UsageTests(unittest.TestCase):
         (archive / "rollout-copy.jsonl").write_text("\n".join((meta, context, before, "")), encoding="utf-8")
         unrelated = rec("session_meta", {"id": "unrelated-id", "cwd": str(tmp_path / "project-other")})
         (live / "rollout-other.jsonl").write_text("\n".join((unrelated, context, after, "")), encoding="utf-8")
-        sessions, index, coverage = usage.collect(tmp_path, [root], b"key")
+        sessions, index, coverage = usage.collect([tmp_path], [root], b"key")
         assert len(sessions) == 1
         assert len(next(iter(index.values()))) == 2
         assert coverage["duplicate_token_records"] == 1
@@ -66,6 +66,10 @@ class UsageTests(unittest.TestCase):
         assert events[2]["reported_last"]["input"] == 2
         assert events[2]["effort"] == "high"
         assert events[3]["windows"][300]["status"] == "missing"
+        history = usage.compact_history(sessions)
+        packed = dict(zip(history["columns"], next(iter(history["sessions"].values()))[0]))
+        assert packed["300"][0] == 15
+        assert packed["cumulative"][-1] == 30
 
 
     def test_window_validation_and_staleness(self):

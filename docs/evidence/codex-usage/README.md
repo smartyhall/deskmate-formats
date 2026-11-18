@@ -84,11 +84,27 @@ publication and choose a new filename for each milestone.
 python tools/experimental/codex_usage.py --root . --private-dir $private --label campaign-slug --checkpoint milestone-slug --output $receipt
 ```
 
-Repeat `--root` for known project worktrees and set `--home` for another known
-store. Omit `--checkpoint` for event history. Reuse the same private directory
+Repeat `--root` for known project worktrees and repeat `--home` to include
+multiple known homes. Omit `--checkpoint` for event history. Reuse the same private directory
 to retain opaque session labels. Merge histories by session and observation
 contents or regenerate the batch from source. `--at` is an inclusive ISO
 timestamp cutoff with timezone. Attach a known public Git SHA with `--commit`.
+
+`--compact-history` declares positional row fields in `history.columns`. Each
+session label maps to its ordered rows. Token and window arrays use
+`token_columns` and `window_columns`, respectively. Compaction rows end after
+the event type. Each batch regenerates deterministically for fixed inputs,
+cutoff and key.
+
+[Historical batch 01](20261118-historical-backfill-01.json) covers
+2026-11-11 23:12:27 to 2026-11-18 17:45:23 UTC, with 2,457 token observations
+across 21 sessions. The default home contributed 19 historical sessions.
+Its archive directory had no rollouts. Two reviewed supervisor homes
+under private evidence contributed one session each. The cutoff excluded the
+active campaign. Attribution comes from the project checkout or the documented
+supervisor run directories. Public milestone attribution requires separate
+evidence because the starting checkout can still be on an earlier campaign's
+branch.
 
 Token observations include UTC time, reviewed model and effort from turn
 context, cumulative counters, the reported last increment, and counter state.
