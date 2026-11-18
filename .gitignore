@@ -23,12 +23,14 @@ local-results/
 *.pcl
 *.doc
 *.fig
+*.wks
 !tests/fixtures/application-generated/**/*.cln
 !tests/fixtures/application-generated/**/*.adr
 !tests/fixtures/application-generated/**/*.fil
 !tests/fixtures/application-generated/**/*.pcl
 !tests/fixtures/application-generated/text/*.doc
 !tests/fixtures/application-generated/draw/*.fig
+!tests/fixtures/application-generated/worksheet/*.wks
 *.nvr
 *.rom
 *.vhd

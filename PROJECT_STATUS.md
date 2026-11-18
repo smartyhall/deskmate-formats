@@ -1,5 +1,22 @@
 # Project status — DeskMate formats
 
+## Worksheet research checkpoint — 2026-11-17
+
+The dedicated Worksheet branch preserves 38 exact native synthetic WKS
+files and a bounded reader for all five cell categories. Controls establish
+the packed TOPLIST layout, counted dummies, rebased memory pointers,
+one-based grid, NUL string pool and binary64 values. Native formula
+copies distinguish relative references from `#` absolute references.
+Stored formula results can remain stale across a save and reopen.
+See the [native Worksheet report](docs/research/worksheet-native-20261117.md)
+and [evidence receipt](docs/evidence/worksheet-native-20261117.json).
+
+The preceding native graphics campaign is integrated by
+[PR #112](https://github.com/smartyhall/deskmate-formats/pull/112) at
+`a5d3a713e808fd0e73fbc6ae6c09104a90020260`. Its
+[native report](docs/research/graphics-native-20261117.md) supersedes the
+historical graphics proposal below.
+
 ## Manufacturer-derived Appendix A reference layer — 2026-11-17
 
 The [Tandy format crosswalk](docs/reference/tandy-format-crosswalk.md) now indexes [common Page Setup headers](docs/reference/tandy-common-headers.md), [Address Book](docs/reference/tandy-addressbook-format.md), [Calendar](docs/reference/tandy-calendar-format.md), [Draw](docs/reference/tandy-draw-format.md), [Filer/Form Setup](docs/reference/tandy-filer-format.md), [Text](docs/reference/tandy-text-format.md), and [Worksheet](docs/reference/tandy-worksheet-format.md). These are original technical paraphrases from the operator-provided DeskMate Development System 03.05.00 Development Guide, Appendix A, with page references, uncertainties and specific native-test targets. They **do not add new experimental evidence** or expand measured reader/writer support. The proprietary manual is not redistributed.

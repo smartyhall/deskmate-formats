@@ -8,7 +8,7 @@ The [Tandy Appendix A format crosswalk](reference/tandy-format-crosswalk.md) con
 | Address Book 3.05 PERSONAL.ADR | [Phase I](research/addressbook-phase1.md) and [Phase II](research/addressbook-phase2.md) native field differentials; [codec report](research/addressbook-codec.md) | Ten-page reader and one-contact writer (four exact native whole-file SHA matches); no multicontact insertion |
 | Filer 3.05 | [Native records](research/filer-native-20261117.md) and [controlled forms](research/graphics-native-20261117.md) | Bounded schema, index and DATA inspection. Decodes card and report GRAPHICS chunks. |
 | Text 3.05 | [Native text corpus](research/text-native-20261117.md) and [clipboard-pasted pictures](research/graphics-native-20261117.md) | Plain and default-header formatted text extraction. Bounded picture envelope inspection preserves binary payloads. |
-| Worksheet | Not investigated | None |
+| Worksheet 3.05 installation | [Native WKS controls and all five categories](research/worksheet-native-20261117.md) | Bounded read-only TOPLIST, cell, string-pool and cached-value inspection |
 | Draw 3.05 installation | [Native FIG files and comparative controls](research/graphics-native-20261117.md) | Bounded `14 FIG` reader and SVG geometry preview for supported primitives. |
 | Supporting DeskMate database structures | DMDB components, common DBCOLS/index framing and code-backed service thunks studied | Bounded read-only [shared parser](../src/deskmate_formats/database.py); no universal allocator or runtime loader binding proved |
 

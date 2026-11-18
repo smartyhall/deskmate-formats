@@ -23,7 +23,7 @@ This is an original, concise technical paraphrase with numerical interface facts
 | Draw | A-9 / 482 | [Draw](tandy-draw-format.md) | Form header, size buffer, form payload, trailing palette |
 | Filer / Form Setup | A-11 / 483–485 | [Filer](tandy-filer-format.md) | Layout columns/types, encoded GRAPHICS, dynamic DATA |
 | Text | A-15 / 486–491 | [Text](tandy-text-format.md) | Formatting, headers/footers, length-delimited embedded Draw pictures, fields |
-| Worksheet | A-21 / 492–493 | [Worksheet](tandy-worksheet-format.md) | Five TOPLISTs, cell structures, string pool |
+| Worksheet | A-21 / 492–493 | [Worksheet](tandy-worksheet-format.md) | [Native TOPLIST, typed cells, string pool and formula-cache controls](../research/worksheet-native-20261117.md) |
 
 ## Cross-application interfaces
 
