@@ -1,6 +1,6 @@
 # DeskMate Preservation Workbench
 
-Phase I exports measured DeskMate 3.05 document profiles. Each bundle keeps
+The Workbench exports measured DeskMate document profiles. Each bundle keeps
 the original bytes, source-derived details and a preview or import format.
 The original is the preservation copy. Modern files are projections with
 documented limits. The workbench runs offline with Python 3.13 or later.
@@ -18,8 +18,8 @@ Open `results-bundle/preview.html` in a modern browser. The output parent must
 exist, and the named output directory must be new. Reads are bounded to 1 MiB,
 with stricter limits in individual readers. Input files are opened read-only.
 
-The program recognizes Worksheet, Draw, formatted Text and Address Book
-signatures and validates their structures. Calendar and Filer share the `03 FIL`
+The program recognizes Worksheet, Draw, formatted Text, Address Book, Sound
+and Music signatures and validates their structures. Calendar and Filer share the `03 FIL`
 signature. Their table and column profiles distinguish them. A filename
 extension alone is insufficient evidence. Some native Text files are DOS
 streams with no distinctive header. Confirm their origin and select Text
@@ -97,6 +97,8 @@ outside this byte-preservation format.
 | Filer / Form Setup | `preview.html`, `records.csv`, card/report SVGs when present | Native DATA field names, schema order, index order and printable values. Recovered GRAPHICS geometry and raw LAYOUTS have different evidence and coverage. |
 | Calendar | `preview.html`, one `.ics` per nonempty supported calendar, strict `interchange-v1.json` when representable | SDK-derived ordinary date and quarter-hour time codecs. All parsed rows, raw fields and control records are available in the archival JSON. |
 | Address Book | `preview.html`, `contacts.vcf`, strict `interchange-v1.json` when representable | The measured ten-page profile exposes first name, last name, city and work phone. The archival JSON includes the opaque contact bytes. |
+| Sound | `preview.html`, `assets/sample-01.wav` and additional sample WAVs | Independently decoded mono PCM at the stored rate. Preserves original sample offsets, compressed regions and pitch/range/sustain metadata. |
+| Music | `preview.html`, `composition.mid` when representable | Three voice streams and a conductor, with measured notes, rests, ties, meter and tempo changes. Original and event JSON remain available for scores with opaque words or unexpanded repeats. |
 
 **Worksheet.** A formula's expression, binary64 cache, raw status word and
 measured result/error flags remain together in `content.json` and the detailed
@@ -144,6 +146,15 @@ opaque values produce diagnostics. Strict interchange is emitted only when its
 existing validator accepts the book.
 [Address Book codec](research/addressbook-codec.md)
 
+**Sound and Music.** Sound's local audio controls play the independent WAV
+projection. The Workbench records the hashes of the stored and decoded
+sample regions, and both compression modes are lossy. Music MIDI uses
+neutral velocity and default MIDI playback instruments. Unsupported
+sequencing controls produce a MIDI omission diagnostic. The original score,
+raw words and known events remain available.
+[Sound report](research/sound-native-20261118.md) ·
+[Music report](research/music-native-20261118.md)
+
 ## Reproduce the native demo
 
 Use an installed build and a fresh output path. This example shows the three
@@ -155,7 +166,7 @@ deskmate-preserve export tests/fixtures/application-generated/text/tp06.doc --ou
 deskmate-preserve verify text-demo
 ```
 
-For a six-family collection, copy the following committed native synthetic
+For an eight-family collection, copy the following committed native synthetic
 specimens into a new directory. Run the collection example above with that
 directory as the input.
 
@@ -167,6 +178,8 @@ directory as the input.
 | [Filer G18](../tests/fixtures/application-generated/filer/g18.fil) | A card form with 36 lines from a multi-chunk GRAPHICS stream |
 | [Calendar alarm trial](../tests/fixtures/application-generated/calendar/alarm-on-86box-trial-c.cln) | One appointment with the measured alarm enabled |
 | [Address Book two-contact save](../tests/fixtures/application-generated/addressbook/native-two-contact-20261117.adr) | Two native contacts and their core vCard fields |
+| [Sound 440 Hz tone](../tests/fixtures/application-generated/sound/tone-native-pcm.snd) | One uncompressed native Save As control and its exact PCM waveform |
+| [Music tempo control](../tests/fixtures/application-generated/music/mtempo.sng) | Seven notes, a rest, six base durations and an explicit 140 BPM tempo |
 
 The [portable end-to-end test](../tests/portable/test_preservation.py) builds
 and verifies this collection. [The Worksheet regression](../tests/portable/test_preservation_worksheet.py)

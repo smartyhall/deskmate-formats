@@ -18,7 +18,8 @@ from deskmate_formats.preservation.model import PreservationError
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = ROOT / 'tests/fixtures/application-generated'
 DEMO = ('worksheet/wmix.wks', 'text/tp06.doc', 'draw/d17.fig', 'filer/g18.fil',
-        'calendar/alarm-on-86box-trial-c.cln', 'addressbook/native-two-contact-20261117.adr')
+        'calendar/alarm-on-86box-trial-c.cln', 'addressbook/native-two-contact-20261117.adr',
+        'sound/tone-native-pcm.snd', 'music/mtempo.sng')
 SVG = '{http://www.w3.org/2000/svg}'
 
 
@@ -284,7 +285,7 @@ class StandardExportTest(unittest.TestCase):
 
 
 class CollectionTest(unittest.TestCase):
-    def test_six_family_export_and_verification(self):
+    def test_all_family_export_and_verification(self):
         with TemporaryDirectory() as directory:
             inputs = Path(directory) / 'inputs'
             output = inputs / 'archive'
@@ -294,7 +295,8 @@ class CollectionTest(unittest.TestCase):
             status, result = run_cli('export', inputs, '--output-dir', output)
             self.assertEqual(status, 0)
             self.assertEqual({item['application'] for item in result['entries']}, set(native.APPLICATIONS))
-            self.assertEqual(run_cli('verify', output), (0, {'verified': True, 'bundle_count': 6, 'failed_count': 0}))
+            self.assertEqual(run_cli('verify', output),
+                             (0, {'verified': True, 'bundle_count': len(DEMO), 'failed_count': 0}))
             self.assertEqual(run_cli('export', inputs, '--output-dir', output)[1]['error'], 'output_exists')
             for item in result['entries']:
                 child = output / item['directory']

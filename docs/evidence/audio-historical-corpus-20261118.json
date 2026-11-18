@@ -1,0 +1,230 @@
+{
+  "retrieved": "2026-11-18",
+  "scope": "Private research originals. This receipt contains source identities and aggregate measurements.",
+  "archives": [
+    {
+      "name": "1000RLX_HD-B.zip",
+      "size": 2431617,
+      "sha256": "c19e395880113fed55ad50e8a8d1e05b6cdf87ca883f700b0d28dd062882463f",
+      "member_count": 255,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/1000RLX_HD-B.zip"
+    },
+    {
+      "name": "arazi.zip",
+      "size": 13755,
+      "sha256": "470b6634b72297a6214f005623d9970fb24b5f28418edff0fbd7bba3213d7aa7",
+      "member_count": 1,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/arazi.zip"
+    },
+    {
+      "name": "banjo.zip",
+      "size": 5680,
+      "sha256": "2c40e6d37d9eba3aa79c157a5c14d9713a2c0d8769983597dfa326439df99ef5",
+      "member_count": 1,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/banjo.zip"
+    },
+    {
+      "name": "barq2.zip",
+      "size": 532,
+      "sha256": "777035001118041d671f96f28ef623a3c551a6eba3b767e60b718d587f5dd44e",
+      "member_count": 1,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/barq2.zip"
+    },
+    {
+      "name": "beamup.zip",
+      "size": 33803,
+      "sha256": "ca3be6db7efb4a9baa5df1414a47add45a36069eda2a76846d69274131167366",
+      "member_count": 1,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/beamup.zip"
+    },
+    {
+      "name": "canon.zip",
+      "size": 737,
+      "sha256": "509a13d6a7e0a18f921e26568fbcb4234ce10664aef5ef138e97fba551bc5328",
+      "member_count": 1,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/canon.zip"
+    },
+    {
+      "name": "castle.zip",
+      "size": 1908,
+      "sha256": "43fa164461f49eeaeef5b8db727c7362bb17e76fdd441362f4f1d09177de1237",
+      "member_count": 1,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/castle.zip"
+    },
+    {
+      "name": "conver.zip",
+      "size": 18061,
+      "sha256": "4300dd311a0a0b6d2845b658088e82a7f5971f6981e76152763e65059421037e",
+      "member_count": 2,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/conver.zip"
+    },
+    {
+      "name": "creepy.zip",
+      "size": 600,
+      "sha256": "2054edd90eddee70f74cc9cf271a0c36765a9ec869959acd3b92a41bbc43f307",
+      "member_count": 1,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/creepy.zip"
+    },
+    {
+      "name": "d1000tl2.zip",
+      "size": 1425759,
+      "sha256": "085c7e7d505387a68e9c1efaa32dc72236636a58cb712197114aa4f182810b51",
+      "member_count": 5,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000tl2.zip"
+    },
+    {
+      "name": "dm2tun.zip",
+      "size": 9720,
+      "sha256": "8e9cf169bd150c9a151077770a219ec38c0d8d5a5a04b27c5627b5ccdbed277f",
+      "member_count": 10,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm2tun.zip"
+    },
+    {
+      "name": "dm_music.zip",
+      "size": 24629,
+      "sha256": "3f25b8f3367659fc89abd8617a5d4dc9e448e6ee5de51aec5d7f02c0402db902",
+      "member_count": 2,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/dm_music.zip"
+    },
+    {
+      "name": "dmsnd07.zip",
+      "size": 107272,
+      "sha256": "bbf64c7017defb82f01967c8f37a3bd7b5d617c516cca8168dab8e297f91dcea",
+      "member_count": 18,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/dmsnd07.zip"
+    },
+    {
+      "name": "dmsnddos.zip",
+      "size": 282031,
+      "sha256": "02c48e715ecb2270fdfabb8196ca2f7ea4c36fa421909232d91683f57b2b7549",
+      "member_count": 25,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/dmsnddos.zip"
+    },
+    {
+      "name": "e1000rlx.zip",
+      "size": 1476437,
+      "sha256": "a7e27499dea4a900b003d6b388f9b91851ef29be892ff60a4c192e971fd91f34",
+      "member_count": 3,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/e1000rlx.zip"
+    },
+    {
+      "name": "gifcert.zip",
+      "size": 3220,
+      "sha256": "334027e29e14994551266c13a3d3aea7d11412ff9b77b4363b087c0d4bfb3921",
+      "member_count": 2,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/gifcert.zip"
+    },
+    {
+      "name": "hheellpp.zip",
+      "size": 1530,
+      "sha256": "d996bee74301eb886cabe89b56bce276b118575fb6b414ed10489991916c0bbe",
+      "member_count": 1,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/hheellpp.zip"
+    },
+    {
+      "name": "janna.zip",
+      "size": 19710,
+      "sha256": "1fd91d8d036b559d923b4bf3e13dc9677ccdd0dfdcb6880d9ae12d233af7c90a",
+      "member_count": 1,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/janna.zip"
+    },
+    {
+      "name": "marimba.zip",
+      "size": 7673,
+      "sha256": "9f8c5ee7c43f4729ef7c375e259448ea625d3139af8034857bb4df77718a8949",
+      "member_count": 1,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/marimba.zip"
+    },
+    {
+      "name": "musicsnd.zip",
+      "size": 3583028,
+      "sha256": "544a70c3e6b0e5b228c117ba87d541eaac983860a2f59152c43fa0dd6aa0efc3",
+      "member_count": 1,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/musicsnd.zip"
+    },
+    {
+      "name": "mussnd89.zip",
+      "size": 6884960,
+      "sha256": "aa433871fa314dfd5ffad688e59cfe03ff04a790132141e2fe9d6b4878fa94ec",
+      "member_count": 1,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/mussnd89.zip"
+    },
+    {
+      "name": "ncc1701.zip",
+      "size": 4563,
+      "sha256": "70ccde89bc275ed4154f530f2d8d16fef6e6712a03661abedc74bb2e6a54b3f9",
+      "member_count": 1,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/ncc1701.zip"
+    },
+    {
+      "name": "oldies.zip",
+      "size": 4757,
+      "sha256": "139a18c98e47edba45faf98a53a4aef21a008803b612d39e1f51a03a4a24c5d0",
+      "member_count": 8,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/oldies.zip"
+    },
+    {
+      "name": "pdm2.zip",
+      "size": 397389,
+      "sha256": "74c86fd7173fbd32ac7b5d7727a59e547e67ffa8257e72138ce4e30921c36833",
+      "member_count": 35,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/pdm2.zip"
+    },
+    {
+      "name": "pdm2musi.zip",
+      "size": 13883,
+      "sha256": "b10a7159b575f390ee3f4b2a1298d9884873526d96d623d1d673b4b1a6e55290",
+      "member_count": 19,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/pdm2musi.zip"
+    },
+    {
+      "name": "pipes.zip",
+      "size": 3433,
+      "sha256": "99096e3131b77698204bb8cf32bef72ee6efb0e2dacf53026b276880db91c0ae",
+      "member_count": 1,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/pipes.zip"
+    },
+    {
+      "name": "rsxdisks.zip",
+      "size": 4083315,
+      "sha256": "e8289597e3d246727ff977f151ee986dd59d50ace72bdfdd2a65614b88588a5c",
+      "member_count": 8,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/rsxdisks.zip"
+    },
+    {
+      "name": "stuff.zip",
+      "size": 45453,
+      "sha256": "0edec6eedadf374b13079836b817c5fdcfffbefe85a647a7984b80428322333d",
+      "member_count": 4,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/stuff.zip"
+    },
+    {
+      "name": "tandysnd.zip",
+      "size": 65405,
+      "sha256": "ab587634d8c891a84fed8d4e0c05b5ab61d327e1f6a5a7f3f396b3d6e66fd1af",
+      "member_count": 23,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/tandysnd.zip"
+    },
+    {
+      "name": "tandysng.zip",
+      "size": 29971,
+      "sha256": "568f88458f9e9a1eca1837797a79a8b94986d56d177c37c37c7d6793cea09cb9",
+      "member_count": 35,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/tandysng.zip"
+    },
+    {
+      "name": "thnder.zip",
+      "size": 54484,
+      "sha256": "7a03563bca84cde4ea0bc86fa009de2813bb442a2046f9e0ef40ec6b30350cd6",
+      "member_count": 1,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/thnder.zip"
+    },
+    {
+      "name": "tsampler.zip",
+      "size": 44636,
+      "sha256": "d01757060cefbdf0390759389ecc6ad7d6d3dc55008c23b7b30966e4b6ed4f8a",
+      "member_count": 3,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/tsampler.zip"
+    }
+  ]
+}

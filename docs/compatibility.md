@@ -10,6 +10,21 @@ reported separately from browser approximations and omissions in modern
 formats. Every accepted source is copied byte-for-byte to the bundle.
 The Calendar tooling below also offers the narrower `observed` profile.
 
+## Multimedia profiles
+
+The generic 03.05.00 distribution studied here lacks the audio applications.
+The RSX OEM 3.04 Sound and Music modules ran on the Tandy 1000 RSX clone
+using the installed 3.05 runtime and the OEM audio resources.
+
+| Application | Reader and projection scope |
+| --- | --- |
+| Sound | Original 16/28-byte table and later 114/46-byte linked profiles, recording and instrument metadata, validated sample regions, mono unsigned 8-bit WAV. The music and speech streams use the measured packed-delta decoder. [Sound report](research/sound-native-20261118.md) |
+| Music | `0C SNG` with three voice streams and a conductor. JSON preserves recognized events and opaque words. MIDI covers checked linear scores with notes, rests, ties, tempo changes and meter. Native sampled playback depends on external Sound instruments. [Music report](research/music-native-20261118.md) |
+
+The audio companions in bundles are independent projections. Native
+sample selection, playback fidelity and historical control dialects
+have separate evidence limits. [Private corpus scope](research/audio-historical-corpus-20261118.md)
+
 ## Default Calendar profile
 
 The table below describes the unchanged default Calendar `observed` profile.
