@@ -58,7 +58,7 @@ milestones, record task size and continuity, keep meter epochs stable, and
 identify concurrent account work where possible. Compare model and effort on
 matched tasks and report cache state and context length alongside output.
 
-Reproduce the counts from the repository root with:
+Run the summary from the repository root.
 
 ```powershell
 python tools/experimental/codex_usage_summary.py docs/evidence/codex-usage/20261118-historical-backfill-01.json

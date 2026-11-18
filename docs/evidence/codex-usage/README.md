@@ -89,6 +89,7 @@ multiple known homes. Omit `--checkpoint` for event history. Reuse the same priv
 to retain opaque session labels. Merge histories by session and observation
 contents or regenerate the batch from source. `--at` is an inclusive ISO
 timestamp cutoff with timezone. Attach a known public Git SHA with `--commit`.
+The campaign checkpoints use the already committed HEAD at collection.
 
 `--compact-history` declares positional row fields in `history.columns`. Each
 session label maps to its ordered rows. Token and window arrays use

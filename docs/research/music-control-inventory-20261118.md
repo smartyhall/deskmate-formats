@@ -33,7 +33,7 @@ Native sample bindings and dynamic amplitudes need separate DAC measurements.
 Four header profiles and all four combinations of zero- or one-byte text
 alignment and trailer occur in the corpus.
 
-To regenerate with the private extracted corpus and this checkout:
+Regenerate with the private extracted corpus and this checkout.
 
 ```powershell
 $env:PYTHONPATH = 'src'

@@ -259,6 +259,9 @@ octave transposition and sustained output on this configuration.
 
 ## Next sampled-playback controls
 
+The [sampled playback experiment plan](music-sampled-playback-experiments.md)
+specifies matched comparisons and the corresponding measurements.
+
 1. Keep LABINST's slot and loop words, and replace its uniform sine with
    different signals in frames 0–1099, 1100–2199 and 2200 onward. First
    reopen and save it in Sound and record the bytes. Then use HELD7 to
