@@ -27,6 +27,7 @@ assert sha256(supervisor.joinpath("codex-0.166.0.json").read_bytes()).hexdigest(
 dist = importlib.metadata.distribution("deskmate-formats")
 assert dist.version == "0.1.0.dev0"
 for command in (
+    "deskmate-preserve",
     "deskmate-calendar",
     "deskmate-calendar-append",
     "deskmate-86box-mcp",
