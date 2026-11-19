@@ -34,7 +34,7 @@ favor recoverable progress over speculative confinement requirements.
 | **86Box automation** | **DOS baseline validated** | Authenticated native client, verified Tandy RSX DOS 5.00 baseline, original guest canary, and a read-only MCP bridge tested with a synthetic native peer |
 | **Worksheet** | **Native WKS corpus** | Read the five cell types, string pool and stored formula result states. See the [Worksheet study](docs/research/worksheet-native-20261117.md). |
 | **Sound** (`.SND`) | **WAV export** | Both measured containers, recording and instrument metadata, and music/speech compressed samples. [Sound research](docs/research/sound-native-20261118.md) |
-| **Music** (`.SNG`) | **Event JSON and bounded MIDI** | Three voices, a conductor and a conservative MIDI projection for interpreted linear scores. [Music research](docs/research/music-native-20261118.md) |
+| **Music** (`.SNG`) | **Event JSON, MIDI and sampled WAV** | Three voices, a conductor, bounded repeat expansion and approximate sampled playback with explicit Sound instruments. [Music playback research](docs/research/sampled-music-playback-20261118.md) |
 
 These experimental capabilities include SDK-derived, offline-tested cases that
 have **not** all been accepted in the native application. See the dated
@@ -72,7 +72,8 @@ Archive the original bytes and recover practical files from the measured
 application profiles. Every bundle includes an offline HTML preview,
 application-specific JSON and a checksum manifest. Additional exports include
 Worksheet and Filer CSV, Text and Draw SVG, Calendar iCalendar, Address Book
-vCard, Sound WAV and Music MIDI. The [workbench guide](docs/preservation-workbench.md) covers the measured
+vCard, Sound WAV and Music MIDI. Music bundles can also include sampled WAV
+with a supplied instrument directory. The [workbench guide](docs/preservation-workbench.md) covers the measured
 profiles, export limits and reproducible native examples.
 
 ```sh
@@ -91,11 +92,15 @@ Open the bundle's `preview.html` or the collection's `index.html`. Select
 ```sh
 deskmate-sound recording.snd --wav sample.wav
 deskmate-music composition.sng --midi composition.mid
+deskmate-music composition.sng --instruments instruments --wav composition.wav
+deskmate-preserve export composition.sng --instruments instruments --output-dir music-archive
 ```
 
-Omit the output option to inspect a file as JSON. Music requires a supported
-linear score for MIDI export. The Workbench preserves opaque score words and
-explains skipped projections. [Compatibility](docs/compatibility.md)
+Omit the output option to inspect a file as JSON. Music MIDI and WAV exports
+support measured repeat and alternate-ending structures. WAV uses an
+approximate RSX playback model and resolves instruments by their stored
+number. The Workbench preserves opaque score words and explains skipped
+projections. [Compatibility](docs/compatibility.md)
 
 ### Native Calendar and Address Book tools
 

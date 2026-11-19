@@ -13,6 +13,7 @@ import wave
 
 from deskmate_formats import music, sampled_music, sound
 from deskmate_formats.preservation.bundle import export, verify
+from deskmate_formats.preservation.cli import main as preserve_main
 
 
 FIXTURES = Path(__file__).resolve().parents[1] / 'fixtures/application-generated'
@@ -432,6 +433,37 @@ class SampledMusicTests(unittest.TestCase):
                                              str(destination), '--instruments', str(folder)]), 2)
                 self.assertIn('File exists', stderr.getvalue())
                 self.assertFalse(midi_path.exists())
+
+    def test_workbench_sampled_audio_and_missing_instrument(self):
+        score = FIXTURES / 'music/region-hold-tool-generated.sng'
+        instrument = FIXTURES / 'sound/region-marked-tool-generated.snd'
+        with tempfile.TemporaryDirectory() as folder, redirect_stdout(StringIO()):
+            folder = Path(folder)
+            bank = folder / 'bank'
+            bank.mkdir()
+            (bank / 'mark.snd').write_bytes(instrument.read_bytes())
+            bundle = folder / 'sampled'
+            self.assertEqual(preserve_main(['export', str(score), '--output-dir', str(bundle),
+                                            '--instruments', str(bank)]), 0)
+            verified = verify(bundle)
+            self.assertIn('sampled_playback_model', {d['code'] for d in verified['diagnostics']})
+            self.assertEqual((bundle / 'original.sng').read_bytes(), score.read_bytes())
+            self.assertTrue((bundle / 'composition.mid').is_file())
+            with wave.open(str(bundle / 'assets/composition.wav'), 'rb') as wav:
+                self.assertEqual(wav.getnframes(), 109432)
+            preview = (bundle / 'preview.html').read_text(encoding='utf-8')
+            self.assertIn('media-src', preview)
+            self.assertIn('<audio controls', preview)
+            metadata = json.loads((bundle / 'content.json').read_bytes())['sampled_playback']
+            self.assertEqual(metadata['instruments'][0]['sample_indices'], [0])
+            self.assertEqual(metadata['instruments'][0]['sha256'], sha256(instrument.read_bytes()).hexdigest())
+
+            omitted = folder / 'omitted'
+            manifest = export(score, omitted, instruments=())
+            self.assertIn('sampled_playback_omitted', {d['code'] for d in manifest['diagnostics']})
+            self.assertFalse((omitted / 'assets').exists())
+            self.assertTrue((omitted / 'composition.mid').is_file())
+            self.assertEqual(verify(omitted), manifest)
 
 
 class NativeSoundTests(unittest.TestCase):

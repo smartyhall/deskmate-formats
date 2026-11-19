@@ -98,7 +98,7 @@ outside this byte-preservation format.
 | Calendar | `preview.html`, one `.ics` per nonempty supported calendar, strict `interchange-v1.json` when representable | SDK-derived ordinary date and quarter-hour time codecs. All parsed rows, raw fields and control records are available in the archival JSON. |
 | Address Book | `preview.html`, `contacts.vcf`, strict `interchange-v1.json` when representable | The measured ten-page profile exposes first name, last name, city and work phone. The archival JSON includes the opaque contact bytes. |
 | Sound | `preview.html`, `assets/sample-01.wav` and additional sample WAVs | Independently decoded mono PCM at the stored rate. Preserves original sample offsets, compressed regions and pitch/range/sustain metadata. |
-| Music | `preview.html`, `composition.mid` when representable | Three voice streams and a conductor, with measured notes, rests, ties, meter and tempo changes. Original and event JSON remain available for scores with opaque words or unexpanded repeats. |
+| Music | `preview.html`, `composition.mid` when representable, `assets/composition.wav` with an explicit instrument collection | Three written voice streams and a conductor, including supported repeats, endings, note connections and annotations. WAV includes approximate sampled playback and the selected instrument hashes. |
 
 **Worksheet.** A formula's expression, binary64 cache, raw status word and
 measured result/error flags remain together in `content.json` and the detailed
@@ -152,8 +152,25 @@ sample regions, and both compression modes are lossy. Music MIDI uses
 neutral velocity and default MIDI playback instruments. Unsupported
 sequencing controls produce a MIDI omission diagnostic. The original score,
 raw words and known events remain available.
+
+Supply `--instruments <directory>` to add approximate sampled playback to
+Music exports. The collection is read once for a batch export. Files bind
+by their stored instrument numbers, and `content.json` records the exact SND
+hashes and sample descriptors used. The bundle includes the original SNG,
+written event metadata, MIDI when representable and a local audio player
+for the WAV. Missing or ambiguous bindings produce an omission diagnostic.
+Use `--sample-policy strict` to require exactly one matching range, or
+`--sample-policy nearest-root` to allow a unique nearest-root fallback.
+
+```powershell
+New-Item -ItemType Directory instruments
+Copy-Item tests/fixtures/application-generated/sound/region-marked-tool-generated.snd instruments/
+deskmate-preserve export tests/fixtures/application-generated/music/alternate-endings-tool-generated.sng --instruments instruments --output-dir sampled-demo
+deskmate-preserve verify sampled-demo
+```
+
 [Sound report](research/sound-native-20261118.md) ·
-[Music report](research/music-native-20261118.md)
+[Sampled Music report](research/sampled-music-playback-20261118.md)
 
 ## Reproduce the native demo
 
