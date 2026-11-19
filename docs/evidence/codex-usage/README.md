@@ -4,6 +4,14 @@ The [recovered Draw campaign tail](20261119-draw-pr122-recovered-tail.json)
 contains observations after PR #122's published completion receipt
 through the interrupted turn's last recorded event.
 
+Draw II receipts cover [startup](20261119-draw-ii-startup.json),
+[outline decoding](20261119-draw-ii-outlines.json),
+[native FF1 trials](20261119-draw-ii-native-ff1.json),
+[FF1 comparison](20261119-draw-ii-ff1-gallery.json),
+[pen recovery](20261119-draw-ii-pen.json),
+[browser authoring](20261119-draw-ii-authoring.json), and
+[completion](20261119-draw-ii-completion.json).
+
 **Established:** 2026-11-18, by operator request.
 **Scope:** DeskMate research campaigns; sanitized, reproducible usage receipts
 only. This directory is the central tracked destination, not a dump of the

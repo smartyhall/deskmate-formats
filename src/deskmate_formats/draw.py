@@ -6,7 +6,7 @@ from pathlib import Path
 from struct import unpack_from
 import sys
 
-from . import graphics
+from . import font_resources, graphics
 
 
 PAGE_SETUP_SIZE = 22
@@ -65,14 +65,21 @@ def main(argv=None):
                         help='permit one measured legacy arc length disagreement')
     parser.add_argument('--substitute-external-fonts', action='store_true',
                         help='use labeled generic monospace glyphs for unresolved font references in SVG')
+    parser.add_argument('--ff1', type=Path, action='append', default=[],
+                        help='use the base face in this local FF1 file for SVG (repeatable)')
     args = parser.parse_args(argv)
     try:
         drawing = parse_file(args.source, recover_arc_length=args.recover_arc_length)
         if drawing.recovered_arcs:
             print(f'recovered arc length at list byte {drawing.recovered_arcs[0]}', file=sys.stderr)
         if args.svg:
-            sys.stdout.write(graphics.render_svg(drawing.form, drawing.palette,
-                                                 substitute_external_fonts=args.substitute_external_fonts))
+            preview = graphics.preview_svg(drawing.form, drawing.palette,
+                                           substitute_external_fonts=args.substitute_external_fonts,
+                                           outline_faces=font_resources.load_outline_faces(args.ff1))
+            if args.ff1:
+                for omission in preview.omissions:
+                    print(f'list byte {omission.offset}: {omission.reason}', file=sys.stderr)
+            sys.stdout.write(preview.svg)
         else:
             print(json.dumps(asdict(drawing), default=bytes.hex, indent=2))
     except (OSError, ValueError) as exc:

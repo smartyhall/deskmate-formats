@@ -18,18 +18,28 @@ button:disabled{opacity:.55;cursor:default}
 .brand{display:flex;gap:.65rem;align-items:center;white-space:nowrap}
 .emblem{display:inline-block;width:1.45rem;height:1.1rem;border:2px solid #3e2b20;background:linear-gradient(140deg,transparent 45%,#3e2b20 47% 55%,transparent 57%)}
 .filename{font-size:.92rem;overflow-wrap:anywhere;text-align:right}
-.commands{display:flex;align-items:center;flex-wrap:wrap;gap:.45rem;padding:.63rem 1rem;background:#1c2c3b;border-bottom:1px solid var(--fine)}
-.commands label{display:flex;gap:.5rem;align-items:center;margin-left:.5rem}
+.menus{display:flex;flex-wrap:wrap;gap:1px;background:#243645;border-bottom:1px solid var(--fine);z-index:1}
+.menus details{position:relative}
+.menus summary{list-style:none;white-space:nowrap;padding:.35rem .55rem;background:var(--dark)}
+.menus summary::-webkit-details-marker{display:none}
+.menus details[open] summary,.menus summary:hover{background:#304d5e}
+.menu-list{position:absolute;left:0;top:100%;min-width:11.5rem;background:var(--bg);border:1px solid var(--fine);padding:.22rem;box-shadow:3px 3px #101923;display:grid;gap:.1rem}
+.menu-list :is(button,label){text-align:left;white-space:nowrap;background:var(--dark);padding:.22rem .45rem;min-height:1.8rem}
+.menu-list button:hover{background:#304d5e}
+.menu-list label select{display:block;max-width:16rem;font-size:.86rem}
+.menus details:last-child .menu-list{left:auto;right:0}
 kbd{padding:0 .22em;border:1px solid var(--fine);font:inherit;color:var(--muted)}
-.divider{height:1.55rem;width:1px;background:var(--fine);margin-inline:.25rem}
 #zoom{display:inline-block;min-width:4rem;text-align:center}
 main{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,21rem);gap:1px;background:var(--fine);flex:1;min-height:34rem}
+main.inspection-hidden{grid-template-columns:1fr}
+main.inspection-hidden .inspector{display:none}
 .workspace{min-width:0;display:flex;flex-direction:column;background:var(--dark)}
 .viewport{position:relative;overflow:hidden;min-height:30rem;flex:1;touch-action:none;cursor:grab}
 .viewport:active{cursor:grabbing}
 #stage{position:absolute;top:50%;left:50%;width:640px;height:418px;transform-origin:center;box-shadow:0 0 0 1px #647581}
 #stage svg{display:block;width:100%;height:100%;overflow:hidden}
 #stage svg [data-offset]{cursor:crosshair}
+.viewport.drawing,.viewport.drawing #stage svg [data-offset]{cursor:crosshair}
 .canvas-info,footer{padding:.52rem .85rem;background:#1b2b38;display:flex;flex-wrap:wrap;justify-content:space-between;gap:.45rem;color:var(--muted);font-size:.84rem}
 .inspector{background:var(--bg);min-width:0}
 .inspector>section,.inspector>details{border-bottom:1px solid var(--fine);padding:.75rem .85rem}
@@ -49,14 +59,14 @@ dd{margin:0;overflow-wrap:anywhere}
 dialog{max-width:calc(100% - 2rem);width:26rem;color:var(--text);background:var(--bg);border:2px solid #bd9d62;padding:1rem}
 dialog::backdrop{background:#07101bc9}
 dialog h2{margin:0 0 .7rem;font-size:1.12rem;color:var(--paper)}
-#edit-fields{display:grid;gap:.55rem}
-#edit-fields label{display:grid;grid-template-columns:1fr 8rem;align-items:center;gap:.55rem}
-#edit-fields input{width:100%;background:var(--dark);border:1px solid var(--fine);color:var(--text);padding:.42rem;font:inherit}
-#edit-error{display:block;color:#ffc491;margin-top:.55rem}
+#edit-fields,#command-fields{display:grid;gap:.55rem}
+#edit-fields label,#command-fields label{display:grid;grid-template-columns:1fr 8rem;align-items:center;gap:.55rem}
+#edit-fields input,#command-fields input{width:100%;background:var(--dark);border:1px solid var(--fine);color:var(--text);padding:.42rem;font:inherit}
+#edit-error,#command-error{display:block;color:#ffc491;margin-top:.55rem}
 summary{cursor:pointer;color:var(--paper);font-weight:700}
 footer{border-top:1px solid var(--fine)}
 @media(max-width:850px){main{grid-template-columns:1fr;min-height:auto}.viewport{min-height:27rem}.inspector{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.inspector>section,.inspector>details{border-right:1px solid var(--fine)}}
-@media(max-width:520px){.titlebar,.commands{padding-inline:.65rem}.commands label{margin-left:0}.viewport{min-height:23rem}.inspector{grid-template-columns:1fr}.commands .divider{display:none}}
+@media(max-width:520px){.titlebar{padding-inline:.65rem}.viewport{min-height:23rem}.inspector{grid-template-columns:1fr}.menus details:last-child .menu-list{left:0;right:auto}}
 </style>
 </head>
 <body>
@@ -64,28 +74,80 @@ footer{border-top:1px solid var(--fine)}
   <div class="brand"><span class="emblem" aria-hidden="true"></span> Draw Workbench</div>
   <div id="document-name" class="filename" aria-live="polite">Open a FIG</div>
 </header>
-<nav class="commands" aria-label="Drawing commands">
+<nav class="menus" id="classic-menus" aria-label="Draw menus">
+  <details><summary>Help <kbd>F1</kbd></summary><div class="menu-list">
+    <button type="button" data-command="help">Drawing keys</button>
+  </div></details>
+  <details><summary>File <kbd>F2</kbd></summary><div class="menu-list">
+    <button type="button" data-command="new">New</button>
+    <button type="button" data-command="open">Open…</button>
+    <button type="button" data-command="save">Save As…</button>
+    <button type="button" data-command="download">Original FIG</button>
+    <label>Examples <select id="examples"></select></label>
+    <button type="button" data-command="svg-export">Export SVG</button>
+    <button type="button" data-command="png-export">Export PNG</button>
+  </div></details>
+  <details><summary>Edit <kbd>F3</kbd></summary><div class="menu-list">
+    <button type="button" data-command="edit">Move / Resize…</button>
+    <button type="button" data-command="label">Edit label…</button>
+    <button type="button" data-command="delete">Clear</button>
+    <button type="button" data-command="undo">Undo</button>
+    <button type="button" data-command="redo">Redo</button>
+  </div></details>
+  <details><summary>Actions <kbd>F4</kbd></summary><div class="menu-list">
+    <button type="button" data-command="top">Move to top</button>
+    <button type="button" data-command="bottom">Move to bottom</button>
+    <button type="button" data-command="group">Make object (all)</button>
+    <button type="button" data-command="ungroup">Break object</button>
+  </div></details>
+  <details><summary>Zoom <kbd>F5</kbd></summary><div class="menu-list">
+    <button type="button" data-command="normal">Normal</button>
+    <button type="button" data-zoom="2">Two times</button>
+    <button type="button" data-zoom="4">Four times</button>
+    <button type="button" data-zoom="0.5">Half</button>
+    <button type="button" data-zoom="0.25">Quarter</button>
+    <button type="button" data-command="fit">Fit drawing</button>
+    <button type="button" data-command="plus">Zoom in</button>
+    <button type="button" data-command="minus">Zoom out</button>
+  </div></details>
+  <details><summary>Options <kbd>F6</kbd></summary><div class="menu-list">
+    <button type="button" data-command="palette-edit">Colors…</button>
+    <button type="button" data-command="ink">New object ink and fill…</button>
+    <button type="button" data-command="font-open">Load local FF1 fonts…</button>
+    <button type="button" data-command="font-clear">Clear local fonts</button>
+    <button type="button" data-command="inspector">Toggle inspector</button>
+  </div></details>
+  <details><summary>Tools <kbd>F7</kbd></summary><div class="menu-list" id="drawing-tools">
+    <button type="button" data-tool="select">Select</button>
+    <button type="button" data-tool="L">Line</button>
+    <button type="button" data-tool="R">Rectangle</button>
+    <button type="button" data-tool="E">Ellipse</button>
+    <button type="button" disabled>Text</button>
+    <button type="button" disabled>Brush</button>
+    <button type="button" disabled>Filled Brush</button>
+    <button type="button" disabled>Arc</button>
+    <button type="button" data-tool="polyline">Polyline</button>
+    <button type="button" data-tool="polygon">Polygon</button>
+  </div></details>
+</nav>
+<div hidden>
   <button id="open" type="button">Open FIG <kbd>O</kbd></button>
   <input id="file" type="file" accept=".fig" hidden>
-  <label>Example <select id="examples"></select></label>
-  <span class="divider" aria-hidden="true"></span>
   <button id="minus" type="button" aria-label="Zoom out">−</button>
-  <output id="zoom">100%</output>
   <button id="plus" type="button" aria-label="Zoom in">+</button>
   <button id="normal" type="button">Normal</button>
   <button id="fit" type="button">Fit drawing</button>
-  <span class="divider" aria-hidden="true"></span>
   <button id="download" type="button">Original FIG</button>
   <button id="save" type="button" disabled>Save FIG As</button>
   <button id="svg-export" type="button">SVG</button>
   <button id="png-export" type="button">PNG</button>
-</nav>
-<main>
+</div>
+<main class="inspection-hidden">
   <section class="workspace" aria-label="Drawing surface">
     <div id="viewport" class="viewport" tabindex="0" aria-label="Drawing canvas. Use arrow keys to pan.">
       <div id="stage"></div>
     </div>
-    <div class="canvas-info"><strong id="canvas-mode">Scalable preview</strong><span id="drawing-stats"></span></div>
+    <div class="canvas-info"><strong id="canvas-mode">Scalable preview</strong><span id="drawing-stats"></span><output id="zoom">100%</output></div>
   </section>
   <aside class="inspector" aria-label="Native document inspector">
     <section aria-labelledby="objects-title">
@@ -108,6 +170,12 @@ footer{border-top:1px solid var(--fine)}
     <details>
       <summary>Preview limits</summary>
       <p>Scalable geometry uses approximations for stroke weights and fill patterns. Missing glyphs and unsupported records are listed below.</p>
+      <div class="edits">
+        <button type="button" id="font-open">Load local FF1 fonts</button>
+        <button type="button" id="font-clear" disabled>Clear fonts</button>
+        <input type="file" id="font-file" accept=".ff1" multiple hidden>
+      </div>
+      <ul id="local-fonts" aria-label="Loaded local font resources"></ul>
       <label><input type="checkbox" id="substitute"> Show generic labels for unresolved fonts</label>
       <ul id="omissions"></ul>
     </details>
@@ -120,6 +188,17 @@ footer{border-top:1px solid var(--fine)}
     <output id="edit-error" role="status"></output>
     <div class="dialog-actions">
       <button type="button" id="edit-cancel">Cancel</button>
+      <button type="submit">Apply</button>
+    </div>
+  </form>
+</dialog>
+<dialog id="command-dialog">
+  <form id="command-form">
+    <h2 id="command-title"></h2>
+    <div id="command-fields"></div>
+    <output id="command-error" role="status"></output>
+    <div class="dialog-actions">
+      <button type="button" id="command-cancel">Cancel</button>
       <button type="submit">Apply</button>
     </div>
   </form>
@@ -305,11 +384,120 @@ const DrawFig = (() => {
     return [a, p.map((value, index) => 2 * value - (a[index] + b[index]) / 2), b];
   }
 
-  function preview(model, { inspect = false, substitute = false } = {}) {
+  const MAX_FF1_BYTES = 128 * 1024;
+
+  function readOutlineFace(source) {
+    require(source instanceof Uint8Array && source.length >= 66 && source.length <= MAX_FF1_BYTES,
+      'Invalid FF1 file size');
+    const data = new Uint8Array(source), view = new DataView(data.buffer);
+    const word = pos => view.getUint16(pos, true), dword = pos => view.getUint32(pos, true);
+    const variants = word(10), first = word(14), count = word(16);
+    const inner = 70 + 46 * variants;
+    require([189, 122, 0, 1, 1].every((v, i) => data[i] === v) && word(32) === 46
+      && variants >= 1 && variants <= 64 && count > 0 && first + count <= 256
+      && inner + 48 <= data.length, 'Unsupported FF1 directory profile');
+    const names = [];
+    for (let i = 0; i < variants; i++) {
+      const area = data.subarray(66 + 46 * i, 98 + 46 * i);
+      const end = area.indexOf(0);
+      const name = area.subarray(0, end);
+      require(end > 0 && name.every(code => code >= 32 && code <= 126), 'Invalid FF1 variant name');
+      names.push(String.fromCharCode(...name).toLowerCase());
+    }
+    require(new Set(names).size === names.length, 'Duplicate FF1 variant name');
+    const size = dword(inner + 4), units = word(inner + 12);
+    const widths = word(inner - 2), index = word(inner + 46), glyphs = index + 4 * count;
+    require(dword(inner) === 0x0101f31e && units > 0
+      && word(inner + 14) === first && word(inner + 16) === count
+      && widths >= 48 && widths + 2 * count === index && glyphs < size
+      && inner + size <= data.length && dword(inner + index) === glyphs, 'Invalid FF1 inner glyph index');
+    const entries = [];
+    for (let i = 0; i < count; i++) {
+      const at = dword(inner + index + 4 * i);
+      const end = i + 1 === count ? size : dword(inner + index + 4 * (i + 1));
+      require(at < end && end <= size, 'Overlapping or unordered FF1 glyph extents');
+      entries.push({ at: inner + at, size: end - at, advance: word(inner + widths + 2 * i) });
+    }
+    const nameBytes = data.subarray(66, 98);
+    return {
+      name: String.fromCharCode(...nameBytes.subarray(0, nameBytes.indexOf(0))),
+      first, units, entries,
+      same: other => other instanceof Uint8Array && other.length === data.length && data.every((v, i) => v === other[i]),
+      commands(code) {
+        const { at, size } = entries[code - first];
+        require(size >= 14, `Truncated FF1 glyph for code ${code}`);
+        const i16 = pos => view.getInt16(pos, true);
+        const end = at + 14 + word(at + 10);
+        require(end + word(at + 12) === at + size && word(at) === 1
+          && i16(at + 2) <= i16(at + 6) && i16(at + 4) <= i16(at + 8),
+        `Unsupported FF1 glyph header for code ${code}`);
+        const contours = [];
+        let contour;
+        for (let pos = at + 14; pos < end;) {
+          const op = data[pos], next = pos + (op === 2 ? 13 : 5);
+          require(op <= 2, `Unknown FF1 opcode ${hex(op)} at glyph byte ${pos - at} for code ${code}`);
+          require(next <= end, `Truncated FF1 command for code ${code}`);
+          const points = [];
+          for (let i = pos + 1; i < next; i += 4) points.push([i16(i), i16(i + 2)]);
+          if (op === 0) {
+            contour = [points];
+            contours.push(contour);
+          } else {
+            require(contour, `FF1 contour lacks a move for code ${code}`);
+            contour.push(points);
+          }
+          pos = next;
+        }
+        return contours.filter(c => c.length > 1).map(c => {
+          const [x, y] = c[0][0], [lastX, lastY] = c.at(-1).at(-1);
+          require(x === lastX && y === lastY, `Open FF1 contour for code ${code}`);
+          return c;
+        });
+      },
+    };
+  }
+
+  function pathOutlines(part, face, budget) {
+    const { raw, text } = part;
+    const view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+    const word = pos => view.getUint16(pos, true);
+    const pointSize = word(56), width = word(58);
+    require(raw[21] === 255 && raw.slice(22, 26).every(v => v === 0)
+      && (raw[20] === 1 || face.name.toLowerCase() === 'cobb')
+      && raw.slice(60, 64).every(v => v === 0) && word(64) === 12 && word(66) === 255
+      && raw.slice(68, 84).every(v => v === 0)
+      && word(90) === 1 && pointSize && width, 'Unsupported external font transform or style');
+    let cost = 0;
+    for (const code of text) {
+      const entry = face.entries[code - face.first];
+      require(entry, `Code ${code} is outside the ${face.name} glyph index`);
+      cost += entry.size;
+    }
+    require(cost <= budget, 'Outline byte budget');
+    const x = view.getInt16(92, true), y = view.getInt16(94, true);
+    const sy = pointSize * 1000 / (72 * face.units), sx = sy * width / 100;
+    const cache = new Map(), paths = [];
+    let advance = 0;
+    for (const code of text) {
+      if (!cache.has(code)) cache.set(code, face.commands(code));
+      const contours = cache.get(code);
+      const coord = ([px, py]) => `${safeNumber(x + (advance + px) * sx)} ${safeNumber(y + py * sy)}`;
+      const commands = contours.map(([start, ...segments]) => [
+        'M ' + coord(start[0]),
+        ...segments.map(points => (points.length === 1 ? 'L ' : 'C ') + points.map(coord).join(' ')),
+        'Z',
+      ].join(' '));
+      if (commands.length) paths.push(commands.join(' '));
+      advance += face.entries[code - face.first].advance;
+    }
+    return { paths, cost };
+  }
+
+  function preview(model, { inspect = false, substitute = false, faces = new Map() } = {}) {
     const paint = (index, otherwise) => model.palette.has(index)
       ? '#' + model.palette.get(index).map(hex).join('') : otherwise;
     const result = [], omitted = [];
-    let bank = new Map(), strokeBudget = 100000, substituted = 0;
+    let bank = new Map(), strokeBudget = 100000, outlineBudget = 200000, substituted = 0, resolved = 0;
     try { bank = strokes(model.strokes); } catch { /* Keep opaque stroke bytes. */ }
     const outline = index => `stroke="${paint(index, '#333333')}" stroke-width="1" vector-effect="non-scaling-stroke"`;
     for (const part of leaves(model)) {
@@ -345,10 +533,29 @@ const DrawFig = (() => {
           continue;
         }
       }
-      if (kind === 'Uf' && substitute && part.text?.length) {
-        const label = Array.from(part.text, value => value >= 32 && value < 127 ? char(value) : '�').join('');
-        result.push(`<text x="${Math.min(x0,x1)}" y="${Math.max(y0,y1)}" font-size="${Math.max(1,Math.abs(y1-y0))}" font-family="monospace" fill="${paint(raw[20], '#333333')}"${interactive}>${escaped(label)}</text>`);
-        substituted++;
+      if (kind === 'Uf') {
+        const fill = paint(1, '#333333');
+        const face = faces.get(part.fontName?.toLowerCase());
+        let reason = part.fontName ? `Supply local ${part.fontName} FF1` : 'Invalid external font descriptor';
+        if (face) {
+          try {
+            const { paths, cost } = pathOutlines(part, face, outlineBudget);
+            outlineBudget -= cost;
+            result.push(...paths.map(path => `<path d="${path}" fill="${fill}"${interactive}/>`));
+            resolved++;
+            continue;
+          } catch (error) {
+            // A rejected glyph must still consume its share of the decoding budget.
+            outlineBudget -= Math.min(outlineBudget, Array.from(part.text, code =>
+              face.entries[code - face.first]?.size ?? 0).reduce((a, b) => a + b, 0));
+            reason = error.message;
+          }
+        }
+        if (substitute && part.text?.length) {
+          const label = Array.from(part.text, value => value >= 32 && value < 127 ? char(value) : '�').join('');
+          result.push(`<text x="${Math.min(x0,x1)}" y="${Math.max(y0,y1)}" font-size="${Math.max(1,Math.abs(y1-y0))}" font-family="monospace" fill="${fill}"${interactive}>${escaped(label)}</text>`);
+          substituted++;
+        } else omitted.push({ kind, offset: part.offset, reason });
         continue;
       }
       const dx = x1 - x0, dy = y1 - y0;
@@ -371,9 +578,262 @@ const DrawFig = (() => {
         result.push(`<${geom} fill="${fill}" ${outline(raw[18])}${interactive}/>`);
         continue;
       }
-      omitted.push({ kind, offset: part.offset, reason: kind === 'Uf' ? 'external font' : 'unsupported preview record' });
+      omitted.push({ kind, offset: part.offset, reason: 'unsupported preview record' });
     }
-    return { shapes: result.join(''), background: paint(0, '#000080'), omissions: omitted, substituted };
+    return { shapes: result.join(''), background: paint(0, '#000080'), omissions: omitted, substituted, resolved };
+  }
+
+  const FIXED_ONE = 65536;
+  const DEFAULT_PALETTE = [
+    [0, 0, 128], [192, 192, 0], [192, 192, 192], [128, 0, 0], [0, 128, 128], [0, 0, 192],
+    [192, 0, 0], [128, 128, 128], [64, 64, 64], [0, 128, 128], [0, 192, 0], [128, 0, 128],
+    [128, 128, 0], [192, 0, 192], [0, 128, 0], [0, 0, 0],
+  ];
+
+  function fixed(value) {
+    require(Number.isInteger(value) && value >= -2147483648 && value <= 2147483647,
+      'Value outside exact signed 16.16 range');
+    return value;
+  }
+
+  function setCoords(view, start, coordinates) {
+    require(coordinates.length === 4, 'Expected four signed 16.16 coordinates');
+    coordinates.forEach((v, i) => {
+      const whole = Math.floor(fixed(v) / FIXED_ONE);
+      view.setInt16(start + 4 * i, whole, true);
+      view.setUint16(start + 4 * i + 2, v - whole * FIXED_ONE, true);
+    });
+  }
+
+  function colorIndex(value) {
+    require(Number.isInteger(value) && value >= 0 && value < 16, 'Palette index must be 0–15');
+    return value;
+  }
+
+  function primitive(kind, geometry, color, fill) {
+    colorIndex(color);
+    if (fill !== null) colorIndex(fill);
+    const pattern = fill === null ? 254 : 1, foreground = fill ?? 1;
+    if (Object.hasOwn(sizes, kind)) {
+      const raw = new Uint8Array(sizes[kind]);
+      raw[0] = kind.charCodeAt(0);
+      raw[1] = kind === 'L' ? 0 : pattern;
+      const [x0, y0, x1, y1] = geometry;
+      if (kind !== 'L') require(x1 > x0 && y1 > y0, 'Shape requires positive ordered bounds');
+      else require(fill === null, 'Line does not take a fill color');
+      setCoords(new DataView(raw.buffer), 2, geometry);
+      raw[18] = color;
+      if (kind !== 'L') raw[22] = foreground;
+      return raw;
+    }
+    const closed = kind === 'polygon';
+    require((closed || kind === 'polyline') && geometry.length >= 2 + Number(closed)
+      && geometry.length <= 16374 && (closed || fill === null), 'Invalid polyline closure, fill, or point count');
+    const xs = [], ys = [];
+    for (const point of geometry) {
+      require(point.length === 2 && point.every(v => Number.isInteger(v) && v >= -32768 && v <= 32767),
+        'Polyline points require signed integral world units');
+      xs.push(point[0]); ys.push(point[1]);
+    }
+    const x0 = Math.min(...xs), y0 = Math.min(...ys), x1 = Math.max(...xs), y1 = Math.max(...ys);
+    const raw = new Uint8Array(36 + 4 * geometry.length), view = new DataView(raw.buffer);
+    raw.set([85, 80]);
+    setCoords(view, 2, [x0, y0, x1, y1].map(v => v * FIXED_ONE));
+    view.setUint16(18, raw.length / 2, true);
+    raw.set([color, color, 0, 0, pattern, 0, foreground, 0], 20);
+    view.setUint16(28, x1 - x0, true);
+    view.setUint16(30, y1 - y0, true);
+    raw.set([fill === null ? 0 : 255, closed ? 255 : 0], 32);
+    view.setUint16(34, geometry.length, true);
+    geometry.forEach(([x, y], i) => {
+      view.setUint16(36 + 4 * i, x - x0, true);
+      view.setUint16(38 + 4 * i, y - y0, true);
+    });
+    return raw;
+  }
+
+  function blank() {
+    return { blank: true, entries: [], elements: new Map(), strokes: new Uint8Array(),
+      palette: new Map(DEFAULT_PALETTE.map((rgb, i) => [i, [...rgb]])) };
+  }
+
+  function defaultContainer() {
+    const data = new Uint8Array(113);
+    data.set([20, 70, 73, 71, 0, 0, 42, 40, 40, 0, 110, 45, 45, 0, 80, 66, 60, 0, 0, 0, 1, 0]);
+    data.set([1, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x78, 0x1c], FORM);
+    data.set([2, 0], 42);
+    data.set([16, 0], LIST + 2);
+    DEFAULT_PALETTE.forEach((rgb, i) => data.set([i, ...rgb], LIST + 4 + 4 * i));
+    return data;
+  }
+
+  function packed(model) {
+    if (model.blank) return { data: defaultContainer(), first: 0x1c78, hint: 0, listBytes: 0 };
+    const data = model.copy(), view = new DataView(data.buffer);
+    const word = pos => view.getUint16(pos, true);
+    const count = model.entries.length, first = word(36), hint = word(32), listBytes = word(40);
+    require(word(28) === count + 1 && word(30) === 2 * count + 1 && word(38) - first === listBytes
+      && model.strokes.length === 2 && model.strokes.every(v => v === 0)
+      && model.elements.keys().next().value === 2 + 4 * count, 'Structural edit requires a packed Draw list');
+    return { data, first, hint, listBytes };
+  }
+
+  function knownLeaves(parts) {
+    require(parts.every(e => {
+      if (Object.hasOwn(sizes, e.kind)) return e.raw.length === sizes[e.kind];
+      if (e.kind !== 'UA' && e.kind !== 'UP') return false;
+      const size = 2 * (e.raw[18] + 256 * e.raw[19]);
+      return size === e.raw.length && (e.kind !== 'UA' || size === 44);
+    }), 'Structural edit would relocate an unsupported record');
+  }
+
+  function packList(ordered, first) {
+    const count = ordered.length;
+    require(count > 0, 'Native Draw has no qualified empty-file representation');
+    const size = 2 + 4 * count + ordered.reduce((sum, item) => sum + item.raw.length, 0);
+    require(size <= 65535 - first, 'Rebuilt Draw list exceeds the measured allocation bound');
+    const listing = new Uint8Array(size), view = new DataView(listing.buffer);
+    view.setUint16(0, count, true);
+    let at = 2 + 4 * count;
+    for (let i = count - 1; i >= 0; i--) {
+      view.setUint16(2 + 4 * i, at / 2, true);
+      view.setUint16(4 + 4 * i, ordered[i].tag, true);
+      listing.set(ordered[i].raw, at);
+      at += ordered[i].raw.length;
+    }
+    return listing;
+  }
+
+  function wrap({ data, first, listBytes }, listing, hint) {
+    require(listing.length <= 65535 - first, 'Rebuilt Draw list exceeds the measured allocation bound');
+    const count = new DataView(listing.buffer).getUint16(0, true);
+    const result = new Uint8Array(data.length - listBytes + listing.length), view = new DataView(result.buffer);
+    result.set(data.subarray(0, LIST));
+    result.set(listing, LIST);
+    result.set(data.subarray(LIST + listBytes), LIST + listing.length);
+    for (const [pos, value] of [[24, listing.length / 2], [28, count + 1], [30, 2 * count + 1], [32, hint],
+      [38, first + listing.length], [40, listing.length]]) view.setUint16(pos, value, true);
+    return read(result);
+  }
+
+  function nextTag(model, hint, count = 1) {
+    const tag = Math.max(hint, ...model.entries.map(e => e.tag)) + count;
+    require(tag <= 65535, 'Draw tag space exhausted');
+    return tag;
+  }
+
+  function flat(model) {
+    const parts = model.entries.map(e => ({ ...e, raw: model.elements.get(e.offset).raw,
+      kind: model.elements.get(e.offset).kind }));
+    require(parts.length === model.elements.size, 'Structural edit requires a packed flat Draw list');
+    knownLeaves(parts);
+    return parts;
+  }
+
+  function add(model, kind, geometry, { color = 1, fill = null } = {}) {
+    const profile = packed(model), parts = flat(model);
+    const tag = nextTag(model, profile.hint);
+    parts.push({ tag, raw: primitive(kind, geometry, color, fill) });
+    return wrap(profile, packList(parts, profile.first), tag);
+  }
+
+  function remove(model, tag) {
+    const profile = packed(model), parts = flat(model);
+    require(parts.some(e => e.tag === tag), 'The requested top-level delete tag does not exist');
+    return wrap(profile, packList(parts.filter(e => e.tag !== tag), profile.first), profile.hint);
+  }
+
+  function reorder(model, tags) {
+    const parts = new Map(model.entries.map(e => [e.tag, e.offset]));
+    require(!model.blank && tags.length === parts.size && new Set(tags).size === parts.size
+      && tags.every(tag => parts.has(tag)), 'Display order must contain each top-level tag exactly once');
+    const data = model.copy(), view = new DataView(data.buffer);
+    tags.forEach((tag, i) => {
+      view.setUint16(LIST + 2 + 4 * i, parts.get(tag) / 2, true);
+      view.setUint16(LIST + 4 + 4 * i, tag, true);
+    });
+    return read(data);
+  }
+
+  function group(model) {
+    const profile = packed(model), parts = flat(model), count = parts.length;
+    require(count >= 2, 'Grouping requires at least two flat top-level elements');
+    const offsets = new Map();
+    const raw = new Uint8Array(20 + 2 * count + parts.reduce((sum, item) => sum + item.raw.length, 0));
+    const view = new DataView(raw.buffer);
+    raw.set([79, 79]);
+    const coords = model.entries.map(e => model.elements.get(e.offset).bounds.map(v => v * FIXED_ONE));
+    const xs = coords.flatMap(([a, , c]) => [a, c]), ys = coords.flatMap(([, b, , d]) => [b, d]);
+    setCoords(view, 2, [Math.min(...xs), Math.min(...ys), Math.max(...xs) + FIXED_ONE, Math.max(...ys) + FIXED_ONE]);
+    view.setUint16(18, count, true);
+    let at = 20 + 2 * count;
+    for (const part of [...parts].reverse()) {
+      offsets.set(part.tag, (at + 6) / 2);
+      raw.set(part.raw, at);
+      at += part.raw.length;
+    }
+    parts.forEach((part, i) => view.setUint16(20 + 2 * i, offsets.get(part.tag), true));
+    const tag = nextTag(model, profile.hint);
+    return wrap(profile, packList([{ tag, raw }], profile.first), tag);
+  }
+
+  function ungroup(model) {
+    const profile = packed(model), root = model.elements.get(model.entries[0]?.offset);
+    require(model.entries.length === 1 && root?.kind === 'OO' && root.children.length >= 2
+      && root.raw.length === 20 + 2 * root.children.length
+      && model.elements.size === root.children.length + 1, 'Ungrouping requires one flat group containing only leaves');
+    const parts = root.children.map(offset => model.elements.get(offset));
+    knownLeaves(parts);
+    const hint = nextTag(model, profile.hint, parts.length);
+    const ordered = parts.map((item, i) => ({ raw: item.raw, tag: hint - parts.length + i + 1 }));
+    return wrap(profile, packList(ordered, profile.first), hint);
+  }
+
+  function paletteColor(model, index, rgb) {
+    colorIndex(index);
+    require(!model.blank && rgb.length === 3 && rgb.every(v => Number.isInteger(v) && v >= 0 && v <= 255),
+      'Palette channels require three byte values in a drawing');
+    const data = model.copy(), offset = data.length - 65 + 4 * [...model.palette.keys()].indexOf(index);
+    data.set(rgb, offset + 1);
+    return read(data);
+  }
+
+  function canPermute(model, tag) {
+    const entry = model.entries.find(e => e.tag === tag);
+    const part = entry && model.elements.get(entry.offset);
+    return part && ['Cobb', 'Dixon', 'Marin'].includes(part.fontName)
+      && part.raw.length === 2 * (part.raw[18] + 256 * part.raw[19])
+      && part.text.every(code => code >= 32 && code <= 126);
+  }
+
+  function permuteLabel(model, tag, label) {
+    require(canPermute(model, tag), 'Text edit requires a top-level ASCII outline-font run');
+    const offset = model.entries.find(e => e.tag === tag).offset, part = model.elements.get(offset);
+    const codes = Array.from(label, value => value.codePointAt(0));
+    const expected = [...part.text].sort().join(',');
+    require(codes.slice().sort().join(',') === expected, 'Use a permutation of the original ASCII label');
+    const result = model.copy();
+    result.set(codes, LIST + offset + 100);
+    return read(result);
+  }
+
+  function structuralProfile(model) {
+    if (model.blank) return 'flat';
+    try {
+      packed(model);
+      if (model.entries.length === 1) {
+        const root = model.elements.get(model.entries[0].offset);
+        if (root.kind === 'OO' && root.children.length >= 2 && root.raw.length === 20 + 2 * root.children.length
+          && model.elements.size === root.children.length + 1) {
+          knownLeaves(root.children.map(offset => model.elements.get(offset)));
+          return 'group';
+        }
+      }
+      flat(model);
+      return 'flat';
+    } catch {
+      return null;
+    }
   }
 
   function canEdit(model, tag) {
@@ -392,32 +852,23 @@ const DrawFig = (() => {
     const data = model.copy();
     const start = LIST + entry.offset;
     const view = new DataView(data.buffer);
-    const valid = value => {
-      require(Number.isInteger(value) && value >= -2147483648 && value <= 2147483647,
-        'Value outside exact signed 16.16 range');
-      return value;
-    };
-    const fixed = record.bounds.map(value => value * 65536);
+    const coordinates = record.bounds.map(value => value * FIXED_ONE);
     let coords;
     if (kind === 'L') {
-      const dx = valid(options.dx), dy = valid(options.dy);
-      require(Number.isInteger(options.color) && options.color >= 0 && options.color < 16, 'Palette index must be 0–15');
-      data[start + 18] = options.color;
-      coords = fixed.map((value, index) => value + (index % 2 ? dy : dx));
+      const dx = fixed(options.dx), dy = fixed(options.dy);
+      data[start + 18] = colorIndex(options.color);
+      coords = coordinates.map((value, index) => value + (index % 2 ? dy : dx));
     } else {
-      const width = valid(options.width), height = valid(options.height);
+      const width = fixed(options.width), height = fixed(options.height);
       require(width > 0 && height > 0, 'Rectangle dimensions must be positive');
-      coords = [fixed[0], fixed[1], fixed[0] + width, fixed[1] + height];
+      coords = [coordinates[0], coordinates[1], coordinates[0] + width, coordinates[1] + height];
     }
-    coords.forEach((value, index) => {
-      const whole = Math.floor(valid(value) / 65536);
-      view.setInt16(start + 2 + 4 * index, whole, true);
-      view.setUint16(start + 4 + 4 * index, value - whole * 65536, true);
-    });
+    setCoords(view, start + 2, coords);
     return read(data);
   }
 
-  return Object.freeze({ read, leaves, preview, arcQuadratic, canEdit, edit, MAX_BYTES });
+  return Object.freeze({ read, leaves, preview, arcQuadratic, canEdit, edit, readOutlineFace, MAX_BYTES, MAX_FF1_BYTES,
+    blank, structuralProfile, add, remove, reorder, group, ungroup, paletteColor, canPermute, permuteLabel });
 })();
 
 if (typeof module === 'object') module.exports = DrawFig;
@@ -427,13 +878,15 @@ if (typeof module === 'object') module.exports = DrawFig;
 const get = id => document.getElementById(id);
 const viewport = get('viewport'), stage = get('stage');
 const state = { model: null, original: null, past: [], future: [], name: '', selected: null,
-  scale: 1, x: 0, y: 0, box: [0, 0, 8000, 4840] };
+  scale: 1, x: 0, y: 0, box: [0, 0, 8000, 4840], faces: new Map(),
+  tool: 'select', points: [], cursor: [4000, 2420], color: 1, fill: null, profile: null };
 const svgNS = 'http://www.w3.org/2000/svg';
 const names = { L: 'Line', R: 'Rectangle', E: 'Ellipse', UA: 'Arc', UP: 'Polyline / polygon',
   OO: 'Object group', T: 'Stroke text', Uf: 'External-font text' };
 const examples = JSON.parse(get('samples').textContent);
 const number = value => Number(value.toFixed(5));
 const hex = data => [...data].map(value => value.toString(16).padStart(2, '0')).join(' ');
+let drag;
 
 function node(tag, text) {
   const result = document.createElement(tag);
@@ -456,18 +909,28 @@ function svgImage(preview, box) {
   return `<svg xmlns="${svgNS}" viewBox="${box.join(' ')}" width="640" height="418" preserveAspectRatio="none">${description}<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${preview.background}"/>${preview.shapes}</svg>`;
 }
 
+function documentPreview(inspect = false) {
+  return DrawFig.preview(state.model, { inspect, substitute: get('substitute').checked, faces: state.faces });
+}
+
 function frame() {
   if (!state.model) return;
-  const preview = DrawFig.preview(state.model, { inspect: true, substitute: get('substitute').checked });
+  const preview = documentPreview(true);
   const doc = new DOMParser().parseFromString(svgImage(preview, state.box), 'image/svg+xml');
   stage.replaceChildren(document.importNode(doc.documentElement, true));
   get('drawing-stats').textContent = `${state.model.elements.size} records · ${preview.omissions.length} omitted`
+    + (preview.resolved ? ` · ${preview.resolved} runs with local FF1` : '')
     + (preview.substituted ? ` · ${preview.substituted} generic font substitutions` : '');
   get('omissions').replaceChildren(...preview.omissions.map(item =>
     node('li', `${names[item.kind] ?? 'Record'} at list byte ${item.offset} · ${item.reason}`)));
   if (!preview.omissions.length) get('omissions').append(node('li', 'No records omitted in this preview.'));
   selection(state.selected);
   viewportTransform();
+  draft();
+}
+
+function activeEntry() {
+  return state.model?.entries.find(item => item.offset === state.selected);
 }
 
 function selection(offset) {
@@ -479,6 +942,7 @@ function selection(offset) {
   const record = state.model?.elements.get(offset);
   const entry = state.model?.entries.find(item => item.offset === offset);
   get('edit').disabled = !entry || !DrawFig.canEdit(state.model, entry.tag);
+  updateMenus();
   const inspect = get('inspection');
   if (!record) {
     inspect.textContent = 'Select a record or shape.';
@@ -503,16 +967,26 @@ function selection(offset) {
   if (record.children.length) rows.push(['Children', record.children.join(', ')]);
   for (const [k, v] of rows) details.append(node('dt', k), node('dd', v));
   inspect.replaceChildren(details);
-  const box = document.createElementNS(svgNS, 'rect');
-  box.id = 'selection-outline';
+  const box = document.createElementNS(svgNS, 'rect'), selection = document.createElementNS(svgNS, 'g');
+  selection.id = 'selection-outline';
+  selection.setAttribute('pointer-events', 'none');
   const s = Math.max(state.box[2] / 640, state.box[3] / 418);
+  const left = Math.min(x0, x1) - s, right = Math.max(x0, x1) + s;
+  const top = Math.min(y0, y1) - s, bottom = Math.max(y0, y1) + s;
   for (const [key, value] of Object.entries({
-    x: Math.min(x0, x1) - s, y: Math.min(y0, y1) - s,
-    width: Math.abs(x1 - x0) + 2 * s, height: Math.abs(y1 - y0) + 2 * s,
-    fill: 'none', stroke: '#fff0c0', 'stroke-width': 1,
-    'stroke-dasharray': '3 3', 'vector-effect': 'non-scaling-stroke', 'pointer-events': 'none',
+    x: left, y: top, width: right - left, height: bottom - top,
+    fill: 'none', stroke: '#fff0c0', 'stroke-width': 1, 'vector-effect': 'non-scaling-stroke',
   })) box.setAttribute(key, value);
-  stage.querySelector('svg')?.append(box);
+  selection.append(box);
+  if (right - left > 8 * s && bottom - top > 8 * s) {
+    for (const [x, y] of [[left, top], [right, top], [left, bottom], [right, bottom]]) {
+      const handle = document.createElementNS(svgNS, 'rect');
+      for (const [key, value] of Object.entries({ x: x - 2 * s, y: y - 2 * s, width: 4 * s, height: 4 * s,
+        fill: '#fff0c0' })) handle.setAttribute(key, value);
+      selection.append(handle);
+    }
+  }
+  stage.querySelector('svg')?.append(selection);
 }
 
 function fillInspector(model) {
@@ -545,15 +1019,20 @@ function fillInspector(model) {
 function load(name, bytes) {
   try {
     const model = DrawFig.read(bytes);
-    Object.assign(state, { model, original: model, past: [], future: [], name, selected: null,
-      x: 0, y: 0, scale: 1, box: [0, 0, 8000, 4840] });
-    get('document-name').textContent = name;
-    fillInspector(model);
-    frame();
-    editStatus();
+    openModel(name, model);
   } catch (error) {
     report(`${name}: ${error.message}`);
   }
+}
+
+function openModel(name, model) {
+  Object.assign(state, { model, original: model, past: [], future: [], name, selected: null,
+    x: 0, y: 0, scale: 1, box: [0, 0, 8000, 4840], profile: DrawFig.structuralProfile(model) });
+  get('document-name').textContent = name;
+  setTool('select');
+  fillInspector(model);
+  frame();
+  editStatus();
 }
 
 async function openFile(file) {
@@ -611,20 +1090,60 @@ get('file').addEventListener('change', event => {
   openFile(event.target.files[0]);
   event.target.value = '';
 });
+get('font-open').addEventListener('click', () => get('font-file').click());
+function showFonts() {
+  get('font-clear').disabled = state.faces.size === 0;
+  get('local-fonts').replaceChildren(...Array.from(state.faces.values(), face => {
+    const entry = node('li', `${face.name} · ${face.filename}`);
+    if (face.sha256) entry.title = `SHA-256 ${face.sha256}`;
+    return entry;
+  }));
+  frame();
+}
+get('font-file').addEventListener('change', async event => {
+  const files = Array.from(event.target.files);
+  event.target.value = '';
+  const omissions = [];
+  for (const file of files) {
+    try {
+      if (file.size > DrawFig.MAX_FF1_BYTES) throw new Error('File exceeds the FF1 size limit');
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const face = DrawFig.readOutlineFace(bytes);
+      const key = face.name.toLowerCase(), existing = state.faces.get(key);
+      if (existing && !existing.same(bytes)) throw new Error(`Conflicting local resource for ${face.name}`);
+      if (!existing && state.faces.size >= 32) throw new Error('Local font resource limit reached');
+      const sha256 = globalThis.crypto?.subtle ? hex(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)))
+        .replaceAll(' ', '') : null;
+      state.faces.set(key, { ...face, filename: file.name, sha256 });
+    } catch (error) {
+      omissions.push(`${file.name}: ${error.message}`);
+    }
+  }
+  showFonts();
+  report(omissions.length ? omissions.join(' · ') : `${state.faces.size} local FF1 resources available`);
+});
+get('font-clear').addEventListener('click', () => {
+  state.faces.clear();
+  showFonts();
+  report('Cleared local FF1 resources.');
+});
 get('download').addEventListener('click', () => {
-  if (state.original) download(state.name, state.original.copy(), 'application/octet-stream');
+  if (state.original && !state.original.blank) download(state.name, state.original.copy(), 'application/octet-stream');
 });
 get('save').addEventListener('click', () => {
-  if (state.model) download(`${stem()}-edited.fig`, state.model.copy(), 'application/octet-stream');
+  if (state.model && !state.model.blank) {
+    const name = state.original.blank ? 'drawing.fig' : `${stem()}-edited.fig`;
+    download(name, state.model.copy(), 'application/octet-stream');
+  }
 });
 get('svg-export').addEventListener('click', () => {
   if (state.model) download(`${stem()}.svg`,
-    svgImage(DrawFig.preview(state.model, { substitute: get('substitute').checked }), state.box), 'image/svg+xml');
+    svgImage(documentPreview(), state.box), 'image/svg+xml');
 });
 get('png-export').addEventListener('click', () => {
   if (!state.model) return;
   const name = stem();
-  const data = svgImage(DrawFig.preview(state.model, { substitute: get('substitute').checked }), state.box);
+  const data = svgImage(documentPreview(), state.box);
   const url = URL.createObjectURL(new Blob([data], { type: 'image/svg+xml' }));
   const preview = new Image();
   preview.onload = () => {
@@ -652,20 +1171,40 @@ function editStatus() {
   get('undo').disabled = !state.past.length;
   get('redo').disabled = !state.future.length;
   const supported = state.model.entries.filter(entry => DrawFig.canEdit(state.model, entry.tag)).length;
-  const message = state.original !== state.model ? 'Edited locally. Save FIG As downloads the edited copy.'
+  const message = state.model.blank ? 'Choose a drawing tool from Tools.'
+    : state.original !== state.model ? 'Edited locally. Save As downloads the FIG.'
+    : state.profile === 'flat' ? 'Choose a tool to add objects or select a record to edit.'
     : supported === state.model.elements.size && supported
       ? 'Select a line or rectangle to edit. Original FIG remains available.'
       : supported ? 'Partly editable. Select a top-level line or rectangle.'
       : 'Read-only drawing. Original FIG remains available.';
   report(message);
+  updateMenus();
+}
+
+function showRevision(model, tag) {
+  state.model = model;
+  state.profile = DrawFig.structuralProfile(model);
+  state.selected = model.entries.find(e => e.tag === tag)?.offset ?? null;
+  state.points = [];
+  if (state.profile !== 'flat') setTool('select');
+  fillInspector(model);
+  frame();
+  editStatus();
+}
+
+function commitRevision(model, tag = activeEntry()?.tag) {
+  if (state.past.length === 32) state.past.shift();
+  state.past.push({ model: state.model, tag: activeEntry()?.tag });
+  state.future.length = 0;
+  showRevision(model, tag);
 }
 
 function restore(source, destination) {
   if (!source.length) return;
-  destination.push(state.model);
-  state.model = source.pop();
-  frame();
-  editStatus();
+  destination.push({ model: state.model, tag: activeEntry()?.tag });
+  const { model, tag } = source.pop();
+  showRevision(model, tag);
 }
 get('undo').addEventListener('click', () => restore(state.past, state.future));
 get('redo').addEventListener('click', () => restore(state.future, state.past));
@@ -703,26 +1242,251 @@ get('edit-form').addEventListener('submit', event => {
     [key, Number(value) * (key === 'color' ? 1 : 65536)]));
   try {
     const next = DrawFig.edit(state.model, Number(event.target.dataset.tag), options);
-    if (state.past.length === 32) state.past.shift();
-    state.past.push(state.model);
-    state.future.length = 0;
-    state.model = next;
     dialog.close();
-    frame();
-    editStatus();
+    commitRevision(next);
   } catch (error) {
     get('edit-error').textContent = error.message;
   }
 });
-window.addEventListener('keydown', event => {
-  if (event.ctrlKey || event.metaKey || event.altKey || ['INPUT', 'SELECT', 'BUTTON'].includes(event.target.tagName)) return;
-  if (event.key.toLowerCase() === 'o') {
+const menuBar = get('classic-menus');
+const menus = [...menuBar.querySelectorAll('details')];
+
+function closeMenus(except = null) {
+  for (const menu of menus) if (menu !== except) menu.open = false;
+}
+
+function updateMenus() {
+  const entry = activeEntry(), model = state.model;
+  if (!model) return;
+  const limits = {
+    save: model === state.original || model.blank,
+    download: state.original.blank,
+    undo: !state.past.length, redo: !state.future.length,
+    edit: get('edit').disabled, label: !entry || !DrawFig.canPermute(model, entry.tag),
+    delete: !entry || state.profile !== 'flat' || model.entries.length <= 1,
+    top: !entry || model.entries.at(-1) === entry, bottom: !entry || model.entries[0] === entry,
+    group: state.profile !== 'flat' || model.entries.length < 2, ungroup: state.profile !== 'group',
+    'palette-edit': model.blank, 'font-clear': state.faces.size === 0,
+  };
+  for (const [name, disabled] of Object.entries(limits)) {
+    menuBar.querySelector(`[data-command="${name}"]`).disabled = Boolean(disabled);
+  }
+  for (const button of menuBar.querySelectorAll('[data-tool]')) {
+    button.disabled = state.profile !== 'flat' && button.dataset.tool !== 'select';
+    button.setAttribute('aria-pressed', String(state.tool === button.dataset.tool));
+  }
+}
+
+function commandDialog(title, fields, apply) {
+  const form = get('command-form'), dialog = get('command-dialog');
+  get('command-title').textContent = title;
+  get('command-error').textContent = '';
+  get('command-fields').replaceChildren(...fields.map(([key, caption, type, value]) => {
+    const label = node('label', caption), field = node('input');
+    field.name = key;
+    field.type = type;
+    field.value = value;
+    field.required = key !== 'fill';
+    label.append(field);
+    return label;
+  }));
+  form.onsubmit = event => {
     event.preventDefault();
-    get('file').click();
+    try {
+      apply(Object.fromEntries(new FormData(form)));
+      dialog.close();
+    } catch (error) {
+      get('command-error').textContent = error.message;
+    }
+  };
+  dialog.showModal();
+}
+
+get('command-cancel').addEventListener('click', () => get('command-dialog').close());
+
+function order(top) {
+  const tag = activeEntry().tag;
+  const other = state.model.entries.filter(e => e.tag !== tag).map(e => e.tag);
+  commitRevision(DrawFig.reorder(state.model, top ? [...other, tag] : [tag, ...other]));
+}
+
+const commands = {
+  help: () => report('O opens a FIG. Shift+1–7 opens menus. Arrows and Space place points. Enter finishes a path. Escape cancels.'),
+  new: () => openModel('Untitled', DrawFig.blank()),
+  inspector: () => {
+    document.querySelector('main').classList.toggle('inspection-hidden');
+  },
+  delete: () => commitRevision(DrawFig.remove(state.model, activeEntry().tag), null),
+  top: () => order(true), bottom: () => order(false),
+  group: () => {
+    const next = DrawFig.group(state.model);
+    commitRevision(next, next.entries[0].tag);
+  },
+  ungroup: () => commitRevision(DrawFig.ungroup(state.model), null),
+  label: () => {
+    const entry = activeEntry(), item = state.model.elements.get(entry.offset);
+    commandDialog('Edit outline label', [['label', 'Use the same characters', 'text', String.fromCharCode(...item.text)]],
+      values => commitRevision(DrawFig.permuteLabel(state.model, entry.tag, values.label)));
+  },
+  'palette-edit': () => {
+    const index = state.color, rgb = state.model.palette.get(index);
+    commandDialog('Palette color', [['index', 'Index (0–15)', 'number', index], ['rgb', 'RGB', 'color', '#' + rgb.map(v => v.toString(16).padStart(2, '0')).join('')]],
+      values => commitRevision(DrawFig.paletteColor(state.model, Number(values.index),
+        values.rgb.slice(1).match(/../g).map(v => Number.parseInt(v, 16)))));
+  },
+  ink: () => commandDialog('New object ink and fill', [
+    ['color', 'Ink index (0–15)', 'number', state.color],
+    ['fill', 'Fill index (blank for none)', 'number', state.fill ?? ''],
+  ], values => {
+    const color = Number(values.color), fill = values.fill === '' ? null : Number(values.fill);
+    const valid = v => Number.isInteger(v) && v >= 0 && v <= 15;
+    if (!valid(color) || (fill !== null && !valid(fill))) throw new Error('Use palette indices 0–15.');
+    Object.assign(state, { color, fill });
+    draft();
+  }),
+};
+
+menuBar.addEventListener('click', event => {
+  const summary = event.target.closest('summary');
+  if (summary) closeMenus(summary.parentElement);
+  const button = event.target.closest('button');
+  if (!button || button.disabled) return;
+  closeMenus();
+  try {
+    if (button.dataset.tool) setTool(button.dataset.tool);
+    else if (button.dataset.zoom) adjust(Number(button.dataset.zoom));
+    else if (commands[button.dataset.command]) commands[button.dataset.command]();
+    else get(button.dataset.command)?.click();
+  } catch (error) {
+    report(error.message);
   }
 });
+menuBar.addEventListener('keydown', event => {
+  const menu = event.target.closest('details');
+  if (event.key === 'Escape') {
+    closeMenus();
+    menu?.querySelector('summary').focus();
+    event.preventDefault();
+    return;
+  }
+  if (!menu || !['ArrowUp', 'ArrowDown'].includes(event.key)) return;
+  menu.open = true;
+  const buttons = [...menu.querySelectorAll('button:not(:disabled), select')];
+  if (!buttons.length) return;
+  const focused = buttons.indexOf(document.activeElement);
+  const step = event.key === 'ArrowUp' ? -1 : 1;
+  buttons[(focused < 0 ? (step < 0 ? buttons.length - 1 : 0) : (focused + step + buttons.length) % buttons.length)].focus();
+  event.preventDefault();
+});
+document.addEventListener('pointerdown', event => {
+  if (!menuBar.contains(event.target)) closeMenus();
+});
+window.addEventListener('keydown', event => {
+  if (event.ctrlKey || event.metaKey || event.altKey || event.target.closest('dialog, input, select')) return;
+  const fn = /^F([1-7])$/.exec(event.key);
+  const digit = event.shiftKey && /^Digit([1-7])$/.exec(event.code);
+  const menu = menus[Number((fn || digit)?.[1]) - 1];
+  if (menu) {
+    const opening = !menu.open;
+    closeMenus();
+    menu.open = opening;
+    menu.querySelector('summary').focus();
+    event.preventDefault();
+  } else if (event.key.toLowerCase() === 'o') {
+    get('file').click();
+    event.preventDefault();
+  }
+});
+
+function setTool(tool) {
+  state.tool = tool;
+  state.points = [];
+  viewport.classList.toggle('drawing', tool !== 'select');
+  updateMenus();
+  draft();
+  if (tool !== 'select') {
+    viewport.focus();
+    const path = tool === 'polyline' || tool === 'polygon';
+    report(path ? 'Click or press Space to add points. Enter finishes. Escape cancels.'
+      : 'Click or press Space to set each endpoint. Escape cancels.');
+  }
+}
+
+function twoPointTool() {
+  return ['L', 'R', 'E'].includes(state.tool);
+}
+
+function draft() {
+  const svg = stage.querySelector('svg');
+  const old = svg?.querySelector('#drawing-draft');
+  old?.remove();
+  if (!svg || state.tool === 'select') return;
+  const group = document.createElementNS(svgNS, 'g');
+  group.id = 'drawing-draft';
+  const [x, y] = state.cursor;
+  const transient = drag?.drawing && drag?.moved && !state.points.length ? [drag.start] : [];
+  const points = state.points.length ? state.points : transient;
+  const [a, b] = points[0] ?? state.cursor;
+  let guide = '';
+  if (points.length) {
+    if (state.tool === 'E') guide = `<ellipse cx="${(a+x)/2}" cy="${(b+y)/2}" rx="${Math.abs(a-x)/2}" ry="${Math.abs(b-y)/2}"/>`;
+    else if (state.tool === 'R') guide = `<rect x="${Math.min(a,x)}" y="${Math.min(b,y)}" width="${Math.abs(a-x)}" height="${Math.abs(b-y)}"/>`;
+    else guide = `<polyline points="${[...points, state.cursor].map(p => p.join(',')).join(' ')}"/>`;
+  }
+  const unit = Math.max(state.box[2] / 640, state.box[3] / 418) / state.scale;
+  group.setAttribute('fill', 'none');
+  group.setAttribute('stroke', '#ffe7a0');
+  group.setAttribute('pointer-events', 'none');
+  group.innerHTML = guide + `<path d="M ${x-5*unit} ${y} H ${x+5*unit} M ${x} ${y-5*unit} V ${y+5*unit}"/>`;
+  group.querySelectorAll('*').forEach(el => el.setAttribute('vector-effect', 'non-scaling-stroke'));
+  svg.append(group);
+}
+
+function worldPoint(event) {
+  const rect = stage.getBoundingClientRect(), [x, y, width, height] = state.box;
+  return [x + width * (event.clientX - rect.left) / rect.width,
+    y + height * (event.clientY - rect.top) / rect.height].map(v => Math.round(v * 65536) / 65536);
+}
+
+function finishDrawing(points) {
+  try {
+    let { tool, fill } = state;
+    let geometry = points.map(point => point.map(Math.round));
+    if (twoPointTool()) {
+      const [[x, y], [a, b]] = points;
+      const bounds = tool !== 'L' ? [Math.min(x,a), Math.min(y,b), Math.max(x,a), Math.max(y,b)] : [x,y,a,b];
+      geometry = bounds.map(v => Math.round(v * 65536));
+    }
+    if (tool === 'L' || tool === 'polyline') fill = null;
+    const model = DrawFig.add(state.model, tool, geometry, { color: state.color, fill });
+    commitRevision(model, model.entries.at(-1).tag);
+  } catch (error) {
+    report(error.message);
+  }
+}
+
+function placePoint() {
+  const point = [...state.cursor];
+  if (state.points.length && twoPointTool()) finishDrawing([state.points[0], point]);
+  else if (state.points.length >= 4096) report('Finish the current path before adding more points.');
+  else {
+    state.points.push(point);
+    draft();
+  }
+}
+
 viewport.addEventListener('keydown', event => {
   const move = { ArrowUp: [0, 25], ArrowDown: [0, -25], ArrowLeft: [25, 0], ArrowRight: [-25, 0] }[event.key];
+  if (state.tool !== 'select') {
+    if (move) state.cursor = state.cursor.map((v, i) => v - move[i]);
+    else if (event.key === ' ') placePoint();
+    else if (event.key === 'Enter' && state.points.length >= (state.tool === 'polygon' ? 3 : 2)) finishDrawing(state.points);
+    else if (event.key === 'Escape') state.points = [];
+    else return;
+    draft();
+    event.preventDefault();
+    return;
+  }
   if (!move) return;
   event.preventDefault();
   state.x += move[0];
@@ -734,16 +1498,41 @@ viewport.addEventListener('wheel', event => {
   const rect = viewport.getBoundingClientRect();
   adjust(state.scale * (event.deltaY < 0 ? 1.25 : .8),
     event.clientX - rect.left - rect.width / 2, event.clientY - rect.top - rect.height / 2);
+  draft();
 }, { passive: false });
 
-let drag;
+function rootOffset(offset) {
+  if (offset === null) return null;
+  const parents = new Map();
+  for (const part of state.model.elements.values()) {
+    for (const child of part.children) parents.set(child, part.offset);
+  }
+  while (parents.has(offset)) offset = parents.get(offset);
+  return offset;
+}
+
 viewport.addEventListener('pointerdown', event => {
   if (event.button !== 0) return;
-  drag = { x: event.clientX, y: event.clientY, startX: state.x, startY: state.y,
-    offset: event.target.getAttribute('data-offset'), moved: false };
+  if (state.tool !== 'select') {
+    const start = worldPoint(event);
+    drag = { drawing: true, start, x: event.clientX, y: event.clientY, moved: false };
+    state.cursor = start;
+    draft();
+  } else {
+    drag = { x: event.clientX, y: event.clientY, startX: state.x, startY: state.y,
+      offset: event.target.getAttribute('data-offset'), moved: false };
+  }
   viewport.setPointerCapture(event.pointerId);
 });
 viewport.addEventListener('pointermove', event => {
+  if (state.tool !== 'select') {
+    state.cursor = worldPoint(event);
+    if (drag?.drawing && twoPointTool()) {
+      drag.moved ||= Math.abs(event.clientX - drag.x) + Math.abs(event.clientY - drag.y) >= 4;
+    }
+    draft();
+    return;
+  }
   if (!drag) return;
   const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
   if (!drag.moved && Math.abs(dx) + Math.abs(dy) < 4) return;
@@ -752,11 +1541,16 @@ viewport.addEventListener('pointermove', event => {
   state.y = drag.startY + dy;
   viewportTransform();
 });
-viewport.addEventListener('pointerup', () => {
-  if (drag && !drag.moved) selection(drag.offset === null ? null : Number(drag.offset));
+viewport.addEventListener('pointerup', event => {
+  const finished = drag;
   drag = null;
+  if (finished?.drawing) {
+    state.cursor = worldPoint(event);
+    if (finished.moved && !state.points.length) finishDrawing([finished.start, state.cursor]);
+    else placePoint();
+  } else if (finished && !finished.moved) selection(rootOffset(finished.offset === null ? null : Number(finished.offset)));
 });
-viewport.addEventListener('lostpointercapture', () => { drag = null; });
+viewport.addEventListener('lostpointercapture', () => { drag = null; draft(); });
 window.addEventListener('dragover', event => event.preventDefault());
 window.addEventListener('drop', event => {
   event.preventDefault();
@@ -775,7 +1569,10 @@ function showExample(id) {
   load(sample.name, Uint8Array.from(atob(sample.data), char => char.charCodeAt(0)));
   if (viewport.clientWidth < 640) fit();
 }
-get('examples').addEventListener('change', () => showExample(get('examples').value));
+get('examples').addEventListener('change', () => {
+  closeMenus();
+  showExample(get('examples').value);
+});
 get('examples').value = 'compound-landscape';
 showExample(get('examples').value);
 </script>

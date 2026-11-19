@@ -1,10 +1,10 @@
-"""Inspect the measured DeskMate FF1 family directory in user-supplied resources."""
+"""Inspect DeskMate FF1 directories and outlines in user-supplied resources."""
 import argparse
 from dataclasses import asdict, dataclass
 from hashlib import sha256
 import json
 from pathlib import Path
-from struct import unpack_from
+from struct import iter_unpack, unpack_from
 
 
 MAX_SIZE = 128 * 1024
@@ -44,6 +44,92 @@ class GlyphEntry:
 class GlyphIndex:
     units_per_em_word: int
     entries: tuple[GlyphEntry, ...]
+
+
+Point = tuple[int, int]
+
+
+@dataclass(frozen=True)
+class Contour:
+    start: Point
+    # Line endpoints and cubic triples, in stream order.
+    segments: tuple[tuple[Point, ...], ...]
+
+
+@dataclass(frozen=True)
+class GlyphOutline:
+    bounds: tuple[int, int, int, int]
+    contours: tuple[Contour, ...]
+    auxiliary: bytes
+
+
+def parse_glyph_outline(data, entry):
+    """Read one contour stream, retaining the auxiliary bytes verbatim."""
+    offset = entry.offset
+    prefix_size = 14
+    if offset < 0 or entry.size < prefix_size or offset + entry.size > len(data):
+        raise FontResourceError(f'invalid FF1 glyph extent for code {entry.code}')
+    marker, left, top, right, bottom, size, auxiliary_size = unpack_from('<H4h2H', data, offset)
+    if marker != 1 or prefix_size + size + auxiliary_size != entry.size or left > right or top > bottom:
+        raise FontResourceError(f'unsupported FF1 glyph header for code {entry.code}')
+    start = None
+    segments = []
+    contours = []
+    pos, end = offset + prefix_size, offset + prefix_size + size
+    while pos < end:
+        opcode = data[pos]
+        if opcode > 2:
+            raise FontResourceError(f'unknown FF1 opcode {opcode:#04x} for code {entry.code} at glyph byte {pos-offset}')
+        following = pos + (13 if opcode == 2 else 5)
+        if following > end:
+            raise FontResourceError(f'truncated FF1 command for code {entry.code} at glyph byte {pos-offset}')
+        points = tuple(iter_unpack('<hh', data[pos+1:following]))
+        if opcode == 0:
+            if start is not None:
+                contours.append(Contour(start, tuple(segments)))
+            start, segments = points[0], []
+        elif start is None:
+            raise FontResourceError(f'FF1 contour lacks a move for code {entry.code}')
+        else:
+            segments.append(points)
+        pos = following
+    if start is not None:
+        contours.append(Contour(start, tuple(segments)))
+    if any(c.segments and c.segments[-1][-1] != c.start for c in contours):
+        raise FontResourceError(f'open FF1 contour for code {entry.code}')
+    return GlyphOutline((left, top, right, bottom), tuple(contours), data[end:offset + entry.size])
+
+
+@dataclass(frozen=True)
+class OutlineFace:
+    """Base face of a local FF1 snapshot, keyed by its resource name."""
+
+    name: str
+    sha256: str
+    index: GlyphIndex
+    data: bytes
+
+    def entry(self, code):
+        position = code - self.index.entries[0].code
+        if not 0 <= position < len(self.index.entries):
+            raise FontResourceError(f'code {code} is outside the {self.name} glyph index')
+        return self.index.entries[position]
+
+
+def load_outline_faces(paths):
+    """Load explicitly supplied base faces and reject ambiguous family names."""
+    faces = {}
+    for path in paths:
+        with Path(path).open('rb') as handle:
+            data = handle.read(MAX_SIZE + 1)
+        resource = parse_bytes(data)
+        index = parse_glyph_index(data)
+        name = resource.variants[0].name
+        key = name.casefold()
+        if key in faces and faces[key].sha256 != resource.sha256:
+            raise FontResourceError(f'conflicting FF1 resources for {name}')
+        faces[key] = OutlineFace(name, resource.sha256, index, data)
+    return faces
 
 
 def parse_bytes(data):

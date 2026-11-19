@@ -194,6 +194,22 @@ SVG_ATTRIBUTES = {
     'polyline': {'points', 'fill', 'stroke', 'stroke-width', 'vector-effect'},
 }
 NUMBER = r'-?(?:[0-9]+(?:\.[0-9]+)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?'
+QUADRATIC_PATH = re.compile(rf'M {NUMBER} {NUMBER} Q(?: {NUMBER}){{4}}')
+OUTLINE_CONTOUR = re.compile(rf'M(?: {NUMBER}){{2}}(?: L(?: {NUMBER}){{2}}| C(?: {NUMBER}){{6}})+ Z')
+
+
+def checked_path(value):
+    if QUADRATIC_PATH.fullmatch(value):
+        return True
+    pos = 0
+    while match := OUTLINE_CONTOUR.match(value, pos):
+        pos = match.end()
+        if pos == len(value):
+            return True
+        if value[pos] != ' ':
+            return False
+        pos += 1
+    return False
 
 
 def check_svg(data):
@@ -220,7 +236,7 @@ def check_svg(data):
                 pair = rf'{NUMBER},{NUMBER}'
                 valid = all(re.fullmatch(pair, point) for point in value.split())
             elif key == 'd':
-                valid = re.fullmatch(rf'M {NUMBER} {NUMBER} Q(?: {NUMBER}){{4}}', value)
+                valid = checked_path(value)
             elif key == 'aria-label':
                 valid = len(value) <= 256
             else:

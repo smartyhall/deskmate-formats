@@ -1,0 +1,292 @@
+{
+  "schema_version": 1,
+  "method": "4-neighborhood foreground boundaries; two-way Manhattan distance in matched pixels.",
+  "milestones": {
+    "vga-ff1-03": {
+      "renderer_revision": "9994ce09c62c9792e216dde7e20e2992c3a7c19b",
+      "cases": {
+        "primitives-styles": {
+          "native_boundary_pixels": 17370,
+          "renderer_boundary_pixels": 18124,
+          "mean_l1_pixels": 0.32814,
+          "p95_l1_pixels": 0
+        },
+        "technical-plan": {
+          "native_boundary_pixels": 5870,
+          "renderer_boundary_pixels": 5669,
+          "mean_l1_pixels": 0.105988,
+          "p95_l1_pixels": 1
+        },
+        "compound-landscape": {
+          "native_boundary_pixels": 11415,
+          "renderer_boundary_pixels": 11401,
+          "mean_l1_pixels": 0.008897,
+          "p95_l1_pixels": 0
+        },
+        "typography": {
+          "native_boundary_pixels": 9706,
+          "renderer_boundary_pixels": 9525,
+          "mean_l1_pixels": 1.282773,
+          "p95_l1_pixels": 4
+        },
+        "d01": {
+          "native_boundary_pixels": 33,
+          "renderer_boundary_pixels": 33,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d02": {
+          "native_boundary_pixels": 67,
+          "renderer_boundary_pixels": 67,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d04": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 452,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d05": {
+          "native_boundary_pixels": 528,
+          "renderer_boundary_pixels": 528,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d06": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 452,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d07c": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 452,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d09": {
+          "native_boundary_pixels": 820,
+          "renderer_boundary_pixels": 820,
+          "mean_l1_pixels": 0.118293,
+          "p95_l1_pixels": 1
+        },
+        "d10": {
+          "native_boundary_pixels": 1239,
+          "renderer_boundary_pixels": 1250,
+          "mean_l1_pixels": 0.258738,
+          "p95_l1_pixels": 1
+        },
+        "d11": {
+          "native_boundary_pixels": 231,
+          "renderer_boundary_pixels": 231,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d12": {
+          "native_boundary_pixels": 33,
+          "renderer_boundary_pixels": 33,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d16a": {
+          "native_boundary_pixels": 41,
+          "renderer_boundary_pixels": 41,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d16b": {
+          "native_boundary_pixels": 41,
+          "renderer_boundary_pixels": 41,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d17": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 391,
+          "mean_l1_pixels": 0.170732,
+          "p95_l1_pixels": 1
+        },
+        "d18": {
+          "native_boundary_pixels": 1152,
+          "renderer_boundary_pixels": 1152,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d19": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 391,
+          "mean_l1_pixels": 0.170732,
+          "p95_l1_pixels": 1
+        },
+        "d20": {
+          "native_boundary_pixels": 350,
+          "renderer_boundary_pixels": 350,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d21": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 391,
+          "mean_l1_pixels": 0.170732,
+          "p95_l1_pixels": 1
+        },
+        "d22": {
+          "native_boundary_pixels": 2370,
+          "renderer_boundary_pixels": 2367,
+          "mean_l1_pixels": 0.000633,
+          "p95_l1_pixels": 0
+        },
+        "d23": {
+          "native_boundary_pixels": 380,
+          "renderer_boundary_pixels": 407,
+          "mean_l1_pixels": 0.232529,
+          "p95_l1_pixels": 1
+        }
+      }
+    },
+    "vga-pen-04": {
+      "renderer_revision": "385e90d7a6910a71b12491ae95e390ba160b37bd",
+      "cases": {
+        "primitives-styles": {
+          "native_boundary_pixels": 17370,
+          "renderer_boundary_pixels": 17947,
+          "mean_l1_pixels": 0.284934,
+          "p95_l1_pixels": 0
+        },
+        "technical-plan": {
+          "native_boundary_pixels": 5870,
+          "renderer_boundary_pixels": 5669,
+          "mean_l1_pixels": 0.105988,
+          "p95_l1_pixels": 1
+        },
+        "compound-landscape": {
+          "native_boundary_pixels": 11415,
+          "renderer_boundary_pixels": 11401,
+          "mean_l1_pixels": 0.008897,
+          "p95_l1_pixels": 0
+        },
+        "typography": {
+          "native_boundary_pixels": 9706,
+          "renderer_boundary_pixels": 9525,
+          "mean_l1_pixels": 1.282773,
+          "p95_l1_pixels": 4
+        },
+        "d01": {
+          "native_boundary_pixels": 33,
+          "renderer_boundary_pixels": 33,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d02": {
+          "native_boundary_pixels": 67,
+          "renderer_boundary_pixels": 67,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d04": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 452,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d05": {
+          "native_boundary_pixels": 528,
+          "renderer_boundary_pixels": 528,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d06": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 452,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d07c": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 452,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d09": {
+          "native_boundary_pixels": 820,
+          "renderer_boundary_pixels": 820,
+          "mean_l1_pixels": 0.118293,
+          "p95_l1_pixels": 1
+        },
+        "d10": {
+          "native_boundary_pixels": 1239,
+          "renderer_boundary_pixels": 1250,
+          "mean_l1_pixels": 0.258738,
+          "p95_l1_pixels": 1
+        },
+        "d11": {
+          "native_boundary_pixels": 231,
+          "renderer_boundary_pixels": 231,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d12": {
+          "native_boundary_pixels": 33,
+          "renderer_boundary_pixels": 33,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d16a": {
+          "native_boundary_pixels": 41,
+          "renderer_boundary_pixels": 41,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d16b": {
+          "native_boundary_pixels": 41,
+          "renderer_boundary_pixels": 41,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d17": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 391,
+          "mean_l1_pixels": 0.170732,
+          "p95_l1_pixels": 1
+        },
+        "d18": {
+          "native_boundary_pixels": 1152,
+          "renderer_boundary_pixels": 1152,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d19": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 391,
+          "mean_l1_pixels": 0.170732,
+          "p95_l1_pixels": 1
+        },
+        "d20": {
+          "native_boundary_pixels": 350,
+          "renderer_boundary_pixels": 350,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d21": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 391,
+          "mean_l1_pixels": 0.170732,
+          "p95_l1_pixels": 1
+        },
+        "d22": {
+          "native_boundary_pixels": 2370,
+          "renderer_boundary_pixels": 2367,
+          "mean_l1_pixels": 0.000633,
+          "p95_l1_pixels": 0
+        },
+        "d23": {
+          "native_boundary_pixels": 380,
+          "renderer_boundary_pixels": 407,
+          "mean_l1_pixels": 0.232529,
+          "p95_l1_pixels": 1
+        }
+      }
+    }
+  }
+}

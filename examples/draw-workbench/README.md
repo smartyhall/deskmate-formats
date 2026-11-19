@@ -4,10 +4,9 @@ Open [workbench.html](workbench.html) directly from a local checkout.
 It is a single offline HTML file with the four frozen Draw examples.
 Rebuild it with `python tools/experimental/build_draw_workbench.py`.
 
-The first implementation uses an independently designed period-style
-interface. It follows the observed open, select, zoom, edit and Save As
-workflow. The native title/menu organization, tool interactions and
-dialogs remain documented research references for further work.
+The independently styled interface follows the native function-key menu
+organization and uses the observed open, select, zoom, draw and Save As
+workflows. More detailed native dialogs remain research references.
 See the [native interface observations](../../docs/research/draw-native-ui-20261119.md).
 
 The operator requests a faithful reconstruction of original DeskMate Draw
@@ -23,23 +22,38 @@ only; it is not evidence of actual AROS compatibility or native UI details.
 - Open or drop a local FIG. Pan by dragging or with the arrow keys after
   focusing the canvas. Use Normal, Fit drawing or the zoom buttons. The
   mouse wheel zooms at the pointer.
-- Select an object in the canvas or its display-list row. Inspect native
+- Choose **File → New** to start an unsaved canvas. Draw lines, rectangles,
+  ellipses, polylines or polygons on a qualified flat list. Click twice or
+  drag for a two-point tool. For paths, click each point and press Enter
+  to finish. Escape cancels the draft. Arrow keys move the drawing cursor
+  and Space places a point.
+- Select an object or group in the canvas. Use **Options → Toggle
+  inspector** to access the display list and select a record there. Inspect native
   coordinate words, resolved bounds, raw attributes, group children,
   palette indices and external-font metadata.
 - Edit a top-level line's position or palette index, or resize an ordered
-  top-level rectangle. The editor preserves all enclosing bytes and
-  unrelated records. Undo and redo keep up to 32 prior models.
+  top-level rectangle. Reorder existing roots and change the palette.
+  In the packed flat profile, delete a top-level element or group the
+  whole drawing. Break a supported single group. The label editor accepts
+  a permutation of the existing ASCII label for the qualified outline
+  profile. Undo and redo keep up to 32 prior document models.
 - Download the original FIG byte for byte or save the edited copy as a
   new FIG. SVG and PNG export the current scalable viewport. The optional
   generic text mode is explicitly marked as a substitution in the view
   and exported SVG.
+- Use **Options → Load local FF1 fonts** to render
+  supported external base-face labels. Files stay in the current browser
+  session. The Workbench resolves the internal family name, reports
+  missing faces or unsupported styles, and includes the projected curves
+  in scalable exports. Use **Clear fonts** to release the session copies.
+  The renderer uses nominal advances and unhinted outlines. See the
+  [FF1 measurements](../../docs/research/draw-ii-20261119.md).
 
-The browser uses `O` or the Open FIG button in place of application-level
-function keys. In the native program F2 opens File, F3 Edit, F4 Actions,
-F5 Zoom, F6 Options and F7 Tools. Browser Find and Reload often reserve
-F3 and F5, respectively. Native menu placement and behavior were
-observed over the RSX socket. The browser does not claim the complete
-native menu set or keyboard-mode drawing.
+The visible menu strip follows Help F1, File F2, Edit F3, Actions F4,
+Zoom F5, Options F6 and Tools F7. Use Shift+1 through Shift+7 if your
+browser reserves a function key. Press `O` to open a FIG directly.
+Use Up/Down to navigate an open menu. The viewport displays a scalable
+projection. The separate comparison gallery shows measured RSX rasters.
 
 ## Native validation
 
@@ -52,6 +66,13 @@ The resized rectangle was saved directly. Both native saves reopened
 in original Draw and in Chromium. Both were independently extracted
 from the stopped FAT16 image. See the
 [round-trip evidence](../../docs/research/draw-writing-20261119.md).
+
+Draw II also created new line, rectangle and grouped drawings entirely
+in Chromium. Native Draw reopened all three. The group was selected,
+moved using the native keyboard workflow and saved. Its four leaves
+retained their styles, order and palette, with the native save flattening
+the group. Chromium reopened and downloaded all three extracted native
+saves byte for byte. [Draw II round trip](../../docs/research/draw-ii-20261119.md).
 
 ## Classic interface research
 

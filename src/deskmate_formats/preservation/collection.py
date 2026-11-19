@@ -48,7 +48,7 @@ def _index(entries):
                      f'{exported} exported · {len(entries) - exported} failed', body)
 
 
-def export(directory, output, *, application=None, instruments=None, sample_policy='rsx-ranges'):
+def export(directory, output, *, application=None, instruments=None, sample_policy='rsx-ranges', outline_faces=None):
     """Export direct files in stable order. Each per-file failure is recorded."""
     paths = _input_files(directory)
     output = Path(output)
@@ -61,7 +61,7 @@ def export(directory, output, *, application=None, instruments=None, sample_poli
             if not bundle.regular_file(source):
                 raise PreservationError('not_regular_file', 'Batch inputs must be regular files.')
             result = bundle.export(source, target, application=application,
-                                   instruments=instruments, sample_policy=sample_policy)
+                                   instruments=instruments, sample_policy=sample_policy, outline_faces=outline_faces)
         except (PreservationError, OSError) as exc:
             entries.append({'filename': source.name, 'status': 'failed', 'failure': error_report(exc)})
         else:

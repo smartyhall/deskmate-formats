@@ -7,7 +7,7 @@ import subprocess
 
 from PIL import Image, __version__ as pillow_version
 
-from deskmate_formats import draw, graphics, graphics_raster
+from deskmate_formats import draw, font_resources, graphics, graphics_raster
 
 from draw_comparison_baseline import NATIVE_BACKGROUND, audit, capture, measure, put, put_json, rasterize, save_png
 
@@ -15,10 +15,15 @@ from draw_comparison_baseline import NATIVE_BACKGROUND, audit, capture, measure,
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def pinned_code():
+FONT_MILESTONES = ('vga-ff1-03', 'vga-pen-04')
+MILESTONES = ('arc-vector-01', 'vga-raster-01', 'vga-strokes-02', *FONT_MILESTONES)
+
+
+def pinned_code(*, use_fonts=False):
     revision = subprocess.check_output(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], text=True).strip()
     pins = {}
-    for module in (draw, graphics, graphics_raster):
+    modules = (draw, graphics, graphics_raster)
+    for module in (*modules, font_resources) if use_fonts else modules:
         path = Path(module.__file__).resolve()
         name = path.relative_to(ROOT).as_posix()
         expected = subprocess.check_output(['git', '-C', str(ROOT), 'show', f'{revision}:{name}'])
@@ -29,7 +34,13 @@ def pinned_code():
 
 
 def build(args):
-    revision, pins = pinned_code()
+    using_fonts = any(name in FONT_MILESTONES for name in args.milestone)
+    if using_fonts and len(args.milestone) != 1:
+        raise ValueError('build font milestones separately')
+    faces = font_resources.load_outline_faces(args.ff1)
+    if bool(faces) != using_fonts:
+        raise ValueError('the FF1 milestone requires local pinned FF1 resources')
+    revision, pins = pinned_code(use_fonts=using_fonts)
     library = ROOT / audit.TREE
     baseline = json.loads((library / audit.BASELINE / 'manifest.json').read_text(encoding='utf-8'))
     verified = json.loads(args.disk_verification.read_text(encoding='utf-8'))
@@ -50,15 +61,21 @@ def build(args):
         receipt['source_role'] = 'verified-identical-native-recapture'
         receipt['baseline_framebuffer_sha256'] = case['native_capture']['framebuffer_sha256']
         drawing = draw.parse_bytes(source_data)
-        preview = graphics.preview_svg(drawing.form, drawing.palette)
+        for family, spec in case['font_resources'].items():
+            if using_fonts and (family.casefold() not in faces or faces[family.casefold()].sha256 != spec['sha256']):
+                raise ValueError(f'{dos_name} requires the pinned {family} FF1')
+        preview = graphics.preview_svg(drawing.form, drawing.palette, outline_faces=faces)
         source_receipts.append((case, native, receipt, drawing, preview))
-    vector, flags = rasterize(args.browser, [item[4] for item in source_receipts],
-                              [item[0]['renderer_background'] for item in source_receipts])
+    vector, flags = [None] * len(source_receipts), []
+    if 'arc-vector-01' in args.milestone:
+        if not args.browser or not args.browser_version:
+            raise ValueError('the vector milestone requires the browser and its version')
+        vector, flags = rasterize(args.browser, [item[4] for item in source_receipts],
+                                  [item[0]['renderer_background'] for item in source_receipts])
     profiles = {
         'arc-vector-01': {
             'mode': 'scalable SVG at Normal-zoom viewport',
-            'rasterizer': baseline['rasterizer'] | {'version': args.browser_version, 'flags': flags,
-                                                   'executable_sha256': sha256(args.browser.read_bytes()).hexdigest()},
+            'rasterizer': baseline['rasterizer'] | {'version': args.browser_version, 'flags': flags},
             'limits': 'Shared quadratic arcs. Solid one-pixel SVG strokes and solid fill approximations. '
                       'Cobb remains omitted. VGA colors and browser antialiasing differ.',
         },
@@ -75,9 +92,25 @@ def build(args):
             'limits': 'Adds measured horizontal and vertical line styles and widths. Diagonal and shape '
                       'outlines remain approximate. Text is omitted. The SVG is a separate scalable preview.',
         },
+        'vga-ff1-03': {
+            'mode': 'experimental RSX raster with local FF1 cubic outlines',
+            'rasterizer': {'name': 'Independent RSX raster', 'version': '3', 'png_encoder': f'Pillow {pillow_version}'},
+            'limits': 'Unhinted base-face fill using decoded contours and nominal advance words. '
+                      'Font raster quantization, sizing, colors, pair adjustments and embedded stroke text '
+                      'remain incompletely understood. Diagonal and shape outlines remain approximate.',
+        },
+        'vga-pen-04': {
+            'mode': 'experimental RSX raster with the square line pen and slanted brush',
+            'rasterizer': {'name': 'Independent RSX raster', 'version': '4', 'png_encoder': f'Pillow {pillow_version}'},
+            'limits': 'Keeps local unhinted FF1 outlines. Adds directed oblique line stepping, '
+                      'pen stamps and dash timing. Slanted brush spans and other shape outlines '
+                      'remain approximate.',
+        },
     }
     for name in args.milestone:
         profile = profiles[name]
+        if name == 'arc-vector-01':
+            profile['rasterizer']['executable_sha256'] = sha256(args.browser.read_bytes()).hexdigest()
         directory = library / name
         if (directory / 'manifest.json').exists():
             previous = json.loads((directory / 'manifest.json').read_text(encoding='utf-8'))
@@ -90,7 +123,7 @@ def build(args):
                                                    'font_resources', 'native_background')}
             case['native_capture'] = receipt
             if name.startswith('vga-'):
-                raster = graphics_raster.preview_rsx(drawing.form, drawing.palette)
+                raster = graphics_raster.preview_rsx(drawing.form, drawing.palette, outline_faces=faces)
                 projection = Image.frombytes('RGB', (raster.width, raster.height), raster.rgb)
                 background = raster.background
                 current = raster
@@ -99,6 +132,11 @@ def build(args):
                 background = tuple(bytes.fromhex(original['renderer_background'][1:]))
                 current = preview
             case['renderer_background'] = '#%02x%02x%02x' % background
+            if using_fonts:
+                case['renderer_font_resources'] = {
+                    family: {'sha256': faces[family.casefold()].sha256, 'mode': 'local-unhinted-base-face'}
+                    for family in case['font_resources']
+                }
             case['rendered_elements'] = current.rendered_elements
             case['omissions'] = [vars(item) for item in current.omissions]
             diff, case['metrics'] = measure(native, projection, NATIVE_BACKGROUND, background)
@@ -128,9 +166,10 @@ def build(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ('evidence', 'disk-verification', 'browser'):
+    for name in ('evidence', 'disk-verification'):
         parser.add_argument('--' + name, type=Path, required=True)
-    parser.add_argument('--browser-version', required=True)
-    parser.add_argument('--milestone', choices=('arc-vector-01', 'vga-raster-01', 'vga-strokes-02'),
-                        action='append', required=True)
+    parser.add_argument('--browser', type=Path)
+    parser.add_argument('--browser-version')
+    parser.add_argument('--ff1', type=Path, action='append', default=[])
+    parser.add_argument('--milestone', choices=MILESTONES, action='append', required=True)
     build(parser.parse_args())

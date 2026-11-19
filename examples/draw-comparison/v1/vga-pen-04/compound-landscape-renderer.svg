@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="141.5 261.5 7497 4387">
+<desc>DeskMate geometry preview with approximate fills, stroke styles and text spacing.</desc>
+<rect x="141.5" y="261.5" width="7497" height="4387" fill="#000080"/>
+<ellipse cx="6570" cy="925" rx="500" ry="485" fill="#c0c000" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<polygon points="320,2590 1630,850 2500,2080 3650,650 5360,2640 7260,1980 7460,4200 320,4200" fill="#008080" stroke="#008080" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<polygon points="330,2910 2150,2480 3900,2920 5400,2360 7460,2530 7460,4390 330,4390" fill="#008000" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<polygon points="4000,3680 5530,3000 7440,2850 7440,4470 2820,4470" fill="#008080" stroke="#008080" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="4320" y1="3400" x2="7110" y2="3400" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="4680" y1="3545" x2="7024" y2="3545" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="5040" y1="3690" x2="6938" y2="3690" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="5400" y1="3835" x2="6852" y2="3835" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="5760" y1="3980" x2="6766" y2="3980" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="1600" y="2230" width="2370" height="1440" fill="#808000" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<polygon points="1420,2340 2740,1470 4160,2340" fill="#c00000" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="1920" y="2630" width="440" height="470" fill="#008080" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="2140" y1="2630" x2="2140" y2="3100" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="1920" y1="2865" x2="2360" y2="2865" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="3260" y="2630" width="410" height="470" fill="#008080" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="3470" y1="2630" x2="3470" y2="3100" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="3260" y1="2865" x2="3670" y2="2865" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="2540" y="2750" width="500" height="920" fill="#800000" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="800" y1="3560" x2="800" y2="3740" stroke="#808000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<polygon points="430,3560 800,2790 1170,3560" fill="#008000" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="1180" y1="3800" x2="1180" y2="3980" stroke="#808000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<polygon points="921,3800 1180,3315 1439,3800" fill="#008000" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="4690" y1="2680" x2="4690" y2="2860" stroke="#808000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<polygon points="4450,2680 4690,2243 4930,2680" fill="#008000" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="5320" y1="2690" x2="5320" y2="2870" stroke="#808000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<polygon points="5024,2690 5320,2110 5616,2690" fill="#008000" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+</svg>

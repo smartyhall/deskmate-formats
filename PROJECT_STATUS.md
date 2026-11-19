@@ -1,5 +1,17 @@
 # Project status — DeskMate formats
 
+## Draw II typography, raster and browser authoring — 2026-11-19
+
+The shared graphics engine reads the outline command streams in all
+672 glyph records of the pinned Cobb, Dixon and Marin resources. It
+accepts local FF1s for SVG and experimental RSX raster output. The two
+new frozen comparison milestones raise typography foreground overlap
+to 43.76% and retain Cedar Lake at 99.91%. Nine isolated oblique grids
+match the native RSX pixels. The offline browser can author native FIGs
+from a blank canvas, including a grouped four-object control that Draw
+opened, moved, saved and reopened. Native Draw flattens the group
+during that move. [Draw II evidence](docs/research/draw-ii-20261119.md).
+
 ## Draw preservation and native graphics — 2026-11-19
 
 The Draw campaign freezes four original native-resaved figures and

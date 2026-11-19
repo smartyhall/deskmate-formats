@@ -1,9 +1,9 @@
 """Bounded experimental native-resolution graphics profile for the RSX VGA oracle."""
 from dataclasses import dataclass
-from math import cos, pi, sin
+from math import ceil, cos, pi, sin
 from struct import unpack_from
 
-from .graphics import SvgOmission, arc_quadratic
+from .graphics import MAX_PREVIEW_OUTLINE_BYTES, OUTLINE_INK_INDEX, SvgOmission, arc_quadratic, outline_layout
 
 
 WIDTH, HEIGHT = 640, 418
@@ -41,6 +41,11 @@ AXIS_STROKES = (
     ('1', '0', '1000', '11100111', '10011100', '10', '1100', '00010000'),
     ('1', '0', '00000011', '1111100011111111', '0000111111100011', '1001', '11100011', '0000011000000000'),
 )
+# Weight-one dash bits applied to the centers of the 2 x 2 pixel pen.
+SQUARE_PEN_DASHES = ('1', '0', '00000010', '1111100001111111', '0000111111000010',
+                     '0001', '11000011', '0000010000000000')
+# Normal-zoom nib endpoints observed in the forward horizontal controls.
+BRUSH_NIBS = {17: ((1, -1), (-2, 2)), 18: ((4, -3), (-3, 4)), 19: ((5, -5), (-6, 6))}
 
 
 @dataclass(frozen=True)
@@ -53,8 +58,25 @@ class RasterPreview:
     background: tuple[int, int, int]
 
 
-def _point(x, y):
-    return int(x * 2 / 25), int(y * 19 / 220)
+@dataclass(frozen=True)
+class RasterViewport:
+    """The unscrolled 640 × 418 RSX drawing area at a measured zoom."""
+
+    zoom: int = 1
+
+    def __post_init__(self):
+        if type(self.zoom) is not int or self.zoom not in (1, 2, 4):
+            raise ValueError('RSX raster viewport supports Normal, Two times and Four times')
+
+    def project(self, x, y):
+        return x * self.zoom * 2 / 25, y * self.zoom * 19 / 220
+
+    def point(self, x, y):
+        px, py = self.project(x, y)
+        return int(px), int(py)
+
+
+NORMAL_VIEWPORT = RasterViewport()
 
 
 def _clip(start, end):
@@ -119,6 +141,35 @@ def _axis_stroke(image, start, end, rgb, style, weight, vertical):
             image[index:index + 3] = rgb
 
 
+def _square_pen_stroke(image, start, end, rgb, style, weight):
+    """Sweep the measured VGA pen over a line in the original dash phase."""
+    dx, dy = end[0] - start[0], end[1] - start[1]
+    vertical = abs(dy) > abs(dx)
+    major, minor = (1, 0) if vertical else (0, 1)
+    length, run = abs(end[major] - start[major]), abs(end[minor] - start[minor])
+    direction = 1 if end[major] >= start[major] else -1
+    transverse = 1 if end[minor] >= start[minor] else -1
+    lead = max(0, weight - 1)
+    extent = HEIGHT if vertical else WIDTH
+    low, high = -weight, extent - 1 + lead
+    distances = sorted(((low - start[major]) * direction, (high - start[major]) * direction))
+    pattern = '1' if weight >= 2 else (SQUARE_PEN_DASHES if weight else AXIS_STROKES[0])[style]
+    for step in range(max(0, distances[0]), min(length, distances[1]) + 1):
+        if pattern[step % len(pattern)] == '0':
+            continue
+        # At a half-pixel tie, choose the step nearest the lower major coordinate.
+        offset = (2 * step * run + length - (direction > 0)) // (2 * length) if length else 0
+        position = start[major] + direction * step
+        cross = start[minor] + transverse * offset
+        x, y = (cross, position) if vertical else (position, cross)
+        first, last = max(0, x - lead), min(WIDTH, x + weight + 1)
+        if first < last:
+            pixels = rgb * (last - first)
+            for row in range(max(0, y - lead), min(HEIGHT, y + weight + 1)):
+                at = 3 * (row * WIDTH + first)
+                image[at:at + len(pixels)] = pixels
+
+
 def _fill_span(image, x0, x1, y, tile, fg, bg):
     start, end = max(0, x0), min(WIDTH - 1, x1)
     if not 0 <= y < HEIGHT or start > end:
@@ -147,47 +198,147 @@ def _fill_polygon(image, edges, min_y, max_y, tile, fg, bg):
             _fill_span(image, round(a), round(b), y, tile, fg, bg)
 
 
-def _shape(element):
+def _brush_segment(image, start, end, rgb, nib):
+    """Approximate the native slanted brush polygon and inclusive edges."""
+    (u, v), (s, t) = nib
+    a, b = start
+    c, d = end
+    vertices = [(a + u, b + v), (c + u, d + v), (c + s, d + t), (a + s, b + t)]
+    edges = _segments(vertices, True)
+    first = min(b, d) + min(v, t)
+    last = max(b, d) + max(v, t)
+    for y in range(max(0, first), min(HEIGHT - 1, last) + 1):
+        crossings = []
+        for (x0, y0), (x1, y1) in edges:
+            if min(y0, y1) <= y <= max(y0, y1):
+                if y0 == y1:
+                    crossings.extend((x0, x1))
+                else:
+                    crossings.append(x0 + (x1 - x0) * (y - y0) / (y1 - y0))
+        _fill_span(image, round(min(crossings)), round(max(crossings)) + (b != d), y, TILES[1], rgb, rgb)
+    for start_edge, end_edge in edges:
+        _line(image, start_edge, end_edge, rgb)
+
+
+def _shape(element, point):
     a, b, c, d = element.bounds
     el, raw = element.kind, element.raw
     if el == 'L':
-        return [_point(a, b), _point(c, d)], False, raw[18], None
+        return [point(a, b), point(c, d)], False, raw[18], None
     if el == 'R':
-        points = [_point(a, b), _point(c, b), _point(c, d), _point(a, d)]
+        points = [point(a, b), point(c, b), point(c, d), point(a, d)]
         return points, True, raw[18], (raw[1], raw[22], raw[21])
     if el == 'E':
         # The contour sampler approximates the native integer ellipse walk.
-        points = [_point((a + c + (c - a) * cos(t * pi / 180)) / 2,
+        points = [point((a + c + (c - a) * cos(t * pi / 180)) / 2,
                          (b + d + (d - b) * sin(t * pi / 180)) / 2) for t in range(360)]
         return points, True, raw[18], (raw[1], raw[22], raw[21])
     if el == 'UA':
         quadratic = arc_quadratic(element)
         if quadratic is not None:
             p0, q, p1 = quadratic
-            points = [_point(*((1-t)**2*v0 + 2*(1-t)*t*vq + t*t*v1 for v0, vq, v1 in zip(p0, q, p1)))
+            points = [point(*((1-t)**2*v0 + 2*(1-t)*t*vq + t*t*v1 for v0, vq, v1 in zip(p0, q, p1)))
                       for i in range(257) for t in (i / 256,)]
             return points, False, raw[20], None
     if el == 'UP' and len(element.points) >= 2:
         sx, sy = unpack_from('<HH', raw, 28)
-        points = [_point(a + (x * (c-a) / sx if sx else 0), b + (y * (d-b) / sy if sy else 0))
+        points = [point(a + (x * (c-a) / sx if sx else 0), b + (y * (d-b) / sy if sy else 0))
                   for x, y in element.points]
         return points, bool(raw[32] or raw[33]), raw[20], ((raw[24], raw[26], raw[25]) if raw[32] else None)
     return None
 
 
-def preview_rsx(form, palette):
-    """Render the Normal-zoom RSX drawing crop with the measured fill profiles.
+def _glyph_edges(glyph, viewport):
+    edges = []
+    for start, segments in glyph:
+        previous = viewport.project(*start)
+        for segment in segments:
+            points = tuple(viewport.project(*point) for point in segment)
+            if len(points) == 1:
+                edges.append((previous, points[0]))
+            else:
+                a, b, c = points
+                length = sum(max(abs(q[0]-p[0]), abs(q[1]-p[1]))
+                             for p, q in zip((previous, a, b), points))
+                count = min(32, max(2, ceil(length / 2)))
+                point = previous
+                for i in range(1, count + 1):
+                    t = i / count
+                    u = 1 - t
+                    next_point = tuple(u**3*p + 3*u*u*t*v + 3*u*t*t*w + t**3*q
+                                       for p, v, w, q in zip(previous, a, b, c))
+                    edges.append((point, next_point))
+                    point = next_point
+            previous = points[-1]
+    return edges
 
-    Uses measured axis-aligned line styles and screen-phase fill tiles, with
-    approximate ellipse/curve stepping and polygon scan conversion. Stroke
-    styles of other outlines use a one-pixel solid approximation. Text is omitted.
+
+def _fill_glyph(image, edges, rows, color):
+    for y in rows:
+        sample_y = y + .5
+        crossings = []
+        for (x0, y0), (x1, y1) in edges:
+            if min(y0, y1) <= sample_y < max(y0, y1):
+                x = x0 + (x1 - x0) * (sample_y - y0) / (y1 - y0)
+                crossings.append((x, 1 if y1 > y0 else -1))
+        winding = 0
+        start = 0
+        for x, delta in sorted(crossings):
+            if winding == 0:
+                start = max(0, ceil(x - .5))
+            winding += delta
+            if winding == 0:
+                end = min(WIDTH, ceil(x - .5))
+                if start < end:
+                    offset = 3 * (y * WIDTH + start)
+                    image[offset:offset + 3 * (end - start)] = color * (end - start)
+
+
+def _raster_outlines(image, glyphs, color, budget, viewport):
+    prepared = []
+    cost = 0
+    for glyph in glyphs:
+        if not glyph:
+            continue
+        edges = _glyph_edges(glyph, viewport)
+        ys = [y for edge in edges for _, y in edge]
+        rows = range(max(0, ceil(min(ys) - .5)), min(HEIGHT, ceil(max(ys) - .5)))
+        cost += len(edges) * (1 + len(rows)) + WIDTH * len(rows)
+        if cost > budget:
+            return None
+        prepared.append((edges, rows))
+    for edges, rows in prepared:
+        _fill_glyph(image, edges, rows, color)
+    return cost
+
+
+def preview_rsx(form, palette, *, outline_faces=None, viewport=NORMAL_VIEWPORT):
+    """Render the RSX drawing crop. Style measurements use the Normal viewport.
+
+    Uses measured line pens, dash masks and screen-phase fill tiles, with
+    approximate brush, ellipse, curve and polygon rasterization. Other
+    outlines use a one-pixel solid approximation. Supplied
+    FF1 base faces use an unhinted, pixel-center contour fill.
     """
     colors = {index: bytes((channel >> 2) * 255 // 63 for channel in rgb) for index, *rgb in palette}
     background = colors.get(0, b'\0\0\x81')
     image = bytearray(background * (WIDTH * HEIGHT))
     rendered, omitted, budget = 0, [], MAX_WORK
+    outline_budget = MAX_PREVIEW_OUTLINE_BYTES
     for record in form.draw_order():
-        shape = _shape(record) if budget > 0 else None
+        if record.kind == 'Uf' and outline_faces and budget > 0:
+            glyphs, cost, reason = outline_layout(record, outline_faces, outline_budget)
+            outline_budget -= cost
+            if reason is None:
+                cost = _raster_outlines(image, glyphs, colors.get(OUTLINE_INK_INDEX, bytes(3)), budget, viewport)
+                if cost is not None:
+                    budget -= cost
+                    rendered += 1
+                    continue
+                reason = 'raster_work_limit'
+            omitted.append(SvgOmission(record.offset, '5566', reason))
+            continue
+        shape = _shape(record, viewport.point) if budget > 0 else None
         if shape is None:
             reason = 'raster_work_limit' if budget <= 0 else 'unsupported_rsx_raster_element'
             omitted.append(SvgOmission(record.offset, record.kind.encode('latin-1').hex(), reason))
@@ -196,6 +347,9 @@ def preview_rsx(form, palette):
         min_y, max_y = min(y for x, y in points), max(y for x, y in points)
         rows = max(0, min(HEIGHT, max_y + 1) - max(0, min_y))
         cost = len(points) * (640 + rows)
+        nib = BRUSH_NIBS.get(record.raw[23]) if record.kind == 'UP' and record.raw[24] == 254 else None
+        if nib:
+            cost += len(points) * (4 * HEIGHT + 12 * WIDTH)
         if cost > budget:
             omitted.append(SvgOmission(record.offset, record.kind.encode('latin-1').hex(), 'raster_work_limit'))
             continue
@@ -206,9 +360,14 @@ def preview_rsx(form, palette):
             _fill_polygon(image, edges, min_y, max_y, tile, fg, bg)
         outline = colors.get(color_index, bytes(3))
         x0, y0, x1, y1 = record.bounds
-        if (record.kind == 'L' and (x0 == x1 or y0 == y1)
-                and record.modifier < 8 and record.raw[19] < 4):
-            _axis_stroke(image, *points, outline, record.modifier, record.raw[19], vertical=x0 == x1)
+        if record.kind == 'L' and record.modifier < 8 and record.raw[19] < 4:
+            if x0 == x1 or y0 == y1:
+                _axis_stroke(image, *points, outline, record.modifier, record.raw[19], vertical=x0 == x1)
+            else:
+                _square_pen_stroke(image, *points, outline, record.modifier, record.raw[19])
+        elif nib:
+            for a, b in edges:
+                _brush_segment(image, a, b, outline, nib)
         else:
             for a, b in edges:
                 _line(image, a, b, outline)

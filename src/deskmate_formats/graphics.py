@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from html import escape
 from struct import unpack_from
 
+from .font_resources import FontResourceError, parse_glyph_outline
+
 
 HEADER_SIZE = 18
 PREFIX_SIZE = HEADER_SIZE + 4
@@ -11,6 +13,8 @@ ELEMENT_SIZE = 18
 PRIMITIVE_SIZES = {'L': 20, 'R': 24, 'E': 24}
 PREVIEW_KINDS = frozenset((*PRIMITIVE_SIZES, 'UP'))
 MAX_PREVIEW_STROKE_POINTS = 100_000
+MAX_PREVIEW_OUTLINE_BYTES = 200_000
+OUTLINE_INK_INDEX = 1
 
 
 class GraphicsFormatError(ValueError):
@@ -335,11 +339,82 @@ def _svg_stroke_text(element, glyphs, colors):
             f'fill="none" stroke="{color}" stroke-width="1">' + ''.join(paths) + '</g>')
 
 
-def preview_svg(form, palette=(), *, substitute_external_fonts=False):
+def outline_layout(element, faces, byte_budget):
+    """Project the measured unrotated Uf profile into world-space glyph paths.
+
+    Returns (glyph paths, charged bytes, omission reason). Glyph paths are
+    independent so ink from adjacent glyphs cannot cancel in overlapping areas.
+    """
+    run = external_font_run(element)
+    if run is None:
+        return (), 0, 'invalid_external_font_descriptor'
+    face = faces.get(run.name.casefold())
+    if face is None:
+        return (), 0, 'external_font_reference'
+    if (run.attributes[1:] != b'\xff\0\0\0\0'
+            or (run.attributes[0] != 1 and face.name.casefold() != 'cobb')
+            or run.descriptor[4:28] != b'\0\0\0\0\x0c\0\xff' + bytes(17)
+            or run.descriptor[34:36] != b'\x01\0'
+            or not run.point_size_word or not run.width_percent_word):
+        return (), 0, 'unsupported_external_font_transform_or_style'
+    try:
+        entries = [face.entry(code) for code in run.text_bytes]
+    except FontResourceError as error:
+        return (), 0, str(error)
+    cost = sum(entry.size for entry in entries)
+    if cost > byte_budget:
+        return (), 0, 'outline_byte_limit'
+    x, y = unpack_from('<hh', run.descriptor, 36)
+    sy = run.point_size_word * 1000 / (72 * face.index.units_per_em_word)
+    sx = sy * run.width_percent_word / 100
+    glyphs = []
+    advance = 0
+    outlines = {}
+
+    def project(point):
+        return x + (advance + point[0]) * sx, y + point[1] * sy
+
+    for entry in entries:
+        if entry.code not in outlines:
+            try:
+                outlines[entry.code] = parse_glyph_outline(face.data, entry)
+            except FontResourceError as error:
+                return (), cost, str(error)
+        outline = outlines[entry.code]
+        glyphs.append(tuple(
+            (project(contour.start), tuple(tuple(map(project, segment)) for segment in contour.segments))
+            for contour in outline.contours if contour.segments
+        ))
+        advance += entry.advance_word
+    return tuple(glyphs), cost, None
+
+
+def _svg_outline_text(glyphs, colors):
+    color = colors.get(OUTLINE_INK_INDEX, '#333333')
+
+    def coordinates(points):
+        return ' '.join(_number(value) for point in points for value in point)
+
+    paths = []
+    for glyph in glyphs:
+        if not glyph:
+            continue
+        commands = []
+        for start, segments in glyph:
+            commands.append('M ' + coordinates((start,)))
+            for segment in segments:
+                commands.append(('L ' if len(segment) == 1 else 'C ') + coordinates(segment))
+            commands.append('Z')
+        paths.append(f'<path d="{" ".join(commands)}" fill="{color}"/>')
+    return ''.join(paths)
+
+
+def preview_svg(form, palette=(), *, substitute_external_fonts=False, outline_faces=None):
     """Return the geometry preview, dimensions and omitted element locations.
 
     Palette entries are (index, red, green, blue). Stroke styles and patterned
-    fills use solid approximations. Unrotated T text with a complete embedded
+    fills use solid approximations. Supplied FF1 faces project the supported
+    unrotated outline text. Unrotated T text with a complete embedded
     glyph bank uses fixed cell advances. Unsupported records are listed in the
     SVG description and remain available on the original Form.
     """
@@ -353,6 +428,7 @@ def preview_svg(form, palette=(), *, substitute_external_fonts=False):
             pass
     point_costs = {key: sum(map(len, glyph.paths)) for key, glyph in glyphs.items()}
     point_budget = MAX_PREVIEW_STROKE_POINTS
+    outline_budget = MAX_PREVIEW_OUTLINE_BYTES
     shapes, bounds, missing = [], [], []
     substitutions = 0
     for element in leaves:
@@ -367,14 +443,22 @@ def preview_svg(form, palette=(), *, substitute_external_fonts=False):
             shape = _svg_arc(element, colors, arc)
         elif element.kind in PREVIEW_KINDS:
             shape = _svg_element(element, colors)
-        elif substitute_external_fonts and element.kind == 'Uf' and element.text_bytes:
-            x0, y0, x1, y1 = element.bounds
-            label = ''.join(c if ord(c) >= 0x20 else '\ufffd' for c in element.text_bytes.decode('cp437'))
-            color = colors.get(element.raw[20], '#333333')
-            shape = (f'<text x="{_number(min(x0, x1))}" y="{_number(max(y0, y1))}" '
-                     f'font-size="{_number(max(1, abs(y1-y0)))}" font-family="monospace" '
-                     f'fill="{color}">{escape(label)}</text>')
-            substitutions += 1
+        elif element.kind == 'Uf':
+            outlines, cost, reason = outline_layout(element, outline_faces or {}, outline_budget)
+            outline_budget -= cost
+            if reason is None:
+                shape = _svg_outline_text(outlines, colors)
+            elif substitute_external_fonts and element.text_bytes:
+                x0, y0, x1, y1 = element.bounds
+                label = ''.join(c if ord(c) >= 0x20 else '\ufffd' for c in element.text_bytes.decode('cp437'))
+                color = colors.get(OUTLINE_INK_INDEX, '#333333')
+                shape = (f'<text x="{_number(min(x0, x1))}" y="{_number(max(y0, y1))}" '
+                         f'font-size="{_number(max(1, abs(y1-y0)))}" font-family="monospace" '
+                         f'fill="{color}">{escape(label)}</text>')
+                substitutions += 1
+            else:
+                missing.append(SvgOmission(element.offset, '5566', reason))
+                continue
         elif (element.kind == 'T' and element.text_bytes and element.raw[21] == 0
               and all((element.modifier, code) in glyphs for code in element.text_bytes)):
             cost = sum(point_costs[element.modifier, code] for code in element.text_bytes)
@@ -412,6 +496,7 @@ def preview_svg(form, palette=(), *, substitute_external_fonts=False):
     return SvgPreview(svg, box, geometry, len(shapes), tuple(missing))
 
 
-def render_svg(form, palette=(), *, substitute_external_fonts=False):
+def render_svg(form, palette=(), *, substitute_external_fonts=False, outline_faces=None):
     """Return the stand-alone SVG string for the measured geometry preview."""
-    return preview_svg(form, palette, substitute_external_fonts=substitute_external_fonts).svg
+    return preview_svg(form, palette, substitute_external_fonts=substitute_external_fonts,
+                       outline_faces=outline_faces).svg

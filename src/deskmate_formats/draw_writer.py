@@ -5,6 +5,13 @@ from . import draw, graphics, graphics_edit
 
 
 LIST_START = draw.PAGE_SETUP_SIZE + graphics.PREFIX_SIZE
+_DEFAULT_PAGE_SETUP = bytes.fromhex('1446494700002a2828006e2d2d0050423c0000000100')
+_DEFAULT_PALETTE = (
+    (0, 0, 128), (192, 192, 0), (192, 192, 192), (128, 0, 0),
+    (0, 128, 128), (0, 0, 192), (192, 0, 0), (128, 128, 128),
+    (64, 64, 64), (0, 128, 128), (0, 192, 0), (128, 0, 128),
+    (128, 128, 0), (192, 0, 192), (0, 128, 0), (0, 0, 0),
+)
 
 
 def _snapshot(source):
@@ -142,9 +149,35 @@ def add_ellipse(source, coords, *, color=1, fill=None):
     return _rebuild_flat(source, new=graphics_edit.ellipse_record(coords, color, fill))
 
 
+def add_rectangle(source, coords, *, color=1, fill=None):
+    """Append a rectangle with ordered exact fixed bounds to a supported flat FIG."""
+    return _rebuild_flat(source, new=graphics_edit.rectangle_record(coords, color, fill))
+
+
 def add_polyline(source, points, *, color=1, closed=False, fill=None):
     """Append an integral polyline or polygon to a supported flat FIG."""
     return _rebuild_flat(source, new=graphics_edit.polyline_record(points, color, closed, fill))
+
+
+def new_drawing(kind, geometry, *, color=1, fill=None):
+    """Construct a new single-primitive FIG using the measured default profile."""
+    if kind == 'L' and fill is None:
+        record = graphics_edit.line_record(geometry, color)
+    elif kind == 'E':
+        record = graphics_edit.ellipse_record(geometry, color, fill)
+    elif kind == 'R':
+        record = graphics_edit.rectangle_record(geometry, color, fill)
+    elif kind in ('polyline', 'polygon'):
+        record = graphics_edit.polyline_record(geometry, color, kind == 'polygon', fill)
+    else:
+        raise graphics.GraphicsFormatError('unsupported first primitive')
+    first = 0x1C78
+    listing = _rebuild_listing([(1, record)], first)
+    palette = b''.join(bytes((index, *rgb)) for index, rgb in enumerate(_DEFAULT_PALETTE))
+    header = pack('<BB8H', 1, 1, len(listing) // 2, 2, 2, 3, 1, 0, first, first + len(listing))
+    data = _DEFAULT_PAGE_SETUP + header + pack('<HH', len(listing), 2) + listing + b'\0\0\x10\0' + palette + b'\0'
+    draw.parse_bytes(data)
+    return data
 
 
 def delete(source, tag):

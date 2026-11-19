@@ -1,0 +1,2374 @@
+{
+  "schema_version": 1,
+  "suite_version": "v1",
+  "publication": "original-synthetic-drawing-crops",
+  "view_mapping": {
+    "native_frame_origin_xy": [
+      0,
+      62
+    ],
+    "world_view_box": [
+      0,
+      0,
+      8000,
+      4840
+    ],
+    "world_to_crop_pixel_continuous_scale": [
+      0.08,
+      0.08636363636363636
+    ],
+    "method": "World origin fixed from viewport control; independent X/Y scale, no alignment fit per case."
+  },
+  "metric_version": "raw-rgb-foreground-v1",
+  "milestone": "vga-ff1-03",
+  "renderer_revision": "9994ce09c62c9792e216dde7e20e2992c3a7c19b",
+  "renderer_source_sha256": {
+    "src/deskmate_formats/draw.py": "56b1a151210b086a503b6ce037b5d5982ef39db558b31aef0d8d39f0ee1ea74b",
+    "src/deskmate_formats/graphics.py": "215fd50273e7bee6ef1de3d692f25b6242ed00c31ba36fe8f83542c8149fe13a",
+    "src/deskmate_formats/graphics_raster.py": "cde58660d8333b18d267b31b1b75ee95d16d456c3909112c0db7a6a1beae65ce",
+    "src/deskmate_formats/font_resources.py": "7bb2eca8bb68ceef480a2b147e5d323d5b9ff143acf2b69968a6baa0c86de6b2"
+  },
+  "native_profile": {
+    "emulator_terminal_ms": 365409,
+    "deskMate_version": "03.05.00",
+    "starting_nvram_sha256": "481b201d15d7603740c823b9b4f0d61dda630384b5fd7503edb847a58fed37be",
+    "capture_condition": "Fixed Normal zoom, fresh Draw DOS launch, pointer parked above canvas, 450 ms stable repaint check",
+    "emulator_binary_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+    "rsx_bios_sha256": "17984fe7c31ab6b51c96272ba8ee89580eb139aab01399a1b865f6743f3334f2",
+    "rom_revision": "908394b690f7da28f47727d9876774fd672c4ed3",
+    "machine": "Tandy 1000 RSX, 386SX at 25 MHz, 4 MiB, internal VGA, COM1 serial mouse",
+    "starting_disk_sha256": "51bf3bf0e7ba2ad74df497503093b72aac470dadb65fc4da3188f847d2292a65",
+    "starting_config_sha256": "42a3dedbd2c911b3db00559f2e1e3af9ccfdfb6ef4e8bf2ec17a8bd15e068f1d",
+    "emulator_terminal_frames": 22971,
+    "emulator_revision": "855258da966f1594f568350be59e8e1eca082ed1",
+    "draw_pdm_sha256": "abbbaf420f7998480569e06e2c35590a40dfc54dc5656922d1ffe1df34280e65"
+  },
+  "stopped_disk_sha256": "75fa3a3eec1f2ddf820df855edfe044548bfbcbf68f42b2a3f94085ac064e585",
+  "mode": "experimental RSX raster with local FF1 cubic outlines",
+  "rasterizer": {
+    "name": "Independent RSX raster",
+    "version": "3",
+    "png_encoder": "Pillow 13.0.0"
+  },
+  "limits": "Unhinted base-face fill using decoded contours and nominal advance words. Font raster quantization, sizing, colors, pair adjustments and embedded stroke text remain incompletely understood. Diagonal and shape outlines remain approximate.",
+  "cases": [
+    {
+      "id": "primitives-styles",
+      "source_path": "tests/fixtures/application-generated/draw/suite-v1-primitives-styles.fig",
+      "source_sha256": "49d43144b8c19166d7984f645fbff1dd71a404c43c52e5f867c03e1ae3c65a7b",
+      "title": "Primitive and style chart",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "808d9c337b61e763f01c52a942fcb020d3edd1023ff74f577aaf7a25322debbd",
+        "first_framebuffer_sha256": "808d9c337b61e763f01c52a942fcb020d3edd1023ff74f577aaf7a25322debbd",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 45700,
+        "emulated_frame": 2948,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "PSTYLE.FIG",
+        "reopen_actions": [
+          "type:desk draw pstyle.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "51e2b9e3edba8bb8a3afa04cef8f95ae21822e4f12aa52808a1fe1ee8f408b5b"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 63,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 37131,
+        "renderer_foreground_pixels": 37955,
+        "foreground_union_pixels": 38340,
+        "foreground_intersection_pixels": 36746,
+        "foreground_iou": 0.958425,
+        "exact_rgb_shared_foreground_pixels": 36577,
+        "exact_rgb_on_foreground_union": 0.954017,
+        "exact_rgb_frame_pixels": 265757,
+        "overlap_with_rgb_difference_pixels": 169,
+        "native_foreground_palette_counts": {
+          "#000000": 952,
+          "#0000c2": 952,
+          "#008100": 952,
+          "#008181": 3072,
+          "#00c200": 6297,
+          "#404040": 952,
+          "#810000": 952,
+          "#810081": 3135,
+          "#818100": 4747,
+          "#818181": 952,
+          "#c20000": 986,
+          "#c200c2": 4358,
+          "#c2c200": 1273,
+          "#c2c2c2": 7551
+        },
+        "native_foreground_bbox_xyxy": [
+          0,
+          26,
+          595,
+          385
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          0,
+          26,
+          596,
+          385
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/primitives-styles-native.png",
+          "sha256": "f420e51bf9f2de7e1269bbcd99883423d90e62f75134a1d3f9b9215b5ce4bc81",
+          "size": 7190,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/primitives-styles-renderer.png",
+          "sha256": "9ba17969ee9872b40ddc9387fea7cef5e2ec386fbe482159984cfe07279d2674",
+          "size": 7772,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/primitives-styles-diff.png",
+          "sha256": "89d3fdff4dfaa100b7fed900f53c25f64d49295ed1df16ca4daf8470e32dc736",
+          "size": 8620,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/primitives-styles-renderer.svg",
+          "sha256": "771f007d5aeef3fd2f19c6fe046a248f1bc23f5c2e9eb072f09644b83cd113d8",
+          "size": 8229,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "technical-plan",
+      "source_path": "tests/fixtures/application-generated/draw/suite-v1-technical-plan.fig",
+      "source_sha256": "9c683be4c20d93190a7224dd337095a6b900f1561e2f843292c1f9cd2c314fd4",
+      "title": "Cedar Workshop",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {
+        "Cobb": {
+          "filename": "COBB.FF1",
+          "sha256": "891e9f07ed2d9fd5f5c8e75d0facd3d4094e891096a6e77a6a8b3db1518a265f"
+        }
+      },
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "fcdef22ddfbb99993780728ab7e8359d0de21159f47301617ce67f36e94d45fa",
+        "first_framebuffer_sha256": "fcdef22ddfbb99993780728ab7e8359d0de21159f47301617ce67f36e94d45fa",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 53884,
+        "emulated_frame": 3452,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "WSHOP.FIG",
+        "reopen_actions": [
+          "type:desk draw wshop.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "d69ed2a101e26035758c197a197fc7260529e08b50dbedd28da06773555ba169"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {
+        "Cobb": {
+          "sha256": "891e9f07ed2d9fd5f5c8e75d0facd3d4094e891096a6e77a6a8b3db1518a265f",
+          "mode": "local-unhinted-base-face"
+        }
+      },
+      "rendered_elements": 35,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 5872,
+        "renderer_foreground_pixels": 5671,
+        "foreground_union_pixels": 6208,
+        "foreground_intersection_pixels": 5335,
+        "foreground_iou": 0.859375,
+        "exact_rgb_shared_foreground_pixels": 5334,
+        "exact_rgb_on_foreground_union": 0.859214,
+        "exact_rgb_frame_pixels": 266646,
+        "overlap_with_rgb_difference_pixels": 1,
+        "native_foreground_palette_counts": {
+          "#008181": 274,
+          "#00c200": 1085,
+          "#c2c200": 3911,
+          "#c2c2c2": 602
+        },
+        "native_foreground_bbox_xyxy": [
+          72,
+          55,
+          549,
+          394
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          72,
+          56,
+          549,
+          395
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/technical-plan-native.png",
+          "sha256": "b8c9bf50e5cf85e7c889fb6a6f2d3e97f38104aa3ffc0564cf2c705d2bc33c7e",
+          "size": 2828,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/technical-plan-renderer.png",
+          "sha256": "e78dccd76096199ce02e0ccb66896cd20b41f18a04e7d9f2ff07293efb9f8fb6",
+          "size": 2860,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/technical-plan-diff.png",
+          "sha256": "d9b9060d7283da168fc0490d9b1b715c1b507c510ea67d6e8c7b0e92b7d8f664",
+          "size": 4211,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/technical-plan-renderer.svg",
+          "sha256": "5da8b9c0b6e5df57a6b5522806e7fc5ba7fab041267c488d4db13357b99a6b31",
+          "size": 43577,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "compound-landscape",
+      "source_path": "tests/fixtures/application-generated/draw/suite-v1-compound-landscape.fig",
+      "source_sha256": "3bb86807a385f73d341be34ed33c10fe7de082e56bbe5248074728b966c3ceab",
+      "title": "Cedar Lake",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "ac0d09a2a25dee6944ce28ece14cbfbbb817202af327f8f8dbad96d29387c40f",
+        "first_framebuffer_sha256": "ac0d09a2a25dee6944ce28ece14cbfbbb817202af327f8f8dbad96d29387c40f",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 62080,
+        "emulated_frame": 3956,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "LAKEVIEW.FIG",
+        "reopen_actions": [
+          "type:desk draw lakeview.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "6ff2c9fb387bc281916ebbce060a75f67ff381b30a09ba84715443d2312dd544"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 26,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 113223,
+        "renderer_foreground_pixels": 113245,
+        "foreground_union_pixels": 113286,
+        "foreground_intersection_pixels": 113182,
+        "foreground_iou": 0.999082,
+        "exact_rgb_shared_foreground_pixels": 113100,
+        "exact_rgb_on_foreground_union": 0.998358,
+        "exact_rgb_frame_pixels": 267334,
+        "overlap_with_rgb_difference_pixels": 82,
+        "native_foreground_palette_counts": {
+          "#008100": 37555,
+          "#008181": 45979,
+          "#00c200": 1380,
+          "#810000": 3042,
+          "#818100": 15415,
+          "#c20000": 2192,
+          "#c2c200": 6458,
+          "#c2c2c2": 1202
+        },
+        "native_foreground_bbox_xyxy": [
+          25,
+          37,
+          597,
+          387
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          25,
+          38,
+          597,
+          387
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/compound-landscape-native.png",
+          "sha256": "d41c6fcfb1372898fd427ebf2faa2d6e2d28f2747762a76fadf4a8a9aeb3024b",
+          "size": 5866,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/compound-landscape-renderer.png",
+          "sha256": "9e4a0a6ac05a5042b9a9405a7f227f8afed140cc3254a287180d8040aa4a58db",
+          "size": 5821,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/compound-landscape-diff.png",
+          "sha256": "16e3f0dbef3ddcf0ace6c9ee2e41147cc8bd9bdfb4dd501868069ad1a824a0b1",
+          "size": 5131,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/compound-landscape-renderer.svg",
+          "sha256": "c8aa7a10d55fe6b9e1388b5da3212086e1bae3349066f8bde61a59ef304850c2",
+          "size": 3611,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "typography",
+      "source_path": "tests/fixtures/application-generated/draw/suite-v1-typography.fig",
+      "source_sha256": "dbbec667a3a4d566bf5aea5bd2ced0534da2e5d498d7a5d7fcbae2e35c05f0ba",
+      "title": "Graphical typography",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {
+        "Cobb": {
+          "filename": "COBB.FF1",
+          "sha256": "891e9f07ed2d9fd5f5c8e75d0facd3d4094e891096a6e77a6a8b3db1518a265f"
+        }
+      },
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "44bedeff8f801c6caa6b181ac3a331fb0472e50df595d272371f24c7f9bca5f9",
+        "first_framebuffer_sha256": "44bedeff8f801c6caa6b181ac3a331fb0472e50df595d272371f24c7f9bca5f9",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 70268,
+        "emulated_frame": 4459,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "LETTER.FIG",
+        "reopen_actions": [
+          "type:desk draw letter.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "0473ffc73b7657b5b8e1099f184643291a42bc7824840d7b1dfd7093fe05d9c2"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {
+        "Cobb": {
+          "sha256": "891e9f07ed2d9fd5f5c8e75d0facd3d4094e891096a6e77a6a8b3db1518a265f",
+          "mode": "local-unhinted-base-face"
+        }
+      },
+      "rendered_elements": 12,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 11401,
+        "renderer_foreground_pixels": 10641,
+        "foreground_union_pixels": 15332,
+        "foreground_intersection_pixels": 6710,
+        "foreground_iou": 0.437647,
+        "exact_rgb_shared_foreground_pixels": 6710,
+        "exact_rgb_on_foreground_union": 0.437647,
+        "exact_rgb_frame_pixels": 258898,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#818181": 1794,
+          "#c2c200": 9607
+        },
+        "native_foreground_bbox_xyxy": [
+          48,
+          55,
+          619,
+          363
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          48,
+          56,
+          620,
+          363
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/typography-native.png",
+          "sha256": "88e66764eb2b57fceda160db637e8c7a121150e6c4670109bed3bbeb3a61f7c6",
+          "size": 4772,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/typography-renderer.png",
+          "sha256": "c889f3c9ff3695e05ef2c2180c51dc545cf3a2200ed954c70b59a7fc00f8a01f",
+          "size": 5607,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/typography-diff.png",
+          "sha256": "552c9f55a2571084864c6be5cbef23c30ad780850ff8b36c88ccca83976a2f7e",
+          "size": 9672,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/typography-renderer.svg",
+          "sha256": "e3c5b6fe0b3fec79d054877b5b8f4bae24bc652e36da3b4cbc9028a6cbd0e00f",
+          "size": 77804,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d01",
+      "source_path": "tests/fixtures/application-generated/draw/d01.fig",
+      "source_sha256": "adf9cbc2906115e97d462a7fed32f1ce325f1f7a006bbabaaf716f621b29bd53",
+      "title": "D01",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "a5784dcda665b7a4ab3c3bcfd8c3f2bd90e8377f93cbb660aaaccdbc08ead3ef",
+        "first_framebuffer_sha256": "a5784dcda665b7a4ab3c3bcfd8c3f2bd90e8377f93cbb660aaaccdbc08ead3ef",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 78444,
+        "emulated_frame": 4961,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D01.FIG",
+        "reopen_actions": [
+          "type:desk draw d01.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "4ad00617c8cb9e4ff7eab98d50f04ce3aded82e8baa075770d345a5022d9f5fe"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 1,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 33,
+        "renderer_foreground_pixels": 33,
+        "foreground_union_pixels": 33,
+        "foreground_intersection_pixels": 33,
+        "foreground_iou": 1.0,
+        "exact_rgb_shared_foreground_pixels": 33,
+        "exact_rgb_on_foreground_union": 1.0,
+        "exact_rgb_frame_pixels": 267520,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 33
+        },
+        "native_foreground_bbox_xyxy": [
+          64,
+          85,
+          97,
+          86
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          64,
+          85,
+          97,
+          86
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d01-native.png",
+          "sha256": "ad533b098b570888230e555625693bbdee506c9554e49ea6bda357faa87344e5",
+          "size": 1410,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d01-renderer.png",
+          "sha256": "ad533b098b570888230e555625693bbdee506c9554e49ea6bda357faa87344e5",
+          "size": 1410,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d01-diff.png",
+          "sha256": "52c27af19502780d836efed26d01e3950cbed81a61975c49ef4743c5844eafe6",
+          "size": 1419,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d01-renderer.svg",
+          "sha256": "22ab541a7831de9f59e24ced328fe8b074fdc26a9c70aaa66fef59be28e44590",
+          "size": 345,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d02",
+      "source_path": "tests/fixtures/application-generated/draw/d02.fig",
+      "source_sha256": "7a85c629e218e5ed7ec918c9a2374a55282883f82c95ffab646a402d145a4139",
+      "title": "D02",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "d0d1da177291458c017a9e916c404ee2b0c7e98baab61c096f60858bdbe596fa",
+        "first_framebuffer_sha256": "d0d1da177291458c017a9e916c404ee2b0c7e98baab61c096f60858bdbe596fa",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 86620,
+        "emulated_frame": 5464,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D02.FIG",
+        "reopen_actions": [
+          "type:desk draw d02.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "e20ab8b43df882f0b9e90732228c272d128f84b260379e6f1b2a3af50990c6a1"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 1,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 67,
+        "renderer_foreground_pixels": 67,
+        "foreground_union_pixels": 67,
+        "foreground_intersection_pixels": 67,
+        "foreground_iou": 1.0,
+        "exact_rgb_shared_foreground_pixels": 67,
+        "exact_rgb_on_foreground_union": 1.0,
+        "exact_rgb_frame_pixels": 267520,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 67
+        },
+        "native_foreground_bbox_xyxy": [
+          64,
+          85,
+          131,
+          86
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          64,
+          85,
+          131,
+          86
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d02-native.png",
+          "sha256": "6bc2b4302920c1249c2ed04e741374ecc061c354a87c3448d0c44d2dffff2ebc",
+          "size": 1410,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d02-renderer.png",
+          "sha256": "6bc2b4302920c1249c2ed04e741374ecc061c354a87c3448d0c44d2dffff2ebc",
+          "size": 1410,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d02-diff.png",
+          "sha256": "57ee1fb7604d3aa2f26183c7e60b79fdf026793352f9f8bc5b5d0da9adde9e94",
+          "size": 1417,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d02-renderer.svg",
+          "sha256": "559949a473156228dd2d73a68473e5fe3c957595d8bc06da230a574a7eae9eb7",
+          "size": 373,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d04",
+      "source_path": "tests/fixtures/application-generated/draw/d04.fig",
+      "source_sha256": "dfd5993ee1081276efad220aef4d0ab7650b0c113af2b71aa16652817bc3e5ca",
+      "title": "D04",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "351589cab09a1ae4ab4dbdc4028951714b900b087ca27a63e2873d75c3c6e4e9",
+        "first_framebuffer_sha256": "351589cab09a1ae4ab4dbdc4028951714b900b087ca27a63e2873d75c3c6e4e9",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 94796,
+        "emulated_frame": 5966,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D04.FIG",
+        "reopen_actions": [
+          "type:desk draw d04.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "212b00b784b39466f591517b2143ae0b440cdcaf7f75963fa09725c9ebbf4474"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 1,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 452,
+        "renderer_foreground_pixels": 452,
+        "foreground_union_pixels": 452,
+        "foreground_intersection_pixels": 452,
+        "foreground_iou": 1.0,
+        "exact_rgb_shared_foreground_pixels": 452,
+        "exact_rgb_on_foreground_union": 1.0,
+        "exact_rgb_frame_pixels": 267520,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 452
+        },
+        "native_foreground_bbox_xyxy": [
+          48,
+          85,
+          161,
+          200
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          48,
+          85,
+          161,
+          200
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d04-native.png",
+          "sha256": "72bb8e8d728409dbe79fe8f194aa815f77bf7a3fe7bfaa0aec26a752565b3b2d",
+          "size": 1423,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d04-renderer.png",
+          "sha256": "72bb8e8d728409dbe79fe8f194aa815f77bf7a3fe7bfaa0aec26a752565b3b2d",
+          "size": 1423,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d04-diff.png",
+          "sha256": "495f5684dac0677bf6580c13439e0cd0ce92224a9e1eab995d0368b5ab26ab2e",
+          "size": 1430,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d04-renderer.svg",
+          "sha256": "ec53c33d2216b17f131301d5a1c2117a48b937958392d32befc6881f53a0a9c0",
+          "size": 369,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d05",
+      "source_path": "tests/fixtures/application-generated/draw/d05.fig",
+      "source_sha256": "ef71f2f39f2c0a7bf0ec3a10dd0f2982af7f740db2f48326789e37708933d90e",
+      "title": "D05",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "70b86db1d34a8854722166cd28d0157d00bd947c26ead5b104dc896d2064d8c8",
+        "first_framebuffer_sha256": "70b86db1d34a8854722166cd28d0157d00bd947c26ead5b104dc896d2064d8c8",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 102972,
+        "emulated_frame": 6468,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D05.FIG",
+        "reopen_actions": [
+          "type:desk draw d05.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "405a7ca175f459d8a6c43095b0abd6a29601ad29f4b8aace3337292fc018a867"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 1,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 528,
+        "renderer_foreground_pixels": 528,
+        "foreground_union_pixels": 528,
+        "foreground_intersection_pixels": 528,
+        "foreground_iou": 1.0,
+        "exact_rgb_shared_foreground_pixels": 528,
+        "exact_rgb_on_foreground_union": 1.0,
+        "exact_rgb_frame_pixels": 267520,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 528
+        },
+        "native_foreground_bbox_xyxy": [
+          48,
+          85,
+          195,
+          204
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          48,
+          85,
+          195,
+          204
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d05-native.png",
+          "sha256": "369e2b01b96cb8a02090fe68b6fc80e700b428ec7117cee03621fb2f26067341",
+          "size": 1425,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d05-renderer.png",
+          "sha256": "369e2b01b96cb8a02090fe68b6fc80e700b428ec7117cee03621fb2f26067341",
+          "size": 1425,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d05-diff.png",
+          "sha256": "6d52f88467c76064b0461e4f1af812cec82c34e9787376f36e7ba9dad20e30c0",
+          "size": 1433,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d05-renderer.svg",
+          "sha256": "6eab293a862849067c3c2a64890dafab6b66a6149d40587363208760aae8dccb",
+          "size": 397,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d06",
+      "source_path": "tests/fixtures/application-generated/draw/d06.fig",
+      "source_sha256": "31801cd6b26c5cb92f79da53b43f5af4f2d697ecccf9a0a7b17669e2f44994f3",
+      "title": "D06",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "e6208e14a6b5c94a92920095c5695bab8d2bf68a7289c35e558fa99b2ac1e176",
+        "first_framebuffer_sha256": "e6208e14a6b5c94a92920095c5695bab8d2bf68a7289c35e558fa99b2ac1e176",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 111148,
+        "emulated_frame": 6971,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D06.FIG",
+        "reopen_actions": [
+          "type:desk draw d06.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "f3d9af8921e2afe2598bd7f14da09f85e3f0c0e8c53202559135a26e386c7426"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 1,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 452,
+        "renderer_foreground_pixels": 452,
+        "foreground_union_pixels": 452,
+        "foreground_intersection_pixels": 452,
+        "foreground_iou": 1.0,
+        "exact_rgb_shared_foreground_pixels": 452,
+        "exact_rgb_on_foreground_union": 1.0,
+        "exact_rgb_frame_pixels": 267520,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 452
+        },
+        "native_foreground_bbox_xyxy": [
+          112,
+          237,
+          225,
+          352
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          112,
+          237,
+          225,
+          352
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d06-native.png",
+          "sha256": "85c15ab5643e7a973af5ad3f6af5e307b5684cabe6b4da889886a237700fbfb2",
+          "size": 1419,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d06-renderer.png",
+          "sha256": "85c15ab5643e7a973af5ad3f6af5e307b5684cabe6b4da889886a237700fbfb2",
+          "size": 1419,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d06-diff.png",
+          "sha256": "8c31064a2af9afb7d15ee1fe6aba5666dd83c057848db1da68033fb5e9b68857",
+          "size": 1427,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d06-renderer.svg",
+          "sha256": "ec3b27a79b09f149bae259d5cb65a0231643fa03bc3e9a2457f6d913255ae1f5",
+          "size": 375,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d07c",
+      "source_path": "tests/fixtures/application-generated/draw/d07c.fig",
+      "source_sha256": "add31259e2bc822e35e5a6b2aef47ae2fe0c282fcddb89ea39d9b469b24828ef",
+      "title": "D07C",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "ae84223e431a5282a6f495684c27a5491a6fa2f12dd0e2de8ac96eee3b1ea20e",
+        "first_framebuffer_sha256": "ae84223e431a5282a6f495684c27a5491a6fa2f12dd0e2de8ac96eee3b1ea20e",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 119328,
+        "emulated_frame": 7473,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D07C.FIG",
+        "reopen_actions": [
+          "type:desk draw d07c.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "5caaf0cfa6de983ef6500f9c11627aa9744402458c85f8d83855099df6336727"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 1,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 452,
+        "renderer_foreground_pixels": 452,
+        "foreground_union_pixels": 452,
+        "foreground_intersection_pixels": 452,
+        "foreground_iou": 1.0,
+        "exact_rgb_shared_foreground_pixels": 452,
+        "exact_rgb_on_foreground_union": 1.0,
+        "exact_rgb_frame_pixels": 267520,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#00c200": 452
+        },
+        "native_foreground_bbox_xyxy": [
+          48,
+          85,
+          161,
+          200
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          48,
+          85,
+          161,
+          200
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d07c-native.png",
+          "sha256": "2c1f9876539cf88a1ee2ac1552c4c6e21f1ef708f4b757c024549a3e1eb4e012",
+          "size": 1421,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d07c-renderer.png",
+          "sha256": "2c1f9876539cf88a1ee2ac1552c4c6e21f1ef708f4b757c024549a3e1eb4e012",
+          "size": 1421,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d07c-diff.png",
+          "sha256": "495f5684dac0677bf6580c13439e0cd0ce92224a9e1eab995d0368b5ab26ab2e",
+          "size": 1430,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d07c-renderer.svg",
+          "sha256": "7c6e17e1e49c764a239f980ae70a5105f6bdb89262db66761ebe3aabc97ebd2d",
+          "size": 369,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d09",
+      "source_path": "tests/fixtures/application-generated/draw/d09.fig",
+      "source_sha256": "45e6927a55670578b11ed1afc6c90367fc179f63c8cf061f52b5c1b727ecd8c5",
+      "title": "D09",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "96d33918e2b6b3eb80f7863c100162dfe104c456199554586de88a1a31bd687b",
+        "first_framebuffer_sha256": "96d33918e2b6b3eb80f7863c100162dfe104c456199554586de88a1a31bd687b",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 127504,
+        "emulated_frame": 7976,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D09.FIG",
+        "reopen_actions": [
+          "type:desk draw d09.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "3147336b910f334fb799dc62760e85ee6f9babc77b1683de63e142ee6d9b5ef8"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 2,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 820,
+        "renderer_foreground_pixels": 822,
+        "foreground_union_pixels": 917,
+        "foreground_intersection_pixels": 725,
+        "foreground_iou": 0.790622,
+        "exact_rgb_shared_foreground_pixels": 725,
+        "exact_rgb_on_foreground_union": 0.790622,
+        "exact_rgb_frame_pixels": 267328,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 820
+        },
+        "native_foreground_bbox_xyxy": [
+          0,
+          0,
+          330,
+          200
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          0,
+          0,
+          330,
+          200
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d09-native.png",
+          "sha256": "af03a66f98a843e450c6518fae0cdfbe868afef48523abefc125bdfc7dc0b968",
+          "size": 1757,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d09-renderer.png",
+          "sha256": "11f40483c9f9a217b96c807ed19f9f5df455e382993d2c8aecc0bec6f7621488",
+          "size": 1766,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d09-diff.png",
+          "sha256": "9da51896a79f77ef46a616d3a30f385b63d55ec6ead1d3d8b13f01f007a0ae9a",
+          "size": 2171,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d09-renderer.svg",
+          "sha256": "ed2ff6343c1f59c5f99ab2b08328f8c39da1560f5db0090549fc74c1a14e27e7",
+          "size": 522,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d10",
+      "source_path": "tests/fixtures/application-generated/draw/d10.fig",
+      "source_sha256": "29bba588ee4581fcfca0016906036d4048da27c38a3479bdcc1bc11572761c73",
+      "title": "D10",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {
+        "Cobb": {
+          "filename": "COBB.FF1",
+          "sha256": "891e9f07ed2d9fd5f5c8e75d0facd3d4094e891096a6e77a6a8b3db1518a265f"
+        }
+      },
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "558bdeb03ce6c5d1e93edc9a91e55277bf51352b9fff1ebd2f19fe94d5e62741",
+        "first_framebuffer_sha256": "558bdeb03ce6c5d1e93edc9a91e55277bf51352b9fff1ebd2f19fe94d5e62741",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 135680,
+        "emulated_frame": 8478,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D10.FIG",
+        "reopen_actions": [
+          "type:desk draw d10.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "b1913082280bed60582243863e7feb49014fa1856f1e3fcdd429ce6bbd9d961f"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {
+        "Cobb": {
+          "sha256": "891e9f07ed2d9fd5f5c8e75d0facd3d4094e891096a6e77a6a8b3db1518a265f",
+          "mode": "local-unhinted-base-face"
+        }
+      },
+      "rendered_elements": 3,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 1239,
+        "renderer_foreground_pixels": 1254,
+        "foreground_union_pixels": 1556,
+        "foreground_intersection_pixels": 937,
+        "foreground_iou": 0.602185,
+        "exact_rgb_shared_foreground_pixels": 937,
+        "exact_rgb_on_foreground_union": 0.602185,
+        "exact_rgb_frame_pixels": 266901,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 1239
+        },
+        "native_foreground_bbox_xyxy": [
+          0,
+          0,
+          534,
+          390
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          0,
+          0,
+          534,
+          391
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d10-native.png",
+          "sha256": "3b7b84da78619e0ab9fc194d693d8a35692d7d8ed8e5fa87ec7e88d289024b31",
+          "size": 2144,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d10-renderer.png",
+          "sha256": "67b789e4aa254dadba62b06ecb6cb7dff8d3644ce5e1b81a105b8eacd7d70618",
+          "size": 2169,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d10-diff.png",
+          "sha256": "5245deb928aeed2fb640baace8a51ba5789874679e74874bdb64bce152eb93ae",
+          "size": 3111,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d10-renderer.svg",
+          "sha256": "196f50d51375937f245bd40697acceb512cb01a4dc4ddc1a767eaefdae39e681",
+          "size": 9393,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d11",
+      "source_path": "tests/fixtures/application-generated/draw/d11.fig",
+      "source_sha256": "37ab83a41e20b7a27987a8fc3102f50b5cd7db5282abe0bf690d22d0abcd2d05",
+      "title": "D11",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "c6618c1416a82d48421fb89e7ded44f2262f7937460848f650fad4f554621552",
+        "first_framebuffer_sha256": "c6618c1416a82d48421fb89e7ded44f2262f7937460848f650fad4f554621552",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 143856,
+        "emulated_frame": 8981,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D11.FIG",
+        "reopen_actions": [
+          "type:desk draw d11.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "13d675eae37bd180d2e6fe82ad10bb58d8a91d7311fa85de075a92e8a680171b"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 2,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 231,
+        "renderer_foreground_pixels": 231,
+        "foreground_union_pixels": 231,
+        "foreground_intersection_pixels": 231,
+        "foreground_iou": 1.0,
+        "exact_rgb_shared_foreground_pixels": 231,
+        "exact_rgb_on_foreground_union": 1.0,
+        "exact_rgb_frame_pixels": 267520,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 231
+        },
+        "native_foreground_bbox_xyxy": [
+          101,
+          63,
+          210,
+          125
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          101,
+          63,
+          210,
+          125
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d11-native.png",
+          "sha256": "ac08101f8e5a2bdcba852a508f84faf25d83817ea7191e9f23415a431b0edc49",
+          "size": 1442,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d11-renderer.png",
+          "sha256": "ac08101f8e5a2bdcba852a508f84faf25d83817ea7191e9f23415a431b0edc49",
+          "size": 1442,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d11-diff.png",
+          "sha256": "38d83dfe17a683f1f7b6e0acadee7ca15af6697ee2313818457527a5a15ec744",
+          "size": 1449,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d11-renderer.svg",
+          "sha256": "0fbc957e620967f0498cc5bee4941083927a21f4423edc99a8d0a3c58ea92e89",
+          "size": 503,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d12",
+      "source_path": "tests/fixtures/application-generated/draw/d12.fig",
+      "source_sha256": "2515bdb1e79b0f33ddc9e2be3ef72af85c69c22af128738b14106c6db6132e67",
+      "title": "D12",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "5fe238a8b2dbfdd28fe97934f1376724b1e678b0e6317234c81dd4fc98becdb2",
+        "first_framebuffer_sha256": "5fe238a8b2dbfdd28fe97934f1376724b1e678b0e6317234c81dd4fc98becdb2",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 152032,
+        "emulated_frame": 9483,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D12.FIG",
+        "reopen_actions": [
+          "type:desk draw d12.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "115cff3b51baf97331bc1edbce8dcebc861add8d5d0c6697b89765949e6529b9"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 1,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 33,
+        "renderer_foreground_pixels": 33,
+        "foreground_union_pixels": 33,
+        "foreground_intersection_pixels": 33,
+        "foreground_iou": 1.0,
+        "exact_rgb_shared_foreground_pixels": 33,
+        "exact_rgb_on_foreground_union": 1.0,
+        "exact_rgb_frame_pixels": 267520,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 33
+        },
+        "native_foreground_bbox_xyxy": [
+          64,
+          85,
+          97,
+          86
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          64,
+          85,
+          97,
+          86
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d12-native.png",
+          "sha256": "ad533b098b570888230e555625693bbdee506c9554e49ea6bda357faa87344e5",
+          "size": 1410,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d12-renderer.png",
+          "sha256": "ad533b098b570888230e555625693bbdee506c9554e49ea6bda357faa87344e5",
+          "size": 1410,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d12-diff.png",
+          "sha256": "52c27af19502780d836efed26d01e3950cbed81a61975c49ef4743c5844eafe6",
+          "size": 1419,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d12-renderer.svg",
+          "sha256": "22ab541a7831de9f59e24ced328fe8b074fdc26a9c70aaa66fef59be28e44590",
+          "size": 345,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d16a",
+      "source_path": "tests/fixtures/application-generated/draw/d16a.fig",
+      "source_sha256": "fc2ce8d4153be5eb54ec184f97e5324599f87b03b07778aea26c6f6ec51074bd",
+      "title": "D16A",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "8595e7bebe68296f7e73fb6c4076f3138356af805c47daea4ac4792676c0ae2e",
+        "first_framebuffer_sha256": "8595e7bebe68296f7e73fb6c4076f3138356af805c47daea4ac4792676c0ae2e",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 160212,
+        "emulated_frame": 9986,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D16A.FIG",
+        "reopen_actions": [
+          "type:desk draw d16a.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "83fdd4715b36ab658f984a000e7e11890fdce49ff09c0ae25f9e60d710faa8f1"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 1,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 41,
+        "renderer_foreground_pixels": 41,
+        "foreground_union_pixels": 41,
+        "foreground_intersection_pixels": 41,
+        "foreground_iou": 1.0,
+        "exact_rgb_shared_foreground_pixels": 41,
+        "exact_rgb_on_foreground_union": 1.0,
+        "exact_rgb_frame_pixels": 267520,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 41
+        },
+        "native_foreground_bbox_xyxy": [
+          100,
+          63,
+          141,
+          64
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          100,
+          63,
+          141,
+          64
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d16a-native.png",
+          "sha256": "df0a44db6a9f9638016504f8055da26c175a3991da9e8f34ff994b43dbbac312",
+          "size": 1412,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d16a-renderer.png",
+          "sha256": "df0a44db6a9f9638016504f8055da26c175a3991da9e8f34ff994b43dbbac312",
+          "size": 1412,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d16a-diff.png",
+          "sha256": "a6a119c11dcfc3cda794de6c6a0b009e23a28d1e3407a49b8dcb508529858bc7",
+          "size": 1419,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d16a-renderer.svg",
+          "sha256": "913233e8f5b24de54218c43e46f0b93432d1a02d1eaff48351aabbaa3fc099bf",
+          "size": 356,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d16b",
+      "source_path": "tests/fixtures/application-generated/draw/d16b.fig",
+      "source_sha256": "56b147bcd551dc36fdabb22e326ff72fc265d590cc8aae06f97b71bbf2345bbe",
+      "title": "D16B",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "fb12d3221c3f2a4e873e15dcf9ef8446d47674e81860c96353461776fd727c62",
+        "first_framebuffer_sha256": "fb12d3221c3f2a4e873e15dcf9ef8446d47674e81860c96353461776fd727c62",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 168392,
+        "emulated_frame": 10489,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D16B.FIG",
+        "reopen_actions": [
+          "type:desk draw d16b.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "f6e6e9887aace364c39da2cd65b458d3a3ac14e43e1df66bb4f093458da11156"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 1,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 41,
+        "renderer_foreground_pixels": 41,
+        "foreground_union_pixels": 41,
+        "foreground_intersection_pixels": 41,
+        "foreground_iou": 1.0,
+        "exact_rgb_shared_foreground_pixels": 41,
+        "exact_rgb_on_foreground_union": 1.0,
+        "exact_rgb_frame_pixels": 267520,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 41
+        },
+        "native_foreground_bbox_xyxy": [
+          101,
+          63,
+          142,
+          64
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          101,
+          63,
+          142,
+          64
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d16b-native.png",
+          "sha256": "48c73f6d481ee5d5e0124dcfdb2931b5c7cb951869cdde2419cbf167af71ba85",
+          "size": 1412,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d16b-renderer.png",
+          "sha256": "48c73f6d481ee5d5e0124dcfdb2931b5c7cb951869cdde2419cbf167af71ba85",
+          "size": 1412,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d16b-diff.png",
+          "sha256": "8a381b91480122e3c81d33d2d50a0103b83bc285847fae99d41a84e1faf08e15",
+          "size": 1419,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d16b-renderer.svg",
+          "sha256": "7baea73d879fd0f689c08a9f42193f880feb4998ab65d5c711c7d0c21bb3db41",
+          "size": 356,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d17",
+      "source_path": "tests/fixtures/application-generated/draw/d17.fig",
+      "source_sha256": "8ecc1be0c67d9904310d2040b5d458d0a9c0e31589e72782fe855d87fbbd5010",
+      "title": "D17",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "942782230338dadf7ce6cbeff00ec5daa5038f90ec9b4335689f4787c866766a",
+        "first_framebuffer_sha256": "942782230338dadf7ce6cbeff00ec5daa5038f90ec9b4335689f4787c866766a",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 176568,
+        "emulated_frame": 10992,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D17.FIG",
+        "reopen_actions": [
+          "type:desk draw d17.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "3b5b2fd5b3adc43fa68338fc64d22f539111b470765cb40971be6ced27c2540a"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 3,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 347,
+        "renderer_foreground_pixels": 391,
+        "foreground_union_pixels": 429,
+        "foreground_intersection_pixels": 309,
+        "foreground_iou": 0.72028,
+        "exact_rgb_shared_foreground_pixels": 309,
+        "exact_rgb_on_foreground_union": 0.72028,
+        "exact_rgb_frame_pixels": 267400,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 347
+        },
+        "native_foreground_bbox_xyxy": [
+          101,
+          63,
+          278,
+          125
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          101,
+          63,
+          278,
+          125
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d17-native.png",
+          "sha256": "860633864282cb21ab44c35b74d0f69f1af73e8add8d09779a78459ab47c1d57",
+          "size": 1598,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d17-renderer.png",
+          "sha256": "7d99ca887b9ae5e8263266246726aa195fb99fc4bf7a80b9b572840169370384",
+          "size": 1642,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d17-diff.png",
+          "sha256": "10f23ec8666339ec0d73c9e3f02ca5ac65a39f512a1543dcf9160e492c668f86",
+          "size": 1876,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d17-renderer.svg",
+          "sha256": "879d7075fcd1d5ce08db4f14e34c0998767b7e9082de324e3d871855f6c53bae",
+          "size": 641,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d18",
+      "source_path": "tests/fixtures/application-generated/draw/d18.fig",
+      "source_sha256": "f0b2cd6a20be7bc80f230c03980c127e857f189a371540ce427b8d25d0c37e2c",
+      "title": "D18",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "b004c9a95adc74f3edd07d16fc7d0ea6d2411a992ee00125ab3e9024e4e9177f",
+        "first_framebuffer_sha256": "b004c9a95adc74f3edd07d16fc7d0ea6d2411a992ee00125ab3e9024e4e9177f",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 184744,
+        "emulated_frame": 11494,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D18.FIG",
+        "reopen_actions": [
+          "type:desk draw d18.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "11c20b01a1d06807865a4746c5da9c156e8fc00d0ad0a93c17ffa372e9d059d8"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 36,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 1152,
+        "renderer_foreground_pixels": 1152,
+        "foreground_union_pixels": 1152,
+        "foreground_intersection_pixels": 1152,
+        "foreground_iou": 1.0,
+        "exact_rgb_shared_foreground_pixels": 1152,
+        "exact_rgb_on_foreground_union": 1.0,
+        "exact_rgb_frame_pixels": 267520,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 1152
+        },
+        "native_foreground_bbox_xyxy": [
+          60,
+          46,
+          422,
+          247
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          60,
+          46,
+          422,
+          247
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d18-native.png",
+          "sha256": "92c9fa43c550edfe91e9168c483c08f9976cc1192b8ba2baddd8cbc9a5377204",
+          "size": 1506,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d18-renderer.png",
+          "sha256": "92c9fa43c550edfe91e9168c483c08f9976cc1192b8ba2baddd8cbc9a5377204",
+          "size": 1506,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d18-diff.png",
+          "sha256": "89a51175cdd8b37df0632f1c5a3e5cc2af6cb8150177a30d6ef18476a8894f77",
+          "size": 1511,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d18-renderer.svg",
+          "sha256": "c34718ba49afb5a66a5b9fe13b8bd168c22f77482c66cb5df037fc2b36e1b4c9",
+          "size": 4447,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d19",
+      "source_path": "tests/fixtures/application-generated/draw/d19.fig",
+      "source_sha256": "816ed0f1384311948c98b0cd9ed7ec031afbfafe941edc3c541e7e41b88ef6b9",
+      "title": "D19",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "32b88056f06b7a40b3f55651eac21aeadc2221b2c4b9ba42ab7006fb2d27b979",
+        "first_framebuffer_sha256": "32b88056f06b7a40b3f55651eac21aeadc2221b2c4b9ba42ab7006fb2d27b979",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 192920,
+        "emulated_frame": 11997,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D19.FIG",
+        "reopen_actions": [
+          "type:desk draw d19.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "76dc6e0fc28c3206c5590ec6763ad3449f2e17623ed292e3fcddf257b6305c18"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 3,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 347,
+        "renderer_foreground_pixels": 391,
+        "foreground_union_pixels": 429,
+        "foreground_intersection_pixels": 309,
+        "foreground_iou": 0.72028,
+        "exact_rgb_shared_foreground_pixels": 309,
+        "exact_rgb_on_foreground_union": 0.72028,
+        "exact_rgb_frame_pixels": 267400,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 347
+        },
+        "native_foreground_bbox_xyxy": [
+          101,
+          63,
+          278,
+          125
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          101,
+          63,
+          278,
+          125
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d19-native.png",
+          "sha256": "860633864282cb21ab44c35b74d0f69f1af73e8add8d09779a78459ab47c1d57",
+          "size": 1598,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d19-renderer.png",
+          "sha256": "7d99ca887b9ae5e8263266246726aa195fb99fc4bf7a80b9b572840169370384",
+          "size": 1642,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d19-diff.png",
+          "sha256": "10f23ec8666339ec0d73c9e3f02ca5ac65a39f512a1543dcf9160e492c668f86",
+          "size": 1876,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d19-renderer.svg",
+          "sha256": "879d7075fcd1d5ce08db4f14e34c0998767b7e9082de324e3d871855f6c53bae",
+          "size": 641,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d20",
+      "source_path": "tests/fixtures/application-generated/draw/d20.fig",
+      "source_sha256": "99930be15d4819ca1912031d094aed9dc59733f3e1fbbe770be09cf4a7e67e5f",
+      "title": "D20",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "9715cbfcada90f9b182010e03b1590b0209d28c75f39637599655b3fc1c3e76d",
+        "first_framebuffer_sha256": "9715cbfcada90f9b182010e03b1590b0209d28c75f39637599655b3fc1c3e76d",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 201096,
+        "emulated_frame": 12500,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D20.FIG",
+        "reopen_actions": [
+          "type:desk draw d20.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "6411db9a424c4c47dc519c57dd04a2b4fb27dd699bd494a520a5fdc5d3039ba6"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 1,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 350,
+        "renderer_foreground_pixels": 350,
+        "foreground_union_pixels": 350,
+        "foreground_intersection_pixels": 350,
+        "foreground_iou": 1.0,
+        "exact_rgb_shared_foreground_pixels": 350,
+        "exact_rgb_on_foreground_union": 1.0,
+        "exact_rgb_frame_pixels": 267520,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 350
+        },
+        "native_foreground_bbox_xyxy": [
+          115,
+          60,
+          256,
+          156
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          115,
+          60,
+          256,
+          156
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d20-native.png",
+          "sha256": "f89f4381bc18033dd5c83d7b821dbfc2e4ab91e12abaed44b48f36ec0a92c6de",
+          "size": 1625,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d20-renderer.png",
+          "sha256": "f89f4381bc18033dd5c83d7b821dbfc2e4ab91e12abaed44b48f36ec0a92c6de",
+          "size": 1625,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d20-diff.png",
+          "sha256": "1a130d05ff9bd7372f580686487357281fa282db34a3d68fb10767e69076ec23",
+          "size": 1634,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d20-renderer.svg",
+          "sha256": "50f09ad4c9338b4bc90da4e92ca816cac42fe7b4d0c76426f8f75ab4ccfdb367",
+          "size": 407,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d21",
+      "source_path": "tests/fixtures/application-generated/draw/d21.fig",
+      "source_sha256": "65ec6229428e31bd8a0fe3c15e7c589fd07968be41f2afa85b05c6a8c0625d0a",
+      "title": "D21",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "ebb736142e7c0d3160cfbbbb2bb105981cec57e64356e77201c2e2fb95ce7d1b",
+        "first_framebuffer_sha256": "ebb736142e7c0d3160cfbbbb2bb105981cec57e64356e77201c2e2fb95ce7d1b",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 209272,
+        "emulated_frame": 13002,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D21.FIG",
+        "reopen_actions": [
+          "type:desk draw d21.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "cd256f537a568e0d653a5f1721d4d18bf4ac0627403e7c56b9fa5b8dbdc61b24"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 3,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 347,
+        "renderer_foreground_pixels": 391,
+        "foreground_union_pixels": 429,
+        "foreground_intersection_pixels": 309,
+        "foreground_iou": 0.72028,
+        "exact_rgb_shared_foreground_pixels": 309,
+        "exact_rgb_on_foreground_union": 0.72028,
+        "exact_rgb_frame_pixels": 267400,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 347
+        },
+        "native_foreground_bbox_xyxy": [
+          101,
+          63,
+          278,
+          125
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          101,
+          63,
+          278,
+          125
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d21-native.png",
+          "sha256": "860633864282cb21ab44c35b74d0f69f1af73e8add8d09779a78459ab47c1d57",
+          "size": 1598,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d21-renderer.png",
+          "sha256": "7d99ca887b9ae5e8263266246726aa195fb99fc4bf7a80b9b572840169370384",
+          "size": 1642,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d21-diff.png",
+          "sha256": "10f23ec8666339ec0d73c9e3f02ca5ac65a39f512a1543dcf9160e492c668f86",
+          "size": 1876,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d21-renderer.svg",
+          "sha256": "879d7075fcd1d5ce08db4f14e34c0998767b7e9082de324e3d871855f6c53bae",
+          "size": 641,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d22",
+      "source_path": "tests/fixtures/application-generated/draw/d22.fig",
+      "source_sha256": "c8a8087bad2205771f14ad0db20c5cf5493655c86bf0e94351378051e8b919e9",
+      "title": "D22",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {},
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "a7d63bfde9c158da240eaa937ff080665a048d313c14fad8b87c3f8772e7b776",
+        "first_framebuffer_sha256": "a7d63bfde9c158da240eaa937ff080665a048d313c14fad8b87c3f8772e7b776",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 217448,
+        "emulated_frame": 13504,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D22.FIG",
+        "reopen_actions": [
+          "type:desk draw d22.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "94af52fd0bf4d886305096b623b906669487ee10112374193c8627496609aea3"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {},
+      "rendered_elements": 1,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 2544,
+        "renderer_foreground_pixels": 2541,
+        "foreground_union_pixels": 2544,
+        "foreground_intersection_pixels": 2541,
+        "foreground_iou": 0.998821,
+        "exact_rgb_shared_foreground_pixels": 2541,
+        "exact_rgb_on_foreground_union": 0.998821,
+        "exact_rgb_frame_pixels": 267517,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 2544
+        },
+        "native_foreground_bbox_xyxy": [
+          115,
+          60,
+          256,
+          156
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          115,
+          60,
+          256,
+          156
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d22-native.png",
+          "sha256": "3d73484990444ad27df8886048673751f73307ce8324b8018a532078cfbbb3d3",
+          "size": 2036,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d22-renderer.png",
+          "sha256": "d47a247c545df0f418b54c921bd3ab3acb2a3848c64a021d3e45924af3701a54",
+          "size": 2035,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d22-diff.png",
+          "sha256": "344ea6e9f744d3278f40070211dde38f517b531388be9923dc609503bde5e2dc",
+          "size": 2068,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d22-renderer.svg",
+          "sha256": "2819a4d89674a447d1d53ee52fb650325a141e56270328864bc864046ebd44ce",
+          "size": 410,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    },
+    {
+      "id": "d23",
+      "source_path": "tests/fixtures/application-generated/draw/d23.fig",
+      "source_sha256": "3a65ae65872af24f5a50291503158bb2b983c3b403aad1838387c043ab893613",
+      "title": "D23",
+      "dimensions": [
+        640,
+        418
+      ],
+      "font_resources": {
+        "Cobb": {
+          "filename": "COBB.FF1",
+          "sha256": "891e9f07ed2d9fd5f5c8e75d0facd3d4094e891096a6e77a6a8b3db1518a265f"
+        }
+      },
+      "native_background": "#000081",
+      "native_capture": {
+        "source_role": "verified-identical-native-recapture",
+        "framebuffer_sha256": "c0b8ccf2c2341dd13936923b530185d158fe951067f0ead69b806d4ec8ea4c48",
+        "first_framebuffer_sha256": "c0b8ccf2c2341dd13936923b530185d158fe951067f0ead69b806d4ec8ea4c48",
+        "framebuffer_dimensions": [
+          640,
+          480
+        ],
+        "bios_mode": 18,
+        "emulated_ms": 225624,
+        "emulated_frame": 14007,
+        "crop_xyxy": [
+          0,
+          62,
+          640,
+          480
+        ],
+        "zoom": "Normal",
+        "dos_name": "D23.FIG",
+        "reopen_actions": [
+          "type:desk draw d23.fig|",
+          "step:5200",
+          "mouse:-900,-900,0",
+          "step:750"
+        ],
+        "stable_repaint_actions": [
+          "step:450"
+        ],
+        "baseline_framebuffer_sha256": "37c626227ea2a8310141f2d2b31f573585176d9d05957f4950b4bd240bac3cde"
+      },
+      "renderer_background": "#000081",
+      "renderer_font_resources": {
+        "Cobb": {
+          "sha256": "891e9f07ed2d9fd5f5c8e75d0facd3d4094e891096a6e77a6a8b3db1518a265f",
+          "mode": "local-unhinted-base-face"
+        }
+      },
+      "rendered_elements": 1,
+      "omissions": [],
+      "metrics": {
+        "native_foreground_pixels": 381,
+        "renderer_foreground_pixels": 408,
+        "foreground_union_pixels": 485,
+        "foreground_intersection_pixels": 304,
+        "foreground_iou": 0.626804,
+        "exact_rgb_shared_foreground_pixels": 304,
+        "exact_rgb_on_foreground_union": 0.626804,
+        "exact_rgb_frame_pixels": 267339,
+        "overlap_with_rgb_difference_pixels": 0,
+        "native_foreground_palette_counts": {
+          "#c2c200": 381
+        },
+        "native_foreground_bbox_xyxy": [
+          110,
+          48,
+          251,
+          66
+        ],
+        "renderer_foreground_bbox_xyxy": [
+          110,
+          48,
+          251,
+          67
+        ]
+      },
+      "artifacts": {
+        "native.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d23-native.png",
+          "sha256": "10fa65ae5f8706f047b150ec24821fef9b2c7c6786ccbf83550f3f6fdd20b3d0",
+          "size": 1757,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d23-renderer.png",
+          "sha256": "40f7c775490f1f813103e0dbe46b242874fc90ed36708853121705a31541d2a9",
+          "size": 1780,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "diff.png": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d23-diff.png",
+          "sha256": "4938ad0e60c29097b2f7422f3cc713f324f93a48958d956428a2ee0f32d11c0c",
+          "size": 2167,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        },
+        "renderer.svg": {
+          "path": "examples/draw-comparison/v1/vga-ff1-03/d23-renderer.svg",
+          "sha256": "9ab5bb7468fb1535ec6bb88a65c2bb17478d9d152f2ce2f4e813f128c9d25cde",
+          "size": 7565,
+          "license": "GPL-3.0-or-later OR CC-BY-4.0"
+        }
+      }
+    }
+  ]
+}

@@ -52,6 +52,14 @@ class DrawArtifactsTest(unittest.TestCase):
             with self.subTest(extra=extra), self.assertRaises(ValueError):
                 audit.check_svg(SVG.replace(b'</svg>', extra + b'</svg>'))
 
+    def test_closed_cubic_outline_only(self):
+        outline = b'<path d="M 0 0 L 2 3 C 2 3 1 1 0 0 Z M 1 1 L 1 1 Z" fill="#012345"/>'
+        audit.check_svg(SVG.replace(b'</svg>', outline + b'</svg>'))
+        for bad in (outline.replace(b' C ', b' A '), outline.replace(b' L 1 1 Z', b' L 1 1'),
+                    outline.replace(b' 0 0 Z', b' 0 Z'), outline.replace(b' Z M ', b' ZM ')):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                audit.check_svg(SVG.replace(b'</svg>', bad + b'</svg>'))
+
 
 class DrawLibraryAuditTest(unittest.TestCase):
     def setUp(self):

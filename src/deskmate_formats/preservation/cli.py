@@ -3,7 +3,7 @@ import argparse
 from pathlib import Path
 import sys
 
-from .. import sampled_music
+from .. import font_resources, sampled_music
 from . import collection
 from .bundle import export, prepare, verify
 from .model import PreservationError, error_report
@@ -20,6 +20,8 @@ def _parser():
         action.add_argument('input')
         action.add_argument('--application', choices=APPLICATIONS, help='select the native reader explicitly')
         action.add_argument('--instruments', type=Path, help='SND directory for Music sampled playback')
+        action.add_argument('--ff1', action='append', type=Path, default=[],
+                            help='use this local outline font for Draw, Text or Filer graphics (repeatable)')
         action.add_argument('--sample-policy', choices=sampled_music.SAMPLE_POLICIES,
                             help='Music sample range resolution (default rsx-ranges)')
     convert.add_argument('--output-dir', required=True, help='new directory for the bundle or collection')
@@ -41,6 +43,7 @@ def main(argv=None):
                 'application': args.application,
                 'instruments': None if args.instruments is None else sampled_music.load_instruments(args.instruments),
                 'sample_policy': args.sample_policy or 'rsx-ranges',
+                'outline_faces': font_resources.load_outline_faces(args.ff1),
             }
         if args.command == 'inspect':
             result = prepare(args.input, **options).manifest
@@ -60,6 +63,10 @@ def main(argv=None):
                       'artifact_count': len(manifest['artifacts'])}
     except sampled_music.PlaybackError as exc:
         error = PreservationError('instrument_collection_error', str(exc))
+        sys.stderr.write(json_bytes(error_report(error)).decode('ascii'))
+        return 2
+    except font_resources.FontResourceError as exc:
+        error = PreservationError('outline_resource_error', str(exc))
         sys.stderr.write(json_bytes(error_report(error)).decode('ascii'))
         return 2
     except (PreservationError, OSError) as exc:
