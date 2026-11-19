@@ -1,9 +1,12 @@
 """Exercise the FF1 directory inspection profile with synthetic bytes."""
+import json
+from pathlib import Path
 from struct import pack, pack_into
 import unittest
 
 from deskmate_formats import font_resources as ff1
 from deskmate_formats import graphics, graphics_raster
+from deskmate_formats.preservation.bundle import prepare
 
 
 def resource():
@@ -94,3 +97,19 @@ class DirectoryTest(unittest.TestCase):
         self.assertEqual(raster.omissions, ())
         self.assertEqual(raster.rgb[3 * (22 * 640 + 20):][:3], b'\xc2\xc2\0')
         self.assertEqual(raster.rgb[3 * (43 * 640 + 30):][:3], b'\0\0\x81')
+
+    def test_draw_text_and_filer_outline_assets(self):
+        root = Path(__file__).resolve().parents[1] / 'fixtures/application-generated'
+        commands = pack('<BhhBhhBhhBhh', 0, 0, 0, 1, 500, 0, 1, 250, -600, 1, 0, 0)
+        data = pack('<H4h2H', 1, 0, -600, 500, 0, len(commands), 0) + commands
+        entries = tuple(ff1.GlyphEntry(code, 600, 0, len(data)) for code in range(32, 127))
+        face = ff1.OutlineFace('Cobb', '0' * 64, ff1.GlyphIndex(1000, entries), data)
+        for fixture, asset, origin in (
+                ('draw/d23.fig', 'drawing.svg', b'M 1375 765'),
+                ('text/tp09.doc', 'assets/picture-001.svg', b'M 100 356'),
+                ('filer/g23.fil', 'assets/card.svg', b'M 1800 906')):
+            with self.subTest(fixture=fixture):
+                prepared = prepare(root / fixture, outline_faces={'cobb': face})
+                self.assertIn(origin, prepared.files[asset])
+                info = json.loads(prepared.files['content.json'])
+                self.assertEqual(info['supplied_outline_resources'], [{'family': 'Cobb', 'sha256': '0' * 64}])

@@ -12,28 +12,80 @@
   <div class="brand"><span class="emblem" aria-hidden="true"></span> Draw Workbench</div>
   <div id="document-name" class="filename" aria-live="polite">Open a FIG</div>
 </header>
-<nav class="commands" aria-label="Drawing commands">
+<nav class="menus" id="classic-menus" aria-label="Draw menus">
+  <details><summary>Help <kbd>F1</kbd></summary><div class="menu-list">
+    <button type="button" data-command="help">Drawing keys</button>
+  </div></details>
+  <details><summary>File <kbd>F2</kbd></summary><div class="menu-list">
+    <button type="button" data-command="new">New</button>
+    <button type="button" data-command="open">Open…</button>
+    <button type="button" data-command="save">Save As…</button>
+    <button type="button" data-command="download">Original FIG</button>
+    <label>Examples <select id="examples"></select></label>
+    <button type="button" data-command="svg-export">Export SVG</button>
+    <button type="button" data-command="png-export">Export PNG</button>
+  </div></details>
+  <details><summary>Edit <kbd>F3</kbd></summary><div class="menu-list">
+    <button type="button" data-command="edit">Move / Resize…</button>
+    <button type="button" data-command="label">Edit label…</button>
+    <button type="button" data-command="delete">Clear</button>
+    <button type="button" data-command="undo">Undo</button>
+    <button type="button" data-command="redo">Redo</button>
+  </div></details>
+  <details><summary>Actions <kbd>F4</kbd></summary><div class="menu-list">
+    <button type="button" data-command="top">Move to top</button>
+    <button type="button" data-command="bottom">Move to bottom</button>
+    <button type="button" data-command="group">Make object (all)</button>
+    <button type="button" data-command="ungroup">Break object</button>
+  </div></details>
+  <details><summary>Zoom <kbd>F5</kbd></summary><div class="menu-list">
+    <button type="button" data-command="normal">Normal</button>
+    <button type="button" data-zoom="2">Two times</button>
+    <button type="button" data-zoom="4">Four times</button>
+    <button type="button" data-zoom="0.5">Half</button>
+    <button type="button" data-zoom="0.25">Quarter</button>
+    <button type="button" data-command="fit">Fit drawing</button>
+    <button type="button" data-command="plus">Zoom in</button>
+    <button type="button" data-command="minus">Zoom out</button>
+  </div></details>
+  <details><summary>Options <kbd>F6</kbd></summary><div class="menu-list">
+    <button type="button" data-command="palette-edit">Colors…</button>
+    <button type="button" data-command="ink">New object ink and fill…</button>
+    <button type="button" data-command="font-open">Load local FF1 fonts…</button>
+    <button type="button" data-command="font-clear">Clear local fonts</button>
+    <button type="button" data-command="inspector">Toggle inspector</button>
+  </div></details>
+  <details><summary>Tools <kbd>F7</kbd></summary><div class="menu-list" id="drawing-tools">
+    <button type="button" data-tool="select">Select</button>
+    <button type="button" data-tool="L">Line</button>
+    <button type="button" data-tool="R">Rectangle</button>
+    <button type="button" data-tool="E">Ellipse</button>
+    <button type="button" disabled>Text</button>
+    <button type="button" disabled>Brush</button>
+    <button type="button" disabled>Filled Brush</button>
+    <button type="button" disabled>Arc</button>
+    <button type="button" data-tool="polyline">Polyline</button>
+    <button type="button" data-tool="polygon">Polygon</button>
+  </div></details>
+</nav>
+<div hidden>
   <button id="open" type="button">Open FIG <kbd>O</kbd></button>
   <input id="file" type="file" accept=".fig" hidden>
-  <label>Example <select id="examples"></select></label>
-  <span class="divider" aria-hidden="true"></span>
   <button id="minus" type="button" aria-label="Zoom out">−</button>
-  <output id="zoom">100%</output>
   <button id="plus" type="button" aria-label="Zoom in">+</button>
   <button id="normal" type="button">Normal</button>
   <button id="fit" type="button">Fit drawing</button>
-  <span class="divider" aria-hidden="true"></span>
   <button id="download" type="button">Original FIG</button>
   <button id="save" type="button" disabled>Save FIG As</button>
   <button id="svg-export" type="button">SVG</button>
   <button id="png-export" type="button">PNG</button>
-</nav>
-<main>
+</div>
+<main class="inspection-hidden">
   <section class="workspace" aria-label="Drawing surface">
     <div id="viewport" class="viewport" tabindex="0" aria-label="Drawing canvas. Use arrow keys to pan.">
       <div id="stage"></div>
     </div>
-    <div class="canvas-info"><strong id="canvas-mode">Scalable preview</strong><span id="drawing-stats"></span></div>
+    <div class="canvas-info"><strong id="canvas-mode">Scalable preview</strong><span id="drawing-stats"></span><output id="zoom">100%</output></div>
   </section>
   <aside class="inspector" aria-label="Native document inspector">
     <section aria-labelledby="objects-title">
@@ -74,6 +126,17 @@
     <output id="edit-error" role="status"></output>
     <div class="dialog-actions">
       <button type="button" id="edit-cancel">Cancel</button>
+      <button type="submit">Apply</button>
+    </div>
+  </form>
+</dialog>
+<dialog id="command-dialog">
+  <form id="command-form">
+    <h2 id="command-title"></h2>
+    <div id="command-fields"></div>
+    <output id="command-error" role="status"></output>
+    <div class="dialog-actions">
+      <button type="button" id="command-cancel">Cancel</button>
       <button type="submit">Apply</button>
     </div>
   </form>

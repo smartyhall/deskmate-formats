@@ -52,8 +52,8 @@ def _figure(path, label, detail, *, style='', rendered=True):
             f'<a href="{path}">SVG</a></figcaption></figure>')
 
 
-def convert_draw(drawing, filename):
-    preview = graphics.preview_svg(drawing.form, drawing.palette)
+def convert_draw(drawing, filename, *, outline_faces=None):
+    preview = graphics.preview_svg(drawing.form, drawing.palette, outline_faces=outline_faces)
     content = asdict(drawing)
     content['preview'] = _svg_data(preview)
     content['profile'] = 'draw-3.05-14-fig'
@@ -67,7 +67,7 @@ def convert_draw(drawing, filename):
     })
 
 
-def _picture_previews(document, conversion):
+def _picture_previews(document, conversion, outline_faces):
     figures = []
     budget = MAX_TEXT_SVG_BYTES
     limited = 0
@@ -88,7 +88,7 @@ def _picture_previews(document, conversion):
                 'text_picture_unsupported', 'omission', f'Picture geometry could not be decoded: {exc}', location))
             figures.append(f'<p>{caption} · geometry unavailable</p>')
             continue
-        preview = graphics.preview_svg(form)
+        preview = graphics.preview_svg(form, outline_faces=outline_faces)
         rendered = preview.svg.encode('utf-8')
         if len(rendered) > budget:
             limited += 1
@@ -177,7 +177,7 @@ def _document_body(document, figures, *, use_controls, dense_lines):
     return '<article class="document">' + ''.join(body) + '</article>', layout_inside_line
 
 
-def convert_text(document, filename):
+def convert_text(document, filename, *, outline_faces=None):
     conversion = Conversion(asdict(document), [
         Diagnostic('text_layout_approximation', 'approximation',
                    'Hard line breaks and measured character attributes are displayed with browser '
@@ -189,7 +189,7 @@ def convert_text(document, filename):
             'text_picture_placement_approximation', 'approximation',
             'Pictures appear in source order at their decoded text positions. Horizontal indent '
             'uses the stored display column with a width cap for narrow screens.'))
-    figures = _picture_previews(document, conversion)
+    figures = _picture_previews(document, conversion, outline_faces)
     dense_lines = document.text.count('\n') > 20_000
     use_controls = len(document.controls) == document.control_count and not dense_lines
     if not use_controls:
@@ -223,7 +223,7 @@ def _record(row):
     }
 
 
-def convert_filer(snapshot, filename):
+def convert_filer(snapshot, filename, *, outline_faces=None):
     data = snapshot.table('DATA')
     headings = [column.name for column in data.columns]
     records = [_record(row) for row in data.rows]
@@ -267,7 +267,7 @@ def convert_filer(snapshot, filename):
         conversion.diagnostics.extend(_visual_diagnostics(native_palette=False))
     for section in sections:
         kind = {'F': 'card', 'R': 'report'}[section.marker]
-        preview = graphics.preview_svg(section.form)
+        preview = graphics.preview_svg(section.form, outline_faces=outline_faces)
         asset = f'assets/{kind}.svg'
         conversion.artifacts[asset] = preview.svg.encode('utf-8')
         content['graphics'].append({**asdict(section), 'asset': asset, 'preview': _svg_data(preview)})

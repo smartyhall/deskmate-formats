@@ -10,6 +10,13 @@ reported separately from browser approximations and omissions in modern
 formats. Every accepted source is copied byte-for-byte to the bundle.
 The Calendar tooling below also offers the narrower `observed` profile.
 
+For Draw, Text pictures and Filer graphics, `deskmate-preserve export
+--ff1 LOCAL.FF1` can project supported unrotated outline labels using
+an explicitly supplied local base face. The bundle records the family
+and hash and preserves the original document. The RSX raster and
+offline FIG editor have their own measured profiles. See
+[Draw II evidence](research/draw-ii-20261119.md).
+
 ## Multimedia profiles
 
 The generic 03.05.00 distribution studied here lacks the audio applications.

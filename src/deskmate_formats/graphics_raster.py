@@ -58,8 +58,25 @@ class RasterPreview:
     background: tuple[int, int, int]
 
 
-def _point(x, y):
-    return int(x * 2 / 25), int(y * 19 / 220)
+@dataclass(frozen=True)
+class RasterViewport:
+    """The unscrolled 640 × 418 RSX drawing area at a measured zoom."""
+
+    zoom: int = 1
+
+    def __post_init__(self):
+        if type(self.zoom) is not int or self.zoom not in (1, 2, 4):
+            raise ValueError('RSX raster viewport supports Normal, Two times and Four times')
+
+    def project(self, x, y):
+        return x * self.zoom * 2 / 25, y * self.zoom * 19 / 220
+
+    def point(self, x, y):
+        px, py = self.project(x, y)
+        return int(px), int(py)
+
+
+NORMAL_VIEWPORT = RasterViewport()
 
 
 def _clip(start, end):
@@ -203,43 +220,40 @@ def _brush_segment(image, start, end, rgb, nib):
         _line(image, start_edge, end_edge, rgb)
 
 
-def _shape(element):
+def _shape(element, point):
     a, b, c, d = element.bounds
     el, raw = element.kind, element.raw
     if el == 'L':
-        return [_point(a, b), _point(c, d)], False, raw[18], None
+        return [point(a, b), point(c, d)], False, raw[18], None
     if el == 'R':
-        points = [_point(a, b), _point(c, b), _point(c, d), _point(a, d)]
+        points = [point(a, b), point(c, b), point(c, d), point(a, d)]
         return points, True, raw[18], (raw[1], raw[22], raw[21])
     if el == 'E':
         # The contour sampler approximates the native integer ellipse walk.
-        points = [_point((a + c + (c - a) * cos(t * pi / 180)) / 2,
+        points = [point((a + c + (c - a) * cos(t * pi / 180)) / 2,
                          (b + d + (d - b) * sin(t * pi / 180)) / 2) for t in range(360)]
         return points, True, raw[18], (raw[1], raw[22], raw[21])
     if el == 'UA':
         quadratic = arc_quadratic(element)
         if quadratic is not None:
             p0, q, p1 = quadratic
-            points = [_point(*((1-t)**2*v0 + 2*(1-t)*t*vq + t*t*v1 for v0, vq, v1 in zip(p0, q, p1)))
+            points = [point(*((1-t)**2*v0 + 2*(1-t)*t*vq + t*t*v1 for v0, vq, v1 in zip(p0, q, p1)))
                       for i in range(257) for t in (i / 256,)]
             return points, False, raw[20], None
     if el == 'UP' and len(element.points) >= 2:
         sx, sy = unpack_from('<HH', raw, 28)
-        points = [_point(a + (x * (c-a) / sx if sx else 0), b + (y * (d-b) / sy if sy else 0))
+        points = [point(a + (x * (c-a) / sx if sx else 0), b + (y * (d-b) / sy if sy else 0))
                   for x, y in element.points]
         return points, bool(raw[32] or raw[33]), raw[20], ((raw[24], raw[26], raw[25]) if raw[32] else None)
     return None
 
 
-def _glyph_edges(glyph):
-    def project(point):
-        return point[0] * 2 / 25, point[1] * 19 / 220
-
+def _glyph_edges(glyph, viewport):
     edges = []
     for start, segments in glyph:
-        previous = project(start)
+        previous = viewport.project(*start)
         for segment in segments:
-            points = tuple(map(project, segment))
+            points = tuple(viewport.project(*point) for point in segment)
             if len(points) == 1:
                 edges.append((previous, points[0]))
             else:
@@ -280,13 +294,13 @@ def _fill_glyph(image, edges, rows, color):
                     image[offset:offset + 3 * (end - start)] = color * (end - start)
 
 
-def _raster_outlines(image, glyphs, color, budget):
+def _raster_outlines(image, glyphs, color, budget, viewport):
     prepared = []
     cost = 0
     for glyph in glyphs:
         if not glyph:
             continue
-        edges = _glyph_edges(glyph)
+        edges = _glyph_edges(glyph, viewport)
         ys = [y for edge in edges for _, y in edge]
         rows = range(max(0, ceil(min(ys) - .5)), min(HEIGHT, ceil(max(ys) - .5)))
         cost += len(edges) * (1 + len(rows)) + WIDTH * len(rows)
@@ -298,8 +312,8 @@ def _raster_outlines(image, glyphs, color, budget):
     return cost
 
 
-def preview_rsx(form, palette, *, outline_faces=None):
-    """Render the Normal-zoom RSX drawing crop with the measured fill profiles.
+def preview_rsx(form, palette, *, outline_faces=None, viewport=NORMAL_VIEWPORT):
+    """Render the RSX drawing crop. Style measurements use the Normal viewport.
 
     Uses measured line pens, dash masks and screen-phase fill tiles, with
     approximate brush, ellipse, curve and polygon rasterization. Other
@@ -316,7 +330,7 @@ def preview_rsx(form, palette, *, outline_faces=None):
             glyphs, cost, reason = outline_layout(record, outline_faces, outline_budget)
             outline_budget -= cost
             if reason is None:
-                cost = _raster_outlines(image, glyphs, colors.get(OUTLINE_INK_INDEX, bytes(3)), budget)
+                cost = _raster_outlines(image, glyphs, colors.get(OUTLINE_INK_INDEX, bytes(3)), budget, viewport)
                 if cost is not None:
                     budget -= cost
                     rendered += 1
@@ -324,7 +338,7 @@ def preview_rsx(form, palette, *, outline_faces=None):
                 reason = 'raster_work_limit'
             omitted.append(SvgOmission(record.offset, '5566', reason))
             continue
-        shape = _shape(record) if budget > 0 else None
+        shape = _shape(record, viewport.point) if budget > 0 else None
         if shape is None:
             reason = 'raster_work_limit' if budget <= 0 else 'unsupported_rsx_raster_element'
             omitted.append(SvgOmission(record.offset, record.kind.encode('latin-1').hex(), reason))

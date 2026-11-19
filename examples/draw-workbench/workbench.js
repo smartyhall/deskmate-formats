@@ -3,13 +3,15 @@
 const get = id => document.getElementById(id);
 const viewport = get('viewport'), stage = get('stage');
 const state = { model: null, original: null, past: [], future: [], name: '', selected: null,
-  scale: 1, x: 0, y: 0, box: [0, 0, 8000, 4840], faces: new Map() };
+  scale: 1, x: 0, y: 0, box: [0, 0, 8000, 4840], faces: new Map(),
+  tool: 'select', points: [], cursor: [4000, 2420], color: 1, fill: null, profile: null };
 const svgNS = 'http://www.w3.org/2000/svg';
 const names = { L: 'Line', R: 'Rectangle', E: 'Ellipse', UA: 'Arc', UP: 'Polyline / polygon',
   OO: 'Object group', T: 'Stroke text', Uf: 'External-font text' };
 const examples = JSON.parse(get('samples').textContent);
 const number = value => Number(value.toFixed(5));
 const hex = data => [...data].map(value => value.toString(16).padStart(2, '0')).join(' ');
+let drag;
 
 function node(tag, text) {
   const result = document.createElement(tag);
@@ -49,6 +51,11 @@ function frame() {
   if (!preview.omissions.length) get('omissions').append(node('li', 'No records omitted in this preview.'));
   selection(state.selected);
   viewportTransform();
+  draft();
+}
+
+function activeEntry() {
+  return state.model?.entries.find(item => item.offset === state.selected);
 }
 
 function selection(offset) {
@@ -60,6 +67,7 @@ function selection(offset) {
   const record = state.model?.elements.get(offset);
   const entry = state.model?.entries.find(item => item.offset === offset);
   get('edit').disabled = !entry || !DrawFig.canEdit(state.model, entry.tag);
+  updateMenus();
   const inspect = get('inspection');
   if (!record) {
     inspect.textContent = 'Select a record or shape.';
@@ -84,16 +92,26 @@ function selection(offset) {
   if (record.children.length) rows.push(['Children', record.children.join(', ')]);
   for (const [k, v] of rows) details.append(node('dt', k), node('dd', v));
   inspect.replaceChildren(details);
-  const box = document.createElementNS(svgNS, 'rect');
-  box.id = 'selection-outline';
+  const box = document.createElementNS(svgNS, 'rect'), selection = document.createElementNS(svgNS, 'g');
+  selection.id = 'selection-outline';
+  selection.setAttribute('pointer-events', 'none');
   const s = Math.max(state.box[2] / 640, state.box[3] / 418);
+  const left = Math.min(x0, x1) - s, right = Math.max(x0, x1) + s;
+  const top = Math.min(y0, y1) - s, bottom = Math.max(y0, y1) + s;
   for (const [key, value] of Object.entries({
-    x: Math.min(x0, x1) - s, y: Math.min(y0, y1) - s,
-    width: Math.abs(x1 - x0) + 2 * s, height: Math.abs(y1 - y0) + 2 * s,
-    fill: 'none', stroke: '#fff0c0', 'stroke-width': 1,
-    'stroke-dasharray': '3 3', 'vector-effect': 'non-scaling-stroke', 'pointer-events': 'none',
+    x: left, y: top, width: right - left, height: bottom - top,
+    fill: 'none', stroke: '#fff0c0', 'stroke-width': 1, 'vector-effect': 'non-scaling-stroke',
   })) box.setAttribute(key, value);
-  stage.querySelector('svg')?.append(box);
+  selection.append(box);
+  if (right - left > 8 * s && bottom - top > 8 * s) {
+    for (const [x, y] of [[left, top], [right, top], [left, bottom], [right, bottom]]) {
+      const handle = document.createElementNS(svgNS, 'rect');
+      for (const [key, value] of Object.entries({ x: x - 2 * s, y: y - 2 * s, width: 4 * s, height: 4 * s,
+        fill: '#fff0c0' })) handle.setAttribute(key, value);
+      selection.append(handle);
+    }
+  }
+  stage.querySelector('svg')?.append(selection);
 }
 
 function fillInspector(model) {
@@ -126,15 +144,20 @@ function fillInspector(model) {
 function load(name, bytes) {
   try {
     const model = DrawFig.read(bytes);
-    Object.assign(state, { model, original: model, past: [], future: [], name, selected: null,
-      x: 0, y: 0, scale: 1, box: [0, 0, 8000, 4840] });
-    get('document-name').textContent = name;
-    fillInspector(model);
-    frame();
-    editStatus();
+    openModel(name, model);
   } catch (error) {
     report(`${name}: ${error.message}`);
   }
+}
+
+function openModel(name, model) {
+  Object.assign(state, { model, original: model, past: [], future: [], name, selected: null,
+    x: 0, y: 0, scale: 1, box: [0, 0, 8000, 4840], profile: DrawFig.structuralProfile(model) });
+  get('document-name').textContent = name;
+  setTool('select');
+  fillInspector(model);
+  frame();
+  editStatus();
 }
 
 async function openFile(file) {
@@ -195,8 +218,11 @@ get('file').addEventListener('change', event => {
 get('font-open').addEventListener('click', () => get('font-file').click());
 function showFonts() {
   get('font-clear').disabled = state.faces.size === 0;
-  get('local-fonts').replaceChildren(...Array.from(state.faces.values(), face =>
-    node('li', `${face.name} · ${face.filename}`)));
+  get('local-fonts').replaceChildren(...Array.from(state.faces.values(), face => {
+    const entry = node('li', `${face.name} · ${face.filename}`);
+    if (face.sha256) entry.title = `SHA-256 ${face.sha256}`;
+    return entry;
+  }));
   frame();
 }
 get('font-file').addEventListener('change', async event => {
@@ -211,7 +237,9 @@ get('font-file').addEventListener('change', async event => {
       const key = face.name.toLowerCase(), existing = state.faces.get(key);
       if (existing && !existing.same(bytes)) throw new Error(`Conflicting local resource for ${face.name}`);
       if (!existing && state.faces.size >= 32) throw new Error('Local font resource limit reached');
-      state.faces.set(key, { ...face, filename: file.name });
+      const sha256 = globalThis.crypto?.subtle ? hex(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)))
+        .replaceAll(' ', '') : null;
+      state.faces.set(key, { ...face, filename: file.name, sha256 });
     } catch (error) {
       omissions.push(`${file.name}: ${error.message}`);
     }
@@ -225,10 +253,13 @@ get('font-clear').addEventListener('click', () => {
   report('Cleared local FF1 resources.');
 });
 get('download').addEventListener('click', () => {
-  if (state.original) download(state.name, state.original.copy(), 'application/octet-stream');
+  if (state.original && !state.original.blank) download(state.name, state.original.copy(), 'application/octet-stream');
 });
 get('save').addEventListener('click', () => {
-  if (state.model) download(`${stem()}-edited.fig`, state.model.copy(), 'application/octet-stream');
+  if (state.model && !state.model.blank) {
+    const name = state.original.blank ? 'drawing.fig' : `${stem()}-edited.fig`;
+    download(name, state.model.copy(), 'application/octet-stream');
+  }
 });
 get('svg-export').addEventListener('click', () => {
   if (state.model) download(`${stem()}.svg`,
@@ -265,20 +296,40 @@ function editStatus() {
   get('undo').disabled = !state.past.length;
   get('redo').disabled = !state.future.length;
   const supported = state.model.entries.filter(entry => DrawFig.canEdit(state.model, entry.tag)).length;
-  const message = state.original !== state.model ? 'Edited locally. Save FIG As downloads the edited copy.'
+  const message = state.model.blank ? 'Choose a drawing tool from Tools.'
+    : state.original !== state.model ? 'Edited locally. Save As downloads the FIG.'
+    : state.profile === 'flat' ? 'Choose a tool to add objects or select a record to edit.'
     : supported === state.model.elements.size && supported
       ? 'Select a line or rectangle to edit. Original FIG remains available.'
       : supported ? 'Partly editable. Select a top-level line or rectangle.'
       : 'Read-only drawing. Original FIG remains available.';
   report(message);
+  updateMenus();
+}
+
+function showRevision(model, tag) {
+  state.model = model;
+  state.profile = DrawFig.structuralProfile(model);
+  state.selected = model.entries.find(e => e.tag === tag)?.offset ?? null;
+  state.points = [];
+  if (state.profile !== 'flat') setTool('select');
+  fillInspector(model);
+  frame();
+  editStatus();
+}
+
+function commitRevision(model, tag = activeEntry()?.tag) {
+  if (state.past.length === 32) state.past.shift();
+  state.past.push({ model: state.model, tag: activeEntry()?.tag });
+  state.future.length = 0;
+  showRevision(model, tag);
 }
 
 function restore(source, destination) {
   if (!source.length) return;
-  destination.push(state.model);
-  state.model = source.pop();
-  frame();
-  editStatus();
+  destination.push({ model: state.model, tag: activeEntry()?.tag });
+  const { model, tag } = source.pop();
+  showRevision(model, tag);
 }
 get('undo').addEventListener('click', () => restore(state.past, state.future));
 get('redo').addEventListener('click', () => restore(state.future, state.past));
@@ -316,26 +367,251 @@ get('edit-form').addEventListener('submit', event => {
     [key, Number(value) * (key === 'color' ? 1 : 65536)]));
   try {
     const next = DrawFig.edit(state.model, Number(event.target.dataset.tag), options);
-    if (state.past.length === 32) state.past.shift();
-    state.past.push(state.model);
-    state.future.length = 0;
-    state.model = next;
     dialog.close();
-    frame();
-    editStatus();
+    commitRevision(next);
   } catch (error) {
     get('edit-error').textContent = error.message;
   }
 });
-window.addEventListener('keydown', event => {
-  if (event.ctrlKey || event.metaKey || event.altKey || ['INPUT', 'SELECT', 'BUTTON'].includes(event.target.tagName)) return;
-  if (event.key.toLowerCase() === 'o') {
+const menuBar = get('classic-menus');
+const menus = [...menuBar.querySelectorAll('details')];
+
+function closeMenus(except = null) {
+  for (const menu of menus) if (menu !== except) menu.open = false;
+}
+
+function updateMenus() {
+  const entry = activeEntry(), model = state.model;
+  if (!model) return;
+  const limits = {
+    save: model === state.original || model.blank,
+    download: state.original.blank,
+    undo: !state.past.length, redo: !state.future.length,
+    edit: get('edit').disabled, label: !entry || !DrawFig.canPermute(model, entry.tag),
+    delete: !entry || state.profile !== 'flat' || model.entries.length <= 1,
+    top: !entry || model.entries.at(-1) === entry, bottom: !entry || model.entries[0] === entry,
+    group: state.profile !== 'flat' || model.entries.length < 2, ungroup: state.profile !== 'group',
+    'palette-edit': model.blank, 'font-clear': state.faces.size === 0,
+  };
+  for (const [name, disabled] of Object.entries(limits)) {
+    menuBar.querySelector(`[data-command="${name}"]`).disabled = Boolean(disabled);
+  }
+  for (const button of menuBar.querySelectorAll('[data-tool]')) {
+    button.disabled = state.profile !== 'flat' && button.dataset.tool !== 'select';
+    button.setAttribute('aria-pressed', String(state.tool === button.dataset.tool));
+  }
+}
+
+function commandDialog(title, fields, apply) {
+  const form = get('command-form'), dialog = get('command-dialog');
+  get('command-title').textContent = title;
+  get('command-error').textContent = '';
+  get('command-fields').replaceChildren(...fields.map(([key, caption, type, value]) => {
+    const label = node('label', caption), field = node('input');
+    field.name = key;
+    field.type = type;
+    field.value = value;
+    field.required = key !== 'fill';
+    label.append(field);
+    return label;
+  }));
+  form.onsubmit = event => {
     event.preventDefault();
-    get('file').click();
+    try {
+      apply(Object.fromEntries(new FormData(form)));
+      dialog.close();
+    } catch (error) {
+      get('command-error').textContent = error.message;
+    }
+  };
+  dialog.showModal();
+}
+
+get('command-cancel').addEventListener('click', () => get('command-dialog').close());
+
+function order(top) {
+  const tag = activeEntry().tag;
+  const other = state.model.entries.filter(e => e.tag !== tag).map(e => e.tag);
+  commitRevision(DrawFig.reorder(state.model, top ? [...other, tag] : [tag, ...other]));
+}
+
+const commands = {
+  help: () => report('O opens a FIG. Shift+1–7 opens menus. Arrows and Space place points. Enter finishes a path. Escape cancels.'),
+  new: () => openModel('Untitled', DrawFig.blank()),
+  inspector: () => {
+    document.querySelector('main').classList.toggle('inspection-hidden');
+  },
+  delete: () => commitRevision(DrawFig.remove(state.model, activeEntry().tag), null),
+  top: () => order(true), bottom: () => order(false),
+  group: () => {
+    const next = DrawFig.group(state.model);
+    commitRevision(next, next.entries[0].tag);
+  },
+  ungroup: () => commitRevision(DrawFig.ungroup(state.model), null),
+  label: () => {
+    const entry = activeEntry(), item = state.model.elements.get(entry.offset);
+    commandDialog('Edit outline label', [['label', 'Use the same characters', 'text', String.fromCharCode(...item.text)]],
+      values => commitRevision(DrawFig.permuteLabel(state.model, entry.tag, values.label)));
+  },
+  'palette-edit': () => {
+    const index = state.color, rgb = state.model.palette.get(index);
+    commandDialog('Palette color', [['index', 'Index (0–15)', 'number', index], ['rgb', 'RGB', 'color', '#' + rgb.map(v => v.toString(16).padStart(2, '0')).join('')]],
+      values => commitRevision(DrawFig.paletteColor(state.model, Number(values.index),
+        values.rgb.slice(1).match(/../g).map(v => Number.parseInt(v, 16)))));
+  },
+  ink: () => commandDialog('New object ink and fill', [
+    ['color', 'Ink index (0–15)', 'number', state.color],
+    ['fill', 'Fill index (blank for none)', 'number', state.fill ?? ''],
+  ], values => {
+    const color = Number(values.color), fill = values.fill === '' ? null : Number(values.fill);
+    const valid = v => Number.isInteger(v) && v >= 0 && v <= 15;
+    if (!valid(color) || (fill !== null && !valid(fill))) throw new Error('Use palette indices 0–15.');
+    Object.assign(state, { color, fill });
+    draft();
+  }),
+};
+
+menuBar.addEventListener('click', event => {
+  const summary = event.target.closest('summary');
+  if (summary) closeMenus(summary.parentElement);
+  const button = event.target.closest('button');
+  if (!button || button.disabled) return;
+  closeMenus();
+  try {
+    if (button.dataset.tool) setTool(button.dataset.tool);
+    else if (button.dataset.zoom) adjust(Number(button.dataset.zoom));
+    else if (commands[button.dataset.command]) commands[button.dataset.command]();
+    else get(button.dataset.command)?.click();
+  } catch (error) {
+    report(error.message);
   }
 });
+menuBar.addEventListener('keydown', event => {
+  const menu = event.target.closest('details');
+  if (event.key === 'Escape') {
+    closeMenus();
+    menu?.querySelector('summary').focus();
+    event.preventDefault();
+    return;
+  }
+  if (!menu || !['ArrowUp', 'ArrowDown'].includes(event.key)) return;
+  menu.open = true;
+  const buttons = [...menu.querySelectorAll('button:not(:disabled), select')];
+  if (!buttons.length) return;
+  const focused = buttons.indexOf(document.activeElement);
+  const step = event.key === 'ArrowUp' ? -1 : 1;
+  buttons[(focused < 0 ? (step < 0 ? buttons.length - 1 : 0) : (focused + step + buttons.length) % buttons.length)].focus();
+  event.preventDefault();
+});
+document.addEventListener('pointerdown', event => {
+  if (!menuBar.contains(event.target)) closeMenus();
+});
+window.addEventListener('keydown', event => {
+  if (event.ctrlKey || event.metaKey || event.altKey || event.target.closest('dialog, input, select')) return;
+  const fn = /^F([1-7])$/.exec(event.key);
+  const digit = event.shiftKey && /^Digit([1-7])$/.exec(event.code);
+  const menu = menus[Number((fn || digit)?.[1]) - 1];
+  if (menu) {
+    const opening = !menu.open;
+    closeMenus();
+    menu.open = opening;
+    menu.querySelector('summary').focus();
+    event.preventDefault();
+  } else if (event.key.toLowerCase() === 'o') {
+    get('file').click();
+    event.preventDefault();
+  }
+});
+
+function setTool(tool) {
+  state.tool = tool;
+  state.points = [];
+  viewport.classList.toggle('drawing', tool !== 'select');
+  updateMenus();
+  draft();
+  if (tool !== 'select') {
+    viewport.focus();
+    const path = tool === 'polyline' || tool === 'polygon';
+    report(path ? 'Click or press Space to add points. Enter finishes. Escape cancels.'
+      : 'Click or press Space to set each endpoint. Escape cancels.');
+  }
+}
+
+function twoPointTool() {
+  return ['L', 'R', 'E'].includes(state.tool);
+}
+
+function draft() {
+  const svg = stage.querySelector('svg');
+  const old = svg?.querySelector('#drawing-draft');
+  old?.remove();
+  if (!svg || state.tool === 'select') return;
+  const group = document.createElementNS(svgNS, 'g');
+  group.id = 'drawing-draft';
+  const [x, y] = state.cursor;
+  const transient = drag?.drawing && drag?.moved && !state.points.length ? [drag.start] : [];
+  const points = state.points.length ? state.points : transient;
+  const [a, b] = points[0] ?? state.cursor;
+  let guide = '';
+  if (points.length) {
+    if (state.tool === 'E') guide = `<ellipse cx="${(a+x)/2}" cy="${(b+y)/2}" rx="${Math.abs(a-x)/2}" ry="${Math.abs(b-y)/2}"/>`;
+    else if (state.tool === 'R') guide = `<rect x="${Math.min(a,x)}" y="${Math.min(b,y)}" width="${Math.abs(a-x)}" height="${Math.abs(b-y)}"/>`;
+    else guide = `<polyline points="${[...points, state.cursor].map(p => p.join(',')).join(' ')}"/>`;
+  }
+  const unit = Math.max(state.box[2] / 640, state.box[3] / 418) / state.scale;
+  group.setAttribute('fill', 'none');
+  group.setAttribute('stroke', '#ffe7a0');
+  group.setAttribute('pointer-events', 'none');
+  group.innerHTML = guide + `<path d="M ${x-5*unit} ${y} H ${x+5*unit} M ${x} ${y-5*unit} V ${y+5*unit}"/>`;
+  group.querySelectorAll('*').forEach(el => el.setAttribute('vector-effect', 'non-scaling-stroke'));
+  svg.append(group);
+}
+
+function worldPoint(event) {
+  const rect = stage.getBoundingClientRect(), [x, y, width, height] = state.box;
+  return [x + width * (event.clientX - rect.left) / rect.width,
+    y + height * (event.clientY - rect.top) / rect.height].map(v => Math.round(v * 65536) / 65536);
+}
+
+function finishDrawing(points) {
+  try {
+    let { tool, fill } = state;
+    let geometry = points.map(point => point.map(Math.round));
+    if (twoPointTool()) {
+      const [[x, y], [a, b]] = points;
+      const bounds = tool !== 'L' ? [Math.min(x,a), Math.min(y,b), Math.max(x,a), Math.max(y,b)] : [x,y,a,b];
+      geometry = bounds.map(v => Math.round(v * 65536));
+    }
+    if (tool === 'L' || tool === 'polyline') fill = null;
+    const model = DrawFig.add(state.model, tool, geometry, { color: state.color, fill });
+    commitRevision(model, model.entries.at(-1).tag);
+  } catch (error) {
+    report(error.message);
+  }
+}
+
+function placePoint() {
+  const point = [...state.cursor];
+  if (state.points.length && twoPointTool()) finishDrawing([state.points[0], point]);
+  else if (state.points.length >= 4096) report('Finish the current path before adding more points.');
+  else {
+    state.points.push(point);
+    draft();
+  }
+}
+
 viewport.addEventListener('keydown', event => {
   const move = { ArrowUp: [0, 25], ArrowDown: [0, -25], ArrowLeft: [25, 0], ArrowRight: [-25, 0] }[event.key];
+  if (state.tool !== 'select') {
+    if (move) state.cursor = state.cursor.map((v, i) => v - move[i]);
+    else if (event.key === ' ') placePoint();
+    else if (event.key === 'Enter' && state.points.length >= (state.tool === 'polygon' ? 3 : 2)) finishDrawing(state.points);
+    else if (event.key === 'Escape') state.points = [];
+    else return;
+    draft();
+    event.preventDefault();
+    return;
+  }
   if (!move) return;
   event.preventDefault();
   state.x += move[0];
@@ -347,16 +623,41 @@ viewport.addEventListener('wheel', event => {
   const rect = viewport.getBoundingClientRect();
   adjust(state.scale * (event.deltaY < 0 ? 1.25 : .8),
     event.clientX - rect.left - rect.width / 2, event.clientY - rect.top - rect.height / 2);
+  draft();
 }, { passive: false });
 
-let drag;
+function rootOffset(offset) {
+  if (offset === null) return null;
+  const parents = new Map();
+  for (const part of state.model.elements.values()) {
+    for (const child of part.children) parents.set(child, part.offset);
+  }
+  while (parents.has(offset)) offset = parents.get(offset);
+  return offset;
+}
+
 viewport.addEventListener('pointerdown', event => {
   if (event.button !== 0) return;
-  drag = { x: event.clientX, y: event.clientY, startX: state.x, startY: state.y,
-    offset: event.target.getAttribute('data-offset'), moved: false };
+  if (state.tool !== 'select') {
+    const start = worldPoint(event);
+    drag = { drawing: true, start, x: event.clientX, y: event.clientY, moved: false };
+    state.cursor = start;
+    draft();
+  } else {
+    drag = { x: event.clientX, y: event.clientY, startX: state.x, startY: state.y,
+      offset: event.target.getAttribute('data-offset'), moved: false };
+  }
   viewport.setPointerCapture(event.pointerId);
 });
 viewport.addEventListener('pointermove', event => {
+  if (state.tool !== 'select') {
+    state.cursor = worldPoint(event);
+    if (drag?.drawing && twoPointTool()) {
+      drag.moved ||= Math.abs(event.clientX - drag.x) + Math.abs(event.clientY - drag.y) >= 4;
+    }
+    draft();
+    return;
+  }
   if (!drag) return;
   const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
   if (!drag.moved && Math.abs(dx) + Math.abs(dy) < 4) return;
@@ -365,11 +666,16 @@ viewport.addEventListener('pointermove', event => {
   state.y = drag.startY + dy;
   viewportTransform();
 });
-viewport.addEventListener('pointerup', () => {
-  if (drag && !drag.moved) selection(drag.offset === null ? null : Number(drag.offset));
+viewport.addEventListener('pointerup', event => {
+  const finished = drag;
   drag = null;
+  if (finished?.drawing) {
+    state.cursor = worldPoint(event);
+    if (finished.moved && !state.points.length) finishDrawing([finished.start, state.cursor]);
+    else placePoint();
+  } else if (finished && !finished.moved) selection(rootOffset(finished.offset === null ? null : Number(finished.offset)));
 });
-viewport.addEventListener('lostpointercapture', () => { drag = null; });
+viewport.addEventListener('lostpointercapture', () => { drag = null; draft(); });
 window.addEventListener('dragover', event => event.preventDefault());
 window.addEventListener('drop', event => {
   event.preventDefault();
@@ -388,6 +694,9 @@ function showExample(id) {
   load(sample.name, Uint8Array.from(atob(sample.data), char => char.charCodeAt(0)));
   if (viewport.clientWidth < 640) fit();
 }
-get('examples').addEventListener('change', () => showExample(get('examples').value));
+get('examples').addEventListener('change', () => {
+  closeMenus();
+  showExample(get('examples').value);
+});
 get('examples').value = 'compound-landscape';
 showExample(get('examples').value);

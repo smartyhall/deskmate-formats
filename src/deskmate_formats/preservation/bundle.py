@@ -49,14 +49,21 @@ def _identity(path, data):
     return {'path': path, 'size': len(data), 'sha256': sha256(data).hexdigest()}
 
 
-def prepare(path, *, application=None, instruments=None, sample_policy='rsx-ranges'):
+def prepare(path, *, application=None, instruments=None, sample_policy='rsx-ranges', outline_faces=None):
     """Read and interpret a bounded source snapshot without writing files."""
     path = Path(path)
     data = read_bounded(path, native.MAX_SOURCE_BYTES, code='input_too_large')
     document = native.open_native(data, application)
     converter = CONVERTERS[document.application]
     options = {'instruments': instruments, 'sample_policy': sample_policy} if document.application == 'music' else {}
+    graphical = document.application in ('draw', 'text', 'filer')
+    if graphical and outline_faces:
+        options['outline_faces'] = outline_faces
     conversion = converter(document.value, path.name, **options)
+    if graphical and outline_faces:
+        conversion.content['supplied_outline_resources'] = [
+            {'family': face.name, 'sha256': face.sha256} for _, face in sorted(outline_faces.items())
+        ]
     source_path = 'original.' + native.EXTENSIONS[document.application]
     files = {'content.json': json_bytes(conversion.content), **conversion.artifacts}
     manifest = {
@@ -106,9 +113,10 @@ def publish(bundle, output):
         raise
 
 
-def export(path, output, *, application=None, instruments=None, sample_policy='rsx-ranges'):
+def export(path, output, *, application=None, instruments=None, sample_policy='rsx-ranges', outline_faces=None):
     """Export one input document into a newly created output directory."""
-    return publish(prepare(path, application=application, instruments=instruments, sample_policy=sample_policy), output)
+    return publish(prepare(path, application=application, instruments=instruments, sample_policy=sample_policy,
+                           outline_faces=outline_faces), output)
 
 
 def _require(condition, message):

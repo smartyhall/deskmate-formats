@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from struct import unpack_from
 
-from deskmate_formats import draw, graphics
+from deskmate_formats import draw, font_resources, graphics
 
 
 def count_attributes(stats, name, values):
@@ -103,7 +103,7 @@ def inspect(drawing, stats):
     return form, drawing.palette
 
 
-def inventory(archive, *, recover_arc_length=False):
+def inventory(archive, *, recover_arc_length=False, outline_faces=None):
     inputs = {}
     for path in sorted(archive.rglob('*')):
         if not path.is_file() or path.is_symlink() or path.suffix.lower() != '.fig':
@@ -140,7 +140,7 @@ def inventory(archive, *, recover_arc_length=False):
             if drawing.recovered_arcs:
                 item['recovered_arc_offsets'] = drawing.recovered_arcs
             try:
-                preview = graphics.preview_svg(form, palette)
+                preview = graphics.preview_svg(form, palette, outline_faces=outline_faces)
             except graphics.GraphicsFormatError as exc:
                 stats['projection_failures'][str(exc)] += 1
             else:
@@ -160,6 +160,8 @@ def inventory(archive, *, recover_arc_length=False):
     }
     if recover_arc_length:
         result['recovered_files'] = sum(bool(item.get('recovered_arc_offsets')) for item in records)
+    if outline_faces:
+        result['outline_resources'] = {face.name: face.sha256 for _, face in sorted(outline_faces.items())}
     return result
 
 
@@ -169,8 +171,10 @@ if __name__ == '__main__':
     parser.add_argument('output', type=Path)
     parser.add_argument('--recover-arc-length', action='store_true')
     parser.add_argument('--summary-only', action='store_true')
+    parser.add_argument('--ff1', type=Path, action='append', default=[])
     args = parser.parse_args()
-    result = inventory(args.archive, recover_arc_length=args.recover_arc_length)
+    result = inventory(args.archive, recover_arc_length=args.recover_arc_length,
+                       outline_faces=font_resources.load_outline_faces(args.ff1))
     if args.summary_only:
         sources = result.pop('sources')
         result['ordered_source_digests_sha256'] = sha256(

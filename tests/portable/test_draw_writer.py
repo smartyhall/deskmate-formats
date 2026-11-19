@@ -21,6 +21,29 @@ def read(name):
 
 
 class WriterTest(unittest.TestCase):
+    def test_construct_single_line_from_profile(self):
+        expected = read('d01')
+        item, = draw.parse_bytes(expected).form.draw_order()
+        coords = tuple(int(value * 65536) for value in item.bounds)
+        self.assertEqual(draw_writer.new_drawing('L', coords, color=item.raw[18]), expected)
+
+    def test_native_saves_of_browser_created_documents(self):
+        for kind in ('line', 'rectangle', 'group'):
+            name = f'browser-new-{kind}'
+            before = draw.parse_bytes(read(name))
+            after = draw.parse_bytes(read(name + ('-native-moved' if kind == 'group' else '-native')))
+            source, native = tuple(before.form.draw_order()), tuple(after.form.draw_order())
+            self.assertEqual(before.palette, after.palette)
+            dx, dy = (300, -11) if kind == 'group' else (0, 0)
+            for a, b in zip(source, native, strict=True):
+                x0, y0, x1, y1 = a.bounds
+                self.assertEqual((b.kind, b.bounds, b.raw[18:]),
+                                 (a.kind, (x0 + dx, y0 + dy, x1 + dx, y1 + dy), a.raw[18:]))
+            if kind == 'group':
+                self.assertEqual(len(before.form.entries), 1)
+                self.assertEqual(len(before.form.elements), 5)
+                self.assertEqual(len(after.form.entries), 4)
+
     def test_exact_copy_and_localized_edits(self):
         bad = read('arc-extent-native-resaved')
         self.assertEqual(draw_writer.exact_copy(memoryview(bad), recover_arc_length=True), bad)
@@ -245,3 +268,41 @@ class BrowserCodecTest(unittest.TestCase):
             self.assertEqual(a.get('fill'), b.get('fill'))
             tokens = lambda d: [token if token in 'MLCZ' else float(token) for token in d.split()]
             self.assertEqual(tokens(a.get('d')), tokens(b.get('d')))
+
+    def test_browser_structural_edits_match_python_bytes(self):
+        actual = self.browser(
+            '''
+            const fs = require('node:fs'), codec = require(process.argv[1]);
+            const values = JSON.parse(fs.readFileSync(0, 'utf8'));
+            const u = 65536, raw = m => Buffer.from(m.copy()).toString('hex');
+            const first = codec.add(codec.blank(), 'L', [100, 201, 403, 500].map(v => v * u));
+            const rectangle = codec.add(codec.blank(), 'R', [503, 660, 1900, 1325].map(v => v * u), {color: 2, fill: 4});
+            const second = codec.add(first, 'E', [503, 660, 1900, 1325].map(v => v * u), {color: 2, fill: 4});
+            const third = codec.add(second, 'polyline', [[-25, 6], [12, 18], [14, 0]], {color: 7});
+            const fourth = codec.add(third, 'polygon', [[25, 100], [200, 20], [100, 900]], {fill: 10});
+            const ordered = codec.reorder(fourth, [4, 2, 3, 1]);
+            const grouped = codec.group(ordered);
+            const broken = codec.ungroup(grouped);
+            const removed = codec.remove(broken, broken.entries[1].tag);
+            const recolored = codec.paletteColor(removed, 4, [140, 200, 255]);
+            const text = codec.read(Buffer.from(values.text, 'base64'));
+            const label = codec.permuteLabel(text, text.entries[0].tag, 'DIXON 42');
+            process.stdout.write(JSON.stringify([first, rectangle, second, third, fourth, ordered, grouped, broken,
+                                                  removed, recolored, label].map(raw)));
+            ''',
+            {'text': read('outline-fonts-native')},
+        )
+        first = draw_writer.new_drawing('L', [v * 65536 for v in (100, 201, 403, 500)])
+        rectangle = draw_writer.new_drawing('R', [v * 65536 for v in (503, 660, 1900, 1325)], color=2, fill=4)
+        second = draw_writer.add_ellipse(first, [v * 65536 for v in (503, 660, 1900, 1325)], color=2, fill=4)
+        third = draw_writer.add_polyline(second, [(-25, 6), (12, 18), (14, 0)], color=7)
+        fourth = draw_writer.add_polyline(third, [(25, 100), (200, 20), (100, 900)], closed=True, fill=10)
+        ordered = draw_writer.reorder(fourth, [4, 2, 3, 1])
+        grouped = draw_writer.group_all(ordered)
+        broken = draw_writer.ungroup_all(grouped)
+        removed = draw_writer.delete(broken, draw.parse_bytes(broken).form.entries[1].tag)
+        recolored = draw_writer.replace_palette_color(removed, 4, [140, 200, 255])
+        text = read('outline-fonts-native')
+        label = draw_writer.permute_outline_label(text, draw.parse_bytes(text).form.entries[0].tag, b'DIXON 42')
+        self.assertEqual(actual, [blob.hex() for blob in
+                                  (first, rectangle, second, third, fourth, ordered, grouped, broken, removed, recolored, label)])

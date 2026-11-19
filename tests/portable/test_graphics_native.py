@@ -16,6 +16,12 @@ def read_drawing(name):
 
 
 class ObliquePenTest(unittest.TestCase):
+    def test_unscrolled_viewport_mappings(self):
+        for zoom, expected in ((1, (160, 86)), (2, (320, 172)), (4, (640, 345))):
+            self.assertEqual(graphics_raster.RasterViewport(zoom).point(2000.25, 1000.25), expected)
+        with self.assertRaisesRegex(ValueError, 'supports Normal'):
+            graphics_raster.RasterViewport(.5)
+
     def test_normal_zoom_native_line_neighborhoods(self):
         # Drawing-area RGB crops from the isolated line trials. Each crop
         # includes four background pixels beyond the stored endpoints.

@@ -82,12 +82,20 @@ def line_record(coords, color):
     return _record('L', 0, coords) + bytes((_color(color), 0))
 
 
-def ellipse_record(coords, color, fill):
+def _closed_primitive(kind, coords, color, fill):
     x0, y0, x1, y1 = coords
     if not (x0 < x1 and y0 < y1):
-        raise graphics.GraphicsFormatError('ellipse requires positive ordered bounds')
+        raise graphics.GraphicsFormatError('shape requires positive ordered bounds')
     pattern, foreground = (254, 1) if fill is None else (1, _color(fill))
-    return _record('E', pattern, coords) + bytes((_color(color), 0, 0, 0, foreground, 0))
+    return _record(kind, pattern, coords) + bytes((_color(color), 0, 0, 0, foreground, 0))
+
+
+def ellipse_record(coords, color, fill):
+    return _closed_primitive('E', coords, color, fill)
+
+
+def rectangle_record(coords, color, fill):
+    return _closed_primitive('R', coords, color, fill)
 
 
 def polyline_record(points, color, closed, fill):
