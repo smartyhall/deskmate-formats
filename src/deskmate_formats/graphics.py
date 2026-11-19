@@ -78,6 +78,25 @@ class StrokeGlyph:
 
 
 @dataclass(frozen=True)
+class ExternalFontRun:
+    """Measured Uf descriptor and label bytes; glyph data is external."""
+
+    name: str
+    attributes: bytes
+    descriptor: bytes
+    text_bytes: bytes
+    padding: bytes
+
+    @property
+    def point_size_word(self):
+        return unpack_from('<H', self.descriptor, 0)[0]
+
+    @property
+    def width_percent_word(self):
+        return unpack_from('<H', self.descriptor, 2)[0]
+
+
+@dataclass(frozen=True)
 class SvgOmission:
     """Location and reason for an element excluded from the geometry preview."""
 
@@ -130,7 +149,29 @@ def parse_strokes(source):
     return tuple(glyphs.values())
 
 
-def _elements(data, entries, directory_end):
+def _font_run(raw, length):
+    if length < 102 or raw[98:100] != b'\0\0':
+        return None
+    name, terminator, padding = raw[26:56].partition(b'\0')
+    count, = unpack_from('<H', raw, 96)
+    end = 100 + count
+    if (not terminator or not name or any(padding) or any(not 32 <= code <= 126 for code in name)
+            or not end <= length <= end + 2 or (length == end + 2 and raw[end:length] != b'\0\0')
+            or b'\0' in raw[100:end]):
+        return None
+    return ExternalFontRun(name.decode('ascii'), raw[20:26], raw[56:96],
+                           raw[100:end], raw[end:length])
+
+
+def external_font_run(element):
+    """Inspect a validated Uf record without loading its external resource."""
+    if element.kind != 'Uf' or len(element.raw) < 20:
+        return None
+    size, = unpack_from('<H', element.raw, 18)
+    return _font_run(element.raw, 2 * size) if 2 * size <= len(element.raw) else None
+
+
+def _elements(data, entries, directory_end, *, recover_arc_length=False):
     pending = [entry.offset for entry in entries]
     offsets = set(pending)
     _require(len(offsets) == len(entries), 'duplicate display-list element')
@@ -153,6 +194,7 @@ def _elements(data, entries, directory_end):
 
     boundaries = sorted(offsets) + [len(data)]
     elements = []
+    recovered_arc = False
     for offset, end in zip(boundaries, boundaries[1:]):
         raw = data[offset:end]
         _require(len(raw) >= ELEMENT_SIZE, 'overlapping element records')
@@ -171,27 +213,33 @@ def _elements(data, entries, directory_end):
         elif kind.startswith('U'):
             _require(len(raw) >= 20, 'truncated extended element')
             words, = unpack_from('<H', raw, 18)
-            _require(20 <= words * 2 <= len(raw), 'extended element exceeds its record')
+            if (recover_arc_length and not recovered_arc and kind == 'UA' and len(raw) == 44
+                    and words == 23 and (data[end:end + 1] == b'L' or data[end:end + 2] == b'UP')):
+                # The measured native reader draws the fixed UA structure and
+                # retains the original size word across Save As.
+                recovered_arc = True
+            else:
+                _require(20 <= words * 2 <= len(raw), 'extended element exceeds its record')
             if kind == 'UP':
                 _require(words >= 18, 'truncated polyline header')
                 count, = unpack_from('<H', raw, 34)
                 _require(words * 2 == 36 + 4 * count, 'polyline point count disagrees with size')
                 flat = unpack_from(f'<{2 * count}H', raw, 36)
                 points = tuple(zip(flat[::2], flat[1::2]))
-            elif kind == 'Uf' and words >= 51 and raw[26:31] == b'Cobb\x00':
-                count, = unpack_from('<H', raw, 96)
-                text_end = 100 + count
-                if raw[98:100] == b'\x00\x00' and text_end < words * 2 and raw[text_end] == 0:
-                    label, font_name = raw[100:text_end], 'Cobb'
+            elif kind == 'Uf':
+                font = _font_run(raw, 2 * words)
+                if font:
+                    label, font_name = font.text_bytes, font.name
         elements.append(Element(offset, kind, raw[1], coords, raw, children, points, label, font_name))
     return tuple(elements)
 
 
-def parse_bytes(source, *, text_picture=False):
+def parse_bytes(source, *, text_picture=False, recover_arc_length=False):
     """Read FORM HEADER, size buffer, list and strokes from a bounded payload.
 
     Set text_picture for the native Text variant with one extra payload byte.
     The reserved header words and unrecognized records are preserved verbatim.
+    The explicit Draw recovery permits one measured legacy arc length mismatch.
     """
     _require(isinstance(source, (bytes, bytearray, memoryview)), 'expected a byte snapshot')
     _require(PREFIX_SIZE <= memoryview(source).nbytes <= MAX_BYTES, 'invalid form payload size')
@@ -211,7 +259,7 @@ def parse_bytes(source, *, text_picture=False):
                     (unpack_from('<HH', listing, i) for i in range(2, directory_end, 4)))
     _require(len({entry.tag for entry in entries}) == count, 'duplicate display-list tag')
     return Form(data[:HEADER_SIZE], listing, data[list_end:end], entries,
-                _elements(listing, entries, directory_end), data[end:])
+                _elements(listing, entries, directory_end, recover_arc_length=recover_arc_length), data[end:])
 
 
 def _number(value):
@@ -227,6 +275,29 @@ def _polyline(element, palette, style):
     fill = palette.get(element.raw[26], '#b0b0b0') if element.raw[32] and element.raw[24] != 0xFE else 'none'
     tag = 'polygon' if element.raw[32] or element.raw[33] else 'polyline'
     return f'<{tag} points="{points}" fill="{fill}" {style}/>'
+
+
+def arc_quadratic(element):
+    """Return the measured UA geometry as start, control and end in world units."""
+    if element.kind != 'UA' or len(element.raw) != 44 or element.raw[18:20] not in (b'\x16\0', b'\x17\0'):
+        return None
+    x0, y0, x1, y1 = element.bounds
+    x_extent, y_extent, ax, ay, bx, by, px, py = unpack_from('<8h', element.raw, 28)
+    if x_extent <= 0 or y_extent <= 0 or x1 < x0 or y1 < y0:
+        return None
+    dx, dy = (x1 - x0) / x_extent, (y1 - y0) / y_extent
+    a = (x0 + ax * dx, y0 + ay * dy)
+    b = (x0 + bx * dx, y0 + by * dy)
+    p = (x0 + px * dx, y0 + py * dy)
+    q = (2 * p[0] - (a[0] + b[0]) / 2, 2 * p[1] - (a[1] + b[1]) / 2)
+    return a, q, b
+
+
+def _svg_arc(element, colors, points):
+    a, q, b = (' '.join(map(_number, pair)) for pair in points)
+    stroke = colors.get(element.raw[20], '#333333')
+    return (f'<path d="M {a} Q {q} {b}" fill="none" stroke="{stroke}" '
+            'stroke-width="1" vector-effect="non-scaling-stroke"/>')
 
 
 def _svg_element(element, palette):
@@ -264,7 +335,7 @@ def _svg_stroke_text(element, glyphs, colors):
             f'fill="none" stroke="{color}" stroke-width="1">' + ''.join(paths) + '</g>')
 
 
-def preview_svg(form, palette=()):
+def preview_svg(form, palette=(), *, substitute_external_fonts=False):
     """Return the geometry preview, dimensions and omitted element locations.
 
     Palette entries are (index, red, green, blue). Stroke styles and patterned
@@ -283,12 +354,27 @@ def preview_svg(form, palette=()):
     point_costs = {key: sum(map(len, glyph.paths)) for key, glyph in glyphs.items()}
     point_budget = MAX_PREVIEW_STROKE_POINTS
     shapes, bounds, missing = [], [], []
+    substitutions = 0
     for element in leaves:
         if element.kind == 'UP' and len(element.points) < 2:
             missing.append(SvgOmission(element.offset, '5550', 'polyline_has_too_few_points'))
             continue
-        if element.kind in PREVIEW_KINDS:
+        if element.kind == 'UA':
+            arc = arc_quadratic(element)
+            if arc is None:
+                missing.append(SvgOmission(element.offset, '5541', 'unsupported_arc_extent'))
+                continue
+            shape = _svg_arc(element, colors, arc)
+        elif element.kind in PREVIEW_KINDS:
             shape = _svg_element(element, colors)
+        elif substitute_external_fonts and element.kind == 'Uf' and element.text_bytes:
+            x0, y0, x1, y1 = element.bounds
+            label = ''.join(c if ord(c) >= 0x20 else '\ufffd' for c in element.text_bytes.decode('cp437'))
+            color = colors.get(element.raw[20], '#333333')
+            shape = (f'<text x="{_number(min(x0, x1))}" y="{_number(max(y0, y1))}" '
+                     f'font-size="{_number(max(1, abs(y1-y0)))}" font-family="monospace" '
+                     f'fill="{color}">{escape(label)}</text>')
+            substitutions += 1
         elif (element.kind == 'T' and element.text_bytes and element.raw[21] == 0
               and all((element.modifier, code) in glyphs for code in element.text_bytes)):
             cost = sum(point_costs[element.modifier, code] for code in element.text_bytes)
@@ -310,6 +396,8 @@ def preview_svg(form, palette=()):
     box = (min(xs) - pad, min(ys) - pad, max(xs) - min(xs) + 2*pad, max(ys) - min(ys) + 2*pad)
     view = ' '.join(map(_number, box))
     description = 'DeskMate geometry preview with approximate fills, stroke styles and text spacing.'
+    if substitutions:
+        description += f' Generic monospace substitutes for {substitutions} external font runs.'
     if missing:
         kinds = sorted({item.kind_hex for item in missing})
         description += ' Omitted element type bytes (hex) ' + ', '.join(kinds) + '.'
@@ -324,6 +412,6 @@ def preview_svg(form, palette=()):
     return SvgPreview(svg, box, geometry, len(shapes), tuple(missing))
 
 
-def render_svg(form, palette=()):
+def render_svg(form, palette=(), *, substitute_external_fonts=False):
     """Return the stand-alone SVG string for the measured geometry preview."""
-    return preview_svg(form, palette).svg
+    return preview_svg(form, palette, substitute_external_fonts=substitute_external_fonts).svg

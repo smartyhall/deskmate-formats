@@ -14,6 +14,118 @@ def read_drawing(name):
     return draw.parse_file(FIXTURES / 'draw' / (name + '.fig'))
 
 
+class ArcRecoveryTest(unittest.TestCase):
+    def test_native_arc_size_disagreement_is_opt_in(self):
+        root = FIXTURES / 'draw'
+        good = (root / 'arc-extent-control.fig').read_bytes()
+        bad = (root / 'arc-extent-native-resaved.fig').read_bytes()
+        self.assertEqual(good[:72] + b'\x17' + good[73:], bad)
+        with self.assertRaisesRegex(graphics.GraphicsFormatError, 'extended element exceeds'):
+            draw.parse_bytes(bad)
+        recovered = draw.parse_bytes(bad, recover_arc_length=True)
+        self.assertEqual(recovered.recovered_arcs, (10,))
+        self.assertEqual(recovered.form.list_data[28:30], b'\x17\0')
+        self.assertEqual([e.kind for e in recovered.form.elements], ['UA', 'L'])
+        self.assertEqual(graphics.render_svg(recovered.form, recovered.palette),
+                         graphics.render_svg(draw.parse_bytes(good).form, recovered.palette))
+        for offset, value in ((72, 24), (98, ord('R')), (55, ord('V'))):
+            candidate = bytearray(bad)
+            candidate[offset] = value
+            with self.subTest(offset=offset), self.assertRaises(graphics.GraphicsFormatError):
+                draw.parse_bytes(candidate, recover_arc_length=True)
+
+    def test_quadratic_geometry_and_reflection_boundary(self):
+        drawing = read_drawing('arc-grid-native')
+        arcs = tuple(drawing.form.draw_order())
+        self.assertEqual(graphics.arc_quadratic(arcs[0]), ((400, 800), (1100, 200), (1800, 800)))
+        self.assertEqual(graphics.arc_quadratic(arcs[1]), ((3450, 800), (2750, 200), (2050, 800)))
+        self.assertEqual(graphics.arc_quadratic(arcs[4]), ((400, 2450), (455, 650), (1850, 2450)))
+        self.assertEqual(graphics.arc_quadratic(arcs[8]), ((400, 4450), (1300, 1550), (2200, 4450)))
+        self.assertIsNone(graphics.arc_quadratic(arcs[9]))
+        preview = graphics.preview_svg(drawing.form, drawing.palette)
+        self.assertEqual(preview.rendered_elements, 10)
+        self.assertEqual([omission.reason for omission in preview.omissions], ['unsupported_arc_extent'])
+        self.assertIn('d="M 400 800 Q 1100 200 1800 800"', preview.svg)
+
+
+class ExternalFontTest(unittest.TestCase):
+    def test_descriptor_and_optional_safe_substitution(self):
+        original = bytearray((FIXTURES / 'draw/d23.fig').read_bytes())
+        drawing = draw.parse_bytes(original)
+        element, = drawing.form.draw_order()
+        start = 44 + element.offset
+        original[start + 26:start + 31] = b'Dixon'
+        original[start + 100:start + 109] = b'LAB <& 42'
+        renamed = draw.parse_bytes(original)
+        run = graphics.external_font_run(next(renamed.form.draw_order()))
+        self.assertEqual(run.name, 'Dixon')
+        self.assertEqual(run.text_bytes, b'LAB <& 42')
+        self.assertEqual(run.padding, b'\0')
+        self.assertEqual(len(run.descriptor), 40)
+        self.assertEqual((run.point_size_word, run.width_percent_word), (24, 100))
+        self.assertNotIn('<text ', graphics.render_svg(renamed.form, renamed.palette))
+        substitute = graphics.render_svg(renamed.form, renamed.palette, substitute_external_fonts=True)
+        self.assertIn('Generic monospace substitutes for 1 external font runs', substitute)
+        self.assertIn('LAB &lt;&amp; 42', substitute)
+
+    def test_native_dixon_and_marin(self):
+        drawing = read_drawing('outline-fonts-native')
+        refs = [graphics.external_font_run(item) for item in drawing.form.draw_order()]
+        self.assertEqual([(ref.name, ref.text_bytes, ref.point_size_word, ref.width_percent_word) for ref in refs],
+                         [('Dixon', b'DIXON 24', 24, 100), ('Marin', b'MARIN 24', 24, 100)])
+
+
+class ArcTransferTest(unittest.TestCase):
+    def test_arc_and_rectangle_across_native_wrappers(self):
+        drawing = read_drawing('arc-transfer-native').form
+        document = text.parse_file(FIXTURES / 'text/arc-transfer-native.doc')
+        picture, = document.pictures
+        data = filer.parse_file(FIXTURES / 'filer/arc-transfer-native.fil')
+        card, report = filer_graphics.decode(data)
+        self.assertEqual((picture.column, picture.payload[-1]), (0, 25))
+        self.assertEqual((card.marker, report.marker), ('F', 'R'))
+        self.assertEqual((len(card.payload), len(report.payload)), (122, 122))
+        self.assertEqual([len(chunk) for item in (card, report) for chunk in item.encoded_chunks], [205, 205])
+        wrapped = (
+            (graphics.parse_bytes(picture.payload, text_picture=True), (-850, -410)),
+            (card.form, (850, 140)),
+            (report.form, (1050, 580)),
+        )
+        for form, (dx, dy) in wrapped:
+            with self.subTest(dx=dx, dy=dy):
+                self.assertEqual(len(form.entries), 1)
+                for source, copy in zip(drawing.draw_order(), form.draw_order(), strict=True):
+                    self.assertEqual(source.kind, copy.kind)
+                    self.assertEqual(source.raw[18:], copy.raw[18:])
+                    a, b, c, d = source.bounds
+                    self.assertEqual(copy.bounds, (a + dx, b + dy, c + dx, d + dy))
+                preview = graphics.preview_svg(form)
+                self.assertEqual(preview.rendered_elements, 2)
+                self.assertIn('<path d="M ', preview.svg)
+
+    def test_independent_text_replacement_and_native_resave(self):
+        folder = FIXTURES / 'text'
+        records = [text.parse_file(folder / name) for name in (
+            'arc-replacement-tool-generated.doc', 'arc-replacement-native.doc')]
+        forms = []
+        for document in records:
+            self.assertEqual(document.text, 'ARC SAMPLE\n')
+            picture, = document.pictures
+            self.assertEqual((picture.offset, picture.column, len(picture.payload), picture.payload[-1]),
+                             (34, 3, 123, 25))
+            forms.append(graphics.parse_bytes(picture.payload, text_picture=True))
+        self.assertEqual(forms[0].list_data, forms[1].list_data)
+        self.assertEqual([e.kind for e in forms[1].draw_order()], ['UA', 'R'])
+
+    def test_brush_tools_saved_as_extended_paths(self):
+        open_path, closed_path = read_drawing('brushes-native').form.draw_order()
+        self.assertEqual([part.kind for part in (open_path, closed_path)], ['UP', 'UP'])
+        self.assertEqual((len(open_path.points), len(closed_path.points)), (8, 6))
+        self.assertEqual(open_path.raw[32:34], b'\0\0')
+        self.assertEqual(closed_path.raw[32:34], b'\xff\xff')
+        self.assertEqual(open_path.raw[22:25], closed_path.raw[22:25])
+
+
 def read_text(name):
     return text.parse_file(FIXTURES / 'text' / (name + '.doc'))
 

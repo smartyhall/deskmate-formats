@@ -1,5 +1,17 @@
 # Project status — DeskMate formats
 
+## Draw preservation and native graphics — 2026-11-19
+
+The Draw campaign freezes four original native-resaved figures and
+19 diagnostic inputs. Four immutable comparison milestones pair those
+exact inputs with genuine RSX framebuffer crops, the PR #120 baseline,
+shared quadratic SVGs and two independent raster profiles. A local
+browser gallery and offline FIG Workbench provide visual comparison,
+inspection, and the first native-validated edits. The 206-figure
+historical inventory, explicit arc recovery, Python writing operations
+and native Text/Filer transfers are documented in the
+[campaign report](docs/research/draw-campaign-20261119.md).
+
 ## Independent sampled Music playback — 2026-11-18
 
 The [v1 listening suite](examples/music-listening/README.md) contains

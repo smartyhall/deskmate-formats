@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>DeskMate Draw Workbench</title>
+<style>/* workbench-css */</style>
+</head>
+<body>
+<header class="titlebar">
+  <div class="brand"><span class="emblem" aria-hidden="true"></span> Draw Workbench</div>
+  <div id="document-name" class="filename" aria-live="polite">Open a FIG</div>
+</header>
+<nav class="commands" aria-label="Drawing commands">
+  <button id="open" type="button">Open FIG <kbd>O</kbd></button>
+  <input id="file" type="file" accept=".fig" hidden>
+  <label>Example <select id="examples"></select></label>
+  <span class="divider" aria-hidden="true"></span>
+  <button id="minus" type="button" aria-label="Zoom out">−</button>
+  <output id="zoom">100%</output>
+  <button id="plus" type="button" aria-label="Zoom in">+</button>
+  <button id="normal" type="button">Normal</button>
+  <button id="fit" type="button">Fit drawing</button>
+  <span class="divider" aria-hidden="true"></span>
+  <button id="download" type="button">Original FIG</button>
+  <button id="save" type="button" disabled>Save FIG As</button>
+  <button id="svg-export" type="button">SVG</button>
+  <button id="png-export" type="button">PNG</button>
+</nav>
+<main>
+  <section class="workspace" aria-label="Drawing surface">
+    <div id="viewport" class="viewport" tabindex="0" aria-label="Drawing canvas. Use arrow keys to pan.">
+      <div id="stage"></div>
+    </div>
+    <div class="canvas-info"><strong id="canvas-mode">Scalable preview</strong><span id="drawing-stats"></span></div>
+  </section>
+  <aside class="inspector" aria-label="Native document inspector">
+    <section aria-labelledby="objects-title">
+      <h2 id="objects-title">Display list</h2>
+      <ol id="objects" class="objects"></ol>
+    </section>
+    <section aria-labelledby="palette-title">
+      <h2 id="palette-title">Palette</h2>
+      <div id="palette" class="palette"></div>
+    </section>
+    <section aria-labelledby="selection-title">
+      <h2 id="selection-title">Record inspector</h2>
+      <div id="inspection">Select a record or shape.</div>
+      <div class="edits">
+        <button type="button" id="edit" disabled>Edit record</button>
+        <button type="button" id="undo" disabled>Undo</button>
+        <button type="button" id="redo" disabled>Redo</button>
+      </div>
+    </section>
+    <details>
+      <summary>Preview limits</summary>
+      <p>Scalable geometry uses approximations for stroke weights and fill patterns. Missing glyphs and unsupported records are listed below.</p>
+      <label><input type="checkbox" id="substitute"> Show generic labels for unresolved fonts</label>
+      <ul id="omissions"></ul>
+    </details>
+  </aside>
+</main>
+<dialog id="edit-dialog">
+  <form id="edit-form">
+    <h2 id="edit-title">Edit record</h2>
+    <div id="edit-fields"></div>
+    <output id="edit-error" role="status"></output>
+    <div class="dialog-actions">
+      <button type="button" id="edit-cancel">Cancel</button>
+      <button type="submit">Apply</button>
+    </div>
+  </form>
+</dialog>
+<footer><output id="status" role="status">Open or drop a local DeskMate FIG.</output><span>Local files · Offline</span></footer>
+<script type="application/json" id="samples">/* workbench-samples */</script>
+<script>/* workbench-codec */</script>
+<script>/* workbench-script */</script>
+</body>
+</html>

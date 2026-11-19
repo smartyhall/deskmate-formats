@@ -10,6 +10,10 @@ import tarfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
+if (ROOT / 'src/deskmate_formats').is_dir():
+    sys.path.insert(0, str(ROOT / 'src'))
+from deskmate_formats.supervisor import draw_comparison_audit as draw_audit
+
 EXCLUDED = {'.git', 'build', 'dist', 'local-results', 'private-fixtures', '.ruff_cache'}
 FIXTURE_DIR = Path('tests/fixtures/application-generated')
 LISTENING_DIR = Path('examples/music-listening/v1')
@@ -259,6 +263,8 @@ def check_listening_wav(rel, data, entry):
 
 def audit():
     allowed = fixture_manifest()
+    comparisons, comparison_metadata = draw_audit.comparison_manifest(ROOT, allowed)
+    comparisons_found = set()
     listening, listening_metadata = listening_manifest(allowed)
     listening_found = set()
     found = set()
@@ -271,6 +277,14 @@ def audit():
             raise ValueError('symlink is not permitted: ' + rel)
         if path.name.lower() in PRIVATE_SPOOL_FILES:
             raise ValueError('private Observatory spool file: ' + rel)
+        if rel in comparisons:
+            draw_audit.check_artifact(ROOT, rel, comparisons[rel])
+            comparisons_found.add(rel)
+            count += 1
+            continue
+        if rel_path.is_relative_to(draw_audit.TREE) and rel not in comparison_metadata:
+            if rel_path.name not in ('README.md', 'README.md.license') or len(rel_path.parts) != 5:
+                raise ValueError('unlisted Draw comparison file: ' + rel)
         if rel in listening:
             if path.stat().st_size != listening[rel]['size']:
                 raise ValueError('listening WAV digest or size mismatch: ' + rel)
@@ -319,6 +333,7 @@ def audit():
     if listening_found != set(listening) and (
             listening_found or (ROOT / '.git').exists() or not (ROOT / 'PKG-INFO').is_file()):
         raise ValueError('missing declared listening WAVs')
+    draw_audit.check_complete(ROOT, comparisons, comparisons_found)
     # Git-only binary fixtures are excluded. Pinned synthetic JSONL ships in the sdist.
     for path in (ROOT / 'dist').glob('*'):
         if path.suffix == '.whl':
@@ -333,6 +348,7 @@ def audit():
             if any(part in EXCLUDED or part.startswith('.venv') for part in Path(name).parts):
                 raise ValueError('excluded directory in archive: ' + name)
             if (Path(name).suffix.lower() in BAD_EXT
+                    or draw_audit.packaged_projection(name)
                     or native_text_export(Path(name.partition('/')[2]))
                     or native_text_export(Path(name))):
                 raise ValueError('excluded file in archive: ' + name)
@@ -349,6 +365,7 @@ def audit():
     return {'source_files_checked': count, 'status': 'passed',
             'application_generated_fixtures_checked': len(found),
             'listening_wavs_checked': len(listening_found),
+            'draw_comparison_artifacts_checked': len(comparisons_found),
             'synthetic_jsonl_fixtures_checked': telemetry_count,
             'excluded': 'Commercial software, private data and unlisted binary files.'}
 

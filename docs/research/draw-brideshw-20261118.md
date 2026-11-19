@@ -40,10 +40,32 @@ historical figures occupy 44 bytes and declare 22 words. Changing only
 The case remains outside strict decoding until the native interpretation
 is verified.
 
-For the next native experiment, draw a synthetic standalone arc followed
-physically by a distinctly positioned polyline. Verify that their saved
-boundaries are 44 bytes apart, change only the arc length from 22 to 23 in
-a disposable copy, and compare both shapes on screen and after Save As.
-On another disposable disk, Save As the untouched BRIDESHW and compare
-this word and its neighboring entries. These controls can distinguish
-fixed-layout rendering, skipping the arc and normalizing the size on save.
+## Native reopen and size-word control
+
+On 2026-11-19, Draw 03.05.00 opened the untouched historical FIG and saved
+`BRDSAVE.FIG` on a disposable clone. The resave is 6,101 bytes, SHA-256
+`97b2da2ea6d7627d499a4324e0a11eed67aabe01607e982b06a9774b05335b87`.
+Only six bytes changed, at file offsets 32, 36–39 and 292. The arc still
+declares 23 words and still occupies 44 bytes. The untouched source,
+native resave and private one-word-corrected copy reopened natively with
+byte-identical 640 × 418 drawing crops in the Normal viewport.
+
+The independent synthetic candidate contained a 44-byte `UA` record at
+list byte 10 followed by a visibly distinct 20-byte line at byte 54.
+Native Save As preserved both records. The stopped-disk extraction
+confirmed a 22-word declaration at file offset 72. The next test staged
+that result and a second copy with only file byte 72 changed to 23. Draw
+showed both the arc and line in both files. They and the native resave of
+the 23-word variant had identical native drawing pixels. The native resave
+preserved all 187 candidate bytes. 7-Zip and the direct FAT16 reader
+agreed on the extracted figures in both trials. The source controls are
+in the [fixture manifest](../../tests/fixtures/application-generated/manifest.json).
+
+For these controls, the visible operation uses fixed arc geometry across
+the 44-byte boundary. Native Save As preserves the declared size word.
+Strict decoding still rejects the disagreement. Draw's opt-in
+`recover_arc_length=True` or `--recover-arc-length` qualifies one
+23-word declaration in a 44-byte `UA` followed by a valid line or
+polyline record. The directory, child ownership and remaining lengths
+receive the usual validation. The reported recovered offset identifies the
+affected original record, and the original size word remains available.

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "draw-native-20261119",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 23,
+    "token_records": 3018,
+    "sessions": 23
+  },
+  "checkpoint": "baseline",
+  "collected_at": "2026-11-19T07:10:00.045460+00:00",
+  "commit": "c05d3b49980e4ff9a17d47056010865b44d7645e",
+  "observation": {
+    "session": "74643f8c130a75c5bae8c2a8",
+    "measured_at": "2026-11-19T07:09:38.482000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 8337818,
+      "cached_input": 8180352,
+      "output": 41981,
+      "reasoning_output": 6036,
+      "total": 8379799
+    },
+    "reported_last": {
+      "input": 153765,
+      "cached_input": 152448,
+      "output": 336,
+      "reasoning_output": 152,
+      "total": 154101
+    },
+    "windows": {
+      "300": {
+        "used_percent": 14.0,
+        "reset_epoch": 1795088836,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 17.0,
+        "reset_epoch": 1795652781,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  }
+}

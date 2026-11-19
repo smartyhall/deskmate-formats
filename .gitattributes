@@ -19,6 +19,8 @@ tests/fixtures/application-generated/filer/*.fil -text
 tests/fixtures/application-generated/text/*.doc binary
 tests/fixtures/application-generated/text/*.txt binary
 tests/fixtures/application-generated/draw/*.fig binary
+examples/draw-comparison/v1/**/*.png binary
+examples/draw-comparison/v1/**/*.svg -text
 tests/fixtures/application-generated/worksheet/*.wks binary
 tests/fixtures/application-generated/sound/*.snd binary
 tests/fixtures/application-generated/music/*.sng binary

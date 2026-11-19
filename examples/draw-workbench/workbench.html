@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>DeskMate Draw Workbench</title>
+<style>:root{color-scheme:dark;--bg:#16202a;--dark:#101923;--paper:#f2dea9;--fine:#526578;--text:#f9eacc;--muted:#cdc2a5;--blue:#8ed3e6;font:15px/1.45 "Cascadia Mono",Consolas,monospace}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:var(--bg);color:var(--text)}
+button,select{font:inherit;color:inherit;background:#243645;border:1px solid var(--fine);border-radius:2px;padding:.37rem .58rem;min-height:2.2rem}
+button{cursor:pointer}
+button:hover,select:hover{background:#304d5e}
+button:focus-visible,select:focus-visible,.viewport:focus-visible,summary:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+button:disabled{opacity:.55;cursor:default}
+.titlebar{display:flex;justify-content:space-between;align-items:center;gap:.65rem;background:#e6be73;color:#282019;border-bottom:3px solid #a77d3d;padding:.62rem 1.15rem;font-weight:700}
+.brand{display:flex;gap:.65rem;align-items:center;white-space:nowrap}
+.emblem{display:inline-block;width:1.45rem;height:1.1rem;border:2px solid #3e2b20;background:linear-gradient(140deg,transparent 45%,#3e2b20 47% 55%,transparent 57%)}
+.filename{font-size:.92rem;overflow-wrap:anywhere;text-align:right}
+.commands{display:flex;align-items:center;flex-wrap:wrap;gap:.45rem;padding:.63rem 1rem;background:#1c2c3b;border-bottom:1px solid var(--fine)}
+.commands label{display:flex;gap:.5rem;align-items:center;margin-left:.5rem}
+kbd{padding:0 .22em;border:1px solid var(--fine);font:inherit;color:var(--muted)}
+.divider{height:1.55rem;width:1px;background:var(--fine);margin-inline:.25rem}
+#zoom{display:inline-block;min-width:4rem;text-align:center}
+main{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,21rem);gap:1px;background:var(--fine);flex:1;min-height:34rem}
+.workspace{min-width:0;display:flex;flex-direction:column;background:var(--dark)}
+.viewport{position:relative;overflow:hidden;min-height:30rem;flex:1;touch-action:none;cursor:grab}
+.viewport:active{cursor:grabbing}
+#stage{position:absolute;top:50%;left:50%;width:640px;height:418px;transform-origin:center;box-shadow:0 0 0 1px #647581}
+#stage svg{display:block;width:100%;height:100%;overflow:hidden}
+#stage svg [data-offset]{cursor:crosshair}
+.canvas-info,footer{padding:.52rem .85rem;background:#1b2b38;display:flex;flex-wrap:wrap;justify-content:space-between;gap:.45rem;color:var(--muted);font-size:.84rem}
+.inspector{background:var(--bg);min-width:0}
+.inspector>section,.inspector>details{border-bottom:1px solid var(--fine);padding:.75rem .85rem}
+.inspector h2{font-size:1rem;line-height:1.2;margin:0 0 .6rem;color:var(--paper)}
+.objects{list-style:none;margin:0;padding:0;overflow:auto;max-height:16rem}
+.objects li{border-bottom:1px solid #36434d}
+.objects button{width:100%;text-align:left;background:none;border:none;font-size:.9rem;min-height:1.95rem;padding:.3rem .4rem}
+.objects button[aria-current=true]{background:#304d5e;color:#fff;box-shadow:inset 3px 0 var(--blue)}
+.palette{display:grid;grid-template-columns:repeat(8,minmax(18px,1fr));gap:4px}
+.palette span{height:1.55rem;border:1px solid #8293a2;display:grid;place-items:center;color:#fff;font-size:.7rem;text-shadow:0 0 3px #000,0 1px 2px #000}
+.inspector p{font-size:.88rem;color:var(--muted);margin:.5rem 0}
+#inspection dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.35rem .55rem;font-size:.82rem;margin:0}
+dt{color:var(--muted)}
+dd{margin:0;overflow-wrap:anywhere}
+#omissions{max-height:11rem;overflow:auto;padding-left:1.2rem;font-size:.84rem}
+.edits,.dialog-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:.4rem;margin-top:.75rem}
+dialog{max-width:calc(100% - 2rem);width:26rem;color:var(--text);background:var(--bg);border:2px solid #bd9d62;padding:1rem}
+dialog::backdrop{background:#07101bc9}
+dialog h2{margin:0 0 .7rem;font-size:1.12rem;color:var(--paper)}
+#edit-fields{display:grid;gap:.55rem}
+#edit-fields label{display:grid;grid-template-columns:1fr 8rem;align-items:center;gap:.55rem}
+#edit-fields input{width:100%;background:var(--dark);border:1px solid var(--fine);color:var(--text);padding:.42rem;font:inherit}
+#edit-error{display:block;color:#ffc491;margin-top:.55rem}
+summary{cursor:pointer;color:var(--paper);font-weight:700}
+footer{border-top:1px solid var(--fine)}
+@media(max-width:850px){main{grid-template-columns:1fr;min-height:auto}.viewport{min-height:27rem}.inspector{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.inspector>section,.inspector>details{border-right:1px solid var(--fine)}}
+@media(max-width:520px){.titlebar,.commands{padding-inline:.65rem}.commands label{margin-left:0}.viewport{min-height:23rem}.inspector{grid-template-columns:1fr}.commands .divider{display:none}}
+</style>
+</head>
+<body>
+<header class="titlebar">
+  <div class="brand"><span class="emblem" aria-hidden="true"></span> Draw Workbench</div>
+  <div id="document-name" class="filename" aria-live="polite">Open a FIG</div>
+</header>
+<nav class="commands" aria-label="Drawing commands">
+  <button id="open" type="button">Open FIG <kbd>O</kbd></button>
+  <input id="file" type="file" accept=".fig" hidden>
+  <label>Example <select id="examples"></select></label>
+  <span class="divider" aria-hidden="true"></span>
+  <button id="minus" type="button" aria-label="Zoom out">−</button>
+  <output id="zoom">100%</output>
+  <button id="plus" type="button" aria-label="Zoom in">+</button>
+  <button id="normal" type="button">Normal</button>
+  <button id="fit" type="button">Fit drawing</button>
+  <span class="divider" aria-hidden="true"></span>
+  <button id="download" type="button">Original FIG</button>
+  <button id="save" type="button" disabled>Save FIG As</button>
+  <button id="svg-export" type="button">SVG</button>
+  <button id="png-export" type="button">PNG</button>
+</nav>
+<main>
+  <section class="workspace" aria-label="Drawing surface">
+    <div id="viewport" class="viewport" tabindex="0" aria-label="Drawing canvas. Use arrow keys to pan.">
+      <div id="stage"></div>
+    </div>
+    <div class="canvas-info"><strong id="canvas-mode">Scalable preview</strong><span id="drawing-stats"></span></div>
+  </section>
+  <aside class="inspector" aria-label="Native document inspector">
+    <section aria-labelledby="objects-title">
+      <h2 id="objects-title">Display list</h2>
+      <ol id="objects" class="objects"></ol>
+    </section>
+    <section aria-labelledby="palette-title">
+      <h2 id="palette-title">Palette</h2>
+      <div id="palette" class="palette"></div>
+    </section>
+    <section aria-labelledby="selection-title">
+      <h2 id="selection-title">Record inspector</h2>
+      <div id="inspection">Select a record or shape.</div>
+      <div class="edits">
+        <button type="button" id="edit" disabled>Edit record</button>
+        <button type="button" id="undo" disabled>Undo</button>
+        <button type="button" id="redo" disabled>Redo</button>
+      </div>
+    </section>
+    <details>
+      <summary>Preview limits</summary>
+      <p>Scalable geometry uses approximations for stroke weights and fill patterns. Missing glyphs and unsupported records are listed below.</p>
+      <label><input type="checkbox" id="substitute"> Show generic labels for unresolved fonts</label>
+      <ul id="omissions"></ul>
+    </details>
+  </aside>
+</main>
+<dialog id="edit-dialog">
+  <form id="edit-form">
+    <h2 id="edit-title">Edit record</h2>
+    <div id="edit-fields"></div>
+    <output id="edit-error" role="status"></output>
+    <div class="dialog-actions">
+      <button type="button" id="edit-cancel">Cancel</button>
+      <button type="submit">Apply</button>
+    </div>
+  </form>
+</dialog>
+<footer><output id="status" role="status">Open or drop a local DeskMate FIG.</output><span>Local files · Offline</span></footer>
+<script type="application/json" id="samples">[{"id":"primitives-styles","title":"Primitive and style chart","name":"PSTYLE.FIG","data":"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"},{"id":"technical-plan","title":"Cedar Workshop","name":"WSHOP.FIG","data":"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"},{"id":"compound-landscape","title":"Cedar Lake","name":"LAKEVIEW.FIG","data":"FEZJRwAAKigoAG4tLQBQQjwAAAABAAEB1wECABMAJQATAAAAeBwmIK4DAgASAMsBAQCpAQIAiQEDAG0BBABjAQUAWQEGAE8BBwBFAQgAOwEJAK0ACgCjAAsAiwAMAIEADQBpAA4AXwAPAEcAEAA9ABEAJQASAFVQoBMAAD4IAADwFQAAggoAABgACgoAAAEADgBQAkQC//8DAAAARAIoAQAAUAJEAkwAyBQAAIIKAADIFAAANgsAAAwCVVBiEQAAwwgAAEITAAB4CgAAGAAKCgAAAQAOAOABtQH//wMAAAC1AfAAAADgAbUBTABSEgAAeAoAAFISAAAsCwAADAJVUJkDAADzDAAAnwUAANgOAAAYAAoKAAABAA4ABgLlAf//AwAAAOUBAwEAAAYC5QFMAJwEAADYDgAAnAQAAIwPAAAMAlVQrgEAAOYKAACSBAAA6A0AABgACgoAAAEADgDkAgID//8DAAAAAgNyAQAA5AICA0wAIAMAAOgNAAAgAwAAnA4AAAwCT0+MBQAAvgUAAEEQAABXDgAABAAvARcBxwC7AFIB7AkAAL4KAADgCwAAVg4AAAEAAAADAE9PgAcAAEYKAABXDgAAHQwAAAYACwEBAfcA6wDhANcATAC8DAAAMQsAAFYOAAAxCwAAAgBMAI4NAABGCgAAjg0AABwMAAACAFIBvAwAAEYKAABWDgAAHAwAAAIAAAAEAEwAgAcAADELAAA4CQAAMQsAAAIATABcCAAARgoAAFwIAAAcDAAAAgBSAYAHAABGCgAAOAkAABwMAAACAAAABABVUIwFAAC+BQAAQBAAACQJAAAYAAEBAAAJAAYAtApmA///AwAAAGYDKAUAALQKZgNSAUAGAAC2CAAAgg8AAFYOAAABAAAADABMAIAWAACMDwAAbhoAAIwPAAACAEwAGBUAAPsOAADEGgAA+w4AAAIATACwEwAAag4AABobAABqDgAAAgBMAEgSAADZDQAAcBsAANkNAAACAEwA4BAAAEgNAADGGwAASA0AAAIAVVAECwAAIgsAABAdAAB2EQAAHAAEBAAAAQAEAAwSVAb//wUAnAQ+A5YKlgAMEgAADBJUBgAAVAZVUEoBAAA4CQAAJB0AACYRAAAgAAoKAAABAA4A2hvuB///BwAAACYCHAd4APINMALOEwAA2huqANob7gcAAO4HVVBAAQAAigIAACQdAABoEAAAIgAEBAAACQAEAOQb3g3//wgAAACUBx4FyACECJYFAg0AALATxgccGzIF5BveDQAA3g1FAbYXAAC4AQAAnhsAAIIFAAABAAAAAQAAABAAAAAAgAHAwAACwMDAA4AAAAQAgIAFAADABsAAAAeAgIAIQEBACQCAgAoAwAALgACADICAAA3AAMAOAIAADwAAAAA="},{"id":"typography","title":"Graphical typography","name":"LETTER.FIG","data":"FEZJRwAAKigoAG4tLQBQQjwAAAABAAEBqwECAA0AGQANAAAAeBzOH1YDAgAMAHABAQBmAQIALQEDACMBBADqAAUA4AAGAKgABwCeAAgAZQAJAFsACgAjAAsAGQAMAEwAbAIAAGgQAACiEgAAaBAAAAcAVWZsAgAA0Q4AAB4UAAA0EAAAOAAB/wAAAABDb2JiAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjAJsAAAAAAAwA/wAAAAAAAAAAAAAAAAAAAAAAYwFBAbIRAQBsAhIQCgAAAFdJREUgVFJBQ0sAAEwAbAIAAN4NAACgCgAA3g0AAAcAVWZsAgAAkAwAAE8LAADrDQAAOQAN/wAAAABDb2JiAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZAG8AAAAAAAwA/wAAAAAAAAAAAAAAAAAAAAAAWwEFAeMIAQBsApUNDQAAAENMT1NFIFNQQUNJTkcATABsAgAAfAsAAJQMAAB8CwAABwBVZmwCAADzCQAA3AoAAJQLAAA4AAT/AAAAAENvYmIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4AcgAAAAAADAD/AAAAAAAAAAAAAAAAAAAAAAChATkBcAgBAGwCLAsKAAAAMDEyMzQ1Njc4OQAATABsAgAAOAkAACwVAAA4CQAABwBVZmwCAADPBwAALx0AADIJAAA5AAr/AAAAAENvYmIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4A0wAAAAAADAD/AAAAAAAAAAAAAAAAAAAAAABjARkBwxoBAGwC6AgNAAAATk9QUVJTVFVWV1hZWgBMAGwCAAD0BgAALBUAAPQGAAAHAFVmbAIAAB4GAACZBwAAwQYAADkAAv8AAAAAQ29iYgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADABkAAAAAAAMAP8AAAAAAAAAAAAAAAAAAAAAAKMAhgAtBQEAbAKkBg0AAABBQkNERUZHSElKS0xNAEwAWAIAACQEAACUEQAAJAQAAAcAVWZYAgAAZwIAAF4eAADrAwAAOwAB/wAAAABDb2JiAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnAIIAAAAAAAwA/wAAAAAAAAAAAAAAAAAAAAAAhAFhAQYcAQBYAsgDEQAAAERSQVcgTEVUVEVSIFNUVURZAAAAEAAAAACAAcDAAALAwMADgAAABACAgAUAAMAGwAAAB4CAgAhAQEAJAICACgDAAAuAAIAMgIAADcAAwA4AgAAPAAAAAA=="}]</script>
+<script>'use strict';
+
+// Native length fields are little endian. A coordinate is a signed whole
+// word followed by an unsigned fraction. Keep both original words.
+const DrawFig = (() => {
+  const FORM = 22, LIST = 44, MAX_BYTES = 131182;
+  const sizes = { L: 20, R: 24, E: 24 };
+  const require = (test, reason) => { if (!test) throw new Error(reason); };
+  const chunk = (data, start, end) => data.slice(start, end);
+  const char = value => String.fromCharCode(value);
+  const hex = value => value.toString(16).padStart(2, '0');
+
+  function read(source) {
+    require(source instanceof Uint8Array && source.length >= 113 && source.length <= MAX_BYTES,
+      'Invalid FIG file size');
+    const data = new Uint8Array(source);
+    const view = new DataView(data.buffer);
+    const u16 = offset => view.getUint16(offset, true);
+    const i16 = offset => view.getInt16(offset, true);
+    require(data[0] === 20 && char(data[1]) + char(data[2]) + char(data[3]) === 'FIG',
+      'Unsupported FIG signature');
+    const listBytes = u16(40), strokeBytes = u16(42);
+    const listEnd = LIST + listBytes, formEnd = listEnd + strokeBytes, paletteStart = formEnd + 2;
+    require(data.length === paletteStart + 65 && u16(formEnd) === 16, 'Inconsistent FIG form or palette extent');
+    require(data[FORM] === 1 && data[FORM + 1] <= 1, 'Unsupported form flags');
+    require(listBytes >= 2 && listBytes === 2 * u16(24) && strokeBytes === u16(26), 'Inconsistent form size fields');
+    const palette = new Map();
+    for (let i = paletteStart; i < paletteStart + 64; i += 4) {
+      require(data[i] < 16 && !palette.has(data[i]), 'Invalid FIG palette indices');
+      palette.set(data[i], [...data.slice(i + 1, i + 4)]);
+    }
+    const count = u16(LIST);
+    const directoryEnd = 2 + 4 * count;
+    require(directoryEnd <= listBytes, 'Form directory exceeds list');
+    const entries = [], offsets = new Set(), tags = new Set(), group = new Map(), pending = [];
+    function enqueue(offset) {
+      require(!offsets.has(offset), 'Duplicate or cyclic group reference');
+      require(offset >= directoryEnd && offset <= listBytes - 18, 'Element reference outside form list');
+      offsets.add(offset);
+      pending.push(offset);
+    }
+    for (let i = 0; i < count; i++) {
+      const offset = 2 * u16(LIST + 2 + 4 * i), tag = u16(LIST + 4 + 4 * i);
+      require(!tags.has(tag), 'Duplicate display-list tag');
+      tags.add(tag);
+      enqueue(offset);
+      entries.push({ offset, tag });
+    }
+    for (const offset of pending) {
+      const start = LIST + offset;
+      if (data[start] !== 79 || data[start + 1] !== 79) continue;
+      require(start + 20 <= listEnd, 'Truncated group header');
+      const count = u16(start + 18), children = [];
+      require(start + 20 + count * 2 <= listEnd, 'Truncated group references');
+      for (let i = 0; i < count; i++) {
+        const child = 2 * u16(start + 20 + i * 2);
+        enqueue(child);
+        children.push(child);
+      }
+      group.set(offset, children);
+    }
+    const sorted = [...offsets].sort((a, b) => a - b);
+    const elements = new Map();
+    for (let i = 0; i < sorted.length; i++) {
+      const offset = sorted[i], start = LIST + offset;
+      const next = sorted[i + 1] ?? listBytes, length = next - offset;
+      require(length >= 18, 'Overlapping element records');
+      const modifier = data[start + 1];
+      const kind = char(data[start]) + (data[start] === 85 || group.has(offset) ? char(modifier) : '');
+      const coords = [], bounds = [];
+      for (let i = 0; i < 4; i++) {
+        const at = start + 2 + 4 * i;
+        const whole = i16(at), fraction = u16(at + 2);
+        coords.push(whole, fraction);
+        bounds.push(whole + fraction / 65536);
+      }
+      const children = group.get(offset) ?? [];
+      const points = [];
+      let text = null, fontName = null;
+      if (Object.hasOwn(sizes, kind)) require(length >= sizes[kind], `Truncated ${kind} record`);
+      else if (kind === 'OO') require(length >= 20 + 2 * children.length, 'Overlapping group records');
+      else if (kind === 'T') {
+        require(length >= 22 && length >= 22 + data[start + 20], 'Truncated text');
+        text = data.slice(start + 22, start + 22 + data[start + 20]);
+      } else if (kind.startsWith('U')) {
+        require(length >= 20, 'Truncated extended record');
+        const size = 2 * u16(start + 18);
+        require(size >= 20 && size <= length, 'Extended element exceeds its record');
+        if (kind === 'UP') {
+          require(size >= 36, 'Truncated polyline header');
+          const count = u16(start + 34);
+          require(size === 36 + 4 * count, 'Polyline point count disagrees with size');
+          for (let i = 0; i < count; i++) points.push([u16(start + 36 + i * 4), u16(start + 38 + i * 4)]);
+        } else if (kind === 'Uf' && size >= 102) {
+          const count = u16(start + 96), end = start + 100 + count;
+          const area = data.slice(start + 26, start + 56);
+          const boundary = area.indexOf(0);
+          const name = area.slice(0, boundary);
+          if (u16(start + 98) === 0 && end <= start + size && start + size <= end + 2
+              && (start + size !== end + 2 || (data[end] === 0 && data[end + 1] === 0))
+              && boundary > 0 && area.slice(boundary).every(value => value === 0)
+              && name.every(value => 32 <= value && value <= 126)
+              && !data.slice(start + 100, end).includes(0)) {
+            text = data.slice(start + 100, end);
+            fontName = String.fromCharCode(...name);
+          }
+        }
+      }
+      elements.set(offset, { offset, kind, modifier, coords, bounds, children, points, text, fontName,
+        raw: chunk(data, start, LIST + next) });
+    }
+    const model = {
+      entries, elements, palette, pageSetup: chunk(data, 0, FORM),
+      header: chunk(data, FORM, 40), strokes: chunk(data, listEnd, formEnd),
+      trailer: chunk(data, data.length - 1), copy: () => new Uint8Array(data),
+    };
+    return model;
+  }
+
+  function* leaves(model) {
+    const pending = model.entries.map(entry => entry.offset).reverse();
+    while (pending.length) {
+      const item = model.elements.get(pending.pop());
+      if (item.kind !== 'OO') yield item;
+      else for (let i = item.children.length - 1; i >= 0; i--) pending.push(item.children[i]);
+    }
+  }
+
+  const safeNumber = value => Number(value.toPrecision(9));
+
+  function strokes(data) {
+    const result = new Map();
+    if (!data.length) return result;
+    const view = new DataView(data.buffer);
+    require(data.length >= 2 && view.getUint16(data.length - 2, true) === 0, 'Missing stroke terminator');
+    let at = 0;
+    const bound = data.length - 2;
+    while (at < bound) {
+      require(at + 4 <= bound, 'Truncated glyph header');
+      const size = view.getUint16(at, true);
+      const end = at + size, id = 256 * data[at + 2] + data[at + 3];
+      require(size >= 4 && end <= bound && !result.has(id), 'Invalid glyph length or identity');
+      const paths = [];
+      for (let pos = at + 4; pos < end;) {
+        let last = pos;
+        while (last < end && data[last]) last++;
+        const length = last - pos;
+        if (length) {
+          require(length >= 4 && length % 2 === 0, 'Invalid stroke path length');
+          const path = [];
+          for (let i = pos; i < last; i += 2) {
+            require(data[i] <= 128 && data[i + 1] <= 128, 'Invalid stroke coordinates');
+            path.push([data[i], data[i + 1]]);
+          }
+          paths.push(path);
+        }
+        pos = last + 1;
+      }
+      result.set(id, paths);
+      at = end;
+    }
+    return result;
+  }
+
+  const escaped = value => value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+
+  function arcQuadratic(part) {
+    if (part.kind !== 'UA' || part.raw.length !== 44 || part.raw[18] !== 22 || part.raw[19] !== 0) return null;
+    const [x0, y0, x1, y1] = part.bounds;
+    const data = new DataView(part.raw.buffer);
+    const v = index => data.getInt16(28 + 2 * index, true);
+    if (v(0) <= 0 || v(1) <= 0 || x1 < x0 || y1 < y0) return null;
+    const sx = (x1 - x0) / v(0), sy = (y1 - y0) / v(1);
+    const a = [x0 + v(2) * sx, y0 + v(3) * sy];
+    const b = [x0 + v(4) * sx, y0 + v(5) * sy];
+    const p = [x0 + v(6) * sx, y0 + v(7) * sy];
+    return [a, p.map((value, index) => 2 * value - (a[index] + b[index]) / 2), b];
+  }
+
+  function preview(model, { inspect = false, substitute = false } = {}) {
+    const paint = (index, otherwise) => model.palette.has(index)
+      ? '#' + model.palette.get(index).map(hex).join('') : otherwise;
+    const result = [], omitted = [];
+    let bank = new Map(), strokeBudget = 100000, substituted = 0;
+    try { bank = strokes(model.strokes); } catch { /* Keep opaque stroke bytes. */ }
+    const outline = index => `stroke="${paint(index, '#333333')}" stroke-width="1" vector-effect="non-scaling-stroke"`;
+    for (const part of leaves(model)) {
+      const [x0, y0, x1, y1] = part.bounds, { kind, raw } = part;
+      const interactive = inspect ? ` data-offset="${part.offset}"` : '';
+      if (kind === 'L') {
+        result.push(`<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" ${outline(raw[18])}${interactive}/>`);
+        continue;
+      }
+      if (kind === 'UA') {
+        const arc = arcQuadratic(part);
+        if (arc) {
+          const [a, q, b] = arc.map(pair => pair.map(safeNumber).join(' '));
+          result.push(`<path d="M ${a} Q ${q} ${b}" fill="none" ${outline(raw[20])}${interactive}/>`);
+        } else omitted.push({ kind, offset: part.offset, reason: 'unsupported arc extent' });
+        continue;
+      }
+      if (kind === 'T' && part.text?.length && raw[21] === 0) {
+        const glyphs = Array.from(part.text, code => bank.get(256 * part.modifier + code));
+        if (glyphs.every(Boolean)) {
+          const cost = glyphs.reduce((total, glyph) => total + glyph.reduce((sum, path) => sum + path.length, 0), 0);
+          if (cost > strokeBudget) {
+            omitted.push({ kind, offset: part.offset, reason: 'stroke point budget' });
+            continue;
+          }
+          strokeBudget -= cost;
+          const advance = (x1 - x0) / glyphs.length, height = y1 - y0;
+          const lines = glyphs.flatMap((glyph, index) => glyph.map(path => {
+            const points = path.map(([x, y]) => `${safeNumber(x0 + advance * (index + x/128))},${safeNumber(y0 + height * y/128)}`).join(' ');
+            return `<polyline points="${points}" ${outline(raw[19])}${interactive}/>`;
+          }));
+          result.push(`<g fill="none">${lines.join('')}</g>`);
+          continue;
+        }
+      }
+      if (kind === 'Uf' && substitute && part.text?.length) {
+        const label = Array.from(part.text, value => value >= 32 && value < 127 ? char(value) : '�').join('');
+        result.push(`<text x="${Math.min(x0,x1)}" y="${Math.max(y0,y1)}" font-size="${Math.max(1,Math.abs(y1-y0))}" font-family="monospace" fill="${paint(raw[20], '#333333')}"${interactive}>${escaped(label)}</text>`);
+        substituted++;
+        continue;
+      }
+      const dx = x1 - x0, dy = y1 - y0;
+      if (kind === 'UP' && part.points.length >= 2) {
+        const view = new DataView(raw.buffer);
+        const sx = view.getUint16(28, true), sy = view.getUint16(30, true);
+        const coords = part.points.map(([x, y]) =>
+          `${safeNumber(x0 + (sx ? x * dx / sx : 0))},${safeNumber(y0 + (sy ? y * dy / sy : 0))}`).join(' ');
+        const tag = raw[32] || raw[33] ? 'polygon' : 'polyline';
+        const fill = raw[32] && raw[24] !== 254 ? paint(raw[26], '#b0b0b0') : 'none';
+        result.push(`<${tag} points="${coords}" fill="${fill}" ${outline(raw[20])}${interactive}/>`);
+        continue;
+      }
+      if (kind === 'R' || kind === 'E') {
+        const w = Math.abs(dx), h = Math.abs(dy);
+        const fill = raw[1] === 254 ? 'none' : paint(raw[22], '#b0b0b0');
+        const geom = kind === 'R'
+          ? `rect x="${Math.min(x0, x1)}" y="${Math.min(y0, y1)}" width="${w}" height="${h}"`
+          : `ellipse cx="${(x0+x1)/2}" cy="${(y0+y1)/2}" rx="${w/2}" ry="${h/2}"`;
+        result.push(`<${geom} fill="${fill}" ${outline(raw[18])}${interactive}/>`);
+        continue;
+      }
+      omitted.push({ kind, offset: part.offset, reason: kind === 'Uf' ? 'external font' : 'unsupported preview record' });
+    }
+    return { shapes: result.join(''), background: paint(0, '#000080'), omissions: omitted, substituted };
+  }
+
+  function canEdit(model, tag) {
+    const entry = model.entries.find(item => item.tag === tag);
+    const record = entry && model.elements.get(entry.offset);
+    return record && ['L', 'R'].includes(record.kind) && record.raw.length === sizes[record.kind]
+      && (record.kind !== 'R' || (record.bounds[0] <= record.bounds[2] && record.bounds[1] <= record.bounds[3]))
+      ? record.kind : null;
+  }
+
+  function edit(model, tag, options) {
+    const kind = canEdit(model, tag);
+    require(kind, 'Edit requires a supported top-level line or rectangle');
+    const entry = model.entries.find(item => item.tag === tag);
+    const record = model.elements.get(entry.offset);
+    const data = model.copy();
+    const start = LIST + entry.offset;
+    const view = new DataView(data.buffer);
+    const valid = value => {
+      require(Number.isInteger(value) && value >= -2147483648 && value <= 2147483647,
+        'Value outside exact signed 16.16 range');
+      return value;
+    };
+    const fixed = record.bounds.map(value => value * 65536);
+    let coords;
+    if (kind === 'L') {
+      const dx = valid(options.dx), dy = valid(options.dy);
+      require(Number.isInteger(options.color) && options.color >= 0 && options.color < 16, 'Palette index must be 0–15');
+      data[start + 18] = options.color;
+      coords = fixed.map((value, index) => value + (index % 2 ? dy : dx));
+    } else {
+      const width = valid(options.width), height = valid(options.height);
+      require(width > 0 && height > 0, 'Rectangle dimensions must be positive');
+      coords = [fixed[0], fixed[1], fixed[0] + width, fixed[1] + height];
+    }
+    coords.forEach((value, index) => {
+      const whole = Math.floor(valid(value) / 65536);
+      view.setInt16(start + 2 + 4 * index, whole, true);
+      view.setUint16(start + 4 + 4 * index, value - whole * 65536, true);
+    });
+    return read(data);
+  }
+
+  return Object.freeze({ read, leaves, preview, arcQuadratic, canEdit, edit, MAX_BYTES });
+})();
+
+if (typeof module === 'object') module.exports = DrawFig;
+</script>
+<script>'use strict';
+
+const get = id => document.getElementById(id);
+const viewport = get('viewport'), stage = get('stage');
+const state = { model: null, original: null, past: [], future: [], name: '', selected: null,
+  scale: 1, x: 0, y: 0, box: [0, 0, 8000, 4840] };
+const svgNS = 'http://www.w3.org/2000/svg';
+const names = { L: 'Line', R: 'Rectangle', E: 'Ellipse', UA: 'Arc', UP: 'Polyline / polygon',
+  OO: 'Object group', T: 'Stroke text', Uf: 'External-font text' };
+const examples = JSON.parse(get('samples').textContent);
+const number = value => Number(value.toFixed(5));
+const hex = data => [...data].map(value => value.toString(16).padStart(2, '0')).join(' ');
+
+function node(tag, text) {
+  const result = document.createElement(tag);
+  if (text !== undefined) result.textContent = text;
+  return result;
+}
+
+function report(text) {
+  get('status').textContent = text;
+}
+
+function viewportTransform() {
+  stage.style.transform = `translate(calc(-50% + ${state.x}px), calc(-50% + ${state.y}px)) scale(${state.scale})`;
+  get('zoom').value = `${Math.round(state.scale * 100)}%`;
+}
+
+function svgImage(preview, box) {
+  const [x, y, w, h] = box;
+  const description = preview.substituted ? '<desc>External fonts shown using generic monospace substitutes.</desc>' : '';
+  return `<svg xmlns="${svgNS}" viewBox="${box.join(' ')}" width="640" height="418" preserveAspectRatio="none">${description}<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${preview.background}"/>${preview.shapes}</svg>`;
+}
+
+function frame() {
+  if (!state.model) return;
+  const preview = DrawFig.preview(state.model, { inspect: true, substitute: get('substitute').checked });
+  const doc = new DOMParser().parseFromString(svgImage(preview, state.box), 'image/svg+xml');
+  stage.replaceChildren(document.importNode(doc.documentElement, true));
+  get('drawing-stats').textContent = `${state.model.elements.size} records · ${preview.omissions.length} omitted`
+    + (preview.substituted ? ` · ${preview.substituted} generic font substitutions` : '');
+  get('omissions').replaceChildren(...preview.omissions.map(item =>
+    node('li', `${names[item.kind] ?? 'Record'} at list byte ${item.offset} · ${item.reason}`)));
+  if (!preview.omissions.length) get('omissions').append(node('li', 'No records omitted in this preview.'));
+  selection(state.selected);
+  viewportTransform();
+}
+
+function selection(offset) {
+  state.selected = offset;
+  stage.querySelector('#selection-outline')?.remove();
+  for (const button of get('objects').querySelectorAll('button')) {
+    button.setAttribute('aria-current', String(Number(button.dataset.offset) === offset));
+  }
+  const record = state.model?.elements.get(offset);
+  const entry = state.model?.entries.find(item => item.offset === offset);
+  get('edit').disabled = !entry || !DrawFig.canEdit(state.model, entry.tag);
+  const inspect = get('inspection');
+  if (!record) {
+    inspect.textContent = 'Select a record or shape.';
+    return;
+  }
+  const [x0, y0, x1, y1] = record.bounds;
+  const details = node('dl');
+  const rows = [
+    ['Type', `${names[record.kind] ?? 'Unknown'} (${hex(record.raw.slice(0, 2))})`],
+    ['List offset', `${record.offset} bytes`],
+    ['Bounds', record.bounds.map(number).join(', ')],
+    ['16.16 words', record.coords.join(', ')],
+    ['Record size', `${record.raw.length} bytes`],
+    ['Attributes', hex(record.raw.slice(18, 42)) || '—'],
+  ];
+  if (record.fontName) {
+    const view = new DataView(record.raw.buffer);
+    rows.push(['Font reference', record.fontName],
+      ['Font size / width words', `${view.getUint16(56, true)}, ${view.getUint16(58, true)}`]);
+  }
+  if (record.text) rows.push(['Text bytes', hex(record.text.slice(0, 48))]);
+  if (record.children.length) rows.push(['Children', record.children.join(', ')]);
+  for (const [k, v] of rows) details.append(node('dt', k), node('dd', v));
+  inspect.replaceChildren(details);
+  const box = document.createElementNS(svgNS, 'rect');
+  box.id = 'selection-outline';
+  const s = Math.max(state.box[2] / 640, state.box[3] / 418);
+  for (const [key, value] of Object.entries({
+    x: Math.min(x0, x1) - s, y: Math.min(y0, y1) - s,
+    width: Math.abs(x1 - x0) + 2 * s, height: Math.abs(y1 - y0) + 2 * s,
+    fill: 'none', stroke: '#fff0c0', 'stroke-width': 1,
+    'stroke-dasharray': '3 3', 'vector-effect': 'non-scaling-stroke', 'pointer-events': 'none',
+  })) box.setAttribute(key, value);
+  stage.querySelector('svg')?.append(box);
+}
+
+function fillInspector(model) {
+  const stack = [...model.entries].reverse().map(entry => ({ ...entry, depth: 0 }));
+  const content = document.createDocumentFragment();
+  for (let index = 0; stack.length && index < 1500; index++) {
+    const { offset, tag, depth } = stack.pop();
+    const record = model.elements.get(offset);
+    const b = node('button', `${tag === undefined ? '↳' : `#${tag}`} ${names[record.kind] ?? 'Record'}`);
+    b.type = 'button';
+    b.dataset.offset = offset;
+    b.style.paddingInlineStart = `${6 + 12 * Math.min(depth, 12)}px`;
+    b.addEventListener('click', () => selection(offset));
+    const row = node('li');
+    row.append(b);
+    content.append(row);
+    for (const child of [...record.children].reverse()) stack.push({ offset: child, depth: depth + 1 });
+  }
+  if (stack.length) content.append(node('li', 'Display list limited to the first 1,500 rows.'));
+  get('objects').replaceChildren(content);
+  get('palette').replaceChildren(...Array.from(model.palette.entries()).sort((a, b) => a[0] - b[0]).map(([i, rgb]) => {
+    const tile = node('span', i);
+    const color = '#' + hex(rgb).replaceAll(' ', '');
+    tile.style.background = color;
+    tile.title = `Palette index ${i} · ${color.toUpperCase()}`;
+    return tile;
+  }));
+}
+
+function load(name, bytes) {
+  try {
+    const model = DrawFig.read(bytes);
+    Object.assign(state, { model, original: model, past: [], future: [], name, selected: null,
+      x: 0, y: 0, scale: 1, box: [0, 0, 8000, 4840] });
+    get('document-name').textContent = name;
+    fillInspector(model);
+    frame();
+    editStatus();
+  } catch (error) {
+    report(`${name}: ${error.message}`);
+  }
+}
+
+async function openFile(file) {
+  if (!file) return;
+  if (file.size > DrawFig.MAX_BYTES) {
+    report('File exceeds the supported FIG size.');
+    return;
+  }
+  try {
+    load(file.name, new Uint8Array(await file.arrayBuffer()));
+  } catch (error) {
+    report(`Could not open ${file.name}: ${error.message}`);
+  }
+}
+
+function adjust(scale, x = 0, y = 0) {
+  const before = state.scale;
+  state.scale = Math.max(.125, Math.min(8, scale));
+  state.x = x + (state.x - x) * state.scale / before;
+  state.y = y + (state.y - y) * state.scale / before;
+  viewportTransform();
+}
+
+function fit() {
+  if (!state.model) return;
+  let loX = Infinity, loY = Infinity, hiX = -Infinity, hiY = -Infinity;
+  for (const item of DrawFig.leaves(state.model)) {
+    const [x0, y0, x1, y1] = item.bounds;
+    loX = Math.min(loX, x0, x1); loY = Math.min(loY, y0, y1);
+    hiX = Math.max(hiX, x0, x1); hiY = Math.max(hiY, y0, y1);
+  }
+  if (!Number.isFinite(loX)) return;
+  const pad = Math.max(12, (hiX - loX) / 40, (hiY - loY) / 40);
+  const cx = (loX + hiX) / 2, cy = (loY + hiY) / 2;
+  const w = Math.max(hiX - loX + 2 * pad, (hiY - loY + 2 * pad) * 8000 / 4840);
+  const h = w * 4840 / 8000;
+  Object.assign(state, { box: [cx - w / 2, cy - h / 2, w, h], x: 0, y: 0,
+    scale: Math.max(.125, Math.min(1, (viewport.clientWidth - 12) / 640, (viewport.clientHeight - 12) / 418)) });
+  frame();
+}
+
+function download(name, data, media) {
+  const value = new Blob([data], { type: media });
+  const url = URL.createObjectURL(value);
+  const a = node('a');
+  a.href = url;
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+const stem = () => state.name.replace(/\.fig$/i, '');
+get('open').addEventListener('click', () => get('file').click());
+get('file').addEventListener('change', event => {
+  openFile(event.target.files[0]);
+  event.target.value = '';
+});
+get('download').addEventListener('click', () => {
+  if (state.original) download(state.name, state.original.copy(), 'application/octet-stream');
+});
+get('save').addEventListener('click', () => {
+  if (state.model) download(`${stem()}-edited.fig`, state.model.copy(), 'application/octet-stream');
+});
+get('svg-export').addEventListener('click', () => {
+  if (state.model) download(`${stem()}.svg`,
+    svgImage(DrawFig.preview(state.model, { substitute: get('substitute').checked }), state.box), 'image/svg+xml');
+});
+get('png-export').addEventListener('click', () => {
+  if (!state.model) return;
+  const name = stem();
+  const data = svgImage(DrawFig.preview(state.model, { substitute: get('substitute').checked }), state.box);
+  const url = URL.createObjectURL(new Blob([data], { type: 'image/svg+xml' }));
+  const preview = new Image();
+  preview.onload = () => {
+    const canvas = node('canvas');
+    canvas.width = 640;
+    canvas.height = 418;
+    canvas.getContext('2d').drawImage(preview, 0, 0);
+    canvas.toBlob(png => { if (png) download(`${name}.png`, png, 'image/png'); }, 'image/png');
+    URL.revokeObjectURL(url);
+  };
+  preview.onerror = () => { URL.revokeObjectURL(url); report('PNG preview could not be exported.'); };
+  preview.src = url;
+});
+get('minus').addEventListener('click', () => adjust(state.scale / 2));
+get('plus').addEventListener('click', () => adjust(state.scale * 2));
+get('normal').addEventListener('click', () => {
+  Object.assign(state, { box: [0, 0, 8000, 4840], scale: 1, x: 0, y: 0 });
+  frame();
+});
+get('fit').addEventListener('click', fit);
+get('substitute').addEventListener('change', frame);
+
+function editStatus() {
+  get('save').disabled = state.original === state.model;
+  get('undo').disabled = !state.past.length;
+  get('redo').disabled = !state.future.length;
+  const supported = state.model.entries.filter(entry => DrawFig.canEdit(state.model, entry.tag)).length;
+  const message = state.original !== state.model ? 'Edited locally. Save FIG As downloads the edited copy.'
+    : supported === state.model.elements.size && supported
+      ? 'Select a line or rectangle to edit. Original FIG remains available.'
+      : supported ? 'Partly editable. Select a top-level line or rectangle.'
+      : 'Read-only drawing. Original FIG remains available.';
+  report(message);
+}
+
+function restore(source, destination) {
+  if (!source.length) return;
+  destination.push(state.model);
+  state.model = source.pop();
+  frame();
+  editStatus();
+}
+get('undo').addEventListener('click', () => restore(state.past, state.future));
+get('redo').addEventListener('click', () => restore(state.future, state.past));
+
+const dialog = get('edit-dialog');
+get('edit-cancel').addEventListener('click', () => dialog.close());
+get('edit').addEventListener('click', () => {
+  const entry = state.model.entries.find(item => item.offset === state.selected);
+  if (!entry) return;
+  const kind = DrawFig.canEdit(state.model, entry.tag);
+  if (!kind) return;
+  const record = state.model.elements.get(entry.offset);
+  const [x0, y0, x1, y1] = record.bounds;
+  const fields = kind === 'L' ? [['dx', 'Horizontal move', 0], ['dy', 'Vertical move', 0],
+    ['color', 'Palette index', record.raw[18]]] : [['width', 'Width', x1 - x0], ['height', 'Height', y1 - y0]];
+  get('edit-title').textContent = `Edit ${names[kind].toLowerCase()} #${entry.tag}`;
+  get('edit-fields').replaceChildren(...fields.map(([key, label, value]) => {
+    const row = node('label', label);
+    const field = node('input');
+    field.name = key;
+    field.type = 'number';
+    field.step = 'any';
+    field.required = true;
+    field.value = value;
+    row.append(field);
+    return row;
+  }));
+  get('edit-form').dataset.tag = entry.tag;
+  get('edit-error').textContent = '';
+  dialog.showModal();
+});
+get('edit-form').addEventListener('submit', event => {
+  event.preventDefault();
+  const options = Object.fromEntries([...new FormData(event.target)].map(([key, value]) =>
+    [key, Number(value) * (key === 'color' ? 1 : 65536)]));
+  try {
+    const next = DrawFig.edit(state.model, Number(event.target.dataset.tag), options);
+    if (state.past.length === 32) state.past.shift();
+    state.past.push(state.model);
+    state.future.length = 0;
+    state.model = next;
+    dialog.close();
+    frame();
+    editStatus();
+  } catch (error) {
+    get('edit-error').textContent = error.message;
+  }
+});
+window.addEventListener('keydown', event => {
+  if (event.ctrlKey || event.metaKey || event.altKey || ['INPUT', 'SELECT', 'BUTTON'].includes(event.target.tagName)) return;
+  if (event.key.toLowerCase() === 'o') {
+    event.preventDefault();
+    get('file').click();
+  }
+});
+viewport.addEventListener('keydown', event => {
+  const move = { ArrowUp: [0, 25], ArrowDown: [0, -25], ArrowLeft: [25, 0], ArrowRight: [-25, 0] }[event.key];
+  if (!move) return;
+  event.preventDefault();
+  state.x += move[0];
+  state.y += move[1];
+  viewportTransform();
+});
+viewport.addEventListener('wheel', event => {
+  event.preventDefault();
+  const rect = viewport.getBoundingClientRect();
+  adjust(state.scale * (event.deltaY < 0 ? 1.25 : .8),
+    event.clientX - rect.left - rect.width / 2, event.clientY - rect.top - rect.height / 2);
+}, { passive: false });
+
+let drag;
+viewport.addEventListener('pointerdown', event => {
+  if (event.button !== 0) return;
+  drag = { x: event.clientX, y: event.clientY, startX: state.x, startY: state.y,
+    offset: event.target.getAttribute('data-offset'), moved: false };
+  viewport.setPointerCapture(event.pointerId);
+});
+viewport.addEventListener('pointermove', event => {
+  if (!drag) return;
+  const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
+  if (!drag.moved && Math.abs(dx) + Math.abs(dy) < 4) return;
+  drag.moved = true;
+  state.x = drag.startX + dx;
+  state.y = drag.startY + dy;
+  viewportTransform();
+});
+viewport.addEventListener('pointerup', () => {
+  if (drag && !drag.moved) selection(drag.offset === null ? null : Number(drag.offset));
+  drag = null;
+});
+viewport.addEventListener('lostpointercapture', () => { drag = null; });
+window.addEventListener('dragover', event => event.preventDefault());
+window.addEventListener('drop', event => {
+  event.preventDefault();
+  if (event.dataTransfer.files.length !== 1) report('Drop one FIG file at a time.');
+  else openFile(event.dataTransfer.files[0]);
+});
+
+for (const sample of examples) {
+  const option = node('option', sample.title);
+  option.value = sample.id;
+  get('examples').append(option);
+}
+function showExample(id) {
+  const sample = examples.find(item => item.id === id);
+  if (!sample) return;
+  load(sample.name, Uint8Array.from(atob(sample.data), char => char.charCodeAt(0)));
+  if (viewport.clientWidth < 640) fit();
+}
+get('examples').addEventListener('change', () => showExample(get('examples').value));
+get('examples').value = 'compound-landscape';
+showExample(get('examples').value);
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeskMate Draw Comparison Library</title>
+<link rel="stylesheet" href="compare.css">
+<script src="catalog.js" defer></script>
+<script src="compare.js" defer></script>
+</head>
+<body>
+<header class="masthead">
+  <div class="page mast-inner">
+    <div class="identity"><span class="drawing-mark" aria-hidden="true"></span> DeskMate Draw</div>
+    <a href="README.md">Research notes</a>
+  </div>
+</header>
+<main class="page">
+  <header class="intro">
+    <h1>Visual comparison library</h1>
+    <p>Original DeskMate drawings, captured on a Tandy 1000 RSX and compared with independent rendering at native pixel dimensions.</p>
+  </header>
+  <section aria-labelledby="featured-title">
+    <div class="section-head">
+      <h2 id="featured-title">Featured drawings</h2>
+      <label class="field">Renderer milestone <select id="milestone"></select></label>
+    </div>
+    <div class="featured" id="featured"></div>
+  </section>
+  <section class="viewer" aria-labelledby="case-title">
+    <div class="section-head viewer-head">
+      <div><h2 id="case-title">Loading comparison</h2><p id="case-description"></p></div>
+      <label class="field">Diagnostic controls <select id="diagnostics"></select></label>
+    </div>
+    <div class="toolbar">
+      <div class="modes" id="modes" aria-label="Comparison view">
+        <button type="button" data-mode="split" aria-pressed="true">Side by side</button>
+        <button type="button" data-mode="overlay" aria-pressed="false">Overlay</button>
+        <button type="button" data-mode="switch" aria-pressed="false">A/B</button>
+        <button type="button" data-mode="difference" aria-pressed="false">Difference</button>
+      </div>
+      <label id="overlay-tools" class="field inline" hidden>Renderer opacity
+        <input id="opacity" type="range" min="0" max="100" value="50">
+      </label>
+      <button id="switch" type="button" hidden>Show renderer</button>
+      <div class="zoom">
+        <button type="button" id="zoom-out" aria-label="Zoom out">−</button>
+        <output id="zoom-status" aria-live="polite">Fit</output>
+        <button type="button" id="zoom-in" aria-label="Zoom in">+</button>
+        <button type="button" id="fit">Fit</button>
+        <button type="button" id="pixel">1:1</button>
+      </div>
+    </div>
+    <div id="panels" class="panels"></div>
+    <div class="viewer-foot">
+      <p id="view-help">Drag to pan. Use the wheel or zoom controls to enlarge pixels.</p>
+      <ul class="legend" id="legend" hidden>
+        <li class="native-only">Native only</li><li class="renderer-only">Renderer only</li>
+        <li class="changed">Different RGB</li><li class="same">Exact foreground match</li>
+      </ul>
+    </div>
+  </section>
+  <section aria-labelledby="metrics-title" class="facts">
+    <div class="analysis">
+      <h2 id="metrics-title">Rendering metrics</h2>
+      <dl id="metrics" class="metrics"></dl>
+      <p id="metrics-note">Foreground overlap compares drawing pixels after masking each background separately.</p>
+    </div>
+    <div class="sources">
+      <h2>Artifacts</h2>
+      <ul id="artifacts"></ul>
+    </div>
+  </section>
+  <details class="provenance">
+    <summary>Capture provenance and rendering limits</summary>
+    <dl id="provenance"></dl>
+  </details>
+  <noscript>Enable JavaScript for interactive comparison. The individual files are linked from the baseline documentation.</noscript>
+</main>
+<footer class="page"><a href="v1/baseline-pr120/README.md">PR #120 baseline files</a><a href="suite-v1.json">Frozen suite manifest</a></footer>
+</body>
+</html>

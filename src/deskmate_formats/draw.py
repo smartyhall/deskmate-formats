@@ -22,8 +22,14 @@ class Drawing:
     palette: tuple[tuple[int, int, int, int], ...]
     trailer: bytes
 
+    @property
+    def recovered_arcs(self):
+        """List-relative offsets of fixed arcs with the measured legacy size word."""
+        return tuple(element.offset for element in self.form.elements
+                     if element.kind == 'UA' and len(element.raw) == 44 and element.raw[18:20] == b'\x17\0')
 
-def parse_bytes(source):
+
+def parse_bytes(source, *, recover_arc_length=False):
     """Read the measured 0x14 FIG profile, retaining all serialized sections."""
     if not isinstance(source, (bytes, bytearray, memoryview)):
         raise graphics.GraphicsFormatError('expected a byte snapshot')
@@ -42,24 +48,31 @@ def parse_bytes(source):
     palette = tuple(unpack_from('<4B', data, i) for i in range(palette_offset, palette_end, 4))
     if {entry[0] for entry in palette} != set(range(16)):
         raise graphics.GraphicsFormatError('invalid FIG palette indices')
-    form = graphics.parse_bytes(data[PAGE_SETUP_SIZE:form_end])
+    form = graphics.parse_bytes(data[PAGE_SETUP_SIZE:form_end], recover_arc_length=recover_arc_length)
     return Drawing(data[:PAGE_SETUP_SIZE], form, palette_offset, palette, data[palette_end:])
 
 
-def parse_file(path):
+def parse_file(path, *, recover_arc_length=False):
     with Path(path).open('rb') as handle:
-        return parse_bytes(handle.read(MAX_BYTES + 1))
+        return parse_bytes(handle.read(MAX_BYTES + 1), recover_arc_length=recover_arc_length)
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source')
     parser.add_argument('--svg', action='store_true', help='write an SVG geometry preview to stdout')
+    parser.add_argument('--recover-arc-length', action='store_true',
+                        help='permit one measured legacy arc length disagreement')
+    parser.add_argument('--substitute-external-fonts', action='store_true',
+                        help='use labeled generic monospace glyphs for unresolved font references in SVG')
     args = parser.parse_args(argv)
     try:
-        drawing = parse_file(args.source)
+        drawing = parse_file(args.source, recover_arc_length=args.recover_arc_length)
+        if drawing.recovered_arcs:
+            print(f'recovered arc length at list byte {drawing.recovered_arcs[0]}', file=sys.stderr)
         if args.svg:
-            sys.stdout.write(graphics.render_svg(drawing.form, drawing.palette))
+            sys.stdout.write(graphics.render_svg(drawing.form, drawing.palette,
+                                                 substitute_external_fonts=args.substitute_external_fonts))
         else:
             print(json.dumps(asdict(drawing), default=bytes.hex, indent=2))
     except (OSError, ValueError) as exc:

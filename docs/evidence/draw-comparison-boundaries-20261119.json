@@ -1,0 +1,578 @@
+{
+  "schema_version": 1,
+  "method": "4-neighborhood foreground boundaries; two-way Manhattan distance in matched pixels.",
+  "milestones": {
+    "arc-vector-01": {
+      "renderer_revision": "23b225ac40935124534620b16c170a9311c7fdd8",
+      "cases": {
+        "primitives-styles": {
+          "native_boundary_pixels": 17370,
+          "renderer_boundary_pixels": 8913,
+          "mean_l1_pixels": 5.412358,
+          "p95_l1_pixels": 22
+        },
+        "technical-plan": {
+          "native_boundary_pixels": 5870,
+          "renderer_boundary_pixels": 9967,
+          "mean_l1_pixels": 2.09181,
+          "p95_l1_pixels": 18
+        },
+        "compound-landscape": {
+          "native_boundary_pixels": 11415,
+          "renderer_boundary_pixels": 1904,
+          "mean_l1_pixels": 29.456341,
+          "p95_l1_pixels": 90
+        },
+        "typography": {
+          "native_boundary_pixels": 9706,
+          "renderer_boundary_pixels": 3586,
+          "mean_l1_pixels": 24.923112,
+          "p95_l1_pixels": 150
+        },
+        "d01": {
+          "native_boundary_pixels": 33,
+          "renderer_boundary_pixels": 64,
+          "mean_l1_pixels": 0.340206,
+          "p95_l1_pixels": 1
+        },
+        "d02": {
+          "native_boundary_pixels": 67,
+          "renderer_boundary_pixels": 132,
+          "mean_l1_pixels": 0.336683,
+          "p95_l1_pixels": 1
+        },
+        "d04": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 898,
+          "mean_l1_pixels": 0.334815,
+          "p95_l1_pixels": 1
+        },
+        "d05": {
+          "native_boundary_pixels": 528,
+          "renderer_boundary_pixels": 1052,
+          "mean_l1_pixels": 0.336709,
+          "p95_l1_pixels": 1
+        },
+        "d06": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 898,
+          "mean_l1_pixels": 0.334815,
+          "p95_l1_pixels": 1
+        },
+        "d07c": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 898,
+          "mean_l1_pixels": 0.334815,
+          "p95_l1_pixels": 1
+        },
+        "d09": {
+          "native_boundary_pixels": 820,
+          "renderer_boundary_pixels": 1620,
+          "mean_l1_pixels": 0.339754,
+          "p95_l1_pixels": 1
+        },
+        "d10": {
+          "native_boundary_pixels": 1239,
+          "renderer_boundary_pixels": 1620,
+          "mean_l1_pixels": 70.703743,
+          "p95_l1_pixels": 499
+        },
+        "d11": {
+          "native_boundary_pixels": 231,
+          "renderer_boundary_pixels": 457,
+          "mean_l1_pixels": 0.337209,
+          "p95_l1_pixels": 1
+        },
+        "d12": {
+          "native_boundary_pixels": 33,
+          "renderer_boundary_pixels": 64,
+          "mean_l1_pixels": 0.340206,
+          "p95_l1_pixels": 1
+        },
+        "d16a": {
+          "native_boundary_pixels": 41,
+          "renderer_boundary_pixels": 80,
+          "mean_l1_pixels": 0.338843,
+          "p95_l1_pixels": 1
+        },
+        "d16b": {
+          "native_boundary_pixels": 41,
+          "renderer_boundary_pixels": 82,
+          "mean_l1_pixels": 0.333333,
+          "p95_l1_pixels": 1
+        },
+        "d17": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 691,
+          "mean_l1_pixels": 0.375723,
+          "p95_l1_pixels": 1
+        },
+        "d18": {
+          "native_boundary_pixels": 1152,
+          "renderer_boundary_pixels": 2304,
+          "mean_l1_pixels": 0.333333,
+          "p95_l1_pixels": 1
+        },
+        "d19": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 691,
+          "mean_l1_pixels": 0.375723,
+          "p95_l1_pixels": 1
+        },
+        "d20": {
+          "native_boundary_pixels": 350,
+          "renderer_boundary_pixels": 691,
+          "mean_l1_pixels": 0.361191,
+          "p95_l1_pixels": 1
+        },
+        "d21": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 691,
+          "mean_l1_pixels": 0.375723,
+          "p95_l1_pixels": 1
+        },
+        "d22": {
+          "native_boundary_pixels": 2370,
+          "renderer_boundary_pixels": 353,
+          "mean_l1_pixels": 12.365773,
+          "p95_l1_pixels": 35
+        },
+        "d23": {
+          "native_boundary_pixels": 380,
+          "renderer_boundary_pixels": 0,
+          "mean_l1_pixels": null,
+          "p95_l1_pixels": null
+        }
+      }
+    },
+    "baseline-pr120": {
+      "renderer_revision": "5e1b24f8d8d262ac165b125474f7807163afbcc1",
+      "cases": {
+        "primitives-styles": {
+          "native_boundary_pixels": 17370,
+          "renderer_boundary_pixels": 8428,
+          "mean_l1_pixels": 5.994651,
+          "p95_l1_pixels": 23
+        },
+        "technical-plan": {
+          "native_boundary_pixels": 5870,
+          "renderer_boundary_pixels": 9659,
+          "mean_l1_pixels": 2.457595,
+          "p95_l1_pixels": 23
+        },
+        "compound-landscape": {
+          "native_boundary_pixels": 11415,
+          "renderer_boundary_pixels": 1904,
+          "mean_l1_pixels": 29.456341,
+          "p95_l1_pixels": 90
+        },
+        "typography": {
+          "native_boundary_pixels": 9706,
+          "renderer_boundary_pixels": 3586,
+          "mean_l1_pixels": 24.923112,
+          "p95_l1_pixels": 150
+        },
+        "d01": {
+          "native_boundary_pixels": 33,
+          "renderer_boundary_pixels": 64,
+          "mean_l1_pixels": 0.340206,
+          "p95_l1_pixels": 1
+        },
+        "d02": {
+          "native_boundary_pixels": 67,
+          "renderer_boundary_pixels": 132,
+          "mean_l1_pixels": 0.336683,
+          "p95_l1_pixels": 1
+        },
+        "d04": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 898,
+          "mean_l1_pixels": 0.334815,
+          "p95_l1_pixels": 1
+        },
+        "d05": {
+          "native_boundary_pixels": 528,
+          "renderer_boundary_pixels": 1052,
+          "mean_l1_pixels": 0.336709,
+          "p95_l1_pixels": 1
+        },
+        "d06": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 898,
+          "mean_l1_pixels": 0.334815,
+          "p95_l1_pixels": 1
+        },
+        "d07c": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 898,
+          "mean_l1_pixels": 0.334815,
+          "p95_l1_pixels": 1
+        },
+        "d09": {
+          "native_boundary_pixels": 820,
+          "renderer_boundary_pixels": 1620,
+          "mean_l1_pixels": 0.339754,
+          "p95_l1_pixels": 1
+        },
+        "d10": {
+          "native_boundary_pixels": 1239,
+          "renderer_boundary_pixels": 1620,
+          "mean_l1_pixels": 70.703743,
+          "p95_l1_pixels": 499
+        },
+        "d11": {
+          "native_boundary_pixels": 231,
+          "renderer_boundary_pixels": 457,
+          "mean_l1_pixels": 0.337209,
+          "p95_l1_pixels": 1
+        },
+        "d12": {
+          "native_boundary_pixels": 33,
+          "renderer_boundary_pixels": 64,
+          "mean_l1_pixels": 0.340206,
+          "p95_l1_pixels": 1
+        },
+        "d16a": {
+          "native_boundary_pixels": 41,
+          "renderer_boundary_pixels": 80,
+          "mean_l1_pixels": 0.338843,
+          "p95_l1_pixels": 1
+        },
+        "d16b": {
+          "native_boundary_pixels": 41,
+          "renderer_boundary_pixels": 82,
+          "mean_l1_pixels": 0.333333,
+          "p95_l1_pixels": 1
+        },
+        "d17": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 691,
+          "mean_l1_pixels": 0.375723,
+          "p95_l1_pixels": 1
+        },
+        "d18": {
+          "native_boundary_pixels": 1152,
+          "renderer_boundary_pixels": 2304,
+          "mean_l1_pixels": 0.333333,
+          "p95_l1_pixels": 1
+        },
+        "d19": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 691,
+          "mean_l1_pixels": 0.375723,
+          "p95_l1_pixels": 1
+        },
+        "d20": {
+          "native_boundary_pixels": 350,
+          "renderer_boundary_pixels": 691,
+          "mean_l1_pixels": 0.361191,
+          "p95_l1_pixels": 1
+        },
+        "d21": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 691,
+          "mean_l1_pixels": 0.375723,
+          "p95_l1_pixels": 1
+        },
+        "d22": {
+          "native_boundary_pixels": 2370,
+          "renderer_boundary_pixels": 353,
+          "mean_l1_pixels": 12.365773,
+          "p95_l1_pixels": 35
+        },
+        "d23": {
+          "native_boundary_pixels": 380,
+          "renderer_boundary_pixels": 0,
+          "mean_l1_pixels": null,
+          "p95_l1_pixels": null
+        }
+      }
+    },
+    "vga-raster-01": {
+      "renderer_revision": "23b225ac40935124534620b16c170a9311c7fdd8",
+      "cases": {
+        "primitives-styles": {
+          "native_boundary_pixels": 17370,
+          "renderer_boundary_pixels": 18065,
+          "mean_l1_pixels": 0.442726,
+          "p95_l1_pixels": 1
+        },
+        "technical-plan": {
+          "native_boundary_pixels": 5870,
+          "renderer_boundary_pixels": 5111,
+          "mean_l1_pixels": 2.593115,
+          "p95_l1_pixels": 28
+        },
+        "compound-landscape": {
+          "native_boundary_pixels": 11415,
+          "renderer_boundary_pixels": 11401,
+          "mean_l1_pixels": 0.008897,
+          "p95_l1_pixels": 0
+        },
+        "typography": {
+          "native_boundary_pixels": 9706,
+          "renderer_boundary_pixels": 1794,
+          "mean_l1_pixels": 28.703739,
+          "p95_l1_pixels": 161
+        },
+        "d01": {
+          "native_boundary_pixels": 33,
+          "renderer_boundary_pixels": 33,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d02": {
+          "native_boundary_pixels": 67,
+          "renderer_boundary_pixels": 67,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d04": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 452,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d05": {
+          "native_boundary_pixels": 528,
+          "renderer_boundary_pixels": 528,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d06": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 452,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d07c": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 452,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d09": {
+          "native_boundary_pixels": 820,
+          "renderer_boundary_pixels": 820,
+          "mean_l1_pixels": 0.118293,
+          "p95_l1_pixels": 1
+        },
+        "d10": {
+          "native_boundary_pixels": 1239,
+          "renderer_boundary_pixels": 820,
+          "mean_l1_pixels": 97.86644,
+          "p95_l1_pixels": 514
+        },
+        "d11": {
+          "native_boundary_pixels": 231,
+          "renderer_boundary_pixels": 231,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d12": {
+          "native_boundary_pixels": 33,
+          "renderer_boundary_pixels": 33,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d16a": {
+          "native_boundary_pixels": 41,
+          "renderer_boundary_pixels": 41,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d16b": {
+          "native_boundary_pixels": 41,
+          "renderer_boundary_pixels": 41,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d17": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 391,
+          "mean_l1_pixels": 0.170732,
+          "p95_l1_pixels": 1
+        },
+        "d18": {
+          "native_boundary_pixels": 1152,
+          "renderer_boundary_pixels": 1152,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d19": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 391,
+          "mean_l1_pixels": 0.170732,
+          "p95_l1_pixels": 1
+        },
+        "d20": {
+          "native_boundary_pixels": 350,
+          "renderer_boundary_pixels": 350,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d21": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 391,
+          "mean_l1_pixels": 0.170732,
+          "p95_l1_pixels": 1
+        },
+        "d22": {
+          "native_boundary_pixels": 2370,
+          "renderer_boundary_pixels": 2367,
+          "mean_l1_pixels": 0.000633,
+          "p95_l1_pixels": 0
+        },
+        "d23": {
+          "native_boundary_pixels": 380,
+          "renderer_boundary_pixels": 0,
+          "mean_l1_pixels": null,
+          "p95_l1_pixels": null
+        }
+      }
+    },
+    "vga-strokes-02": {
+      "renderer_revision": "c1e90fc5a6e0cf6d998fe14b755d0496c0e4c7d1",
+      "cases": {
+        "primitives-styles": {
+          "native_boundary_pixels": 17370,
+          "renderer_boundary_pixels": 18124,
+          "mean_l1_pixels": 0.32814,
+          "p95_l1_pixels": 0
+        },
+        "technical-plan": {
+          "native_boundary_pixels": 5870,
+          "renderer_boundary_pixels": 5111,
+          "mean_l1_pixels": 2.593115,
+          "p95_l1_pixels": 28
+        },
+        "compound-landscape": {
+          "native_boundary_pixels": 11415,
+          "renderer_boundary_pixels": 11401,
+          "mean_l1_pixels": 0.008897,
+          "p95_l1_pixels": 0
+        },
+        "typography": {
+          "native_boundary_pixels": 9706,
+          "renderer_boundary_pixels": 1794,
+          "mean_l1_pixels": 28.703739,
+          "p95_l1_pixels": 161
+        },
+        "d01": {
+          "native_boundary_pixels": 33,
+          "renderer_boundary_pixels": 33,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d02": {
+          "native_boundary_pixels": 67,
+          "renderer_boundary_pixels": 67,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d04": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 452,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d05": {
+          "native_boundary_pixels": 528,
+          "renderer_boundary_pixels": 528,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d06": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 452,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d07c": {
+          "native_boundary_pixels": 452,
+          "renderer_boundary_pixels": 452,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d09": {
+          "native_boundary_pixels": 820,
+          "renderer_boundary_pixels": 820,
+          "mean_l1_pixels": 0.118293,
+          "p95_l1_pixels": 1
+        },
+        "d10": {
+          "native_boundary_pixels": 1239,
+          "renderer_boundary_pixels": 820,
+          "mean_l1_pixels": 97.86644,
+          "p95_l1_pixels": 514
+        },
+        "d11": {
+          "native_boundary_pixels": 231,
+          "renderer_boundary_pixels": 231,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d12": {
+          "native_boundary_pixels": 33,
+          "renderer_boundary_pixels": 33,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d16a": {
+          "native_boundary_pixels": 41,
+          "renderer_boundary_pixels": 41,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d16b": {
+          "native_boundary_pixels": 41,
+          "renderer_boundary_pixels": 41,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d17": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 391,
+          "mean_l1_pixels": 0.170732,
+          "p95_l1_pixels": 1
+        },
+        "d18": {
+          "native_boundary_pixels": 1152,
+          "renderer_boundary_pixels": 1152,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d19": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 391,
+          "mean_l1_pixels": 0.170732,
+          "p95_l1_pixels": 1
+        },
+        "d20": {
+          "native_boundary_pixels": 350,
+          "renderer_boundary_pixels": 350,
+          "mean_l1_pixels": 0.0,
+          "p95_l1_pixels": 0
+        },
+        "d21": {
+          "native_boundary_pixels": 347,
+          "renderer_boundary_pixels": 391,
+          "mean_l1_pixels": 0.170732,
+          "p95_l1_pixels": 1
+        },
+        "d22": {
+          "native_boundary_pixels": 2370,
+          "renderer_boundary_pixels": 2367,
+          "mean_l1_pixels": 0.000633,
+          "p95_l1_pixels": 0
+        },
+        "d23": {
+          "native_boundary_pixels": 380,
+          "renderer_boundary_pixels": 0,
+          "mean_l1_pixels": null,
+          "p95_l1_pixels": null
+        }
+      }
+    }
+  }
+}

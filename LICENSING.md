@@ -14,6 +14,7 @@ to OpenAI, Codex or any other party.
 | General documentation and explanatory metadata | `GPL-3.0-or-later OR CC-BY-SA-4.0` | Other authored Markdown, evidence/provenance JSON and GitHub issue templates/configuration |
 | Application-generated synthetic-data fixtures | `GPL-3.0-or-later OR CC-BY-4.0`, to the extent rights exist in contributed test content | tests/fixtures/application-generated/; no ownership claim over native structural facts |
 | Manifest-verified musical comparisons | `GPL-3.0-or-later OR CC-BY-4.0` for the project's original composition and performance contributions | examples/music-listening/v1/ WAVs; underlying Tandy instrument material retains its separate rights |
+| Manifest-verified Draw comparisons | `GPL-3.0-or-later OR CC-BY-4.0` for the original synthetic drawings and derived comparisons | Manifest-listed drawing-area PNGs and independent SVGs in examples/draw-comparison/v1/ |
 | Standard license texts | Original notices/permissions, unmodified | LICENSE and LICENSES/*.txt |
 
 Each independently authored file has an adjacent REUSE-compatible `.license`
@@ -87,6 +88,13 @@ demo compositions, or unrelated historical music pursuant to this
 decision. See [the listening suite](examples/music-listening/README.md)
 for the narrow manifest and publication controls.
 
+The Draw comparison library contains original synthetic drawings and
+drawing-only crops from the native application. Original labels rendered by
+the installed Cobb resource are part of the synthetic documents. The project
+license covers the original drawings and derived comparison contributions.
+It conveys no rights to the font resource, application, or UI. The original
+font files and full captures remain private. See the
+[Draw comparison library](examples/draw-comparison/README.md).
 
 No project license grants rights to Tandy DeskMate executables, installation
 media, original user databases, manuals, assets, trademarks, external images or

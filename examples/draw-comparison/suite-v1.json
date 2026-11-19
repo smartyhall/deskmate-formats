@@ -1,0 +1,3486 @@
+{
+  "schema_version": 1,
+  "suite_version": "v1",
+  "baseline_renderer_revision": "5e1b24f8d8d262ac165b125474f7807163afbcc1",
+  "fixture_manifest": "tests/fixtures/application-generated/manifest.json",
+  "diagnostic_draw_fixtures": [
+    {
+      "id": "d01",
+      "path": "tests/fixtures/application-generated/draw/d01.fig",
+      "sha256": "adf9cbc2906115e97d462a7fed32f1ce325f1f7a006bbabaaf716f621b29bd53",
+      "size": 139,
+      "purpose": "line",
+      "status": "native-saved"
+    },
+    {
+      "id": "d02",
+      "path": "tests/fixtures/application-generated/draw/d02.fig",
+      "sha256": "7a85c629e218e5ed7ec918c9a2374a55282883f82c95ffab646a402d145a4139",
+      "size": 139,
+      "purpose": "resized line",
+      "status": "native-saved"
+    },
+    {
+      "id": "d04",
+      "path": "tests/fixtures/application-generated/draw/d04.fig",
+      "sha256": "dfd5993ee1081276efad220aef4d0ab7650b0c113af2b71aa16652817bc3e5ca",
+      "size": 143,
+      "purpose": "rectangle",
+      "status": "native-saved"
+    },
+    {
+      "id": "d05",
+      "path": "tests/fixtures/application-generated/draw/d05.fig",
+      "sha256": "ef71f2f39f2c0a7bf0ec3a10dd0f2982af7f740db2f48326789e37708933d90e",
+      "size": 143,
+      "purpose": "resized rectangle",
+      "status": "native-saved"
+    },
+    {
+      "id": "d06",
+      "path": "tests/fixtures/application-generated/draw/d06.fig",
+      "sha256": "31801cd6b26c5cb92f79da53b43f5af4f2d697ecccf9a0a7b17669e2f44994f3",
+      "size": 143,
+      "purpose": "moved rectangle",
+      "status": "native-saved"
+    },
+    {
+      "id": "d07c",
+      "path": "tests/fixtures/application-generated/draw/d07c.fig",
+      "sha256": "add31259e2bc822e35e5a6b2aef47ae2fe0c282fcddb89ea39d9b469b24828ef",
+      "size": 143,
+      "purpose": "color change",
+      "status": "native-saved"
+    },
+    {
+      "id": "d09",
+      "path": "tests/fixtures/application-generated/draw/d09.fig",
+      "sha256": "45e6927a55670578b11ed1afc6c90367fc179f63c8cf061f52b5c1b727ecd8c5",
+      "size": 171,
+      "purpose": "ellipse",
+      "status": "native-saved"
+    },
+    {
+      "id": "d10",
+      "path": "tests/fixtures/application-generated/draw/d10.fig",
+      "sha256": "29bba588ee4581fcfca0016906036d4048da27c38a3479bdcc1bc11572761c73",
+      "size": 285,
+      "purpose": "external font text",
+      "status": "native-saved"
+    },
+    {
+      "id": "d11",
+      "path": "tests/fixtures/application-generated/draw/d11.fig",
+      "sha256": "37ab83a41e20b7a27987a8fc3102f50b5cd7db5282abe0bf690d22d0abcd2d05",
+      "size": 167,
+      "purpose": "deletion",
+      "status": "native-saved"
+    },
+    {
+      "id": "d12",
+      "path": "tests/fixtures/application-generated/draw/d12.fig",
+      "sha256": "2515bdb1e79b0f33ddc9e2be3ef72af85c69c22af128738b14106c6db6132e67",
+      "size": 139,
+      "purpose": "native Save As",
+      "status": "native-saved"
+    },
+    {
+      "id": "d16a",
+      "path": "tests/fixtures/application-generated/draw/d16a.fig",
+      "sha256": "fc2ce8d4153be5eb54ec184f97e5324599f87b03b07778aea26c6f6ec51074bd",
+      "size": 139,
+      "purpose": "pixel displacement A",
+      "status": "native-saved"
+    },
+    {
+      "id": "d16b",
+      "path": "tests/fixtures/application-generated/draw/d16b.fig",
+      "sha256": "56b147bcd551dc36fdabb22e326ff72fc265d590cc8aae06f97b71bbf2345bbe",
+      "size": 139,
+      "purpose": "pixel displacement B",
+      "status": "native-saved"
+    },
+    {
+      "id": "d17",
+      "path": "tests/fixtures/application-generated/draw/d17.fig",
+      "sha256": "8ecc1be0c67d9904310d2040b5d458d0a9c0e31589e72782fe855d87fbbd5010",
+      "size": 195,
+      "purpose": "three primitives",
+      "status": "native-saved"
+    },
+    {
+      "id": "d18",
+      "path": "tests/fixtures/application-generated/draw/d18.fig",
+      "sha256": "f0b2cd6a20be7bc80f230c03980c127e857f189a371540ce427b8d25d0c37e2c",
+      "size": 979,
+      "purpose": "36-line grid",
+      "status": "native-saved"
+    },
+    {
+      "id": "d19",
+      "path": "tests/fixtures/application-generated/draw/d19.fig",
+      "sha256": "816ed0f1384311948c98b0cd9ed7ec031afbfafe941edc3c541e7e41b88ef6b9",
+      "size": 213,
+      "purpose": "group",
+      "status": "native-saved"
+    },
+    {
+      "id": "d20",
+      "path": "tests/fixtures/application-generated/draw/d20.fig",
+      "sha256": "99930be15d4819ca1912031d094aed9dc59733f3e1fbbe770be09cf4a7e67e5f",
+      "size": 175,
+      "purpose": "polygon",
+      "status": "native-saved"
+    },
+    {
+      "id": "d21",
+      "path": "tests/fixtures/application-generated/draw/d21.fig",
+      "sha256": "65ec6229428e31bd8a0fe3c15e7c589fd07968be41f2afa85b05c6a8c0625d0a",
+      "size": 195,
+      "purpose": "ungroup",
+      "status": "native-saved"
+    },
+    {
+      "id": "d22",
+      "path": "tests/fixtures/application-generated/draw/d22.fig",
+      "sha256": "c8a8087bad2205771f14ad0db20c5cf5493655c86bf0e94351378051e8b919e9",
+      "size": 175,
+      "purpose": "patterned polygon",
+      "status": "native-saved"
+    },
+    {
+      "id": "d23",
+      "path": "tests/fixtures/application-generated/draw/d23.fig",
+      "sha256": "3a65ae65872af24f5a50291503158bb2b983c3b403aad1838387c043ab893613",
+      "size": 229,
+      "purpose": "Cobb text",
+      "status": "native-saved"
+    }
+  ],
+  "cross_application_controls": {
+    "text": [
+      {
+        "path": "tests/fixtures/application-generated/text/tp01.doc",
+        "sha256": "189b8d32aeb84e6fe22eb8e7d5e5e7124eaccbd19886be64e6d4ee9537fc830d",
+        "size": 126
+      },
+      {
+        "path": "tests/fixtures/application-generated/text/tp02.doc",
+        "sha256": "6fc65fbec2da073983d6abeee857f911d390fc45b5b543b5f3ecddda976cf7b9",
+        "size": 126
+      },
+      {
+        "path": "tests/fixtures/application-generated/text/tp03.doc",
+        "sha256": "8a1d35238259506271829dceaad58acc6b814cb2670d73c1aa2e2ce6b6ba2762",
+        "size": 107
+      },
+      {
+        "path": "tests/fixtures/application-generated/text/tp04.doc",
+        "sha256": "da676eb7034fdf12909d2be0c6b0d1c69e311f3c0a56ad7062be950ce6da664f",
+        "size": 209
+      },
+      {
+        "path": "tests/fixtures/application-generated/text/tp05.doc",
+        "sha256": "6fb31d9e26b3bed814574001fe901fb4da2231679fcd7173bdf9af2fac7b74ee",
+        "size": 38
+      },
+      {
+        "path": "tests/fixtures/application-generated/text/tp06.doc",
+        "sha256": "64eb14f09728450f9a2ca470f505e939bf60e78bd3df4d68d0c584ccd7e75084",
+        "size": 170
+      },
+      {
+        "path": "tests/fixtures/application-generated/text/tp07.doc",
+        "sha256": "68eb5fe2104eae4c4d8a30806b2663f6c30c4b5724f06246a680a40868ca7c12",
+        "size": 125
+      },
+      {
+        "path": "tests/fixtures/application-generated/text/tp09.doc",
+        "sha256": "449121ba8bb9949440eed0f6e0f5a69467ca80b0b12bfbb5439e08aa79c3d83c",
+        "size": 206
+      }
+    ],
+    "filer": [
+      {
+        "path": "tests/fixtures/application-generated/filer/g01.fil",
+        "sha256": "d78e6fcb773cef76405cdfecd671aa4da8fc61fcc3100f89e5c7d8c1b3583936",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/g03.fil",
+        "sha256": "e3672ec7b63344a96f757c6c32696eb9b77ff4699536eac1600668c7a2115693",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/g04.fil",
+        "sha256": "9a936d5d3c1a9368903a72865a390b5c18c383ee0e29a3430d47f485ec5a16fa",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/g05.fil",
+        "sha256": "e48c93659f57e194cb0aed60374748d5d0e9d547f0accf202291122c09024e0f",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/gcol.fil",
+        "sha256": "2f50b79f983b9c56a2ced14036af6c9c5b2b359e02cfeb0a9dc2507b7bc44d3a",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/gdel.fil",
+        "sha256": "721850e9fe8c19adb48453fbd03bb34396a8c24c9be3bcddb563db271318cabb",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/gmove.fil",
+        "sha256": "a8641b2428aded747ab893d2a4bf90ddb3a4d41f235feee1a25b19fb062398fd",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/g23.fil",
+        "sha256": "f9f8bbede1d8296b5fd399c7940daf0f82d82e52f819385187e9badf3e28264c",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/g20.fil",
+        "sha256": "8106ab10d8f4ff03432a67e41c658bcd5a5fd6e510b878377fd4346611b1d4a7",
+        "size": 12288
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/g18.fil",
+        "sha256": "eb28f41d08edcbe42cc3efb014ba3046227f658017846103db93fafbc9995e24",
+        "size": 11264
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/gsize.fil",
+        "sha256": "5d60da40aba90ae0bb451e1b48131a792e5a768b3bb34a0b62ab341e7e35c08a",
+        "size": 10240
+      }
+    ]
+  },
+  "featured_cases": [
+    {
+      "id": "primitives-styles",
+      "title": "Primitive and style chart",
+      "description": "Lines, weights, dashes, arcs, patterns and 16 palette swatches.",
+      "path": "tests/fixtures/application-generated/draw/suite-v1-primitives-styles.fig",
+      "sha256": "49d43144b8c19166d7984f645fbff1dd71a404c43c52e5f867c03e1ae3c65a7b",
+      "size": 1879,
+      "status": "native-saved",
+      "native_dos_name": "PSTYLE.FIG",
+      "generator_output": {
+        "dos_name": "PRIM2.FIG",
+        "sha256": "121defc87382ee379c62be598a577bc23c76863ad93f9d5b5228cc364ebd1b15",
+        "size": 1879
+      },
+      "display_directory": [
+        {
+          "offset": 1746,
+          "tag": 1
+        },
+        {
+          "offset": 1726,
+          "tag": 2
+        },
+        {
+          "offset": 1706,
+          "tag": 3
+        },
+        {
+          "offset": 1682,
+          "tag": 4
+        },
+        {
+          "offset": 1658,
+          "tag": 5
+        },
+        {
+          "offset": 1638,
+          "tag": 6
+        },
+        {
+          "offset": 1618,
+          "tag": 7
+        },
+        {
+          "offset": 1598,
+          "tag": 8
+        },
+        {
+          "offset": 1574,
+          "tag": 9
+        },
+        {
+          "offset": 1550,
+          "tag": 10
+        },
+        {
+          "offset": 1530,
+          "tag": 11
+        },
+        {
+          "offset": 1510,
+          "tag": 12
+        },
+        {
+          "offset": 1490,
+          "tag": 13
+        },
+        {
+          "offset": 1466,
+          "tag": 14
+        },
+        {
+          "offset": 1442,
+          "tag": 15
+        },
+        {
+          "offset": 1422,
+          "tag": 16
+        },
+        {
+          "offset": 1402,
+          "tag": 17
+        },
+        {
+          "offset": 1382,
+          "tag": 18
+        },
+        {
+          "offset": 1358,
+          "tag": 19
+        },
+        {
+          "offset": 1334,
+          "tag": 20
+        },
+        {
+          "offset": 1314,
+          "tag": 21
+        },
+        {
+          "offset": 1294,
+          "tag": 22
+        },
+        {
+          "offset": 1274,
+          "tag": 23
+        },
+        {
+          "offset": 1250,
+          "tag": 24
+        },
+        {
+          "offset": 1226,
+          "tag": 25
+        },
+        {
+          "offset": 1206,
+          "tag": 26
+        },
+        {
+          "offset": 1186,
+          "tag": 27
+        },
+        {
+          "offset": 1166,
+          "tag": 28
+        },
+        {
+          "offset": 1142,
+          "tag": 29
+        },
+        {
+          "offset": 1118,
+          "tag": 30
+        },
+        {
+          "offset": 1098,
+          "tag": 31
+        },
+        {
+          "offset": 1078,
+          "tag": 32
+        },
+        {
+          "offset": 1058,
+          "tag": 33
+        },
+        {
+          "offset": 1034,
+          "tag": 34
+        },
+        {
+          "offset": 1010,
+          "tag": 35
+        },
+        {
+          "offset": 990,
+          "tag": 36
+        },
+        {
+          "offset": 970,
+          "tag": 37
+        },
+        {
+          "offset": 950,
+          "tag": 38
+        },
+        {
+          "offset": 926,
+          "tag": 39
+        },
+        {
+          "offset": 902,
+          "tag": 40
+        },
+        {
+          "offset": 878,
+          "tag": 41
+        },
+        {
+          "offset": 854,
+          "tag": 42
+        },
+        {
+          "offset": 802,
+          "tag": 43
+        },
+        {
+          "offset": 746,
+          "tag": 44
+        },
+        {
+          "offset": 702,
+          "tag": 45
+        },
+        {
+          "offset": 658,
+          "tag": 46
+        },
+        {
+          "offset": 638,
+          "tag": 47
+        },
+        {
+          "offset": 614,
+          "tag": 48
+        },
+        {
+          "offset": 590,
+          "tag": 49
+        },
+        {
+          "offset": 566,
+          "tag": 50
+        },
+        {
+          "offset": 542,
+          "tag": 51
+        },
+        {
+          "offset": 518,
+          "tag": 52
+        },
+        {
+          "offset": 494,
+          "tag": 53
+        },
+        {
+          "offset": 470,
+          "tag": 54
+        },
+        {
+          "offset": 446,
+          "tag": 55
+        },
+        {
+          "offset": 422,
+          "tag": 56
+        },
+        {
+          "offset": 398,
+          "tag": 57
+        },
+        {
+          "offset": 374,
+          "tag": 58
+        },
+        {
+          "offset": 350,
+          "tag": 59
+        },
+        {
+          "offset": 326,
+          "tag": 60
+        },
+        {
+          "offset": 302,
+          "tag": 61
+        },
+        {
+          "offset": 278,
+          "tag": 62
+        },
+        {
+          "offset": 254,
+          "tag": 63
+        }
+      ],
+      "physical_records": [
+        {
+          "offset": 254,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            7025,
+            0,
+            4050,
+            0,
+            7390,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000f00",
+          "child_offsets": []
+        },
+        {
+          "offset": 278,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            6590,
+            0,
+            4050,
+            0,
+            6955,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000e00",
+          "child_offsets": []
+        },
+        {
+          "offset": 302,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            6155,
+            0,
+            4050,
+            0,
+            6520,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000d00",
+          "child_offsets": []
+        },
+        {
+          "offset": 326,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            5720,
+            0,
+            4050,
+            0,
+            6085,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000c00",
+          "child_offsets": []
+        },
+        {
+          "offset": 350,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            5285,
+            0,
+            4050,
+            0,
+            5650,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000b00",
+          "child_offsets": []
+        },
+        {
+          "offset": 374,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            4850,
+            0,
+            4050,
+            0,
+            5215,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 398,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            4415,
+            0,
+            4050,
+            0,
+            4780,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000900",
+          "child_offsets": []
+        },
+        {
+          "offset": 422,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            3980,
+            0,
+            4050,
+            0,
+            4345,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000800",
+          "child_offsets": []
+        },
+        {
+          "offset": 446,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            3545,
+            0,
+            4050,
+            0,
+            3910,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000700",
+          "child_offsets": []
+        },
+        {
+          "offset": 470,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            3110,
+            0,
+            4050,
+            0,
+            3475,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000600",
+          "child_offsets": []
+        },
+        {
+          "offset": 494,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            2675,
+            0,
+            4050,
+            0,
+            3040,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000500",
+          "child_offsets": []
+        },
+        {
+          "offset": 518,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            2240,
+            0,
+            4050,
+            0,
+            2605,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000400",
+          "child_offsets": []
+        },
+        {
+          "offset": 542,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            1805,
+            0,
+            4050,
+            0,
+            2170,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000300",
+          "child_offsets": []
+        },
+        {
+          "offset": 566,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            1370,
+            0,
+            4050,
+            0,
+            1735,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000200",
+          "child_offsets": []
+        },
+        {
+          "offset": 590,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            935,
+            0,
+            4050,
+            0,
+            1300,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000100",
+          "child_offsets": []
+        },
+        {
+          "offset": 614,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            500,
+            0,
+            4050,
+            0,
+            865,
+            0,
+            4450,
+            0
+          ],
+          "record_tail_hex": "020000000000",
+          "child_offsets": []
+        },
+        {
+          "offset": 638,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            -200,
+            0,
+            4200,
+            0,
+            1400,
+            0,
+            4200,
+            0
+          ],
+          "record_tail_hex": "0a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 658,
+          "type_bytes": "5541",
+          "coordinate_words": [
+            6400,
+            0,
+            2850,
+            0,
+            7440,
+            0,
+            3350,
+            0
+          ],
+          "record_tail_hex": "16000a0a0000fe000a001004f4010000f4011004f40108020000",
+          "child_offsets": []
+        },
+        {
+          "offset": 702,
+          "type_bytes": "5541",
+          "coordinate_words": [
+            5110,
+            0,
+            2670,
+            0,
+            6160,
+            0,
+            3360,
+            0
+          ],
+          "record_tail_hex": "160001010000fe0001001a04b2020000b2021a04b2020d020000",
+          "child_offsets": []
+        },
+        {
+          "offset": 746,
+          "type_bytes": "5550",
+          "coordinate_words": [
+            3710,
+            0,
+            2710,
+            0,
+            4820,
+            0,
+            3550,
+            0
+          ],
+          "record_tail_hex": "1c00020200000900040056044803ffff050000003601f40100005604b4008e034803e6000c03",
+          "child_offsets": []
+        },
+        {
+          "offset": 802,
+          "type_bytes": "5550",
+          "coordinate_words": [
+            2300,
+            0,
+            2710,
+            0,
+            3470,
+            0,
+            3700,
+            0
+          ],
+          "record_tail_hex": "1a000a0a0100fe0001009204de03000004000000de0300000000a203c60292047800",
+          "child_offsets": []
+        },
+        {
+          "offset": 854,
+          "type_bytes": "4509",
+          "coordinate_words": [
+            950,
+            0,
+            2880,
+            0,
+            2010,
+            0,
+            3720,
+            0
+          ],
+          "record_tail_hex": "0d0000000d00",
+          "child_offsets": []
+        },
+        {
+          "offset": 878,
+          "type_bytes": "52fe",
+          "coordinate_words": [
+            500,
+            0,
+            2710,
+            0,
+            1750,
+            0,
+            3500,
+            0
+          ],
+          "record_tail_hex": "020000000100",
+          "child_offsets": []
+        },
+        {
+          "offset": 902,
+          "type_bytes": "4508",
+          "coordinate_words": [
+            6625,
+            0,
+            1845,
+            0,
+            7315,
+            0,
+            2395,
+            0
+          ],
+          "record_tail_hex": "020000000d00",
+          "child_offsets": []
+        },
+        {
+          "offset": 926,
+          "type_bytes": "5208",
+          "coordinate_words": [
+            6625,
+            0,
+            1120,
+            0,
+            7315,
+            0,
+            1670,
+            0
+          ],
+          "record_tail_hex": "020000000d00",
+          "child_offsets": []
+        },
+        {
+          "offset": 950,
+          "type_bytes": "4c07",
+          "coordinate_words": [
+            7275,
+            0,
+            490,
+            0,
+            7275,
+            0,
+            830,
+            0
+          ],
+          "record_tail_hex": "0a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 970,
+          "type_bytes": "4c07",
+          "coordinate_words": [
+            6625,
+            0,
+            480,
+            0,
+            7125,
+            0,
+            815,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 990,
+          "type_bytes": "4c07",
+          "coordinate_words": [
+            6625,
+            0,
+            325,
+            0,
+            7275,
+            0,
+            325,
+            0
+          ],
+          "record_tail_hex": "0203",
+          "child_offsets": []
+        },
+        {
+          "offset": 1010,
+          "type_bytes": "4507",
+          "coordinate_words": [
+            5750,
+            0,
+            1845,
+            0,
+            6440,
+            0,
+            2395,
+            0
+          ],
+          "record_tail_hex": "020000000c00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1034,
+          "type_bytes": "5207",
+          "coordinate_words": [
+            5750,
+            0,
+            1120,
+            0,
+            6440,
+            0,
+            1670,
+            0
+          ],
+          "record_tail_hex": "020000000c00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1058,
+          "type_bytes": "4c06",
+          "coordinate_words": [
+            6400,
+            0,
+            490,
+            0,
+            6400,
+            0,
+            830,
+            0
+          ],
+          "record_tail_hex": "0a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1078,
+          "type_bytes": "4c06",
+          "coordinate_words": [
+            5750,
+            0,
+            480,
+            0,
+            6250,
+            0,
+            815,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1098,
+          "type_bytes": "4c06",
+          "coordinate_words": [
+            5750,
+            0,
+            325,
+            0,
+            6400,
+            0,
+            325,
+            0
+          ],
+          "record_tail_hex": "0202",
+          "child_offsets": []
+        },
+        {
+          "offset": 1118,
+          "type_bytes": "4506",
+          "coordinate_words": [
+            4875,
+            0,
+            1845,
+            0,
+            5565,
+            0,
+            2395,
+            0
+          ],
+          "record_tail_hex": "020000000b00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1142,
+          "type_bytes": "5206",
+          "coordinate_words": [
+            4875,
+            0,
+            1120,
+            0,
+            5565,
+            0,
+            1670,
+            0
+          ],
+          "record_tail_hex": "020000000b00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1166,
+          "type_bytes": "4c05",
+          "coordinate_words": [
+            5525,
+            0,
+            490,
+            0,
+            5525,
+            0,
+            830,
+            0
+          ],
+          "record_tail_hex": "0a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1186,
+          "type_bytes": "4c05",
+          "coordinate_words": [
+            4875,
+            0,
+            480,
+            0,
+            5375,
+            0,
+            815,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1206,
+          "type_bytes": "4c05",
+          "coordinate_words": [
+            4875,
+            0,
+            325,
+            0,
+            5525,
+            0,
+            325,
+            0
+          ],
+          "record_tail_hex": "0201",
+          "child_offsets": []
+        },
+        {
+          "offset": 1226,
+          "type_bytes": "4505",
+          "coordinate_words": [
+            4000,
+            0,
+            1845,
+            0,
+            4690,
+            0,
+            2395,
+            0
+          ],
+          "record_tail_hex": "020000000a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1250,
+          "type_bytes": "5205",
+          "coordinate_words": [
+            4000,
+            0,
+            1120,
+            0,
+            4690,
+            0,
+            1670,
+            0
+          ],
+          "record_tail_hex": "020000000a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1274,
+          "type_bytes": "4c04",
+          "coordinate_words": [
+            4650,
+            0,
+            490,
+            0,
+            4650,
+            0,
+            830,
+            0
+          ],
+          "record_tail_hex": "0a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1294,
+          "type_bytes": "4c04",
+          "coordinate_words": [
+            4000,
+            0,
+            480,
+            0,
+            4500,
+            0,
+            815,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1314,
+          "type_bytes": "4c04",
+          "coordinate_words": [
+            4000,
+            0,
+            325,
+            0,
+            4650,
+            0,
+            325,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 1334,
+          "type_bytes": "4504",
+          "coordinate_words": [
+            3125,
+            0,
+            1845,
+            0,
+            3815,
+            0,
+            2395,
+            0
+          ],
+          "record_tail_hex": "020000000d00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1358,
+          "type_bytes": "5204",
+          "coordinate_words": [
+            3125,
+            0,
+            1120,
+            0,
+            3815,
+            0,
+            1670,
+            0
+          ],
+          "record_tail_hex": "020000000d00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1382,
+          "type_bytes": "4c03",
+          "coordinate_words": [
+            3775,
+            0,
+            490,
+            0,
+            3775,
+            0,
+            830,
+            0
+          ],
+          "record_tail_hex": "0a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1402,
+          "type_bytes": "4c03",
+          "coordinate_words": [
+            3125,
+            0,
+            480,
+            0,
+            3625,
+            0,
+            815,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1422,
+          "type_bytes": "4c03",
+          "coordinate_words": [
+            3125,
+            0,
+            325,
+            0,
+            3775,
+            0,
+            325,
+            0
+          ],
+          "record_tail_hex": "0203",
+          "child_offsets": []
+        },
+        {
+          "offset": 1442,
+          "type_bytes": "4503",
+          "coordinate_words": [
+            2250,
+            0,
+            1845,
+            0,
+            2940,
+            0,
+            2395,
+            0
+          ],
+          "record_tail_hex": "020000000c00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1466,
+          "type_bytes": "5203",
+          "coordinate_words": [
+            2250,
+            0,
+            1120,
+            0,
+            2940,
+            0,
+            1670,
+            0
+          ],
+          "record_tail_hex": "020000000c00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1490,
+          "type_bytes": "4c02",
+          "coordinate_words": [
+            2900,
+            0,
+            490,
+            0,
+            2900,
+            0,
+            830,
+            0
+          ],
+          "record_tail_hex": "0a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1510,
+          "type_bytes": "4c02",
+          "coordinate_words": [
+            2250,
+            0,
+            480,
+            0,
+            2750,
+            0,
+            815,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1530,
+          "type_bytes": "4c02",
+          "coordinate_words": [
+            2250,
+            0,
+            325,
+            0,
+            2900,
+            0,
+            325,
+            0
+          ],
+          "record_tail_hex": "0202",
+          "child_offsets": []
+        },
+        {
+          "offset": 1550,
+          "type_bytes": "4502",
+          "coordinate_words": [
+            1375,
+            0,
+            1845,
+            0,
+            2065,
+            0,
+            2395,
+            0
+          ],
+          "record_tail_hex": "020000000b00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1574,
+          "type_bytes": "5202",
+          "coordinate_words": [
+            1375,
+            0,
+            1120,
+            0,
+            2065,
+            0,
+            1670,
+            0
+          ],
+          "record_tail_hex": "020000000b00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1598,
+          "type_bytes": "4c01",
+          "coordinate_words": [
+            2025,
+            0,
+            490,
+            0,
+            2025,
+            0,
+            830,
+            0
+          ],
+          "record_tail_hex": "0a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1618,
+          "type_bytes": "4c01",
+          "coordinate_words": [
+            1375,
+            0,
+            480,
+            0,
+            1875,
+            0,
+            815,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1638,
+          "type_bytes": "4c01",
+          "coordinate_words": [
+            1375,
+            0,
+            325,
+            0,
+            2025,
+            0,
+            325,
+            0
+          ],
+          "record_tail_hex": "0201",
+          "child_offsets": []
+        },
+        {
+          "offset": 1658,
+          "type_bytes": "4501",
+          "coordinate_words": [
+            500,
+            0,
+            1845,
+            0,
+            1190,
+            0,
+            2395,
+            0
+          ],
+          "record_tail_hex": "020000000a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1682,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            500,
+            0,
+            1120,
+            0,
+            1190,
+            0,
+            1670,
+            0
+          ],
+          "record_tail_hex": "020000000a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1706,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            1150,
+            0,
+            490,
+            0,
+            1150,
+            0,
+            830,
+            0
+          ],
+          "record_tail_hex": "0a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1726,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            500,
+            0,
+            480,
+            0,
+            1000,
+            0,
+            815,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1746,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            500,
+            0,
+            325,
+            0,
+            1150,
+            0,
+            325,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        }
+      ],
+      "palette_entries": [
+        [
+          0,
+          0,
+          0,
+          128
+        ],
+        [
+          1,
+          192,
+          192,
+          0
+        ],
+        [
+          2,
+          192,
+          192,
+          192
+        ],
+        [
+          3,
+          128,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          128,
+          128
+        ],
+        [
+          5,
+          0,
+          0,
+          192
+        ],
+        [
+          6,
+          192,
+          0,
+          0
+        ],
+        [
+          7,
+          128,
+          128,
+          128
+        ],
+        [
+          8,
+          64,
+          64,
+          64
+        ],
+        [
+          9,
+          0,
+          128,
+          128
+        ],
+        [
+          10,
+          0,
+          192,
+          0
+        ],
+        [
+          11,
+          128,
+          0,
+          128
+        ],
+        [
+          12,
+          128,
+          128,
+          0
+        ],
+        [
+          13,
+          192,
+          0,
+          192
+        ],
+        [
+          14,
+          0,
+          128,
+          0
+        ],
+        [
+          15,
+          0,
+          0,
+          0
+        ]
+      ],
+      "font_resources": {}
+    },
+    {
+      "id": "technical-plan",
+      "title": "Cedar Workshop",
+      "description": "Floor plan with door arcs, windows, dimensions and six Cobb labels.",
+      "path": "tests/fixtures/application-generated/draw/suite-v1-technical-plan.fig",
+      "sha256": "9c683be4c20d93190a7224dd337095a6b900f1561e2f843292c1f9cd2c314fd4",
+      "size": 1563,
+      "status": "native-saved",
+      "native_dos_name": "WSHOP.FIG",
+      "generator_output": {
+        "dos_name": "PLAN2.FIG",
+        "sha256": "45ef786c71f9d2f10f7432a93a63f1563af334ffb979ca0ba3f61a70f8d03313",
+        "size": 1563
+      },
+      "display_directory": [
+        {
+          "offset": 1426,
+          "tag": 1
+        },
+        {
+          "offset": 1402,
+          "tag": 2
+        },
+        {
+          "offset": 1382,
+          "tag": 3
+        },
+        {
+          "offset": 1362,
+          "tag": 4
+        },
+        {
+          "offset": 1342,
+          "tag": 5
+        },
+        {
+          "offset": 1322,
+          "tag": 6
+        },
+        {
+          "offset": 1302,
+          "tag": 7
+        },
+        {
+          "offset": 1282,
+          "tag": 8
+        },
+        {
+          "offset": 1262,
+          "tag": 9
+        },
+        {
+          "offset": 1242,
+          "tag": 10
+        },
+        {
+          "offset": 1222,
+          "tag": 11
+        },
+        {
+          "offset": 1178,
+          "tag": 12
+        },
+        {
+          "offset": 1158,
+          "tag": 13
+        },
+        {
+          "offset": 1114,
+          "tag": 14
+        },
+        {
+          "offset": 1090,
+          "tag": 15
+        },
+        {
+          "offset": 1070,
+          "tag": 16
+        },
+        {
+          "offset": 1046,
+          "tag": 17
+        },
+        {
+          "offset": 1026,
+          "tag": 18
+        },
+        {
+          "offset": 1002,
+          "tag": 19
+        },
+        {
+          "offset": 982,
+          "tag": 20
+        },
+        {
+          "offset": 962,
+          "tag": 21
+        },
+        {
+          "offset": 942,
+          "tag": 22
+        },
+        {
+          "offset": 922,
+          "tag": 23
+        },
+        {
+          "offset": 902,
+          "tag": 24
+        },
+        {
+          "offset": 882,
+          "tag": 25
+        },
+        {
+          "offset": 862,
+          "tag": 26
+        },
+        {
+          "offset": 842,
+          "tag": 27
+        },
+        {
+          "offset": 818,
+          "tag": 28
+        },
+        {
+          "offset": 794,
+          "tag": 29
+        },
+        {
+          "offset": 678,
+          "tag": 30
+        },
+        {
+          "offset": 572,
+          "tag": 31
+        },
+        {
+          "offset": 464,
+          "tag": 32
+        },
+        {
+          "offset": 354,
+          "tag": 33
+        },
+        {
+          "offset": 248,
+          "tag": 34
+        },
+        {
+          "offset": 142,
+          "tag": 35
+        }
+      ],
+      "physical_records": [
+        {
+          "offset": 142,
+          "type_bytes": "5566",
+          "coordinate_words": [
+            4790,
+            0,
+            4431,
+            0,
+            5315,
+            0,
+            4601,
+            0
+          ],
+          "record_tail_hex": "350002ff00000000436f626200000000000000000000000000000000000000000000000000000c006400000000000c00ff0000000000000000000000000000000000aa008d000d020100b612dc1105000000342e36204d00",
+          "child_offsets": []
+        },
+        {
+          "offset": 248,
+          "type_bytes": "5566",
+          "coordinate_words": [
+            1800,
+            0,
+            4431,
+            0,
+            2325,
+            0,
+            4601,
+            0
+          ],
+          "record_tail_hex": "350002ff00000000436f626200000000000000000000000000000000000000000000000000000c006400000000000c00ff0000000000000000000000000000000000aa008d000d0201000807dc1105000000342e30204d00",
+          "child_offsets": []
+        },
+        {
+          "offset": 354,
+          "type_bytes": "5566",
+          "coordinate_words": [
+            4570,
+            0,
+            2973,
+            0,
+            5483,
+            0,
+            3136,
+            0
+          ],
+          "record_tail_hex": "370002ff00000000436f626200000000000000000000000000000000000000000000000000000c006400000000000c00ff0000000000000000000000000000000000a300860091030100da11230c0900000042454e43482042415900",
+          "child_offsets": []
+        },
+        {
+          "offset": 464,
+          "type_bytes": "5566",
+          "coordinate_words": [
+            1240,
+            0,
+            3123,
+            0,
+            1853,
+            0,
+            3286,
+            0
+          ],
+          "record_tail_hex": "360002ff00000000436f626200000000000000000000000000000000000000000000000000000c006400000000000c00ff0000000000000000000000000000000000a300860065020100d804b90c0600000053545544494f0000",
+          "child_offsets": []
+        },
+        {
+          "offset": 572,
+          "type_bytes": "5566",
+          "coordinate_words": [
+            1390,
+            0,
+            1632,
+            0,
+            1903,
+            0,
+            1795,
+            0
+          ],
+          "record_tail_hex": "350002ff00000000436f626200000000000000000000000000000000000000000000000000000c006400000000000c00ff0000000000000000000000000000000000a3008600010201006e05e6060500000053544f524500",
+          "child_offsets": []
+        },
+        {
+          "offset": 678,
+          "type_bytes": "5566",
+          "coordinate_words": [
+            960,
+            0,
+            606,
+            0,
+            2372,
+            0,
+            769,
+            0
+          ],
+          "record_tail_hex": "3a0002ff00000000436f626200000000000000000000000000000000000000000000000000000c006400000000000c00ff0000000000000000000000000000000000a300860084050100c003e4020e000000434544415220574f524b53484f500000",
+          "child_offsets": []
+        },
+        {
+          "offset": 794,
+          "type_bytes": "52fe",
+          "coordinate_words": [
+            5320,
+            0,
+            1660,
+            0,
+            6230,
+            0,
+            1970,
+            0
+          ],
+          "record_tail_hex": "0a0000000100",
+          "child_offsets": []
+        },
+        {
+          "offset": 818,
+          "type_bytes": "52fe",
+          "coordinate_words": [
+            5150,
+            0,
+            1570,
+            0,
+            6400,
+            0,
+            2080,
+            0
+          ],
+          "record_tail_hex": "0a0000000100",
+          "child_offsets": []
+        },
+        {
+          "offset": 842,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            950,
+            0,
+            4245,
+            0,
+            6810,
+            0,
+            4245,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 862,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            6765,
+            0,
+            4290,
+            0,
+            6855,
+            0,
+            4200,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 882,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            6810,
+            0,
+            3910,
+            0,
+            6810,
+            0,
+            4340,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 902,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            3615,
+            0,
+            4290,
+            0,
+            3705,
+            0,
+            4200,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 922,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            3660,
+            0,
+            3910,
+            0,
+            3660,
+            0,
+            4340,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 942,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            905,
+            0,
+            4290,
+            0,
+            995,
+            0,
+            4200,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 962,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            950,
+            0,
+            3910,
+            0,
+            950,
+            0,
+            4340,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 982,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            5500,
+            0,
+            1087,
+            0,
+            6250,
+            0,
+            1087,
+            0
+          ],
+          "record_tail_hex": "0a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1002,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            5500,
+            0,
+            1030,
+            0,
+            6250,
+            0,
+            1145,
+            0
+          ],
+          "record_tail_hex": "0a0000000000",
+          "child_offsets": []
+        },
+        {
+          "offset": 1026,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            4550,
+            0,
+            1087,
+            0,
+            5300,
+            0,
+            1087,
+            0
+          ],
+          "record_tail_hex": "0a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1046,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            4550,
+            0,
+            1030,
+            0,
+            5300,
+            0,
+            1145,
+            0
+          ],
+          "record_tail_hex": "0a0000000000",
+          "child_offsets": []
+        },
+        {
+          "offset": 1070,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            1400,
+            0,
+            1087,
+            0,
+            2150,
+            0,
+            1087,
+            0
+          ],
+          "record_tail_hex": "0a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1090,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            1400,
+            0,
+            1030,
+            0,
+            2150,
+            0,
+            1145,
+            0
+          ],
+          "record_tail_hex": "0a0000000000",
+          "child_offsets": []
+        },
+        {
+          "offset": 1114,
+          "type_bytes": "5541",
+          "coordinate_words": [
+            2450,
+            0,
+            1910,
+            0,
+            3100,
+            0,
+            2560,
+            0
+          ],
+          "record_tail_hex": "160004040000fe0004008a028a02000000008a028a02cc01be00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1158,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            2450,
+            0,
+            2560,
+            0,
+            2450,
+            0,
+            1910,
+            0
+          ],
+          "record_tail_hex": "0400",
+          "child_offsets": []
+        },
+        {
+          "offset": 1178,
+          "type_bytes": "5541",
+          "coordinate_words": [
+            3736,
+            0,
+            2560,
+            0,
+            4436,
+            0,
+            3260,
+            0
+          ],
+          "record_tail_hex": "160004040000fe000400bc02bc0200000000bc02bc02ef01cd00",
+          "child_offsets": []
+        },
+        {
+          "offset": 1222,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            3736,
+            0,
+            3260,
+            0,
+            4436,
+            0,
+            3260,
+            0
+          ],
+          "record_tail_hex": "0400",
+          "child_offsets": []
+        },
+        {
+          "offset": 1242,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            3100,
+            0,
+            2635,
+            0,
+            3660,
+            0,
+            2635,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1262,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            1025,
+            0,
+            2635,
+            0,
+            2450,
+            0,
+            2635,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1282,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            3100,
+            0,
+            2560,
+            0,
+            3660,
+            0,
+            2560,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1302,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            1025,
+            0,
+            2560,
+            0,
+            2450,
+            0,
+            2560,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1322,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            3735,
+            32768,
+            3260,
+            0,
+            3735,
+            32768,
+            3835,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1342,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            3660,
+            32768,
+            3260,
+            0,
+            3660,
+            32768,
+            3835,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1362,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            3735,
+            32768,
+            1125,
+            0,
+            3735,
+            32768,
+            2560,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1382,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            3660,
+            32768,
+            1125,
+            0,
+            3660,
+            32768,
+            2560,
+            0
+          ],
+          "record_tail_hex": "0100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1402,
+          "type_bytes": "52fe",
+          "coordinate_words": [
+            1025,
+            0,
+            1125,
+            0,
+            6735,
+            0,
+            3835,
+            0
+          ],
+          "record_tail_hex": "010000000100",
+          "child_offsets": []
+        },
+        {
+          "offset": 1426,
+          "type_bytes": "52fe",
+          "coordinate_words": [
+            950,
+            0,
+            1050,
+            0,
+            6810,
+            0,
+            3910,
+            0
+          ],
+          "record_tail_hex": "010000000100",
+          "child_offsets": []
+        }
+      ],
+      "palette_entries": [
+        [
+          0,
+          0,
+          0,
+          128
+        ],
+        [
+          1,
+          192,
+          192,
+          0
+        ],
+        [
+          2,
+          192,
+          192,
+          192
+        ],
+        [
+          3,
+          128,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          128,
+          128
+        ],
+        [
+          5,
+          0,
+          0,
+          192
+        ],
+        [
+          6,
+          192,
+          0,
+          0
+        ],
+        [
+          7,
+          128,
+          128,
+          128
+        ],
+        [
+          8,
+          64,
+          64,
+          64
+        ],
+        [
+          9,
+          0,
+          128,
+          128
+        ],
+        [
+          10,
+          0,
+          192,
+          0
+        ],
+        [
+          11,
+          128,
+          0,
+          128
+        ],
+        [
+          12,
+          128,
+          128,
+          0
+        ],
+        [
+          13,
+          192,
+          0,
+          192
+        ],
+        [
+          14,
+          0,
+          128,
+          0
+        ],
+        [
+          15,
+          0,
+          0,
+          0
+        ]
+      ],
+      "font_resources": {
+        "Cobb": {
+          "filename": "COBB.FF1",
+          "sha256": "891e9f07ed2d9fd5f5c8e75d0facd3d4094e891096a6e77a6a8b3db1518a265f"
+        }
+      }
+    },
+    {
+      "id": "compound-landscape",
+      "title": "Cedar Lake",
+      "description": "Original lake scene with a house, nested window group and patterned roof.",
+      "path": "tests/fixtures/application-generated/draw/suite-v1-compound-landscape.fig",
+      "sha256": "3bb86807a385f73d341be34ed33c10fe7de082e56bbe5248074728b966c3ceab",
+      "size": 1055,
+      "status": "native-saved",
+      "native_dos_name": "LAKEVIEW.FIG",
+      "generator_output": {
+        "dos_name": "LAND2.FIG",
+        "sha256": "33cbc35497655ff81f09ad89077a10a85ea68d599245079e75c0e6afb9e3265a",
+        "size": 1055
+      },
+      "display_directory": [
+        {
+          "offset": 918,
+          "tag": 1
+        },
+        {
+          "offset": 850,
+          "tag": 2
+        },
+        {
+          "offset": 786,
+          "tag": 3
+        },
+        {
+          "offset": 730,
+          "tag": 4
+        },
+        {
+          "offset": 710,
+          "tag": 5
+        },
+        {
+          "offset": 690,
+          "tag": 6
+        },
+        {
+          "offset": 670,
+          "tag": 7
+        },
+        {
+          "offset": 650,
+          "tag": 8
+        },
+        {
+          "offset": 630,
+          "tag": 9
+        },
+        {
+          "offset": 346,
+          "tag": 10
+        },
+        {
+          "offset": 326,
+          "tag": 11
+        },
+        {
+          "offset": 278,
+          "tag": 12
+        },
+        {
+          "offset": 258,
+          "tag": 13
+        },
+        {
+          "offset": 210,
+          "tag": 14
+        },
+        {
+          "offset": 190,
+          "tag": 15
+        },
+        {
+          "offset": 142,
+          "tag": 16
+        },
+        {
+          "offset": 122,
+          "tag": 17
+        },
+        {
+          "offset": 74,
+          "tag": 18
+        }
+      ],
+      "physical_records": [
+        {
+          "offset": 74,
+          "type_bytes": "5550",
+          "coordinate_words": [
+            5024,
+            0,
+            2110,
+            0,
+            5616,
+            0,
+            2690,
+            0
+          ],
+          "record_tail_hex": "18000a0a000001000e0050024402ffff0300000044022801000050024402",
+          "child_offsets": []
+        },
+        {
+          "offset": 122,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            5320,
+            0,
+            2690,
+            0,
+            5320,
+            0,
+            2870,
+            0
+          ],
+          "record_tail_hex": "0c02",
+          "child_offsets": []
+        },
+        {
+          "offset": 142,
+          "type_bytes": "5550",
+          "coordinate_words": [
+            4450,
+            0,
+            2243,
+            0,
+            4930,
+            0,
+            2680,
+            0
+          ],
+          "record_tail_hex": "18000a0a000001000e00e001b501ffff03000000b501f0000000e001b501",
+          "child_offsets": []
+        },
+        {
+          "offset": 190,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            4690,
+            0,
+            2680,
+            0,
+            4690,
+            0,
+            2860,
+            0
+          ],
+          "record_tail_hex": "0c02",
+          "child_offsets": []
+        },
+        {
+          "offset": 210,
+          "type_bytes": "5550",
+          "coordinate_words": [
+            921,
+            0,
+            3315,
+            0,
+            1439,
+            0,
+            3800,
+            0
+          ],
+          "record_tail_hex": "18000a0a000001000e000602e501ffff03000000e501030100000602e501",
+          "child_offsets": []
+        },
+        {
+          "offset": 258,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            1180,
+            0,
+            3800,
+            0,
+            1180,
+            0,
+            3980,
+            0
+          ],
+          "record_tail_hex": "0c02",
+          "child_offsets": []
+        },
+        {
+          "offset": 278,
+          "type_bytes": "5550",
+          "coordinate_words": [
+            430,
+            0,
+            2790,
+            0,
+            1170,
+            0,
+            3560,
+            0
+          ],
+          "record_tail_hex": "18000a0a000001000e00e4020203ffff03000000020372010000e4020203",
+          "child_offsets": []
+        },
+        {
+          "offset": 326,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            800,
+            0,
+            3560,
+            0,
+            800,
+            0,
+            3740,
+            0
+          ],
+          "record_tail_hex": "0c02",
+          "child_offsets": []
+        },
+        {
+          "offset": 346,
+          "type_bytes": "4f4f",
+          "coordinate_words": [
+            1420,
+            0,
+            1470,
+            0,
+            4161,
+            0,
+            3671,
+            0
+          ],
+          "record_tail_hex": "04002f011701c700bb00",
+          "child_offsets": [
+            606,
+            558,
+            398,
+            374
+          ]
+        },
+        {
+          "offset": 374,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            2540,
+            0,
+            2750,
+            0,
+            3040,
+            0,
+            3670,
+            0
+          ],
+          "record_tail_hex": "010000000300",
+          "child_offsets": []
+        },
+        {
+          "offset": 398,
+          "type_bytes": "4f4f",
+          "coordinate_words": [
+            1920,
+            0,
+            2630,
+            0,
+            3671,
+            0,
+            3101,
+            0
+          ],
+          "record_tail_hex": "06000b010101f700eb00e100d700",
+          "child_offsets": [
+            534,
+            514,
+            494,
+            470,
+            450,
+            430
+          ]
+        },
+        {
+          "offset": 430,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            3260,
+            0,
+            2865,
+            0,
+            3670,
+            0,
+            2865,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 450,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            3470,
+            0,
+            2630,
+            0,
+            3470,
+            0,
+            3100,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 470,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            3260,
+            0,
+            2630,
+            0,
+            3670,
+            0,
+            3100,
+            0
+          ],
+          "record_tail_hex": "020000000400",
+          "child_offsets": []
+        },
+        {
+          "offset": 494,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            1920,
+            0,
+            2865,
+            0,
+            2360,
+            0,
+            2865,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 514,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            2140,
+            0,
+            2630,
+            0,
+            2140,
+            0,
+            3100,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 534,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            1920,
+            0,
+            2630,
+            0,
+            2360,
+            0,
+            3100,
+            0
+          ],
+          "record_tail_hex": "020000000400",
+          "child_offsets": []
+        },
+        {
+          "offset": 558,
+          "type_bytes": "5550",
+          "coordinate_words": [
+            1420,
+            0,
+            1470,
+            0,
+            4160,
+            0,
+            2340,
+            0
+          ],
+          "record_tail_hex": "18000101000009000600b40a6603ffff03000000660328050000b40a6603",
+          "child_offsets": []
+        },
+        {
+          "offset": 606,
+          "type_bytes": "5201",
+          "coordinate_words": [
+            1600,
+            0,
+            2230,
+            0,
+            3970,
+            0,
+            3670,
+            0
+          ],
+          "record_tail_hex": "010000000c00",
+          "child_offsets": []
+        },
+        {
+          "offset": 630,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            5760,
+            0,
+            3980,
+            0,
+            6766,
+            0,
+            3980,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 650,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            5400,
+            0,
+            3835,
+            0,
+            6852,
+            0,
+            3835,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 670,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            5040,
+            0,
+            3690,
+            0,
+            6938,
+            0,
+            3690,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 690,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            4680,
+            0,
+            3545,
+            0,
+            7024,
+            0,
+            3545,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 710,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            4320,
+            0,
+            3400,
+            0,
+            7110,
+            0,
+            3400,
+            0
+          ],
+          "record_tail_hex": "0200",
+          "child_offsets": []
+        },
+        {
+          "offset": 730,
+          "type_bytes": "5550",
+          "coordinate_words": [
+            2820,
+            0,
+            2850,
+            0,
+            7440,
+            0,
+            4470,
+            0
+          ],
+          "record_tail_hex": "1c0004040000010004000c125406ffff05009c043e03960a96000c1200000c12540600005406",
+          "child_offsets": []
+        },
+        {
+          "offset": 786,
+          "type_bytes": "5550",
+          "coordinate_words": [
+            330,
+            0,
+            2360,
+            0,
+            7460,
+            0,
+            4390,
+            0
+          ],
+          "record_tail_hex": "20000a0a000001000e00da1bee07ffff0700000026021c077800f20d3002ce130000da1baa00da1bee070000ee07",
+          "child_offsets": []
+        },
+        {
+          "offset": 850,
+          "type_bytes": "5550",
+          "coordinate_words": [
+            320,
+            0,
+            650,
+            0,
+            7460,
+            0,
+            4200,
+            0
+          ],
+          "record_tail_hex": "22000404000009000400e41bde0dffff0800000094071e05c80084089605020d0000b013c6071c1b3205e41bde0d0000de0d",
+          "child_offsets": []
+        },
+        {
+          "offset": 918,
+          "type_bytes": "4501",
+          "coordinate_words": [
+            6070,
+            0,
+            440,
+            0,
+            7070,
+            0,
+            1410,
+            0
+          ],
+          "record_tail_hex": "010000000100",
+          "child_offsets": []
+        }
+      ],
+      "palette_entries": [
+        [
+          0,
+          0,
+          0,
+          128
+        ],
+        [
+          1,
+          192,
+          192,
+          0
+        ],
+        [
+          2,
+          192,
+          192,
+          192
+        ],
+        [
+          3,
+          128,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          128,
+          128
+        ],
+        [
+          5,
+          0,
+          0,
+          192
+        ],
+        [
+          6,
+          192,
+          0,
+          0
+        ],
+        [
+          7,
+          128,
+          128,
+          128
+        ],
+        [
+          8,
+          64,
+          64,
+          64
+        ],
+        [
+          9,
+          0,
+          128,
+          128
+        ],
+        [
+          10,
+          0,
+          192,
+          0
+        ],
+        [
+          11,
+          128,
+          0,
+          128
+        ],
+        [
+          12,
+          128,
+          128,
+          0
+        ],
+        [
+          13,
+          192,
+          0,
+          192
+        ],
+        [
+          14,
+          0,
+          128,
+          0
+        ],
+        [
+          15,
+          0,
+          0,
+          0
+        ]
+      ],
+      "font_resources": {}
+    },
+    {
+      "id": "typography",
+      "title": "Graphical typography",
+      "description": "Cobb heading, alphabet and numerals with varied serialized reference bounds.",
+      "path": "tests/fixtures/application-generated/draw/suite-v1-typography.fig",
+      "sha256": "dbbec667a3a4d566bf5aea5bd2ced0534da2e5d498d7a5d7fcbae2e35c05f0ba",
+      "size": 967,
+      "status": "native-saved",
+      "native_dos_name": "LETTER.FIG",
+      "generator_output": {
+        "dos_name": "TYPE2.FIG",
+        "sha256": "3329691fde0ec0b6c64c77e3e503cf69b851d121afbd8af3cf9da8ed23d4dba4",
+        "size": 967
+      },
+      "display_directory": [
+        {
+          "offset": 736,
+          "tag": 1
+        },
+        {
+          "offset": 716,
+          "tag": 2
+        },
+        {
+          "offset": 602,
+          "tag": 3
+        },
+        {
+          "offset": 582,
+          "tag": 4
+        },
+        {
+          "offset": 468,
+          "tag": 5
+        },
+        {
+          "offset": 448,
+          "tag": 6
+        },
+        {
+          "offset": 336,
+          "tag": 7
+        },
+        {
+          "offset": 316,
+          "tag": 8
+        },
+        {
+          "offset": 202,
+          "tag": 9
+        },
+        {
+          "offset": 182,
+          "tag": 10
+        },
+        {
+          "offset": 70,
+          "tag": 11
+        },
+        {
+          "offset": 50,
+          "tag": 12
+        }
+      ],
+      "physical_records": [
+        {
+          "offset": 50,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            620,
+            0,
+            4200,
+            0,
+            4770,
+            0,
+            4200,
+            0
+          ],
+          "record_tail_hex": "0700",
+          "child_offsets": []
+        },
+        {
+          "offset": 70,
+          "type_bytes": "5566",
+          "coordinate_words": [
+            620,
+            0,
+            3793,
+            0,
+            5150,
+            0,
+            4148,
+            0
+          ],
+          "record_tail_hex": "380001ff00000000436f6262000000000000000000000000000000000000000000000000000023009b00000000000c00ff000000000000000000000000000000000063014101b21101006c0212100a0000005749444520545241434b0000",
+          "child_offsets": []
+        },
+        {
+          "offset": 182,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            620,
+            0,
+            3550,
+            0,
+            2720,
+            0,
+            3550,
+            0
+          ],
+          "record_tail_hex": "0700",
+          "child_offsets": []
+        },
+        {
+          "offset": 202,
+          "type_bytes": "5566",
+          "coordinate_words": [
+            620,
+            0,
+            3216,
+            0,
+            2895,
+            0,
+            3563,
+            0
+          ],
+          "record_tail_hex": "39000dff00000000436f6262000000000000000000000000000000000000000000000000000019006f00000000000c00ff00000000000000000000000000000000005b010501e30801006c02950d0d000000434c4f53452053504143494e4700",
+          "child_offsets": []
+        },
+        {
+          "offset": 316,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            620,
+            0,
+            2940,
+            0,
+            3220,
+            0,
+            2940,
+            0
+          ],
+          "record_tail_hex": "0700",
+          "child_offsets": []
+        },
+        {
+          "offset": 336,
+          "type_bytes": "5566",
+          "coordinate_words": [
+            620,
+            0,
+            2547,
+            0,
+            2780,
+            0,
+            2964,
+            0
+          ],
+          "record_tail_hex": "380004ff00000000436f626200000000000000000000000000000000000000000000000000001e007200000000000c00ff0000000000000000000000000000000000a1013901700801006c022c0b0a000000303132333435363738390000",
+          "child_offsets": []
+        },
+        {
+          "offset": 448,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            620,
+            0,
+            2360,
+            0,
+            5420,
+            0,
+            2360,
+            0
+          ],
+          "record_tail_hex": "0700",
+          "child_offsets": []
+        },
+        {
+          "offset": 468,
+          "type_bytes": "5566",
+          "coordinate_words": [
+            620,
+            0,
+            1999,
+            0,
+            7471,
+            0,
+            2354,
+            0
+          ],
+          "record_tail_hex": "39000aff00000000436f626200000000000000000000000000000000000000000000000000001e00d300000000000c00ff000000000000000000000000000000000063011901c31a01006c02e8080d0000004e4f505152535455565758595a00",
+          "child_offsets": []
+        },
+        {
+          "offset": 582,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            620,
+            0,
+            1780,
+            0,
+            5420,
+            0,
+            1780,
+            0
+          ],
+          "record_tail_hex": "0700",
+          "child_offsets": []
+        },
+        {
+          "offset": 602,
+          "type_bytes": "5566",
+          "coordinate_words": [
+            620,
+            0,
+            1566,
+            0,
+            1945,
+            0,
+            1729,
+            0
+          ],
+          "record_tail_hex": "390002ff00000000436f626200000000000000000000000000000000000000000000000000000c006400000000000c00ff0000000000000000000000000000000000a30086002d0501006c02a4060d0000004142434445464748494a4b4c4d00",
+          "child_offsets": []
+        },
+        {
+          "offset": 716,
+          "type_bytes": "4c00",
+          "coordinate_words": [
+            600,
+            0,
+            1060,
+            0,
+            4500,
+            0,
+            1060,
+            0
+          ],
+          "record_tail_hex": "0700",
+          "child_offsets": []
+        },
+        {
+          "offset": 736,
+          "type_bytes": "5566",
+          "coordinate_words": [
+            600,
+            0,
+            615,
+            0,
+            7774,
+            0,
+            1003,
+            0
+          ],
+          "record_tail_hex": "3b0001ff00000000436f6262000000000000000000000000000000000000000000000000000027008200000000000c00ff000000000000000000000000000000000084016101061c01005802c8031100000044524157204c455454455220535455445900",
+          "child_offsets": []
+        }
+      ],
+      "palette_entries": [
+        [
+          0,
+          0,
+          0,
+          128
+        ],
+        [
+          1,
+          192,
+          192,
+          0
+        ],
+        [
+          2,
+          192,
+          192,
+          192
+        ],
+        [
+          3,
+          128,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          128,
+          128
+        ],
+        [
+          5,
+          0,
+          0,
+          192
+        ],
+        [
+          6,
+          192,
+          0,
+          0
+        ],
+        [
+          7,
+          128,
+          128,
+          128
+        ],
+        [
+          8,
+          64,
+          64,
+          64
+        ],
+        [
+          9,
+          0,
+          128,
+          128
+        ],
+        [
+          10,
+          0,
+          192,
+          0
+        ],
+        [
+          11,
+          128,
+          0,
+          128
+        ],
+        [
+          12,
+          128,
+          128,
+          0
+        ],
+        [
+          13,
+          192,
+          0,
+          192
+        ],
+        [
+          14,
+          0,
+          128,
+          0
+        ],
+        [
+          15,
+          0,
+          0,
+          0
+        ]
+      ],
+      "font_resources": {
+        "Cobb": {
+          "filename": "COBB.FF1",
+          "sha256": "891e9f07ed2d9fd5f5c8e75d0facd3d4094e891096a6e77a6a8b3db1518a265f"
+        }
+      }
+    }
+  ],
+  "status": "frozen-native-saved",
+  "native_profile": "DeskMate 03.05.00 on Tandy 1000 RSX, internal VGA BIOS mode 0x12",
+  "metric_version": "raw-rgb-foreground-v1",
+  "capture_crop_xyxy": [
+    0,
+    62,
+    640,
+    480
+  ]
+}
