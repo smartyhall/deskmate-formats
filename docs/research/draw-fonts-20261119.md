@@ -66,3 +66,7 @@ monospace previews identify the substitution explicitly. Geometry,
 advances, rotation and other exact FF1 glyph behavior remain open.
 The browser also renders the same unrotated embedded-stroke subset
 with fixed cell advances as the shared scalable Python projection.
+
+The [recovery handoff](draw-recovery-handoff-20261119.md#external-fonts)
+identifies candidate pair-adjustment tables after the Dixon and Marin
+glyph blocks and proposes a native test of their effect on placement.
