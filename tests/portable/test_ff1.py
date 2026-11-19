@@ -1,11 +1,12 @@
 """Check lossless FF1 reconstruction and optional outline interchange."""
 from dataclasses import replace
 from importlib.util import find_spec
+from io import BytesIO
 from struct import pack_into, unpack_from
 import unittest
 
 from deskmate_formats import ff1, ff1_geometric, ff1_interchange
-from deskmate_formats.font_resources import MAX_SIZE, Contour, FontResourceError
+from deskmate_formats.font_resources import MAX_SIZE, Contour, FontResourceError, draw_outline_slot
 
 
 class FontWriterTests(unittest.TestCase):
@@ -47,6 +48,14 @@ class FontWriterTests(unittest.TestCase):
         with self.assertRaisesRegex(FontResourceError, 'name'):
             ff1_geometric.geometric_face('Non-ASCII \N{LATIN CAPITAL LETTER E WITH ACUTE}')
 
+    def test_draw_outline_slot_routing(self):
+        self.assertEqual(draw_outline_slot(0x82), 197)
+        self.assertEqual(draw_outline_slot(0x90), 220)
+        self.assertEqual(draw_outline_slot(0xC1), 127)
+        self.assertEqual(len({draw_outline_slot(i) for i in range(128, 224)}), 96)
+        self.assertEqual({draw_outline_slot(i) for i in range(224, 256)}, {32})
+        self.assertEqual(draw_outline_slot(ord('A')), ord('A'))
+
     @unittest.skipUnless(find_spec('fontTools'), 'optional FontTools extra')
     def test_interchange(self):
         data = ff1_interchange.export_cff(self.model)
@@ -57,3 +66,44 @@ class FontWriterTests(unittest.TestCase):
         self.assertEqual(len(report['represented_codepoints']), 223)
         self.assertEqual(rebuilt.glyphs[:95], self.model.glyphs[:95])
         self.assertEqual(rebuilt.glyphs[96:], self.model.glyphs[96:])
+
+    @unittest.skipUnless(find_spec('fontTools'), 'optional FontTools extra')
+    def test_native_text_mapping_roundtrip(self):
+        direct = ff1_interchange.export_cff(self.model)
+        model, report = ff1_interchange.import_outline(direct, 'Test', native_text_map=True)
+        self.assertEqual(len(report['represented_codepoints']), 191)
+        self.assertEqual(model.glyphs[220 - 32], self.model.glyphs[0x90 - 32])
+        result = ff1_interchange.export_cff(model, native_text_map=True)
+        rebuilt, _ = ff1_interchange.import_outline(result, 'Test', native_text_map=True)
+        self.assertEqual(rebuilt.glyphs, model.glyphs)
+
+    @unittest.skipUnless(find_spec('fontTools'), 'optional FontTools extra')
+    def test_truetype_composite_and_quadratic(self):
+        from fontTools.fontBuilder import FontBuilder
+        from fontTools.pens.ttGlyphPen import TTGlyphPen
+
+        pen = TTGlyphPen(None)
+        pen.moveTo((0, 0))
+        pen.qCurveTo((300, 600), (600, 0))
+        pen.closePath()
+        glyphs = {'.notdef': TTGlyphPen(None).glyph(), 'arch': pen.glyph()}
+        composite = TTGlyphPen(glyphs)
+        composite.addComponent('arch', (1, 0, 0, 1, 100, -200))
+        glyphs['component'] = composite.glyph()
+        builder = FontBuilder(1000, isTTF=True)
+        builder.setupGlyphOrder(list(glyphs))
+        builder.setupCharacterMap({ord('A'): 'component'})
+        builder.setupGlyf(glyphs)
+        builder.setupHorizontalMetrics({'.notdef': (0, 0), 'arch': (700, 0), 'component': (800, 100)})
+        builder.setupHorizontalHeader(ascent=800, descent=-200)
+        builder.setupNameTable({'familyName': 'Quadratic Trial', 'styleName': 'Regular'})
+        builder.setupOS2()
+        builder.setupPost()
+        source = BytesIO()
+        builder.save(source)
+        model, report = ff1_interchange.import_outline(source.getvalue(), 'Trial')
+        glyph = model.glyphs[ord('A') - 32]
+        self.assertEqual(glyph.advance, 800)
+        self.assertEqual(glyph.outline.contours,
+                         (Contour((100, 200), (((300, -200), (500, -200), (700, 200)), ((100, 200),))),))
+        self.assertEqual(report['max_coordinate_error_em1000'], 0)

@@ -5,11 +5,15 @@ import math
 import re
 
 from .ff1 import CODE_COUNT, FIRST_CODE, UNITS_PER_EM, Glyph, create_resource, outline_bounds
-from .font_resources import Contour, FontResourceError, GlyphOutline
+from .font_resources import Contour, FontResourceError, GlyphOutline, draw_outline_slot
 
 
-def _repertoire(first, count):
-    # Provisional mapping used by the Draw text decoder. DEL remains unmapped.
+def _repertoire(first, count, native_text_map):
+    if native_text_map:
+        if (first, count) != (FIRST_CODE, CODE_COUNT):
+            raise FontResourceError('Draw text mapping requires a 32–255 glyph index')
+        return {draw_outline_slot(code): bytes([code]).decode('cp437')
+                for code in range(32, 224) if code != 127}
     return {code: bytes([code]).decode('cp437')
             for code in range(first, first + count) if code >= 32 and code != 127}
 
@@ -57,16 +61,19 @@ def _source_contours(glyph_set, name):
 
 
 def _open_font(source):
-    from fontTools.ttLib import TTFont
+    from fontTools.ttLib import TTFont, TTLibError
 
-    font = TTFont(BytesIO(source), recalcTimestamp=False)
+    try:
+        font = TTFont(BytesIO(source), recalcTimestamp=False)
+    except TTLibError as error:
+        raise FontResourceError(f'invalid modern font: {error}') from error
     if ('glyf' not in font and 'CFF ' not in font) or 'fvar' in font or 'CFF2' in font:
         font.close()
         raise FontResourceError('expected static TrueType or OpenType CFF outlines')
     return font
 
 
-def import_outline(source, family, *, face_id=50, family_id=2):
+def import_outline(source, family, *, face_id=50, family_id=2, native_text_map=False):
     """Build an FF1 candidate and report coverage and pre-serialization quantization."""
     glyphs = []
     missing = []
@@ -76,7 +83,7 @@ def import_outline(source, family, *, face_id=50, family_id=2):
         cmap = font.getBestCmap() or {}
         glyph_set = font.getGlyphSet()
         scale = Fraction(UNITS_PER_EM, font['head'].unitsPerEm)
-        repertoire = _repertoire(FIRST_CODE, CODE_COUNT)
+        repertoire = _repertoire(FIRST_CODE, CODE_COUNT, native_text_map)
         for code in range(FIRST_CODE, FIRST_CODE + CODE_COUNT):
             char = repertoire.get(code)
             name = cmap.get(ord(char)) if char else None
@@ -116,7 +123,8 @@ def import_outline(source, family, *, face_id=50, family_id=2):
             'missing_codepoints': missing,
             'unrepresented_source_codepoints': len(cmap.keys() - set(represented)),
             'substitutions': [],
-            'map': 'provisional CP437, bytes 32–255, excluding DEL',
+            'map': ('Draw base-outline slots for CP437 bytes 32–223, excluding DEL'
+                    if native_text_map else 'direct slot CP437, bytes 32–255, excluding DEL'),
             'max_coordinate_error_em1000': float(coordinate_error),
             'max_advance_error_em1000': float(advance_error),
             'source_feature_tables_outside_interchange': sorted(set(font.keys()) & {
@@ -131,7 +139,7 @@ def import_outline(source, family, *, face_id=50, family_id=2):
     return create_resource(family, glyphs, face_id=face_id, family_id=family_id), report
 
 
-def export_cff(resource):
+def export_cff(resource, *, native_text_map=False):
     """Export the base outlines to CFF, with bounds-derived vertical metrics."""
     from fontTools.fontBuilder import FontBuilder
     from fontTools.pens.boundsPen import BoundsPen
@@ -143,7 +151,7 @@ def export_cff(resource):
     family = resource.family
     postscript = (re.sub(r'[^A-Za-z0-9-]', '', family) or 'DeskMateOutline') + '-Regular'
     cmap = {ord(char): f'c{code:02X}' for code, char in
-            _repertoire(resource.first_code, len(resource.glyphs)).items()}
+            _repertoire(resource.first_code, len(resource.glyphs), native_text_map).items()}
     charstrings = {'.notdef': T2CharStringPen(0, None).getCharString()}
     metrics = {'.notdef': (0, 0)}
     ascent = descent = 0

@@ -1,5 +1,5 @@
 """Lossless editing and independent construction of the measured FF1 profile."""
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from struct import error as StructError, pack, pack_into, unpack_from
 
 from .font_resources import (
@@ -73,12 +73,14 @@ def _encode_outline(outline):
     commands = bytearray()
     for contour in outline.contours:
         commands.extend(pack('<Bhh', 0, *contour.start))
+        if len(commands) > 65535:
+            raise FontResourceError('FF1 contour stream exceeds its length word')
         if contour.segments and contour.segments[-1][-1:] != (contour.start,):
             raise FontResourceError('open FF1 contour')
         for segment in contour.segments:
             if len(segment) == 1:
                 commands.extend(pack('<Bhh', 1, *segment[0]))
-            elif len(segment) == 3:
+            elif len(segment) == 3 and all(len(point) == 2 for point in segment):
                 commands.extend(pack('<B6h', 2, *(value for point in segment for value in point)))
             else:
                 raise FontResourceError('FF1 segment must be a line or cubic')
@@ -190,3 +192,25 @@ def create_resource(family, glyphs, *, face_id=50, family_id=2, optional_metrics
 def polygon(*points):
     """Construct a polygon with an explicit closing line."""
     return Contour(points[0], tuple((point,) for point in (*points[1:], points[0])))
+
+
+def dixon_slot(resource):
+    """Use the measured Dixon directory structure around an independent bank."""
+    if (resource.family != 'Dixon' or len(resource.descriptors) != 1
+            or unpack_from('<H', resource.header, 54)[0] != 2
+            or unpack_from('<H', resource.descriptors[0], 34)[0] != 50):
+        raise FontResourceError('Dixon slot requires family Dixon and IDs 2 and 50')
+    settings = (
+        ('Thin', 126, 2, 75, 0),
+        ('Condensed', 3, 4, 125, 0),
+        ('Wide', 4, 8, 150, 0),
+        ('Expanded', 54, 16, 100, 1),
+        ('Hollow', 5, 17, 85, 1),
+        ('Hol-Thin', 58, 18, 75, 1),
+        ('Hol-Cond', 6, 20, 125, 1),
+        ('Hol-Wide', 55, 24, 150, 1),
+    )
+    descriptors = [_name_field('Dixon ' + name) + pack('<HHBBB', 0, ident, mode, width, variant)
+                   + resource.descriptors[0][39:] for name, ident, mode, width, variant in settings]
+    descriptors.append(_name_field('Dixon Hol-Exp') + pack('<HHBB', 0, 1, 18, 2) + bytes(8))
+    return replace(resource, descriptors=(*resource.descriptors, *descriptors))

@@ -13,6 +13,7 @@ recursive-include experiments *.asm *.license
 recursive-include .github *.yml *.yaml *.license
 global-exclude *.pyc
 global-exclude *.cln *.adr *.fil *.pcl *.doc *.fig *.wks *.snd *.sng *.wav *.mid *.png
+global-exclude *.ff1 *.otf *.ttf
 recursive-exclude examples/draw-comparison *.svg
 exclude tests/fixtures/application-generated/text/*.txt
 global-exclude task-queue.sqlite3 task-queue.sqlite3-journal task-queue.sqlite3-wal task-queue.sqlite3-shm

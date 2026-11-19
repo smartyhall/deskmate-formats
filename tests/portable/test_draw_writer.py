@@ -151,6 +151,29 @@ class BrowserCodecTest(unittest.TestCase):
         )
         return json.loads(response.stdout)
 
+    def test_outline_authoring_parity(self):
+        from deskmate_formats.ff1 import serialize_resource
+        from deskmate_formats.ff1_geometric import geometric_face
+        from deskmate_formats.font_resources import OutlineFace, parse_glyph_index
+
+        data = serialize_resource(geometric_face('Dixon'))
+        face = OutlineFace('Dixon', '', parse_glyph_index(data), data)
+        fixture = draw_writer.new_outline_drawing(face, 'H Oi', (450, 820), point_size=36)
+        fixture = draw_writer.add_outline_text(fixture, face, 'AV 01', (-80, 1600),
+                                                point_size=14, width_percent=125)
+        output = self.browser(
+            '''
+            const fs = require('node:fs');
+            const codec = require(process.argv[1]);
+            const source = JSON.parse(fs.readFileSync(0, 'utf8'));
+            const face = codec.readOutlineFace(Buffer.from(source.font, 'base64'));
+            let model = codec.addOutlineText(codec.blank(), face, 'H Oi', [450, 820], 36, 100);
+            model = codec.addOutlineText(model, face, 'AV 01', [-80, 1600], 14, 125);
+            console.log(JSON.stringify(Buffer.from(model.copy()).toString('hex')));
+            ''', {'font': data},
+        )
+        self.assertEqual(bytes.fromhex(output), fixture)
+
     def test_structural_model_and_raw_copy_parity(self):
         cases = {path.stem: path.read_bytes() for path in sorted(FIXTURES.glob('*.fig'))}
         cases['truncated'] = cases['d04'][:-1]

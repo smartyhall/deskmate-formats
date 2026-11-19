@@ -86,3 +86,94 @@ uses FontTools for outline and advance auditing and Pillow FreeType
 for baseline-aligned coverage overlap. Modern raster overlap includes
 the original font rasterizer's treatment of hints. It is separate
 from DeskMate screenshot agreement.
+
+## Native installation and byte map
+
+Draw 03.05.00 loaded the independently constructed ten-descriptor face
+through the Dixon slot on a disposable RSX clone. Rename the clone's
+original DIXON.FF1 to a backup and copy the candidate into the same
+directory as DIXON.FF1. Reenter Draw from DOS. The native descriptor
+remains Dixon. This procedure was tested on the pinned 3.05 machine.
+The generated files contain a single independent outline bank and a
+ten-entry variant directory built from measured style constants.
+
+Single-descriptor candidates and two-descriptor tests fell back to
+System in the observed setup. A full ten-descriptor Dixon shell around
+the geometric bank rendered with no pair table and zero auxiliary bytes
+in each glyph. The fully independent ten-descriptor bank also rendered
+when the 28 bytes between the inner header and advance table were
+omitted. The ten-descriptor fourth-family trial with fresh IDs, a physical
+LABGRID.FF1, and a matching Labgrid label rendered the bitmap fallback.
+This did not establish additive installation or successful dialog selection.
+DMFONT.RES contains a wildcard FF1 pattern, an explicit COBB.FF1 string,
+and literals for Cobb, Dixon, Marin and System. Discovery and dialog
+enumeration require separate tracing.
+
+A native grid tested all 128 extended bytes using eight binary marker
+stems in each physical FF1 glyph. All 128 marker rows decoded without an
+ambiguous result. For attributes 01 FF 00 00 00 00 in the measured
+base-outline profile, bytes 80–DF map to 96 distinct slots and E0–FF
+silently select slot 32. The sampled ASCII controls matched their raw
+codes. Import with `--native-text-map` to assign Unicode CP437
+characters to the measured physical slots. Export with the same flag to
+reverse that interpretation. Direct CP437 slot mapping remains available
+for geometric interchange and testing. See the shared mapping in
+[font_resources.py](../../src/deskmate_formats/font_resources.py).
+Unicode interpretation follows CP437 input text. The raster probe measures
+routing from bytes to glyphs, independently of character names.
+
+```powershell
+deskmate-font create --family Dixon --dixon-slot --output DIXON.FF1
+deskmate-font import LOCAL.OTF --family Dixon --dixon-slot --native-text-map --output CONVERT.FF1
+deskmate-font specimen CONVERT.FF1 --text "AV WA Ag fy" --output SPEC.FIG
+```
+
+Both TeX Gyre Bonum Regular and Liberation Mono Regular rendered through
+this procedure, including the source ASCII, accented Latin, different
+sizes and non-default width percentages. Their native-mapped copies were
+saved and reopened on the same disposable system. Distinct outlines are
+visible although the saved family field continues to be Dixon.
+
+## Geometry and modern raster comparisons
+
+Direct mapping controls use the full 223-codepoint interchange repertoire.
+
+| Source | Shared coverage | Maximum sampled error in 1,000-em units | Maximum ink bound error | Advance error | FreeType overlap at 12 / 24 / 48 / 96 px |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Bonum Regular | 166 | 0 | 0 | 0 | 75.48% / 83.32% / 90.38% / 95.97% |
+| Liberation Mono Regular | 223 | 0.6961 | 0.5000 | 0.0977 | 80.35% / 89.88% / 91.97% / 96.58% |
+
+Neither comparison changed the contour counts or contour orientation.
+The TrueType control had three segment-sequence differences after CFF
+encoding. Ink bound measures omit isolated move points. The sampled
+deviation is measured over matching subdivisions. The CFF source
+ascent and descent (1069 and −268) export as 930 and −241 from ink bounds.
+The TrueType source hhea metrics are 832.52 and −300.29 on the 1,000-em
+scale, with an export of 833 and −300. Line gaps in both controls are zero.
+
+Exact source hashes are
+`8ad5a53ae61d710fe1773f4ecc7fdf6dde7df1df59faa4492a24def95077d6b3`
+for CTAN's texgyrebonum-regular.otf and
+`6b3809450cf6253b36d157198dc15004a5fbade9abad5543c377feb7bb29139c`
+for Debian's LiberationMono-Regular.ttf. Use the original archive notices.
+[CTAN TeX Gyre](https://ctan.org/pkg/tex-gyre)
+· [Debian Liberation fonts](https://deb.debian.org/debian/pool/main/f/fonts-liberation2/)
+
+## Graphical text and comparison library
+
+The Python writer and offline Workbench construct left-justified filled
+base-outline runs. The authoring cache encloses the modeled glyph points
+and nominal text width. The existing packed-list writer preserves other
+supported leaves. The browser uses local FF1 file input, Tools → Text,
+and a baseline placement followed by family, text, size and width fields.
+The browser path currently authors printable ASCII. Python accepts CP437
+bytes via Unicode input. Native rotation, hollow and other styles remain
+outside this writing profile.
+
+A headless Chromium trial loaded the exact geometric FF1 with no HTTP
+requests, placed three outlines and downloaded a FIG. Original Draw
+opened that download and displayed the synthetic contours at 19, 36
+and 48 points and widths of 75, 100 and 125 percent. Native Save As
+reopened with the same appearance. The
+[typography comparison v1](../../examples/typography-comparison/v1/README.md)
+binds the exact original specimen FIGs, crops and independent raster outputs.

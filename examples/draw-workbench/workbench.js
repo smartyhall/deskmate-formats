@@ -397,7 +397,8 @@ function updateMenus() {
     menuBar.querySelector(`[data-command="${name}"]`).disabled = Boolean(disabled);
   }
   for (const button of menuBar.querySelectorAll('[data-tool]')) {
-    button.disabled = state.profile !== 'flat' && button.dataset.tool !== 'select';
+    button.disabled = (state.profile !== 'flat' && button.dataset.tool !== 'select')
+      || (button.dataset.tool === 'text' && !state.faces.size);
     button.setAttribute('aria-pressed', String(state.tool === button.dataset.tool));
   }
 }
@@ -407,10 +408,15 @@ function commandDialog(title, fields, apply) {
   get('command-title').textContent = title;
   get('command-error').textContent = '';
   get('command-fields').replaceChildren(...fields.map(([key, caption, type, value]) => {
-    const label = node('label', caption), field = node('input');
+    const choices = type === 'select';
+    const label = node('label', caption), field = node(choices ? 'select' : 'input');
     field.name = key;
-    field.type = type;
-    field.value = value;
+    if (choices) {
+      for (const choice of value) field.append(node('option', choice));
+    } else {
+      field.type = type;
+      field.value = value;
+    }
     field.required = key !== 'fill';
     label.append(field);
     return label;
@@ -532,7 +538,8 @@ function setTool(tool) {
   if (tool !== 'select') {
     viewport.focus();
     const path = tool === 'polyline' || tool === 'polygon';
-    report(path ? 'Click or press Space to add points. Enter finishes. Escape cancels.'
+    if (tool === 'text') report('Click or press Space to place the left baseline of outline text.');
+    else report(path ? 'Click or press Space to add points. Enter finishes. Escape cancels.'
       : 'Click or press Space to set each endpoint. Escape cancels.');
   }
 }
@@ -592,7 +599,20 @@ function finishDrawing(points) {
 
 function placePoint() {
   const point = [...state.cursor];
-  if (state.points.length && twoPointTool()) finishDrawing([state.points[0], point]);
+  if (state.tool === 'text') {
+    const families = Array.from(state.faces.values(), face => face.name);
+    commandDialog('Text Options', [
+      ['family', 'Outline family', 'select', families],
+      ['label', 'Text', 'text', ''],
+      ['size', 'Point size', 'number', 24],
+      ['width', 'Width percent', 'number', 100],
+    ], values => {
+      const face = state.faces.get(values.family.toLowerCase());
+      const next = DrawFig.addOutlineText(state.model, face, values.label, point.map(Math.round),
+        Number(values.size), Number(values.width));
+      commitRevision(next, next.entries.at(-1).tag);
+    });
+  } else if (state.points.length && twoPointTool()) finishDrawing([state.points[0], point]);
   else if (state.points.length >= 4096) report('Finish the current path before adding more points.');
   else {
     state.points.push(point);
