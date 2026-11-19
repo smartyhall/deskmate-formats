@@ -129,3 +129,26 @@ to the publication audit with regression coverage; do not relax the general
 audio embargo or package research binaries in wheel/sdist. Record a blocked
 native re-capture honestly rather than substituting renderer output or
 mislabeling a prior reference as fresh.
+
+## Draw visual references and Classic UI — operator decision 2026-11-19
+
+Maintain the [Draw comparison library](examples/draw-comparison/README.md).
+Use its four original featured drawings (primitive/style chart, technical
+plan, compound illustration and typography) and existing pinned native
+diagnostics. Establish an immutable baseline before major renderer changes;
+at each major shared-graphics interpreter or rendering milestone regenerate
+the same genuine native and independent visual comparisons, publish actual
+eligible images and provenance/metrics, and retain earlier outputs.
+Extend the existing audit narrowly for manifest-listed comparison imagery;
+keep raw framebuffer captures, original historical art and proprietary
+resources private. Distinguish exact native pixels from scalable vector
+approximations. Do not claim a missing native comparison was captured.
+
+The [Draw Workbench](examples/draw-workbench/README.md) must reproduce the
+actual original Draw UI and workflows as closely as practical, using
+independently authored assets and native behavioral evidence. Integrate
+modern QoL in the same visual language. The offline browser viewer/editor
+must treat native forms as authoritative and enable only validated edits;
+verify browser-written FIGs in original DeskMate. Preserve unsupported
+records or reject affected operations. The illustrative AROS concept is
+not a compatibility claim or authoritative UI specification.

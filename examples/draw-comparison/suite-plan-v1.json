@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "status": "planned-not-captured",
+  "suite_version": "v1",
+  "baseline_renderer_revision": "5e1b24f8d8d262ac165b125474f7807163afbcc1",
+  "native_profile": "DeskMate 03.05.00 on Tandy 1000 RSX, pinned existing VGA configuration; exact capture configuration to be established",
+  "fixture_manifest": "tests/fixtures/application-generated/manifest.json",
+  "featured_cases": [
+    {
+      "id": "primitives-styles",
+      "title": "Primitive and style chart",
+      "requirements": [
+        "lines at varied slopes and weights",
+        "every verified dash and fill pattern",
+        "rectangles, ellipses, arcs, open polylines and closed polygons",
+        "palette swatches and overlapping foreground/background controls",
+        "brush and filled brush if available"
+      ],
+      "feature": "Geometry, colors, line weights, dashes, fills and clipping"
+    },
+    {
+      "id": "technical-plan",
+      "title": "Architectural / technical plan",
+      "requirements": [
+        "original compact house or workshop floor plan",
+        "dimension lines, interior/exterior walls, door arcs, window symbols",
+        "fine strokes and labels with practical scale",
+        "repeated and fractional coordinate placements"
+      ],
+      "feature": "Precise geometry, arcs, spacing and text placement"
+    },
+    {
+      "id": "compound-landscape",
+      "title": "Compound illustration",
+      "requirements": [
+        "original house and mountain / lakeside scene",
+        "nested groups, overlapping shapes, palette variations, textured fills",
+        "repeated trees or other reusable objects",
+        "one transformed group where native support exists"
+      ],
+      "feature": "Display order, group transformations and pattern behavior"
+    },
+    {
+      "id": "typography",
+      "title": "Graphical typography specimen",
+      "requirements": [
+        "original short labels and alphabet/digit samples",
+        "varied supported fonts, sizes, spacing, colors, rotations",
+        "embedded stroke examples where natively creatable",
+        "external-font examples with independently recorded local font identities"
+      ],
+      "feature": "Glyph geometry, advances, alignment, rotation and resource resolution"
+    }
+  ],
+  "diagnostic_draw_fixtures": [
+    {
+      "id": "d01",
+      "path": "tests/fixtures/application-generated/draw/d01.fig",
+      "sha256": "adf9cbc2906115e97d462a7fed32f1ce325f1f7a006bbabaaf716f621b29bd53",
+      "size": 139,
+      "purpose": "line",
+      "status": "native-saved"
+    },
+    {
+      "id": "d02",
+      "path": "tests/fixtures/application-generated/draw/d02.fig",
+      "sha256": "7a85c629e218e5ed7ec918c9a2374a55282883f82c95ffab646a402d145a4139",
+      "size": 139,
+      "purpose": "resized line",
+      "status": "native-saved"
+    },
+    {
+      "id": "d04",
+      "path": "tests/fixtures/application-generated/draw/d04.fig",
+      "sha256": "dfd5993ee1081276efad220aef4d0ab7650b0c113af2b71aa16652817bc3e5ca",
+      "size": 143,
+      "purpose": "rectangle",
+      "status": "native-saved"
+    },
+    {
+      "id": "d05",
+      "path": "tests/fixtures/application-generated/draw/d05.fig",
+      "sha256": "ef71f2f39f2c0a7bf0ec3a10dd0f2982af7f740db2f48326789e37708933d90e",
+      "size": 143,
+      "purpose": "resized rectangle",
+      "status": "native-saved"
+    },
+    {
+      "id": "d06",
+      "path": "tests/fixtures/application-generated/draw/d06.fig",
+      "sha256": "31801cd6b26c5cb92f79da53b43f5af4f2d697ecccf9a0a7b17669e2f44994f3",
+      "size": 143,
+      "purpose": "moved rectangle",
+      "status": "native-saved"
+    },
+    {
+      "id": "d07c",
+      "path": "tests/fixtures/application-generated/draw/d07c.fig",
+      "sha256": "add31259e2bc822e35e5a6b2aef47ae2fe0c282fcddb89ea39d9b469b24828ef",
+      "size": 143,
+      "purpose": "color change",
+      "status": "native-saved"
+    },
+    {
+      "id": "d09",
+      "path": "tests/fixtures/application-generated/draw/d09.fig",
+      "sha256": "45e6927a55670578b11ed1afc6c90367fc179f63c8cf061f52b5c1b727ecd8c5",
+      "size": 171,
+      "purpose": "ellipse",
+      "status": "native-saved"
+    },
+    {
+      "id": "d10",
+      "path": "tests/fixtures/application-generated/draw/d10.fig",
+      "sha256": "29bba588ee4581fcfca0016906036d4048da27c38a3479bdcc1bc11572761c73",
+      "size": 285,
+      "purpose": "external font text",
+      "status": "native-saved"
+    },
+    {
+      "id": "d11",
+      "path": "tests/fixtures/application-generated/draw/d11.fig",
+      "sha256": "37ab83a41e20b7a27987a8fc3102f50b5cd7db5282abe0bf690d22d0abcd2d05",
+      "size": 167,
+      "purpose": "deletion",
+      "status": "native-saved"
+    },
+    {
+      "id": "d12",
+      "path": "tests/fixtures/application-generated/draw/d12.fig",
+      "sha256": "2515bdb1e79b0f33ddc9e2be3ef72af85c69c22af128738b14106c6db6132e67",
+      "size": 139,
+      "purpose": "native Save As",
+      "status": "native-saved"
+    },
+    {
+      "id": "d16a",
+      "path": "tests/fixtures/application-generated/draw/d16a.fig",
+      "sha256": "fc2ce8d4153be5eb54ec184f97e5324599f87b03b07778aea26c6f6ec51074bd",
+      "size": 139,
+      "purpose": "pixel displacement A",
+      "status": "native-saved"
+    },
+    {
+      "id": "d16b",
+      "path": "tests/fixtures/application-generated/draw/d16b.fig",
+      "sha256": "56b147bcd551dc36fdabb22e326ff72fc265d590cc8aae06f97b71bbf2345bbe",
+      "size": 139,
+      "purpose": "pixel displacement B",
+      "status": "native-saved"
+    },
+    {
+      "id": "d17",
+      "path": "tests/fixtures/application-generated/draw/d17.fig",
+      "sha256": "8ecc1be0c67d9904310d2040b5d458d0a9c0e31589e72782fe855d87fbbd5010",
+      "size": 195,
+      "purpose": "three primitives",
+      "status": "native-saved"
+    },
+    {
+      "id": "d18",
+      "path": "tests/fixtures/application-generated/draw/d18.fig",
+      "sha256": "f0b2cd6a20be7bc80f230c03980c127e857f189a371540ce427b8d25d0c37e2c",
+      "size": 979,
+      "purpose": "36-line grid",
+      "status": "native-saved"
+    },
+    {
+      "id": "d19",
+      "path": "tests/fixtures/application-generated/draw/d19.fig",
+      "sha256": "816ed0f1384311948c98b0cd9ed7ec031afbfafe941edc3c541e7e41b88ef6b9",
+      "size": 213,
+      "purpose": "group",
+      "status": "native-saved"
+    },
+    {
+      "id": "d20",
+      "path": "tests/fixtures/application-generated/draw/d20.fig",
+      "sha256": "99930be15d4819ca1912031d094aed9dc59733f3e1fbbe770be09cf4a7e67e5f",
+      "size": 175,
+      "purpose": "polygon",
+      "status": "native-saved"
+    },
+    {
+      "id": "d21",
+      "path": "tests/fixtures/application-generated/draw/d21.fig",
+      "sha256": "65ec6229428e31bd8a0fe3c15e7c589fd07968be41f2afa85b05c6a8c0625d0a",
+      "size": 195,
+      "purpose": "ungroup",
+      "status": "native-saved"
+    },
+    {
+      "id": "d22",
+      "path": "tests/fixtures/application-generated/draw/d22.fig",
+      "sha256": "c8a8087bad2205771f14ad0db20c5cf5493655c86bf0e94351378051e8b919e9",
+      "size": 175,
+      "purpose": "patterned polygon",
+      "status": "native-saved"
+    },
+    {
+      "id": "d23",
+      "path": "tests/fixtures/application-generated/draw/d23.fig",
+      "sha256": "3a65ae65872af24f5a50291503158bb2b983c3b403aad1838387c043ab893613",
+      "size": 229,
+      "purpose": "Cobb text",
+      "status": "native-saved"
+    }
+  ],
+  "cross_application_controls": {
+    "text": [
+      {
+        "path": "tests/fixtures/application-generated/text/tp01.doc",
+        "sha256": "189b8d32aeb84e6fe22eb8e7d5e5e7124eaccbd19886be64e6d4ee9537fc830d",
+        "size": 126
+      },
+      {
+        "path": "tests/fixtures/application-generated/text/tp02.doc",
+        "sha256": "6fc65fbec2da073983d6abeee857f911d390fc45b5b543b5f3ecddda976cf7b9",
+        "size": 126
+      },
+      {
+        "path": "tests/fixtures/application-generated/text/tp03.doc",
+        "sha256": "8a1d35238259506271829dceaad58acc6b814cb2670d73c1aa2e2ce6b6ba2762",
+        "size": 107
+      },
+      {
+        "path": "tests/fixtures/application-generated/text/tp04.doc",
+        "sha256": "da676eb7034fdf12909d2be0c6b0d1c69e311f3c0a56ad7062be950ce6da664f",
+        "size": 209
+      },
+      {
+        "path": "tests/fixtures/application-generated/text/tp05.doc",
+        "sha256": "6fb31d9e26b3bed814574001fe901fb4da2231679fcd7173bdf9af2fac7b74ee",
+        "size": 38
+      },
+      {
+        "path": "tests/fixtures/application-generated/text/tp06.doc",
+        "sha256": "64eb14f09728450f9a2ca470f505e939bf60e78bd3df4d68d0c584ccd7e75084",
+        "size": 170
+      },
+      {
+        "path": "tests/fixtures/application-generated/text/tp07.doc",
+        "sha256": "68eb5fe2104eae4c4d8a30806b2663f6c30c4b5724f06246a680a40868ca7c12",
+        "size": 125
+      },
+      {
+        "path": "tests/fixtures/application-generated/text/tp09.doc",
+        "sha256": "449121ba8bb9949440eed0f6e0f5a69467ca80b0b12bfbb5439e08aa79c3d83c",
+        "size": 206
+      }
+    ],
+    "filer": [
+      {
+        "path": "tests/fixtures/application-generated/filer/g01.fil",
+        "sha256": "d78e6fcb773cef76405cdfecd671aa4da8fc61fcc3100f89e5c7d8c1b3583936",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/g03.fil",
+        "sha256": "e3672ec7b63344a96f757c6c32696eb9b77ff4699536eac1600668c7a2115693",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/g04.fil",
+        "sha256": "9a936d5d3c1a9368903a72865a390b5c18c383ee0e29a3430d47f485ec5a16fa",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/g05.fil",
+        "sha256": "e48c93659f57e194cb0aed60374748d5d0e9d547f0accf202291122c09024e0f",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/gcol.fil",
+        "sha256": "2f50b79f983b9c56a2ced14036af6c9c5b2b359e02cfeb0a9dc2507b7bc44d3a",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/gdel.fil",
+        "sha256": "721850e9fe8c19adb48453fbd03bb34396a8c24c9be3bcddb563db271318cabb",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/gmove.fil",
+        "sha256": "a8641b2428aded747ab893d2a4bf90ddb3a4d41f235feee1a25b19fb062398fd",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/g23.fil",
+        "sha256": "f9f8bbede1d8296b5fd399c7940daf0f82d82e52f819385187e9badf3e28264c",
+        "size": 10240
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/g20.fil",
+        "sha256": "8106ab10d8f4ff03432a67e41c658bcd5a5fd6e510b878377fd4346611b1d4a7",
+        "size": 12288
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/g18.fil",
+        "sha256": "eb28f41d08edcbe42cc3efb014ba3046227f658017846103db93fafbc9995e24",
+        "size": 11264
+      },
+      {
+        "path": "tests/fixtures/application-generated/filer/gsize.fil",
+        "sha256": "5d60da40aba90ae0bb451e1b48131a792e5a768b3bb34a0b62ab341e7e35c08a",
+        "size": 10240
+      }
+    ]
+  },
+  "outputs": {
+    "frozen_spec": "examples/draw-comparison/suite-v1.json",
+    "milestones": "examples/draw-comparison/v1/<milestone-id>/",
+    "baseline": "examples/draw-comparison/v1/baseline-pr120/",
+    "gallery": "examples/draw-comparison/compare.html",
+    "web_app": "examples/draw-workbench/"
+  }
+}
