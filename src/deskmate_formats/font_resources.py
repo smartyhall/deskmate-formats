@@ -15,7 +15,7 @@ DRAW_EXTENDED_OUTLINE_SLOTS = bytes((
     220, 215, 211, 194, 206, 202, 195, 203, 239, 218, 219, 191, 187, 188, 186, 190,
     196, 213, 198, 199, 183, 182, 249, 250, 185, 128, 129, 130, 131, 184, 251, 253,
     226, 234, 210, 214, 241, 240, 161, 225, 233, 189, 244, 243, 242, 168, 169, 170,
-    160, 127, 176, 252, 246, 245, 179, 224, 162, 163, 164, 165, 230, 229, 166, 167,
+    160, 255, 176, 252, 246, 245, 179, 224, 162, 163, 164, 165, 230, 229, 166, 167,
     232, 231, 223, 235, 236, 173, 237, 174, 238, 222, 247, 248, 254, 175, 227, 228,
 ))
 
@@ -36,7 +36,9 @@ class FontResourceError(ValueError):
 @dataclass(frozen=True)
 class FontVariant:
     name: str
+    # Name offset within the original snapshot.
     offset: int
+    # Native record's twelve leading and two trailing bytes.
     attributes: bytes
 
 
@@ -177,7 +179,7 @@ def parse_bytes(data):
         if label.casefold() in names:
             raise FontResourceError('duplicate FF1 variant name')
         names.add(label.casefold())
-        variants.append(FontVariant(label, offset, raw[32:]))
+        variants.append(FontVariant(label, offset, data[offset-12:offset] + raw[32:34]))
     return FontResource(len(data), sha256(data).hexdigest(), first, codes, tuple(variants))
 
 

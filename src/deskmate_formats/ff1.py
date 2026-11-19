@@ -11,6 +11,8 @@ from .font_resources import (
 FIRST_CODE = 32
 CODE_COUNT = 224
 UNITS_PER_EM = 1000
+NATIVE_DIRECTORY_OFFSET = DIRECTORY_OFFSET - 12
+BANK_DESCRIPTOR_SIZE = 16
 
 
 @dataclass(frozen=True)
@@ -25,7 +27,7 @@ class Resource:
 
     header: bytes
     descriptors: tuple[bytes, ...]
-    bridge: bytes
+    bank_descriptor: bytes
     inner_header: bytes
     inner_padding: bytes
     glyphs: tuple[Glyph, ...]
@@ -33,7 +35,7 @@ class Resource:
 
     @property
     def family(self):
-        return self.descriptors[0][:32].split(b'\0', 1)[0].decode('ascii')
+        return self.descriptors[0][12:44].split(b'\0', 1)[0].decode('ascii')
 
     @property
     def first_code(self):
@@ -43,17 +45,16 @@ class Resource:
     def units_per_em(self):
         return unpack_from('<H', self.inner_header, 12)[0]
 
-
 def parse_resource(data):
     directory = parse_bytes(data)
     index = parse_glyph_index(data)
-    end = DIRECTORY_OFFSET + len(directory.variants) * RECORD_SIZE
-    inner = end + 4
-    widths, = unpack_from('<H', data, end + 2)
+    end = NATIVE_DIRECTORY_OFFSET + len(directory.variants) * RECORD_SIZE
+    inner = end + BANK_DESCRIPTOR_SIZE
+    widths, = unpack_from('<H', data, end + 14)
     glyph_end = index.entries[-1].offset + index.entries[-1].size
     return Resource(
-        data[:DIRECTORY_OFFSET],
-        tuple(data[v.offset:v.offset + RECORD_SIZE] for v in directory.variants),
+        data[:NATIVE_DIRECTORY_OFFSET],
+        tuple(data[v.offset - 12:v.offset + 34] for v in directory.variants),
         data[end:inner], data[inner:inner + 48], data[inner + 48:inner + widths],
         tuple(Glyph(entry.advance_word, parse_glyph_outline(data, entry)) for entry in index.entries),
         data[glyph_end:],
@@ -95,18 +96,18 @@ def _encode_outline(outline):
 
 def serialize_resource(resource):
     """Rebuild commands and lengths. Keep opaque fields and padding verbatim."""
-    if (len(resource.header) != DIRECTORY_OFFSET or len(resource.bridge) != 4
+    if (len(resource.header) != NATIVE_DIRECTORY_OFFSET or len(resource.bank_descriptor) != BANK_DESCRIPTOR_SIZE
             or len(resource.inner_header) != 48 or not 1 <= len(resource.descriptors) <= 64
             or any(len(item) != RECORD_SIZE for item in resource.descriptors)):
         raise FontResourceError('invalid FF1 model section sizes')
-    header, bridge, inner = map(bytearray, (resource.header, resource.bridge, resource.inner_header))
+    header, bank, inner = map(bytearray, (resource.header, resource.bank_descriptor, resource.inner_header))
     count = len(resource.glyphs)
     if not 0 < count <= 256 - resource.first_code:
         raise FontResourceError('invalid FF1 character range')
     widths_at = len(inner) + len(resource.inner_padding)
     offsets_at = widths_at + 2 * count
     cursor = offsets_at + 4 * count
-    inner_at = DIRECTORY_OFFSET + RECORD_SIZE * len(resource.descriptors) + len(bridge)
+    inner_at = NATIVE_DIRECTORY_OFFSET + RECORD_SIZE * len(resource.descriptors) + len(bank)
     widths, offsets, outlines = bytearray(), bytearray(), bytearray()
     if inner_at + cursor + len(resource.trailing) > MAX_SIZE:
         raise FontResourceError('FF1 resource exceeds snapshot limit')
@@ -122,27 +123,31 @@ def serialize_resource(resource):
             if inner_at + cursor + len(resource.trailing) > MAX_SIZE:
                 raise FontResourceError('FF1 resource exceeds snapshot limit')
             outlines.extend(encoded)
-        original_end = (DIRECTORY_OFFSET + RECORD_SIZE * unpack_from('<H', header, 10)[0]
-                        + 4 + unpack_from('<I', inner, 4)[0])
+        original_inner_at = NATIVE_DIRECTORY_OFFSET + RECORD_SIZE * unpack_from('<H', header, 10)[0] + len(bank)
+        original_end = original_inner_at + unpack_from('<I', inner, 4)[0]
         pair_at, = unpack_from('<I', header, 38)
         if pair_at and cursor + inner_at != original_end:
             if pair_at != original_end:
                 raise FontResourceError('cannot relocate an unrecognized FF1 section pointer')
             pack_into('<I', header, 38, cursor + inner_at)
-        if inner_at != original_end - unpack_from('<I', inner, 4)[0]:
+        if inner_at != original_inner_at:
             outer_index, = unpack_from('<H', header, 34)
-            if outer_index != original_end - unpack_from('<I', inner, 4)[0] - 16:
+            if outer_index != original_inner_at - len(bank):
                 raise FontResourceError('cannot relocate an unrecognized FF1 directory pointer')
-            pack_into('<H', header, 34, inner_at - 16)
+            pack_into('<H', header, 34, inner_at - len(bank))
+            bank_at, = unpack_from('<I', bank, 2)
+            if bank_at != original_inner_at:
+                raise FontResourceError('cannot relocate an unrecognized FF1 outline pointer')
+            pack_into('<I', bank, 2, inner_at)
         pack_into('<H', header, 10, len(resource.descriptors))
         pack_into('<H', header, 16, count)
-        pack_into('<H', bridge, 2, widths_at)
+        pack_into('<H', bank, 14, widths_at)
         pack_into('<I', inner, 4, cursor)
         pack_into('<H', inner, 16, count)
         pack_into('<H', inner, 46, offsets_at)
     except StructError as error:
         raise FontResourceError(f'FF1 integer field overflow: {error}') from error
-    data = bytes(header + b''.join(resource.descriptors) + bridge + inner
+    data = bytes(header + b''.join(resource.descriptors) + bank + inner
                  + resource.inner_padding + widths + offsets + outlines + resource.trailing)
     parse_glyph_index(data)
     return data
@@ -154,7 +159,7 @@ def _name_field(name):
     return name.encode('ascii').ljust(32, b'\0')
 
 
-def create_resource(family, glyphs, *, face_id=50, family_id=2, optional_metrics=True):
+def create_resource(family, glyphs, *, face_id=2, optional_metrics=True):
     """Build an independent single-variant 32–255/1000-em candidate.
 
     The outer descriptor style defaults and inner constants are inferred from
@@ -162,30 +167,31 @@ def create_resource(family, glyphs, *, face_id=50, family_id=2, optional_metrics
     to the model and are not synthesized.
     """
     glyphs = tuple(glyphs)
-    if len(glyphs) != CODE_COUNT or not all(1 <= ident <= 255 for ident in (face_id, family_id)):
-        raise FontResourceError('expected 224 glyphs and IDs in 1–255')
+    if len(glyphs) != CODE_COUNT or not 1 <= face_id <= 255:
+        raise FontResourceError('expected 224 glyphs and a face ID in 1–255')
     descriptor_name = _name_field(family)
     present = [glyph.outline.bounds for glyph in glyphs if glyph.outline.contours]
     bounds = (min((b[0] for b in present), default=0), min((b[1] for b in present), default=0),
               max((b[2] for b in present), default=0), max((b[3] for b in present), default=0))
     advance = max(glyph.advance for glyph in glyphs)
-    header = bytearray(DIRECTORY_OFFSET)
+    header = bytearray(NATIVE_DIRECTORY_OFFSET)
     header[:5] = b'\xbd\x7a\0\x01\x01'
     inner = bytearray(48)
     inner[:4] = b'\x1e\xf3\x01\x01'
     style = bytes.fromhex('0f 05 f8 1e 14 00 00')
     try:
         pack_into('<5H4h6H', header, 8, UNITS_PER_EM, 1, 1, FIRST_CODE, CODE_COUNT,
-                  *bounds, 0x578f, 0x104, 54, RECORD_SIZE, DIRECTORY_OFFSET + RECORD_SIZE + 4 - 16, 16)
-        header[54:66] = pack('<HBBB', family_id, 0, 100, 0) + style
-        descriptor = descriptor_name + pack('<HHBBB', 0, face_id, 1, 85, 0) + style
+                  *bounds, 0x578f, 0x104, NATIVE_DIRECTORY_OFFSET, RECORD_SIZE,
+                  NATIVE_DIRECTORY_OFFSET + RECORD_SIZE, BANK_DESCRIPTOR_SIZE)
+        descriptor = pack('<HBBB', face_id, 0, 100, 0) + style + descriptor_name + bytes(2)
+        bank = pack('<HI', 1, NATIVE_DIRECTORY_OFFSET + RECORD_SIZE + BANK_DESCRIPTOR_SIZE) + bytes(10)
         pack_into('<7H4h4hH', inner, 8, 1, 0, UNITS_PER_EM, FIRST_CODE, CODE_COUNT,
                   0x104, 0x578f, *bounds, -250, min(advance, 32767), 0, min(advance, 32767),
                   76 if optional_metrics else 48)
         padding = bytes(16) + pack('<H4hH', 3, -700, bounds[1], bounds[3], 32767, 0)
     except StructError as error:
         raise FontResourceError(f'FF1 construction field overflow: {error}') from error
-    return Resource(bytes(header), (descriptor,), bytes(4), bytes(inner),
+    return Resource(bytes(header), (descriptor,), bank, bytes(inner),
                     padding if optional_metrics else b'', glyphs, b'')
 
 
@@ -197,20 +203,21 @@ def polygon(*points):
 def dixon_slot(resource):
     """Use the measured Dixon directory structure around an independent bank."""
     if (resource.family != 'Dixon' or len(resource.descriptors) != 1
-            or unpack_from('<H', resource.header, 54)[0] != 2
-            or unpack_from('<H', resource.descriptors[0], 34)[0] != 50):
-        raise FontResourceError('Dixon slot requires family Dixon and IDs 2 and 50')
+            or unpack_from('<H', resource.descriptors[0])[0] != 2):
+        raise FontResourceError('Dixon slot requires one base variant named Dixon with ID 2')
     settings = (
-        ('Thin', 126, 2, 75, 0),
-        ('Condensed', 3, 4, 125, 0),
-        ('Wide', 4, 8, 150, 0),
-        ('Expanded', 54, 16, 100, 1),
-        ('Hollow', 5, 17, 85, 1),
-        ('Hol-Thin', 58, 18, 75, 1),
-        ('Hol-Cond', 6, 20, 125, 1),
-        ('Hol-Wide', 55, 24, 150, 1),
+        ('Thin', 50, 1, 85, 0),
+        ('Condensed', 126, 2, 75, 0),
+        ('Wide', 3, 4, 125, 0),
+        ('Expanded', 4, 8, 150, 0),
+        ('Hollow', 54, 16, 100, 1),
+        ('Hol-Thin', 5, 17, 85, 1),
+        ('Hol-Cond', 58, 18, 75, 1),
+        ('Hol-Wide', 6, 20, 125, 1),
+        ('Hol-Exp', 55, 24, 150, 1),
     )
-    descriptors = [_name_field('Dixon ' + name) + pack('<HHBBB', 0, ident, mode, width, variant)
-                   + resource.descriptors[0][39:] for name, ident, mode, width, variant in settings]
-    descriptors.append(_name_field('Dixon Hol-Exp') + pack('<HHBB', 0, 1, 18, 2) + bytes(8))
+    style = resource.descriptors[0][5:12]
+    descriptors = tuple(pack('<HBBB', ident, mode, width, variant) + style
+                        + _name_field('Dixon ' + name) + bytes(2)
+                        for name, ident, mode, width, variant in settings)
     return replace(resource, descriptors=(*resource.descriptors, *descriptors))

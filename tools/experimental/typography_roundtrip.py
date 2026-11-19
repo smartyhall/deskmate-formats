@@ -32,12 +32,19 @@ def orientation(points):
     return (area > 0) - (area < 0)
 
 
-def _without_point_segments(contour):
+def _normalize_lines(contour):
     start = contour.start
     segments = []
     for segment in contour.segments:
-        if any(point != start for point in segment):
-            segments.append(segment)
+        if all(point == start for point in segment):
+            continue
+        if len(segment) == 1 and segments and len(segments[-1]) == 1:
+            previous = segments[-2][-1] if len(segments) > 1 else contour.start
+            ux, uy = start[0] - previous[0], start[1] - previous[1]
+            vx, vy = segment[0][0] - start[0], segment[0][1] - start[1]
+            if ux * vy == uy * vx and ux * vx + uy * vy > 0:
+                segments.pop()
+        segments.append(segment)
         start = segment[-1]
     return Contour(contour.start, tuple(segments))
 
@@ -76,7 +83,7 @@ def compare(source, output, represented):
             for s, o in zip(a, b):
                 if tuple(map(len, s.segments)) != tuple(map(len, o.segments)):
                     result['segment_structure_differences'] += 1
-                    s, o = _without_point_segments(s), _without_point_segments(o)
+                    s, o = _normalize_lines(s), _normalize_lines(o)
                 spoints, opoints = list(path_points(s)), list(path_points(o))
                 result['orientation_differences'] += int(orientation(spoints) != orientation(opoints))
                 if tuple(map(len, s.segments)) != tuple(map(len, o.segments)):

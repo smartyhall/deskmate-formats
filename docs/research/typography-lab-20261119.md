@@ -14,17 +14,17 @@ and trailing data.
 | Offset | Meaning or observed relation |
 | --- | --- |
 | Outer +0 | Measured profile starts BD 7A 00 01 01 |
-| Outer +8, +10, +12 | Em word, variant count, word 1 in all three originals |
+| Outer +8, +10, +12 | Em word, variant count, outline-family count |
 | Outer +14, +16 | First character code and count |
 | Outer +18 | Four signed resource bounds, repeated at inner +22 |
-| Outer +30, +32, +34, +36 | Directory-relative 54, descriptor stride 46, inner start minus 16, word 16 |
+| Outer +30, +32, +34, +36 | Variant directory offset 54, stride 46, bank-directory offset and bank stride 16 |
 | Outer +38 | Absolute optional tail pointer, zero for Cobb |
-| Outer +54 | Family identifier candidate, Cobb 1, Dixon 2, Marin 14 |
-| Descriptor +0 | NUL-terminated name in 32 bytes |
-| Descriptor +32 | Face-dependent word, Cobb 1024, Dixon 0, Marin 4104 |
-| Descriptor +34 | Variant identifier candidate, base Cobb 100, Dixon 50, Marin 7 |
-| Descriptor +36–38 | Variant-dependent bytes, including percentage-like values |
-| After descriptors +2 | Inner relative nominal advance table offset |
+| Variant +0 | ID word, base Cobb 1, Dixon 2, Marin 14 |
+| Variant +2–4 | Variant-dependent bytes, including percentage-like values at +3 |
+| Variant +12 | NUL-terminated name in 32 bytes |
+| Variant +44 | Face-dependent word, base Cobb 1024, Dixon 0, Marin 4104 |
+| Bank +0, +2 | Word 1 and absolute 32-bit outline-bank pointer |
+| Bank +14 | Inner relative nominal advance table offset |
 | Inner +0, +4 | Signature 1E F3 01 01 and length including its own header |
 | Inner +12, +14, +16 | Em, first character code, and count |
 | Inner +38, +46 | Second nominal-table offset candidate and glyph offset-table position |
@@ -53,8 +53,8 @@ The optional FontTools dependency is used for CFF and TrueType
 interchange. Ordinary native reading and serialization have no new
 dependency. The CLI reports exact byte identity and structural
 coverage. Use a new output file and keep commercial-derived resources
-private. The Dixon naming and default IDs select the tested research
-slot on a disposable copy of native DeskMate.
+private. Use a distinct name and unused base ID for a new face on a
+disposable copy. The Dixon profile is also available as a replacement control.
 
 ## Modern outline interchange
 
@@ -66,8 +66,9 @@ OpenType re-import with the same coordinates reproduces the mapped
 Lab Grid outlines and nominal advances exactly. The control slot
 at DEL is omitted from the Unicode map.
 
-The importer uses a provisional CP437 map for 223 bytes from the
-measured 224-slot range, with no codepoint for 127. It resolves
+The direct interchange uses 223 Unicode mappings over the
+224-slot range. The native mapping targets 191 supported display bytes.
+The importer resolves
 TrueType composite transformations and implied on-curves through
 FontTools. It elevates quadratic segments to cubics before integer
 rounding. Missing slots have zero advance and no ink. It reports
@@ -89,29 +90,34 @@ from DeskMate screenshot agreement.
 
 ## Native installation and byte map
 
-Draw 03.05.00 loaded the independently constructed ten-descriptor face
-through the Dixon slot on a disposable RSX clone. Rename the clone's
-original DIXON.FF1 to a backup and copy the candidate into the same
-directory as DIXON.FF1. Reenter Draw from DOS. The native descriptor
-remains Dixon. This procedure was tested on the pinned 3.05 machine.
-The generated files contain a single independent outline bank and a
-ten-entry variant directory built from measured style constants.
+Draw 03.05.00 discovered Labgrid alongside Cobb, Dixon and Marin after
+copying the single-variant LABGRID.FF1 into the clone's DeskMate directory
+and launching Draw from DOS. Selecting Labgrid in native Text Options
+and drawing a new label worked. The native save reopened as Labgrid.
+Two single-variant modern conversions coexisted as Lab Serif and Lab Mono.
+Their DOS filenames, BONUM.FF1 and MONOFONT.FF1, differ from their internal
+family names. These trials used the existing configuration.
 
-Single-descriptor candidates and two-descriptor tests fell back to
-System in the observed setup. A full ten-descriptor Dixon shell around
-the geometric bank rendered with no pair table and zero auxiliary bytes
-in each glyph. The fully independent ten-descriptor bank also rendered
-when the 28 bytes between the inner header and advance table were
-omitted. The ten-descriptor fourth-family trial with fresh IDs, a physical
-LABGRID.FF1, and a matching Labgrid label rendered the bitmap fallback.
-This did not establish additive installation or successful dialog selection.
-DMFONT.RES contains a wildcard FF1 pattern, an explicit COBB.FF1 string,
-and literals for Cobb, Dixon, Marin and System. Discovery and dialog
-enumeration require separate tracing.
+The early short-directory trials used incorrect outline-bank descriptors.
+Ghidra 12.1.4 verified the native directory access in a stripped MZ image
+at synthetic 1000:0000 with the 0x200-byte file header removed.
+DMFONT.RES (SHA-256 c23c440793c4bc154ea8af14fd195e45018e5af581a0b197109380f8d0da4be4)
+uses a wildcard scan at file 0x24bc, tests the signature/version near
+0x2564, and reads the first variant offset and record size from header
++30 and +32 around 0x260a–0x2671. File insertion compares names at
+variant +12. The wildcard literal is at 0x98fc. The scan loop allows
+up to 24 iterations in this routine.
 
-A native grid tested all 128 extended bytes using eight binary marker
-stems in each physical FF1 glyph. All 128 marker rows decoded without an
-ambiguous result. For attributes 01 FF 00 00 00 00 in the measured
+The replacement profile rendered with no auxiliary bytes in any glyph
+and no pair table. It also rendered with the 28 bytes between the inner
+header and advance table omitted. The corrected independent single
+variant uses the absolute bank pointer. Alternate directories,
+overlapping internal names and live rescan behavior remain open.
+
+A native grid tested all 128 extended bytes using eight marker stems
+in each physical FF1 glyph. The module table at 0x92ce agrees with
+all but the crowded C1 cell. A separate oval-versus-rectangle probe
+confirmed the table's C1 → 255 entry. For attributes 01 FF 00 00 00 00 in the measured
 base-outline profile, bytes 80–DF map to 96 distinct slots and E0–FF
 silently select slot 32. The sampled ASCII controls matched their raw
 codes. Import with `--native-text-map` to assign Unicode CP437
@@ -123,16 +129,15 @@ Unicode interpretation follows CP437 input text. The raster probe measures
 routing from bytes to glyphs, independently of character names.
 
 ```powershell
-deskmate-font create --family Dixon --dixon-slot --output DIXON.FF1
-deskmate-font import LOCAL.OTF --family Dixon --dixon-slot --native-text-map --output CONVERT.FF1
+deskmate-font create --family Labgrid --face-id 28 --output LABGRID.FF1
+deskmate-font import LOCAL.OTF --family "Lab Serif" --face-id 29 --native-text-map --output CONVERT.FF1
 deskmate-font specimen CONVERT.FF1 --text "AV WA Ag fy" --output SPEC.FIG
 ```
 
 Both TeX Gyre Bonum Regular and Liberation Mono Regular rendered through
-this procedure, including the source ASCII, accented Latin, different
-sizes and non-default width percentages. Their native-mapped copies were
-saved and reopened on the same disposable system. Distinct outlines are
-visible although the saved family field continues to be Dixon.
+this procedure, including ASCII, accented Latin, different sizes and
+non-default width percentages. Their named copies were saved and
+reopened on the same disposable system.
 
 ## Geometry and modern raster comparisons
 

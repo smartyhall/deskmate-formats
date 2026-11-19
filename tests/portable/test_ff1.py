@@ -51,7 +51,7 @@ class FontWriterTests(unittest.TestCase):
     def test_draw_outline_slot_routing(self):
         self.assertEqual(draw_outline_slot(0x82), 197)
         self.assertEqual(draw_outline_slot(0x90), 220)
-        self.assertEqual(draw_outline_slot(0xC1), 127)
+        self.assertEqual(draw_outline_slot(0xC1), 255)
         self.assertEqual(len({draw_outline_slot(i) for i in range(128, 224)}), 96)
         self.assertEqual({draw_outline_slot(i) for i in range(224, 256)}, {32})
         self.assertEqual(draw_outline_slot(ord('A')), ord('A'))

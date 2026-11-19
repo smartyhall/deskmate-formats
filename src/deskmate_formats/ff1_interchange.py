@@ -73,7 +73,7 @@ def _open_font(source):
     return font
 
 
-def import_outline(source, family, *, face_id=50, family_id=2, native_text_map=False):
+def import_outline(source, family, *, face_id=2, native_text_map=False):
     """Build an FF1 candidate and report coverage and pre-serialization quantization."""
     glyphs = []
     missing = []
@@ -136,7 +136,7 @@ def import_outline(source, family, *, face_id=50, family_id=2, native_text_map=F
                        'missing slots have zero advance and no outline'],
             'native_acceptance': 'unverified',
         }
-    return create_resource(family, glyphs, face_id=face_id, family_id=family_id), report
+    return create_resource(family, glyphs, face_id=face_id), report
 
 
 def export_cff(resource, *, native_text_map=False):

@@ -23,7 +23,7 @@ def oval(x, y, rx, ry, *, counter=False):
     return Contour(start, segments)
 
 
-def geometric_face(family='Lab Grid', *, face_id=50, family_id=2, optional_metrics=True):
+def geometric_face(family='Lab Grid', *, face_id=2, optional_metrics=True):
     """Draw distinctive shared test glyphs; other slots have no ink."""
     shapes = {
         'I': (rectangle(205, -700, 395, 0),),
@@ -57,5 +57,4 @@ def geometric_face(family='Lab Grid', *, face_id=50, family_id=2, optional_metri
         contours = shapes.get(bytes([code]).decode('cp437'), ())
         advance = 310 if code in (32, 33, 46) else 620
         glyphs.append(Glyph(advance, GlyphOutline(outline_bounds(contours), contours, b'')))
-    return create_resource(family, glyphs, face_id=face_id, family_id=family_id,
-                           optional_metrics=optional_metrics)
+    return create_resource(family, glyphs, face_id=face_id, optional_metrics=optional_metrics)

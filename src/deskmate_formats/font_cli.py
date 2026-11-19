@@ -20,7 +20,12 @@ def inspect(data):
     directory = parse_bytes(data)
     return {
         'sha256': directory.sha256, 'size': directory.size, 'family': resource.family,
-        'variants': [{'name': v.name, 'attributes_hex': v.attributes.hex()} for v in directory.variants],
+        'variants': [
+            {'name': v.name, 'native_id': unpack_from('<H', record)[0],
+             'prefix_hex': record[:12].hex(), 'trailer_hex': record[44:].hex()}
+            for v, record in zip(directory.variants, resource.descriptors)
+        ],
+        'outline_bank_descriptor_hex': resource.bank_descriptor.hex(),
         'first_code': resource.first_code, 'glyph_count': len(resource.glyphs),
         'units_per_em': resource.units_per_em,
         'contour_count': sum(len(g.outline.contours) for g in resource.glyphs),
@@ -41,8 +46,7 @@ def main(argv=None):
             sub.add_argument('--output', required=True, type=Path)
         if command in ('create', 'import'):
             sub.add_argument('--family', required=command == 'import', default='Lab Grid')
-            sub.add_argument('--face-id', type=int, default=50)
-            sub.add_argument('--family-id', type=int, default=2)
+            sub.add_argument('--face-id', type=int, default=2)
             sub.add_argument('--dixon-slot', action='store_true',
                              help='emit the measured ten-descriptor Dixon replacement profile')
         if command in ('import', 'export'):
@@ -65,7 +69,7 @@ def main(argv=None):
                     raise FontResourceError('reconstruction differs from source bytes')
         else:
             if args.command == 'create':
-                resource = geometric_face(args.family, face_id=args.face_id, family_id=args.family_id)
+                resource = geometric_face(args.family, face_id=args.face_id)
                 output = serialize_resource(dixon_slot(resource) if args.dixon_slot else resource)
             elif args.command == 'import':
                 from .ff1_interchange import import_outline
@@ -74,7 +78,7 @@ def main(argv=None):
                 if len(source) > 32 * 1024 * 1024:
                     raise FontResourceError('modern font exceeds the 32 MiB input limit')
                 resource, report = import_outline(source, args.family, face_id=args.face_id,
-                                                  family_id=args.family_id, native_text_map=args.native_text_map)
+                                                  native_text_map=args.native_text_map)
                 output = serialize_resource(dixon_slot(resource) if args.dixon_slot else resource)
             elif args.command == 'export':
                 from .ff1_interchange import export_cff

@@ -96,6 +96,15 @@ It conveys no rights to the font resource, application, or UI. The original
 font files and full captures remain private. See the
 [Draw comparison library](examples/draw-comparison/README.md).
 
+The [typography comparison](examples/typography-comparison/v1/README.md)
+covers independently authored specimens rendered with project and
+separately licensed outlines. The project licenses its own specimens and
+comparison assets. TeX Gyre Bonum and Liberation Mono retain their own
+notices and license terms. Source and converted modern font binaries are
+private. The manifest permits the independently drawn Labgrid FF1 and
+the specified typography comparison crops. Distribution packages exclude
+the research fonts, figures and images.
+
 No project license grants rights to Tandy DeskMate executables, installation
 media, original user databases, manuals, assets, trademarks, external images or
 other third-party works. Application-generated synthetic test documents can be
