@@ -70,8 +70,10 @@ shareware archives, user groups and preservation collections. Track
 negative findings and missing media, without inventing download links
 or discarding leads.
 
-The [acquisition handoff](acquisitions.md) records the two immediate
-operator-supplied archives. See the [demonstrator plan](demonstrator.md)
+The [acquisition handoff](acquisitions.md) records acquired archives
+and prioritized leads. The [TVDog archive mirror protocol](archive-mirror.md)
+sets out the operator-approved complete private mirror and derived public
+reference index. See the [demonstrator plan](demonstrator.md)
 for the companion living-system project.
 
 ## Publication

@@ -67,6 +67,11 @@
       "title": "TVDog Tandy 1000 documentation index",
       "url": "http://www.oldskool.org/guides/tvdog/documents.html",
       "verification": "Operator supplied index and pasted entries on 2026-11-19; listing inspected, underlying downloads not yet verified. Priorities in acquisitions.md."
+    },
+    "tvdog-root": {
+      "title": "TVDog archive at Oldskool — complete public subtree",
+      "url": "http://ftp.oldskool.org/pub/tvdog/",
+      "verification": "Operator authorized a private, server-friendly mirror of the entire publicly accessible subtree on 2026-11-19. Scope and acquisition protocol in archive-mirror.md. Inventory and completion not yet verified."
     }
   },
   "entries": [

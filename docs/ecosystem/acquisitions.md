@@ -199,9 +199,10 @@ printing, word processing, database and graphics. Acquire relevant media
 privately with SHA-256 receipts, preserving originals and deduplicating
 identical files. Use a bounded, polite download process; if the archive
 is unavailable, retain the lead and report the error. Identify missing
-catalog titles and newly discovered candidates. No indiscriminate mirror
-of unrelated commercial software, public rehosting of original media,
-or bulk installation in the core research image. Extensive per-title
+catalog titles and newly discovered candidates. The subsequent operator decision authorizes a full private mirror of
+/pub/tvdog/ under [the archive protocol](archive-mirror.md), superseding
+this earlier selective acquisition limit. No public rehosting of original
+media or bulk installation in the core research image. Extensive per-title
 reverse engineering belongs to later campaigns; the next typography
 campaign should undertake the inventory and useful adjacent acquisitions
 without displacing its primary research objectives.
@@ -236,5 +237,17 @@ forum messages, personal contact details and historical documents private.
 Publish independent findings, citations, metadata and eligible synthetic
 fixtures only. Retain dated price and product evidence for the future
 demonstrator's internally consistent purchase records. Do not invent the
-family canon. Prioritize immediate acquisitions in the next typography/
-Express Publisher campaign without displacing primary research objectives.
+family canon. Use the prioritized list to order the initial transfers within the full
+private mirror; all permitted in-scope files remain eventual targets.
+See the [archive protocol](archive-mirror.md).
+
+## Complete TVDog archive — operator decision
+
+The operator expanded the acquisition scope to the entire publicly
+accessible subtree at http://ftp.oldskool.org/pub/tvdog/ . The
+[archive mirror protocol](archive-mirror.md) governs server-friendly
+acquisition, persistent verification, offline indexing and publication
+of annotated source references. This replaces earlier selective-only
+acquisition instructions within this subtree; it does not expand the
+scope to other hosts or parent directories. Prioritize the existing
+DeskMate leads first within the mirror queue. No mirror is yet claimed.

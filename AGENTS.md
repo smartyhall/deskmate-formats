@@ -169,3 +169,21 @@ image. The [acquisition handoff](docs/ecosystem/acquisitions.md) pins
 the two operator-provided archives for the next campaign. In the near
 term prioritize core Draw/font reconstruction and independent font
 conversion, with bounded adjacent acquisitions and inventory.
+
+## TVDog archive preservation — operator decision 2026-11-19
+
+Create a complete private, resumable mirror of the publicly accessible,
+permitted subtree at http://ftp.oldskool.org/pub/tvdog/ using the
+[archive mirror protocol](docs/ecosystem/archive-mirror.md). This
+supersedes the earlier selective-only acquisition limit for this
+subtree, not other sites. Respect operator policies of the source,
+robots directives, service health, and rate limits; a full mirror
+is a goal, not authorization to bypass restrictions. Prioritize
+Express Publisher and other immediate DeskMate leads, but preserve
+the entire allowed tree over successive runs if necessary. Keep
+original bytes, listings, private searchable text and processing
+state outside Git. Publish only reviewed, independently authored
+metadata, source links and cross-references under existing project
+publication rules. After transfer, index offline, cross-link the
+ecosystem catalog and technical research, and report exact missing
+or blocked items rather than claiming completeness prematurely.
