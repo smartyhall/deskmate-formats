@@ -13,6 +13,7 @@ to OpenAI, Codex or any other party.
 | Formal technical specifications | `GPL-3.0-or-later OR CC-BY-4.0` | docs/formats/calendar/CALENDAR_FORMAT.md, docs/containers/README.md, docs/compatibility.md |
 | General documentation and explanatory metadata | `GPL-3.0-or-later OR CC-BY-SA-4.0` | Other authored Markdown, evidence/provenance JSON and GitHub issue templates/configuration |
 | Application-generated synthetic-data fixtures | `GPL-3.0-or-later OR CC-BY-4.0`, to the extent rights exist in contributed test content | tests/fixtures/application-generated/; no ownership claim over native structural facts |
+| Manifest-verified musical comparisons | `GPL-3.0-or-later OR CC-BY-4.0` for the project's original composition and performance contributions | examples/music-listening/v1/ WAVs; underlying Tandy instrument material retains its separate rights |
 | Standard license texts | Original notices/permissions, unmodified | LICENSE and LICENSES/*.txt |
 
 Each independently authored file has an adjacent REUSE-compatible `.license`

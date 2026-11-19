@@ -4,6 +4,7 @@ import ast
 import hashlib
 import json
 import re
+from struct import unpack_from
 import sys
 import tarfile
 import zipfile
@@ -11,6 +12,17 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUDED = {'.git', 'build', 'dist', 'local-results', 'private-fixtures', '.ruff_cache'}
 FIXTURE_DIR = Path('tests/fixtures/application-generated')
+LISTENING_DIR = Path('examples/music-listening/v1')
+LISTENING_CASES = ('major-scale', 'minor-scale', 'chromatic-scale', 'major-cadence', 'minor-cadence')
+LISTENING_BANKS = {
+    'synthetic': ({9, 10, 11}, 'independent-synthetic-performance'),
+    'oem': ({1, 2, 3, 4}, 'original-performance-using-tandy-instruments'),
+}
+LISTENING_LICENSE = 'GPL-3.0-or-later OR CC-BY-4.0'
+MIN_LISTENING_FRAMES = 4 * 48_000
+MAX_LISTENING_FRAMES = 20 * 48_000
+MAX_MILESTONE_BYTES = 26 * 1024 * 1024
+MAX_LISTENING_BYTES = 128 * 1024 * 1024
 DATA_EXT = {'.cln', '.adr', '.fil', '.pcl', '.doc', '.fig', '.wks', '.snd', '.sng'}
 PRIVATE_SPOOL_FILES = {'events.jsonl', 'writer.lock'}
 PRIVATE_SPOOL_FILES.update(
@@ -45,7 +57,7 @@ def source_files():
         if any(part in EXCLUDED or part.startswith('.venv') or
                part.endswith('.egg-info') or part == '__pycache__' for part in rel.parts):
             continue
-        if path.is_file():
+        if path.is_symlink() or path.is_junction() or path.is_file():
             yield path
 
 
@@ -90,18 +102,176 @@ def check_telemetry_file(path, data):
     return True
 
 
+def is_digest(value):
+    return isinstance(value, str) and re.fullmatch(r'[0-9a-f]{64}', value) is not None
+
+
+def check_listening_path(path):
+    if any(parent.is_symlink() or parent.is_junction()
+           for parent in (path, *path.parents) if parent.is_relative_to(ROOT)):
+        raise ValueError(f'symlink is not permitted: {path.relative_to(ROOT)}')
+
+
+def listening_json(path):
+    check_listening_path(path)
+    if path.stat().st_size > 1_000_000:
+        raise ValueError(f'oversized listening manifest: {path.relative_to(ROOT)}')
+    return json.loads(path.read_text(encoding='utf-8'))
+
+
+def listening_manifest(fixtures):
+    base = ROOT / LISTENING_DIR
+    check_listening_path(base)
+    if not base.exists():
+        return {}, set()
+    spec = listening_json(base.parent / 'suite-v1.json')
+    if spec['schema_version'] != 1 or set(spec['banks']) != set(LISTENING_BANKS):
+        raise ValueError('unsupported listening suite or bank')
+    banks = {}
+    for bank, (slots, rights) in LISTENING_BANKS.items():
+        instruments = spec['banks'][bank]
+        index = {entry['slot']: entry['sha256'] for entry in instruments}
+        if (set(index) != slots or len(instruments) != len(slots)
+                or not all(is_digest(digest) for digest in index.values())):
+            raise ValueError(f'invalid listening instrument bank: {bank}')
+        for entry in instruments:
+            if bank == 'synthetic':
+                path = entry['fixture_path']
+                if (not path.startswith(f'{FIXTURE_DIR.as_posix()}/sound/')
+                        or not path.endswith('.snd')
+                        or fixtures.get(path, {}).get('sha256') != entry['sha256']):
+                    raise ValueError(f'unpinned listening instrument: {path}')
+            elif not entry['archive_member'] or not entry['source_archive']:
+                raise ValueError('missing OEM listening instrument provenance')
+        banks[bank] = (index, rights)
+    cases = spec['cases']
+    expected = {case: 'synthetic' for case in LISTENING_CASES}
+    expected.update({f'oem-{case}': 'oem' for case in LISTENING_CASES})
+    if len(cases) != len(expected) or {item['id']: item['bank'] for item in cases} != expected:
+        raise ValueError('unexpected listening case identities')
+    scores = {}
+    for case in cases:
+        path = case['score_path']
+        if (not path.startswith(f'{FIXTURE_DIR.as_posix()}/music/') or not path.endswith('.sng')
+                or not is_digest(case['score_sha256'])
+                or fixtures.get(path, {}).get('sha256') != case['score_sha256']):
+            raise ValueError(f'unpinned listening score: {path}')
+        scores[case['id']] = case['score_sha256']
+
+    index, metadata = {}, set()
+    manifests = sorted(base.glob('*/manifest.json'))
+    if not manifests or base / 'baseline-pr118/manifest.json' not in manifests:
+        raise ValueError('missing baseline listening manifest')
+    total = 0
+    for manifest_path in manifests:
+        milestone = manifest_path.parent.name
+        if not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+){0,5}', milestone):
+            raise ValueError(f'invalid listening milestone: {milestone}')
+        metadata.update({manifest_path.relative_to(ROOT).as_posix(),
+                         manifest_path.relative_to(ROOT).as_posix() + '.license'})
+        manifest = listening_json(manifest_path)
+        if manifest['schema_version'] != 1 or manifest['milestone'] != milestone:
+            raise ValueError('invalid listening milestone manifest')
+        if (not is_digest(manifest['emulator_sha256']) or not is_digest(manifest['renderer_sha256'])
+                or not re.fullmatch(r'[0-9a-f]{40}', manifest['renderer_revision'])
+                or manifest['authorization'] != 'operator-2026-11-18'):
+            raise ValueError('invalid listening milestone provenance')
+        if (milestone == 'baseline-pr118'
+                and manifest['renderer_revision'] != 'f9fe4f174790b6fa19801d5c107994db8e57f0dc'):
+            raise ValueError('unexpected baseline renderer revision')
+        pairs = set()
+        milestone_bytes = 0
+        for entry in manifest['recordings']:
+            case, role = entry['case'], entry['playback']
+            if case not in expected or role not in {'native', 'renderer'} or (case, role) in pairs:
+                raise ValueError('unknown or duplicate listening recording')
+            pairs.add((case, role))
+            bank = expected[case]
+            bank_hashes, rights = banks[bank]
+            rel = (LISTENING_DIR / milestone / f'{case}-{role}.wav').as_posix()
+            if (entry['path'] != rel or entry['bank'] != bank or entry['classification'] != rights
+                    or entry['license'] != LISTENING_LICENSE or entry['score_sha256'] != scores[case]
+                    or entry['instrument_sha256'] != {str(k): v for k, v in bank_hashes.items()}
+                    or not is_digest(entry['sha256'])):
+                raise ValueError(f'invalid listening identity or rights: {rel}')
+            frames, size = entry['frames'], entry['size']
+            if (type(frames) is not int or not MIN_LISTENING_FRAMES <= frames <= MAX_LISTENING_FRAMES
+                    or type(size) is not int or size != frames * 2 + 44):
+                raise ValueError(f'invalid listening size: {rel}')
+            if role == 'native':
+                start = entry['first_capture_frame']
+                if (entry['tap'] != 'pssj-dac-pre-mix' or not is_digest(entry['raw_sha256'])
+                        or type(start) is not int or start < 0
+                        or type(entry['raw_frames']) is not int or start + frames > entry['raw_frames']):
+                    raise ValueError(f'invalid native capture provenance: {rel}')
+            elif (not is_digest(entry['render_pcm_sha256']) or entry['rate'] != 48_000
+                    or not entry['model']
+                    or (milestone == 'baseline-pr118' and entry['model'] != 'rsx-dac-approximation-v1')):
+                raise ValueError(f'invalid independent render provenance: {rel}')
+            index[rel] = entry
+            metadata.add(rel + '.license')
+            milestone_bytes += size
+        if pairs != {(case, role) for case in expected for role in ('native', 'renderer')}:
+            raise ValueError(f'incomplete listening comparison: {milestone}')
+        if milestone_bytes > MAX_MILESTONE_BYTES:
+            raise ValueError(f'listening milestone exceeds byte limit: {milestone}')
+        total += milestone_bytes
+    if total > MAX_LISTENING_BYTES:
+        raise ValueError('listening suite exceeds aggregate byte limit')
+    return index, metadata
+
+
+def check_listening_wav(rel, data, entry):
+    if len(data) != entry['size'] or hashlib.sha256(data).hexdigest() != entry['sha256']:
+        raise ValueError('listening WAV digest or size mismatch: ' + rel)
+    header = unpack_from('<4sI4s4sIHHIIHH4sI', data)
+    if header != (b'RIFF', len(data) - 8, b'WAVE', b'fmt ', 16, 1, 1, 48_000,
+                  96_000, 2, 16, b'data', len(data) - 44):
+        raise ValueError('expected PCM-only 48 kHz mono 16-bit WAV: ' + rel)
+    if entry['playback'] == 'renderer':
+        payload_start, payload_frames = entry['first_render_frame'], entry['render_frames']
+        if (type(payload_start) is not int or type(payload_frames) is not int
+                or payload_start < 0 or payload_frames <= 0
+                or payload_start + payload_frames > entry['frames']):
+            raise ValueError('invalid listening render frame range: ' + rel)
+        lo, hi = 44 + payload_start * 2, 44 + (payload_start + payload_frames) * 2
+        if (any(data[44:lo]) or any(data[hi:])
+                or hashlib.sha256(data[lo:hi]).hexdigest() != entry['render_pcm_sha256']):
+            raise ValueError('listening render PCM or zero padding mismatch: ' + rel)
+    sidecar = ROOT / (rel + '.license')
+    check_listening_path(sidecar)
+    notice = sidecar.read_text(encoding='utf-8')
+    if f'SPDX-License-Identifier: {LISTENING_LICENSE}' not in notice.splitlines():
+        raise ValueError('missing listening REUSE license: ' + rel)
+    if entry['bank'] == 'oem' and 'Tandy' not in notice:
+        raise ValueError('missing underlying Tandy material notice: ' + rel)
+
+
 def audit():
     allowed = fixture_manifest()
+    listening, listening_metadata = listening_manifest(allowed)
+    listening_found = set()
     found = set()
     count = 0
     telemetry_count = 0
     for path in source_files():
         rel_path = path.relative_to(ROOT)
         rel = rel_path.as_posix()
-        if path.is_symlink():
+        if path.is_symlink() or path.is_junction():
             raise ValueError('symlink is not permitted: ' + rel)
         if path.name.lower() in PRIVATE_SPOOL_FILES:
             raise ValueError('private Observatory spool file: ' + rel)
+        if rel in listening:
+            if path.stat().st_size != listening[rel]['size']:
+                raise ValueError('listening WAV digest or size mismatch: ' + rel)
+            check_listening_wav(rel, path.read_bytes(), listening[rel])
+            listening_found.add(rel)
+            count += 1
+            continue
+        if rel_path.is_relative_to(LISTENING_DIR) and rel not in listening_metadata:
+            raise ValueError('unlisted listening file: ' + rel)
+        if path.suffix.lower() in ('.wav', '.raw'):
+            raise ValueError('excluded evidence/software type: ' + rel)
         data = path.read_bytes()
         telemetry_count += check_telemetry_file(rel, data)
         if rel in allowed:
@@ -136,6 +306,9 @@ def audit():
     # Git-only binary research fixtures. A source checkout requires every entry.
     if found != set(allowed) and not (ROOT / 'PKG-INFO').is_file():
         raise ValueError('missing declared fixtures: ' + ', '.join(sorted(set(allowed) - found)))
+    if listening_found != set(listening) and (
+            listening_found or (ROOT / '.git').exists() or not (ROOT / 'PKG-INFO').is_file()):
+        raise ValueError('missing declared listening WAVs')
     # Git-only binary fixtures are excluded. Pinned synthetic JSONL ships in the sdist.
     for path in (ROOT / 'dist').glob('*'):
         if path.suffix == '.whl':
@@ -165,6 +338,7 @@ def audit():
                     raise ValueError(label + ' in archive: ' + name)
     return {'source_files_checked': count, 'status': 'passed',
             'application_generated_fixtures_checked': len(found),
+            'listening_wavs_checked': len(listening_found),
             'synthetic_jsonl_fixtures_checked': telemetry_count,
             'excluded': 'Commercial software, private data and unlisted binary files.'}
 

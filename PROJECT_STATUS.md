@@ -2,6 +2,13 @@
 
 ## Independent sampled Music playback — 2026-11-18
 
+The [v1 listening suite](examples/music-listening/README.md) contains
+ten native RSX DAC and PR #118 renderer pairs. Five original passages
+use three synthetic Sound instruments and five use the original Tandy
+Clarinet, Piano, Bells and Cello bank. The frozen score and instrument
+specification, capture provenance, and quantitative comparisons accompany
+the audio.
+
 The Music CLI and Preservation Workbench render sampled PCM/WAV using an
 explicit SND collection. The RSX model uses measured numeric binding,
 sample ranges, sustain boundaries, block-quantized tempo and bounded

@@ -1,0 +1,2515 @@
+{
+  "schema_version": 1,
+  "banks": {
+    "synthetic": [
+      {
+        "name": "Lab Reed",
+        "slot": 9,
+        "sha256": "2ffc016c79e069e28ad7eba1a93c7376638c9d330ea80f1d846c0295f32a3ca5",
+        "size": 5660,
+        "sample_rate": 11000,
+        "compression_code": 0,
+        "descriptors": [
+          {
+            "midi_low": 57,
+            "midi_high": 95,
+            "root_midi": 60,
+            "sample_frames": 5500,
+            "stored_bytes": 5500,
+            "sustain_start_frame": 1260,
+            "sustain_end_frame_exclusive": 3360
+          }
+        ],
+        "fixture_path": "tests/fixtures/application-generated/sound/listening-reed-v1.snd",
+        "attack_seconds": 0.023,
+        "tail_seconds": 0.035,
+        "components_multiplier_amplitude_decay_seconds": [
+          [
+            1,
+            39,
+            0
+          ],
+          [
+            3,
+            17,
+            0
+          ],
+          [
+            5,
+            6,
+            0
+          ],
+          [
+            7,
+            3,
+            0
+          ]
+        ],
+        "base_period_samples": 42,
+        "nominal_rate": 11000,
+        "nominal_root_midi": 60,
+        "fundamental_hz": 261.9047619047619,
+        "pcm_unsigned8_sha256": "db604bc7627c002922586fe26fe8868d26cc4a00c84131fbc32d681fb0cbc537",
+        "native_sound_saved_filename": "VREED.SND",
+        "native_sound_capture_window_frames": [
+          1179744,
+          1249728
+        ],
+        "save_byte_identical_to_generator": true
+      },
+      {
+        "name": "Lab Pluck",
+        "slot": 10,
+        "sha256": "6757e3baa556f4bea7a31bb397b6ee016a2e6456d0a13625f02b384150613637",
+        "size": 5660,
+        "sample_rate": 11000,
+        "compression_code": 0,
+        "descriptors": [
+          {
+            "midi_low": 57,
+            "midi_high": 95,
+            "root_midi": 60,
+            "sample_frames": 5500,
+            "stored_bytes": 5500,
+            "sustain_start_frame": 0,
+            "sustain_end_frame_exclusive": 0
+          }
+        ],
+        "fixture_path": "tests/fixtures/application-generated/sound/listening-pluck-v1.snd",
+        "attack_seconds": 0.005,
+        "tail_seconds": 0.035,
+        "components_multiplier_amplitude_decay_seconds": [
+          [
+            1,
+            53,
+            0.23
+          ],
+          [
+            2,
+            28,
+            0.13
+          ],
+          [
+            3,
+            16,
+            0.09
+          ],
+          [
+            5,
+            8,
+            0.05
+          ]
+        ],
+        "base_period_samples": 42,
+        "nominal_rate": 11000,
+        "nominal_root_midi": 60,
+        "fundamental_hz": 261.9047619047619,
+        "pcm_unsigned8_sha256": "4782e9bb6b9a84c4b92fd7889ea8ec7b439c94f20573034204971eb1b524928f",
+        "native_sound_saved_filename": "VPLUCK.SND",
+        "native_sound_capture_window_frames": [
+          1894080,
+          1964064
+        ],
+        "save_byte_identical_to_generator": true
+      },
+      {
+        "name": "Lab Bell",
+        "slot": 11,
+        "sha256": "d9b6bf2ae2bbbe0c3f3d2890c8523957b2fe3af8332c836966d9633c635b552b",
+        "size": 5660,
+        "sample_rate": 11000,
+        "compression_code": 0,
+        "descriptors": [
+          {
+            "midi_low": 57,
+            "midi_high": 95,
+            "root_midi": 60,
+            "sample_frames": 5500,
+            "stored_bytes": 5500,
+            "sustain_start_frame": 0,
+            "sustain_end_frame_exclusive": 0
+          }
+        ],
+        "fixture_path": "tests/fixtures/application-generated/sound/listening-bell-v1.snd",
+        "attack_seconds": 0.009,
+        "tail_seconds": 0.035,
+        "components_multiplier_amplitude_decay_seconds": [
+          [
+            1,
+            45,
+            0.44
+          ],
+          [
+            2.41,
+            22,
+            0.14
+          ],
+          [
+            3.67,
+            14,
+            0.085
+          ]
+        ],
+        "base_period_samples": 42,
+        "nominal_rate": 11000,
+        "nominal_root_midi": 60,
+        "fundamental_hz": 261.9047619047619,
+        "pcm_unsigned8_sha256": "277b194e42789fc280fb7f1761357bb06b98f58ebd8a2c5bab78fcd4daa6be02",
+        "native_sound_saved_filename": "VBELL.SND",
+        "native_sound_capture_window_frames": [
+          2608416,
+          2678400
+        ],
+        "save_byte_identical_to_generator": true
+      }
+    ],
+    "oem": [
+      {
+        "name": "Clarinet",
+        "slot": 1,
+        "sha256": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc",
+        "size": 6892,
+        "sample_rate": 11000,
+        "compression_code": 1,
+        "descriptors": [
+          {
+            "midi_low": 33,
+            "midi_high": 45,
+            "root_midi": 48,
+            "sample_frames": 2946,
+            "stored_bytes": 1607,
+            "sustain_start_frame": 1925,
+            "sustain_end_frame_exclusive": 2941
+          },
+          {
+            "midi_low": 46,
+            "midi_high": 67,
+            "root_midi": 60,
+            "sample_frames": 2685,
+            "stored_bytes": 2546,
+            "sustain_start_frame": 1621,
+            "sustain_end_frame_exclusive": 2681
+          },
+          {
+            "midi_low": 68,
+            "midi_high": 95,
+            "root_midi": 72,
+            "sample_frames": 2767,
+            "stored_bytes": 2487,
+            "sustain_start_frame": 1827,
+            "sustain_end_frame_exclusive": 2759
+          }
+        ],
+        "source_archive": "rsxdisks.zip",
+        "archive_member": "DISK2.ZIP \u2192 DeskMate 3.04 disk 2 \u2192 CLARINET.SND",
+        "release": "Tandy 1000 RSX DeskMate 3.04 disk 2"
+      },
+      {
+        "name": "Piano",
+        "slot": 2,
+        "sha256": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849",
+        "size": 23600,
+        "sample_rate": 11000,
+        "compression_code": 1,
+        "descriptors": [
+          {
+            "midi_low": 33,
+            "midi_high": 57,
+            "root_midi": 48,
+            "sample_frames": 15123,
+            "stored_bytes": 8714,
+            "sustain_start_frame": 0,
+            "sustain_end_frame_exclusive": 0
+          },
+          {
+            "midi_low": 58,
+            "midi_high": 71,
+            "root_midi": 60,
+            "sample_frames": 10671,
+            "stored_bytes": 6346,
+            "sustain_start_frame": 0,
+            "sustain_end_frame_exclusive": 0
+          },
+          {
+            "midi_low": 72,
+            "midi_high": 95,
+            "root_midi": 72,
+            "sample_frames": 15224,
+            "stored_bytes": 8288,
+            "sustain_start_frame": 0,
+            "sustain_end_frame_exclusive": 0
+          }
+        ],
+        "source_archive": "rsxdisks.zip",
+        "archive_member": "DISK2.ZIP \u2192 DeskMate 3.04 disk 2 \u2192 PIANO.SND",
+        "release": "Tandy 1000 RSX DeskMate 3.04 disk 2"
+      },
+      {
+        "name": "Bells",
+        "slot": 3,
+        "sha256": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777",
+        "size": 25797,
+        "sample_rate": 11000,
+        "compression_code": 1,
+        "descriptors": [
+          {
+            "midi_low": 33,
+            "midi_high": 57,
+            "root_midi": 48,
+            "sample_frames": 13146,
+            "stored_bytes": 7583,
+            "sustain_start_frame": 0,
+            "sustain_end_frame_exclusive": 0
+          },
+          {
+            "midi_low": 58,
+            "midi_high": 69,
+            "root_midi": 60,
+            "sample_frames": 13937,
+            "stored_bytes": 9491,
+            "sustain_start_frame": 0,
+            "sustain_end_frame_exclusive": 0
+          },
+          {
+            "midi_low": 70,
+            "midi_high": 95,
+            "root_midi": 72,
+            "sample_frames": 13284,
+            "stored_bytes": 8471,
+            "sustain_start_frame": 0,
+            "sustain_end_frame_exclusive": 0
+          }
+        ],
+        "source_archive": "rsxdisks.zip",
+        "archive_member": "DISK2.ZIP \u2192 DeskMate 3.04 disk 2 \u2192 BELLS.SND",
+        "release": "Tandy 1000 RSX DeskMate 3.04 disk 2"
+      },
+      {
+        "name": "Cello",
+        "slot": 4,
+        "sha256": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889",
+        "size": 26999,
+        "sample_rate": 11000,
+        "compression_code": 1,
+        "descriptors": [
+          {
+            "midi_low": 33,
+            "midi_high": 53,
+            "root_midi": 48,
+            "sample_frames": 11995,
+            "stored_bytes": 6692,
+            "sustain_start_frame": 0,
+            "sustain_end_frame_exclusive": 0
+          },
+          {
+            "midi_low": 54,
+            "midi_high": 68,
+            "root_midi": 60,
+            "sample_frames": 12478,
+            "stored_bytes": 10531,
+            "sustain_start_frame": 0,
+            "sustain_end_frame_exclusive": 0
+          },
+          {
+            "midi_low": 69,
+            "midi_high": 95,
+            "root_midi": 72,
+            "sample_frames": 10343,
+            "stored_bytes": 9524,
+            "sustain_start_frame": 0,
+            "sustain_end_frame_exclusive": 0
+          }
+        ],
+        "source_archive": "rsxdisks.zip",
+        "archive_member": "DISK2.ZIP \u2192 DeskMate 3.04 disk 2 \u2192 CELLO.SND",
+        "release": "Tandy 1000 RSX DeskMate 3.04 disk 2"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "id": "major-scale",
+      "bank": "synthetic",
+      "score_sha256": "6844bba6fe94c9de220ff8a05251e14ad666af6150b225b2e2c5e865b8ea436f",
+      "score_path": "tests/fixtures/application-generated/music/listening-major-scale-v1.sng",
+      "generation": "tool-generated",
+      "native_acceptance": "opened and played",
+      "native_save": false,
+      "native_input_filename": "LAB1.SNG",
+      "native_run": "lab-scales",
+      "quarter_bpm": 100,
+      "voices": [
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 9,
+            "word": "7308"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 24,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "ea1c"
+          },
+          {
+            "kind": "note",
+            "tick": 24,
+            "duration_ticks": 24,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "ea1e"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 24,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "ea20"
+          },
+          {
+            "kind": "note",
+            "tick": 72,
+            "duration_ticks": 24,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "ea21"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 24,
+            "midi_pitch": 67,
+            "accidental_flags": 0,
+            "word": "ea23"
+          },
+          {
+            "kind": "note",
+            "tick": 120,
+            "duration_ticks": 24,
+            "midi_pitch": 69,
+            "accidental_flags": 0,
+            "word": "ea25"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 24,
+            "midi_pitch": 71,
+            "accidental_flags": 0,
+            "word": "ea27"
+          },
+          {
+            "kind": "note",
+            "tick": 168,
+            "duration_ticks": 24,
+            "midi_pitch": 72,
+            "accidental_flags": 0,
+            "word": "ea28"
+          },
+          {
+            "kind": "note",
+            "tick": 192,
+            "duration_ticks": 24,
+            "midi_pitch": 71,
+            "accidental_flags": 0,
+            "word": "ea27"
+          },
+          {
+            "kind": "note",
+            "tick": 216,
+            "duration_ticks": 24,
+            "midi_pitch": 69,
+            "accidental_flags": 0,
+            "word": "ea25"
+          },
+          {
+            "kind": "note",
+            "tick": 240,
+            "duration_ticks": 24,
+            "midi_pitch": 67,
+            "accidental_flags": 0,
+            "word": "ea23"
+          },
+          {
+            "kind": "note",
+            "tick": 264,
+            "duration_ticks": 24,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "ea21"
+          },
+          {
+            "kind": "note",
+            "tick": 288,
+            "duration_ticks": 24,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "ea20"
+          },
+          {
+            "kind": "note",
+            "tick": 312,
+            "duration_ticks": 24,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "ea1e"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 336,
+            "dynamic_index": 3,
+            "word": "7203"
+          },
+          {
+            "kind": "note",
+            "tick": 336,
+            "duration_ticks": 48,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "e61c"
+          },
+          {
+            "kind": "rest",
+            "tick": 384,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ],
+        [],
+        []
+      ],
+      "conductor": [
+        {
+          "kind": "tempo",
+          "tick": 0,
+          "quarter_bpm": 100,
+          "tempo_bpm": 100,
+          "tempo_note_denominator": 4,
+          "word": "1164"
+        },
+        {
+          "kind": "advance",
+          "tick": 0,
+          "duration_ticks": 408,
+          "word": "2198"
+        }
+      ]
+    },
+    {
+      "id": "minor-scale",
+      "bank": "synthetic",
+      "score_sha256": "efa0ed2aeae648877c8d11fd42b7bb947101d80228cc5c3e3b75b0ea020e11da",
+      "score_path": "tests/fixtures/application-generated/music/listening-minor-scale-v1.sng",
+      "generation": "tool-generated",
+      "native_acceptance": "opened and played",
+      "native_save": false,
+      "native_input_filename": "LAB2.SNG",
+      "native_run": "lab-scales",
+      "quarter_bpm": 100,
+      "voices": [
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 10,
+            "word": "7309"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 24,
+            "midi_pitch": 57,
+            "accidental_flags": 0,
+            "word": "ea19"
+          },
+          {
+            "kind": "note",
+            "tick": 24,
+            "duration_ticks": 24,
+            "midi_pitch": 59,
+            "accidental_flags": 0,
+            "word": "ea1b"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 24,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "ea1c"
+          },
+          {
+            "kind": "note",
+            "tick": 72,
+            "duration_ticks": 24,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "ea1e"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 24,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "ea20"
+          },
+          {
+            "kind": "note",
+            "tick": 120,
+            "duration_ticks": 24,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "ea21"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 24,
+            "midi_pitch": 68,
+            "accidental_flags": 64,
+            "word": "ea64"
+          },
+          {
+            "kind": "note",
+            "tick": 168,
+            "duration_ticks": 24,
+            "midi_pitch": 69,
+            "accidental_flags": 0,
+            "word": "ea25"
+          },
+          {
+            "kind": "note",
+            "tick": 192,
+            "duration_ticks": 24,
+            "midi_pitch": 68,
+            "accidental_flags": 64,
+            "word": "ea64"
+          },
+          {
+            "kind": "note",
+            "tick": 216,
+            "duration_ticks": 24,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "ea21"
+          },
+          {
+            "kind": "note",
+            "tick": 240,
+            "duration_ticks": 24,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "ea20"
+          },
+          {
+            "kind": "note",
+            "tick": 264,
+            "duration_ticks": 24,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "ea1e"
+          },
+          {
+            "kind": "note",
+            "tick": 288,
+            "duration_ticks": 24,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "ea1c"
+          },
+          {
+            "kind": "note",
+            "tick": 312,
+            "duration_ticks": 24,
+            "midi_pitch": 59,
+            "accidental_flags": 0,
+            "word": "ea1b"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 336,
+            "dynamic_index": 3,
+            "word": "7203"
+          },
+          {
+            "kind": "note",
+            "tick": 336,
+            "duration_ticks": 48,
+            "midi_pitch": 57,
+            "accidental_flags": 0,
+            "word": "e619"
+          },
+          {
+            "kind": "rest",
+            "tick": 384,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ],
+        [],
+        []
+      ],
+      "conductor": [
+        {
+          "kind": "tempo",
+          "tick": 0,
+          "quarter_bpm": 100,
+          "tempo_bpm": 100,
+          "tempo_note_denominator": 4,
+          "word": "1164"
+        },
+        {
+          "kind": "advance",
+          "tick": 0,
+          "duration_ticks": 408,
+          "word": "2198"
+        }
+      ]
+    },
+    {
+      "id": "chromatic-scale",
+      "bank": "synthetic",
+      "score_sha256": "1b2d765fc364da39ca57ae4679ba4d50a2af42708c82077849927a1c97eda7c1",
+      "score_path": "tests/fixtures/application-generated/music/listening-chromatic-scale-v1.sng",
+      "generation": "tool-generated",
+      "native_acceptance": "opened and played",
+      "native_save": false,
+      "native_input_filename": "LAB3.SNG",
+      "native_run": "lab-scales",
+      "quarter_bpm": 100,
+      "voices": [
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 11,
+            "word": "730a"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 12,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "ee1c"
+          },
+          {
+            "kind": "note",
+            "tick": 12,
+            "duration_ticks": 12,
+            "midi_pitch": 61,
+            "accidental_flags": 64,
+            "word": "ee5d"
+          },
+          {
+            "kind": "note",
+            "tick": 24,
+            "duration_ticks": 12,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "ee1e"
+          },
+          {
+            "kind": "note",
+            "tick": 36,
+            "duration_ticks": 12,
+            "midi_pitch": 63,
+            "accidental_flags": 64,
+            "word": "ee5f"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 12,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "ee20"
+          },
+          {
+            "kind": "note",
+            "tick": 60,
+            "duration_ticks": 12,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "ee21"
+          },
+          {
+            "kind": "note",
+            "tick": 72,
+            "duration_ticks": 12,
+            "midi_pitch": 66,
+            "accidental_flags": 64,
+            "word": "ee62"
+          },
+          {
+            "kind": "note",
+            "tick": 84,
+            "duration_ticks": 12,
+            "midi_pitch": 67,
+            "accidental_flags": 0,
+            "word": "ee23"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 12,
+            "midi_pitch": 68,
+            "accidental_flags": 64,
+            "word": "ee64"
+          },
+          {
+            "kind": "note",
+            "tick": 108,
+            "duration_ticks": 12,
+            "midi_pitch": 69,
+            "accidental_flags": 0,
+            "word": "ee25"
+          },
+          {
+            "kind": "note",
+            "tick": 120,
+            "duration_ticks": 12,
+            "midi_pitch": 70,
+            "accidental_flags": 64,
+            "word": "ee66"
+          },
+          {
+            "kind": "note",
+            "tick": 132,
+            "duration_ticks": 12,
+            "midi_pitch": 71,
+            "accidental_flags": 0,
+            "word": "ee27"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 12,
+            "midi_pitch": 72,
+            "accidental_flags": 0,
+            "word": "ee28"
+          },
+          {
+            "kind": "note",
+            "tick": 156,
+            "duration_ticks": 12,
+            "midi_pitch": 71,
+            "accidental_flags": 0,
+            "word": "ee27"
+          },
+          {
+            "kind": "note",
+            "tick": 168,
+            "duration_ticks": 12,
+            "midi_pitch": 70,
+            "accidental_flags": 64,
+            "word": "ee66"
+          },
+          {
+            "kind": "note",
+            "tick": 180,
+            "duration_ticks": 12,
+            "midi_pitch": 69,
+            "accidental_flags": 0,
+            "word": "ee25"
+          },
+          {
+            "kind": "note",
+            "tick": 192,
+            "duration_ticks": 12,
+            "midi_pitch": 68,
+            "accidental_flags": 64,
+            "word": "ee64"
+          },
+          {
+            "kind": "note",
+            "tick": 204,
+            "duration_ticks": 12,
+            "midi_pitch": 67,
+            "accidental_flags": 0,
+            "word": "ee23"
+          },
+          {
+            "kind": "note",
+            "tick": 216,
+            "duration_ticks": 12,
+            "midi_pitch": 66,
+            "accidental_flags": 64,
+            "word": "ee62"
+          },
+          {
+            "kind": "note",
+            "tick": 228,
+            "duration_ticks": 12,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "ee21"
+          },
+          {
+            "kind": "note",
+            "tick": 240,
+            "duration_ticks": 12,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "ee20"
+          },
+          {
+            "kind": "note",
+            "tick": 252,
+            "duration_ticks": 12,
+            "midi_pitch": 63,
+            "accidental_flags": 64,
+            "word": "ee5f"
+          },
+          {
+            "kind": "note",
+            "tick": 264,
+            "duration_ticks": 12,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "ee1e"
+          },
+          {
+            "kind": "note",
+            "tick": 276,
+            "duration_ticks": 12,
+            "midi_pitch": 61,
+            "accidental_flags": 64,
+            "word": "ee5d"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 288,
+            "dynamic_index": 3,
+            "word": "7203"
+          },
+          {
+            "kind": "note",
+            "tick": 288,
+            "duration_ticks": 48,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "e61c"
+          },
+          {
+            "kind": "rest",
+            "tick": 336,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ],
+        [],
+        []
+      ],
+      "conductor": [
+        {
+          "kind": "tempo",
+          "tick": 0,
+          "quarter_bpm": 100,
+          "tempo_bpm": 100,
+          "tempo_note_denominator": 4,
+          "word": "1164"
+        },
+        {
+          "kind": "advance",
+          "tick": 0,
+          "duration_ticks": 360,
+          "word": "2168"
+        }
+      ]
+    },
+    {
+      "id": "major-cadence",
+      "bank": "synthetic",
+      "score_sha256": "9de77f31059efc2f9769d8d2cb7b8c4c8ec404b9be57f9947e69037a625a7809",
+      "score_path": "tests/fixtures/application-generated/music/listening-major-cadence-v1.sng",
+      "generation": "tool-generated",
+      "native_acceptance": "opened and played",
+      "native_save": false,
+      "native_input_filename": "LAB4.SNG",
+      "native_run": "lab-cadences",
+      "quarter_bpm": 100,
+      "voices": [
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 9,
+            "word": "7308"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 48,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "e61c"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 48,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "e61c"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 48,
+            "midi_pitch": 59,
+            "accidental_flags": 0,
+            "word": "e61b"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 72,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "e41c"
+          },
+          {
+            "kind": "rest",
+            "tick": 216,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ],
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 9,
+            "word": "7308"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 48,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "e620"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 48,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "e621"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 48,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "e61e"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 72,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "e420"
+          },
+          {
+            "kind": "rest",
+            "tick": 216,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ],
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 9,
+            "word": "7308"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 48,
+            "midi_pitch": 67,
+            "accidental_flags": 0,
+            "word": "e623"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 48,
+            "midi_pitch": 69,
+            "accidental_flags": 0,
+            "word": "e625"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 48,
+            "midi_pitch": 67,
+            "accidental_flags": 0,
+            "word": "e623"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 72,
+            "midi_pitch": 67,
+            "accidental_flags": 0,
+            "word": "e423"
+          },
+          {
+            "kind": "rest",
+            "tick": 216,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ]
+      ],
+      "conductor": [
+        {
+          "kind": "tempo",
+          "tick": 0,
+          "quarter_bpm": 100,
+          "tempo_bpm": 100,
+          "tempo_note_denominator": 4,
+          "word": "1164"
+        },
+        {
+          "kind": "advance",
+          "tick": 0,
+          "duration_ticks": 240,
+          "word": "20f0"
+        }
+      ]
+    },
+    {
+      "id": "minor-cadence",
+      "bank": "synthetic",
+      "score_sha256": "b97c66b10838986fc60a0de0de5277f453c51b96299efa4da9ad4a9b9dd366df",
+      "score_path": "tests/fixtures/application-generated/music/listening-minor-cadence-v1.sng",
+      "generation": "tool-generated",
+      "native_acceptance": "opened and played",
+      "native_save": false,
+      "native_input_filename": "LAB5.SNG",
+      "native_run": "lab-cadences",
+      "quarter_bpm": 100,
+      "voices": [
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 9,
+            "word": "7308"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 48,
+            "midi_pitch": 57,
+            "accidental_flags": 0,
+            "word": "e619"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 48,
+            "dynamic_index": 1,
+            "word": "7201"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 48,
+            "midi_pitch": 57,
+            "accidental_flags": 0,
+            "word": "e619"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 96,
+            "dynamic_index": 3,
+            "word": "7203"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 48,
+            "midi_pitch": 59,
+            "accidental_flags": 0,
+            "word": "e61b"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 144,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 48,
+            "midi_pitch": 57,
+            "connection": "start",
+            "accidental_flags": 0,
+            "word": "c619"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 192,
+            "dynamic_index": 1,
+            "word": "7201"
+          },
+          {
+            "kind": "note",
+            "tick": 192,
+            "duration_ticks": 24,
+            "midi_pitch": 57,
+            "connection": "end",
+            "accidental_flags": 0,
+            "word": "aa19"
+          },
+          {
+            "kind": "rest",
+            "tick": 216,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ],
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 10,
+            "word": "7309"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 48,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "e61c"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 48,
+            "dynamic_index": 1,
+            "word": "7201"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 48,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "e61e"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 96,
+            "dynamic_index": 3,
+            "word": "7203"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 48,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "e620"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 144,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 48,
+            "midi_pitch": 60,
+            "connection": "start",
+            "accidental_flags": 0,
+            "word": "c61c"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 192,
+            "dynamic_index": 1,
+            "word": "7201"
+          },
+          {
+            "kind": "note",
+            "tick": 192,
+            "duration_ticks": 24,
+            "midi_pitch": 60,
+            "connection": "end",
+            "accidental_flags": 0,
+            "word": "aa1c"
+          },
+          {
+            "kind": "rest",
+            "tick": 216,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ],
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 11,
+            "word": "730a"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 48,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "e620"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 48,
+            "dynamic_index": 1,
+            "word": "7201"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 48,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "e621"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 96,
+            "dynamic_index": 3,
+            "word": "7203"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 48,
+            "midi_pitch": 68,
+            "accidental_flags": 64,
+            "word": "e664"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 144,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 48,
+            "midi_pitch": 69,
+            "connection": "start",
+            "accidental_flags": 0,
+            "word": "c625"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 192,
+            "dynamic_index": 1,
+            "word": "7201"
+          },
+          {
+            "kind": "note",
+            "tick": 192,
+            "duration_ticks": 24,
+            "midi_pitch": 69,
+            "connection": "end",
+            "accidental_flags": 0,
+            "word": "aa25"
+          },
+          {
+            "kind": "rest",
+            "tick": 216,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ]
+      ],
+      "conductor": [
+        {
+          "kind": "tempo",
+          "tick": 0,
+          "quarter_bpm": 100,
+          "tempo_bpm": 100,
+          "tempo_note_denominator": 4,
+          "word": "1164"
+        },
+        {
+          "kind": "advance",
+          "tick": 0,
+          "duration_ticks": 240,
+          "word": "20f0"
+        }
+      ]
+    },
+    {
+      "id": "oem-major-scale",
+      "bank": "oem",
+      "score_sha256": "87d882bbf95ca60304c46f32852981c4eabf21fe109620c6fd2ad2a4dce334ae",
+      "score_path": "tests/fixtures/application-generated/music/listening-oem-major-scale-v1.sng",
+      "generation": "tool-generated",
+      "native_acceptance": "opened and played",
+      "native_save": false,
+      "native_input_filename": "OEM1.SNG",
+      "native_run": "oem-scales",
+      "quarter_bpm": 100,
+      "voices": [
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 1,
+            "word": "7300"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 24,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "ea1c"
+          },
+          {
+            "kind": "note",
+            "tick": 24,
+            "duration_ticks": 24,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "ea1e"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 24,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "ea20"
+          },
+          {
+            "kind": "note",
+            "tick": 72,
+            "duration_ticks": 24,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "ea21"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 24,
+            "midi_pitch": 67,
+            "accidental_flags": 0,
+            "word": "ea23"
+          },
+          {
+            "kind": "note",
+            "tick": 120,
+            "duration_ticks": 24,
+            "midi_pitch": 69,
+            "accidental_flags": 0,
+            "word": "ea25"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 24,
+            "midi_pitch": 71,
+            "accidental_flags": 0,
+            "word": "ea27"
+          },
+          {
+            "kind": "note",
+            "tick": 168,
+            "duration_ticks": 24,
+            "midi_pitch": 72,
+            "accidental_flags": 0,
+            "word": "ea28"
+          },
+          {
+            "kind": "note",
+            "tick": 192,
+            "duration_ticks": 24,
+            "midi_pitch": 71,
+            "accidental_flags": 0,
+            "word": "ea27"
+          },
+          {
+            "kind": "note",
+            "tick": 216,
+            "duration_ticks": 24,
+            "midi_pitch": 69,
+            "accidental_flags": 0,
+            "word": "ea25"
+          },
+          {
+            "kind": "note",
+            "tick": 240,
+            "duration_ticks": 24,
+            "midi_pitch": 67,
+            "accidental_flags": 0,
+            "word": "ea23"
+          },
+          {
+            "kind": "note",
+            "tick": 264,
+            "duration_ticks": 24,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "ea21"
+          },
+          {
+            "kind": "note",
+            "tick": 288,
+            "duration_ticks": 24,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "ea20"
+          },
+          {
+            "kind": "note",
+            "tick": 312,
+            "duration_ticks": 24,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "ea1e"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 336,
+            "dynamic_index": 3,
+            "word": "7203"
+          },
+          {
+            "kind": "note",
+            "tick": 336,
+            "duration_ticks": 48,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "e61c"
+          },
+          {
+            "kind": "rest",
+            "tick": 384,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ],
+        [],
+        []
+      ],
+      "conductor": [
+        {
+          "kind": "tempo",
+          "tick": 0,
+          "quarter_bpm": 100,
+          "tempo_bpm": 100,
+          "tempo_note_denominator": 4,
+          "word": "1164"
+        },
+        {
+          "kind": "advance",
+          "tick": 0,
+          "duration_ticks": 408,
+          "word": "2198"
+        }
+      ]
+    },
+    {
+      "id": "oem-minor-scale",
+      "bank": "oem",
+      "score_sha256": "f8ae66eb6158bde1bcd865dedad8cdd2f1513f0aad1f9201f208585696f68777",
+      "score_path": "tests/fixtures/application-generated/music/listening-oem-minor-scale-v1.sng",
+      "generation": "tool-generated",
+      "native_acceptance": "opened and played",
+      "native_save": false,
+      "native_input_filename": "OEM2.SNG",
+      "native_run": "oem-scales",
+      "quarter_bpm": 100,
+      "voices": [
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 2,
+            "word": "7301"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 24,
+            "midi_pitch": 57,
+            "accidental_flags": 0,
+            "word": "ea19"
+          },
+          {
+            "kind": "note",
+            "tick": 24,
+            "duration_ticks": 24,
+            "midi_pitch": 59,
+            "accidental_flags": 0,
+            "word": "ea1b"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 24,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "ea1c"
+          },
+          {
+            "kind": "note",
+            "tick": 72,
+            "duration_ticks": 24,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "ea1e"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 24,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "ea20"
+          },
+          {
+            "kind": "note",
+            "tick": 120,
+            "duration_ticks": 24,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "ea21"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 24,
+            "midi_pitch": 68,
+            "accidental_flags": 64,
+            "word": "ea64"
+          },
+          {
+            "kind": "note",
+            "tick": 168,
+            "duration_ticks": 24,
+            "midi_pitch": 69,
+            "accidental_flags": 0,
+            "word": "ea25"
+          },
+          {
+            "kind": "note",
+            "tick": 192,
+            "duration_ticks": 24,
+            "midi_pitch": 68,
+            "accidental_flags": 64,
+            "word": "ea64"
+          },
+          {
+            "kind": "note",
+            "tick": 216,
+            "duration_ticks": 24,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "ea21"
+          },
+          {
+            "kind": "note",
+            "tick": 240,
+            "duration_ticks": 24,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "ea20"
+          },
+          {
+            "kind": "note",
+            "tick": 264,
+            "duration_ticks": 24,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "ea1e"
+          },
+          {
+            "kind": "note",
+            "tick": 288,
+            "duration_ticks": 24,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "ea1c"
+          },
+          {
+            "kind": "note",
+            "tick": 312,
+            "duration_ticks": 24,
+            "midi_pitch": 59,
+            "accidental_flags": 0,
+            "word": "ea1b"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 336,
+            "dynamic_index": 3,
+            "word": "7203"
+          },
+          {
+            "kind": "note",
+            "tick": 336,
+            "duration_ticks": 48,
+            "midi_pitch": 57,
+            "accidental_flags": 0,
+            "word": "e619"
+          },
+          {
+            "kind": "rest",
+            "tick": 384,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ],
+        [],
+        []
+      ],
+      "conductor": [
+        {
+          "kind": "tempo",
+          "tick": 0,
+          "quarter_bpm": 100,
+          "tempo_bpm": 100,
+          "tempo_note_denominator": 4,
+          "word": "1164"
+        },
+        {
+          "kind": "advance",
+          "tick": 0,
+          "duration_ticks": 408,
+          "word": "2198"
+        }
+      ]
+    },
+    {
+      "id": "oem-chromatic-scale",
+      "bank": "oem",
+      "score_sha256": "a1b835411bf494f612236d02101280018b6e927ff64003c6bfcbfe9beed6de33",
+      "score_path": "tests/fixtures/application-generated/music/listening-oem-chromatic-scale-v1.sng",
+      "generation": "tool-generated",
+      "native_acceptance": "opened and played",
+      "native_save": false,
+      "native_input_filename": "OEM3.SNG",
+      "native_run": "oem-scales",
+      "quarter_bpm": 100,
+      "voices": [
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 3,
+            "word": "7302"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 12,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "ee1c"
+          },
+          {
+            "kind": "note",
+            "tick": 12,
+            "duration_ticks": 12,
+            "midi_pitch": 61,
+            "accidental_flags": 64,
+            "word": "ee5d"
+          },
+          {
+            "kind": "note",
+            "tick": 24,
+            "duration_ticks": 12,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "ee1e"
+          },
+          {
+            "kind": "note",
+            "tick": 36,
+            "duration_ticks": 12,
+            "midi_pitch": 63,
+            "accidental_flags": 64,
+            "word": "ee5f"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 12,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "ee20"
+          },
+          {
+            "kind": "note",
+            "tick": 60,
+            "duration_ticks": 12,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "ee21"
+          },
+          {
+            "kind": "note",
+            "tick": 72,
+            "duration_ticks": 12,
+            "midi_pitch": 66,
+            "accidental_flags": 64,
+            "word": "ee62"
+          },
+          {
+            "kind": "note",
+            "tick": 84,
+            "duration_ticks": 12,
+            "midi_pitch": 67,
+            "accidental_flags": 0,
+            "word": "ee23"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 12,
+            "midi_pitch": 68,
+            "accidental_flags": 64,
+            "word": "ee64"
+          },
+          {
+            "kind": "note",
+            "tick": 108,
+            "duration_ticks": 12,
+            "midi_pitch": 69,
+            "accidental_flags": 0,
+            "word": "ee25"
+          },
+          {
+            "kind": "note",
+            "tick": 120,
+            "duration_ticks": 12,
+            "midi_pitch": 70,
+            "accidental_flags": 64,
+            "word": "ee66"
+          },
+          {
+            "kind": "note",
+            "tick": 132,
+            "duration_ticks": 12,
+            "midi_pitch": 71,
+            "accidental_flags": 0,
+            "word": "ee27"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 12,
+            "midi_pitch": 72,
+            "accidental_flags": 0,
+            "word": "ee28"
+          },
+          {
+            "kind": "note",
+            "tick": 156,
+            "duration_ticks": 12,
+            "midi_pitch": 71,
+            "accidental_flags": 0,
+            "word": "ee27"
+          },
+          {
+            "kind": "note",
+            "tick": 168,
+            "duration_ticks": 12,
+            "midi_pitch": 70,
+            "accidental_flags": 64,
+            "word": "ee66"
+          },
+          {
+            "kind": "note",
+            "tick": 180,
+            "duration_ticks": 12,
+            "midi_pitch": 69,
+            "accidental_flags": 0,
+            "word": "ee25"
+          },
+          {
+            "kind": "note",
+            "tick": 192,
+            "duration_ticks": 12,
+            "midi_pitch": 68,
+            "accidental_flags": 64,
+            "word": "ee64"
+          },
+          {
+            "kind": "note",
+            "tick": 204,
+            "duration_ticks": 12,
+            "midi_pitch": 67,
+            "accidental_flags": 0,
+            "word": "ee23"
+          },
+          {
+            "kind": "note",
+            "tick": 216,
+            "duration_ticks": 12,
+            "midi_pitch": 66,
+            "accidental_flags": 64,
+            "word": "ee62"
+          },
+          {
+            "kind": "note",
+            "tick": 228,
+            "duration_ticks": 12,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "ee21"
+          },
+          {
+            "kind": "note",
+            "tick": 240,
+            "duration_ticks": 12,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "ee20"
+          },
+          {
+            "kind": "note",
+            "tick": 252,
+            "duration_ticks": 12,
+            "midi_pitch": 63,
+            "accidental_flags": 64,
+            "word": "ee5f"
+          },
+          {
+            "kind": "note",
+            "tick": 264,
+            "duration_ticks": 12,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "ee1e"
+          },
+          {
+            "kind": "note",
+            "tick": 276,
+            "duration_ticks": 12,
+            "midi_pitch": 61,
+            "accidental_flags": 64,
+            "word": "ee5d"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 288,
+            "dynamic_index": 3,
+            "word": "7203"
+          },
+          {
+            "kind": "note",
+            "tick": 288,
+            "duration_ticks": 48,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "e61c"
+          },
+          {
+            "kind": "rest",
+            "tick": 336,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ],
+        [],
+        []
+      ],
+      "conductor": [
+        {
+          "kind": "tempo",
+          "tick": 0,
+          "quarter_bpm": 100,
+          "tempo_bpm": 100,
+          "tempo_note_denominator": 4,
+          "word": "1164"
+        },
+        {
+          "kind": "advance",
+          "tick": 0,
+          "duration_ticks": 360,
+          "word": "2168"
+        }
+      ]
+    },
+    {
+      "id": "oem-major-cadence",
+      "bank": "oem",
+      "score_sha256": "38862015532c18ba3b1f01006e25a9c0bff456f7ddf0f16fc7d12fa406e765db",
+      "score_path": "tests/fixtures/application-generated/music/listening-oem-major-cadence-v1.sng",
+      "generation": "tool-generated",
+      "native_acceptance": "opened and played",
+      "native_save": false,
+      "native_input_filename": "OEM4.SNG",
+      "native_run": "oem-cadences-retry",
+      "quarter_bpm": 100,
+      "voices": [
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 2,
+            "word": "7301"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 48,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "e61c"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 48,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "e61c"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 48,
+            "midi_pitch": 59,
+            "accidental_flags": 0,
+            "word": "e61b"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 72,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "e41c"
+          },
+          {
+            "kind": "rest",
+            "tick": 216,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ],
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 2,
+            "word": "7301"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 48,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "e620"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 48,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "e621"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 48,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "e61e"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 72,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "e420"
+          },
+          {
+            "kind": "rest",
+            "tick": 216,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ],
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 2,
+            "word": "7301"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 48,
+            "midi_pitch": 67,
+            "accidental_flags": 0,
+            "word": "e623"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 48,
+            "midi_pitch": 69,
+            "accidental_flags": 0,
+            "word": "e625"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 48,
+            "midi_pitch": 67,
+            "accidental_flags": 0,
+            "word": "e623"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 72,
+            "midi_pitch": 67,
+            "accidental_flags": 0,
+            "word": "e423"
+          },
+          {
+            "kind": "rest",
+            "tick": 216,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ]
+      ],
+      "conductor": [
+        {
+          "kind": "tempo",
+          "tick": 0,
+          "quarter_bpm": 100,
+          "tempo_bpm": 100,
+          "tempo_note_denominator": 4,
+          "word": "1164"
+        },
+        {
+          "kind": "advance",
+          "tick": 0,
+          "duration_ticks": 240,
+          "word": "20f0"
+        }
+      ]
+    },
+    {
+      "id": "oem-minor-cadence",
+      "bank": "oem",
+      "score_sha256": "8c5b40b2e002db03107f14d252c8c8e03452e9f9222663c64657ed89ca91925d",
+      "score_path": "tests/fixtures/application-generated/music/listening-oem-minor-cadence-v1.sng",
+      "generation": "tool-generated",
+      "native_acceptance": "opened and played",
+      "native_save": false,
+      "native_input_filename": "OEM5.SNG",
+      "native_run": "oem-cadences-retry",
+      "quarter_bpm": 100,
+      "voices": [
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 4,
+            "word": "7303"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 48,
+            "midi_pitch": 57,
+            "accidental_flags": 0,
+            "word": "e619"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 48,
+            "dynamic_index": 1,
+            "word": "7201"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 48,
+            "midi_pitch": 57,
+            "accidental_flags": 0,
+            "word": "e619"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 96,
+            "dynamic_index": 3,
+            "word": "7203"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 48,
+            "midi_pitch": 59,
+            "accidental_flags": 0,
+            "word": "e61b"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 144,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 48,
+            "midi_pitch": 57,
+            "connection": "start",
+            "accidental_flags": 0,
+            "word": "c619"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 192,
+            "dynamic_index": 1,
+            "word": "7201"
+          },
+          {
+            "kind": "note",
+            "tick": 192,
+            "duration_ticks": 24,
+            "midi_pitch": 57,
+            "connection": "end",
+            "accidental_flags": 0,
+            "word": "aa19"
+          },
+          {
+            "kind": "rest",
+            "tick": 216,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ],
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 1,
+            "word": "7300"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 48,
+            "midi_pitch": 60,
+            "accidental_flags": 0,
+            "word": "e61c"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 48,
+            "dynamic_index": 1,
+            "word": "7201"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 48,
+            "midi_pitch": 62,
+            "accidental_flags": 0,
+            "word": "e61e"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 96,
+            "dynamic_index": 3,
+            "word": "7203"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 48,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "e620"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 144,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 48,
+            "midi_pitch": 60,
+            "connection": "start",
+            "accidental_flags": 0,
+            "word": "c61c"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 192,
+            "dynamic_index": 1,
+            "word": "7201"
+          },
+          {
+            "kind": "note",
+            "tick": 192,
+            "duration_ticks": 24,
+            "midi_pitch": 60,
+            "connection": "end",
+            "accidental_flags": 0,
+            "word": "aa1c"
+          },
+          {
+            "kind": "rest",
+            "tick": 216,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ],
+        [
+          {
+            "kind": "instrument",
+            "tick": 0,
+            "instrument_slot": 3,
+            "word": "7302"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 0,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 0,
+            "duration_ticks": 48,
+            "midi_pitch": 64,
+            "accidental_flags": 0,
+            "word": "e620"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 48,
+            "dynamic_index": 1,
+            "word": "7201"
+          },
+          {
+            "kind": "note",
+            "tick": 48,
+            "duration_ticks": 48,
+            "midi_pitch": 65,
+            "accidental_flags": 0,
+            "word": "e621"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 96,
+            "dynamic_index": 3,
+            "word": "7203"
+          },
+          {
+            "kind": "note",
+            "tick": 96,
+            "duration_ticks": 48,
+            "midi_pitch": 68,
+            "accidental_flags": 64,
+            "word": "e664"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 144,
+            "dynamic_index": 2,
+            "word": "7202"
+          },
+          {
+            "kind": "note",
+            "tick": 144,
+            "duration_ticks": 48,
+            "midi_pitch": 69,
+            "connection": "start",
+            "accidental_flags": 0,
+            "word": "c625"
+          },
+          {
+            "kind": "dynamic",
+            "tick": 192,
+            "dynamic_index": 1,
+            "word": "7201"
+          },
+          {
+            "kind": "note",
+            "tick": 192,
+            "duration_ticks": 24,
+            "midi_pitch": 69,
+            "connection": "end",
+            "accidental_flags": 0,
+            "word": "aa25"
+          },
+          {
+            "kind": "rest",
+            "tick": 216,
+            "duration_ticks": 24,
+            "word": "ea00"
+          }
+        ]
+      ],
+      "conductor": [
+        {
+          "kind": "tempo",
+          "tick": 0,
+          "quarter_bpm": 100,
+          "tempo_bpm": 100,
+          "tempo_note_denominator": 4,
+          "word": "1164"
+        },
+        {
+          "kind": "advance",
+          "tick": 0,
+          "duration_ticks": 240,
+          "word": "20f0"
+        }
+      ]
+    }
+  ],
+  "generator": {
+    "path": "tools/experimental/music_listening_inputs.py",
+    "sha256": "27bf5971d79922871b0f5257ef7cbca458239a2f01696b061b1523fa70ab40a7",
+    "templates": {
+      "music/m11.sng": "07993101fcae1fbcaaacab71396a956b80085874ab1015e20395c2ac7a7d1309",
+      "sound/labinst-native.snd": "981d5455517ff715737573e44531b8363541857ca534c69cca4b62b5d974321f"
+    }
+  }
+}

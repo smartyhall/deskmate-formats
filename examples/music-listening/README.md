@@ -1,10 +1,23 @@
 # DeskMate Music listening comparison suite
 
-**Status:** Operator-approved design, 2026-11-18. No audio fixtures have
-been captured for this suite yet. Implement in the next sampled Music
-research campaign. Baseline renderer revision:
-`f9fe4f174790b6fa19801d5c107994db8e57f0dc`
-(merged PR #118, `rsx-dac-approximation-v1`).
+The PR #118 baseline includes ten matched pairs. Native tracks are the
+Tandy 1000 RSX pre-mix PSSJ DAC contribution. The two tracks in each pair
+keep their original levels, which can be quiet at ordinary listening volume.
+
+| Original passage | Synthetic instruments | Tandy instruments |
+| --- | --- | --- |
+| major scale | [native](v1/baseline-pr118/major-scale-native.wav?raw=true) · [renderer](v1/baseline-pr118/major-scale-renderer.wav?raw=true) | [native](v1/baseline-pr118/oem-major-scale-native.wav?raw=true) · [renderer](v1/baseline-pr118/oem-major-scale-renderer.wav?raw=true) |
+| minor scale | [native](v1/baseline-pr118/minor-scale-native.wav?raw=true) · [renderer](v1/baseline-pr118/minor-scale-renderer.wav?raw=true) | [native](v1/baseline-pr118/oem-minor-scale-native.wav?raw=true) · [renderer](v1/baseline-pr118/oem-minor-scale-renderer.wav?raw=true) |
+| chromatic scale | [native](v1/baseline-pr118/chromatic-scale-native.wav?raw=true) · [renderer](v1/baseline-pr118/chromatic-scale-renderer.wav?raw=true) | [native](v1/baseline-pr118/oem-chromatic-scale-native.wav?raw=true) · [renderer](v1/baseline-pr118/oem-chromatic-scale-renderer.wav?raw=true) |
+| major cadence | [native](v1/baseline-pr118/major-cadence-native.wav?raw=true) · [renderer](v1/baseline-pr118/major-cadence-renderer.wav?raw=true) | [native](v1/baseline-pr118/oem-major-cadence-native.wav?raw=true) · [renderer](v1/baseline-pr118/oem-major-cadence-renderer.wav?raw=true) |
+| minor cadence | [native](v1/baseline-pr118/minor-cadence-native.wav?raw=true) · [renderer](v1/baseline-pr118/minor-cadence-renderer.wav?raw=true) | [native](v1/baseline-pr118/oem-minor-cadence-native.wav?raw=true) · [renderer](v1/baseline-pr118/oem-minor-cadence-renderer.wav?raw=true) |
+
+Download or clone the directory and open the [offline player](compare.html)
+to restart pairs together and switch between tracks. See the [frozen scores
+and banks](suite-v1.json), [capture and measurement manifest](v1/baseline-pr118/manifest.json)
+and [reproduction report](../../docs/research/music-listening-v1-20261118.md).
+The renderer is `rsx-dac-approximation-v1` at
+`f9fe4f174790b6fa19801d5c107994db8e57f0dc`.
 
 ## Purpose
 

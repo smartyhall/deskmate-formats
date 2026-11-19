@@ -48,3 +48,5 @@ task-queue.sqlite3
 task-queue.sqlite3-journal
 task-queue.sqlite3-wal
 task-queue.sqlite3-shm
+!/examples/music-listening/v1/*/*-native.wav
+!/examples/music-listening/v1/*/*-renderer.wav
