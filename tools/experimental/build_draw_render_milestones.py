@@ -15,7 +15,8 @@ from draw_comparison_baseline import NATIVE_BACKGROUND, audit, capture, measure,
 ROOT = Path(__file__).resolve().parents[2]
 
 
-MILESTONES = ('arc-vector-01', 'vga-raster-01', 'vga-strokes-02', 'vga-ff1-03')
+FONT_MILESTONES = ('vga-ff1-03', 'vga-pen-04')
+MILESTONES = ('arc-vector-01', 'vga-raster-01', 'vga-strokes-02', *FONT_MILESTONES)
 
 
 def pinned_code(*, use_fonts=False):
@@ -33,9 +34,9 @@ def pinned_code(*, use_fonts=False):
 
 
 def build(args):
-    using_fonts = 'vga-ff1-03' in args.milestone
-    if using_fonts and args.milestone != ['vga-ff1-03']:
-        raise ValueError('build the FF1 milestone separately')
+    using_fonts = any(name in FONT_MILESTONES for name in args.milestone)
+    if using_fonts and len(args.milestone) != 1:
+        raise ValueError('build font milestones separately')
     faces = font_resources.load_outline_faces(args.ff1)
     if bool(faces) != using_fonts:
         raise ValueError('the FF1 milestone requires local pinned FF1 resources')
@@ -97,6 +98,13 @@ def build(args):
             'limits': 'Unhinted base-face fill using decoded contours and nominal advance words. '
                       'Font raster quantization, sizing, colors, pair adjustments and embedded stroke text '
                       'remain incompletely understood. Diagonal and shape outlines remain approximate.',
+        },
+        'vga-pen-04': {
+            'mode': 'experimental RSX raster with the square line pen and slanted brush',
+            'rasterizer': {'name': 'Independent RSX raster', 'version': '4', 'png_encoder': f'Pillow {pillow_version}'},
+            'limits': 'Keeps local unhinted FF1 outlines. Adds directed oblique line stepping, '
+                      'pen stamps and dash timing. Slanted brush spans and other shape outlines '
+                      'remain approximate.',
         },
     }
     for name in args.milestone:

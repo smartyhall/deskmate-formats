@@ -41,6 +41,11 @@ AXIS_STROKES = (
     ('1', '0', '1000', '11100111', '10011100', '10', '1100', '00010000'),
     ('1', '0', '00000011', '1111100011111111', '0000111111100011', '1001', '11100011', '0000011000000000'),
 )
+# Weight-one dash bits applied to the centers of the 2 x 2 pixel pen.
+SQUARE_PEN_DASHES = ('1', '0', '00000010', '1111100001111111', '0000111111000010',
+                     '0001', '11000011', '0000010000000000')
+# Normal-zoom nib endpoints observed in the forward horizontal controls.
+BRUSH_NIBS = {17: ((1, -1), (-2, 2)), 18: ((4, -3), (-3, 4)), 19: ((5, -5), (-6, 6))}
 
 
 @dataclass(frozen=True)
@@ -119,6 +124,35 @@ def _axis_stroke(image, start, end, rgb, style, weight, vertical):
             image[index:index + 3] = rgb
 
 
+def _square_pen_stroke(image, start, end, rgb, style, weight):
+    """Sweep the measured VGA pen over a line in the original dash phase."""
+    dx, dy = end[0] - start[0], end[1] - start[1]
+    vertical = abs(dy) > abs(dx)
+    major, minor = (1, 0) if vertical else (0, 1)
+    length, run = abs(end[major] - start[major]), abs(end[minor] - start[minor])
+    direction = 1 if end[major] >= start[major] else -1
+    transverse = 1 if end[minor] >= start[minor] else -1
+    lead = max(0, weight - 1)
+    extent = HEIGHT if vertical else WIDTH
+    low, high = -weight, extent - 1 + lead
+    distances = sorted(((low - start[major]) * direction, (high - start[major]) * direction))
+    pattern = '1' if weight >= 2 else (SQUARE_PEN_DASHES if weight else AXIS_STROKES[0])[style]
+    for step in range(max(0, distances[0]), min(length, distances[1]) + 1):
+        if pattern[step % len(pattern)] == '0':
+            continue
+        # At a half-pixel tie, choose the step nearest the lower major coordinate.
+        offset = (2 * step * run + length - (direction > 0)) // (2 * length) if length else 0
+        position = start[major] + direction * step
+        cross = start[minor] + transverse * offset
+        x, y = (cross, position) if vertical else (position, cross)
+        first, last = max(0, x - lead), min(WIDTH, x + weight + 1)
+        if first < last:
+            pixels = rgb * (last - first)
+            for row in range(max(0, y - lead), min(HEIGHT, y + weight + 1)):
+                at = 3 * (row * WIDTH + first)
+                image[at:at + len(pixels)] = pixels
+
+
 def _fill_span(image, x0, x1, y, tile, fg, bg):
     start, end = max(0, x0), min(WIDTH - 1, x1)
     if not 0 <= y < HEIGHT or start > end:
@@ -145,6 +179,28 @@ def _fill_polygon(image, edges, min_y, max_y, tile, fg, bg):
         intersections.sort()
         for a, b in zip(intersections[::2], intersections[1::2]):
             _fill_span(image, round(a), round(b), y, tile, fg, bg)
+
+
+def _brush_segment(image, start, end, rgb, nib):
+    """Approximate the native slanted brush polygon and inclusive edges."""
+    (u, v), (s, t) = nib
+    a, b = start
+    c, d = end
+    vertices = [(a + u, b + v), (c + u, d + v), (c + s, d + t), (a + s, b + t)]
+    edges = _segments(vertices, True)
+    first = min(b, d) + min(v, t)
+    last = max(b, d) + max(v, t)
+    for y in range(max(0, first), min(HEIGHT - 1, last) + 1):
+        crossings = []
+        for (x0, y0), (x1, y1) in edges:
+            if min(y0, y1) <= y <= max(y0, y1):
+                if y0 == y1:
+                    crossings.extend((x0, x1))
+                else:
+                    crossings.append(x0 + (x1 - x0) * (y - y0) / (y1 - y0))
+        _fill_span(image, round(min(crossings)), round(max(crossings)) + (b != d), y, TILES[1], rgb, rgb)
+    for start_edge, end_edge in edges:
+        _line(image, start_edge, end_edge, rgb)
 
 
 def _shape(element):
@@ -245,9 +301,9 @@ def _raster_outlines(image, glyphs, color, budget):
 def preview_rsx(form, palette, *, outline_faces=None):
     """Render the Normal-zoom RSX drawing crop with the measured fill profiles.
 
-    Uses measured axis-aligned line styles and screen-phase fill tiles, with
-    approximate ellipse/curve stepping and polygon scan conversion. Stroke
-    styles of other outlines use a one-pixel solid approximation. Supplied
+    Uses measured line pens, dash masks and screen-phase fill tiles, with
+    approximate brush, ellipse, curve and polygon rasterization. Other
+    outlines use a one-pixel solid approximation. Supplied
     FF1 base faces use an unhinted, pixel-center contour fill.
     """
     colors = {index: bytes((channel >> 2) * 255 // 63 for channel in rgb) for index, *rgb in palette}
@@ -277,6 +333,9 @@ def preview_rsx(form, palette, *, outline_faces=None):
         min_y, max_y = min(y for x, y in points), max(y for x, y in points)
         rows = max(0, min(HEIGHT, max_y + 1) - max(0, min_y))
         cost = len(points) * (640 + rows)
+        nib = BRUSH_NIBS.get(record.raw[23]) if record.kind == 'UP' and record.raw[24] == 254 else None
+        if nib:
+            cost += len(points) * (4 * HEIGHT + 12 * WIDTH)
         if cost > budget:
             omitted.append(SvgOmission(record.offset, record.kind.encode('latin-1').hex(), 'raster_work_limit'))
             continue
@@ -287,9 +346,14 @@ def preview_rsx(form, palette, *, outline_faces=None):
             _fill_polygon(image, edges, min_y, max_y, tile, fg, bg)
         outline = colors.get(color_index, bytes(3))
         x0, y0, x1, y1 = record.bounds
-        if (record.kind == 'L' and (x0 == x1 or y0 == y1)
-                and record.modifier < 8 and record.raw[19] < 4):
-            _axis_stroke(image, *points, outline, record.modifier, record.raw[19], vertical=x0 == x1)
+        if record.kind == 'L' and record.modifier < 8 and record.raw[19] < 4:
+            if x0 == x1 or y0 == y1:
+                _axis_stroke(image, *points, outline, record.modifier, record.raw[19], vertical=x0 == x1)
+            else:
+                _square_pen_stroke(image, *points, outline, record.modifier, record.raw[19])
+        elif nib:
+            for a, b in edges:
+                _brush_segment(image, a, b, outline, nib)
         else:
             for a, b in edges:
                 _line(image, a, b, outline)

@@ -1,10 +1,11 @@
 """Cross-check Draw, Text and Filer graphics against application-written bytes."""
+from hashlib import sha256
 from pathlib import Path
 from struct import pack, pack_into
 import unittest
 from xml.etree import ElementTree
 
-from deskmate_formats import database, draw, filer, filer_graphics, graphics, text
+from deskmate_formats import database, draw, filer, filer_graphics, graphics, graphics_raster, text
 
 
 FIXTURES = Path(__file__).resolve().parents[1] / 'fixtures/application-generated'
@@ -12,6 +13,28 @@ FIXTURES = Path(__file__).resolve().parents[1] / 'fixtures/application-generated
 
 def read_drawing(name):
     return draw.parse_file(FIXTURES / 'draw' / (name + '.fig'))
+
+
+class ObliquePenTest(unittest.TestCase):
+    def test_normal_zoom_native_line_neighborhoods(self):
+        # Drawing-area RGB crops from the isolated line trials. Each crop
+        # includes four background pixels beyond the stored endpoints.
+        cases = (
+            ((8, 51), (56, 72), 0, 0, '23a2d80800e47e6011d6250257e81583be20711a9f4d10adad3b4474deb97875'),
+            ((164, 141), (212, 162), 2, 1, 'aa3bb1cc8b153d1b6c6789bc4ee7b72e6b7c39bcf187b9830fd8b8b1124588ff'),
+            ((575, 373), (554, 321), 7, 3, 'da274081dc5a608410052ef3d510de68ce564ecc166136b09efadbf6df531815'),
+            ((450, 193), (398, 141), 5, 1, 'bfb1348e9ac4ab5c6ec7866f0653e966f8f5c02825ffd4f8c936992d77cc159e'),
+        )
+        width, height = graphics_raster.WIDTH, graphics_raster.HEIGHT
+        for start, end, style, weight, expected in cases:
+            with self.subTest(start=start, end=end, style=style, weight=weight):
+                image = bytearray(b'\0\0\x81' * (width * height))
+                graphics_raster._square_pen_stroke(image, start, end, b'\xc2\xc2\0', style, weight)
+                left, right = sorted((start[0], end[0]))
+                top, bottom = sorted((start[1], end[1]))
+                crop = b''.join(image[3 * (y * width + left - 4):3 * (y * width + right + 5)]
+                                for y in range(top - 4, bottom + 5))
+                self.assertEqual(sha256(crop).hexdigest(), expected)
 
 
 class ArcRecoveryTest(unittest.TestCase):
