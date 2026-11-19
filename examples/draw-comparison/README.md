@@ -8,8 +8,9 @@ with the corresponding independent projection. The
 and pins the related Text and Filer controls.
 
 The [quadratic SVG milestone](v1/arc-vector-01/README.md),
-[experimental RSX raster](v1/vga-raster-01/README.md) and
-[axis-stroke raster](v1/vga-strokes-02/README.md) preserve the
+[experimental RSX raster](v1/vga-raster-01/README.md),
+[axis-stroke raster](v1/vga-strokes-02/README.md) and
+[local FF1 raster](v1/vga-ff1-03/README.md) preserve the
 same native inputs and viewport with separately measured output modes.
 
 Open [compare.html](compare.html) from a local checkout. Use the featured
