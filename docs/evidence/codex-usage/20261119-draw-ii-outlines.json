@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "draw-ii-20261119",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 24,
+    "token_records": 3362,
+    "sessions": 24
+  },
+  "checkpoint": "outlines",
+  "collected_at": "2026-11-19T14:34:02.564185+00:00",
+  "commit": "cba662300bbcc38acbf49f6a53f28306746c19a6",
+  "observation": {
+    "session": "56b3e416347725244614d5de",
+    "measured_at": "2026-11-19T14:33:18.744000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 5033278,
+      "cached_input": 4903552,
+      "output": 21928,
+      "reasoning_output": 3945,
+      "total": 5055206
+    },
+    "reported_last": {
+      "input": 132389,
+      "cached_input": 131200,
+      "output": 606,
+      "reasoning_output": 192,
+      "total": 132995
+    },
+    "windows": {
+      "300": {
+        "used_percent": 21.0,
+        "reset_epoch": 1795112444,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 34.0,
+        "reset_epoch": 1795652781,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  },
+  "account": {
+    "source": "account/rateLimits/read",
+    "measured_at": "2026-11-19T14:34:02.241968+00:00",
+    "windows": {
+      "300": {
+        "used_percent": 21,
+        "reset_epoch": 1795112444,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 34,
+        "reset_epoch": 1795652781,
+        "status": "observed"
+      }
+    }
+  }
+}

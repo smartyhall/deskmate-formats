@@ -1,9 +1,9 @@
 """Bounded experimental native-resolution graphics profile for the RSX VGA oracle."""
 from dataclasses import dataclass
-from math import cos, pi, sin
+from math import ceil, cos, pi, sin
 from struct import unpack_from
 
-from .graphics import SvgOmission, arc_quadratic
+from .graphics import MAX_PREVIEW_OUTLINE_BYTES, SvgOmission, arc_quadratic, outline_layout
 
 
 WIDTH, HEIGHT = 640, 418
@@ -175,18 +175,99 @@ def _shape(element):
     return None
 
 
-def preview_rsx(form, palette):
+def _glyph_edges(glyph):
+    def project(point):
+        return point[0] * 2 / 25, point[1] * 19 / 220
+
+    edges = []
+    for start, segments in glyph:
+        previous = project(start)
+        for segment in segments:
+            points = tuple(map(project, segment))
+            if len(points) == 1:
+                edges.append((previous, points[0]))
+            else:
+                a, b, c = points
+                length = sum(max(abs(q[0]-p[0]), abs(q[1]-p[1]))
+                             for p, q in zip((previous, a, b), points))
+                count = min(32, max(2, ceil(length / 2)))
+                point = previous
+                for i in range(1, count + 1):
+                    t = i / count
+                    u = 1 - t
+                    next_point = tuple(u**3*p + 3*u*u*t*v + 3*u*t*t*w + t**3*q
+                                       for p, v, w, q in zip(previous, a, b, c))
+                    edges.append((point, next_point))
+                    point = next_point
+            previous = points[-1]
+    return edges
+
+
+def _fill_glyph(image, edges, rows, color):
+    for y in rows:
+        sample_y = y + .5
+        crossings = []
+        for (x0, y0), (x1, y1) in edges:
+            if min(y0, y1) <= sample_y < max(y0, y1):
+                x = x0 + (x1 - x0) * (sample_y - y0) / (y1 - y0)
+                crossings.append((x, 1 if y1 > y0 else -1))
+        winding = 0
+        start = 0
+        for x, delta in sorted(crossings):
+            if winding == 0:
+                start = max(0, ceil(x - .5))
+            winding += delta
+            if winding == 0:
+                end = min(WIDTH, ceil(x - .5))
+                if start < end:
+                    offset = 3 * (y * WIDTH + start)
+                    image[offset:offset + 3 * (end - start)] = color * (end - start)
+
+
+def _raster_outlines(image, glyphs, color, budget):
+    prepared = []
+    cost = 0
+    for glyph in glyphs:
+        if not glyph:
+            continue
+        edges = _glyph_edges(glyph)
+        ys = [y for edge in edges for _, y in edge]
+        rows = range(max(0, ceil(min(ys) - .5)), min(HEIGHT, ceil(max(ys) - .5)))
+        cost += len(edges) * (1 + len(rows)) + WIDTH * len(rows)
+        if cost > budget:
+            return None
+        prepared.append((edges, rows))
+    for edges, rows in prepared:
+        _fill_glyph(image, edges, rows, color)
+    return cost
+
+
+def preview_rsx(form, palette, *, outline_faces=None):
     """Render the Normal-zoom RSX drawing crop with the measured fill profiles.
 
     Uses measured axis-aligned line styles and screen-phase fill tiles, with
     approximate ellipse/curve stepping and polygon scan conversion. Stroke
-    styles of other outlines use a one-pixel solid approximation. Text is omitted.
+    styles of other outlines use a one-pixel solid approximation. Supplied
+    FF1 base faces use an unhinted, pixel-center contour fill.
     """
     colors = {index: bytes((channel >> 2) * 255 // 63 for channel in rgb) for index, *rgb in palette}
     background = colors.get(0, b'\0\0\x81')
     image = bytearray(background * (WIDTH * HEIGHT))
     rendered, omitted, budget = 0, [], MAX_WORK
+    outline_budget = MAX_PREVIEW_OUTLINE_BYTES
     for record in form.draw_order():
+        if record.kind == 'Uf' and outline_faces and budget > 0:
+            glyphs, cost, reason = outline_layout(record, outline_faces, outline_budget)
+            outline_budget -= cost
+            if reason is None:
+                cost = _raster_outlines(image, glyphs, colors.get(record.raw[20], bytes(3)), budget)
+                if cost is not None:
+                    budget -= cost
+                    rendered += 1
+                    continue
+                reason = 'raster_work_limit'
+            omitted.append(SvgOmission(record.offset, '5566', reason))
+            continue
         shape = _shape(record) if budget > 0 else None
         if shape is None:
             reason = 'raster_work_limit' if budget <= 0 else 'unsupported_rsx_raster_element'
