@@ -70,11 +70,11 @@
       "versions": [
         "2.01"
       ],
-      "media_status": "operator-supplied-chat-archive-vm-pending",
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
-      "format_status": "not-inventoried",
-      "formats": [],
-      "notes": "2.01 archive supplied by operator; verify media and runtime 3.02 in VM. Separate FNT libraries and FONTMOVE lead."
+      "format_status": "resource-and-document-inventory",
+      "formats": ["PUB", "FNT", "DIC", "WID"],
+      "notes": "Exact three FAT12 disks verified by independent extractors. Five FONT resource maps with 159 references. FONTMOVE describes HP soft font conversion. See acquisitions.md."
     },
     {
       "id": "express-publisher",
