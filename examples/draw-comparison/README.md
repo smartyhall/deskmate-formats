@@ -7,6 +7,16 @@ with the corresponding independent projection. The
 [planning manifest](suite-plan-v1.json) records the original test design
 and pins the related Text and Filer controls.
 
+Open [compare.html](compare.html) from a local checkout. Use the featured
+cards or diagnostic selector, then switch between side-by-side, overlay,
+A/B and difference views. Zoom and pan stay linked. The 1:1 control shows
+one image pixel per CSS pixel, and larger scales use nearest-neighbor
+enlargement. Open the separate SVG link for scalable geometry. The gallery
+loads its local catalog and artifacts directly from disk. After publishing a
+milestone, regenerate `catalog.js` with
+`python tools/experimental/build_draw_gallery.py` in an environment with
+the project package importable.
+
 ## Purpose and featured specimens
 
 Maintain a permanent, public, longitudinal visual comparison gallery
@@ -49,7 +59,7 @@ The repository provides the following structure:
 - `v1/baseline-pr120/`: first genuine matched native/independent
   comparisons using the pinned renderer, before any fidelity changes.
 - `v1/<milestone-id>/`: immutable later comparisons with manifests.
-- `compare.html` (to be created): self-contained local gallery.
+- `compare.html`: offline comparison gallery.
 - [Draw Workbench](../draw-workbench/README.md): separate application
   source and interface design, not a substitute for the gallery.
 
