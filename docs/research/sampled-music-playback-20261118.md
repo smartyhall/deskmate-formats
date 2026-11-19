@@ -376,3 +376,12 @@ Capturing DAC register writes and the PSG path would help separate
 native interpolation, gain and gate calculations from the renderer's
 approximations. A targeted capture that starts at playback could
 cover the full alternate-ending comparator.
+
+## Recurring listening comparisons
+
+The operator requested a permanent, versioned
+[synthetic listening suite](../../examples/music-listening/README.md).
+Establish paired native and independent WAV references using the current
+renderer before changing its behavior, and regenerate that fixed suite at
+major renderer-fidelity milestones. This complements rather than replaces
+the private historical comparisons above.

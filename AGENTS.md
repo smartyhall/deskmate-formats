@@ -105,3 +105,20 @@ do not wait for an additional model turn to preserve existing work. Never
 redeem a usage reset, purchase credits, or launch extra model turns merely to
 measure quota without separate operator authorization. This policy does not
 authorize unattended dispatch or expand existing live-launch gates.
+
+## Sampled Music listening references — operator decision 2026-11-18
+
+Maintain the [fixed synthetic listening suite](examples/music-listening/README.md).
+At each major sampled-renderer fidelity milestone, regenerate the same
+musical controls in native DeskMate and with the independent renderer;
+publish the actual matched, eligible WAV files, provenance and quantitative
+comparisons in a review PR. Preserve earlier milestones and immutable native
+score/instrument identities. Label capture path and remaining approximations.
+Use only independently generated test music and synthetic instrument PCM
+with verified redistribution eligibility for the published suite; historical
+or commercial samples and historical-score recordings remain private unless
+separately cleared. Implement a manifest-verified, path-specific WAV exception
+to the publication audit with regression coverage; do not relax the general
+audio embargo or package research binaries in wheel/sdist. Record a blocked
+native re-capture honestly rather than substituting renderer output or
+mislabeling a prior reference as fresh.
