@@ -173,6 +173,8 @@ and is measured independently at this milestone.
 | OEM minor cadence | 0.220 | 0.918 | 0.931 → 0.934 |
 
 The comparisons use the baseline onset rule and 50 ms RMS windows.
+Using the fresh synthetic minor-cadence native crop for both renders,
+whole-waveform correlation rises from 0.161 to 0.898.
 The largest envelope regression is the synthetic major scale, where
 note durations are still approximate. These are correlations on
 aligned recordings at original levels. [Exact metrics and identities](../../examples/music-listening/v1/interleaved-v2/manifest.json)
