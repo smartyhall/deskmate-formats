@@ -144,10 +144,8 @@ class DrawLibraryAuditTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'wrong digest'):
             self.audit(audit_repository)
         target.unlink()
-        alternative = self.root / 'alternative'
-        alternative.write_bytes(data)
         try:
-            target.symlink_to(alternative)
+            target.symlink_to(self.root / self.files[-1])
         except OSError:
             self.skipTest('symlink creation requires OS privileges')
         with self.assertRaisesRegex(ValueError, 'symlink'):

@@ -40,10 +40,26 @@ open. The source bytes were preserved and the reader retains its validation.
 
 ## Native discrimination
 
-On a disposable disk, Save As the untouched input, reopen it, and compare
-the group slots against the original. Repeat after Break Object, if
-available, to see which elements become top-level entries. Capture native
-screens and compare with a private copy containing the five candidate
-references. Use an overlapping synthetic group as a control for display
-order. The stored Form Setup Ghidra findings concern graphics escapes,
-so they do not establish the Draw group traversal path.
+On 2026-11-19, the pinned RSX Draw oracle opened the untouched input and
+saved `PIPESAV.FIG` on a disposable clone. Two independent stopped-disk
+extractions agreed. The 7,521-byte resave has SHA-256
+`ded5e5a37078bc1aa883721b138f55e3c2837eb295daf83714f928775951eae9`.
+Only file bytes 32 and 48 changed, from 199 to 2 and 199 to 1,
+respectively. All five invalid slots and all physical element records
+survived. The resaved file still fails strict decoding.
+
+The original and native resave had byte-identical 640 × 418 Normal-zoom
+drawings after fresh reopens. The private five-reference replacement
+`48aca637e66ad2490644b20b7293be13121a7ddfc56ec0ced240690dbb9991ba`
+opened natively and changed 108 pixels. The difference occupied crop
+bounds `[324,310,334,365]` with exclusive right/bottom edges. This rules
+out visual equivalence of the proposed substitution for that viewport.
+It leaves the application's traversal of the damaged slots open.
+
+Edit → Select all and a direct selection attempt at a visible outline
+left Break Object disabled in the Actions menu. The test does not isolate
+why selection failed. The stopped clone, native captures and commands
+are retained privately in the Draw campaign's `failures` run. That run
+ended at 139,830 emulated ms and 8,697 frames. Strict validation remains
+in place for PIPES. Static traversal evidence and a successful Break
+Object control remain open.
