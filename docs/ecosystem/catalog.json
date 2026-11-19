@@ -71,7 +71,7 @@
         "2.01"
       ],
       "media_status": "private-archive-hash-verified",
-      "installation_status": "not-tested-in-demonstrator",
+      "installation_status": "launched-on-disposable-rsx",
       "format_status": "resource-and-document-inventory",
       "formats": ["PUB", "FNT", "DIC", "WID"],
       "notes": "Exact three FAT12 disks verified by independent extractors. Five FONT resource maps with 159 references. FONTMOVE describes HP soft font conversion. See acquisitions.md."

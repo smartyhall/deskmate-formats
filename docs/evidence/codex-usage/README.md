@@ -165,3 +165,6 @@ records [startup](20261119-typography-startup.json),
 [native rendering](20261119-typography-native-interchange.json),
 [additive installation](20261119-typography-installation.json), and
 [fixture publication](20261119-typography-fixtures.json).
+
+The [typography completion receipt](20261119-typography-completion.json)
+records the final research checkpoint.

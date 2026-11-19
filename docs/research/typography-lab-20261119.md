@@ -273,3 +273,59 @@ adjacent collinear line subdivisions, all drawn sequences match.
 The interchange still drops variant identities, hint data, pair
 tables and unmapped glyph semantics. The lossless native writer retains
 the exact original bytes for all three files.
+
+## Native printing
+
+Draw File → Print → File, with the IBM GRAPHIC driver selected, printed
+the same browser-authored BRTYPE.FIG twice. LABIBM.PRN used the independent
+Dixon-slot glyph bank and OEMIBM.PRN used the pinned original Dixon.
+Two FAT16 extractors agreed on the exact bytes. Both streams contain
+printer setup, positioning and 13 ESC L graphics bands, with a final
+form feed. The paired profiles verify that the driver rasterizes the
+installed outlines to device dots in this path.
+
+| Stream | Bytes | Ink dots | Inclusive dot bounds | SHA-256 |
+| --- | ---: | ---: | --- | --- |
+| LABIBM.PRN | 3079 | 6804 | (76,108)–(444,284) | 157bf7d8d1068c0c6af395f9cf1e589d6154ee6fbe7921a7a1f52f9755c8214e |
+| OEMIBM.PRN | 2849 | 4568 | (80,108)–(434,286) | f2603727c84faecde25c1d8b320642d11430660dc1fd7207e8a0d164f448066e |
+
+The [bounded IBM stream decoder](../../tools/experimental/typography_ibm_print.py)
+reconstructs 120 × 72 dpi dot positions from the captured commands and
+keeps the raw print streams private. A static comparison found an
+extended-byte table at DMPDLASR.RES file offset 0x3f7a that differs
+from the display table. LaserJet output, printer-resident substitution,
+print-specific kerning and outline-only styles remain open.
+
+The follow-up clone ended at 407,725 emulated ms and 27,989 frames.
+Its stopped disk SHA-256 is
+9d31712f6b2ec56377d51de7f90c071743e19dc473c6fed476da69074428b05c.
+The two clones account for 1,820,927 emulated ms and 119,108 frames.
+The automation executable hash is
+e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d
+and its source checkout revision is 855258da966f1594f568350be59e8e1eca082ed1.
+The original program and ROM identities follow the pinned RSX oracle.
+
+## Continuation
+
+- Start with `hintthk-repaint`, `hintoff-repaint` and the pinned original
+  Dixon trial. Trace the marker-2 reader in DMFONT.RES and derive how the
+  two stem lists and their third words modify the outline at 24 points.
+- Use ADVANCE.FIG and the known single-variant Labgrid geometry to
+  separate glyph-local pixel snapping, character-origin quantization
+  and winding. Retain the 23-case frozen Draw suite as a regression set.
+- Use the exact Uf edit fixtures and native cache words to qualify
+  justification, rotation, hollow modes and general placement. The current
+  browser exposes base-outline authoring and editing. An exact native
+  pixel display and additional original dialogs remain open.
+- Repeat the named-face trials through Text pictures and Filer cards and
+  reports. The shared graphics renderer routes the measured base-outline
+  bytes in those formats. Native cross-application creation was outside
+  the completed trial set.
+- Extend the single-variant controls to alternate em units, character
+  ranges, filename collisions and rescan timing. Recover the purpose of
+  unresolved bank and metric fields before offering more profiles.
+- Compare IBM raster jobs with LaserJet output and pair-table mutations.
+  The earlier Marin AV result remains scoped to the observed VGA mode.
+- Use the [ecosystem inventory](../ecosystem/acquisitions.md) for First
+  Publisher, its FNT resource maps and the Atech font lead. Express
+  Publisher and the native DeskMate Q&A Write program remain unacquired.

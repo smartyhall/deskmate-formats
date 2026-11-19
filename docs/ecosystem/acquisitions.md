@@ -142,3 +142,16 @@ Its example modifies IBM ProPrinter font-selection descriptions,
 control sequences and spacing fields in Q&A Write's IBMPRO.FNT.
 It documents printer definitions and provides no FF1 outline grammar.
 [DMQNAFNT.TXT](http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dmqnafnt.txt)
+
+### Isolated First Publisher launch
+
+The follow-up RSX clone copied all three 720 KiB images into a separate
+DOS directory, C:\FP201. The three final copy summaries accounted for
+21, 32 and 16 files. After setting DMCONFIG to that directory,
+launching FP from DOS reached the First Pub editor with a new PUB
+document and the native font menu. The 3.02 runtime stayed in the
+private test directory. No production or established 3.05 files were
+replaced by the First Publisher runtime. Shared runtime and clipboard
+calls remain open. See the
+[typography laboratory report](../research/typography-lab-20261119.md)
+for the stopped disk and emulated time.
