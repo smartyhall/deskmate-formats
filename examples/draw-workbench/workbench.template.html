@@ -56,6 +56,12 @@
     <details>
       <summary>Preview limits</summary>
       <p>Scalable geometry uses approximations for stroke weights and fill patterns. Missing glyphs and unsupported records are listed below.</p>
+      <div class="edits">
+        <button type="button" id="font-open">Load local FF1 fonts</button>
+        <button type="button" id="font-clear" disabled>Clear fonts</button>
+        <input type="file" id="font-file" accept=".ff1" multiple hidden>
+      </div>
+      <ul id="local-fonts" aria-label="Loaded local font resources"></ul>
       <label><input type="checkbox" id="substitute"> Show generic labels for unresolved fonts</label>
       <ul id="omissions"></ul>
     </details>

@@ -14,6 +14,7 @@ PRIMITIVE_SIZES = {'L': 20, 'R': 24, 'E': 24}
 PREVIEW_KINDS = frozenset((*PRIMITIVE_SIZES, 'UP'))
 MAX_PREVIEW_STROKE_POINTS = 100_000
 MAX_PREVIEW_OUTLINE_BYTES = 200_000
+OUTLINE_INK_INDEX = 1
 
 
 class GraphicsFormatError(ValueError):
@@ -350,7 +351,9 @@ def outline_layout(element, faces, byte_budget):
     face = faces.get(run.name.casefold())
     if face is None:
         return (), 0, 'external_font_reference'
-    if (run.descriptor[4:28] != b'\0\0\0\0\x0c\0\xff' + bytes(17)
+    if (run.attributes[1:] != b'\xff\0\0\0\0'
+            or (run.attributes[0] != 1 and face.name.casefold() != 'cobb')
+            or run.descriptor[4:28] != b'\0\0\0\0\x0c\0\xff' + bytes(17)
             or run.descriptor[34:36] != b'\x01\0'
             or not run.point_size_word or not run.width_percent_word):
         return (), 0, 'unsupported_external_font_transform_or_style'
@@ -386,8 +389,8 @@ def outline_layout(element, faces, byte_budget):
     return tuple(glyphs), cost, None
 
 
-def _svg_outline_text(element, glyphs, colors):
-    color = colors.get(element.raw[20], '#333333')
+def _svg_outline_text(glyphs, colors):
+    color = colors.get(OUTLINE_INK_INDEX, '#333333')
 
     def coordinates(points):
         return ' '.join(_number(value) for point in points for value in point)
@@ -410,7 +413,8 @@ def preview_svg(form, palette=(), *, substitute_external_fonts=False, outline_fa
     """Return the geometry preview, dimensions and omitted element locations.
 
     Palette entries are (index, red, green, blue). Stroke styles and patterned
-    fills use solid approximations. Unrotated T text with a complete embedded
+    fills use solid approximations. Supplied FF1 faces project the supported
+    unrotated outline text. Unrotated T text with a complete embedded
     glyph bank uses fixed cell advances. Unsupported records are listed in the
     SVG description and remain available on the original Form.
     """
@@ -443,11 +447,11 @@ def preview_svg(form, palette=(), *, substitute_external_fonts=False, outline_fa
             outlines, cost, reason = outline_layout(element, outline_faces or {}, outline_budget)
             outline_budget -= cost
             if reason is None:
-                shape = _svg_outline_text(element, outlines, colors)
+                shape = _svg_outline_text(outlines, colors)
             elif substitute_external_fonts and element.text_bytes:
                 x0, y0, x1, y1 = element.bounds
                 label = ''.join(c if ord(c) >= 0x20 else '\ufffd' for c in element.text_bytes.decode('cp437'))
-                color = colors.get(element.raw[20], '#333333')
+                color = colors.get(OUTLINE_INK_INDEX, '#333333')
                 shape = (f'<text x="{_number(min(x0, x1))}" y="{_number(max(y0, y1))}" '
                          f'font-size="{_number(max(1, abs(y1-y0)))}" font-family="monospace" '
                          f'fill="{color}">{escape(label)}</text>')

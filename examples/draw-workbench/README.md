@@ -33,6 +33,13 @@ only; it is not evidence of actual AROS compatibility or native UI details.
   new FIG. SVG and PNG export the current scalable viewport. The optional
   generic text mode is explicitly marked as a substitution in the view
   and exported SVG.
+- Open **Preview limits** and select **Load local FF1 fonts** to render
+  supported external base-face labels. Files stay in the current browser
+  session. The Workbench resolves the internal family name, reports
+  missing faces or unsupported styles, and includes the projected curves
+  in scalable exports. Use **Clear fonts** to release the session copies.
+  The renderer uses nominal advances and unhinted outlines. See the
+  [FF1 measurements](../../docs/research/draw-ii-20261119.md).
 
 The browser uses `O` or the Open FIG button in place of application-level
 function keys. In the native program F2 opens File, F3 Edit, F4 Actions,

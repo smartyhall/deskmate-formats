@@ -3,10 +3,12 @@ from base64 import b64encode
 import json
 from pathlib import Path
 from shutil import which
+from struct import pack, pack_into
 import subprocess
 import unittest
+from xml.etree import ElementTree
 
-from deskmate_formats import draw, draw_writer, graphics
+from deskmate_formats import draw, draw_writer, font_resources, graphics
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -198,3 +200,48 @@ class BrowserCodecTest(unittest.TestCase):
                                      1, 10).hex(),
             draw_writer.resize_rectangle(read('d04'), 1, int(1855.5*65536), int(1020.25*65536)).hex(),
         ])
+
+    def test_local_outline_python_browser_conformance(self):
+        commands = pack('<BhhBhhB6h', 0, 0, 0, 1, 0, -620, 2, 550, -420, 480, 0, 0, 0)
+        glyph = pack('<H4h2H', 1, 0, -620, 550, 0, len(commands), 0) + commands
+        first, count, inner = 32, 64, 116
+        offsets = 48 + count * 2
+        glyphs = offsets + count * 4
+        data = bytearray(inner + glyphs)
+        data[:5] = b'\xbd\x7a\0\x01\x01'
+        pack_into('<H', data, 10, 1)
+        pack_into('<HH', data, 14, first, count)
+        pack_into('<H', data, 32, 46)
+        data[66:70] = b'Cobb'
+        pack_into('<HII', data, inner - 2, 48, 0x0101f31e, glyphs + count * len(glyph))
+        pack_into('<HHH', data, inner + 12, 1000, first, count)
+        pack_into('<H', data, inner + 46, offsets)
+        for i in range(count):
+            pack_into('<H', data, inner + 48 + 2 * i, 601 + i)
+            pack_into('<I', data, inner + offsets + 4 * i, glyphs + i * len(glyph))
+        data.extend(glyph * count)
+        data = bytes(data)
+        fig = read('d23')
+        result = self.browser(
+            '''
+            const fs = require('node:fs'), codec = require(process.argv[1]);
+            const values = JSON.parse(fs.readFileSync(0, 'utf8'));
+            const font = codec.readOutlineFace(Buffer.from(values.font, 'base64'));
+            const model = codec.read(Buffer.from(values.fig, 'base64'));
+            const preview = codec.preview(model, {faces: new Map([['cobb', font]])});
+            process.stdout.write(JSON.stringify(preview));
+            ''',
+            {'font': data, 'fig': fig},
+        )
+        drawing = draw.parse_bytes(fig)
+        face = font_resources.OutlineFace('Cobb', '', font_resources.parse_glyph_index(data), data)
+        preview = graphics.preview_svg(drawing.form, drawing.palette, outline_faces={'cobb': face})
+        self.assertEqual(result['resolved'], 1)
+        self.assertEqual(result['omissions'], [])
+        self.assertEqual(preview.omissions, ())
+        js = ElementTree.fromstring('<svg>' + result['shapes'] + '</svg>')
+        py = ElementTree.fromstring(preview.svg)
+        for a, b in zip(js.findall('path'), py.findall('{*}path'), strict=True):
+            self.assertEqual(a.get('fill'), b.get('fill'))
+            tokens = lambda d: [token if token in 'MLCZ' else float(token) for token in d.split()]
+            self.assertEqual(tokens(a.get('d')), tokens(b.get('d')))

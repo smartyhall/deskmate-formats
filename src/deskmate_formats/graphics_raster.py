@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from math import ceil, cos, pi, sin
 from struct import unpack_from
 
-from .graphics import MAX_PREVIEW_OUTLINE_BYTES, SvgOmission, arc_quadratic, outline_layout
+from .graphics import MAX_PREVIEW_OUTLINE_BYTES, OUTLINE_INK_INDEX, SvgOmission, arc_quadratic, outline_layout
 
 
 WIDTH, HEIGHT = 640, 418
@@ -260,7 +260,7 @@ def preview_rsx(form, palette, *, outline_faces=None):
             glyphs, cost, reason = outline_layout(record, outline_faces, outline_budget)
             outline_budget -= cost
             if reason is None:
-                cost = _raster_outlines(image, glyphs, colors.get(record.raw[20], bytes(3)), budget)
+                cost = _raster_outlines(image, glyphs, colors.get(OUTLINE_INK_INDEX, bytes(3)), budget)
                 if cost is not None:
                     budget -= cost
                     rendered += 1

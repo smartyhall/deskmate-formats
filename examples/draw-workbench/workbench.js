@@ -3,7 +3,7 @@
 const get = id => document.getElementById(id);
 const viewport = get('viewport'), stage = get('stage');
 const state = { model: null, original: null, past: [], future: [], name: '', selected: null,
-  scale: 1, x: 0, y: 0, box: [0, 0, 8000, 4840] };
+  scale: 1, x: 0, y: 0, box: [0, 0, 8000, 4840], faces: new Map() };
 const svgNS = 'http://www.w3.org/2000/svg';
 const names = { L: 'Line', R: 'Rectangle', E: 'Ellipse', UA: 'Arc', UP: 'Polyline / polygon',
   OO: 'Object group', T: 'Stroke text', Uf: 'External-font text' };
@@ -32,12 +32,17 @@ function svgImage(preview, box) {
   return `<svg xmlns="${svgNS}" viewBox="${box.join(' ')}" width="640" height="418" preserveAspectRatio="none">${description}<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${preview.background}"/>${preview.shapes}</svg>`;
 }
 
+function documentPreview(inspect = false) {
+  return DrawFig.preview(state.model, { inspect, substitute: get('substitute').checked, faces: state.faces });
+}
+
 function frame() {
   if (!state.model) return;
-  const preview = DrawFig.preview(state.model, { inspect: true, substitute: get('substitute').checked });
+  const preview = documentPreview(true);
   const doc = new DOMParser().parseFromString(svgImage(preview, state.box), 'image/svg+xml');
   stage.replaceChildren(document.importNode(doc.documentElement, true));
   get('drawing-stats').textContent = `${state.model.elements.size} records · ${preview.omissions.length} omitted`
+    + (preview.resolved ? ` · ${preview.resolved} runs with local FF1` : '')
     + (preview.substituted ? ` · ${preview.substituted} generic font substitutions` : '');
   get('omissions').replaceChildren(...preview.omissions.map(item =>
     node('li', `${names[item.kind] ?? 'Record'} at list byte ${item.offset} · ${item.reason}`)));
@@ -187,6 +192,38 @@ get('file').addEventListener('change', event => {
   openFile(event.target.files[0]);
   event.target.value = '';
 });
+get('font-open').addEventListener('click', () => get('font-file').click());
+function showFonts() {
+  get('font-clear').disabled = state.faces.size === 0;
+  get('local-fonts').replaceChildren(...Array.from(state.faces.values(), face =>
+    node('li', `${face.name} · ${face.filename}`)));
+  frame();
+}
+get('font-file').addEventListener('change', async event => {
+  const files = Array.from(event.target.files);
+  event.target.value = '';
+  const omissions = [];
+  for (const file of files) {
+    try {
+      if (file.size > DrawFig.MAX_FF1_BYTES) throw new Error('File exceeds the FF1 size limit');
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const face = DrawFig.readOutlineFace(bytes);
+      const key = face.name.toLowerCase(), existing = state.faces.get(key);
+      if (existing && !existing.same(bytes)) throw new Error(`Conflicting local resource for ${face.name}`);
+      if (!existing && state.faces.size >= 32) throw new Error('Local font resource limit reached');
+      state.faces.set(key, { ...face, filename: file.name });
+    } catch (error) {
+      omissions.push(`${file.name}: ${error.message}`);
+    }
+  }
+  showFonts();
+  report(omissions.length ? omissions.join(' · ') : `${state.faces.size} local FF1 resources available`);
+});
+get('font-clear').addEventListener('click', () => {
+  state.faces.clear();
+  showFonts();
+  report('Cleared local FF1 resources.');
+});
 get('download').addEventListener('click', () => {
   if (state.original) download(state.name, state.original.copy(), 'application/octet-stream');
 });
@@ -195,12 +232,12 @@ get('save').addEventListener('click', () => {
 });
 get('svg-export').addEventListener('click', () => {
   if (state.model) download(`${stem()}.svg`,
-    svgImage(DrawFig.preview(state.model, { substitute: get('substitute').checked }), state.box), 'image/svg+xml');
+    svgImage(documentPreview(), state.box), 'image/svg+xml');
 });
 get('png-export').addEventListener('click', () => {
   if (!state.model) return;
   const name = stem();
-  const data = svgImage(DrawFig.preview(state.model, { substitute: get('substitute').checked }), state.box);
+  const data = svgImage(documentPreview(), state.box);
   const url = URL.createObjectURL(new Blob([data], { type: 'image/svg+xml' }));
   const preview = new Image();
   preview.onload = () => {

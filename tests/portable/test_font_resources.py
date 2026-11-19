@@ -77,14 +77,14 @@ class DirectoryTest(unittest.TestCase):
         glyph = ff1.GlyphEntry(65, 750, 0, len(resource_bytes))
         face = ff1.OutlineFace('Lab', '', ff1.GlyphIndex(1000, (glyph,)), resource_bytes)
         raw = bytearray(102)
-        raw[:2], raw[20], raw[26:29], raw[100] = b'Uf', 4, b'Lab', 65
+        raw[:2], raw[20:22], raw[26:29], raw[100] = b'Uf', b'\x01\xff', b'Lab', 65
         pack_into('<H', raw, 18, 51)
         pack_into('<HH', raw, 56, 72, 100)
         pack_into('<HH', raw, 64, 12, 255)
         pack_into('<HHHH', raw, 90, 1, 100, 800, 1)
         element = graphics.Element(6, 'Uf', 102, (100, 0, 200, 0, 700, 0, 800, 0), bytes(raw))
         form = graphics.Form(b'', b'', b'', (graphics.Entry(6, 1),), (element,), b'')
-        palette = [(0, 0, 0, 128), (4, 192, 192, 0)]
+        palette = [(0, 0, 0, 128), (1, 192, 192, 0)]
         svg = graphics.preview_svg(form, palette, outline_faces={'lab': face})
         self.assertIn('M 100 200 L 700 200', svg.svg)
         self.assertIn('fill="#c0c000"', svg.svg)
