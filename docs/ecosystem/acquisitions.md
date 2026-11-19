@@ -155,3 +155,25 @@ replaced by the First Publisher runtime. Shared runtime and clipboard
 calls remain open. See the
 [typography laboratory report](../research/typography-lab-20261119.md)
 for the stopped disk and emulated time.
+
+## Express Publisher — operator-supplied acquisition lead
+
+After the typography laboratory campaign, the operator identified this
+specific archive directory:
+
+http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Express-Publisher-for-DeskMate/
+
+HTTP and HTTPS retrieval from ChatGPT failed. Do not infer the directory
+contents, exact version, or successful acquisition from the URL alone.
+The next Codex native campaign should retrieve its listing and relevant
+media from the VM (try the original HTTP URL, HTTPS or the archival FTP
+service if available), preserve original bytes privately, inventory and
+hash every acquired file, and verify edition and media integrity. Install
+in a disposable isolated clone, without replacing the verified 3.05
+baseline. Inspect FF1 resources and internal family/variant names against
+Cobb, Dixon and Marin, especially the OEM Rockwell reference, plus shared
+DMFONT resources, example documents and print drivers. Test actual font
+selection, native saves and printing where practical. Update the catalog
+with measured results; if acquisition remains blocked, record the failure
+rather than substituting an unrelated DOS/Windows edition. No commercial
+media or extracted proprietary font resources belong in Git.

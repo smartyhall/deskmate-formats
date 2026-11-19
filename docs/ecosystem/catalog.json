@@ -52,6 +52,11 @@
       "title": "TVDog DeskMate archive",
       "url": "http://www.oldskool.org/guides/tvdog/deskmate.html",
       "verification": "known archive lead; current page retrieval timed out"
+    },
+    "express-publisher-archive": {
+      "title": "Express Publisher for DeskMate — Oldskool archive directory",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Express-Publisher-for-DeskMate/",
+      "verification": "Operator supplied direct directory URL on 2026-11-19; HTTP and HTTPS retrieval failed in ChatGPT. Contents, version and media integrity not yet verified."
     }
   },
   "entries": [
@@ -73,7 +78,12 @@
       "media_status": "private-archive-hash-verified",
       "installation_status": "launched-on-disposable-rsx",
       "format_status": "resource-and-document-inventory",
-      "formats": ["PUB", "FNT", "DIC", "WID"],
+      "formats": [
+        "PUB",
+        "FNT",
+        "DIC",
+        "WID"
+      ],
       "notes": "Exact three FAT12 disks verified by independent extractors. Five FONT resource maps with 159 references. FONTMOVE describes HP soft font conversion. See acquisitions.md."
     },
     {
@@ -86,17 +96,18 @@
       "source_ids": [
         "rs1992",
         "rs1993",
-        "legacy"
+        "legacy",
+        "express-publisher-archive"
       ],
       "catalog_number": "25-1438",
       "versions": [
         "1.00 (secondary catalog lead)"
       ],
-      "media_status": "not-yet-verified",
+      "media_status": "operator-supplied-archive-directory-lead-unverified",
       "installation_status": "not-tested-in-demonstrator",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "DM_PROGS.TXT reports DeskMate 3.05 Atech fonts. Installation media remain unverified."
+      "notes": "DM_PROGS.TXT reports DeskMate 3.05 Atech fonts. Operator supplied a direct Oldskool archive directory after the typography campaign; prioritize acquisition and compare any FF1s with pinned originals, investigate Rockwell and native rendering/printing. Media contents and release remain unverified."
     },
     {
       "id": "qa-write",
