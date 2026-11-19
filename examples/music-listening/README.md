@@ -25,7 +25,7 @@ OEM sample. Generate and document the unsigned PCM and sustain regions
 deterministically, then verify native Sound saves, pitches, ranges, slots
 and playback. Use distinct free instrument numbers (e.g., 9, 10, 11) in
 an explicit bank with no duplicates and a shared known rate/root pitch
-where appropriate. No stock/OEM or commercial sample bytes in public audio.
+where appropriate. Retain these measurements as the synthetic bank.
 
 Create the scores within native DeskMate Music where feasible, save and
 extract the exact SNG files, document the written events, and use those
@@ -53,6 +53,40 @@ editor behavior, then freeze the actual recorded specification. Do not
 silently change it to make a later renderer look better. Any new cases or
 altered inputs get a new suite version, retaining v1 for continuity.
 
+### Original Tandy instrument bank — operator direction, 2026-11-18
+
+The synthetic controls are not a substitute for listening to historically
+recognizable instruments. Include a second, fixed bank with the genuine
+Tandy-supplied Piano, Clarinet, Bells and Cello (where the instrument
+identity, source and compatible pitch range are verified). Use the same
+musical material, tempo, pitches and articulation as the synthetic bank
+where practical, varying instrument assignments explicitly. At minimum,
+include an ascending/descending scale and a three-voice chord progression;
+prefer counterparts for all five musical cases if the ranges permit.
+Freeze exact score bytes, slot assignments, source instrument hashes,
+OEM release/machine profile and musical specification as distinct
+`oem-<case>` entries in the v1 manifest. Use source archive/member
+identification sufficient for an authorized local user to locate the
+instruments; do not commit the actual OEM instrument files.
+
+Publish genuine native and independently rendered WAV performances of the
+new original musical passages. The operator's stated rationale is that
+Tandy supplied the instruments for users to create their own compositions;
+audible performances of such compositions are distinct from redistribution
+of a sample library. This is an operator-approved intended-use basis,
+not a verified express license from Tandy. Inspect available license
+notices for terms applicable to musical output, document findings or
+absence, and flag concrete conflicting terms for operator review. Do not
+treat lack of a located express output license alone as a reason to
+substitute synthetic timbres or abandon the comparison. The recordings
+must be new musical performances, not raw samples, isolated sample
+auditions designed to reconstruct a bank, or repackaged OEM demos.
+Do not claim project licensing covers underlying third-party sample rights.
+Keep original SNDs, extracted waveforms and isolated sample-level controls
+private. Compare and regenerate the OEM musical cases at the same fidelity
+milestones as the synthetic bank. Retain both banks, rather than replacing
+one with the other.
+
 ## Paired audio and milestones
 
 Suggested layout (actual binary bytes, not just hashes):
@@ -60,8 +94,9 @@ Suggested layout (actual binary bytes, not just hashes):
 - `examples/music-listening/README.md`: direct links to each WAV and
   milestone, listening instructions and reference status.
 - `examples/music-listening/suite-v1.json`: musical specification and
-  native input paths/hashes (SNG and SND remain in the existing
-  application-generated fixture area with its manifest).
+  native input paths/hashes (eligible original SNG and synthetic SND remain
+  in the existing application-generated fixture area with its manifest;
+  OEM SNDs are private, identified by provenance and hashes).
 - `examples/music-listening/v1/baseline-pr118/<case>-native.wav`
   and `<case>-renderer.wav`, with a milestone manifest in that directory.
 - `examples/music-listening/v1/<milestone-id>/`: later paired files,
@@ -109,14 +144,19 @@ an envelope correlation.
 ## Publication and validation
 
 The operator explicitly requests publication of these synthetic WAV pairs.
-The scope is eligible project-authored test notes and generated sample
-PCM only. Historical scores, OEM instrument recordings, source executables,
-raw capture streams, screenshots and other private material are not
-authorized for publication. Verify actual content and provenance before
-committing. Use the existing licensing categories for contributed synthetic
-test content (GPL-3.0-or-later OR CC-BY-4.0, to the extent rights exist);
-add accurate adjacent REUSE sidecars and license documentation. Do not
-apply that grant to vendor samples or upstream code.
+The scope is original project-authored musical passages, using either
+independently generated instruments or actual Tandy-supplied musical
+instruments under the operator's intended-use direction above. Historical
+scores, OEM sample files, isolated sample dumps, OEM demonstration songs,
+source executables, raw capture streams, screenshots and other private
+material are not authorized for publication. Verify actual content and
+provenance before committing. Apply the existing licensing categories
+for contributed synthetic test content (GPL-3.0-or-later OR CC-BY-4.0,
+to the extent rights exist) only to rights the project can grant in the
+original composition/performance contributions; add accurate adjacent
+REUSE sidecars and notices distinguishing any underlying OEM material.
+See [licensing policy](../../LICENSING.md). Do not apply that grant to
+vendor samples or upstream code.
 
 The current repository intentionally ignores/rejects WAV everywhere.
 Implement the narrow exception for manifest-listed suite WAVs beneath
@@ -124,7 +164,8 @@ Implement the narrow exception for manifest-listed suite WAVs beneath
 directories). Keep `.gitignore` exceptions specific to this tree.
 Extend the publication audit with a separate strict manifest: canonical
 relative paths, allowed names, no symlinks, unique entries, source score
-and synthetic bank hashes, provenance, size limits, verified hashes and
+and instrument bank hashes, provenance class (synthetic or OEM original
+musical performance), operator-approved rights basis, size limits, verified hashes and
 valid bounded PCM WAV structure; reject unexpected audio and extra
 non-audio RIFF payloads. Add tests for accepted eligible fixtures and
 rejected unlisted, malformed, tampered and out-of-scope WAVs. Keep the
@@ -132,7 +173,7 @@ default ban on all other WAV, raw captures and commercial inputs. Ensure
 all audio and native binary fixtures remain excluded from wheel/sdist;
 metadata-only sdist audit must continue to work. Do not use a blanket
 force-add or weaken other audit rules. Keep each case/pair small (target
-a few MB for the entire five-case milestone, justify larger results).
+a few MB per bank per milestone, justify larger results).
 Use ordinary Git for these small files, not an external service or
 hash-only placeholder. Actual listening files and manifests belong in
 the reviewed PR. Test installed package behavior without proprietary inputs.

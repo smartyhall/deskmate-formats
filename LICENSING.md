@@ -69,6 +69,24 @@ requirement; scholarly citation remains good practice, not ownership of facts.
 
 ## Third-party material and dependencies
 
+### Original musical performances using supplied Tandy instruments
+
+Operator decision, 2026-11-18: the fixed listening suite may include WAV
+recordings of newly authored musical passages performed in DeskMate and
+by the independent renderer using the original Tandy-supplied musical
+instruments. The documented rationale is the intended use of the supplied
+instruments in users' own compositions. This is not a grant of rights in
+the instrument recordings themselves, nor a representation that an
+express historical output license has been located. Record provenance and
+available terms; refer concrete contrary terms to operator review. Label
+the project license as applying solely to the original contributions and
+rights actually held, and retain applicable third-party notices. Do not
+publish the original SND bank, extracted PCM, isolated sample dumps, OEM
+demo compositions, or unrelated historical music pursuant to this
+decision. See [the listening suite](examples/music-listening/README.md)
+for the narrow manifest and publication controls.
+
+
 No project license grants rights to Tandy DeskMate executables, installation
 media, original user databases, manuals, assets, trademarks, external images or
 other third-party works. Application-generated synthetic test documents can be
