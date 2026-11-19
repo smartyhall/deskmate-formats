@@ -65,8 +65,7 @@ def inspect_element(stats, element):
         stats['uninterpreted_kinds'][kind] += 1
 
 
-def inspect(data, stats):
-    drawing = draw.parse_bytes(data)
+def inspect(drawing, stats):
     form = drawing.form
     by_offset = {element.offset: element for element in form.elements}
     stack = [(entry.offset, 0) for entry in form.entries]
@@ -104,7 +103,7 @@ def inspect(data, stats):
     return form, drawing.palette
 
 
-def inventory(archive):
+def inventory(archive, *, recover_arc_length=False):
     inputs = {}
     for path in sorted(archive.rglob('*')):
         if not path.is_file() or path.is_symlink() or path.suffix.lower() != '.fig':
@@ -121,13 +120,25 @@ def inventory(archive):
                 'archive_occurrences': dict(sorted(Counter(archives).items()))}
         stats['signatures'][data[:4].hex()] += 1
         try:
-            form, palette = inspect(data, stats)
+            drawing = draw.parse_bytes(data)
         except graphics.GraphicsFormatError as exc:
             error = str(exc)
             stats['structural_failures'][error] += 1
             item.update(strict_read=False, error=error)
+            if recover_arc_length:
+                try:
+                    drawing = draw.parse_bytes(data, recover_arc_length=True)
+                except graphics.GraphicsFormatError:
+                    drawing = None
+            else:
+                drawing = None
         else:
-            item.update(strict_read=True, element_count=len(form.elements))
+            item['strict_read'] = True
+        if drawing is not None:
+            form, palette = inspect(drawing, stats)
+            item['element_count'] = len(form.elements)
+            if drawing.recovered_arcs:
+                item['recovered_arc_offsets'] = drawing.recovered_arcs
             try:
                 preview = graphics.preview_svg(form, palette)
             except graphics.GraphicsFormatError as exc:
@@ -139,7 +150,7 @@ def inventory(archive):
                 for missed in preview.omissions:
                     stats['projection_omissions'][f'{missed.kind_hex}:{missed.reason}'] += 1
         records.append(item)
-    return {
+    result = {
         'schema_version': 1,
         'distinct_files': len(inputs),
         'occurrences': sum(len(item[1]) for item in inputs.values()),
@@ -147,13 +158,24 @@ def inventory(archive):
         'counts': {key: dict(sorted(counter.items())) for key, counter in sorted(stats.items())},
         'sources': records,
     }
+    if recover_arc_length:
+        result['recovered_files'] = sum(bool(item.get('recovered_arc_offsets')) for item in records)
+    return result
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('archive', type=Path)
     parser.add_argument('output', type=Path)
+    parser.add_argument('--recover-arc-length', action='store_true')
+    parser.add_argument('--summary-only', action='store_true')
     args = parser.parse_args()
+    result = inventory(args.archive, recover_arc_length=args.recover_arc_length)
+    if args.summary_only:
+        sources = result.pop('sources')
+        result['ordered_source_digests_sha256'] = sha256(
+            ''.join(item['sha256'] for item in sources).encode('ascii')).hexdigest()
+        result['failures_and_recoveries'] = [item for item in sources if not item['strict_read']]
     with args.output.open('x', encoding='utf-8', newline='\n') as file:
-        json.dump(inventory(args.archive), file, indent=2)
+        json.dump(result, file, indent=2)
         file.write('\n')

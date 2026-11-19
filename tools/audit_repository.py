@@ -10,7 +10,8 @@ import tarfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / 'src'))
+if (ROOT / 'src/deskmate_formats').is_dir():
+    sys.path.insert(0, str(ROOT / 'src'))
 from deskmate_formats.supervisor import draw_comparison_audit as draw_audit
 
 EXCLUDED = {'.git', 'build', 'dist', 'local-results', 'private-fixtures', '.ruff_cache'}

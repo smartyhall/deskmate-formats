@@ -14,6 +14,40 @@ def read_drawing(name):
     return draw.parse_file(FIXTURES / 'draw' / (name + '.fig'))
 
 
+class ArcRecoveryTest(unittest.TestCase):
+    def test_native_arc_size_disagreement_is_opt_in(self):
+        root = FIXTURES / 'draw'
+        good = (root / 'arc-extent-control.fig').read_bytes()
+        bad = (root / 'arc-extent-native-resaved.fig').read_bytes()
+        self.assertEqual(good[:72] + b'\x17' + good[73:], bad)
+        with self.assertRaisesRegex(graphics.GraphicsFormatError, 'extended element exceeds'):
+            draw.parse_bytes(bad)
+        recovered = draw.parse_bytes(bad, recover_arc_length=True)
+        self.assertEqual(recovered.recovered_arcs, (10,))
+        self.assertEqual(recovered.form.list_data[28:30], b'\x17\0')
+        self.assertEqual([e.kind for e in recovered.form.elements], ['UA', 'L'])
+        self.assertEqual(graphics.render_svg(recovered.form, recovered.palette),
+                         graphics.render_svg(draw.parse_bytes(good).form, recovered.palette))
+        for offset, value in ((72, 24), (98, ord('R')), (55, ord('V'))):
+            candidate = bytearray(bad)
+            candidate[offset] = value
+            with self.subTest(offset=offset), self.assertRaises(graphics.GraphicsFormatError):
+                draw.parse_bytes(candidate, recover_arc_length=True)
+
+    def test_quadratic_geometry_and_reflection_boundary(self):
+        drawing = read_drawing('arc-grid-native')
+        arcs = tuple(drawing.form.draw_order())
+        self.assertEqual(graphics.arc_quadratic(arcs[0]), ((400, 800), (1100, 200), (1800, 800)))
+        self.assertEqual(graphics.arc_quadratic(arcs[1]), ((3450, 800), (2750, 200), (2050, 800)))
+        self.assertEqual(graphics.arc_quadratic(arcs[4]), ((400, 2450), (455, 650), (1850, 2450)))
+        self.assertEqual(graphics.arc_quadratic(arcs[8]), ((400, 4450), (1300, 1550), (2200, 4450)))
+        self.assertIsNone(graphics.arc_quadratic(arcs[9]))
+        preview = graphics.preview_svg(drawing.form, drawing.palette)
+        self.assertEqual(preview.rendered_elements, 10)
+        self.assertEqual([omission.reason for omission in preview.omissions], ['unsupported_arc_extent'])
+        self.assertIn('d="M 400 800 Q 1100 200 1800 800"', preview.svg)
+
+
 def read_text(name):
     return text.parse_file(FIXTURES / 'text' / (name + '.doc'))
 

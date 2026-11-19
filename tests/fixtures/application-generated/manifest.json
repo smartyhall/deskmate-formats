@@ -2876,6 +2876,66 @@
         "draw/d01.fig": "adf9cbc2906115e97d462a7fed32f1ce325f1f7a006bbabaaf716f621b29bd53",
         "draw/d23.fig": "3a65ae65872af24f5a50291503158bb2b983c3b403aad1838387c043ab893613"
       }
+    },
+    {
+      "path": "draw/arc-extent-control.fig",
+      "sha256": "78dd9e51881a9b8dfbe79e54a6abb73bbc049500e4c42d6f93681a85e9fb22b1",
+      "size": 187,
+      "application": "Tandy DeskMate Draw",
+      "version": "DeskMate 03.05.00",
+      "experiment": "2026-11-19 synthetic arc and pattern controls",
+      "origin": "Original independent synthetic construction followed by native open and Save As.",
+      "synthetic_data": true,
+      "native_saved": true,
+      "expected_content": "One quadratic arc followed physically by a distinct green line.",
+      "source_sha256": "78dd9e51881a9b8dfbe79e54a6abb73bbc049500e4c42d6f93681a85e9fb22b1",
+      "generation_method": "tools/experimental/draw_geometry_controls.py using D01 and the native 22-word ARCSAVE spacer control",
+      "limitations": "Pinned native environment; field semantics recorded separately."
+    },
+    {
+      "path": "draw/arc-extent-native-resaved.fig",
+      "sha256": "0509d12bfbd0c35bb8772ef38775eed87ecb73d08ed27a7d1f5632069af8051c",
+      "size": 187,
+      "application": "Tandy DeskMate Draw",
+      "version": "DeskMate 03.05.00",
+      "experiment": "2026-11-19 synthetic arc and pattern controls",
+      "origin": "Original independent synthetic construction followed by native open and Save As.",
+      "synthetic_data": true,
+      "native_saved": true,
+      "expected_content": "One fixed 44-byte UA declaring 23 words, followed by a distinct green line.",
+      "source_sha256": "0509d12bfbd0c35bb8772ef38775eed87ecb73d08ed27a7d1f5632069af8051c",
+      "generation_method": "tools/experimental/draw_geometry_controls.py using D01 and the native 22-word ARCSAVE spacer control",
+      "limitations": "The 23-word variant requires explicit reader recovery."
+    },
+    {
+      "path": "draw/arc-grid-native.fig",
+      "sha256": "d7d06f8eb281ada088abd15c2423aafd2bd583d6631f750a66df1ffaabce25af",
+      "size": 643,
+      "application": "Tandy DeskMate Draw",
+      "version": "DeskMate 03.05.00",
+      "experiment": "2026-11-19 synthetic arc and pattern controls",
+      "origin": "Original independent synthetic construction followed by native open and Save As.",
+      "synthetic_data": true,
+      "native_saved": true,
+      "expected_content": "Eleven arc controls with positive scaling, reversed endpoint order, asymmetric apogees, reflected bounds and collinearity.",
+      "source_sha256": "62a80c7f808147cb464f3737c5bf28b19c64e1bf45af4aae141c4cc31c5a4dc5",
+      "generation_method": "tools/experimental/draw_geometry_controls.py using D01 and the native 22-word ARCSAVE spacer control",
+      "limitations": "Pinned native environment; field semantics recorded separately."
+    },
+    {
+      "path": "draw/pattern-grid-native.fig",
+      "sha256": "23578c82ab40ad62f3c8af9ff342c82cf505f77d82771733b8253aed3e9141c6",
+      "size": 1011,
+      "application": "Tandy DeskMate Draw",
+      "version": "DeskMate 03.05.00",
+      "experiment": "2026-11-19 synthetic arc and pattern controls",
+      "origin": "Original independent synthetic construction followed by native open and Save As.",
+      "synthetic_data": true,
+      "native_saved": true,
+      "expected_content": "Rectangles with 16 styles at two origins; outline 2, background 3, foreground 10.",
+      "source_sha256": "98c757cbfa1ffefbd9b10ea1da18fe045a1f60d850ba1bdb5d4309cccdb3dd08",
+      "generation_method": "tools/experimental/draw_geometry_controls.py using D01 and the native 22-word ARCSAVE spacer control",
+      "limitations": "Pinned native environment; field semantics recorded separately."
     }
   ]
 }

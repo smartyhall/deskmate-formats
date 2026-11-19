@@ -189,6 +189,7 @@ SVG_ATTRIBUTES = {
     'rect': {'x', 'y', 'width', 'height', 'fill', 'stroke', 'stroke-width', 'vector-effect'},
     'ellipse': {'cx', 'cy', 'rx', 'ry', 'fill', 'stroke', 'stroke-width', 'vector-effect'},
     'line': {'x1', 'y1', 'x2', 'y2', 'stroke', 'stroke-width', 'vector-effect'},
+    'path': {'d', 'fill', 'stroke', 'stroke-width', 'vector-effect'},
     'polygon': {'points', 'fill', 'stroke', 'stroke-width', 'vector-effect'},
     'polyline': {'points', 'fill', 'stroke', 'stroke-width', 'vector-effect'},
 }
@@ -218,6 +219,8 @@ def check_svg(data):
             elif key == 'points':
                 pair = rf'{NUMBER},{NUMBER}'
                 valid = all(re.fullmatch(pair, point) for point in value.split())
+            elif key == 'd':
+                valid = re.fullmatch(rf'M {NUMBER} {NUMBER} Q(?: {NUMBER}){{4}}', value)
             elif key == 'aria-label':
                 valid = len(value) <= 256
             else:
