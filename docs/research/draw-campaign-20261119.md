@@ -142,6 +142,10 @@ The review PR contains the hosted check outcomes.
 
 ## Continuation
 
+The [recovery handoff](draw-recovery-handoff-20261119.md) maps the
+private evidence, identifies the FF1 candidate pair-adjustment tables
+and measures the remaining oblique and brush footprint differences.
+
 The largest remaining visual omission is exact native text. Start with
 the pinned Cobb, Dixon and Marin resources and the native outline
 controls to correlate glyph contour encodings and native extent

@@ -1,5 +1,9 @@
 # Codex research usage ledger
 
+The [recovered Draw campaign tail](20261119-draw-pr122-recovered-tail.json)
+contains observations after PR #122's published completion receipt
+through the interrupted turn's last recorded event.
+
 **Established:** 2026-11-18, by operator request.
 **Scope:** DeskMate research campaigns; sanitized, reproducible usage receipts
 only. This directory is the central tracked destination, not a dump of the
