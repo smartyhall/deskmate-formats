@@ -453,34 +453,39 @@ def main(argv=None):
     parser.add_argument('--rate', type=int, help='WAV sample rate (default 48000 Hz)')
     parser.add_argument('--sample-policy', choices=sampled_music.SAMPLE_POLICIES,
                         help='sample range resolution for WAV output (default rsx-ranges)')
+    parser.add_argument('--max-frames', type=int,
+                        help=f'WAV frame budget (default {sampled_music.MAX_FRAMES}, maximum {sampled_music.MAX_STREAM_FRAMES})')
     args = parser.parse_args(argv)
     if bool(args.wav) != bool(args.instruments):
         parser.error('--wav and --instruments must be supplied together')
-    if not args.wav and (args.rate is not None or args.sample_policy is not None):
-        parser.error('--rate and --sample-policy require --wav')
+    if not args.wav and any(value is not None for value in (args.rate, args.sample_policy, args.max_frames)):
+        parser.error('--rate, --sample-policy and --max-frames require --wav')
     created = []
     try:
         with args.source.open('rb') as stream:
             score = parse_bytes(stream.read(MAX_BYTES + 1))
         sequence = project(score)
         result = describe(score, sequence)
-        outputs = []
         if args.midi:
-            outputs.append((args.midi, to_midi(sequence)))
+            midi = to_midi(sequence)
+            with args.midi.open('xb') as stream:
+                created.append(args.midi)
+                stream.write(midi)
         if args.wav:
             instruments = sampled_music.load_instruments(args.instruments)
-            playback = sampled_music.render(score, instruments,
-                                            rate=sampled_music.OUTPUT_RATE if args.rate is None else args.rate,
-                                            sample_policy=args.sample_policy or 'rsx-ranges')
-            outputs.append((args.wav, playback.wav()))
-            result['sampled_playback'] = playback.describe()
-        for path, data in outputs:
-            with path.open('xb') as stream:
-                created.append(path)
-                stream.write(data)
-    except (OSError, ValueError) as exc:
+            with args.wav.open('xb') as stream:
+                created.append(args.wav)
+                result['sampled_playback'] = sampled_music.write_wav(
+                    score, instruments, stream,
+                    rate=sampled_music.OUTPUT_RATE if args.rate is None else args.rate,
+                    sample_policy=args.sample_policy or 'rsx-ranges',
+                    max_frames=sampled_music.MAX_FRAMES if args.max_frames is None else args.max_frames,
+                )
+    except (OSError, ValueError, KeyboardInterrupt) as exc:
         for path in reversed(created):
             path.unlink(missing_ok=True)
+        if isinstance(exc, KeyboardInterrupt):
+            raise
         print(str(exc), file=sys.stderr)
         return 2
     print(json.dumps(result, indent=2))

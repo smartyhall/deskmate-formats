@@ -9,6 +9,7 @@ from pathlib import Path
 from struct import pack, pack_into, unpack_from
 import tempfile
 import unittest
+from unittest.mock import patch
 import wave
 
 from deskmate_formats import music, sampled_music, sound
@@ -386,6 +387,24 @@ class SampledMusicTests(unittest.TestCase):
                    for rate in (5500, 11000, 22000)]
         self.assertEqual(outputs[0], outputs[1])
         self.assertEqual(outputs[1], outputs[2])
+
+    def test_streaming_wav_keeps_phase_across_blocks_and_checks_budget_before_writing(self):
+        voices = ((0x7308, 0xca1c, 0x7200, 0x8a23, 0xaa23), (),
+                  (0x7309, 0xea20, 0xea1c, 0xea20))
+        score = music.parse_bytes(score_bytes(voices, (0x2048,)))
+        payload = bytes((i * 19) % 256 for i in range(201))
+        source = [playback_instrument(slot=9, payload=payload, loop=(19, 67)),
+                  playback_instrument(slot=10, payload=payload, loop=(0, 0))]
+        expected = sampled_music.render(score, source, rate=8000)
+        stream = BytesIO()
+        with patch.object(sampled_music, 'BLOCK_FRAMES', 113):
+            description = sampled_music.write_wav(score, source, stream, rate=8000)
+        self.assertEqual(stream.getvalue(), expected.wav())
+        self.assertEqual(description, expected.describe())
+        stream = BytesIO()
+        with self.assertRaisesRegex(sampled_music.PlaybackError, 'output limit'):
+            sampled_music.write_wav(score, source, stream, rate=8000, max_frames=1024)
+        self.assertEqual(stream.getvalue(), b'')
 
     def test_repeat_boundaries_and_expansion_limits(self):
         for voice, conductor, error in (

@@ -1,0 +1,53 @@
+{
+  "model": "rsx-dac-approximation-v1",
+  "output_rate": 48000,
+  "max_frames": 96000000,
+  "instruments": [
+    {
+      "slot": 1,
+      "sha256": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc"
+    },
+    {
+      "slot": 2,
+      "sha256": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849"
+    },
+    {
+      "slot": 3,
+      "sha256": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777"
+    },
+    {
+      "slot": 4,
+      "sha256": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889"
+    },
+    {
+      "slot": 6,
+      "sha256": "178a88b7aa7b6777cbf02748b078954a5e98703a26050487ffa3fdaee50283e6"
+    }
+  ],
+  "counts": {
+    "distinct": 62,
+    "structural": 62,
+    "interpreted_words": 62,
+    "midi": 51
+  },
+  "midi_failures": {
+    "repeat_boundary": 11
+  },
+  "render_results": {
+    "rsx-ranges": {
+      "full": 40,
+      "unmapped": 0,
+      "no_audio": 0,
+      "repeat_boundary": 11,
+      "missing_instrument": 11
+    },
+    "nearest-root": {
+      "full": 40,
+      "unmapped": 0,
+      "no_audio": 0,
+      "repeat_boundary": 11,
+      "missing_instrument": 11
+    }
+  },
+  "remaining_opaque_words_by_score": {}
+}

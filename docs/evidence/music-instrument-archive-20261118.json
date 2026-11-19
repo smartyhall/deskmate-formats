@@ -1,0 +1,261 @@
+[
+  {
+    "name": "baritone.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/baritone.zip",
+    "sha256": "39aef3654ad0c4c50d685d7e9a10b183813d1be305f5e303dadd3f8c746b7f29",
+    "sounds": [
+      {
+        "member": "BARITONE.SND",
+        "size": 12513,
+        "sha256": "1ba5c9d59b8ae262d35147a9fa2180ceb24c7fa41c6db03ef7fc14f59dfb8adc",
+        "slot": 5,
+        "name": "baritone",
+        "profile": "sound-original-table",
+        "sample_rate": 11000,
+        "compression": 0,
+        "descriptors": [
+          {
+            "low": 4,
+            "high": 63,
+            "pitch": 33,
+            "frames": 12469,
+            "loop": [
+              17896,
+              18666
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "sax.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/sax.zip",
+    "sha256": "bb6dd531cec7bfbfe78873eec0e5bbe65a3ec92a233f0812f2dfcb323a4de67c",
+    "sounds": [
+      {
+        "member": "SAX.SND",
+        "size": 87331,
+        "sha256": "bbc20c8c6485755915627b258db55e8e78d5dffc92c6b43020098731814f918c",
+        "slot": 6,
+        "name": "sax",
+        "profile": "sound-original-table",
+        "sample_rate": 11000,
+        "compression": 1,
+        "descriptors": [
+          {
+            "low": 26,
+            "high": 57,
+            "pitch": 35,
+            "frames": 152662,
+            "loop": [
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "violin.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/violin.zip",
+    "sha256": "b19f8f036b0c3d31984b720050a4ebbb50ffc5ada2f02b917b32c5abfcc7c641",
+    "sounds": [
+      {
+        "member": "VIOLIN.SND",
+        "size": 17156,
+        "sha256": "ab764d06f09fe24cb637891e09ae302ac9fba8b4f7c9b2f6446bde405a86bb5a",
+        "slot": 6,
+        "name": "VIOLIN",
+        "profile": "sound-original-table",
+        "sample_rate": 11000,
+        "compression": 1,
+        "descriptors": [
+          {
+            "low": 4,
+            "high": 63,
+            "pitch": 28,
+            "frames": 30414,
+            "loop": [
+              11660,
+              15920
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "snd001.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/snd001.zip",
+    "error": "NotImplementedError: That compression method is not supported"
+  },
+  {
+    "name": "dm300dk1.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm300dk1.zip",
+    "sha256": "75e8eb1fab7ada4d4e73dfead5a5b7e70c4a378e8f360c4f1f85de64fa820fdf",
+    "sounds": []
+  },
+  {
+    "name": "dm300dk2.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm300dk2.zip",
+    "sha256": "dedcb4bb0dba2281f886dbbb4f98b421da13a1fd0fd4987d8b435b6292be8a50",
+    "sounds": []
+  },
+  {
+    "name": "dm300dk3.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm300dk3.zip",
+    "sha256": "23ac6d45afaa23d8acb4b8e05691c45115ac534c969cdd154a4cfae7a0b82304",
+    "sounds": []
+  },
+  {
+    "name": "dm300dk4.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm300dk4.zip",
+    "sha256": "e55de40c38406c2e4e54e5882bfbec0d6e69749ca36a52e1736772cab3b94a12",
+    "sounds": []
+  },
+  {
+    "name": "dm300dk5.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm300dk5.zip",
+    "sha256": "9d84551c100b4c2653656ccfe2040713a3f073d6d80020352db9fdbe1b623571",
+    "sounds": []
+  },
+  {
+    "name": "dm302dk1.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm302dk1.zip",
+    "sha256": "ebf2b2a0c8e4caf1468c896f83beb4deea6780a67c0b5532104ffb4b1657639d",
+    "sounds": []
+  },
+  {
+    "name": "dm302dk2.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm302dk2.zip",
+    "sha256": "47c4104ed68dcce464130f5cd200772fef0b7fc8d9f61899092b7fbe2fd6c008",
+    "sounds": []
+  },
+  {
+    "name": "dm302dk3.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm302dk3.zip",
+    "sha256": "18d97c5842d15eac8a15cdd5db770493693a06c33f9315203003bd674c873f73",
+    "sounds": []
+  },
+  {
+    "name": "dm303dk1.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk1.zip",
+    "sha256": "a9897beaaddd29c47ec3ad4046d57ea2e28872399afea0731c12f2e8a259ebfe",
+    "sounds": []
+  },
+  {
+    "name": "dm303dk2.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk2.zip",
+    "sha256": "edb617433344c50361c23c582bccefd63441fa1dd5205d64905981c6f995638b",
+    "sounds": []
+  },
+  {
+    "name": "dm303dk3.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk3.zip",
+    "sha256": "e4c9fbada6cbcd158df1c488afbcb79b7b3fae9b28c4dff13bb87108ade8a18f",
+    "sounds": []
+  },
+  {
+    "name": "dm303dk4.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk4.zip",
+    "sha256": "b164799dbf99511eda5e562ca3423622fa0452c591b6d548ea6783a58607055a",
+    "sounds": []
+  },
+  {
+    "name": "dm305dk1.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk1.zip",
+    "sha256": "5fdd7fe79032860274bd0e679b94ce14eb175ea6dde9296d9cf105cbe1186bec",
+    "sounds": []
+  },
+  {
+    "name": "dm305dk2.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk2.zip",
+    "sha256": "188e8bd58eb9b46b3707014d0e955fb9f2d9f2d49169520606a01714a409a8fa",
+    "sounds": []
+  },
+  {
+    "name": "dm305dk3.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk3.zip",
+    "sha256": "53b2a8bfd45b5c16d4103a65109317288aefbef02d4133da717c9c013b8bfeed",
+    "sounds": []
+  },
+  {
+    "name": "dm305dk4.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk4.zip",
+    "sha256": "07fd75ecc80499c17260dd9e2c8889e13a889efc4c73ad686853396c39ff6066",
+    "sounds": []
+  },
+  {
+    "name": "dm305dk5.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk5.zip",
+    "sha256": "8d5b2843e8b9de9d69ed6d1f2fb08ade76527bea3f5f5cf5a219c44774ec677c",
+    "sounds": []
+  },
+  {
+    "name": "dm305dk6.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk6.zip",
+    "sha256": "d6395d8bc3d21ed1bf66d49f53161287af89d9b338487004898a778ed5118d3b",
+    "sounds": []
+  },
+  {
+    "name": "dm305dk7.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk7.zip",
+    "sha256": "b7d34274cb95797691f997daed53721c57b8d7c1c31e98d93febaaf27d3c3d02",
+    "sounds": []
+  },
+  {
+    "name": "dm305dk8.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk8.zip",
+    "sha256": "d32d6c3fe6692112c8bd3f7c689649cf20222de6de8ae94ec28ee7e7c7c5e3e4",
+    "sounds": []
+  },
+  {
+    "name": "dm305dk9.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk9.zip",
+    "sha256": "52befdd828e7065fc2e1fde60c010693d946ca5e4c477703f9c43564086cd883",
+    "sounds": []
+  },
+  {
+    "name": "sounds.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/sounds.zip",
+    "sha256": "b02452610efefd411e0bf097fb8e29b3fa3b755d2a5be952aca9163ef6d8a4e3",
+    "sounds": []
+  },
+  {
+    "name": "sampler.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/sampler.zip",
+    "sha256": "4e01a6d458829b8f8fdbc7bbb974bb7926256932d395147e7831c8e912700f30",
+    "sounds": []
+  },
+  {
+    "name": "soundoff.zip",
+    "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/soundoff.zip",
+    "sha256": "d86f00e381d90b75e769e9278140ac8a85425fa1ec46b7f931e5904715bbfbb5",
+    "sounds": [
+      {
+        "member": "MEEP.SND",
+        "size": 26540,
+        "sha256": "77f7cc5c9f0f4e46d8d5fa0ce61e969a5d9812d6fbc9545a46ce9e94316767cd",
+        "slot": 0,
+        "name": "",
+        "profile": "sound-original-table",
+        "sample_rate": 22000,
+        "compression": 0,
+        "descriptors": [
+          {
+            "low": 255,
+            "high": 255,
+            "pitch": 255,
+            "frames": 26496,
+            "loop": [
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

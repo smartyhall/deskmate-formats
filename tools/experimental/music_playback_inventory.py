@@ -26,7 +26,19 @@ def failure(error):
     return 'other_constraint'
 
 
-def inventory(root, instruments, *, rate=sampled_music.OUTPUT_RATE):
+class _SignalProbe:
+    def __init__(self):
+        self.header_seen = False
+        self.has_signal = False
+
+    def write(self, block):
+        if self.header_seen and not self.has_signal:
+            self.has_signal = any(block)
+        self.header_seen = True
+        return len(block)
+
+
+def inventory(root, instruments, *, rate=sampled_music.OUTPUT_RATE, max_frames=sampled_music.MAX_FRAMES):
     counts = dict.fromkeys(('distinct', 'structural', 'interpreted_words', 'midi'), 0)
     midi_failures = Counter()
     rendered = {policy: Counter(full=0, unmapped=0, no_audio=0)
@@ -49,16 +61,19 @@ def inventory(root, instruments, *, rate=sampled_music.OUTPUT_RATE):
         else:
             counts['midi'] += 1
         for policy, results in rendered.items():
+            probe = _SignalProbe()
             try:
-                audio = sampled_music.render(score, instruments, rate=rate, sample_policy=policy)
+                info = sampled_music.write_wav(score, instruments, probe, rate=rate,
+                                               sample_policy=policy, max_frames=max_frames)
             except sampled_music.PlaybackError as exc:
                 results[failure(exc)] += 1
             else:
-                status = 'no_audio' if not any(audio.pcm) else 'unmapped' if audio.unmapped_pitches else 'full'
+                status = 'no_audio' if not probe.has_signal else 'unmapped' if info['unmapped_pitches'] else 'full'
                 results[status] += 1
     return {
         'model': sampled_music.MODEL,
         'output_rate': rate,
+        'max_frames': max_frames,
         'instruments': [{'slot': instrument.instrument_number, 'sha256': sha256(instrument.source).hexdigest()}
                         for instrument in sorted(instruments, key=lambda item: item.instrument_number)],
         'counts': counts,
@@ -73,6 +88,7 @@ def main():
     parser.add_argument('corpus', type=Path)
     parser.add_argument('instruments', type=Path)
     parser.add_argument('--rate', type=int, default=sampled_music.OUTPUT_RATE)
+    parser.add_argument('--max-frames', type=int, default=sampled_music.MAX_FRAMES)
     args = parser.parse_args()
     if not args.corpus.is_dir():
         parser.error('expected a corpus directory')
@@ -80,7 +96,9 @@ def main():
         instruments = sampled_music.load_instruments(args.instruments)
         if not 8_000 <= args.rate <= 96_000:
             parser.error('output rate must be from 8000 to 96000 Hz')
-        report = inventory(args.corpus, instruments, rate=args.rate)
+        if not 1 <= args.max_frames <= sampled_music.MAX_STREAM_FRAMES:
+            parser.error(f'expected a frame budget from 1 to {sampled_music.MAX_STREAM_FRAMES}')
+        report = inventory(args.corpus, instruments, rate=args.rate, max_frames=args.max_frames)
     except (OSError, ValueError) as exc:
         parser.error(str(exc))
     print(json.dumps(report, indent=2))
