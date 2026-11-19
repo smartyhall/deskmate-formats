@@ -115,11 +115,9 @@ The independent model is labeled `rsx-dac-approximation-v1`. It uses
 measured default slots and DAC-clock scaling, calibrated equal-tempered
 pitch, zero-order resampling, end-exclusive sustain wrapping, an empirical
 gate with immediate cut and approximate linear gain. Unlooped PCM can
-finish early. Equal-pitch ties preserve source position; different-pitch
-slurs retrigger at the next pitch on the same timeline. Native tie
-articulation, operand-level timer rounding, end-word inclusivity and exact
-output mixing remain open. The score and sample readers retain every
-original word and descriptor.
+finish early. The score and sample readers retain every original word and
+descriptor. The table below records the initial comparison, before the
+follow-up changes for articulations and additional score controls.
 
 | Control | Native and independent active duration | RMS, native / independent | First 40 ms onset-aligned correlation |
 | --- | --- | --- | --- |
@@ -144,3 +142,82 @@ The analysis utility takes the exact emulated-millisecond bounds and a
 ```powershell
 python tools/experimental/compare_sampled_music.py <baseline-pssj.raw> 39836 42544 <marked.wav>
 ```
+
+## Sustain endpoints, rates and note connections
+
+The POINTS instrument has isolated PCM values on both sides of each
+sustain boundary. After the one-shot 1,099 marker, the steady loop
+repeated its marker group every 4,749 or 4,750 DAC frames. The recurring
+group included the negative markers at 2,198–2,199 and the positive
+markers at 1,100–1,101. It excluded the positive 2,200–2,201 markers.
+The period is consistent with 1,100 source frames at the measured
+roughly 11.12 kHz. This supports inclusive start and exclusive end.
+Intermediate output levels between marked source frames suggest native
+interpolation. The independent renderer preserves the observed bounds
+with zero-order resampling. Exact interpolation remains open.
+
+RATE55 and RATE22 change the declared rate to 5,500 and 22,000 Hz while
+keeping the waveform and root. Both Music captures matched the 11,000 Hz
+control within 0.1 Hz on the intro and sustain windows and within one DAC
+frame on gate duration. The independent RSX model uses an 11,000 Hz base
+for Music. Sound file inspection and direct WAV extraction still follow the
+declared rate. Raising only the stored root from 28 to 40 reduced the intro
+from about 505.3 Hz to 250.7 Hz. The independent half-rate approximation
+predicts 252.7 Hz. This identifies a residual in the native step arithmetic.
+
+TIE9, three same-pitch quarters, had one intro and 1,761.6 ms of active
+signal. The independent model plays the full tied score interval of
+1,709.9 ms. SLUR9, C4 to G4, resumed the sustain waveform at the new pitch
+without replaying the intro. The first span ended 51.9 ms before the new
+onset. The independent model uses one measured DAC block for this gap and
+retains the sample phase if the same descriptor remains selected. Exact
+phase, tie release beyond score time and slurs that cross sample ranges
+remain open.
+
+Outside a note connection, `8a00` was a timed silent quarter. The paired
+`8e00` and `8600` controls gave silent eighth and half intervals.
+Inside a C4 connection, `8a00` gave a silent quarter and the following
+note resumed the sustain region without its intro. The interpreter now
+preserves these words as rests with continuation flags. Other zero-pitch
+word variants still require tests.
+
+## Repeats, endings, pitch flags and markers
+
+RESTATE covered a three-pass repeat between ordinary notes. The first
+repeat note on pass one used the prior instrument, dynamic and 100 BPM.
+After the in-repeat slot, dynamic and 125 BPM changes, those settings
+persisted into the first note of later passes and into the following
+section. The onset intervals moved from 27,358 to about 22,384 DAC frames.
+RELINE applied a three-pass region to both active voices. NEST played the
+three-pass inner repeat on each of the two outer passes.
+
+Both numbered endings precede the repeat end in ALTGOOD. The observed
+playback is C4, E4, C4, G4, A4. ALT13 repeats the first ending on passes
+one and two and chooses ending 3 on pass three. ALT1 skips the sole
+ending on the second pass, then proceeds beyond the repeat.
+In an earlier candidate with ending 2 after the repeat end, Music returned
+to DOS during playback. The independent interpreter rejects endings
+outside a repeat, unbalanced structures and cuts inside a note, rest or
+active connection. Expansion limits depth to eight and total work to
+131,072 events and slices. The observed nesting was two levels. The
+written-order events and offsets are available independently of the expanded
+timeline. Repeated playback events retain offsets into the original score.
+
+To regenerate the committed alternate-ending fixture with the marked
+instrument, add `--alternate-ending` to the probe command above. Its
+108 bytes match ALTGOOD from the disposable run. The fixture documents
+native playback acceptance of this synthetic input.
+
+In C and G major, the same stored F4 and F-sharp 4 pitches sounded at
+about 672.6 and 714.5 Hz, respectively, with the marked source. Setting
+`80h` did not change either frequency. The printed accidental glyphs
+differed across the flagged notes. The reader retains the exact accidental
+bits and projects pitch from the six pitch bits, without reapplying the
+key signature. Score markers A and Z appeared in the native editor. The
+paired score without markers gave the same pitches and onset intervals.
+Tandy's manual documents markers as editor navigation anchors. The
+interpreter preserves their letter and position, and MIDI emits Marker
+events. [Tandy Music manual archive](http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/musicsnd.zip)
+
+The sequence trials ran for 51,510, 73,678, 92,212 and 91,464 emulated
+milliseconds respectively. [Exact words, capture hashes and comparison windows](../evidence/sampled-music-sequencing-20261118.json)

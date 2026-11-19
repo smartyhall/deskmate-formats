@@ -2521,6 +2521,23 @@
       "evidence_class": "Tool-generated, native-playback accepted in the baseline; Sound resave and editing untested",
       "native_saved": false,
       "expected_content": "One whole note at stored pitch code 28 in voice 1, slot 9, 96 conductor ticks."
+    },
+    {
+      "path": "music/alternate-endings-tool-generated.sng",
+      "size": 108,
+      "sha256": "6635c67c4019116170c627e6163fdbf3617d1807f2af4dd9dcce747367009fbd",
+      "application": "Tandy DeskMate Music",
+      "version": "RSX OEM 3.04 module with generic 03.05.00 runtime",
+      "experiment": "2026-11-18 sampled playback sequencing",
+      "origin": "Tool-generated ALTGOOD.SNG from synthetic Music M11 using the --alternate-ending generator option. It was played with the independently regenerated MARK9.SND input.",
+      "generation_method": "See docs/research/sampled-music-playback-20261118.md for the command and matched DAC controls.",
+      "source_path": "music/m11.sng",
+      "source_size": 90,
+      "source_sha256": "07993101fcae1fbcaaacab71396a956b80085874ab1015e20395c2ac7a7d1309",
+      "evidence_class": "Tool-generated, native-playback accepted with measured alternate-ending order",
+      "synthetic_data": true,
+      "native_saved": false,
+      "expected_content": "Written C4 E4 G4 A4. Playback C4 E4 C4 G4 A4, using slot 9. Both endings precede the repeat end."
     }
   ]
 }

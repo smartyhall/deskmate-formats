@@ -16,6 +16,8 @@ SCORES = {
     'SHIFT.SNG': ((0x7309, 0xe21c), 96),
     'NOLOOP.SNG': ((0x730a, 0xe21c), 96),
 }
+ALTERNATE_VOICE = (0x7308, 0xea1c, 0xea20, 0xea23, 0xea25)
+ALTERNATE_CONDUCTOR = (0x3002, 0x2018, 0x4001, 0x2018, 0x4002, 0x2018, 0x50ff, 0x2018)
 
 
 def score_probe(source, voices, conductor):
@@ -56,18 +58,21 @@ def main(argv=None):
     parser.add_argument('score', type=Path)
     parser.add_argument('instrument', type=Path)
     parser.add_argument('output', type=Path, help='new directory for generated controls')
+    parser.add_argument('--alternate-ending', action='store_true',
+                        help='generate the validated alternate-ending score and slot 9 instrument')
     args = parser.parse_args(argv)
     with args.score.open('rb') as stream:
         score = stream.read(music.MAX_BYTES + 1)
     with args.instrument.open('rb') as stream:
         source = stream.read(sound.MAX_BYTES + 1)
-    files = {name: score_probe(score, (voice, (), ()), (0x2000 + ticks,))
-             for name, (voice, ticks) in SCORES.items()}
-    files.update({
-        'MARK9.SND': region_instrument(source, 9, (1100, 2200)),
-        'SHIFT10.SND': region_instrument(source, 10, (1100, 1980)),
-        'NOLOOP11.SND': region_instrument(source, 11, (0, 0)),
-    })
+    files = {'MARK9.SND': region_instrument(source, 9, (1100, 2200))}
+    if args.alternate_ending:
+        files['ALTGOOD.SNG'] = score_probe(score, (ALTERNATE_VOICE, (), ()), ALTERNATE_CONDUCTOR)
+    else:
+        files.update({name: score_probe(score, (voice, (), ()), (0x2000 + ticks,))
+                      for name, (voice, ticks) in SCORES.items()})
+        files['SHIFT10.SND'] = region_instrument(source, 10, (1100, 1980))
+        files['NOLOOP11.SND'] = region_instrument(source, 11, (0, 0))
     args.output.mkdir()
     for name, payload in files.items():
         (args.output / name).write_bytes(payload)

@@ -26,6 +26,9 @@ SAMPLE_POLICIES = ('rsx-ranges', 'strict', 'nearest-root')
 DYNAMIC_WEIGHTS = (1, 2, 3, 4, 5, 6)
 DEFAULT_DYNAMIC_WEIGHT = 3
 SCORE_TO_NATIVE_CLOCK = Fraction(27_358, 28_800)
+MEASURED_QUARTER_FRAMES = {100: 27_358, 125: 22_384}
+DAC_BLOCK_SECONDS = Fraction(2_487, 48_000)
+RSX_SAMPLE_RATE = 11_000
 PITCH_CALIBRATION = 1.0106
 PHASE_BITS = 32
 
@@ -57,6 +60,7 @@ class Note:
     midi_pitch: int
     dynamic_index: int | None
     source_step: int
+    continues_previous: bool
 
 
 @dataclass(frozen=True)
@@ -75,6 +79,8 @@ class RenderedMusic:
     notes: tuple[Note, ...]
     unmapped_pitches: tuple[UnmappedPitch, ...]
     sample_policy: str
+    written_ticks: int
+    playback_ticks: int
     model: str = MODEL
 
     def wav(self):
@@ -87,6 +93,8 @@ class RenderedMusic:
             'sample_policy': self.sample_policy,
             'rate': self.rate,
             'frames': self.frames,
+            'written_ticks': self.written_ticks,
+            'playback_ticks': self.playback_ticks,
             'instruments': [asdict(binding) for binding in self.bindings],
             'unmapped_pitches': [asdict(pitch) for pitch in self.unmapped_pitches],
         }
@@ -135,6 +143,8 @@ class _Clock:
 
     @staticmethod
     def _step(bpm):
+        if bpm in MEASURED_QUARTER_FRAMES:
+            return Fraction(MEASURED_QUARTER_FRAMES[bpm], 48_000 * music.TICKS_PER_QUARTER)
         return SCORE_TO_NATIVE_CLOCK * Fraction(60, music.TICKS_PER_QUARTER) / Fraction(bpm)
 
     def at(self, tick):
@@ -205,17 +215,17 @@ def _sample_data(instrument, index):
 
 
 def _voice_notes(voice, default_slot):
-    controls = iter(event for event in voice if event.kind in ('instrument', 'dynamic'))
-    control = next(controls, None)
+    notes = iter(music._connected_notes(voice))
+    note = next(notes, None)
     slot, dynamic = default_slot, None
-    for first, last in music._connected_notes(voice):
-        while control is not None and control.offset < first.offset:
-            if control.kind == 'instrument':
-                slot = control.instrument_slot
-            else:
-                dynamic = control.dynamic_index
-            control = next(controls, None)
-        yield first, last, slot, dynamic
+    for event in voice:
+        if event.kind == 'instrument':
+            slot = event.instrument_slot
+        elif event.kind == 'dynamic':
+            dynamic = event.dynamic_index
+        elif note is not None and event is note[0]:
+            yield *note, slot, dynamic
+            note = next(notes, None)
 
 
 def _plan(sequence, by_slot, clock, rate, sample_policy, default_slots):
@@ -248,25 +258,31 @@ def _plan(sequence, by_slot, clock, rate, sample_policy, default_slots):
                 decoded[key] = _sample_data(instrument, index)
             start, end = clock.at(first.tick), clock.at(last.tick + last.duration_ticks)
             duration = end - start
-            # Approximate the duration-dependent gate from short, quarter
-            # and whole-note controls. Slurred pitches retrigger without a gap.
+            # Plain notes use a duration-dependent gate. A tie keeps the
+            # source active for its written span. Slurs use a one-block gap.
             gate = duration
-            if last.connection not in ('start', 'continue'):
+            if last.connection in ('start', 'continue'):
+                gate = max(Fraction(0), duration - DAC_BLOCK_SECONDS)
+            elif first is last:
                 gate = min(duration, max(Fraction(57, 400), duration * Fraction(13, 16) - Fraction(3, 40)))
-            step = round((1 << PHASE_BITS) * instrument.sample_rate / rate
+            step = round((1 << PHASE_BITS) * RSX_SAMPLE_RATE / rate
                          * 2 ** ((pitch - descriptor.midi_pitch) / 12) * PITCH_CALIBRATION)
             notes.append(Note(voice_number, first.offset, first.tick, last.tick + last.duration_ticks,
                               start, end, round(start * rate), round((start + gate) * rate),
-                              slot, index, pitch, dynamic, step))
+                              slot, index, pitch, dynamic, step, first.connection in ('continue', 'end')))
     return notes, decoded, used_slots, unmapped
 
 
 def _mix(notes, decoded, frames):
     output = array('i', [0]) * frames
+    previous = None
+    phase = 0
     for note in notes:
         pcm, loop_start, loop_end = decoded[note.slot, note.sample_index]
         weight = DEFAULT_DYNAMIC_WEIGHT if note.dynamic_index is None else DYNAMIC_WEIGHTS[note.dynamic_index]
-        phase = 0
+        if not (note.continues_previous and previous is not None and previous.voice == note.voice
+                and (previous.slot, previous.sample_index) == (note.slot, note.sample_index)):
+            phase = 0
         loop_limit = loop_end << PHASE_BITS
         loop_period = (loop_end - loop_start) << PHASE_BITS
         limit = len(pcm) << PHASE_BITS
@@ -277,6 +293,7 @@ def _mix(notes, decoded, frames):
                 break
             output[frame] += (pcm[phase >> PHASE_BITS] - 128) * weight
             phase += note.source_step
+        previous = note
     clipped = array('h', (max(-32768, min(32767, round(value * 5 / 3))) for value in output))
     if sys.byteorder == 'big':
         clipped.byteswap()
@@ -295,9 +312,9 @@ def render(score, instruments, *, rate=OUTPUT_RATE, sample_policy='rsx-ranges', 
     if len(default_slots) != music.VOICE_COUNT or any(
             type(slot) is not int or not 1 <= slot <= 32 for slot in default_slots):
         raise PlaybackError('each of the three voices requires a default slot from 1 to 32')
-    sequence = music.project(score)
+    written = music.project(score)
     try:
-        music._require_linear(sequence)
+        sequence = music.expand_playback(written)
         clock = _Clock(sequence.conductor)
         frames = round(clock.at(sequence.written_ticks) * rate)
         if frames > max_frames:
@@ -315,4 +332,5 @@ def render(score, instruments, *, rate=OUTPUT_RATE, sample_policy='rsx-ranges', 
     bindings = tuple(Binding(slot, by_slot[slot].name, sha256(by_slot[slot].source).hexdigest(), tuple(sorted(indices)))
                      for slot, indices in sorted(selected.items()))
     omitted = tuple(UnmappedPitch(slot, pitch, count) for (slot, pitch), count in sorted(unmapped.items()))
-    return RenderedMusic(rate, frames, _mix(notes, decoded, frames), bindings, tuple(notes), omitted, sample_policy)
+    return RenderedMusic(rate, frames, _mix(notes, decoded, frames), bindings, tuple(notes), omitted,
+                         sample_policy, written.written_ticks, sequence.written_ticks)
