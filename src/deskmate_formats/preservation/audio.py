@@ -2,7 +2,7 @@
 
 from hashlib import sha256
 
-from .. import music, sound
+from .. import music, sampled_music, sound
 from .model import Conversion, Diagnostic
 from .render import html_page, html_table, html_text
 
@@ -50,7 +50,7 @@ def convert_sound(document, filename):
 MUSIC_PREVIEW_EVENTS = 120
 
 
-def convert_music(score, filename):
+def convert_music(score, filename, *, instruments=None, sample_policy='rsx-ranges'):
     sequence = music.project(score)
     content = music.describe(score, sequence)
     diagnostics = []
@@ -67,10 +67,30 @@ def convert_music(score, filename):
         if any(event.connection for voice in sequence.voices for event in voice):
             diagnostics.append(Diagnostic('midi_connected_notes', 'notice',
                                           'MIDI joins ties and schedules slurred pitches without a rest.'))
+        if any(event.kind == 'repeat_start' for event in sequence.conductor):
+            diagnostics.append(Diagnostic('midi_repeats_expanded', 'notice',
+                                          'MIDI follows the expanded repeat timeline. Content retains written order.'))
     body = (f'<p>{html_text(score.author)}</p>' if score.author else '')
     body += f'<p>{music.TICKS_PER_QUARTER} ticks per quarter note. Default tempo {music.DEFAULT_QUARTER_BPM} BPM.</p>'
     if 'composition.mid' in artifacts:
         body += '<p><a href="composition.mid">Download MIDI</a></p>'
+    if instruments is not None:
+        try:
+            playback = sampled_music.render(score, instruments, sample_policy=sample_policy)
+        except sampled_music.PlaybackError as exc:
+            diagnostics.append(Diagnostic('sampled_playback_omitted', 'omission', str(exc)))
+        else:
+            path = 'assets/composition.wav'
+            artifacts[path] = playback.wav()
+            content['sampled_playback'] = playback.describe()
+            diagnostics.append(Diagnostic('sampled_playback_model', 'approximation',
+                                          'WAV uses the RSX DAC approximation for sample timing and mixing.'))
+            if playback.unmapped_pitches:
+                count = sum(pitch.note_count for pitch in playback.unmapped_pitches)
+                diagnostics.append(Diagnostic('sampled_playback_unmapped_pitch', 'omission',
+                                              f'{count} note(s) outside explicit instrument ranges are silent.'))
+            body += (f'<p>Approximate sampled playback <audio controls preload="none" src="{path}"></audio> '
+                     f'<a href="{path}">Download WAV</a></p>')
     streams = (*sequence.voices, sequence.conductor)
     for label, events in zip(('Voice 1', 'Voice 2', 'Voice 3', 'Conductor'), streams, strict=True):
         rows = (_music_row(event) for event in events[:MUSIC_PREVIEW_EVENTS])
@@ -78,7 +98,8 @@ def convert_music(score, filename):
         if len(events) > MUSIC_PREVIEW_EVENTS:
             diagnostics.append(Diagnostic(
                 'music_preview_limit', 'omission', f'All {len(events)} words are available in content.json.', label))
-    artifacts['preview.html'] = html_page(score.title or filename, 'DeskMate Music score', body, diagnostics=diagnostics)
+    artifacts['preview.html'] = html_page(score.title or filename, 'DeskMate Music score', body,
+                                          diagnostics=diagnostics, local_audio='assets/composition.wav' in artifacts)
     return Conversion(content, diagnostics, artifacts)
 
 
@@ -93,6 +114,8 @@ def _music_row(event):
         'barline': f'Barline {event.bar_number}',
         'repeat_start': f'Repeat start, count {event.repeat_count}',
         'repeat_end': 'Repeat end',
+        'alternate_ending': f'Alternate ending {event.ending_number}',
+        'score_marker': f'Score marker {event.marker}',
     }
     return (event.tick if event.tick is not None else '', details.get(event.kind, event.kind),
             event.duration_ticks if event.duration_ticks is not None else '', f'{event.word:04X}')

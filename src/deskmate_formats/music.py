@@ -1,7 +1,8 @@
 """Read DeskMate Music scores and preserve their serialized event streams."""
 
 import argparse
-from dataclasses import asdict, dataclass
+from bisect import bisect_left, bisect_right
+from dataclasses import asdict, dataclass, replace
 import json
 from pathlib import Path
 from struct import pack, unpack_from
@@ -15,6 +16,8 @@ STREAM_START = 0x7ffe
 STREAM_END = 0x7fff
 TICKS_PER_QUARTER = 24
 DEFAULT_QUARTER_BPM = 100
+MAX_PLAYBACK_EVENTS = 131_072
+MAX_REPEAT_DEPTH = 8
 # Positive tick counts in the OEM duration lookup. Three signed entries
 # need their own rounding/notation study before projection.
 NOTE_TICKS = {
@@ -69,6 +72,8 @@ class Event:
     meter_denominator: int | None = None
     key_code: int | None = None
     repeat_count: int | None = None
+    ending_number: int | None = None
+    marker: str | None = None
 
 
 @dataclass(frozen=True)
@@ -145,8 +150,7 @@ def project(score):
                 events.append(Event(item.offset, item.word, 'instrument', tick, instrument_slot=value + 1))
             elif code == 0x72 and value < 6:
                 events.append(Event(item.offset, item.word, 'dynamic', tick, dynamic_index=value))
-            elif (duration_code in NOTE_TICKS and accidental != 0x80
-                  and (pitch or (not value and connection is None))):
+            elif duration_code in NOTE_TICKS and (pitch or not value):
                 duration = NOTE_TICKS[duration_code]
                 kind = 'note' if pitch else 'rest'
                 midi_pitch = 32 + pitch if pitch else None
@@ -185,8 +189,12 @@ def project(score):
             conductor.append(Event(item.offset, item.word, 'barline', tick, bar_number=value + 1))
         elif code == 0x30 and value >= 2:
             conductor.append(Event(item.offset, item.word, 'repeat_start', tick, repeat_count=value))
+        elif code == 0x40 and 1 <= value <= 10:
+            conductor.append(Event(item.offset, item.word, 'alternate_ending', tick, ending_number=value))
         elif item.word == 0x50ff:
             conductor.append(Event(item.offset, item.word, 'repeat_end', tick))
+        elif code == 0x74 and 0x41 <= value <= 0x5a:
+            conductor.append(Event(item.offset, item.word, 'score_marker', tick, marker=chr(value)))
         else:
             conductor.append(Event(item.offset, item.word, 'opaque', tick))
     return Sequence(tuple(voices), tuple(conductor), tick, tuple(voice_ticks))
@@ -237,44 +245,178 @@ def _midi_tempo(bpm):
     return b'\xff\x51\x03' + micros.to_bytes(3, 'big')
 
 
-def _midi_notes(voice):
-    pending = None
+def _connected_notes(voice, *, split_controls=False):
+    """Yield the first and last written event of each sounding pitch."""
+    first = last = None
+    open_connection = None
     for event in voice:
-        if event.kind != 'note':
-            if pending is not None:
-                raise MusicFormatError(f'interrupted tie or slur at {event.offset}')
+        if event.kind == 'rest' and event.connection is not None:
+            if first is not None:
+                yield first, last
+                first = last = None
+            if event.connection == 'start':
+                open_connection = 'rest'
+            elif event.connection == 'end':
+                open_connection = None
             continue
-        note = (event.tick, event.tick + event.duration_ticks, event.midi_pitch)
+        if event.kind in ('dynamic', 'instrument'):
+            if split_controls and first is not None:
+                yield first, last
+                first = last = None
+            continue
+        if event.kind != 'note':
+            if open_connection == 'note':
+                raise MusicFormatError(f'interrupted tie or slur at {event.offset}')
+            open_connection = None
+            continue
         if event.connection in ('continue', 'end'):
-            if pending is None:
+            if open_connection is None:
                 raise MusicFormatError(f'tie or slur has no start at {event.offset}')
-            if pending[2] == event.midi_pitch:
-                note = (pending[0], note[1], note[2])
-            else:
-                yield pending
-        elif pending is not None:
+            if first is not None and first.midi_pitch != event.midi_pitch:
+                yield first, last
+                first = None
+            if first is None:
+                first = event
+        elif open_connection == 'note':
             raise MusicFormatError(f'tie or slur has no end before {event.offset}')
-        if event.connection in ('start', 'continue'):
-            pending = note
         else:
-            yield note
-            pending = None
-    if pending is not None:
+            first = event
+        last = event
+        open_connection = 'note' if event.connection in ('start', 'continue') else None
+        if open_connection is None:
+            yield first, last
+            first = last = None
+    if open_connection == 'note':
         raise MusicFormatError('tie or slur ends outside the voice stream')
 
 
-def to_midi(sequence):
-    """Project a fully interpreted linear score to Standard MIDI File type 1."""
+def _midi_notes(voice):
+    for first, last in _connected_notes(voice):
+        yield first.tick, last.tick + last.duration_ticks, first.midi_pitch
+
+
+def _require_interpreted(sequence):
     opaque = sequence.opaque
     if opaque:
         first = opaque[0]
         raise MusicFormatError(f'{len(opaque)} unsupported score word(s), first {first.word:04x} at {first.offset}')
-    if any(event.kind in ('repeat_start', 'repeat_end') for event in sequence.conductor):
-        raise MusicFormatError('score repeats require a playback interpretation')
     if any(tick > sequence.written_ticks for tick in sequence.voice_ticks):
         raise MusicFormatError('voice duration exceeds the conductor timeline')
+
+
+def _repeat_sections(conductor):
+    sections = {}
+    stack = []
+    for index, event in enumerate(conductor):
+        if event.kind == 'repeat_start':
+            if len(stack) >= MAX_REPEAT_DEPTH:
+                raise MusicFormatError(f'repeat depth exceeds {MAX_REPEAT_DEPTH} at {event.offset}')
+            stack.append((index, []))
+        elif event.kind == 'alternate_ending':
+            if not stack:
+                raise MusicFormatError(f'alternate ending lies outside a repeat at {event.offset}')
+            begin, endings = stack[-1]
+            if not endings and event.ending_number != 1:
+                raise MusicFormatError(f'first alternate ending must start at pass 1 at {event.offset}')
+            if endings and event.ending_number <= conductor[endings[-1]].ending_number:
+                raise MusicFormatError(f'alternate ending numbers are out of order at {event.offset}')
+            if event.ending_number > conductor[begin].repeat_count:
+                raise MusicFormatError(f'alternate ending exceeds repeat count at {event.offset}')
+            endings.append(index)
+        elif event.kind == 'repeat_end':
+            if not stack:
+                raise MusicFormatError(f'repeat end has no start at {event.offset}')
+            begin, endings = stack.pop()
+            opening = conductor[begin]
+            if opening.tick == event.tick:
+                raise MusicFormatError(f'empty repeat at {opening.offset}')
+            sections[begin] = index, endings
+    if stack:
+        raise MusicFormatError(f'unclosed repeat at {conductor[stack[-1][0]].offset}')
+    return sections
+
+
+def _playback_chunks(conductor, sections, first, last, left, right):
+    cursor = first
+    while cursor < last:
+        if cursor not in sections:
+            cursor += 1
+            continue
+        end, endings = sections[cursor]
+        start_tick = conductor[cursor].tick
+        yield left, start_tick, conductor[first:cursor]
+        common_end = endings[0] if endings else end
+        ending_numbers = [conductor[index].ending_number for index in endings]
+        ending_limits = [*endings[1:], end]
+        for play in range(1, conductor[cursor].repeat_count + 1):
+            yield from _playback_chunks(conductor, sections, cursor + 1, common_end,
+                                        start_tick, conductor[common_end].tick)
+            if endings and play <= ending_numbers[-1]:
+                choice = bisect_right(ending_numbers, play) - 1
+                begin, limit = endings[choice], ending_limits[choice]
+                yield from _playback_chunks(conductor, sections, begin + 1, limit,
+                                            conductor[begin].tick, conductor[limit].tick)
+        left = conductor[end].tick
+        cursor = first = end + 1
+    yield left, right, conductor[first:last]
+
+
+def _validate_repeat_notes(voice, boundaries):
+    connected = False
+    for event in voice:
+        if event.kind not in ('note', 'rest'):
+            continue
+        if event.kind == 'note':
+            connected = event.connection in ('start', 'continue')
+        elif event.connection != 'continue':
+            connected = event.connection == 'start'
+        end = event.tick + event.duration_ticks
+        index = bisect_right(boundaries, event.tick)
+        if index < len(boundaries):
+            boundary = boundaries[index]
+            if boundary < end or (boundary == end and connected):
+                raise MusicFormatError(f'repeat boundary crosses a note, rest or connection at {event.offset}')
+
+
+def expand_playback(sequence):
+    """Expand supported repeats and endings to a separate timeline with source offsets."""
+    _require_interpreted(sequence)
+    sections = _repeat_sections(sequence.conductor)
+    if not sections:
+        return sequence
+    boundaries = sorted({sequence.conductor[i].tick for begin, (end, endings) in sections.items()
+                         for i in (begin, end, *endings)})
+    voice_ticks = [tuple(event.tick for event in voice) for voice in sequence.voices]
+    for voice in sequence.voices:
+        _validate_repeat_notes(voice, boundaries)
+    voices = [[] for _ in sequence.voices]
+    conductor = []
+    elapsed = size = 0
+    chunks = _playback_chunks(sequence.conductor, sections, 0, len(sequence.conductor), 0, sequence.written_ticks)
+    current = next(chunks)
+    while current is not None:
+        lo, hi, events = current
+        current = next(chunks, None)
+        shift = elapsed - lo
+        size += len(events) + 1
+        for ticks, source, target in zip(voice_ticks, sequence.voices, voices, strict=True):
+            first = bisect_left(ticks, lo)
+            last = len(ticks) if current is None else bisect_left(ticks, hi)
+            size += last - first
+            if size > MAX_PLAYBACK_EVENTS:
+                raise MusicFormatError(f'repeat expansion exceeds the {MAX_PLAYBACK_EVENTS}-event limit')
+            target.extend(replace(event, tick=event.tick + shift) for event in source[first:last])
+        conductor.extend(replace(event, tick=event.tick + shift) for event in events)
+        elapsed += hi - lo
+    ends = tuple(voice[-1].tick + (voice[-1].duration_ticks or 0) if voice else 0 for voice in voices)
+    return Sequence(tuple(tuple(voice) for voice in voices), tuple(conductor), elapsed, ends)
+
+
+def to_midi(sequence):
+    """Project the supported playback timeline to Standard MIDI File type 1."""
+    sequence = expand_playback(sequence)
     tempos = [(0, _midi_tempo(DEFAULT_QUARTER_BPM))]
-    meters = []
+    annotations = []
     for event in sequence.conductor:
         if event.kind == 'tempo':
             if event.quarter_bpm < 4:
@@ -286,8 +428,10 @@ def to_midi(sequence):
                 tempos.append(entry)
         elif event.kind == 'meter':
             exponent = event.meter_denominator.bit_length() - 1
-            meters.append((event.tick, b'\xff\x58\x04' + bytes((event.meter_numerator, exponent, 24, 8))))
-    conductor = sorted(tempos + meters, key=lambda item: item[0])
+            annotations.append((event.tick, b'\xff\x58\x04' + bytes((event.meter_numerator, exponent, 24, 8))))
+        elif event.kind == 'score_marker':
+            annotations.append((event.tick, b'\xff\x06\x01' + event.marker.encode('ascii')))
+    conductor = sorted(tempos + annotations, key=lambda item: item[0])
     tracks = [_midi_track(conductor, sequence.written_ticks)]
     for channel, voice in enumerate(sequence.voices):
         messages = []
@@ -299,22 +443,47 @@ def to_midi(sequence):
 
 
 def main(argv=None):
+    from . import sampled_music
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source', type=Path)
-    parser.add_argument('--midi', type=Path, help='write a fully interpreted linear score to a new MIDI file')
+    parser.add_argument('--midi', type=Path, help='write a fully interpreted score to a new MIDI file')
+    parser.add_argument('--wav', type=Path, help='write approximate sampled playback to a new WAV file')
+    parser.add_argument('--instruments', type=Path, help='directory of explicit SND instruments for --wav')
+    parser.add_argument('--rate', type=int, help='WAV sample rate (default 48000 Hz)')
+    parser.add_argument('--sample-policy', choices=sampled_music.SAMPLE_POLICIES,
+                        help='sample range resolution for WAV output (default rsx-ranges)')
     args = parser.parse_args(argv)
+    if bool(args.wav) != bool(args.instruments):
+        parser.error('--wav and --instruments must be supplied together')
+    if not args.wav and (args.rate is not None or args.sample_policy is not None):
+        parser.error('--rate and --sample-policy require --wav')
+    created = []
     try:
         with args.source.open('rb') as stream:
             score = parse_bytes(stream.read(MAX_BYTES + 1))
         sequence = project(score)
+        result = describe(score, sequence)
+        outputs = []
         if args.midi:
-            midi = to_midi(sequence)
-            with args.midi.open('xb') as stream:
-                stream.write(midi)
-        print(json.dumps(describe(score, sequence), indent=2))
+            outputs.append((args.midi, to_midi(sequence)))
+        if args.wav:
+            instruments = sampled_music.load_instruments(args.instruments)
+            playback = sampled_music.render(score, instruments,
+                                            rate=sampled_music.OUTPUT_RATE if args.rate is None else args.rate,
+                                            sample_policy=args.sample_policy or 'rsx-ranges')
+            outputs.append((args.wav, playback.wav()))
+            result['sampled_playback'] = playback.describe()
+        for path, data in outputs:
+            with path.open('xb') as stream:
+                created.append(path)
+                stream.write(data)
     except (OSError, ValueError) as exc:
+        for path in reversed(created):
+            path.unlink(missing_ok=True)
         print(str(exc), file=sys.stderr)
         return 2
+    print(json.dumps(result, indent=2))
     return 0
 
 

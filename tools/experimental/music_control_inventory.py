@@ -22,7 +22,8 @@ def voice_family(event):
         if duration in SPECIAL_DURATIONS:
             return "special_duration", f"{duration:02x}"
         if value & 0xc0 == 0x80:
-            return "unresolved_accidental_80", f"{value & 0x3f:02x}"
+            family = "accidental_80" if event.kind == "note" else "unresolved_accidental_80"
+            return family, f"{value & 0x3f:02x}"
         if event.kind == "note" and event.accidental_flags:
             return "recognized_accidental_bits", f"{event.accidental_flags:02x}"
     if event.kind == "opaque":
@@ -49,16 +50,8 @@ def conductor_family(event):
     return name, f"{event.word:04x}"
 
 
-def inventory(root):
+def distinct_scores(root):
     seen = set()
-    families = defaultdict(Counter)
-    placements = defaultdict(Counter)
-    stream_ids = defaultdict(Counter)
-    values = defaultdict(Counter)
-    blockers = Counter()
-    file_counts = defaultdict(set)
-    flags = Counter()
-    header_profiles = set()
     for path in sorted(root.rglob("*")):
         if not path.is_file() or path.suffix.lower() != ".sng":
             continue
@@ -67,9 +60,23 @@ def inventory(root):
         if len(data) > music.MAX_BYTES:
             raise music.MusicFormatError("Music input exceeds the bounded profile")
         digest = sha256(data).digest()
-        if digest in seen:
-            continue
-        seen.add(digest)
+        if digest not in seen:
+            seen.add(digest)
+            yield path, data, digest
+
+
+def inventory(root):
+    count = 0
+    families = defaultdict(Counter)
+    placements = defaultdict(Counter)
+    stream_ids = defaultdict(Counter)
+    values = defaultdict(Counter)
+    blockers = Counter()
+    file_counts = defaultdict(set)
+    flags = Counter()
+    header_profiles = set()
+    for _, data, digest in distinct_scores(root):
+        count += 1
         score = music.parse_bytes(data)
         sequence = music.project(score)
         header_profiles.add(score.header[4:22])
@@ -102,7 +109,7 @@ def inventory(root):
                 file_counts[name].add(digest)
     prevalence = {name: len(digests) for name, digests in file_counts.items()}
     return {
-        "schema_version": 1, "distinct_scores": len(seen), "midi_results": dict(blockers),
+        "schema_version": 1, "distinct_scores": count, "midi_results": dict(blockers),
         "distinct_header_profiles": len(header_profiles),
         "container_variants": [
             {"text_pad_bytes": pad, "trailer_bytes": trailer, "scores": count}

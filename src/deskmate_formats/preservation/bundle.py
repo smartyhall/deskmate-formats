@@ -49,12 +49,14 @@ def _identity(path, data):
     return {'path': path, 'size': len(data), 'sha256': sha256(data).hexdigest()}
 
 
-def prepare(path, *, application=None):
+def prepare(path, *, application=None, instruments=None, sample_policy='rsx-ranges'):
     """Read and interpret a bounded source snapshot without writing files."""
     path = Path(path)
     data = read_bounded(path, native.MAX_SOURCE_BYTES, code='input_too_large')
     document = native.open_native(data, application)
-    conversion = CONVERTERS[document.application](document.value, path.name)
+    converter = CONVERTERS[document.application]
+    options = {'instruments': instruments, 'sample_policy': sample_policy} if document.application == 'music' else {}
+    conversion = converter(document.value, path.name, **options)
     source_path = 'original.' + native.EXTENSIONS[document.application]
     files = {'content.json': json_bytes(conversion.content), **conversion.artifacts}
     manifest = {
@@ -104,9 +106,9 @@ def publish(bundle, output):
         raise
 
 
-def export(path, output, *, application=None):
+def export(path, output, *, application=None, instruments=None, sample_policy='rsx-ranges'):
     """Export one input document into a newly created output directory."""
-    return publish(prepare(path, application=application), output)
+    return publish(prepare(path, application=application, instruments=instruments, sample_policy=sample_policy), output)
 
 
 def _require(condition, message):

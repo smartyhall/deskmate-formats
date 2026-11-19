@@ -1,0 +1,348 @@
+{
+  "baseline": {
+    "git_commit": "a39ef57369ab2460693b46b7094d2166f2bba9e5",
+    "distinct": 62,
+    "structural": 62,
+    "interpreted_words": 19,
+    "midi": 15,
+    "sampled_render_available": false
+  },
+  "after_repeat_ending_marker_and_accidental_controls": {
+    "model": "rsx-dac-approximation-v1",
+    "output_rate": 48000,
+    "instruments": [
+      {
+        "slot": 1,
+        "sha256": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc"
+      },
+      {
+        "slot": 2,
+        "sha256": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849"
+      },
+      {
+        "slot": 3,
+        "sha256": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777"
+      },
+      {
+        "slot": 4,
+        "sha256": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889"
+      },
+      {
+        "slot": 6,
+        "sha256": "178a88b7aa7b6777cbf02748b078954a5e98703a26050487ffa3fdaee50283e6"
+      }
+    ],
+    "counts": {
+      "distinct": 62,
+      "structural": 62,
+      "interpreted_words": 49,
+      "midi": 42
+    },
+    "midi_failures": {
+      "opaque_score_words": 13,
+      "repeat_boundary": 5,
+      "connection": 2
+    },
+    "render_results": {
+      "rsx-ranges": {
+        "full": 33,
+        "unmapped": 0,
+        "no_audio": 0,
+        "output_limit": 3,
+        "opaque_score_words": 13,
+        "missing_instrument": 7,
+        "repeat_boundary": 5,
+        "connection": 1
+      },
+      "nearest-root": {
+        "full": 33,
+        "unmapped": 0,
+        "no_audio": 0,
+        "output_limit": 3,
+        "opaque_score_words": 13,
+        "missing_instrument": 7,
+        "repeat_boundary": 5,
+        "connection": 1
+      }
+    },
+    "remaining_opaque_words_by_score": {
+      "8600": 1,
+      "8a00": 5,
+      "8e00": 3,
+      "9500": 1,
+      "aa00": 3,
+      "ae00": 1,
+      "ca00": 1,
+      "d100": 1,
+      "d500": 1,
+      "d600": 4
+    }
+  },
+  "after_initial_connected_rests": {
+    "model": "rsx-dac-approximation-v1",
+    "output_rate": 48000,
+    "instruments": [
+      {
+        "slot": 1,
+        "sha256": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc"
+      },
+      {
+        "slot": 2,
+        "sha256": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849"
+      },
+      {
+        "slot": 3,
+        "sha256": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777"
+      },
+      {
+        "slot": 4,
+        "sha256": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889"
+      },
+      {
+        "slot": 6,
+        "sha256": "178a88b7aa7b6777cbf02748b078954a5e98703a26050487ffa3fdaee50283e6"
+      }
+    ],
+    "counts": {
+      "distinct": 62,
+      "structural": 62,
+      "interpreted_words": 51,
+      "midi": 42
+    },
+    "midi_failures": {
+      "opaque_score_words": 11,
+      "repeat_boundary": 7,
+      "connection": 2
+    },
+    "render_results": {
+      "rsx-ranges": {
+        "full": 33,
+        "unmapped": 0,
+        "no_audio": 0,
+        "output_limit": 3,
+        "opaque_score_words": 11,
+        "missing_instrument": 7,
+        "repeat_boundary": 7,
+        "connection": 1
+      },
+      "nearest-root": {
+        "full": 33,
+        "unmapped": 0,
+        "no_audio": 0,
+        "output_limit": 3,
+        "opaque_score_words": 11,
+        "missing_instrument": 7,
+        "repeat_boundary": 7,
+        "connection": 1
+      }
+    },
+    "remaining_opaque_words_by_score": {
+      "9500": 1,
+      "aa00": 3,
+      "ae00": 1,
+      "ca00": 1,
+      "d100": 1,
+      "d500": 1,
+      "d600": 4
+    }
+  },
+  "final_48khz": {
+    "model": "rsx-dac-approximation-v1",
+    "output_rate": 48000,
+    "instruments": [
+      {
+        "slot": 1,
+        "sha256": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc"
+      },
+      {
+        "slot": 2,
+        "sha256": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849"
+      },
+      {
+        "slot": 3,
+        "sha256": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777"
+      },
+      {
+        "slot": 4,
+        "sha256": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889"
+      },
+      {
+        "slot": 6,
+        "sha256": "178a88b7aa7b6777cbf02748b078954a5e98703a26050487ffa3fdaee50283e6"
+      }
+    ],
+    "counts": {
+      "distinct": 62,
+      "structural": 62,
+      "interpreted_words": 62,
+      "midi": 51
+    },
+    "midi_failures": {
+      "repeat_boundary": 11
+    },
+    "render_results": {
+      "rsx-ranges": {
+        "full": 37,
+        "unmapped": 0,
+        "no_audio": 0,
+        "output_limit": 4,
+        "repeat_boundary": 11,
+        "missing_instrument": 10
+      },
+      "nearest-root": {
+        "full": 37,
+        "unmapped": 0,
+        "no_audio": 0,
+        "output_limit": 4,
+        "repeat_boundary": 11,
+        "missing_instrument": 10
+      }
+    },
+    "remaining_opaque_words_by_score": {}
+  },
+  "long_score_retry_24khz": [
+    {
+      "score_sha256": "d73601679a14a4368af49c2cb69011fc05a24140b4e0d4e72944a65a222cf5fc",
+      "frames": 10108783,
+      "rate": 24000,
+      "complete": true,
+      "pcm_sha256": "160427471f663b7726196477231e8abbc4559af05b65a027010573f89f6339d5"
+    },
+    {
+      "score_sha256": "90a361e54cfc569514c93d3c6dfd0814b83863fd7d3234db6026e9988f9d994a",
+      "frames": 10108783,
+      "rate": 24000,
+      "complete": true,
+      "pcm_sha256": "97eb6ea90577dd9c18e477ae265aeb8b56865186152ad3b49bbffb268132ad5c"
+    },
+    {
+      "score_sha256": "fd06101e11c5386610d69ea59de61132e051564e03bf28a5ad8168bfd98c49ef",
+      "failure": "missing instrument slot 5 for voice 2 at offset 1592"
+    },
+    {
+      "score_sha256": "83e5eb0cdcce4e242a8b33f51aec53ea005505a2e51b09957a7fbc38dac7ef63",
+      "frames": 6272445,
+      "rate": 24000,
+      "complete": true,
+      "pcm_sha256": "be20052856c7eb9df606406ce4abeea62b26a3e1db7baaa593651a87331d00cb"
+    }
+  ],
+  "private_render_comparisons": {
+    "HISTA": {
+      "score_sha256": "fac44ef0a6df6e58de1fec1d6f66b8bcc1a22756ba1255e08f3eb0aa734d450d",
+      "size": 153,
+      "profile": "000000000000000000000000000000000000",
+      "instruments": [
+        1,
+        2
+      ],
+      "written_ticks": 576,
+      "playback_ticks": 576,
+      "dynamic_controls": 1,
+      "voices": 2,
+      "wav_sha256": "2b781ea70e4d7176d74cf4c0fef4b1a9bd546257923c913d63eb31681aeb2332",
+      "wav_seconds": 12.435458333333333,
+      "decoded_peak": 1060,
+      "native": {
+        "start_ms": 19490,
+        "stop_ms": 36498,
+        "capture_sha256": "ccd5a4057b26384e61704d6016dcc135cd2b63d3c6d3c23d9cc79d4f07426b8b",
+        "capture_frames": 3869760,
+        "capture_emulated_ms": 80620,
+        "window_peak": 1045
+      },
+      "comparison": {
+        "native_first_active_frames": 59308,
+        "native_first_to_last_above_25_seconds": 12.487042,
+        "independent_first_to_last_above_25_seconds": 12.263125,
+        "paired_seconds": 12.4,
+        "native_50ms_rms_peak": 405.578,
+        "independent_50ms_rms_peak": 416.045,
+        "envelope_correlation_50ms": 0.84506,
+        "first_40ms_correlation": 0.98858
+      }
+    },
+    "HISTB": {
+      "score_sha256": "ae1b0d7b0631d0b358d94a7dea18294b1ee61a2197987e7382d9fe35b26cab91",
+      "size": 128,
+      "profile": "000000000000000000000000000000000000",
+      "instruments": [
+        2,
+        3
+      ],
+      "written_ticks": 1251,
+      "playback_ticks": 1251,
+      "dynamic_controls": 0,
+      "voices": 2,
+      "wav_sha256": "66a4503cc59f29e3729c50bf011c2f4fbb92f5562ae69568de95a4077b983aa9",
+      "wav_seconds": 29.709083333333332,
+      "decoded_peak": 950,
+      "native": {
+        "start_ms": 42988,
+        "stop_ms": 78996,
+        "capture_sha256": "ccd5a4057b26384e61704d6016dcc135cd2b63d3c6d3c23d9cc79d4f07426b8b",
+        "capture_frames": 3869760,
+        "capture_emulated_ms": 80620,
+        "window_peak": 866
+      },
+      "comparison": {
+        "native_first_active_frames": 91658,
+        "native_first_to_last_above_25_seconds": 29.741292,
+        "independent_first_to_last_above_25_seconds": 29.562729,
+        "paired_seconds": 29.7,
+        "native_50ms_rms_peak": 312.157,
+        "independent_50ms_rms_peak": 321.667,
+        "envelope_correlation_50ms": 0.95739,
+        "first_40ms_correlation": 0.70578
+      }
+    },
+    "HISTC": {
+      "score_sha256": "bbc8de995119ef6b114b79c293231be3c898209a2b52410942cb2c48bc328a5b",
+      "size": 1925,
+      "profile": "000000000000000000000000000000000000",
+      "instruments": [
+        2
+      ],
+      "written_ticks": 2592,
+      "playback_ticks": 3744,
+      "dynamic_controls": 44,
+      "voices": 3,
+      "wav_sha256": "ac8b3782a17635b501bf1df10aabcd16ff2c9f12573acf1813085911bba9868a",
+      "wav_seconds": 105.079625,
+      "decoded_peak": 3180,
+      "native": {
+        "start_ms": 19490,
+        "stop_ms": 93498,
+        "capture_sha256": "a35853a6287ab6d30ec63219d71b5b875f5259c3e089e5ec98d92297f50e7b7c",
+        "capture_frames": 4608000,
+        "capture_emulated_ms": 96746,
+        "window_peak": 2807
+      },
+      "comparison": {
+        "native_first_active_frames": 49360,
+        "native_first_to_last_above_25_seconds": 72.979667,
+        "independent_first_to_last_above_25_seconds": 104.604521,
+        "paired_seconds": 72.95,
+        "native_50ms_rms_peak": 888.242,
+        "independent_50ms_rms_peak": 909.492,
+        "envelope_correlation_50ms": 0.89161,
+        "first_40ms_correlation": 0.94739
+      }
+    },
+    "HISTD": {
+      "score_sha256": "5660c41717f59c0a066fe857ab03e4f1fe42564560f5a677ed04d5ba050a4c53",
+      "size": 702,
+      "profile": "00012b2d2d05642d2d015442420000000100",
+      "instruments": [
+        2
+      ],
+      "written_ticks": 768,
+      "playback_ticks": 1536,
+      "dynamic_controls": 0,
+      "voices": 3,
+      "wav_sha256": "61ece13a4b516f2ee7c67408d510e58779d1c56041c167a66cbf3edf9e7425fe",
+      "wav_seconds": 49.74183333333333,
+      "decoded_peak": 1590
+    }
+  }
+}
