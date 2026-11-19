@@ -15,11 +15,15 @@ from . import music, sound
 
 OUTPUT_RATE = 48_000
 MAX_FRAMES = 12_000_000
+MAX_STREAM_FRAMES = 96_000_000
+BLOCK_FRAMES = 32_768
 MAX_DECODED_BYTES = 16 * 1024 * 1024
 MAX_INSTRUMENT_FILES = 128
 MAX_SOURCE_BYTES = 32 * 1024 * 1024
 DEFAULT_SLOTS = (1, 2, 3)
 MODEL = 'rsx-dac-approximation-v1'
+INTERLEAVED_MODEL = 'rsx-dac-interleaved-v2'
+PLAYBACK_MODELS = (MODEL, INTERLEAVED_MODEL)
 SAMPLE_POLICIES = ('rsx-ranges', 'strict', 'nearest-root')
 # Six measured gain steps approximately scale unsigned PCM by 5/3 through
 # 10 in DAC output units. The unmarked RSX default has the third step's gain.
@@ -87,20 +91,43 @@ class RenderedMusic:
     model: str = MODEL
 
     def wav(self):
-        return pack('<4sI4s4sIHHIIHH4sI', b'RIFF', 36 + len(self.pcm), b'WAVE',
-                    b'fmt ', 16, 1, 1, self.rate, self.rate * 2, 2, 16, b'data', len(self.pcm)) + self.pcm
+        return _wav_header(self.rate, self.frames) + self.pcm
 
     def describe(self):
-        return {
-            'model': self.model,
-            'sample_policy': self.sample_policy,
-            'rate': self.rate,
-            'frames': self.frames,
-            'written_ticks': self.written_ticks,
-            'playback_ticks': self.playback_ticks,
-            'instruments': [asdict(binding) for binding in self.bindings],
-            'unmapped_pitches': [asdict(pitch) for pitch in self.unmapped_pitches],
-        }
+        return _describe(self)
+
+
+@dataclass(frozen=True)
+class _RenderPlan:
+    rate: int
+    frames: int
+    bindings: tuple[Binding, ...]
+    notes: tuple[Note, ...]
+    unmapped_pitches: tuple[UnmappedPitch, ...]
+    sample_policy: str
+    written_ticks: int
+    playback_ticks: int
+    root_pitches: dict[tuple[int, int], int]
+    model: str = MODEL
+
+
+def _describe(playback):
+    return {
+        'model': playback.model,
+        'sample_policy': playback.sample_policy,
+        'rate': playback.rate,
+        'frames': playback.frames,
+        'written_ticks': playback.written_ticks,
+        'playback_ticks': playback.playback_ticks,
+        'instruments': [asdict(binding) for binding in playback.bindings],
+        'unmapped_pitches': [asdict(pitch) for pitch in playback.unmapped_pitches],
+    }
+
+
+def _wav_header(rate, frames):
+    size = frames * 2
+    return pack('<4sI4s4sIHHIIHH4sI', b'RIFF', 36 + size, b'WAVE',
+                b'fmt ', 16, 1, 1, rate, rate * 2, 2, 16, b'data', size)
 
 
 def load_instruments(directory):
@@ -277,8 +304,19 @@ def _plan(sequence, by_slot, clock, rate, sample_policy, default_slots):
     return notes, decoded, used_slots, unmapped
 
 
-def _mix(notes, decoded, frames):
-    output = array('h', [0]) * frames
+@dataclass(frozen=True)
+class _Span:
+    first: int
+    stop: int
+    pcm: bytes
+    phase: int
+    step: int
+    loop_limit: int
+    loop_period: int
+    weight: int
+
+
+def _voice_spans(notes, decoded):
     previous = None
     previous_geometry = None
     phase = 0
@@ -286,7 +324,7 @@ def _mix(notes, decoded, frames):
         pcm, loop_start, loop_end = decoded[note.slot, note.sample_index]
         weight = DEFAULT_DYNAMIC_WEIGHT if note.dynamic_index is None else DYNAMIC_WEIGHTS[note.dynamic_index]
         geometry = len(pcm), loop_start, loop_end
-        previous_connected = previous is not None and previous.voice == note.voice and previous.continues_next
+        previous_connected = previous is not None and previous.continues_next
         if not note.continues_previous or (previous_connected and previous_geometry != geometry):
             phase = 0
         elif not previous_connected:
@@ -294,29 +332,58 @@ def _mix(notes, decoded, frames):
             phase = loop_start << PHASE_BITS
         loop_limit = loop_end << PHASE_BITS
         loop_period = (loop_end - loop_start) << PHASE_BITS
-        limit = len(pcm) << PHASE_BITS
-        for frame in range(note.start_frame, note.gate_frame):
-            if loop_end and phase >= loop_limit:
-                phase = loop_limit - loop_period + (phase - loop_limit) % loop_period
-            elif phase >= limit:
-                break
-            output[frame] += (pcm[phase >> PHASE_BITS] - 128) * weight
-            phase += note.source_step
+        length = note.gate_frame - note.start_frame
+        if not loop_period:
+            available = (len(pcm) << PHASE_BITS) - phase
+            length = min(length, max(0, (available + note.source_step - 1) // note.source_step))
+        if length:
+            yield _Span(note.start_frame, note.start_frame + length, pcm, phase,
+                        note.source_step, loop_limit, loop_period, weight)
+            # Carry the phase after the last audible frame, including loop wrap.
+            last_phase = phase + (length - 1) * note.source_step
+            if loop_period and last_phase >= loop_limit:
+                last_phase = loop_limit - loop_period + (last_phase - loop_limit) % loop_period
+            phase = last_phase + note.source_step
         previous = note
         previous_geometry = geometry
-    pcm_output = array('h', map(MIX_LEVELS.__getitem__, output))
-    if sys.byteorder == 'big':
-        pcm_output.byteswap()
-    return pcm_output.tobytes()
 
 
-def render(score, instruments, *, rate=OUTPUT_RATE, sample_policy='rsx-ranges', default_slots=DEFAULT_SLOTS,
-           max_frames=MAX_FRAMES):
-    """Render parsed Score and Sound objects to bounded mono signed 16-bit PCM."""
+def _mix_blocks(notes, decoded, frames):
+    voices = [[] for _ in range(music.VOICE_COUNT)]
+    for note in notes:
+        voices[note.voice - 1].append(note)
+    sources = [_voice_spans(voice, decoded) for voice in voices]
+    pending = [next(source, None) for source in sources]
+    for begin in range(0, frames, BLOCK_FRAMES):
+        end = min(begin + BLOCK_FRAMES, frames)
+        output = array('h', [0]) * (end - begin)
+        for index, source in enumerate(sources):
+            span = pending[index]
+            while span is not None and span.first < end:
+                first, stop = max(begin, span.first), min(end, span.stop)
+                step, pcm, weight = span.step, span.pcm, span.weight
+                loop_limit, loop_period = span.loop_limit, span.loop_period
+                phase = span.phase + (first - span.first) * step
+                for frame in range(first - begin, stop - begin):
+                    if loop_period and phase >= loop_limit:
+                        phase = loop_limit - loop_period + (phase - loop_limit) % loop_period
+                    output[frame] += (pcm[phase >> PHASE_BITS] - 128) * weight
+                    phase += step
+                if span.stop > end:
+                    break
+                span = next(source, None)
+            pending[index] = span
+        pcm_output = array('h', map(MIX_LEVELS.__getitem__, output))
+        if sys.byteorder == 'big':
+            pcm_output.byteswap()
+        yield pcm_output.tobytes()
+
+
+def _prepare(score, instruments, rate, sample_policy, default_slots, max_frames, hard_limit, *, mix_rate=None):
     if type(rate) is not int or not 8_000 <= rate <= 96_000:
         raise PlaybackError('output rate must be an integer from 8000 to 96000 Hz')
-    if type(max_frames) is not int or not 1 <= max_frames <= MAX_FRAMES:
-        raise PlaybackError(f'output frame budget must be from 1 to {MAX_FRAMES}')
+    if type(max_frames) is not int or not 1 <= max_frames <= hard_limit:
+        raise PlaybackError(f'output frame budget must be from 1 to {hard_limit}')
     if sample_policy not in SAMPLE_POLICIES:
         raise PlaybackError(f'unknown sample selection policy {sample_policy!r}')
     if len(default_slots) != music.VOICE_COUNT or any(
@@ -330,7 +397,9 @@ def render(score, instruments, *, rate=OUTPUT_RATE, sample_policy='rsx-ranges', 
         if frames > max_frames:
             raise PlaybackError(f'render needs {frames} frames and exceeds the {max_frames}-frame output limit')
         by_slot = _instrument_map(instruments)
-        notes, decoded, used_slots, unmapped = _plan(sequence, by_slot, clock, rate, sample_policy, default_slots)
+        notes, decoded, used_slots, unmapped = _plan(
+            sequence, by_slot, clock, rate if mix_rate is None else mix_rate, sample_policy, default_slots,
+        )
     except PlaybackError:
         raise
     except music.MusicFormatError as exc:
@@ -342,5 +411,38 @@ def render(score, instruments, *, rate=OUTPUT_RATE, sample_policy='rsx-ranges', 
     bindings = tuple(Binding(slot, by_slot[slot].name, sha256(by_slot[slot].source).hexdigest(), tuple(sorted(indices)))
                      for slot, indices in sorted(selected.items()))
     omitted = tuple(UnmappedPitch(slot, pitch, count) for (slot, pitch), count in sorted(unmapped.items()))
-    return RenderedMusic(rate, frames, _mix(notes, decoded, frames), bindings, tuple(notes), omitted,
-                         sample_policy, written.written_ticks, sequence.written_ticks)
+    roots = {(slot, index): by_slot[slot].samples[index].midi_pitch for slot, index in decoded}
+    return (_RenderPlan(rate, frames, bindings, tuple(notes), omitted, sample_policy,
+                        written.written_ticks, sequence.written_ticks, roots), decoded)
+
+
+def render(score, instruments, *, rate=OUTPUT_RATE, sample_policy='rsx-ranges', default_slots=DEFAULT_SLOTS,
+           max_frames=MAX_FRAMES):
+    """Render parsed Score and Sound objects to bounded mono signed 16-bit PCM."""
+    plan, decoded = _prepare(score, instruments, rate, sample_policy, default_slots, max_frames, MAX_FRAMES)
+    pcm = b''.join(_mix_blocks(plan.notes, decoded, plan.frames))
+    return RenderedMusic(rate, plan.frames, pcm, plan.bindings, plan.notes, plan.unmapped_pitches,
+                         sample_policy, plan.written_ticks, plan.playback_ticks)
+
+
+def write_wav(score, instruments, stream, *, rate=OUTPUT_RATE, sample_policy='rsx-ranges',
+              default_slots=DEFAULT_SLOTS, max_frames=MAX_FRAMES, model=MODEL):
+    """Stream a WAV to a binary writer and return the playback description."""
+    if model == INTERLEAVED_MODEL:
+        from . import music_dac
+
+        plan, decoded = _prepare(score, instruments, rate, sample_policy, default_slots, max_frames, MAX_FRAMES,
+                                 mix_rate=DAC_RATE / 2)
+        blocks = music_dac.blocks(plan, decoded)
+    elif model == MODEL:
+        plan, decoded = _prepare(score, instruments, rate, sample_policy, default_slots, max_frames, MAX_STREAM_FRAMES)
+        blocks = _mix_blocks(plan.notes, decoded, plan.frames)
+    else:
+        raise PlaybackError(f'unknown sampled playback model {model!r}')
+    header = _wav_header(rate, plan.frames)
+    if stream.write(header) != len(header):
+        raise OSError('incomplete Music WAV header write')
+    for pcm in blocks:
+        if stream.write(pcm) != len(pcm):
+            raise OSError('incomplete Music WAV PCM write')
+    return {**_describe(plan), 'model': model}

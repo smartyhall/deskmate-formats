@@ -1,0 +1,5584 @@
+{
+  "schema_version": 1,
+  "milestone": "baseline-pr118",
+  "authorization": "operator-2026-11-18",
+  "renderer_revision": "f9fe4f174790b6fa19801d5c107994db8e57f0dc",
+  "renderer_sha256": "0ffe149bfdee06526b52653b9f41d0ed64002e43d43e6e2b5b4eb6cb5f88a88f",
+  "emulator_revision": "855258da966f1594f568350be59e8e1eca082ed1",
+  "emulator_sha256": "348df44531bea6ab349a487af6b7e46171b9b90652448ad5816d5a9c6301ce59",
+  "tap_patch_sha256": "20c1d526f42fc8345ae1a7df2e56c078534131eea31e825f9408b741ed4db174",
+  "machine": "Tandy 1000 RSX, i386SX 25 MHz, 4 MiB RAM, internal VGA/PSSJ, DOS 5.00",
+  "rom_sha256": "17984fe7c31ab6b51c96272ba8ee89580eb139aab01399a1b865f6743f3334f2",
+  "rom_revision": "908394b690f7da28f47727d9876774fd672c4ed3",
+  "run_seed": 1,
+  "recordings": [
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/major-scale-native.wav",
+      "case": "major-scale",
+      "playback": "native",
+      "bank": "synthetic",
+      "classification": "independent-synthetic-performance",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "6844bba6fe94c9de220ff8a05251e14ad666af6150b225b2e2c5e865b8ea436f",
+      "instrument_sha256": {
+        "9": "2ffc016c79e069e28ad7eba1a93c7376638c9d330ea80f1d846c0295f32a3ca5",
+        "10": "6757e3baa556f4bea7a31bb397b6ee016a2e6456d0a13625f02b384150613637",
+        "11": "d9b6bf2ae2bbbe0c3f3d2890c8523957b2fe3af8332c836966d9633c635b552b"
+      },
+      "tap": "pssj-dac-pre-mix",
+      "first_capture_frame": 1143377,
+      "raw_frames": 3514560,
+      "raw_sha256": "5ba8b5fa8f0aff42298a45b2ba62ea386d0bb323f0fcb2b9749bd71e7540987e",
+      "command_start_frame": 1141152,
+      "command_stop_frame": 1707936,
+      "command_to_threshold_frames": 9425,
+      "sha256": "79b1c61afce16c945183d071b966370da750fec19e19f04542ed69100484ad9f",
+      "size": 982686,
+      "frames": 491321,
+      "run": "lab-scales",
+      "command_start_ms": 23774,
+      "command_stop_ms": 35582
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/major-scale-renderer.wav",
+      "case": "major-scale",
+      "playback": "renderer",
+      "bank": "synthetic",
+      "classification": "independent-synthetic-performance",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "6844bba6fe94c9de220ff8a05251e14ad666af6150b225b2e2c5e865b8ea436f",
+      "instrument_sha256": {
+        "9": "2ffc016c79e069e28ad7eba1a93c7376638c9d330ea80f1d846c0295f32a3ca5",
+        "10": "6757e3baa556f4bea7a31bb397b6ee016a2e6456d0a13625f02b384150613637",
+        "11": "d9b6bf2ae2bbbe0c3f3d2890c8523957b2fe3af8332c836966d9633c635b552b"
+      },
+      "first_render_frame": 7035,
+      "render_frames": 465086,
+      "render_pcm_sha256": "3a4168fede20f7bcb0b562ede5d4587af1a173ba904b642b9871112d865c3e62",
+      "rate": 48000,
+      "sha256": "68a74d1182b83dddd7b738c8bd914deb671345fa5c66709b5fc90e8a6c9f9279",
+      "size": 982686,
+      "frames": 491321,
+      "model": "rsx-dac-approximation-v1",
+      "sample_policy": "rsx-ranges",
+      "selected_samples": [
+        {
+          "slot": 9,
+          "name": "Lab Reed",
+          "sha256": "2ffc016c79e069e28ad7eba1a93c7376638c9d330ea80f1d846c0295f32a3ca5",
+          "sample_indices": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/minor-scale-native.wav",
+      "case": "minor-scale",
+      "playback": "native",
+      "bank": "synthetic",
+      "classification": "independent-synthetic-performance",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "efa0ed2aeae648877c8d11fd42b7bb947101d80228cc5c3e3b75b0ea020e11da",
+      "instrument_sha256": {
+        "9": "2ffc016c79e069e28ad7eba1a93c7376638c9d330ea80f1d846c0295f32a3ca5",
+        "10": "6757e3baa556f4bea7a31bb397b6ee016a2e6456d0a13625f02b384150613637",
+        "11": "d9b6bf2ae2bbbe0c3f3d2890c8523957b2fe3af8332c836966d9633c635b552b"
+      },
+      "tap": "pssj-dac-pre-mix",
+      "first_capture_frame": 2028886,
+      "raw_frames": 3514560,
+      "raw_sha256": "5ba8b5fa8f0aff42298a45b2ba62ea386d0bb323f0fcb2b9749bd71e7540987e",
+      "command_start_frame": 2026080,
+      "command_stop_frame": 2592864,
+      "command_to_threshold_frames": 10006,
+      "sha256": "a54a8bf03ee66fd0beb5e90bd7d0da97be7ccb749903cb24b70dedcf72e94444",
+      "size": 982964,
+      "frames": 491460,
+      "run": "lab-scales",
+      "command_start_ms": 42210,
+      "command_stop_ms": 54018
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/minor-scale-renderer.wav",
+      "case": "minor-scale",
+      "playback": "renderer",
+      "bank": "synthetic",
+      "classification": "independent-synthetic-performance",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "efa0ed2aeae648877c8d11fd42b7bb947101d80228cc5c3e3b75b0ea020e11da",
+      "instrument_sha256": {
+        "9": "2ffc016c79e069e28ad7eba1a93c7376638c9d330ea80f1d846c0295f32a3ca5",
+        "10": "6757e3baa556f4bea7a31bb397b6ee016a2e6456d0a13625f02b384150613637",
+        "11": "d9b6bf2ae2bbbe0c3f3d2890c8523957b2fe3af8332c836966d9633c635b552b"
+      },
+      "first_render_frame": 7174,
+      "render_frames": 465086,
+      "render_pcm_sha256": "88863e8e6aa75cc3958725616da629b51b5466afb8e17df7fbec2b6bc2203b38",
+      "rate": 48000,
+      "sha256": "cd72a2769be7fb4748d6644590df10afa2288acd074de2ca73bea99aff0fd785",
+      "size": 982964,
+      "frames": 491460,
+      "model": "rsx-dac-approximation-v1",
+      "sample_policy": "rsx-ranges",
+      "selected_samples": [
+        {
+          "slot": 10,
+          "name": "Lab Pluck",
+          "sha256": "6757e3baa556f4bea7a31bb397b6ee016a2e6456d0a13625f02b384150613637",
+          "sample_indices": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/chromatic-scale-native.wav",
+      "case": "chromatic-scale",
+      "playback": "native",
+      "bank": "synthetic",
+      "classification": "independent-synthetic-performance",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "1b2d765fc364da39ca57ae4679ba4d50a2af42708c82077849927a1c97eda7c1",
+      "instrument_sha256": {
+        "9": "2ffc016c79e069e28ad7eba1a93c7376638c9d330ea80f1d846c0295f32a3ca5",
+        "10": "6757e3baa556f4bea7a31bb397b6ee016a2e6456d0a13625f02b384150613637",
+        "11": "d9b6bf2ae2bbbe0c3f3d2890c8523957b2fe3af8332c836966d9633c635b552b"
+      },
+      "tap": "pssj-dac-pre-mix",
+      "first_capture_frame": 2912852,
+      "raw_frames": 3514560,
+      "raw_sha256": "5ba8b5fa8f0aff42298a45b2ba62ea386d0bb323f0fcb2b9749bd71e7540987e",
+      "command_start_frame": 2911008,
+      "command_stop_frame": 3429792,
+      "command_to_threshold_frames": 9044,
+      "sha256": "7cbeadff49260f96bc4ed28d391c345934456b153bde14b964d7c5a5749e7c91",
+      "size": 873350,
+      "frames": 436653,
+      "run": "lab-scales",
+      "command_start_ms": 60646,
+      "command_stop_ms": 71454
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/chromatic-scale-renderer.wav",
+      "case": "chromatic-scale",
+      "playback": "renderer",
+      "bank": "synthetic",
+      "classification": "independent-synthetic-performance",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "1b2d765fc364da39ca57ae4679ba4d50a2af42708c82077849927a1c97eda7c1",
+      "instrument_sha256": {
+        "9": "2ffc016c79e069e28ad7eba1a93c7376638c9d330ea80f1d846c0295f32a3ca5",
+        "10": "6757e3baa556f4bea7a31bb397b6ee016a2e6456d0a13625f02b384150613637",
+        "11": "d9b6bf2ae2bbbe0c3f3d2890c8523957b2fe3af8332c836966d9633c635b552b"
+      },
+      "first_render_frame": 7083,
+      "render_frames": 410370,
+      "render_pcm_sha256": "433ef6348ec3da2920bb0cb46a5ba420f7737961b041ec638bd997eecec39eff",
+      "rate": 48000,
+      "sha256": "7c2feef4b8f5fa375ea7ed2362b214be59655f1342e3a8f09de5a02f14b88f64",
+      "size": 873350,
+      "frames": 436653,
+      "model": "rsx-dac-approximation-v1",
+      "sample_policy": "rsx-ranges",
+      "selected_samples": [
+        {
+          "slot": 11,
+          "name": "Lab Bell",
+          "sha256": "d9b6bf2ae2bbbe0c3f3d2890c8523957b2fe3af8332c836966d9633c635b552b",
+          "sample_indices": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/major-cadence-native.wav",
+      "case": "major-cadence",
+      "playback": "native",
+      "bank": "synthetic",
+      "classification": "independent-synthetic-performance",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "9de77f31059efc2f9769d8d2cb7b8c4c8ec404b9be57f9947e69037a625a7809",
+      "instrument_sha256": {
+        "9": "2ffc016c79e069e28ad7eba1a93c7376638c9d330ea80f1d846c0295f32a3ca5",
+        "10": "6757e3baa556f4bea7a31bb397b6ee016a2e6456d0a13625f02b384150613637",
+        "11": "d9b6bf2ae2bbbe0c3f3d2890c8523957b2fe3af8332c836966d9633c635b552b"
+      },
+      "tap": "pssj-dac-pre-mix",
+      "first_capture_frame": 1143340,
+      "raw_frames": 2264640,
+      "raw_sha256": "10b37f6118a6fa13cc8686adee5a165cc064fb0d1d95564ccaeef4fb1d055309",
+      "command_start_frame": 1141152,
+      "command_stop_frame": 1501536,
+      "command_to_threshold_frames": 9388,
+      "sha256": "599592d65ddf0145810ef1f8ca636b9c26436029f9f6e62f2c893f1668ea4f24",
+      "size": 599900,
+      "frames": 299928,
+      "run": "lab-cadences",
+      "command_start_ms": 23774,
+      "command_stop_ms": 31282
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/major-cadence-renderer.wav",
+      "case": "major-cadence",
+      "playback": "renderer",
+      "bank": "synthetic",
+      "classification": "independent-synthetic-performance",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "9de77f31059efc2f9769d8d2cb7b8c4c8ec404b9be57f9947e69037a625a7809",
+      "instrument_sha256": {
+        "9": "2ffc016c79e069e28ad7eba1a93c7376638c9d330ea80f1d846c0295f32a3ca5",
+        "10": "6757e3baa556f4bea7a31bb397b6ee016a2e6456d0a13625f02b384150613637",
+        "11": "d9b6bf2ae2bbbe0c3f3d2890c8523957b2fe3af8332c836966d9633c635b552b"
+      },
+      "first_render_frame": 7148,
+      "render_frames": 273580,
+      "render_pcm_sha256": "ef598269b6641b7fc9adc9cbf56631bb176d665692dda5fe2c09265c51e1c13f",
+      "rate": 48000,
+      "sha256": "165fde4ab01adda1963ebdebaa42f507c952c26f1d693899b311e49519937b04",
+      "size": 599900,
+      "frames": 299928,
+      "model": "rsx-dac-approximation-v1",
+      "sample_policy": "rsx-ranges",
+      "selected_samples": [
+        {
+          "slot": 9,
+          "name": "Lab Reed",
+          "sha256": "2ffc016c79e069e28ad7eba1a93c7376638c9d330ea80f1d846c0295f32a3ca5",
+          "sample_indices": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/minor-cadence-native.wav",
+      "case": "minor-cadence",
+      "playback": "native",
+      "bank": "synthetic",
+      "classification": "independent-synthetic-performance",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "b97c66b10838986fc60a0de0de5277f453c51b96299efa4da9ad4a9b9dd366df",
+      "instrument_sha256": {
+        "9": "2ffc016c79e069e28ad7eba1a93c7376638c9d330ea80f1d846c0295f32a3ca5",
+        "10": "6757e3baa556f4bea7a31bb397b6ee016a2e6456d0a13625f02b384150613637",
+        "11": "d9b6bf2ae2bbbe0c3f3d2890c8523957b2fe3af8332c836966d9633c635b552b"
+      },
+      "tap": "pssj-dac-pre-mix",
+      "first_capture_frame": 1825599,
+      "raw_frames": 2264640,
+      "raw_sha256": "10b37f6118a6fa13cc8686adee5a165cc064fb0d1d95564ccaeef4fb1d055309",
+      "command_start_frame": 1819680,
+      "command_stop_frame": 2180064,
+      "command_to_threshold_frames": 13119,
+      "sha256": "4b67b2a0c04f857e2ffff180d12fd00a514e504fef68b216d2f4e1f5855bcb1b",
+      "size": 599978,
+      "frames": 299967,
+      "run": "lab-cadences",
+      "command_start_ms": 37910,
+      "command_stop_ms": 45418
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/minor-cadence-renderer.wav",
+      "case": "minor-cadence",
+      "playback": "renderer",
+      "bank": "synthetic",
+      "classification": "independent-synthetic-performance",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "b97c66b10838986fc60a0de0de5277f453c51b96299efa4da9ad4a9b9dd366df",
+      "instrument_sha256": {
+        "9": "2ffc016c79e069e28ad7eba1a93c7376638c9d330ea80f1d846c0295f32a3ca5",
+        "10": "6757e3baa556f4bea7a31bb397b6ee016a2e6456d0a13625f02b384150613637",
+        "11": "d9b6bf2ae2bbbe0c3f3d2890c8523957b2fe3af8332c836966d9633c635b552b"
+      },
+      "first_render_frame": 7187,
+      "render_frames": 273580,
+      "render_pcm_sha256": "44b1818c3b8b5b3c8702b969d1e065acad65b373d605bfd2d09deec93a57ae4a",
+      "rate": 48000,
+      "sha256": "ae856463c77235b4cc866ad36a4527f415a31d0a0676b79b849c55214d13cbf4",
+      "size": 599978,
+      "frames": 299967,
+      "model": "rsx-dac-approximation-v1",
+      "sample_policy": "rsx-ranges",
+      "selected_samples": [
+        {
+          "slot": 9,
+          "name": "Lab Reed",
+          "sha256": "2ffc016c79e069e28ad7eba1a93c7376638c9d330ea80f1d846c0295f32a3ca5",
+          "sample_indices": [
+            0
+          ]
+        },
+        {
+          "slot": 10,
+          "name": "Lab Pluck",
+          "sha256": "6757e3baa556f4bea7a31bb397b6ee016a2e6456d0a13625f02b384150613637",
+          "sample_indices": [
+            0
+          ]
+        },
+        {
+          "slot": 11,
+          "name": "Lab Bell",
+          "sha256": "d9b6bf2ae2bbbe0c3f3d2890c8523957b2fe3af8332c836966d9633c635b552b",
+          "sample_indices": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/oem-major-scale-native.wav",
+      "case": "oem-major-scale",
+      "playback": "native",
+      "bank": "oem",
+      "classification": "original-performance-using-tandy-instruments",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "87d882bbf95ca60304c46f32852981c4eabf21fe109620c6fd2ad2a4dce334ae",
+      "instrument_sha256": {
+        "1": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc",
+        "2": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849",
+        "3": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777",
+        "4": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889"
+      },
+      "tap": "pssj-dac-pre-mix",
+      "first_capture_frame": 1153457,
+      "raw_frames": 3514560,
+      "raw_sha256": "0a1591a0d98b502df472f46aa4ba43bce4a7b01e60cd1ea1b7943dfb5100529c",
+      "command_start_frame": 1141152,
+      "command_stop_frame": 1707936,
+      "command_to_threshold_frames": 19505,
+      "sha256": "3e48909da65e87b12ab2592af680700c7d7deaac556793874b30a224bf736b7e",
+      "size": 982272,
+      "frames": 491114,
+      "run": "oem-scales",
+      "command_start_ms": 23774,
+      "command_stop_ms": 35582
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/oem-major-scale-renderer.wav",
+      "case": "oem-major-scale",
+      "playback": "renderer",
+      "bank": "oem",
+      "classification": "original-performance-using-tandy-instruments",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "87d882bbf95ca60304c46f32852981c4eabf21fe109620c6fd2ad2a4dce334ae",
+      "instrument_sha256": {
+        "1": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc",
+        "2": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849",
+        "3": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777",
+        "4": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889"
+      },
+      "first_render_frame": 6828,
+      "render_frames": 465086,
+      "render_pcm_sha256": "49ae0a10dc841ceb0efecba76e2e318737ff405a9f6ee67742761fc43ed0b507",
+      "rate": 48000,
+      "sha256": "41ab425c7db3851eb813c9b8c0f0f2e272df41b4b42a9d55665403627e176d14",
+      "size": 982272,
+      "frames": 491114,
+      "model": "rsx-dac-approximation-v1",
+      "sample_policy": "rsx-ranges",
+      "selected_samples": [
+        {
+          "slot": 1,
+          "name": "Clarinet",
+          "sha256": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc",
+          "sample_indices": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/oem-minor-scale-native.wav",
+      "case": "oem-minor-scale",
+      "playback": "native",
+      "bank": "oem",
+      "classification": "original-performance-using-tandy-instruments",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "f8ae66eb6158bde1bcd865dedad8cdd2f1513f0aad1f9201f208585696f68777",
+      "instrument_sha256": {
+        "1": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc",
+        "2": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849",
+        "3": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777",
+        "4": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889"
+      },
+      "tap": "pssj-dac-pre-mix",
+      "first_capture_frame": 2068332,
+      "raw_frames": 3514560,
+      "raw_sha256": "0a1591a0d98b502df472f46aa4ba43bce4a7b01e60cd1ea1b7943dfb5100529c",
+      "command_start_frame": 2026080,
+      "command_stop_frame": 2592864,
+      "command_to_threshold_frames": 49452,
+      "sha256": "04fd94691498bb02f62c1a837f39870988e95eea695737d1c9aca5772d526f5e",
+      "size": 983004,
+      "frames": 491480,
+      "run": "oem-scales",
+      "command_start_ms": 42210,
+      "command_stop_ms": 54018
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/oem-minor-scale-renderer.wav",
+      "case": "oem-minor-scale",
+      "playback": "renderer",
+      "bank": "oem",
+      "classification": "original-performance-using-tandy-instruments",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "f8ae66eb6158bde1bcd865dedad8cdd2f1513f0aad1f9201f208585696f68777",
+      "instrument_sha256": {
+        "1": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc",
+        "2": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849",
+        "3": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777",
+        "4": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889"
+      },
+      "first_render_frame": 7194,
+      "render_frames": 465086,
+      "render_pcm_sha256": "a9c49733b5d62a3a22778c8c61f2449d2064c0b3f3c8e86ec99fe4dfe1b6f906",
+      "rate": 48000,
+      "sha256": "18d93f6b7d5c594e68e34951d97399814cc87828d9517d1b439c29a2eea707e1",
+      "size": 983004,
+      "frames": 491480,
+      "model": "rsx-dac-approximation-v1",
+      "sample_policy": "rsx-ranges",
+      "selected_samples": [
+        {
+          "slot": 2,
+          "name": "Piano",
+          "sha256": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849",
+          "sample_indices": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/oem-chromatic-scale-native.wav",
+      "case": "oem-chromatic-scale",
+      "playback": "native",
+      "bank": "oem",
+      "classification": "original-performance-using-tandy-instruments",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "a1b835411bf494f612236d02101280018b6e927ff64003c6bfcbfe9beed6de33",
+      "instrument_sha256": {
+        "1": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc",
+        "2": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849",
+        "3": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777",
+        "4": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889"
+      },
+      "tap": "pssj-dac-pre-mix",
+      "first_capture_frame": 2957236,
+      "raw_frames": 3514560,
+      "raw_sha256": "0a1591a0d98b502df472f46aa4ba43bce4a7b01e60cd1ea1b7943dfb5100529c",
+      "command_start_frame": 2911008,
+      "command_stop_frame": 3429792,
+      "command_to_threshold_frames": 53428,
+      "sha256": "9cd737942d0d64169a90e931cefa460ebfc58b78cd8d55a7b4eb2c3cab3c87d2",
+      "size": 873548,
+      "frames": 436752,
+      "run": "oem-scales",
+      "command_start_ms": 60646,
+      "command_stop_ms": 71454
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/oem-chromatic-scale-renderer.wav",
+      "case": "oem-chromatic-scale",
+      "playback": "renderer",
+      "bank": "oem",
+      "classification": "original-performance-using-tandy-instruments",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "a1b835411bf494f612236d02101280018b6e927ff64003c6bfcbfe9beed6de33",
+      "instrument_sha256": {
+        "1": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc",
+        "2": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849",
+        "3": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777",
+        "4": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889"
+      },
+      "first_render_frame": 7182,
+      "render_frames": 410370,
+      "render_pcm_sha256": "97564c49a16ad3800a8534efbf905bed7de67f7285b008776189403088bdc11d",
+      "rate": 48000,
+      "sha256": "fd15aa9f4d0dbcd8040c971d021a269c22cbc9b27dfe084658b012d2dc245876",
+      "size": 873548,
+      "frames": 436752,
+      "model": "rsx-dac-approximation-v1",
+      "sample_policy": "rsx-ranges",
+      "selected_samples": [
+        {
+          "slot": 3,
+          "name": "Bells",
+          "sha256": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777",
+          "sample_indices": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/oem-major-cadence-native.wav",
+      "case": "oem-major-cadence",
+      "playback": "native",
+      "bank": "oem",
+      "classification": "original-performance-using-tandy-instruments",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "38862015532c18ba3b1f01006e25a9c0bff456f7ddf0f16fc7d12fa406e765db",
+      "instrument_sha256": {
+        "1": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc",
+        "2": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849",
+        "3": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777",
+        "4": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889"
+      },
+      "tap": "pssj-dac-pre-mix",
+      "first_capture_frame": 1183202,
+      "raw_frames": 2629440,
+      "raw_sha256": "12ca287f7734283d25b3d5d553a026d5b663b2dad7dd880a6fac2a25d2320fb1",
+      "command_start_frame": 1141152,
+      "command_stop_frame": 1659936,
+      "command_to_threshold_frames": 49250,
+      "sha256": "14be87688dab585483383841c5202a16a27168206c9f6080c3fecbe6857926cb",
+      "size": 599992,
+      "frames": 299974,
+      "run": "oem-cadences-retry",
+      "command_start_ms": 23774,
+      "command_stop_ms": 34582
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/oem-major-cadence-renderer.wav",
+      "case": "oem-major-cadence",
+      "playback": "renderer",
+      "bank": "oem",
+      "classification": "original-performance-using-tandy-instruments",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "38862015532c18ba3b1f01006e25a9c0bff456f7ddf0f16fc7d12fa406e765db",
+      "instrument_sha256": {
+        "1": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc",
+        "2": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849",
+        "3": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777",
+        "4": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889"
+      },
+      "first_render_frame": 7194,
+      "render_frames": 273580,
+      "render_pcm_sha256": "a78f2efec23a081a8d492fc629548cb79da72fbec0c9fb447b095f965c493889",
+      "rate": 48000,
+      "sha256": "2b464da5a7dfc14cac18714f2c1ea7d3bcb8a9bf6538723f7fc940ade0584c0c",
+      "size": 599992,
+      "frames": 299974,
+      "model": "rsx-dac-approximation-v1",
+      "sample_policy": "rsx-ranges",
+      "selected_samples": [
+        {
+          "slot": 2,
+          "name": "Piano",
+          "sha256": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849",
+          "sample_indices": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/oem-minor-cadence-native.wav",
+      "case": "oem-minor-cadence",
+      "playback": "native",
+      "bank": "oem",
+      "classification": "original-performance-using-tandy-instruments",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "8c5b40b2e002db03107f14d252c8c8e03452e9f9222663c64657ed89ca91925d",
+      "instrument_sha256": {
+        "1": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc",
+        "2": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849",
+        "3": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777",
+        "4": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889"
+      },
+      "tap": "pssj-dac-pre-mix",
+      "first_capture_frame": 2073321,
+      "raw_frames": 2629440,
+      "raw_sha256": "12ca287f7734283d25b3d5d553a026d5b663b2dad7dd880a6fac2a25d2320fb1",
+      "command_start_frame": 1978080,
+      "command_stop_frame": 2544864,
+      "command_to_threshold_frames": 102441,
+      "sha256": "99e0dad0f1a240ea63e194c2b950c5e3279688d163996e39eb4742cced88cb1e",
+      "size": 599982,
+      "frames": 299969,
+      "run": "oem-cadences-retry",
+      "command_start_ms": 41210,
+      "command_stop_ms": 53018
+    },
+    {
+      "path": "examples/music-listening/v1/baseline-pr118/oem-minor-cadence-renderer.wav",
+      "case": "oem-minor-cadence",
+      "playback": "renderer",
+      "bank": "oem",
+      "classification": "original-performance-using-tandy-instruments",
+      "license": "GPL-3.0-or-later OR CC-BY-4.0",
+      "score_sha256": "8c5b40b2e002db03107f14d252c8c8e03452e9f9222663c64657ed89ca91925d",
+      "instrument_sha256": {
+        "1": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc",
+        "2": "53fd65bd8163639e015adce37d4ab55f4d932e54f1cc3ad63acb910ec09f4849",
+        "3": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777",
+        "4": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889"
+      },
+      "first_render_frame": 7189,
+      "render_frames": 273580,
+      "render_pcm_sha256": "36b2945ede7a86007afb96dca04bf8e12aadb8eef9abc54946bf9ccc49a77536",
+      "rate": 48000,
+      "sha256": "00f707676224ccf11f8229e48de2c738f3027a5ac6ab11a2ec52e20a4c176500",
+      "size": 599982,
+      "frames": 299969,
+      "model": "rsx-dac-approximation-v1",
+      "sample_policy": "rsx-ranges",
+      "selected_samples": [
+        {
+          "slot": 1,
+          "name": "Clarinet",
+          "sha256": "cd638022382c0a40d8e2dc7988309ae70b3f812964af40fa3a7b3790c2e67afc",
+          "sample_indices": [
+            1
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Bells",
+          "sha256": "256e907a19c1607ae8354ffd05a6f23f29fab841dac4a477c6c581b7edbb5777",
+          "sample_indices": [
+            1
+          ]
+        },
+        {
+          "slot": 4,
+          "name": "Cello",
+          "sha256": "d689f641d1c69794b2c2f99daca464329cc3b58fd4c14a3fd4e14386e7753889",
+          "sample_indices": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "runs": {
+    "sound": {
+      "raw_sha256": "431c670fb3251255557b231d87feeee86da3a57a7e5b42ed140f6a16f15356a5",
+      "raw_frames": 3049920,
+      "elapsed_emulated_ms": 63558,
+      "setup_config_sha256": "cb08653966acb043e47c62f7250fefc6cd414b0a0167dec51ec8b84787a1fe20",
+      "nvr_sha256": "6e3a5c9688697c3ccd310d2eca1d67faab530ee39a973b6bbb81a96f48615cee",
+      "source_disk_sha256": "3570cc700d0d0f1c92c034451d8e427e36b2dfca7389aa98f20e2eb424096010",
+      "floppy_sha256": "454bba3a16c5aabb6a75a77e9dbf80c64e955cbadc9d820561b7789dfa1dfa81",
+      "stopped_disk_sha256": "6b601b18535c86fc192a21b525df1c7ad421e90424a08f782539479927734637"
+    },
+    "lab-scales": {
+      "raw_sha256": "5ba8b5fa8f0aff42298a45b2ba62ea386d0bb323f0fcb2b9749bd71e7540987e",
+      "raw_frames": 3514560,
+      "elapsed_emulated_ms": 73228,
+      "setup_config_sha256": "cb08653966acb043e47c62f7250fefc6cd414b0a0167dec51ec8b84787a1fe20",
+      "nvr_sha256": "6e3a5c9688697c3ccd310d2eca1d67faab530ee39a973b6bbb81a96f48615cee",
+      "source_disk_sha256": "3570cc700d0d0f1c92c034451d8e427e36b2dfca7389aa98f20e2eb424096010",
+      "floppy_sha256": "045e0bc478e14c158e4c3af4ea3660467b10faaea9d08fcadb560c01cfb541e9",
+      "stopped_disk_sha256": "4e56aac12433877431f9ab7cc06c0e1c9a9341a219478c53399997f5ba73f55d"
+    },
+    "lab-cadences": {
+      "raw_sha256": "10b37f6118a6fa13cc8686adee5a165cc064fb0d1d95564ccaeef4fb1d055309",
+      "raw_frames": 2264640,
+      "elapsed_emulated_ms": 47192,
+      "setup_config_sha256": "cb08653966acb043e47c62f7250fefc6cd414b0a0167dec51ec8b84787a1fe20",
+      "nvr_sha256": "6e3a5c9688697c3ccd310d2eca1d67faab530ee39a973b6bbb81a96f48615cee",
+      "source_disk_sha256": "3570cc700d0d0f1c92c034451d8e427e36b2dfca7389aa98f20e2eb424096010",
+      "floppy_sha256": "3bb6f5e4f6d1cabd3a424f178bfaf76ce2be8dcc48302321bf0a2d8ea026457a",
+      "stopped_disk_sha256": "8c179373e18277b3bd74ffd180274089e5207bb2ca40863eda68f68e71c9f442"
+    },
+    "oem-scales": {
+      "raw_sha256": "0a1591a0d98b502df472f46aa4ba43bce4a7b01e60cd1ea1b7943dfb5100529c",
+      "raw_frames": 3514560,
+      "elapsed_emulated_ms": 73228,
+      "setup_config_sha256": "cb08653966acb043e47c62f7250fefc6cd414b0a0167dec51ec8b84787a1fe20",
+      "nvr_sha256": "6e3a5c9688697c3ccd310d2eca1d67faab530ee39a973b6bbb81a96f48615cee",
+      "source_disk_sha256": "3570cc700d0d0f1c92c034451d8e427e36b2dfca7389aa98f20e2eb424096010",
+      "floppy_sha256": "5d54c8aa83c7d44e67e64d30cb8aceef136c2bdf331d9fac691cf65eef4a3544",
+      "stopped_disk_sha256": "a1899a387f928dda032414390049f5a90d541714c857d4cd25b1448e24e4a282"
+    },
+    "oem-cadences-retry": {
+      "raw_sha256": "12ca287f7734283d25b3d5d553a026d5b663b2dad7dd880a6fac2a25d2320fb1",
+      "raw_frames": 2629440,
+      "elapsed_emulated_ms": 54792,
+      "setup_config_sha256": "cb08653966acb043e47c62f7250fefc6cd414b0a0167dec51ec8b84787a1fe20",
+      "nvr_sha256": "6e3a5c9688697c3ccd310d2eca1d67faab530ee39a973b6bbb81a96f48615cee",
+      "source_disk_sha256": "3570cc700d0d0f1c92c034451d8e427e36b2dfca7389aa98f20e2eb424096010",
+      "floppy_sha256": "732d53a1cb92acdd557e02616e3f3b3aa1bbfbc74ce01170f19a82a0da75168a",
+      "stopped_disk_sha256": "054315d10518fc77bb42456c83a79f249613e8f68febf6cd7e6695119148ca17"
+    }
+  },
+  "metrics": {
+    "major-scale": {
+      "native": {
+        "peak": 268,
+        "rms": 103.0741,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7200,
+            "relative_onset_ms": 0.0,
+            "active_ms": 308.9583,
+            "peak": 209,
+            "rms": 147.4058,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                264.722
+              ],
+              "45": [
+                264.635
+              ],
+              "115": [
+                264.655
+              ],
+              "245": [
+                264.716
+              ]
+            }
+          },
+          {
+            "first_frame": 34549,
+            "relative_onset_ms": 569.7708,
+            "active_ms": 309.1458,
+            "peak": 209,
+            "rms": 147.6309,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                296.7
+              ],
+              "45": [
+                296.643
+              ],
+              "115": [
+                296.753
+              ],
+              "245": [
+                295.471
+              ]
+            }
+          },
+          {
+            "first_frame": 61899,
+            "relative_onset_ms": 1139.5625,
+            "active_ms": 257.5,
+            "peak": 209,
+            "rms": 146.9426,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                333.047
+              ],
+              "45": [
+                332.743
+              ],
+              "115": [
+                333.069
+              ]
+            }
+          },
+          {
+            "first_frame": 89253,
+            "relative_onset_ms": 1709.4375,
+            "active_ms": 257.5833,
+            "peak": 209,
+            "rms": 147.0858,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                352.588
+              ],
+              "45": [
+                352.84
+              ],
+              "115": [
+                352.58
+              ]
+            }
+          },
+          {
+            "first_frame": 116602,
+            "relative_onset_ms": 2279.2083,
+            "active_ms": 205.9583,
+            "peak": 209,
+            "rms": 146.0803,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                396.071
+              ],
+              "45": [
+                395.826
+              ],
+              "115": [
+                396.049
+              ]
+            }
+          },
+          {
+            "first_frame": 143956,
+            "relative_onset_ms": 2849.0833,
+            "active_ms": 206.0417,
+            "peak": 209,
+            "rms": 145.8384,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                444.577
+              ],
+              "45": [
+                444.429
+              ],
+              "115": [
+                444.825
+              ]
+            }
+          },
+          {
+            "first_frame": 171305,
+            "relative_onset_ms": 3418.8542,
+            "active_ms": 206.2292,
+            "peak": 209,
+            "rms": 146.4055,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                499.415
+              ],
+              "45": [
+                499.012
+              ],
+              "115": [
+                499.482
+              ]
+            }
+          },
+          {
+            "first_frame": 198659,
+            "relative_onset_ms": 3988.7292,
+            "active_ms": 258.125,
+            "peak": 209,
+            "rms": 146.7239,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                529.427
+              ],
+              "45": [
+                529.391
+              ],
+              "115": [
+                529.343
+              ]
+            }
+          },
+          {
+            "first_frame": 226021,
+            "relative_onset_ms": 4558.7708,
+            "active_ms": 206.2292,
+            "peak": 209,
+            "rms": 146.3917,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                499.474
+              ],
+              "45": [
+                499.006
+              ],
+              "115": [
+                499.427
+              ]
+            }
+          },
+          {
+            "first_frame": 253388,
+            "relative_onset_ms": 5128.9167,
+            "active_ms": 206.0417,
+            "peak": 209,
+            "rms": 145.849,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                444.59
+              ],
+              "45": [
+                444.436
+              ],
+              "115": [
+                444.84
+              ]
+            }
+          },
+          {
+            "first_frame": 280750,
+            "relative_onset_ms": 5698.9583,
+            "active_ms": 205.9583,
+            "peak": 209,
+            "rms": 146.0459,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                396.09
+              ],
+              "45": [
+                395.792
+              ],
+              "115": [
+                396.025
+              ]
+            }
+          },
+          {
+            "first_frame": 308117,
+            "relative_onset_ms": 6269.1042,
+            "active_ms": 257.5833,
+            "peak": 209,
+            "rms": 147.1144,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                352.567
+              ],
+              "45": [
+                352.829
+              ],
+              "115": [
+                352.568
+              ]
+            }
+          },
+          {
+            "first_frame": 335479,
+            "relative_onset_ms": 6839.1458,
+            "active_ms": 257.5,
+            "peak": 209,
+            "rms": 146.9569,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                333.054
+              ],
+              "45": [
+                332.758
+              ],
+              "115": [
+                333.071
+              ]
+            }
+          },
+          {
+            "first_frame": 362846,
+            "relative_onset_ms": 7409.2917,
+            "active_ms": 309.125,
+            "peak": 209,
+            "rms": 147.6059,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                296.72
+              ],
+              "45": [
+                296.62
+              ],
+              "115": [
+                296.731
+              ],
+              "245": [
+                295.456
+              ]
+            }
+          },
+          {
+            "first_frame": 390212,
+            "relative_onset_ms": 7979.4167,
+            "active_ms": 878.9167,
+            "peak": 268,
+            "rms": 197.6748,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                264.783
+              ],
+              "45": [
+                264.702
+              ],
+              "115": [
+                264.722
+              ],
+              "245": [
+                264.646
+              ]
+            }
+          }
+        ]
+      },
+      "renderer": {
+        "peak": 253,
+        "rms": 123.558,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7053,
+            "relative_onset_ms": 0.0,
+            "active_ms": 387.7083,
+            "peak": 190,
+            "rms": 149.017,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                264.697
+              ],
+              "45": [
+                264.72
+              ],
+              "115": [
+                264.721
+              ],
+              "245": [
+                264.711
+              ]
+            }
+          },
+          {
+            "first_frame": 34409,
+            "relative_onset_ms": 569.9167,
+            "active_ms": 387.75,
+            "peak": 190,
+            "rms": 149.3318,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                297.096
+              ],
+              "45": [
+                297.101
+              ],
+              "115": [
+                297.077
+              ],
+              "245": [
+                297.088
+              ]
+            }
+          },
+          {
+            "first_frame": 61765,
+            "relative_onset_ms": 1139.8333,
+            "active_ms": 387.7917,
+            "peak": 190,
+            "rms": 149.6305,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                333.521
+              ],
+              "45": [
+                333.423
+              ],
+              "115": [
+                333.408
+              ],
+              "245": [
+                333.526
+              ]
+            }
+          },
+          {
+            "first_frame": 89122,
+            "relative_onset_ms": 1709.7708,
+            "active_ms": 387.8125,
+            "peak": 190,
+            "rms": 149.7522,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                353.311
+              ],
+              "45": [
+                353.329
+              ],
+              "115": [
+                353.296
+              ],
+              "245": [
+                353.303
+              ]
+            }
+          },
+          {
+            "first_frame": 116479,
+            "relative_onset_ms": 2279.7083,
+            "active_ms": 387.8333,
+            "peak": 190,
+            "rms": 149.9777,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                396.583
+              ],
+              "45": [
+                396.586
+              ],
+              "115": [
+                396.584
+              ],
+              "245": [
+                396.582
+              ]
+            }
+          },
+          {
+            "first_frame": 143836,
+            "relative_onset_ms": 2849.6458,
+            "active_ms": 387.8542,
+            "peak": 190,
+            "rms": 150.2069,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                445.15
+              ],
+              "45": [
+                445.149
+              ],
+              "115": [
+                445.146
+              ],
+              "245": [
+                445.138
+              ]
+            }
+          },
+          {
+            "first_frame": 171193,
+            "relative_onset_ms": 3419.5833,
+            "active_ms": 387.875,
+            "peak": 190,
+            "rms": 150.4032,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                499.614
+              ],
+              "45": [
+                499.642
+              ],
+              "115": [
+                499.676
+              ],
+              "245": [
+                499.646
+              ]
+            }
+          },
+          {
+            "first_frame": 198550,
+            "relative_onset_ms": 3989.5208,
+            "active_ms": 387.8958,
+            "peak": 190,
+            "rms": 150.4883,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                529.413
+              ],
+              "45": [
+                529.42
+              ],
+              "115": [
+                529.423
+              ],
+              "245": [
+                529.264
+              ]
+            }
+          },
+          {
+            "first_frame": 225909,
+            "relative_onset_ms": 4559.5,
+            "active_ms": 387.875,
+            "peak": 190,
+            "rms": 150.4032,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                499.614
+              ],
+              "45": [
+                499.642
+              ],
+              "115": [
+                499.676
+              ],
+              "245": [
+                499.646
+              ]
+            }
+          },
+          {
+            "first_frame": 253268,
+            "relative_onset_ms": 5129.4792,
+            "active_ms": 387.8542,
+            "peak": 190,
+            "rms": 150.2069,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                445.15
+              ],
+              "45": [
+                445.149
+              ],
+              "115": [
+                445.146
+              ],
+              "245": [
+                445.138
+              ]
+            }
+          },
+          {
+            "first_frame": 280627,
+            "relative_onset_ms": 5699.4583,
+            "active_ms": 387.8333,
+            "peak": 190,
+            "rms": 149.9777,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                396.583
+              ],
+              "45": [
+                396.586
+              ],
+              "115": [
+                396.584
+              ],
+              "245": [
+                396.582
+              ]
+            }
+          },
+          {
+            "first_frame": 307986,
+            "relative_onset_ms": 6269.4375,
+            "active_ms": 387.8125,
+            "peak": 190,
+            "rms": 149.7522,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                353.311
+              ],
+              "45": [
+                353.329
+              ],
+              "115": [
+                353.296
+              ],
+              "245": [
+                353.303
+              ]
+            }
+          },
+          {
+            "first_frame": 335345,
+            "relative_onset_ms": 6839.4167,
+            "active_ms": 387.7917,
+            "peak": 190,
+            "rms": 149.6305,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                333.521
+              ],
+              "45": [
+                333.423
+              ],
+              "115": [
+                333.408
+              ],
+              "245": [
+                333.526
+              ]
+            }
+          },
+          {
+            "first_frame": 362705,
+            "relative_onset_ms": 7409.4167,
+            "active_ms": 387.75,
+            "peak": 190,
+            "rms": 149.3318,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                297.096
+              ],
+              "45": [
+                297.101
+              ],
+              "115": [
+                297.077
+              ],
+              "245": [
+                297.088
+              ]
+            }
+          },
+          {
+            "first_frame": 390065,
+            "relative_onset_ms": 7979.4167,
+            "active_ms": 850.8125,
+            "peak": 253,
+            "rms": 200.8513,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                264.7
+              ],
+              "45": [
+                264.72
+              ],
+              "115": [
+                264.721
+              ],
+              "245": [
+                264.711
+              ]
+            }
+          }
+        ]
+      },
+      "by_order_when_activity_counts_match": [
+        {
+          "onset_delta_ms": -3.0625,
+          "active_duration_delta_ms": 78.75,
+          "dominant_component_pitch_delta_cents": 0.556,
+          "first_40ms_onset_aligned_correlation": -0.706871
+        },
+        {
+          "onset_delta_ms": -2.9167,
+          "active_duration_delta_ms": 78.6042,
+          "dominant_component_pitch_delta_cents": 2.671,
+          "first_40ms_onset_aligned_correlation": -0.635472
+        },
+        {
+          "onset_delta_ms": -2.7917,
+          "active_duration_delta_ms": 130.2917,
+          "dominant_component_pitch_delta_cents": 3.534,
+          "first_40ms_onset_aligned_correlation": -0.657158
+        },
+        {
+          "onset_delta_ms": -2.7292,
+          "active_duration_delta_ms": 130.2292,
+          "dominant_component_pitch_delta_cents": 2.398,
+          "first_40ms_onset_aligned_correlation": -0.642893
+        },
+        {
+          "onset_delta_ms": -2.5625,
+          "active_duration_delta_ms": 181.875,
+          "dominant_component_pitch_delta_cents": 3.321,
+          "first_40ms_onset_aligned_correlation": -0.600792
+        },
+        {
+          "onset_delta_ms": -2.5,
+          "active_duration_delta_ms": 181.8125,
+          "dominant_component_pitch_delta_cents": 2.802,
+          "first_40ms_onset_aligned_correlation": -0.720999
+        },
+        {
+          "onset_delta_ms": -2.3333,
+          "active_duration_delta_ms": 181.6458,
+          "dominant_component_pitch_delta_cents": 2.184,
+          "first_40ms_onset_aligned_correlation": -0.605604
+        },
+        {
+          "onset_delta_ms": -2.2708,
+          "active_duration_delta_ms": 129.7708,
+          "dominant_component_pitch_delta_cents": 0.095,
+          "first_40ms_onset_aligned_correlation": -0.674441
+        },
+        {
+          "onset_delta_ms": -2.3333,
+          "active_duration_delta_ms": 181.6458,
+          "dominant_component_pitch_delta_cents": 2.205,
+          "first_40ms_onset_aligned_correlation": -0.604184
+        },
+        {
+          "onset_delta_ms": -2.5,
+          "active_duration_delta_ms": 181.8125,
+          "dominant_component_pitch_delta_cents": 2.775,
+          "first_40ms_onset_aligned_correlation": -0.719866
+        },
+        {
+          "onset_delta_ms": -2.5625,
+          "active_duration_delta_ms": 181.875,
+          "dominant_component_pitch_delta_cents": 3.47,
+          "first_40ms_onset_aligned_correlation": -0.598948
+        },
+        {
+          "onset_delta_ms": -2.7292,
+          "active_duration_delta_ms": 130.2292,
+          "dominant_component_pitch_delta_cents": 2.452,
+          "first_40ms_onset_aligned_correlation": -0.640162
+        },
+        {
+          "onset_delta_ms": -2.7917,
+          "active_duration_delta_ms": 130.2917,
+          "dominant_component_pitch_delta_cents": 3.456,
+          "first_40ms_onset_aligned_correlation": -0.653745
+        },
+        {
+          "onset_delta_ms": -2.9375,
+          "active_duration_delta_ms": 78.625,
+          "dominant_component_pitch_delta_cents": 2.805,
+          "first_40ms_onset_aligned_correlation": -0.666821
+        },
+        {
+          "onset_delta_ms": -3.0625,
+          "active_duration_delta_ms": -28.1042,
+          "dominant_component_pitch_delta_cents": 0.118,
+          "first_40ms_onset_aligned_correlation": -0.703544
+        }
+      ],
+      "whole_waveform_correlation": -0.319234,
+      "rms_envelope_50ms_correlation": 0.730674
+    },
+    "minor-scale": {
+      "native": {
+        "peak": 477,
+        "rms": 78.0072,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7200,
+            "relative_onset_ms": 0.0,
+            "active_ms": 1082.9792,
+            "peak": 358,
+            "rms": 95.8206,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                222.303
+              ],
+              "45": [
+                221.922
+              ],
+              "115": [
+                222.057
+              ],
+              "245": [
+                220.933
+              ]
+            }
+          },
+          {
+            "first_frame": 61912,
+            "relative_onset_ms": 1139.8333,
+            "active_ms": 482.7917,
+            "peak": 358,
+            "rms": 95.5781,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                264.633
+              ],
+              "45": [
+                264.69
+              ],
+              "115": [
+                264.503
+              ],
+              "245": [
+                264.605
+              ]
+            }
+          },
+          {
+            "first_frame": 89270,
+            "relative_onset_ms": 1709.7917,
+            "active_ms": 431.1667,
+            "peak": 358,
+            "rms": 95.4833,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                296.726
+              ],
+              "45": [
+                296.371
+              ],
+              "115": [
+                296.827
+              ],
+              "245": [
+                295.227
+              ]
+            }
+          },
+          {
+            "first_frame": 116624,
+            "relative_onset_ms": 2279.6667,
+            "active_ms": 384.1042,
+            "peak": 358,
+            "rms": 95.393,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                332.939
+              ],
+              "45": [
+                332.75
+              ],
+              "115": [
+                333.227
+              ],
+              "245": [
+                332.345
+              ]
+            }
+          },
+          {
+            "first_frame": 143982,
+            "relative_onset_ms": 2849.625,
+            "active_ms": 362.6042,
+            "peak": 358,
+            "rms": 95.4106,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                352.404
+              ],
+              "45": [
+                352.869
+              ],
+              "115": [
+                352.568
+              ],
+              "245": [
+                351.328
+              ]
+            }
+          },
+          {
+            "first_frame": 171340,
+            "relative_onset_ms": 3419.5833,
+            "active_ms": 304.5,
+            "peak": 358,
+            "rms": 95.2697,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                419.646
+              ],
+              "45": [
+                419.622
+              ],
+              "115": [
+                419.317
+              ],
+              "245": [
+                418.433
+              ]
+            }
+          },
+          {
+            "first_frame": 198693,
+            "relative_onset_ms": 3989.4375,
+            "active_ms": 287.6042,
+            "peak": 358,
+            "rms": 95.0608,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                444.689
+              ],
+              "45": [
+                444.251
+              ],
+              "115": [
+                444.935
+              ],
+              "245": [
+                444.587
+              ]
+            }
+          },
+          {
+            "first_frame": 226056,
+            "relative_onset_ms": 4559.5,
+            "active_ms": 304.5,
+            "peak": 358,
+            "rms": 95.2609,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                419.656
+              ],
+              "45": [
+                419.616
+              ],
+              "115": [
+                419.323
+              ],
+              "245": [
+                418.464
+              ]
+            }
+          },
+          {
+            "first_frame": 253414,
+            "relative_onset_ms": 5129.4583,
+            "active_ms": 362.6042,
+            "peak": 358,
+            "rms": 95.4113,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                352.4
+              ],
+              "45": [
+                352.897
+              ],
+              "115": [
+                352.58
+              ],
+              "245": [
+                351.33
+              ]
+            }
+          },
+          {
+            "first_frame": 280772,
+            "relative_onset_ms": 5699.4167,
+            "active_ms": 384.1042,
+            "peak": 358,
+            "rms": 95.4031,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                332.927
+              ],
+              "45": [
+                332.784
+              ],
+              "115": [
+                333.227
+              ],
+              "245": [
+                332.359
+              ]
+            }
+          },
+          {
+            "first_frame": 308134,
+            "relative_onset_ms": 6269.4583,
+            "active_ms": 431.1667,
+            "peak": 358,
+            "rms": 95.5188,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                296.719
+              ],
+              "45": [
+                296.391
+              ],
+              "115": [
+                296.847
+              ],
+              "245": [
+                295.186
+              ]
+            }
+          },
+          {
+            "first_frame": 335492,
+            "relative_onset_ms": 6839.4167,
+            "active_ms": 482.7917,
+            "peak": 358,
+            "rms": 95.5744,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                264.628
+              ],
+              "45": [
+                264.709
+              ],
+              "115": [
+                264.525
+              ],
+              "245": [
+                264.626
+              ]
+            }
+          },
+          {
+            "first_frame": 362854,
+            "relative_onset_ms": 7409.4583,
+            "active_ms": 513.0208,
+            "peak": 358,
+            "rms": 95.6184,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                249.256
+              ],
+              "45": [
+                249.174
+              ],
+              "115": [
+                249.213
+              ],
+              "245": [
+                248.823
+              ]
+            }
+          },
+          {
+            "first_frame": 390208,
+            "relative_onset_ms": 7979.3333,
+            "active_ms": 575.8958,
+            "peak": 477,
+            "rms": 126.8441,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                222.346
+              ],
+              "45": [
+                221.721
+              ],
+              "115": [
+                222.515
+              ],
+              "245": [
+                220.865
+              ]
+            }
+          }
+        ]
+      },
+      "renderer": {
+        "peak": 460,
+        "rms": 79.067,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7180,
+            "relative_onset_ms": 0.0,
+            "active_ms": 387.9583,
+            "peak": 345,
+            "rms": 116.1391,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                222.586
+              ],
+              "45": [
+                222.567
+              ],
+              "115": [
+                222.545
+              ],
+              "245": [
+                222.554
+              ]
+            }
+          },
+          {
+            "first_frame": 34537,
+            "relative_onset_ms": 569.9375,
+            "active_ms": 387.9792,
+            "peak": 345,
+            "rms": 110.4698,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                249.829
+              ],
+              "45": [
+                249.815
+              ],
+              "115": [
+                249.839
+              ],
+              "245": [
+                249.862
+              ]
+            }
+          },
+          {
+            "first_frame": 61895,
+            "relative_onset_ms": 1139.8958,
+            "active_ms": 387.9792,
+            "peak": 345,
+            "rms": 107.6544,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                264.688
+              ],
+              "45": [
+                264.715
+              ],
+              "115": [
+                264.677
+              ],
+              "245": [
+                264.691
+              ]
+            }
+          },
+          {
+            "first_frame": 89252,
+            "relative_onset_ms": 1709.8333,
+            "active_ms": 388.0,
+            "peak": 345,
+            "rms": 102.1324,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                297.108
+              ],
+              "45": [
+                297.113
+              ],
+              "115": [
+                297.108
+              ],
+              "245": [
+                297.107
+              ]
+            }
+          },
+          {
+            "first_frame": 116610,
+            "relative_onset_ms": 2279.7917,
+            "active_ms": 387.9792,
+            "peak": 345,
+            "rms": 96.6562,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                333.486
+              ],
+              "45": [
+                333.498
+              ],
+              "115": [
+                333.469
+              ],
+              "245": [
+                333.467
+              ]
+            }
+          },
+          {
+            "first_frame": 143968,
+            "relative_onset_ms": 2849.75,
+            "active_ms": 367.6042,
+            "peak": 345,
+            "rms": 96.4744,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                353.325
+              ],
+              "45": [
+                353.318
+              ],
+              "115": [
+                353.272
+              ],
+              "245": [
+                353.303
+              ]
+            }
+          },
+          {
+            "first_frame": 171325,
+            "relative_onset_ms": 3419.6875,
+            "active_ms": 309.125,
+            "peak": 345,
+            "rms": 96.4675,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                420.156
+              ],
+              "45": [
+                420.15
+              ],
+              "115": [
+                420.155
+              ],
+              "245": [
+                420.136
+              ]
+            }
+          },
+          {
+            "first_frame": 198683,
+            "relative_onset_ms": 3989.6458,
+            "active_ms": 291.7708,
+            "peak": 345,
+            "rms": 96.4884,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                445.146
+              ],
+              "45": [
+                445.133
+              ],
+              "115": [
+                445.146
+              ],
+              "245": [
+                445.128
+              ]
+            }
+          },
+          {
+            "first_frame": 226041,
+            "relative_onset_ms": 4559.6042,
+            "active_ms": 309.125,
+            "peak": 345,
+            "rms": 96.4675,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                420.156
+              ],
+              "45": [
+                420.15
+              ],
+              "115": [
+                420.155
+              ],
+              "245": [
+                420.136
+              ]
+            }
+          },
+          {
+            "first_frame": 253400,
+            "relative_onset_ms": 5129.5833,
+            "active_ms": 367.6042,
+            "peak": 345,
+            "rms": 96.4744,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                353.325
+              ],
+              "45": [
+                353.318
+              ],
+              "115": [
+                353.272
+              ],
+              "245": [
+                353.303
+              ]
+            }
+          },
+          {
+            "first_frame": 280758,
+            "relative_onset_ms": 5699.5417,
+            "active_ms": 387.9792,
+            "peak": 345,
+            "rms": 96.6562,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                333.486
+              ],
+              "45": [
+                333.498
+              ],
+              "115": [
+                333.469
+              ],
+              "245": [
+                333.467
+              ]
+            }
+          },
+          {
+            "first_frame": 308116,
+            "relative_onset_ms": 6269.5,
+            "active_ms": 388.0,
+            "peak": 345,
+            "rms": 102.1324,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                297.108
+              ],
+              "45": [
+                297.113
+              ],
+              "115": [
+                297.108
+              ],
+              "245": [
+                297.107
+              ]
+            }
+          },
+          {
+            "first_frame": 335475,
+            "relative_onset_ms": 6839.4792,
+            "active_ms": 387.9792,
+            "peak": 345,
+            "rms": 107.6544,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                264.688
+              ],
+              "45": [
+                264.715
+              ],
+              "115": [
+                264.677
+              ],
+              "245": [
+                264.691
+              ]
+            }
+          },
+          {
+            "first_frame": 362833,
+            "relative_onset_ms": 7409.4375,
+            "active_ms": 387.9792,
+            "peak": 345,
+            "rms": 110.4698,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                249.829
+              ],
+              "45": [
+                249.815
+              ],
+              "115": [
+                249.839
+              ],
+              "245": [
+                249.862
+              ]
+            }
+          },
+          {
+            "first_frame": 390192,
+            "relative_onset_ms": 7979.4167,
+            "active_ms": 583.5417,
+            "peak": 460,
+            "rms": 128.6411,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                222.585
+              ],
+              "45": [
+                222.568
+              ],
+              "115": [
+                222.545
+              ],
+              "245": [
+                222.553
+              ]
+            }
+          }
+        ]
+      },
+      "by_order_when_activity_counts_match": [],
+      "whole_waveform_correlation": 0.842824,
+      "rms_envelope_50ms_correlation": 0.993132
+    },
+    "chromatic-scale": {
+      "native": {
+        "peak": 448,
+        "rms": 99.2015,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7200,
+            "relative_onset_ms": 0.0,
+            "active_ms": 3122.9375,
+            "peak": 328,
+            "rms": 111.0984,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                264.633
+              ],
+              "45": [
+                264.6
+              ],
+              "115": [
+                264.681
+              ],
+              "245": [
+                264.664
+              ]
+            }
+          },
+          {
+            "first_frame": 157617,
+            "relative_onset_ms": 3133.6875,
+            "active_ms": 259.0208,
+            "peak": 328,
+            "rms": 100.7854,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                498.616
+              ],
+              "45": [
+                499.418
+              ],
+              "115": [
+                497.825
+              ]
+            }
+          },
+          {
+            "first_frame": 171292,
+            "relative_onset_ms": 3418.5833,
+            "active_ms": 244.1875,
+            "peak": 328,
+            "rms": 100.8737,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                529.386
+              ],
+              "45": [
+                529.478
+              ],
+              "115": [
+                529.405
+              ]
+            }
+          },
+          {
+            "first_frame": 184975,
+            "relative_onset_ms": 3703.6458,
+            "active_ms": 259.0208,
+            "peak": 328,
+            "rms": 100.7883,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                498.609
+              ],
+              "45": [
+                499.418
+              ],
+              "115": [
+                497.824
+              ]
+            }
+          },
+          {
+            "first_frame": 198658,
+            "relative_onset_ms": 3988.7083,
+            "active_ms": 274.1458,
+            "peak": 328,
+            "rms": 100.784,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                471.337
+              ],
+              "45": [
+                471.524
+              ],
+              "115": [
+                471.45
+              ]
+            }
+          },
+          {
+            "first_frame": 212342,
+            "relative_onset_ms": 4273.7917,
+            "active_ms": 3054.0208,
+            "peak": 448,
+            "rms": 115.0788,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                443.225
+              ],
+              "45": [
+                444.5
+              ],
+              "115": [
+                443.724
+              ],
+              "245": [
+                444.855
+              ]
+            }
+          }
+        ]
+      },
+      "renderer": {
+        "peak": 440,
+        "rms": 90.1925,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7092,
+            "relative_onset_ms": 0.0,
+            "active_ms": 156.3542,
+            "peak": 330,
+            "rms": 141.0072,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                264.702
+              ],
+              "45": [
+                264.651
+              ],
+              "115": [
+                264.702
+              ]
+            }
+          },
+          {
+            "first_frame": 20771,
+            "relative_onset_ms": 284.9792,
+            "active_ms": 156.3542,
+            "peak": 330,
+            "rms": 139.5699,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                280.414
+              ],
+              "45": [
+                280.441
+              ],
+              "115": [
+                280.411
+              ]
+            }
+          },
+          {
+            "first_frame": 34449,
+            "relative_onset_ms": 569.9375,
+            "active_ms": 156.375,
+            "peak": 330,
+            "rms": 138.0155,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                297.112
+              ],
+              "45": [
+                297.098
+              ],
+              "115": [
+                297.074
+              ]
+            }
+          },
+          {
+            "first_frame": 48128,
+            "relative_onset_ms": 854.9167,
+            "active_ms": 156.375,
+            "peak": 330,
+            "rms": 136.4787,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                314.754
+              ],
+              "45": [
+                314.757
+              ],
+              "115": [
+                314.782
+              ]
+            }
+          },
+          {
+            "first_frame": 61806,
+            "relative_onset_ms": 1139.875,
+            "active_ms": 156.3958,
+            "peak": 330,
+            "rms": 134.8015,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                333.475
+              ],
+              "45": [
+                333.483
+              ],
+              "115": [
+                333.488
+              ]
+            }
+          },
+          {
+            "first_frame": 75485,
+            "relative_onset_ms": 1424.8542,
+            "active_ms": 156.3958,
+            "peak": 330,
+            "rms": 133.2504,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                353.306
+              ],
+              "45": [
+                353.333
+              ],
+              "115": [
+                353.286
+              ]
+            }
+          },
+          {
+            "first_frame": 89164,
+            "relative_onset_ms": 1709.8333,
+            "active_ms": 156.3958,
+            "peak": 330,
+            "rms": 131.5,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                374.318
+              ],
+              "45": [
+                374.33
+              ],
+              "115": [
+                374.302
+              ]
+            }
+          },
+          {
+            "first_frame": 102842,
+            "relative_onset_ms": 1994.7917,
+            "active_ms": 156.4167,
+            "peak": 330,
+            "rms": 129.709,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                396.589
+              ],
+              "45": [
+                396.589
+              ],
+              "115": [
+                396.611
+              ]
+            }
+          },
+          {
+            "first_frame": 116521,
+            "relative_onset_ms": 2279.7708,
+            "active_ms": 156.4167,
+            "peak": 330,
+            "rms": 127.8676,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                420.139
+              ],
+              "45": [
+                420.139
+              ],
+              "115": [
+                420.149
+              ]
+            }
+          },
+          {
+            "first_frame": 130200,
+            "relative_onset_ms": 2564.75,
+            "active_ms": 156.4167,
+            "peak": 330,
+            "rms": 126.0767,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                445.153
+              ],
+              "45": [
+                445.105
+              ],
+              "115": [
+                445.126
+              ]
+            }
+          },
+          {
+            "first_frame": 143878,
+            "relative_onset_ms": 2849.7083,
+            "active_ms": 156.4375,
+            "peak": 330,
+            "rms": 124.2362,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                471.598
+              ],
+              "45": [
+                471.574
+              ],
+              "115": [
+                471.606
+              ]
+            }
+          },
+          {
+            "first_frame": 157557,
+            "relative_onset_ms": 3134.6875,
+            "active_ms": 156.4375,
+            "peak": 330,
+            "rms": 122.2546,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                499.641
+              ],
+              "45": [
+                499.64
+              ],
+              "115": [
+                499.65
+              ]
+            }
+          },
+          {
+            "first_frame": 171236,
+            "relative_onset_ms": 3419.6667,
+            "active_ms": 156.4375,
+            "peak": 330,
+            "rms": 120.2792,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                529.369
+              ],
+              "45": [
+                529.393
+              ],
+              "115": [
+                529.406
+              ]
+            }
+          },
+          {
+            "first_frame": 184915,
+            "relative_onset_ms": 3704.6458,
+            "active_ms": 156.4375,
+            "peak": 330,
+            "rms": 122.2546,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                499.641
+              ],
+              "45": [
+                499.64
+              ],
+              "115": [
+                499.65
+              ]
+            }
+          },
+          {
+            "first_frame": 198594,
+            "relative_onset_ms": 3989.625,
+            "active_ms": 156.4375,
+            "peak": 330,
+            "rms": 124.2362,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                471.598
+              ],
+              "45": [
+                471.574
+              ],
+              "115": [
+                471.606
+              ]
+            }
+          },
+          {
+            "first_frame": 212274,
+            "relative_onset_ms": 4274.625,
+            "active_ms": 156.4167,
+            "peak": 330,
+            "rms": 126.0767,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                445.153
+              ],
+              "45": [
+                445.105
+              ],
+              "115": [
+                445.126
+              ]
+            }
+          },
+          {
+            "first_frame": 225953,
+            "relative_onset_ms": 4559.6042,
+            "active_ms": 156.4167,
+            "peak": 330,
+            "rms": 127.8676,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                420.139
+              ],
+              "45": [
+                420.139
+              ],
+              "115": [
+                420.149
+              ]
+            }
+          },
+          {
+            "first_frame": 239632,
+            "relative_onset_ms": 4844.5833,
+            "active_ms": 156.4167,
+            "peak": 330,
+            "rms": 129.709,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                396.589
+              ],
+              "45": [
+                396.589
+              ],
+              "115": [
+                396.611
+              ]
+            }
+          },
+          {
+            "first_frame": 253312,
+            "relative_onset_ms": 5129.5833,
+            "active_ms": 156.3958,
+            "peak": 330,
+            "rms": 131.5,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                374.318
+              ],
+              "45": [
+                374.33
+              ],
+              "115": [
+                374.302
+              ]
+            }
+          },
+          {
+            "first_frame": 266991,
+            "relative_onset_ms": 5414.5625,
+            "active_ms": 156.3958,
+            "peak": 330,
+            "rms": 133.2504,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                353.306
+              ],
+              "45": [
+                353.333
+              ],
+              "115": [
+                353.286
+              ]
+            }
+          },
+          {
+            "first_frame": 280670,
+            "relative_onset_ms": 5699.5417,
+            "active_ms": 156.3958,
+            "peak": 330,
+            "rms": 134.8015,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                333.475
+              ],
+              "45": [
+                333.483
+              ],
+              "115": [
+                333.488
+              ]
+            }
+          },
+          {
+            "first_frame": 294350,
+            "relative_onset_ms": 5984.5417,
+            "active_ms": 156.375,
+            "peak": 330,
+            "rms": 136.4787,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                314.754
+              ],
+              "45": [
+                314.757
+              ],
+              "115": [
+                314.782
+              ]
+            }
+          },
+          {
+            "first_frame": 308029,
+            "relative_onset_ms": 6269.5208,
+            "active_ms": 156.375,
+            "peak": 330,
+            "rms": 138.0155,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                297.112
+              ],
+              "45": [
+                297.098
+              ],
+              "115": [
+                297.074
+              ]
+            }
+          },
+          {
+            "first_frame": 321709,
+            "relative_onset_ms": 6554.5208,
+            "active_ms": 156.3542,
+            "peak": 330,
+            "rms": 139.5699,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                280.414
+              ],
+              "45": [
+                280.441
+              ],
+              "115": [
+                280.411
+              ]
+            }
+          },
+          {
+            "first_frame": 335388,
+            "relative_onset_ms": 6839.5,
+            "active_ms": 492.6042,
+            "peak": 440,
+            "rms": 137.0454,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                264.702
+              ],
+              "45": [
+                264.654
+              ],
+              "115": [
+                264.701
+              ],
+              "245": [
+                264.716
+              ]
+            }
+          }
+        ]
+      },
+      "by_order_when_activity_counts_match": [],
+      "whole_waveform_correlation": 0.686377,
+      "rms_envelope_50ms_correlation": 0.851048
+    },
+    "major-cadence": {
+      "native": {
+        "peak": 567,
+        "rms": 193.1083,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7200,
+            "relative_onset_ms": 0.0,
+            "active_ms": 879.6875,
+            "peak": 567,
+            "rms": 246.7918,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                399.091,
+                325.928,
+                254.151
+              ],
+              "45": [
+                388.084,
+                269.131,
+                998.528
+              ],
+              "115": [
+                327.173,
+                399.17,
+                254.151
+              ],
+              "245": [
+                264.767,
+                398.809,
+                996.813
+              ]
+            }
+          },
+          {
+            "first_frame": 61931,
+            "relative_onset_ms": 1140.2292,
+            "active_ms": 879.375,
+            "peak": 567,
+            "rms": 246.8677,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                353.151,
+                443.131,
+                265.669
+              ],
+              "45": [
+                352.956,
+                265.607,
+                443.804
+              ],
+              "115": [
+                265.729,
+                350.145,
+                445.906
+              ],
+              "245": [
+                444.923,
+                263.419,
+                352.112
+              ]
+            }
+          },
+          {
+            "first_frame": 116637,
+            "relative_onset_ms": 2279.9375,
+            "active_ms": 775.9583,
+            "peak": 567,
+            "rms": 249.1561,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                395.11,
+                294.563,
+                221.926
+              ],
+              "45": [
+                273.963,
+                396.975,
+                746.469
+              ],
+              "115": [
+                279.465,
+                396.917,
+                747.418
+              ],
+              "245": [
+                395.731,
+                241.679,
+                314.208
+              ]
+            }
+          },
+          {
+            "first_frame": 171348,
+            "relative_onset_ms": 3419.75,
+            "active_ms": 1294.2083,
+            "peak": 567,
+            "rms": 244.9773,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                399.115,
+                325.928,
+                254.151
+              ],
+              "45": [
+                388.002,
+                269.153,
+                998.447
+              ],
+              "115": [
+                327.12,
+                399.17,
+                254.151
+              ],
+              "245": [
+                264.716,
+                398.802,
+                996.811
+              ]
+            }
+          }
+        ]
+      },
+      "renderer": {
+        "peak": 570,
+        "rms": 205.7574,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7160,
+            "relative_onset_ms": 0.0,
+            "active_ms": 850.9375,
+            "peak": 570,
+            "rms": 261.1315,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                400.679,
+                328.726,
+                255.616
+              ],
+              "45": [
+                393.278,
+                268.493,
+                793.784
+              ],
+              "115": [
+                271.798,
+                394.671,
+                793.76
+              ],
+              "245": [
+                324.902,
+                400.477,
+                252.686
+              ]
+            }
+          },
+          {
+            "first_frame": 61875,
+            "relative_onset_ms": 1139.8958,
+            "active_ms": 850.9583,
+            "peak": 570,
+            "rms": 261.5104,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                353.857,
+                444.292,
+                265.043
+              ],
+              "45": [
+                353.979,
+                443.839,
+                265.319
+              ],
+              "115": [
+                265.917,
+                350.814,
+                446.507
+              ],
+              "245": [
+                446.257,
+                263.401,
+                353.448
+              ]
+            }
+          },
+          {
+            "first_frame": 116592,
+            "relative_onset_ms": 2279.8333,
+            "active_ms": 850.9375,
+            "peak": 570,
+            "rms": 261.2854,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                273.443,
+                395.644,
+                1187.28
+              ],
+              "45": [
+                274.663,
+                397.67,
+                749.574
+              ],
+              "115": [
+                274.689,
+                397.679,
+                749.788
+              ],
+              "245": [
+                397.439,
+                247.803,
+                320.067
+              ]
+            }
+          },
+          {
+            "first_frame": 171308,
+            "relative_onset_ms": 3419.75,
+            "active_ms": 1314.0208,
+            "peak": 570,
+            "rms": 262.0346,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                400.679,
+                328.726,
+                255.616
+              ],
+              "45": [
+                393.278,
+                268.493,
+                793.784
+              ],
+              "115": [
+                271.798,
+                394.671,
+                793.76
+              ],
+              "245": [
+                324.902,
+                400.477,
+                252.686
+              ]
+            }
+          }
+        ]
+      },
+      "by_order_when_activity_counts_match": [
+        {
+          "onset_delta_ms": -0.8333,
+          "active_duration_delta_ms": -28.75,
+          "dominant_component_pitch_delta_cents": null,
+          "first_40ms_onset_aligned_correlation": -0.14671
+        },
+        {
+          "onset_delta_ms": -1.1667,
+          "active_duration_delta_ms": -28.4167,
+          "dominant_component_pitch_delta_cents": null,
+          "first_40ms_onset_aligned_correlation": -0.649527
+        },
+        {
+          "onset_delta_ms": -0.9375,
+          "active_duration_delta_ms": 74.9792,
+          "dominant_component_pitch_delta_cents": null,
+          "first_40ms_onset_aligned_correlation": -0.242232
+        },
+        {
+          "onset_delta_ms": -0.8333,
+          "active_duration_delta_ms": 19.8125,
+          "dominant_component_pitch_delta_cents": null,
+          "first_40ms_onset_aligned_correlation": -0.145475
+        }
+      ],
+      "whole_waveform_correlation": 0.203908,
+      "rms_envelope_50ms_correlation": 0.952166
+    },
+    "minor-cadence": {
+      "native": {
+        "peak": 925,
+        "rms": 133.4489,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7200,
+            "relative_onset_ms": 0.0,
+            "active_ms": 828.7708,
+            "peak": 716,
+            "rms": 177.2617,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                250.391,
+                334.499,
+                799.464
+              ],
+              "45": [
+                285.593,
+                211.171,
+                358.152
+              ],
+              "115": [
+                212.887,
+                329.605,
+                666.65
+              ],
+              "245": [
+                226.888,
+                333.413,
+                662.897
+              ]
+            }
+          },
+          {
+            "first_frame": 61925,
+            "relative_onset_ms": 1140.1042,
+            "active_ms": 828.5833,
+            "peak": 448,
+            "rms": 113.6221,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                288.05,
+                361.084,
+                216.065
+              ],
+              "45": [
+                221.509,
+                293.701,
+                365.478
+              ],
+              "115": [
+                222.419,
+                353.495,
+                667.217
+              ],
+              "245": [
+                220.782,
+                356.207,
+                662.294
+              ]
+            }
+          },
+          {
+            "first_frame": 116632,
+            "relative_onset_ms": 2279.8333,
+            "active_ms": 725.1458,
+            "peak": 925,
+            "rms": 233.0025,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                332.745,
+                419.769,
+                248.891
+              ],
+              "45": [
+                247.902,
+                333.893,
+                419.528
+              ],
+              "115": [
+                248.534,
+                419.391,
+                334.873
+              ],
+              "245": [
+                248.845,
+                417.86,
+                746.548
+              ]
+            }
+          },
+          {
+            "first_frame": 171348,
+            "relative_onset_ms": 3419.75,
+            "active_ms": 1036.0208,
+            "peak": 686,
+            "rms": 169.2542,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                250.109,
+                444.414,
+                530.14
+              ],
+              "45": [
+                444.171,
+                274.219,
+                201.417
+              ],
+              "115": [
+                213.341,
+                444.475,
+                286.376
+              ],
+              "245": [
+                227.236,
+                662.541,
+                443.161
+              ]
+            }
+          },
+          {
+            "first_frame": 226058,
+            "relative_onset_ms": 4559.5417,
+            "active_ms": 479.2292,
+            "peak": 477,
+            "rms": 107.1887,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                247.622,
+                444.507,
+                530.027
+              ],
+              "45": [
+                444.026,
+                274.468,
+                201.417
+              ],
+              "115": [
+                213.283,
+                444.486,
+                286.376
+              ],
+              "245": [
+                252.902,
+                444.274,
+                180.909
+              ]
+            }
+          }
+        ]
+      },
+      "renderer": {
+        "peak": 940,
+        "rms": 140.0287,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7192,
+            "relative_onset_ms": 0.0,
+            "active_ms": 851.0833,
+            "peak": 720,
+            "rms": 180.7768,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                250.107,
+                334.52,
+                529.016
+              ],
+              "45": [
+                328.773,
+                210.224,
+                529.096
+              ],
+              "115": [
+                212.516,
+                325.685,
+                667.346
+              ],
+              "245": [
+                230.714,
+                331.418,
+                667.602
+              ]
+            }
+          },
+          {
+            "first_frame": 61907,
+            "relative_onset_ms": 1139.8958,
+            "active_ms": 851.1042,
+            "peak": 463,
+            "rms": 118.8296,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                289.24,
+                361.084,
+                216.065
+              ],
+              "45": [
+                221.89,
+                294.125,
+                366.942
+              ],
+              "115": [
+                222.496,
+                355.027,
+                668.455
+              ],
+              "245": [
+                222.565,
+                356.903,
+                667.429
+              ]
+            }
+          },
+          {
+            "first_frame": 116623,
+            "relative_onset_ms": 2279.8125,
+            "active_ms": 851.1042,
+            "peak": 940,
+            "rms": 233.5217,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                333.154,
+                420.622,
+                248.824
+              ],
+              "45": [
+                248.844,
+                334.305,
+                420.429
+              ],
+              "115": [
+                249.228,
+                420.005,
+                334.857
+              ],
+              "245": [
+                249.877,
+                419.271,
+                749.418
+              ]
+            }
+          },
+          {
+            "first_frame": 171340,
+            "relative_onset_ms": 3419.75,
+            "active_ms": 1088.0,
+            "peak": 695,
+            "rms": 172.342,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                249.956,
+                444.656,
+                530.731
+              ],
+              "45": [
+                444.622,
+                276.053,
+                202.882
+              ],
+              "115": [
+                212.689,
+                444.76,
+                284.911
+              ],
+              "245": [
+                231.032,
+                667.663,
+                445.072
+              ]
+            }
+          },
+          {
+            "first_frame": 226051,
+            "relative_onset_ms": 4559.5625,
+            "active_ms": 388.0833,
+            "peak": 127,
+            "rms": 101.2288,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                222.559,
+                667.675,
+                1112.781
+              ],
+              "45": [
+                222.564,
+                667.726,
+                1112.861
+              ],
+              "115": [
+                222.567,
+                667.711,
+                1112.846
+              ],
+              "245": [
+                222.564,
+                667.719,
+                1112.892
+              ]
+            }
+          }
+        ]
+      },
+      "by_order_when_activity_counts_match": [
+        {
+          "onset_delta_ms": -0.1667,
+          "active_duration_delta_ms": 22.3125,
+          "dominant_component_pitch_delta_cents": null,
+          "first_40ms_onset_aligned_correlation": 0.901992
+        },
+        {
+          "onset_delta_ms": -0.375,
+          "active_duration_delta_ms": 22.5209,
+          "dominant_component_pitch_delta_cents": null,
+          "first_40ms_onset_aligned_correlation": 0.654662
+        },
+        {
+          "onset_delta_ms": -0.1875,
+          "active_duration_delta_ms": 125.9584,
+          "dominant_component_pitch_delta_cents": null,
+          "first_40ms_onset_aligned_correlation": 0.885407
+        },
+        {
+          "onset_delta_ms": -0.1667,
+          "active_duration_delta_ms": 51.9792,
+          "dominant_component_pitch_delta_cents": null,
+          "first_40ms_onset_aligned_correlation": 0.891846
+        },
+        {
+          "onset_delta_ms": -0.1458,
+          "active_duration_delta_ms": -91.1459,
+          "dominant_component_pitch_delta_cents": null,
+          "first_40ms_onset_aligned_correlation": 0.17678
+        }
+      ],
+      "whole_waveform_correlation": 0.151943,
+      "rms_envelope_50ms_correlation": 0.937176
+    },
+    "oem-major-scale": {
+      "native": {
+        "peak": 657,
+        "rms": 160.4539,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7200,
+            "relative_onset_ms": 0.0,
+            "active_ms": 464.125,
+            "peak": 507,
+            "rms": 169.2694,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                265.16
+              ],
+              "45": [
+                261.536
+              ],
+              "115": [
+                262.205
+              ],
+              "245": [
+                262.004
+              ]
+            }
+          },
+          {
+            "first_frame": 34549,
+            "relative_onset_ms": 569.7708,
+            "active_ms": 412.3958,
+            "peak": 507,
+            "rms": 168.6971,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                295.83
+              ],
+              "45": [
+                293.521
+              ],
+              "115": [
+                294.168
+              ],
+              "245": [
+                292.827
+              ]
+            }
+          },
+          {
+            "first_frame": 61894,
+            "relative_onset_ms": 1139.4583,
+            "active_ms": 360.9375,
+            "peak": 507,
+            "rms": 167.2425,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                330.112
+              ],
+              "45": [
+                328.592
+              ],
+              "115": [
+                329.782
+              ],
+              "245": [
+                328.623
+              ]
+            }
+          },
+          {
+            "first_frame": 89248,
+            "relative_onset_ms": 1709.3333,
+            "active_ms": 361.0208,
+            "peak": 507,
+            "rms": 167.7751,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                349.008
+              ],
+              "45": [
+                348.096
+              ],
+              "115": [
+                348.993
+              ],
+              "245": [
+                349.893
+              ]
+            }
+          },
+          {
+            "first_frame": 116597,
+            "relative_onset_ms": 2279.1042,
+            "active_ms": 361.1667,
+            "peak": 507,
+            "rms": 167.6817,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                390.504
+              ],
+              "45": [
+                393.396
+              ],
+              "115": [
+                392.951
+              ],
+              "245": [
+                390.134
+              ]
+            }
+          },
+          {
+            "first_frame": 143903,
+            "relative_onset_ms": 2847.9792,
+            "active_ms": 414.125,
+            "peak": 537,
+            "rms": 241.108,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                442.57
+              ],
+              "45": [
+                441.803
+              ],
+              "115": [
+                440.699
+              ],
+              "245": [
+                436.775
+              ]
+            }
+          },
+          {
+            "first_frame": 171261,
+            "relative_onset_ms": 3417.9375,
+            "active_ms": 362.2917,
+            "peak": 537,
+            "rms": 240.0211,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                496.755
+              ],
+              "45": [
+                493.458
+              ],
+              "115": [
+                492.255
+              ],
+              "245": [
+                494.764
+              ]
+            }
+          },
+          {
+            "first_frame": 198615,
+            "relative_onset_ms": 3987.8125,
+            "active_ms": 466.0208,
+            "peak": 537,
+            "rms": 243.3454,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                526.783
+              ],
+              "45": [
+                524.352
+              ],
+              "115": [
+                524.162
+              ],
+              "245": [
+                524.487
+              ]
+            }
+          },
+          {
+            "first_frame": 225977,
+            "relative_onset_ms": 4557.8542,
+            "active_ms": 362.3125,
+            "peak": 537,
+            "rms": 240.0123,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                496.721
+              ],
+              "45": [
+                493.483
+              ],
+              "115": [
+                492.258
+              ],
+              "245": [
+                494.746
+              ]
+            }
+          },
+          {
+            "first_frame": 253335,
+            "relative_onset_ms": 5127.8125,
+            "active_ms": 414.125,
+            "peak": 537,
+            "rms": 241.1302,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                442.551
+              ],
+              "45": [
+                441.823
+              ],
+              "115": [
+                440.689
+              ],
+              "245": [
+                436.772
+              ]
+            }
+          },
+          {
+            "first_frame": 280745,
+            "relative_onset_ms": 5698.8542,
+            "active_ms": 361.1667,
+            "peak": 507,
+            "rms": 167.6655,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                390.549
+              ],
+              "45": [
+                393.389
+              ],
+              "115": [
+                392.96
+              ],
+              "245": [
+                390.117
+              ]
+            }
+          },
+          {
+            "first_frame": 308112,
+            "relative_onset_ms": 6269.0,
+            "active_ms": 361.0417,
+            "peak": 507,
+            "rms": 167.7634,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                349.077
+              ],
+              "45": [
+                348.177
+              ],
+              "115": [
+                348.991
+              ],
+              "245": [
+                349.844
+              ]
+            }
+          },
+          {
+            "first_frame": 335474,
+            "relative_onset_ms": 6839.0417,
+            "active_ms": 360.9583,
+            "peak": 507,
+            "rms": 167.2618,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                330.155
+              ],
+              "45": [
+                328.554
+              ],
+              "115": [
+                329.782
+              ],
+              "245": [
+                328.647
+              ]
+            }
+          },
+          {
+            "first_frame": 362845,
+            "relative_onset_ms": 7409.2708,
+            "active_ms": 412.3958,
+            "peak": 507,
+            "rms": 168.6505,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                295.812
+              ],
+              "45": [
+                293.605
+              ],
+              "115": [
+                294.206
+              ],
+              "245": [
+                292.742
+              ]
+            }
+          },
+          {
+            "first_frame": 390212,
+            "relative_onset_ms": 7979.4167,
+            "active_ms": 930.4583,
+            "peak": 657,
+            "rms": 227.9167,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                264.561
+              ],
+              "45": [
+                261.395
+              ],
+              "115": [
+                262.254
+              ],
+              "245": [
+                262.158
+              ]
+            }
+          }
+        ]
+      },
+      "renderer": {
+        "peak": 667,
+        "rms": 164.5939,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 6828,
+            "relative_onset_ms": 0.0,
+            "active_ms": 388.0833,
+            "peak": 500,
+            "rms": 174.2765,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                265.559
+              ],
+              "45": [
+                261.369
+              ],
+              "115": [
+                262.178
+              ],
+              "245": [
+                262.177
+              ]
+            }
+          },
+          {
+            "first_frame": 34186,
+            "relative_onset_ms": 569.9583,
+            "active_ms": 388.0833,
+            "peak": 500,
+            "rms": 175.0154,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                297.011
+              ],
+              "45": [
+                293.396
+              ],
+              "115": [
+                294.399
+              ],
+              "245": [
+                294.396
+              ]
+            }
+          },
+          {
+            "first_frame": 61544,
+            "relative_onset_ms": 1139.9167,
+            "active_ms": 388.0833,
+            "peak": 500,
+            "rms": 175.6547,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                331.847
+              ],
+              "45": [
+                329.582
+              ],
+              "115": [
+                330.219
+              ],
+              "245": [
+                330.091
+              ]
+            }
+          },
+          {
+            "first_frame": 88902,
+            "relative_onset_ms": 1709.875,
+            "active_ms": 388.0833,
+            "peak": 500,
+            "rms": 175.6435,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                350.649
+              ],
+              "45": [
+                349.369
+              ],
+              "115": [
+                350.405
+              ],
+              "245": [
+                350.032
+              ]
+            }
+          },
+          {
+            "first_frame": 116260,
+            "relative_onset_ms": 2279.8333,
+            "active_ms": 388.0833,
+            "peak": 500,
+            "rms": 176.6269,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                392.471
+              ],
+              "45": [
+                391.883
+              ],
+              "115": [
+                392.983
+              ],
+              "245": [
+                392.978
+              ]
+            }
+          },
+          {
+            "first_frame": 143639,
+            "relative_onset_ms": 2850.2292,
+            "active_ms": 387.6458,
+            "peak": 525,
+            "rms": 249.3115,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                443.779
+              ],
+              "45": [
+                440.98
+              ],
+              "115": [
+                441.236
+              ],
+              "245": [
+                441.379
+              ]
+            }
+          },
+          {
+            "first_frame": 170995,
+            "relative_onset_ms": 3420.1458,
+            "active_ms": 387.6875,
+            "peak": 525,
+            "rms": 251.0141,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                497.572
+              ],
+              "45": [
+                494.864
+              ],
+              "115": [
+                494.36
+              ],
+              "245": [
+                495.984
+              ]
+            }
+          },
+          {
+            "first_frame": 198352,
+            "relative_onset_ms": 3990.0833,
+            "active_ms": 387.7083,
+            "peak": 525,
+            "rms": 251.8245,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                526.951
+              ],
+              "45": [
+                524.368
+              ],
+              "115": [
+                524.212
+              ],
+              "245": [
+                524.691
+              ]
+            }
+          },
+          {
+            "first_frame": 225711,
+            "relative_onset_ms": 4560.0625,
+            "active_ms": 387.6875,
+            "peak": 525,
+            "rms": 251.0141,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                497.572
+              ],
+              "45": [
+                494.864
+              ],
+              "115": [
+                494.36
+              ],
+              "245": [
+                495.984
+              ]
+            }
+          },
+          {
+            "first_frame": 253071,
+            "relative_onset_ms": 5130.0625,
+            "active_ms": 387.6458,
+            "peak": 525,
+            "rms": 249.3115,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                443.779
+              ],
+              "45": [
+                440.98
+              ],
+              "115": [
+                441.236
+              ],
+              "245": [
+                441.379
+              ]
+            }
+          },
+          {
+            "first_frame": 280408,
+            "relative_onset_ms": 5699.5833,
+            "active_ms": 388.0833,
+            "peak": 500,
+            "rms": 176.6269,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                392.471
+              ],
+              "45": [
+                391.883
+              ],
+              "115": [
+                392.983
+              ],
+              "245": [
+                392.978
+              ]
+            }
+          },
+          {
+            "first_frame": 307766,
+            "relative_onset_ms": 6269.5417,
+            "active_ms": 388.0833,
+            "peak": 500,
+            "rms": 175.6435,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                350.649
+              ],
+              "45": [
+                349.369
+              ],
+              "115": [
+                350.405
+              ],
+              "245": [
+                350.032
+              ]
+            }
+          },
+          {
+            "first_frame": 335124,
+            "relative_onset_ms": 6839.5,
+            "active_ms": 388.0833,
+            "peak": 500,
+            "rms": 175.6547,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                331.847
+              ],
+              "45": [
+                329.582
+              ],
+              "115": [
+                330.219
+              ],
+              "245": [
+                330.091
+              ]
+            }
+          },
+          {
+            "first_frame": 362482,
+            "relative_onset_ms": 7409.4583,
+            "active_ms": 388.0833,
+            "peak": 500,
+            "rms": 175.0154,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                297.011
+              ],
+              "45": [
+                293.396
+              ],
+              "115": [
+                294.399
+              ],
+              "245": [
+                294.396
+              ]
+            }
+          },
+          {
+            "first_frame": 389840,
+            "relative_onset_ms": 7979.4167,
+            "active_ms": 851.1875,
+            "peak": 667,
+            "rms": 237.1837,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                265.557
+              ],
+              "45": [
+                261.369
+              ],
+              "115": [
+                262.181
+              ],
+              "245": [
+                262.181
+              ]
+            }
+          }
+        ]
+      },
+      "by_order_when_activity_counts_match": [
+        {
+          "onset_delta_ms": -7.75,
+          "active_duration_delta_ms": -76.0417,
+          "dominant_component_pitch_delta_cents": -1.106,
+          "first_40ms_onset_aligned_correlation": -0.607599
+        },
+        {
+          "onset_delta_ms": -7.5625,
+          "active_duration_delta_ms": -24.3125,
+          "dominant_component_pitch_delta_cents": -0.737,
+          "first_40ms_onset_aligned_correlation": -0.523273
+        },
+        {
+          "onset_delta_ms": -7.2917,
+          "active_duration_delta_ms": 27.1458,
+          "dominant_component_pitch_delta_cents": 5.208,
+          "first_40ms_onset_aligned_correlation": -0.612544
+        },
+        {
+          "onset_delta_ms": -7.2083,
+          "active_duration_delta_ms": 27.0625,
+          "dominant_component_pitch_delta_cents": 6.32,
+          "first_40ms_onset_aligned_correlation": -0.604226
+        },
+        {
+          "onset_delta_ms": -7.0208,
+          "active_duration_delta_ms": 26.9166,
+          "dominant_component_pitch_delta_cents": -6.671,
+          "first_40ms_onset_aligned_correlation": -0.535498
+        },
+        {
+          "onset_delta_ms": -5.5,
+          "active_duration_delta_ms": -26.4792,
+          "dominant_component_pitch_delta_cents": -3.228,
+          "first_40ms_onset_aligned_correlation": 0.877843
+        },
+        {
+          "onset_delta_ms": -5.5417,
+          "active_duration_delta_ms": 25.3958,
+          "dominant_component_pitch_delta_cents": 4.926,
+          "first_40ms_onset_aligned_correlation": 0.825182
+        },
+        {
+          "onset_delta_ms": -5.4792,
+          "active_duration_delta_ms": -78.3125,
+          "dominant_component_pitch_delta_cents": 0.053,
+          "first_40ms_onset_aligned_correlation": 0.969908
+        },
+        {
+          "onset_delta_ms": -5.5417,
+          "active_duration_delta_ms": 25.375,
+          "dominant_component_pitch_delta_cents": 4.838,
+          "first_40ms_onset_aligned_correlation": 0.823685
+        },
+        {
+          "onset_delta_ms": -5.5,
+          "active_duration_delta_ms": -26.4792,
+          "dominant_component_pitch_delta_cents": -3.306,
+          "first_40ms_onset_aligned_correlation": 0.8771
+        },
+        {
+          "onset_delta_ms": -7.0208,
+          "active_duration_delta_ms": 26.9166,
+          "dominant_component_pitch_delta_cents": -6.64,
+          "first_40ms_onset_aligned_correlation": -0.536669
+        },
+        {
+          "onset_delta_ms": -7.2083,
+          "active_duration_delta_ms": 27.0416,
+          "dominant_component_pitch_delta_cents": 5.917,
+          "first_40ms_onset_aligned_correlation": -0.609153
+        },
+        {
+          "onset_delta_ms": -7.2917,
+          "active_duration_delta_ms": 27.125,
+          "dominant_component_pitch_delta_cents": 5.408,
+          "first_40ms_onset_aligned_correlation": -0.613104
+        },
+        {
+          "onset_delta_ms": -7.5625,
+          "active_duration_delta_ms": -24.3125,
+          "dominant_component_pitch_delta_cents": -1.233,
+          "first_40ms_onset_aligned_correlation": -0.526071
+        },
+        {
+          "onset_delta_ms": -7.75,
+          "active_duration_delta_ms": -79.2708,
+          "dominant_component_pitch_delta_cents": -0.172,
+          "first_40ms_onset_aligned_correlation": -0.612313
+        }
+      ],
+      "whole_waveform_correlation": -0.010299,
+      "rms_envelope_50ms_correlation": 0.925413
+    },
+    "oem-minor-scale": {
+      "native": {
+        "peak": 836,
+        "rms": 154.2388,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7200,
+            "relative_onset_ms": 0.0,
+            "active_ms": 4552.8333,
+            "peak": 627,
+            "rms": 163.5856,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                438.762
+              ],
+              "45": [
+                440.192
+              ],
+              "115": [
+                439.539
+              ],
+              "245": [
+                439.452
+              ]
+            }
+          },
+          {
+            "first_frame": 226068,
+            "relative_onset_ms": 4559.75,
+            "active_ms": 4228.9167,
+            "peak": 836,
+            "rms": 169.6763,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                834.733
+              ],
+              "45": [
+                414.347
+              ],
+              "115": [
+                416.476
+              ],
+              "245": [
+                415.739
+              ]
+            }
+          }
+        ]
+      },
+      "renderer": {
+        "peak": 840,
+        "rms": 153.1341,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7200,
+            "relative_onset_ms": 0.0,
+            "active_ms": 387.9583,
+            "peak": 630,
+            "rms": 185.4513,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                439.467
+              ],
+              "45": [
+                441.078
+              ],
+              "115": [
+                440.105
+              ],
+              "245": [
+                440.627
+              ]
+            }
+          },
+          {
+            "first_frame": 34562,
+            "relative_onset_ms": 570.0417,
+            "active_ms": 387.875,
+            "peak": 625,
+            "rms": 217.4969,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                492.775
+              ],
+              "45": [
+                494.513
+              ],
+              "115": [
+                247.579
+              ],
+              "245": [
+                247.7
+              ]
+            }
+          },
+          {
+            "first_frame": 61919,
+            "relative_onset_ms": 1139.9792,
+            "active_ms": 387.8958,
+            "peak": 625,
+            "rms": 213.5001,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                522.737
+              ],
+              "45": [
+                523.724
+              ],
+              "115": [
+                262.366
+              ],
+              "245": [
+                262.213
+              ]
+            }
+          },
+          {
+            "first_frame": 89276,
+            "relative_onset_ms": 1709.9167,
+            "active_ms": 387.9167,
+            "peak": 625,
+            "rms": 205.5087,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                588.196
+              ],
+              "45": [
+                589.07
+              ],
+              "115": [
+                294.733
+              ],
+              "245": [
+                294.439
+              ]
+            }
+          },
+          {
+            "first_frame": 116633,
+            "relative_onset_ms": 2279.8542,
+            "active_ms": 387.9375,
+            "peak": 625,
+            "rms": 197.1426,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                661.603
+              ],
+              "45": [
+                661.919
+              ],
+              "115": [
+                330.638
+              ],
+              "245": [
+                330.571
+              ]
+            }
+          },
+          {
+            "first_frame": 143991,
+            "relative_onset_ms": 2849.8125,
+            "active_ms": 387.9375,
+            "peak": 625,
+            "rms": 192.8615,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                701.871
+              ],
+              "45": [
+                347.181
+              ],
+              "115": [
+                350.626
+              ],
+              "245": [
+                350.465
+              ]
+            }
+          },
+          {
+            "first_frame": 171348,
+            "relative_onset_ms": 3419.75,
+            "active_ms": 387.9583,
+            "peak": 625,
+            "rms": 179.1149,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                835.344
+              ],
+              "45": [
+                415.115
+              ],
+              "115": [
+                416.882
+              ],
+              "245": [
+                416.837
+              ]
+            }
+          },
+          {
+            "first_frame": 198706,
+            "relative_onset_ms": 3989.7083,
+            "active_ms": 387.9583,
+            "peak": 625,
+            "rms": 174.7473,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                884.86
+              ],
+              "45": [
+                440.243
+              ],
+              "115": [
+                441.814
+              ],
+              "245": [
+                441.162
+              ]
+            }
+          },
+          {
+            "first_frame": 226064,
+            "relative_onset_ms": 4559.6667,
+            "active_ms": 387.9583,
+            "peak": 625,
+            "rms": 179.1149,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                835.344
+              ],
+              "45": [
+                415.115
+              ],
+              "115": [
+                416.882
+              ],
+              "245": [
+                416.837
+              ]
+            }
+          },
+          {
+            "first_frame": 253423,
+            "relative_onset_ms": 5129.6458,
+            "active_ms": 387.9375,
+            "peak": 625,
+            "rms": 192.8615,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                701.871
+              ],
+              "45": [
+                347.181
+              ],
+              "115": [
+                350.626
+              ],
+              "245": [
+                350.465
+              ]
+            }
+          },
+          {
+            "first_frame": 280781,
+            "relative_onset_ms": 5699.6042,
+            "active_ms": 387.9375,
+            "peak": 625,
+            "rms": 197.1426,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                661.603
+              ],
+              "45": [
+                661.919
+              ],
+              "115": [
+                330.638
+              ],
+              "245": [
+                330.571
+              ]
+            }
+          },
+          {
+            "first_frame": 308140,
+            "relative_onset_ms": 6269.5833,
+            "active_ms": 387.9167,
+            "peak": 625,
+            "rms": 205.5087,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                588.196
+              ],
+              "45": [
+                589.07
+              ],
+              "115": [
+                294.733
+              ],
+              "245": [
+                294.439
+              ]
+            }
+          },
+          {
+            "first_frame": 335499,
+            "relative_onset_ms": 6839.5625,
+            "active_ms": 387.8958,
+            "peak": 625,
+            "rms": 213.5001,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                522.737
+              ],
+              "45": [
+                523.724
+              ],
+              "115": [
+                262.366
+              ],
+              "245": [
+                262.213
+              ]
+            }
+          },
+          {
+            "first_frame": 362858,
+            "relative_onset_ms": 7409.5417,
+            "active_ms": 387.875,
+            "peak": 625,
+            "rms": 217.4969,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                492.775
+              ],
+              "45": [
+                494.513
+              ],
+              "115": [
+                247.579
+              ],
+              "245": [
+                247.7
+              ]
+            }
+          },
+          {
+            "first_frame": 390212,
+            "relative_onset_ms": 7979.4167,
+            "active_ms": 808.7917,
+            "peak": 840,
+            "rms": 179.9392,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                439.467
+              ],
+              "45": [
+                441.077
+              ],
+              "115": [
+                440.105
+              ],
+              "245": [
+                440.626
+              ]
+            }
+          }
+        ]
+      },
+      "by_order_when_activity_counts_match": [],
+      "whole_waveform_correlation": 0.680854,
+      "rms_envelope_50ms_correlation": 0.952741
+    },
+    "oem-chromatic-scale": {
+      "native": {
+        "peak": 567,
+        "rms": 114.3189,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7200,
+            "relative_onset_ms": 0.0,
+            "active_ms": 7887.8958,
+            "peak": 567,
+            "rms": 122.7788,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                262.156
+              ],
+              "45": [
+                262.609
+              ],
+              "115": [
+                262.442
+              ],
+              "245": [
+                262.158
+              ]
+            }
+          },
+          {
+            "first_frame": 386087,
+            "relative_onset_ms": 7893.4792,
+            "active_ms": 5.8542,
+            "peak": 29,
+            "rms": 8.4752,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {}
+          },
+          {
+            "first_frame": 386635,
+            "relative_onset_ms": 7904.8958,
+            "active_ms": 73.6875,
+            "peak": 29,
+            "rms": 8.6681,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                262.532
+              ]
+            }
+          }
+        ]
+      },
+      "renderer": {
+        "peak": 560,
+        "rms": 109.2586,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7195,
+            "relative_onset_ms": 0.0,
+            "active_ms": 156.2708,
+            "peak": 420,
+            "rms": 174.3213,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                262.419
+              ],
+              "45": [
+                262.357
+              ],
+              "115": [
+                262.356
+              ]
+            }
+          },
+          {
+            "first_frame": 20874,
+            "relative_onset_ms": 284.9792,
+            "active_ms": 156.2708,
+            "peak": 420,
+            "rms": 172.1532,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                277.947
+              ],
+              "45": [
+                278.012
+              ],
+              "115": [
+                277.789
+              ]
+            }
+          },
+          {
+            "first_frame": 34552,
+            "relative_onset_ms": 569.9375,
+            "active_ms": 156.2917,
+            "peak": 420,
+            "rms": 170.0332,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                294.506
+              ],
+              "45": [
+                294.573
+              ],
+              "115": [
+                294.402
+              ]
+            }
+          },
+          {
+            "first_frame": 48230,
+            "relative_onset_ms": 854.8958,
+            "active_ms": 156.3125,
+            "peak": 420,
+            "rms": 167.8418,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                311.907
+              ],
+              "45": [
+                311.984
+              ],
+              "115": [
+                312.031
+              ]
+            }
+          },
+          {
+            "first_frame": 61909,
+            "relative_onset_ms": 1139.875,
+            "active_ms": 156.3125,
+            "peak": 420,
+            "rms": 165.857,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                331.101
+              ],
+              "45": [
+                330.53
+              ],
+              "115": [
+                330.106
+              ]
+            }
+          },
+          {
+            "first_frame": 75587,
+            "relative_onset_ms": 1424.8333,
+            "active_ms": 156.3333,
+            "peak": 420,
+            "rms": 164.1831,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                350.407
+              ],
+              "45": [
+                349.737
+              ],
+              "115": [
+                349.833
+              ]
+            }
+          },
+          {
+            "first_frame": 89266,
+            "relative_onset_ms": 1709.8125,
+            "active_ms": 156.3333,
+            "peak": 420,
+            "rms": 161.8045,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                370.941
+              ],
+              "45": [
+                370.781
+              ],
+              "115": [
+                371.0
+              ]
+            }
+          },
+          {
+            "first_frame": 102944,
+            "relative_onset_ms": 1994.7708,
+            "active_ms": 156.3542,
+            "peak": 420,
+            "rms": 159.4711,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                393.042
+              ],
+              "45": [
+                392.915
+              ],
+              "115": [
+                393.027
+              ]
+            }
+          },
+          {
+            "first_frame": 116623,
+            "relative_onset_ms": 2279.75,
+            "active_ms": 156.3542,
+            "peak": 420,
+            "rms": 156.5252,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                416.168
+              ],
+              "45": [
+                416.44
+              ],
+              "115": [
+                416.248
+              ]
+            }
+          },
+          {
+            "first_frame": 130301,
+            "relative_onset_ms": 2564.7083,
+            "active_ms": 156.375,
+            "peak": 420,
+            "rms": 153.8792,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                441.203
+              ],
+              "45": [
+                440.953
+              ],
+              "115": [
+                441.241
+              ]
+            }
+          },
+          {
+            "first_frame": 143992,
+            "relative_onset_ms": 2849.9375,
+            "active_ms": 156.125,
+            "peak": 310,
+            "rms": 139.3673,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                467.009
+              ],
+              "45": [
+                466.952
+              ],
+              "115": [
+                467.002
+              ]
+            }
+          },
+          {
+            "first_frame": 157670,
+            "relative_onset_ms": 3134.8958,
+            "active_ms": 156.1458,
+            "peak": 310,
+            "rms": 138.1086,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                494.779
+              ],
+              "45": [
+                494.779
+              ],
+              "115": [
+                494.843
+              ]
+            }
+          },
+          {
+            "first_frame": 171348,
+            "relative_onset_ms": 3419.8542,
+            "active_ms": 156.1667,
+            "peak": 310,
+            "rms": 137.1148,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                524.135
+              ],
+              "45": [
+                524.237
+              ],
+              "115": [
+                524.207
+              ]
+            }
+          },
+          {
+            "first_frame": 185028,
+            "relative_onset_ms": 3704.8542,
+            "active_ms": 156.1458,
+            "peak": 310,
+            "rms": 138.1086,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                494.779
+              ],
+              "45": [
+                494.779
+              ],
+              "115": [
+                494.843
+              ]
+            }
+          },
+          {
+            "first_frame": 198708,
+            "relative_onset_ms": 3989.8542,
+            "active_ms": 156.125,
+            "peak": 310,
+            "rms": 139.3673,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                467.009
+              ],
+              "45": [
+                466.952
+              ],
+              "115": [
+                467.002
+              ]
+            }
+          },
+          {
+            "first_frame": 212375,
+            "relative_onset_ms": 4274.5833,
+            "active_ms": 156.375,
+            "peak": 420,
+            "rms": 153.8792,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                441.203
+              ],
+              "45": [
+                440.953
+              ],
+              "115": [
+                441.241
+              ]
+            }
+          },
+          {
+            "first_frame": 226055,
+            "relative_onset_ms": 4559.5833,
+            "active_ms": 156.3542,
+            "peak": 420,
+            "rms": 156.5252,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                416.168
+              ],
+              "45": [
+                416.44
+              ],
+              "115": [
+                416.248
+              ]
+            }
+          },
+          {
+            "first_frame": 239734,
+            "relative_onset_ms": 4844.5625,
+            "active_ms": 156.3542,
+            "peak": 420,
+            "rms": 159.4711,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                393.042
+              ],
+              "45": [
+                392.915
+              ],
+              "115": [
+                393.027
+              ]
+            }
+          },
+          {
+            "first_frame": 253414,
+            "relative_onset_ms": 5129.5625,
+            "active_ms": 156.3333,
+            "peak": 420,
+            "rms": 161.8045,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                370.941
+              ],
+              "45": [
+                370.781
+              ],
+              "115": [
+                371.0
+              ]
+            }
+          },
+          {
+            "first_frame": 267093,
+            "relative_onset_ms": 5414.5417,
+            "active_ms": 156.3333,
+            "peak": 420,
+            "rms": 164.1831,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                350.407
+              ],
+              "45": [
+                349.737
+              ],
+              "115": [
+                349.833
+              ]
+            }
+          },
+          {
+            "first_frame": 280773,
+            "relative_onset_ms": 5699.5417,
+            "active_ms": 156.3125,
+            "peak": 420,
+            "rms": 165.857,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                331.101
+              ],
+              "45": [
+                330.53
+              ],
+              "115": [
+                330.106
+              ]
+            }
+          },
+          {
+            "first_frame": 294452,
+            "relative_onset_ms": 5984.5208,
+            "active_ms": 156.3125,
+            "peak": 420,
+            "rms": 167.8418,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                311.907
+              ],
+              "45": [
+                311.984
+              ],
+              "115": [
+                312.031
+              ]
+            }
+          },
+          {
+            "first_frame": 308132,
+            "relative_onset_ms": 6269.5208,
+            "active_ms": 156.2917,
+            "peak": 420,
+            "rms": 170.0332,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                294.506
+              ],
+              "45": [
+                294.573
+              ],
+              "115": [
+                294.402
+              ]
+            }
+          },
+          {
+            "first_frame": 321812,
+            "relative_onset_ms": 6554.5208,
+            "active_ms": 156.2708,
+            "peak": 420,
+            "rms": 172.1532,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                277.947
+              ],
+              "45": [
+                278.012
+              ],
+              "115": [
+                277.789
+              ]
+            }
+          },
+          {
+            "first_frame": 335491,
+            "relative_onset_ms": 6839.5,
+            "active_ms": 850.9167,
+            "peak": 560,
+            "rms": 126.2942,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                262.422
+              ],
+              "45": [
+                262.361
+              ],
+              "115": [
+                262.353
+              ],
+              "245": [
+                262.143
+              ]
+            }
+          }
+        ]
+      },
+      "by_order_when_activity_counts_match": [],
+      "whole_waveform_correlation": 0.559267,
+      "rms_envelope_50ms_correlation": 0.86689
+    },
+    "oem-major-cadence": {
+      "native": {
+        "peak": 1493,
+        "rms": 174.9826,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7200,
+            "relative_onset_ms": 0.0,
+            "active_ms": 945.6667,
+            "peak": 1373,
+            "rms": 224.9479,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                786.91,
+                662.04,
+                522.477
+              ],
+              "45": [
+                786.911,
+                389.28,
+                522.861
+              ],
+              "115": [
+                262.958,
+                337.279,
+                786.321
+              ],
+              "245": [
+                259.778,
+                333.512,
+                525.325
+              ]
+            }
+          },
+          {
+            "first_frame": 53259,
+            "relative_onset_ms": 959.5625,
+            "active_ms": 0.1458,
+            "peak": 358,
+            "rms": 243.9359,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {}
+          },
+          {
+            "first_frame": 61916,
+            "relative_onset_ms": 1139.9167,
+            "active_ms": 945.6667,
+            "peak": 1493,
+            "rms": 217.8981,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                699.827,
+                882.284,
+                523.779
+              ],
+              "45": [
+                437.662,
+                524.683,
+                349.957
+              ],
+              "115": [
+                262.945,
+                348.39,
+                441.282
+              ],
+              "245": [
+                262.768,
+                348.07,
+                437.506
+              ]
+            }
+          },
+          {
+            "first_frame": 107975,
+            "relative_onset_ms": 2099.4792,
+            "active_ms": 0.1458,
+            "peak": 358,
+            "rms": 243.9359,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {}
+          },
+          {
+            "first_frame": 116632,
+            "relative_onset_ms": 2279.8333,
+            "active_ms": 1005.0417,
+            "peak": 1344,
+            "rms": 224.6829,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                586.273,
+                491.062,
+                790.931
+              ],
+              "45": [
+                271.784,
+                390.529,
+                780.563
+              ],
+              "115": [
+                269.881,
+                393.771,
+                495.132
+              ],
+              "245": [
+                258.176,
+                390.319,
+                492.645
+              ]
+            }
+          },
+          {
+            "first_frame": 165584,
+            "relative_onset_ms": 3299.6667,
+            "active_ms": 0.1458,
+            "peak": 358,
+            "rms": 243.9359,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {}
+          },
+          {
+            "first_frame": 171348,
+            "relative_onset_ms": 3419.75,
+            "active_ms": 945.6667,
+            "peak": 1373,
+            "rms": 224.8908,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                786.965,
+                661.964,
+                522.449
+              ],
+              "45": [
+                786.89,
+                389.272,
+                522.91
+              ],
+              "115": [
+                262.995,
+                337.228,
+                786.426
+              ],
+              "245": [
+                259.784,
+                333.527,
+                525.295
+              ]
+            }
+          },
+          {
+            "first_frame": 217407,
+            "relative_onset_ms": 4379.3125,
+            "active_ms": 0.1458,
+            "peak": 358,
+            "rms": 243.9359,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {}
+          }
+        ]
+      },
+      "renderer": {
+        "peak": 1440,
+        "rms": 180.0608,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7200,
+            "relative_onset_ms": 0.0,
+            "active_ms": 851.0625,
+            "peak": 1405,
+            "rms": 245.1494,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                662.859,
+                787.35,
+                522.311
+              ],
+              "45": [
+                389.862,
+                788.093,
+                522.547
+              ],
+              "115": [
+                266.94,
+                339.111,
+                787.094
+              ],
+              "245": [
+                262.049,
+                334.716,
+                788.066
+              ]
+            }
+          },
+          {
+            "first_frame": 61916,
+            "relative_onset_ms": 1139.9167,
+            "active_ms": 851.0625,
+            "peak": 1440,
+            "rms": 235.7621,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                883.75,
+                702.429,
+                523.019
+              ],
+              "45": [
+                438.854,
+                524.172,
+                349.901
+              ],
+              "115": [
+                263.646,
+                348.682,
+                441.83
+              ],
+              "245": [
+                261.585,
+                351.897,
+                525.507
+              ]
+            }
+          },
+          {
+            "first_frame": 116632,
+            "relative_onset_ms": 2279.8333,
+            "active_ms": 851.0625,
+            "peak": 1365,
+            "rms": 249.4206,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                586.826,
+                792.409,
+                492.671
+              ],
+              "45": [
+                392.83,
+                263.296,
+                588.082
+              ],
+              "115": [
+                270.877,
+                394.22,
+                494.741
+              ],
+              "245": [
+                262.455,
+                392.235,
+                495.876
+              ]
+            }
+          },
+          {
+            "first_frame": 171348,
+            "relative_onset_ms": 3419.75,
+            "active_ms": 945.6875,
+            "peak": 1405,
+            "rms": 232.7052,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                662.859,
+                787.35,
+                522.311
+              ],
+              "45": [
+                389.862,
+                788.093,
+                522.547
+              ],
+              "115": [
+                266.94,
+                339.111,
+                787.094
+              ],
+              "245": [
+                262.049,
+                334.716,
+                788.066
+              ]
+            }
+          },
+          {
+            "first_frame": 217306,
+            "relative_onset_ms": 4377.2083,
+            "active_ms": 2.3333,
+            "peak": 360,
+            "rms": 68.204,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {}
+          }
+        ]
+      },
+      "by_order_when_activity_counts_match": [],
+      "whole_waveform_correlation": 0.590597,
+      "rms_envelope_50ms_correlation": 0.998434
+    },
+    "oem-minor-cadence": {
+      "native": {
+        "peak": 1403,
+        "rms": 204.1825,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7200,
+            "relative_onset_ms": 0.0,
+            "active_ms": 5129.3542,
+            "peak": 1403,
+            "rms": 225.3745,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                327.612,
+                1649.294,
+                255.616
+              ],
+              "45": [
+                326.307,
+                254.15,
+                1307.972
+              ],
+              "115": [
+                237.437,
+                327.411,
+                1312.945
+              ],
+              "245": [
+                209.682,
+                281.981,
+                1309.28
+              ]
+            }
+          }
+        ]
+      },
+      "renderer": {
+        "peak": 1440,
+        "rms": 204.4615,
+        "clipped_frames": 0,
+        "activity": [
+          {
+            "first_frame": 7189,
+            "relative_onset_ms": 0.0,
+            "active_ms": 851.1875,
+            "peak": 1020,
+            "rms": 265.0553,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                328.028,
+                1652.82,
+                255.616
+              ],
+              "45": [
+                328.478,
+                255.615,
+                1309.171
+              ],
+              "115": [
+                237.841,
+                323.697,
+                1307.783
+              ],
+              "245": [
+                216.056,
+                287.84,
+                1311.185
+              ]
+            }
+          },
+          {
+            "first_frame": 61905,
+            "relative_onset_ms": 1139.9167,
+            "active_ms": 851.1875,
+            "peak": 667,
+            "rms": 175.8255,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                357.134,
+                1751.284,
+                284.913
+              ],
+              "45": [
+                354.757,
+                281.983,
+                1467.908
+              ],
+              "115": [
+                219.617,
+                292.236,
+                364.013
+              ],
+              "245": [
+                220.656,
+                293.701,
+                1470.879
+              ]
+            }
+          },
+          {
+            "first_frame": 116621,
+            "relative_onset_ms": 2279.8333,
+            "active_ms": 851.1875,
+            "peak": 1440,
+            "rms": 345.2507,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                415.989,
+                332.478,
+                2081.864
+              ],
+              "45": [
+                417.27,
+                329.781,
+                1649.011
+              ],
+              "115": [
+                248.053,
+                329.78,
+                415.614
+              ],
+              "245": [
+                331.298,
+                245.332,
+                992.415
+              ]
+            }
+          },
+          {
+            "first_frame": 171337,
+            "relative_onset_ms": 3419.75,
+            "active_ms": 1088.1042,
+            "peak": 985,
+            "rms": 249.7244,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                442.138,
+                269.216,
+                2204.906
+              ],
+              "45": [
+                255.33,
+                440.019,
+                1308.441
+              ],
+              "115": [
+                238.762,
+                447.253,
+                1307.447
+              ],
+              "245": [
+                215.947,
+                1311.257,
+                287.84
+              ]
+            }
+          },
+          {
+            "first_frame": 226053,
+            "relative_onset_ms": 4559.6667,
+            "active_ms": 388.0833,
+            "peak": 393,
+            "rms": 122.4701,
+            "clipped_frames": 0,
+            "spectral_windows_hz": {
+              "10": [
+                264.39,
+                1309.811,
+                787.039
+              ],
+              "45": [
+                260.94,
+                1311.853,
+                787.433
+              ],
+              "115": [
+                262.709,
+                1311.18,
+                786.695
+              ],
+              "245": [
+                262.243,
+                1311.136,
+                787.052
+              ]
+            }
+          }
+        ]
+      },
+      "by_order_when_activity_counts_match": [],
+      "whole_waveform_correlation": 0.220347,
+      "rms_envelope_50ms_correlation": 0.930642
+    }
+  },
+  "applications": {
+    "DESK.EXE": "0f2a40243c997276904d2555a117c60eedf0016dde073285e8d63c8345a2eba3",
+    "MUSIC.PDM": "f54651f6597c89efb5810352d69afdd2887a21217c8d519f3c39d83bf0966993",
+    "SOUND.PDM": "ea5c305a76ae52143f907ed040c05c2c5ea47f6bca45dda3271e410a23af67a2",
+    "DMUSIC.RES": "564035a183ca90c30bde040152521164ac75569e528a24fb039d3c3d9ad919c1",
+    "NMUSIC.RES": "ab9988509e384307ade7d08401626c7a09eb766a2c4c6c79fff907de36749725",
+    "PMUSIC.RES": "6d654c51d63ac591494a778beb9661618b2a1e0dd3df9c28bfdf2721b1219fa6",
+    "DMPLAY.RES": "0661575d79582725e7ff87f1f03767a2b014f8c00705e2d89b77eb47dd887a07"
+  },
+  "runtime": "DeskMate 3.05.00 with Tandy RSX OEM 3.04 Music and Sound modules",
+  "alignment": {
+    "rate": 48000,
+    "absolute_pcm_threshold": 25,
+    "anchor_frame_after_lead_in": 7200,
+    "tail_frames": 19200,
+    "processing": "Exact native PCM crop; unchanged independent PCM with zero padding."
+  }
+}

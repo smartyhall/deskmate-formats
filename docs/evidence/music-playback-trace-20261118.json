@@ -1,0 +1,234 @@
+{
+  "windows": {
+    "POINTS": {
+      "first_capture_frame": 1142400,
+      "end_capture_frame": 1327680,
+      "frames": 185280,
+      "trace_event_counts": {
+        "D": 85820,
+        "W": 227
+      },
+      "noncenter_dma_bytes": 281,
+      "divisor_register_writes": [
+        [
+          1157741,
+          486,
+          161,
+          161,
+          95,
+          14
+        ],
+        [
+          1157741,
+          487,
+          224,
+          161,
+          95,
+          14
+        ]
+      ],
+      "dma_over_events": 75,
+      "transfers_between_dma_over": [
+        [
+          1152,
+          74
+        ]
+      ],
+      "callback_frame_deltas": [
+        [
+          2,
+          72180
+        ],
+        [
+          3,
+          13639
+        ]
+      ],
+      "dma_divisors": [
+        [
+          161,
+          85820
+        ]
+      ],
+      "dac_amplitudes": [
+        [
+          14,
+          85820
+        ]
+      ],
+      "dac_reconstruction_equal_fraction": 1.0
+    },
+    "RATE55": {
+      "first_capture_frame": 1658880,
+      "end_capture_frame": 1844160,
+      "frames": 185280,
+      "trace_event_counts": {
+        "D": 85820,
+        "W": 227
+      },
+      "noncenter_dma_bytes": 38487,
+      "divisor_register_writes": [
+        [
+          1674439,
+          486,
+          161,
+          161,
+          95,
+          14
+        ],
+        [
+          1674439,
+          487,
+          224,
+          161,
+          95,
+          14
+        ]
+      ],
+      "dma_over_events": 75,
+      "transfers_between_dma_over": [
+        [
+          1152,
+          74
+        ]
+      ],
+      "callback_frame_deltas": [
+        [
+          2,
+          72180
+        ],
+        [
+          3,
+          13639
+        ]
+      ],
+      "dma_divisors": [
+        [
+          161,
+          85820
+        ]
+      ],
+      "dac_amplitudes": [
+        [
+          14,
+          85820
+        ]
+      ],
+      "dac_reconstruction_equal_fraction": 1.0
+    },
+    "ROOT40": {
+      "first_capture_frame": 2174400,
+      "end_capture_frame": 2359680,
+      "frames": 185280,
+      "trace_event_counts": {
+        "D": 85820,
+        "W": 224
+      },
+      "noncenter_dma_bytes": 38210,
+      "divisor_register_writes": [
+        [
+          2188974,
+          486,
+          161,
+          161,
+          95,
+          14
+        ],
+        [
+          2188974,
+          487,
+          224,
+          161,
+          95,
+          14
+        ]
+      ],
+      "dma_over_events": 74,
+      "transfers_between_dma_over": [
+        [
+          1152,
+          73
+        ]
+      ],
+      "callback_frame_deltas": [
+        [
+          2,
+          72180
+        ],
+        [
+          3,
+          13639
+        ]
+      ],
+      "dma_divisors": [
+        [
+          161,
+          85820
+        ]
+      ],
+      "dac_amplitudes": [
+        [
+          14,
+          85820
+        ]
+      ],
+      "dac_reconstruction_equal_fraction": 1.0
+    }
+  },
+  "frames": 555840,
+  "closed_trace": [
+    2455680,
+    8084160,
+    241862,
+    161,
+    64,
+    14
+  ],
+  "sha256": {
+    "pssj.raw": "0f08bc9c275328b0774f319cbf430755443b78ad7c73e0273a0aaae134950864",
+    "pssj.csv": "0484b7b6c3a3573d97ccda9f475177b03d622329167b99ec7dce2e892298b90d"
+  },
+  "historical_comparison": {
+    "score_sha256": "bbc8de995119ef6b114b79c293231be3c898209a2b52410942cb2c48bc328a5b",
+    "raw_sha256": "23266722de76b89f2ba59bf93109682a6744cefbbcc962398376b0915ba63025",
+    "raw_frames": 5508480,
+    "capture_start_frame": 1142400,
+    "capture_stop_frame": 6650880,
+    "pair_native_first_raw_frame": 55408,
+    "paired_frames": 5070215,
+    "native_activity_seconds": 104.742646,
+    "renderer_activity_seconds": 104.604521,
+    "elapsed_emulated_ms": 140568,
+    "wav": {
+      "native": {
+        "sha256": "8426dddeaf63ec2ff482d2fdd7a7f73e74725f22239f5aa4b74c834e8c4319f2",
+        "size": 10140474,
+        "frames": 5070215
+      },
+      "renderer": {
+        "sha256": "4f25b03a8866ce85166e8c8a4c14d1f1b6d1555dd5fbb46db8ea89c301532087",
+        "size": 10140474,
+        "frames": 5070215
+      }
+    },
+    "paired_analysis_seconds": 105.05,
+    "envelope_correlation_50ms": 0.876067,
+    "first_40ms_correlation": 0.947904,
+    "whole_waveform_correlation": 0.710309,
+    "capture_window_limited_driver_trace": true
+  },
+  "repeat_capture_identity": {
+    "RMOON": {
+      "raw_sha256": "52d5ba13c5a796cccddf918fdaac53a3f9f7264ad620bb9b422ebf224b8e6bf7",
+      "raw_frames": 5508480,
+      "elapsed_emulated_ms": 142342,
+      "ended_by_operator_cancel": true
+    },
+    "RTRACES": {
+      "raw_sha256": "f44d8b9def82fd8611a39db513f16b9d8afc043866dbfa9139dde214c25d074a",
+      "raw_frames": 5508480,
+      "elapsed_emulated_ms": 142358,
+      "ended_by_operator_cancel": true
+    }
+  }
+}
