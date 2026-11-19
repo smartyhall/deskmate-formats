@@ -48,3 +48,12 @@ the display-list group reference checks. BRIDESHW has the one-word arc
 length disagreement. Their untouched inputs remain private. See the
 [PIPES](draw-pipes-20261118.md) and [BRIDESHW](draw-brideshw-20261118.md)
 investigations.
+
+The [follow-up inventory](../evidence/draw-corpus-arcs-20261119.json)
+keeps the strict result at 204 of 206. Explicit arc recovery admits
+BRIDESHW, bringing the qualified read count to 205. PIPES remains
+outside strict and recovery decoding. The updated scalable projection
+renders 8,704 leaves across those 205 figures and reports omissions in
+122 figures. Twelve arcs retain unsupported extents. The follow-up
+inventory binds the same ordered source hashes and records the recovered
+list offset independently of the renderer output.

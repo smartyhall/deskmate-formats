@@ -160,7 +160,8 @@ class DrawLibraryAuditTest(unittest.TestCase):
         self.assertEqual(self.audit(audit_repository)['draw_comparison_artifacts_checked'], 0)
         dist = self.root / 'dist'
         dist.mkdir()
-        with ZipFile(dist / 'bad.whl', 'w') as package:
-            package.writestr('project/' + self.files[3].as_posix(), SVG)
-        with self.assertRaisesRegex(ValueError, 'excluded file in archive'):
-            self.audit(audit_repository)
+        for prefix in ('project/', ''):
+            with ZipFile(dist / 'bad.whl', 'w') as package:
+                package.writestr(prefix + self.files[3].as_posix(), SVG)
+            with self.assertRaisesRegex(ValueError, 'excluded file in archive'):
+                self.audit(audit_repository)

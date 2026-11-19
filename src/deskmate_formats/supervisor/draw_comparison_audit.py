@@ -2,7 +2,7 @@
 from binascii import crc32
 from hashlib import sha256
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 from struct import unpack, unpack_from
 from xml.etree import ElementTree
@@ -251,3 +251,11 @@ def check_artifact(root, rel, entry):
 def check_complete(root, index, found):
     metadata_only = (root / 'PKG-INFO').is_file() and not (root / '.git').exists() and not found
     require(found == set(index) or metadata_only, 'declared artifacts are missing')
+
+
+def packaged_projection(name):
+    path = PurePosixPath(name)
+    length = len(TREE.parts)
+    return path.suffix.lower() == '.svg' and (
+        path.parts[:length] == TREE.parts or path.parts[1:length + 1] == TREE.parts
+    )

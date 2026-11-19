@@ -348,8 +348,7 @@ def audit():
             if any(part in EXCLUDED or part.startswith('.venv') for part in Path(name).parts):
                 raise ValueError('excluded directory in archive: ' + name)
             if (Path(name).suffix.lower() in BAD_EXT
-                    or str(name).partition('/')[2].startswith(draw_audit.TREE.as_posix() + '/')
-                    and Path(name).suffix.lower() == '.svg'
+                    or draw_audit.packaged_projection(name)
                     or native_text_export(Path(name.partition('/')[2]))
                     or native_text_export(Path(name))):
                 raise ValueError('excluded file in archive: ' + name)
