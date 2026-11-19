@@ -1,8 +1,9 @@
 """Audio regressions independent of Tandy executables and the live emulator."""
 
 from collections import Counter
+from contextlib import redirect_stderr, redirect_stdout
 from hashlib import sha256
-from io import BytesIO
+from io import BytesIO, StringIO
 import json
 from pathlib import Path
 from struct import pack, pack_into, unpack_from
@@ -10,7 +11,7 @@ import tempfile
 import unittest
 import wave
 
-from deskmate_formats import music, sound
+from deskmate_formats import music, sampled_music, sound
 from deskmate_formats.preservation.bundle import export, verify
 
 
@@ -252,6 +253,95 @@ class MusicTests(unittest.TestCase):
             events = json.loads((archive / 'content.json').read_bytes())['voices'][0]
             self.assertEqual([event['kind'] for event in events], ['note', 'opaque', 'note'])
             self.assertIsNone(events[-1]['tick'])
+
+
+def playback_instrument(*, slot=9, payload=b'\x80\x84\x88\x8c\x90\x94', loop=(2, 4),
+                        pitch=28, note_range=(1, 63), rate=11000):
+    return sound.parse_bytes(pack('<4B10sH4B6I', 26, 0, 1, slot, b'Lab sample', rate,
+                                  pitch, 0, *note_range, 44, 0, 0, len(payload), *loop) + payload)
+
+
+class SampledMusicTests(unittest.TestCase):
+    def test_loop_tail_and_octave_phase(self):
+        score = music.parse_bytes(score_bytes(((0x7308, 0xea1c, 0xea28), (), ()), (0x2030,)))
+        looped = sampled_music.render(score, [playback_instrument()], rate=11000)
+        self.assertEqual((looped.bindings[0].slot, looped.bindings[0].sample_indices), (9, (0,)))
+        self.assertEqual(unpack_from('<8h', looped.pcm), (0, 20, 40, 60, 40, 60, 40, 60))
+        second = looped.notes[1]
+        self.assertEqual((second.score_tick, second.midi_pitch), (24, 72))
+        self.assertEqual(unpack_from('<5h', looped.pcm, second.start_frame * 2), (0, 40, 40, 40, 40))
+        linear = sampled_music.render(score, [playback_instrument(loop=(0, 0))], rate=11000)
+        self.assertEqual(unpack_from('<8h', linear.pcm), (0, 20, 40, 60, 80, 100, 0, 0))
+        with wave.open(BytesIO(looped.wav()), 'rb') as wav:
+            self.assertEqual((wav.getnchannels(), wav.getsampwidth(), wav.getframerate()), (1, 2, 11000))
+            self.assertEqual(wav.readframes(wav.getnframes()), looped.pcm)
+
+    def test_ties_tempo_dynamics_and_three_voice_mix(self):
+        score = music.parse_bytes(score_bytes(((0xca1c, 0xaa1c), (0x7200, 0xe21c), (0x7205, 0xe21c)),
+                                              (0x2018, 0x104b, 0x2048)))
+        instruments = [playback_instrument(slot=slot, payload=bytes([140]), loop=(0, 1))
+                       for slot in (1, 2, 3)]
+        played = sampled_music.render(score, instruments)
+        self.assertEqual(len(played.notes), 3)
+        self.assertEqual(played.notes[0].written_end_tick, 48)
+        self.assertEqual(played.notes[0].native_end_seconds,
+                         sampled_music.SCORE_TO_NATIVE_CLOCK)  # 0.6 + 0.4 written seconds
+        self.assertEqual(unpack_from('<h', played.pcm)[0], 200)
+        self.assertEqual(unpack_from('<h', played.pcm, played.notes[0].gate_frame * 2)[0], 140)
+
+    def test_resolution_and_bounded_errors(self):
+        score = music.parse_bytes(score_bytes(((0x7308, 0xea1c), (), ()), (0x2018,)))
+        for instruments, matches in (
+                ([], 'missing instrument slot 9'),
+                ([playback_instrument(), playback_instrument(pitch=40)], 'conflicting Sound files'),
+                ([playback_instrument(note_range=(29, 31))], 'no unambiguous sample range'),
+                ([playback_instrument(pitch=255)], 'invalid root pitch'),
+                ([playback_instrument(loop=(4, 8))], 'invalid sustain bounds')):
+            with self.subTest(matches=matches), self.assertRaisesRegex(sampled_music.PlaybackError, matches):
+                sampled_music.render(score, instruments, sample_policy='strict')
+        with self.assertRaisesRegex(sampled_music.PlaybackError, 'output limit'):
+            sampled_music.render(score, [playback_instrument()], max_frames=128)
+        with self.assertRaisesRegex(sampled_music.PlaybackError, 'unsupported score word'):
+            unsupported = music.parse_bytes(score_bytes(((0x8a00,), (), ()), (0x2018,)))
+            sampled_music.render(unsupported, [])
+        fallback = sampled_music.render(score, [playback_instrument(note_range=(29, 31))],
+                                        sample_policy='nearest-root')
+        self.assertEqual(fallback.notes[0].sample_index, 0)
+        gap = sampled_music.render(score, [playback_instrument(note_range=(29, 31))])
+        self.assertFalse(any(gap.pcm))
+        self.assertEqual(gap.unmapped_pitches, (sampled_music.UnmappedPitch(9, 60, 1),))
+
+    def test_rsx_inclusive_range_and_last_descriptor_precedence(self):
+        encoded = bytearray(later_linked_sound())
+        encoded[178:180] = bytes((28, 37))
+        instrument = sound.parse_bytes(encoded)
+        score = music.parse_bytes(score_bytes(((0x7310, 0xea1b, 0xea1c, 0xea25, 0xea26), (), ()), (0x2060,)))
+        rendered = sampled_music.render(score, [instrument])
+        self.assertEqual([note.sample_index for note in rendered.notes], [0, 1, 1])
+        self.assertEqual(rendered.unmapped_pitches, (sampled_music.UnmappedPitch(17, 70, 1),))
+        with self.assertRaisesRegex(sampled_music.PlaybackError, 'ambiguous sample ranges'):
+            sampled_music.render(score, [instrument], sample_policy='strict')
+
+    def test_render_committed_held_score_through_cli(self):
+        score = FIXTURES / 'music/region-hold-tool-generated.sng'
+        instrument = FIXTURES / 'sound/region-marked-tool-generated.snd'
+        with tempfile.TemporaryDirectory() as folder, redirect_stdout(StringIO()) as stdout:
+            folder = Path(folder)
+            (folder / 'mark9.SND').write_bytes(instrument.read_bytes())
+            destination = folder / 'render.wav'
+            self.assertEqual(music.main([str(score), '--wav', str(destination), '--instruments', str(folder)]), 0)
+            content = json.loads(stdout.getvalue())['sampled_playback']
+            self.assertEqual(content['model'], sampled_music.MODEL)
+            self.assertEqual(content['instruments'][0]['sha256'], sha256(instrument.read_bytes()).hexdigest())
+            with wave.open(str(destination), 'rb') as wav:
+                self.assertEqual(wav.getnframes(), 109432)
+                self.assertTrue(any(wav.readframes(4800)))
+            with redirect_stderr(StringIO()) as stderr:
+                midi_path = folder / 'new.mid'
+                self.assertEqual(music.main([str(score), '--midi', str(midi_path), '--wav',
+                                             str(destination), '--instruments', str(folder)]), 2)
+                self.assertIn('File exists', stderr.getvalue())
+                self.assertFalse(midi_path.exists())
 
 
 class NativeSoundTests(unittest.TestCase):

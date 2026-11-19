@@ -1,0 +1,1484 @@
+{
+  "model": "rsx-dac-approximation-v1",
+  "config_runs": {
+    "baseline": {
+      "emulated_ms": 81720,
+      "video_frames": 5132,
+      "config_sha256": "3c4bdd3a5dccac3997f4e8cdf57571704dd00cd75a360752a3e83b665f462b6c",
+      "parent": {
+        "parent": "followup",
+        "disk_sha256": "3570cc700d0d0f1c92c034451d8e427e36b2dfca7389aa98f20e2eb424096010",
+        "config_sha256": "b2209ab9c9168355263c6b31b902dfe75fe39271c2348280360bbf98d93d82c6",
+        "nvr_sha256": "6e3a5c9688697c3ccd310d2eca1d67faab530ee39a973b6bbb81a96f48615cee"
+      },
+      "scratch": {
+        "sha256": "52dee30c90880d7b8636c42da1698501a827ed9273e2b21f40a87fcd387f4257",
+        "files": {
+          "MARK9.SND": {
+            "size": 5660,
+            "sha256": "b4405cc280eb050a3896d7079e9be853cd67ad326a921fbb596c6c2d05b73b12"
+          },
+          "MARKFAST.SNG": {
+            "size": 92,
+            "sha256": "ec04e1aa5ee0a177c81ecfd357496e126f9c99d1dd7d174fefa391f595b6f8b5"
+          },
+          "MARKHI.SNG": {
+            "size": 88,
+            "sha256": "a5154c6d02b6468fe3f33c0521a7fb191417e9d2b214c391daea8252fe528cb0"
+          },
+          "MARKLONG.SNG": {
+            "size": 88,
+            "sha256": "3fd3d61e004b567d3a717be53838807fb69fb1c9497b306c44d5b2ad188318d6"
+          },
+          "NOLOOP.SNG": {
+            "size": 88,
+            "sha256": "2878ea6a1d258bff2ff0e4d525782b493647f28ef76f4741affc7dc2408b7ec2"
+          },
+          "NOLOOP11.SND": {
+            "size": 5660,
+            "sha256": "e9cc949f8737e3aee761767ff3dff1a153ebddad6f7e096d9f5efec468d624e2"
+          },
+          "SHIFT.SNG": {
+            "size": 88,
+            "sha256": "38b317f460297465e4ad9a866f36c05b33c8b885e75a407fd5152ddb0006c292"
+          },
+          "SHIFT10.SND": {
+            "size": 5660,
+            "sha256": "2dddbd7b986d311fe69bac9c92c044c0eb44d5df79a43291ccd750beeb528f23"
+          }
+        }
+      },
+      "pcm_sha256": "34e4e2e1df4a40be7443899047d5415b94a4ea3cc57e530507b2076ee80e196d",
+      "pcm_frames": 3922560,
+      "rate": 48000
+    },
+    "voices-retry": {
+      "emulated_ms": 91628,
+      "video_frames": 5759,
+      "config_sha256": "3c4bdd3a5dccac3997f4e8cdf57571704dd00cd75a360752a3e83b665f462b6c",
+      "parent": {
+        "parent": "followup",
+        "disk_sha256": "3570cc700d0d0f1c92c034451d8e427e36b2dfca7389aa98f20e2eb424096010",
+        "config_sha256": "b2209ab9c9168355263c6b31b902dfe75fe39271c2348280360bbf98d93d82c6",
+        "nvr_sha256": "6e3a5c9688697c3ccd310d2eca1d67faab530ee39a973b6bbb81a96f48615cee"
+      },
+      "scratch": {
+        "sha256": "fd29900465080c55e70502b89fbc8c758b7dc4abfe9801b0a471bc7398a485ae",
+        "files": {
+          "DUAL.SNG": {
+            "size": 92,
+            "sha256": "e91c051c0d586954b8e774ee3689cedf024b4cd0fc9c5241ca4f7dd1cae2fd24"
+          },
+          "DYNAMIC.SNG": {
+            "size": 110,
+            "sha256": "5b3fbb9d963f17a21769545df75b080dda13d6debfa494a801c00b3169aa031d"
+          },
+          "SEMIS.SNG": {
+            "size": 110,
+            "sha256": "3c7b4604bbbeb220f8fd6b90e934748889c91206a8bb55841c7dbc7aeeb4ff5a"
+          },
+          "TRIPLE.SNG": {
+            "size": 96,
+            "sha256": "63acff9c2feb4853d35dd9acc4d59f10c8b443e305b8387c2d6f68231504c1b8"
+          },
+          "VOICE1.SNG": {
+            "size": 88,
+            "sha256": "3fd3d61e004b567d3a717be53838807fb69fb1c9497b306c44d5b2ad188318d6"
+          },
+          "VOICE10.SND": {
+            "size": 5660,
+            "sha256": "69e1b6def767f464acf1183128e69c0bc93035f401ac2000a308b2c744e67114"
+          },
+          "VOICE11.SND": {
+            "size": 5660,
+            "sha256": "c51f6dce2e76cc5623889c795394aa76381f1e38243737a4f0f5b77f427daf97"
+          },
+          "VOICE2.SNG": {
+            "size": 88,
+            "sha256": "21bfb7169e2e825f89d3864bef3c3df403a880fe5f37f3ace4dc80567dcce278"
+          },
+          "VOICE3.SNG": {
+            "size": 88,
+            "sha256": "64406b4bc143000db48ce477735657f126c0fccf5cfa6e53f6f95aea71909bb8"
+          },
+          "VOICE9.SND": {
+            "size": 5660,
+            "sha256": "e69547ecc93ba3a9649f96cf48863be9acf974c6232f909688c1ed9fca88fea0"
+          }
+        }
+      },
+      "pcm_sha256": "3d776ea0e2bac58c7760f1eb9f66174b19852844fc3d524627df6e5931425898",
+      "pcm_frames": 4397760,
+      "rate": 48000
+    },
+    "ranges2": {
+      "emulated_ms": 76036,
+      "video_frames": 4805,
+      "config_sha256": "3c4bdd3a5dccac3997f4e8cdf57571704dd00cd75a360752a3e83b665f462b6c",
+      "parent": {
+        "parent": "followup",
+        "disk_sha256": "3570cc700d0d0f1c92c034451d8e427e36b2dfca7389aa98f20e2eb424096010",
+        "config_sha256": "b2209ab9c9168355263c6b31b902dfe75fe39271c2348280360bbf98d93d82c6",
+        "nvr_sha256": "6e3a5c9688697c3ccd310d2eca1d67faab530ee39a973b6bbb81a96f48615cee"
+      },
+      "scratch": {
+        "sha256": "3ae5702c8d4ec0683e27fdbc1093939fcb034bc76f99e614e1624f201476f890",
+        "files": {
+          "R10.SND": {
+            "size": 11206,
+            "sha256": "e945863606271264a38659fc44298117128fffcd3af3f178d2e23b519d0b8ef1"
+          },
+          "R10.SNG": {
+            "size": 100,
+            "sha256": "85cd3c0dbd234654e8b38760aa09376ed0c588305ff6e759e20d19989aa6df64"
+          },
+          "R11.SND": {
+            "size": 11206,
+            "sha256": "4034e6c76d73da50b7ff4b2430e826f563800382cc2e9085f232895c74ae967a"
+          },
+          "R11.SNG": {
+            "size": 100,
+            "sha256": "85086643edc35e6906411b3c2796983a50ae24b877c4d2fe6fca0599e19099bd"
+          },
+          "R12.SND": {
+            "size": 11206,
+            "sha256": "bfa66be45475ab060c7c3d42e653371703759dbfb3a98bd76dcef92c75e0979e"
+          },
+          "R12.SNG": {
+            "size": 100,
+            "sha256": "ce0cfdf72c9f25d318ecc99f15f50c5d884210cce759f3d792640eed4bc14498"
+          },
+          "R13.SND": {
+            "size": 11206,
+            "sha256": "6107079f198e50faf0ee4cf666f79df025eee67a3610875719fe78c5ffb2ae9a"
+          },
+          "R13.SNG": {
+            "size": 100,
+            "sha256": "9284acfbf1e8258ece191236a18414d66c757fe65b691373d924016b6e3b4567"
+          },
+          "R9.SND": {
+            "size": 11206,
+            "sha256": "6868bf121fb24e1cf77a41e5e0f24c8fdd43329e2938810b6e6c9e08d7382761"
+          },
+          "R9.SNG": {
+            "size": 100,
+            "sha256": "7b48a449c4d393284316cdeb869bb2a7a76979ad666cbf9972afd26a7fe6c883"
+          }
+        }
+      },
+      "pcm_sha256": "93ec1183b1f0e4cfc4bc85a5534129f02e1b9d6a79f06c39884f0776696530fe",
+      "pcm_frames": 3648960,
+      "rate": 48000
+    }
+  },
+  "note_comparisons": {
+    "octave": {
+      "start_ms": 30784,
+      "stop_ms": 33092,
+      "independent_pcm_sha256": "aefd4aa7d7695b1846f7bea3df849e24401c0bcfe8182be314c473dba1f8a5d4",
+      "independent_sample_indices": [
+        0,
+        0
+      ],
+      "native": [
+        {
+          "first_frame": 9081,
+          "relative_onset_ms": 0.0,
+          "active_ms": 414.4792,
+          "peak": 328,
+          "rms": 218.8385,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              444.659
+            ],
+            "45": [
+              444.664
+            ],
+            "115": [
+              444.655
+            ],
+            "245": [
+              444.668
+            ]
+          }
+        },
+        {
+          "first_frame": 36439,
+          "relative_onset_ms": 569.9583,
+          "active_ms": 362.6042,
+          "peak": 328,
+          "rms": 216.1645,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              889.311
+            ],
+            "45": [
+              889.314
+            ],
+            "115": [
+              889.347
+            ],
+            "245": [
+              889.339
+            ]
+          }
+        }
+      ],
+      "rendered": [
+        {
+          "first_frame": 5,
+          "relative_onset_ms": 0.0,
+          "active_ms": 387.9792,
+          "peak": 315,
+          "rms": 222.8739,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              444.661
+            ],
+            "45": [
+              444.659
+            ],
+            "115": [
+              444.669
+            ],
+            "245": [
+              444.668
+            ]
+          }
+        },
+        {
+          "first_frame": 27361,
+          "relative_onset_ms": 569.9167,
+          "active_ms": 388.0208,
+          "peak": 315,
+          "rms": 222.9221,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              889.326
+            ],
+            "45": [
+              889.321
+            ],
+            "115": [
+              889.341
+            ],
+            "245": [
+              889.34
+            ]
+          }
+        }
+      ],
+      "first_40ms_onset_aligned_correlation": [
+        0.994115,
+        0.993743
+      ]
+    },
+    "MARKLONG": {
+      "start_ms": 39836,
+      "stop_ms": 42544,
+      "independent_pcm_sha256": "92218d03fe97eacc804a2f993d20309e06f6ec98709abe6087abd1a4661607ce",
+      "independent_sample_indices": [
+        0
+      ],
+      "native": [
+        {
+          "first_frame": 10623,
+          "relative_onset_ms": 0.0,
+          "active_ms": 1813.4583,
+          "peak": 238,
+          "rms": 165.6368,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              505.36
+            ],
+            "45": [
+              505.295
+            ],
+            "115": [
+              909.544
+            ],
+            "245": [
+              909.551
+            ]
+          }
+        }
+      ],
+      "rendered": [
+        {
+          "first_frame": 5,
+          "relative_onset_ms": 0.0,
+          "active_ms": 1777.2708,
+          "peak": 240,
+          "rms": 169.7791,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              505.269
+            ],
+            "45": [
+              505.282
+            ],
+            "115": [
+              909.54
+            ],
+            "245": [
+              909.543
+            ]
+          }
+        }
+      ],
+      "first_40ms_onset_aligned_correlation": [
+        0.99357
+      ]
+    },
+    "NOLOOP": {
+      "start_ms": 77588,
+      "stop_ms": 80296,
+      "independent_pcm_sha256": "b848ac1354a3293f3da61f8d728e05b4df581446ec188fd3e17ad19f576d6214",
+      "independent_sample_indices": [
+        0
+      ],
+      "native": [
+        {
+          "first_frame": 9306,
+          "relative_onset_ms": 0.0,
+          "active_ms": 494.7083,
+          "peak": 238,
+          "rms": 164.1391,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              505.31
+            ],
+            "45": [
+              505.281
+            ],
+            "115": [
+              909.556
+            ],
+            "245": [
+              1414.841
+            ]
+          }
+        }
+      ],
+      "rendered": [
+        {
+          "first_frame": 5,
+          "relative_onset_ms": 0.0,
+          "active_ms": 494.6667,
+          "peak": 240,
+          "rms": 169.9286,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              505.269
+            ],
+            "45": [
+              505.282
+            ],
+            "115": [
+              909.54
+            ],
+            "245": [
+              1414.831
+            ]
+          }
+        }
+      ],
+      "first_40ms_onset_aligned_correlation": [
+        0.993528
+      ]
+    },
+    "VOICE1": {
+      "start_ms": 22490,
+      "stop_ms": 25098,
+      "independent_pcm_sha256": "c9f6218c1c0205e77f6425d71a022b66b469ae77e14fbe4b6c08a2443d4884e1",
+      "independent_sample_indices": [
+        0
+      ],
+      "native": [
+        {
+          "first_frame": 7646,
+          "relative_onset_ms": 0.0,
+          "active_ms": 1813.4583,
+          "peak": 238,
+          "rms": 170.3897,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              505.317
+            ],
+            "45": [
+              505.313
+            ],
+            "115": [
+              505.277
+            ],
+            "245": [
+              505.312
+            ]
+          }
+        }
+      ],
+      "rendered": [
+        {
+          "first_frame": 5,
+          "relative_onset_ms": 0.0,
+          "active_ms": 1777.2708,
+          "peak": 240,
+          "rms": 170.6639,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              505.269
+            ],
+            "45": [
+              505.282
+            ],
+            "115": [
+              505.304
+            ],
+            "245": [
+              505.265
+            ]
+          }
+        }
+      ],
+      "first_40ms_onset_aligned_correlation": [
+        0.987325
+      ]
+    },
+    "DUAL": {
+      "start_ms": 51908,
+      "stop_ms": 55166,
+      "independent_pcm_sha256": "8332ce58903dd3cca88037e2f779afa02bf2c6cc81fee7bc384e69b7fe86f86a",
+      "independent_sample_indices": [
+        0,
+        0
+      ],
+      "native": [
+        {
+          "first_frame": 8842,
+          "relative_onset_ms": 0.0,
+          "active_ms": 1813.4583,
+          "peak": 477,
+          "rms": 237.2759,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              505.336,
+              909.538
+            ],
+            "45": [
+              505.298,
+              909.534
+            ],
+            "115": [
+              505.28,
+              909.554
+            ],
+            "245": [
+              505.386,
+              909.569
+            ]
+          }
+        }
+      ],
+      "rendered": [
+        {
+          "first_frame": 5,
+          "relative_onset_ms": 0.0,
+          "active_ms": 1777.2708,
+          "peak": 470,
+          "rms": 240.4416,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              505.277,
+              909.53
+            ],
+            "45": [
+              505.266,
+              909.527
+            ],
+            "115": [
+              505.309,
+              909.561
+            ],
+            "245": [
+              505.266,
+              909.529
+            ]
+          }
+        }
+      ],
+      "first_40ms_onset_aligned_correlation": [
+        0.979941
+      ]
+    },
+    "TRIPLE": {
+      "start_ms": 61464,
+      "stop_ms": 64722,
+      "independent_pcm_sha256": "9eb0bb26ce761bc901b0ca705905fd19d236b4d245d82b8f363aee4b668d40ec",
+      "independent_sample_indices": [
+        0,
+        0,
+        0
+      ],
+      "native": [
+        {
+          "first_frame": 11656,
+          "relative_onset_ms": 0.0,
+          "active_ms": 1813.4583,
+          "peak": 627,
+          "rms": 286.2429,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              505.299,
+              909.561,
+              1414.831
+            ],
+            "45": [
+              505.368,
+              909.551,
+              1414.84
+            ],
+            "115": [
+              505.272,
+              909.583,
+              1414.825
+            ],
+            "245": [
+              505.312,
+              909.547,
+              1414.845
+            ]
+          }
+        }
+      ],
+      "rendered": [
+        {
+          "first_frame": 5,
+          "relative_onset_ms": 0.0,
+          "active_ms": 1777.2708,
+          "peak": 615,
+          "rms": 294.3286,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              505.269,
+              909.512,
+              1414.814
+            ],
+            "45": [
+              505.265,
+              909.505,
+              1414.795
+            ],
+            "115": [
+              505.298,
+              909.48,
+              1414.792
+            ],
+            "245": [
+              505.266,
+              909.535,
+              1414.826
+            ]
+          }
+        }
+      ],
+      "first_40ms_onset_aligned_correlation": [
+        0.979332
+      ]
+    },
+    "R10": {
+      "start_ms": 35182,
+      "stop_ms": 40340,
+      "independent_pcm_sha256": "11d643bbc03d05bb687d886c33ba7b1e8644239c619798fd43ae55e705290413",
+      "independent_sample_indices": [
+        0,
+        1,
+        1,
+        1,
+        1
+      ],
+      "native": [
+        {
+          "first_frame": 35119,
+          "relative_onset_ms": 0.0,
+          "active_ms": 362.5625,
+          "peak": 238,
+          "rms": 170.5409,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              450.09
+            ],
+            "45": [
+              450.093
+            ],
+            "115": [
+              450.027
+            ],
+            "245": [
+              450.001
+            ]
+          }
+        },
+        {
+          "first_frame": 62472,
+          "relative_onset_ms": 569.8542,
+          "active_ms": 362.6667,
+          "peak": 238,
+          "rms": 164.3837,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              1019.544
+            ],
+            "45": [
+              1018.268
+            ],
+            "115": [
+              1019.529
+            ],
+            "245": [
+              1014.946
+            ]
+          }
+        },
+        {
+          "first_frame": 89830,
+          "relative_onset_ms": 1139.8125,
+          "active_ms": 362.6667,
+          "peak": 238,
+          "rms": 163.9856,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              1080.07
+            ],
+            "45": [
+              1079.98
+            ],
+            "115": [
+              1079.99
+            ],
+            "245": [
+              1080.112
+            ]
+          }
+        },
+        {
+          "first_frame": 117188,
+          "relative_onset_ms": 1709.7708,
+          "active_ms": 362.6667,
+          "peak": 238,
+          "rms": 163.3364,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              1144.09
+            ],
+            "45": [
+              1143.1
+            ],
+            "115": [
+              1144.059
+            ],
+            "245": [
+              1140.836
+            ]
+          }
+        },
+        {
+          "first_frame": 144546,
+          "relative_onset_ms": 2279.7292,
+          "active_ms": 362.6667,
+          "peak": 238,
+          "rms": 160.9435,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              1442.59
+            ],
+            "45": [
+              1441.502
+            ],
+            "115": [
+              1442.377
+            ],
+            "245": [
+              1439.386
+            ]
+          }
+        }
+      ],
+      "rendered": [
+        {
+          "first_frame": 27363,
+          "relative_onset_ms": 0.0,
+          "active_ms": 387.9792,
+          "peak": 240,
+          "rms": 170.6436,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              450.191
+            ],
+            "45": [
+              450.168
+            ],
+            "115": [
+              450.173
+            ],
+            "245": [
+              450.181
+            ]
+          }
+        },
+        {
+          "first_frame": 54720,
+          "relative_onset_ms": 569.9375,
+          "active_ms": 388.0,
+          "peak": 240,
+          "rms": 169.7359,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              1020.889
+            ],
+            "45": [
+              1020.909
+            ],
+            "115": [
+              1020.892
+            ],
+            "245": [
+              1020.937
+            ]
+          }
+        },
+        {
+          "first_frame": 82078,
+          "relative_onset_ms": 1139.8958,
+          "active_ms": 388.0,
+          "peak": 240,
+          "rms": 169.7229,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              1081.612
+            ],
+            "45": [
+              1081.621
+            ],
+            "115": [
+              1081.643
+            ],
+            "245": [
+              1081.657
+            ]
+          }
+        },
+        {
+          "first_frame": 109436,
+          "relative_onset_ms": 1709.8542,
+          "active_ms": 388.0,
+          "peak": 240,
+          "rms": 169.7264,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              1145.973
+            ],
+            "45": [
+              1145.927
+            ],
+            "115": [
+              1145.934
+            ],
+            "245": [
+              1145.927
+            ]
+          }
+        },
+        {
+          "first_frame": 136793,
+          "relative_onset_ms": 2279.7917,
+          "active_ms": 388.0208,
+          "peak": 240,
+          "rms": 169.7209,
+          "clipped_frames": 0,
+          "spectral_windows_hz": {
+            "10": [
+              1443.684
+            ],
+            "45": [
+              1443.737
+            ],
+            "115": [
+              1443.716
+            ],
+            "245": [
+              1443.69
+            ]
+          }
+        }
+      ],
+      "first_40ms_onset_aligned_correlation": [
+        0.990218,
+        0.836336,
+        0.814707,
+        0.762528,
+        0.844765
+      ]
+    }
+  },
+  "mix": [
+    {
+      "name": "DUAL",
+      "duration_frames": 1920,
+      "relative_offset_frames": [
+        0,
+        -1
+      ],
+      "correlation": 0.994139,
+      "sum_residual_rms": 28.122565,
+      "combined_rms": 238.863257,
+      "combined_peak": 477
+    },
+    {
+      "name": "TRIPLE",
+      "duration_frames": 1920,
+      "relative_offset_frames": [
+        1,
+        0,
+        0
+      ],
+      "correlation": 0.994767,
+      "sum_residual_rms": 38.44591,
+      "combined_rms": 287.63482,
+      "combined_peak": 627
+    }
+  ],
+  "dynamics": [
+    {
+      "first_pcm_frame": 8416,
+      "active_frames": 19886,
+      "peak": 89,
+      "rms": 57.237725,
+      "center": -14.093131,
+      "freq_windows": [
+        505.262842,
+        505.429231,
+        505.262857,
+        505.440101
+      ]
+    },
+    {
+      "first_pcm_frame": 35770,
+      "active_frames": 19892,
+      "peak": 179,
+      "rms": 112.006107,
+      "center": -15.384124,
+      "freq_windows": [
+        505.36331,
+        505.336782,
+        505.262912,
+        505.351924
+      ]
+    },
+    {
+      "first_pcm_frame": 63126,
+      "active_frames": 19894,
+      "peak": 238,
+      "rms": 170.443313,
+      "center": -10.473861,
+      "freq_windows": [
+        505.330474,
+        505.298893,
+        505.319635,
+        505.351494
+      ]
+    },
+    {
+      "first_pcm_frame": 90484,
+      "active_frames": 19894,
+      "peak": 328,
+      "rms": 219.805646,
+      "center": -12.523826,
+      "freq_windows": [
+        505.315132,
+        505.319133,
+        505.312789,
+        505.330712
+      ]
+    },
+    {
+      "first_pcm_frame": 117842,
+      "active_frames": 19895,
+      "peak": 418,
+      "rms": 278.954247,
+      "center": -8.244433,
+      "freq_windows": [
+        505.332192,
+        505.291424,
+        505.304078,
+        505.325562
+      ]
+    },
+    {
+      "first_pcm_frame": 145200,
+      "active_frames": 19895,
+      "peak": 477,
+      "rms": 338.255081,
+      "center": -10.175069,
+      "freq_windows": [
+        505.323346,
+        505.281412,
+        505.317214,
+        505.320591
+      ]
+    }
+  ],
+  "semitones": {
+    "pitch_codes": [
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      35,
+      40,
+      47,
+      52
+    ],
+    "omitted_codes": [
+      16,
+      23
+    ],
+    "measurements": [
+      {
+        "first_pcm_frame": 62505,
+        "active_frames": 19895,
+        "peak": 238,
+        "rms": 170.397414,
+        "center": -10.459462,
+        "freq_windows": [
+          505.290336,
+          505.276034,
+          505.313601,
+          505.301514
+        ]
+      },
+      {
+        "first_pcm_frame": 89863,
+        "active_frames": 19895,
+        "peak": 238,
+        "rms": 170.308507,
+        "center": -10.578839,
+        "freq_windows": [
+          534.838249,
+          534.103087,
+          534.896144,
+          532.295895
+        ]
+      },
+      {
+        "first_pcm_frame": 117221,
+        "active_frames": 17408,
+        "peak": 238,
+        "rms": 170.171438,
+        "center": -10.791762,
+        "freq_windows": [
+          566.431953,
+          565.811734,
+          566.534513,
+          563.901333
+        ]
+      },
+      {
+        "first_pcm_frame": 144579,
+        "active_frames": 17408,
+        "peak": 238,
+        "rms": 170.066726,
+        "center": -10.754423,
+        "freq_windows": [
+          599.968245,
+          599.888865,
+          599.977817,
+          600.036554
+        ]
+      },
+      {
+        "first_pcm_frame": 171937,
+        "active_frames": 17408,
+        "peak": 238,
+        "rms": 170.048311,
+        "center": -10.964671,
+        "freq_windows": [
+          635.578081,
+          635.065725,
+          635.563305,
+          634.012216
+        ]
+      },
+      {
+        "first_pcm_frame": 199295,
+        "active_frames": 14921,
+        "peak": 238,
+        "rms": 169.81761,
+        "center": -11.208029,
+        "freq_windows": [
+          672.567767,
+          673.331338,
+          673.146992,
+          671.992967
+        ]
+      },
+      {
+        "first_pcm_frame": 226653,
+        "active_frames": 17408,
+        "peak": 238,
+        "rms": 169.776885,
+        "center": -11.483915,
+        "freq_windows": [
+          756.039816,
+          755.275568,
+          756.061484,
+          753.468277
+        ]
+      },
+      {
+        "first_pcm_frame": 254011,
+        "active_frames": 17408,
+        "peak": 238,
+        "rms": 168.880601,
+        "center": -11.918141,
+        "freq_windows": [
+          1010.634207,
+          1010.566534,
+          1010.64534,
+          1010.625589
+        ]
+      },
+      {
+        "first_pcm_frame": 281369,
+        "active_frames": 14921,
+        "peak": 238,
+        "rms": 165.783622,
+        "center": -11.319416,
+        "freq_windows": [
+          1512.668788,
+          1514.821125,
+          1514.344636,
+          1510.822255
+        ]
+      },
+      {
+        "first_pcm_frame": 308727,
+        "active_frames": 16622,
+        "peak": 238,
+        "rms": 159.337229,
+        "center": -12.169053,
+        "freq_windows": [
+          2021.242532,
+          2021.172269,
+          2021.219465,
+          2021.188213
+        ]
+      }
+    ]
+  },
+  "ranges": [
+    {
+      "name": "R9",
+      "selected": [
+        "-",
+        "A",
+        "A",
+        "-",
+        "B",
+        "B",
+        "-"
+      ],
+      "start_ms": 23758,
+      "stop_ms": 28916,
+      "signals": [
+        {
+          "first_pcm_frame": 35096,
+          "active_frames": 17403,
+          "peak": 238,
+          "rms": 170.538711,
+          "center": -10.38976,
+          "freq_windows": [
+            450.093965,
+            450.088413,
+            450.098251,
+            449.996373
+          ]
+        },
+        {
+          "first_pcm_frame": 62450,
+          "active_frames": 17407,
+          "peak": 238,
+          "rms": 170.183718,
+          "center": -10.827885,
+          "freq_windows": [
+            566.43821,
+            565.796879,
+            566.524977,
+            563.894607
+          ]
+        },
+        {
+          "first_pcm_frame": 117166,
+          "active_frames": 17407,
+          "peak": 238,
+          "rms": 163.323555,
+          "center": -13.293445,
+          "freq_windows": [
+            1144.059253,
+            1143.121351,
+            1143.920223,
+            1140.867914
+          ]
+        },
+        {
+          "first_pcm_frame": 144524,
+          "active_frames": 17407,
+          "peak": 238,
+          "rms": 160.910401,
+          "center": -13.881772,
+          "freq_windows": [
+            1442.575787,
+            1441.517361,
+            1442.522425,
+            1439.399408
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R10",
+      "selected": [
+        "-",
+        "A",
+        "B",
+        "B",
+        "B",
+        "B",
+        "-"
+      ],
+      "start_ms": 35182,
+      "stop_ms": 40340,
+      "signals": [
+        {
+          "first_pcm_frame": 35119,
+          "active_frames": 17403,
+          "peak": 238,
+          "rms": 170.540896,
+          "center": -10.37143,
+          "freq_windows": [
+            450.090201,
+            450.093208,
+            450.092396,
+            450.001024
+          ]
+        },
+        {
+          "first_pcm_frame": 62472,
+          "active_frames": 17408,
+          "peak": 238,
+          "rms": 164.383686,
+          "center": -13.023667,
+          "freq_windows": [
+            1019.544338,
+            1018.268353,
+            1019.756814,
+            1014.945701
+          ]
+        },
+        {
+          "first_pcm_frame": 89830,
+          "active_frames": 17408,
+          "peak": 238,
+          "rms": 163.985565,
+          "center": -13.110754,
+          "freq_windows": [
+            1080.069816,
+            1079.98,
+            1080.047068,
+            1080.112375
+          ]
+        },
+        {
+          "first_pcm_frame": 117188,
+          "active_frames": 17408,
+          "peak": 238,
+          "rms": 163.336375,
+          "center": -13.26844,
+          "freq_windows": [
+            1144.08979,
+            1143.100097,
+            1143.919694,
+            1140.836399
+          ]
+        },
+        {
+          "first_pcm_frame": 144546,
+          "active_frames": 17408,
+          "peak": 238,
+          "rms": 160.943486,
+          "center": -13.843578,
+          "freq_windows": [
+            1442.590223,
+            1441.501911,
+            1442.58139,
+            1439.38646
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R11",
+      "selected": [
+        "-",
+        "A",
+        "A",
+        "A",
+        "A",
+        "B",
+        "-"
+      ],
+      "start_ms": 46606,
+      "stop_ms": 51764,
+      "signals": [
+        {
+          "first_pcm_frame": 34741,
+          "active_frames": 17403,
+          "peak": 238,
+          "rms": 170.470292,
+          "center": -10.306269,
+          "freq_windows": [
+            450.09173,
+            450.091313,
+            450.089553,
+            450.00737
+          ]
+        },
+        {
+          "first_pcm_frame": 62095,
+          "active_frames": 17407,
+          "peak": 238,
+          "rms": 170.178612,
+          "center": -10.831332,
+          "freq_windows": [
+            566.43594,
+            565.826585,
+            566.529671,
+            563.891687
+          ]
+        },
+        {
+          "first_pcm_frame": 89453,
+          "active_frames": 17407,
+          "peak": 238,
+          "rms": 170.066466,
+          "center": -10.756765,
+          "freq_windows": [
+            599.969972,
+            599.884405,
+            599.981931,
+            600.034584
+          ]
+        },
+        {
+          "first_pcm_frame": 116811,
+          "active_frames": 17407,
+          "peak": 238,
+          "rms": 170.076767,
+          "center": -10.985753,
+          "freq_windows": [
+            635.568021,
+            635.087595,
+            635.590579,
+            634.037198
+          ]
+        },
+        {
+          "first_pcm_frame": 144169,
+          "active_frames": 17407,
+          "peak": 238,
+          "rms": 160.881906,
+          "center": -13.862469,
+          "freq_windows": [
+            1442.52666,
+            1441.482792,
+            1442.61398,
+            1439.40562
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R12",
+      "selected": [
+        "-",
+        "A",
+        "A",
+        "A",
+        "A",
+        "-",
+        "-"
+      ],
+      "start_ms": 58030,
+      "stop_ms": 63188,
+      "signals": [
+        {
+          "first_pcm_frame": 37496,
+          "active_frames": 17403,
+          "peak": 238,
+          "rms": 170.593285,
+          "center": -10.437683,
+          "freq_windows": [
+            450.078379,
+            450.074838,
+            450.086047,
+            450.008146
+          ]
+        },
+        {
+          "first_pcm_frame": 64850,
+          "active_frames": 17407,
+          "peak": 238,
+          "rms": 170.164231,
+          "center": -10.822945,
+          "freq_windows": [
+            566.444402,
+            565.848518,
+            566.5727,
+            563.936703
+          ]
+        },
+        {
+          "first_pcm_frame": 92208,
+          "active_frames": 17407,
+          "peak": 238,
+          "rms": 170.063627,
+          "center": -10.743264,
+          "freq_windows": [
+            599.977452,
+            599.884055,
+            599.973167,
+            600.068094
+          ]
+        },
+        {
+          "first_pcm_frame": 119566,
+          "active_frames": 17407,
+          "peak": 238,
+          "rms": 170.093469,
+          "center": -11.002355,
+          "freq_windows": [
+            635.53664,
+            635.107154,
+            635.603136,
+            634.023236
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R13",
+      "selected": [
+        "-",
+        "A",
+        "B",
+        "B",
+        "B",
+        "B",
+        "-"
+      ],
+      "start_ms": 69454,
+      "stop_ms": 74612,
+      "signals": [
+        {
+          "first_pcm_frame": 34940,
+          "active_frames": 17403,
+          "peak": 238,
+          "rms": 170.560665,
+          "center": -10.399586,
+          "freq_windows": [
+            450.09201,
+            450.096789,
+            450.08671,
+            449.998895
+          ]
+        },
+        {
+          "first_pcm_frame": 62298,
+          "active_frames": 19890,
+          "peak": 238,
+          "rms": 165.879997,
+          "center": -12.104575,
+          "freq_windows": [
+            721.194242,
+            720.044195,
+            721.27132,
+            716.516936
+          ]
+        },
+        {
+          "first_pcm_frame": 89656,
+          "active_frames": 17403,
+          "peak": 238,
+          "rms": 165.686629,
+          "center": -12.393495,
+          "freq_windows": [
+            763.682688,
+            762.656909,
+            763.997285,
+            759.195976
+          ]
+        },
+        {
+          "first_pcm_frame": 117014,
+          "active_frames": 17403,
+          "peak": 238,
+          "rms": 165.716715,
+          "center": -12.577659,
+          "freq_windows": [
+            810.097589,
+            810.02286,
+            810.086345,
+            810.150867
+          ]
+        },
+        {
+          "first_pcm_frame": 144367,
+          "active_frames": 17408,
+          "peak": 238,
+          "rms": 164.388571,
+          "center": -13.028895,
+          "freq_windows": [
+            1019.535338,
+            1018.25157,
+            1019.779994,
+            1014.932855
+          ]
+        }
+      ]
+    }
+  ]
+}

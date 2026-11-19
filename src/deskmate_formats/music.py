@@ -237,34 +237,38 @@ def _midi_tempo(bpm):
     return b'\xff\x51\x03' + micros.to_bytes(3, 'big')
 
 
-def _midi_notes(voice):
-    pending = None
+def _connected_notes(voice):
+    """Yield the first and last written event of each sounding pitch."""
+    first = last = None
     for event in voice:
         if event.kind != 'note':
-            if pending is not None:
+            if first is not None:
                 raise MusicFormatError(f'interrupted tie or slur at {event.offset}')
             continue
-        note = (event.tick, event.tick + event.duration_ticks, event.midi_pitch)
         if event.connection in ('continue', 'end'):
-            if pending is None:
+            if first is None:
                 raise MusicFormatError(f'tie or slur has no start at {event.offset}')
-            if pending[2] == event.midi_pitch:
-                note = (pending[0], note[1], note[2])
-            else:
-                yield pending
-        elif pending is not None:
+            if first.midi_pitch != event.midi_pitch:
+                yield first, last
+                first = event
+        elif first is not None:
             raise MusicFormatError(f'tie or slur has no end before {event.offset}')
-        if event.connection in ('start', 'continue'):
-            pending = note
         else:
-            yield note
-            pending = None
-    if pending is not None:
+            first = event
+        last = event
+        if event.connection not in ('start', 'continue'):
+            yield first, last
+            first = last = None
+    if first is not None:
         raise MusicFormatError('tie or slur ends outside the voice stream')
 
 
-def to_midi(sequence):
-    """Project a fully interpreted linear score to Standard MIDI File type 1."""
+def _midi_notes(voice):
+    for first, last in _connected_notes(voice):
+        yield first.tick, last.tick + last.duration_ticks, first.midi_pitch
+
+
+def _require_linear(sequence):
     opaque = sequence.opaque
     if opaque:
         first = opaque[0]
@@ -273,6 +277,11 @@ def to_midi(sequence):
         raise MusicFormatError('score repeats require a playback interpretation')
     if any(tick > sequence.written_ticks for tick in sequence.voice_ticks):
         raise MusicFormatError('voice duration exceeds the conductor timeline')
+
+
+def to_midi(sequence):
+    """Project a fully interpreted linear score to Standard MIDI File type 1."""
+    _require_linear(sequence)
     tempos = [(0, _midi_tempo(DEFAULT_QUARTER_BPM))]
     meters = []
     for event in sequence.conductor:
@@ -299,22 +308,47 @@ def to_midi(sequence):
 
 
 def main(argv=None):
+    from . import sampled_music
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source', type=Path)
     parser.add_argument('--midi', type=Path, help='write a fully interpreted linear score to a new MIDI file')
+    parser.add_argument('--wav', type=Path, help='write approximate sampled playback to a new WAV file')
+    parser.add_argument('--instruments', type=Path, help='directory of explicit SND instruments for --wav')
+    parser.add_argument('--rate', type=int, help='WAV sample rate (default 48000 Hz)')
+    parser.add_argument('--sample-policy', choices=sampled_music.SAMPLE_POLICIES,
+                        help='sample range resolution for WAV output (default rsx-ranges)')
     args = parser.parse_args(argv)
+    if bool(args.wav) != bool(args.instruments):
+        parser.error('--wav and --instruments must be supplied together')
+    if not args.wav and (args.rate is not None or args.sample_policy is not None):
+        parser.error('--rate and --sample-policy require --wav')
+    created = []
     try:
         with args.source.open('rb') as stream:
             score = parse_bytes(stream.read(MAX_BYTES + 1))
         sequence = project(score)
+        result = describe(score, sequence)
+        outputs = []
         if args.midi:
-            midi = to_midi(sequence)
-            with args.midi.open('xb') as stream:
-                stream.write(midi)
-        print(json.dumps(describe(score, sequence), indent=2))
+            outputs.append((args.midi, to_midi(sequence)))
+        if args.wav:
+            instruments = sampled_music.load_instruments(args.instruments)
+            playback = sampled_music.render(score, instruments,
+                                            rate=sampled_music.OUTPUT_RATE if args.rate is None else args.rate,
+                                            sample_policy=args.sample_policy or 'rsx-ranges')
+            outputs.append((args.wav, playback.wav()))
+            result['sampled_playback'] = playback.describe()
+        for path, data in outputs:
+            with path.open('xb') as stream:
+                created.append(path)
+                stream.write(data)
     except (OSError, ValueError) as exc:
+        for path in reversed(created):
+            path.unlink(missing_ok=True)
         print(str(exc), file=sys.stderr)
         return 2
+    print(json.dumps(result, indent=2))
     return 0
 
 
