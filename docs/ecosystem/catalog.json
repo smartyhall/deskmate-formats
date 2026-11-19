@@ -57,6 +57,11 @@
       "title": "Express Publisher for DeskMate — Oldskool archive directory",
       "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Express-Publisher-for-DeskMate/",
       "verification": "Operator supplied direct directory URL on 2026-11-19; HTTP and HTTPS retrieval failed in ChatGPT. Contents, version and media integrity not yet verified."
+    },
+    "tvdog-wares": {
+      "title": "TVDog Tandy 1000 commercial software archive",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/",
+      "verification": "Operator identified numerous DeskMate software packages here on 2026-11-19. HTTP and HTTPS listing retrieval returned 502 in ChatGPT; inventory and media identities pending VM verification."
     }
   },
   "entries": [

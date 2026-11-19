@@ -177,3 +177,31 @@ selection, native saves and printing where practical. Update the catalog
 with measured results; if acquisition remains blocked, record the failure
 rather than substituting an unrelated DOS/Windows edition. No commercial
 media or extracted proprietary font resources belong in Git.
+
+## Broader commercial software inventory
+
+The operator also identified the parent archive directory as containing
+numerous DeskMate software packages:
+
+http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/
+
+Treat this as a priority acquisition source for the ecosystem catalog.
+HTTP and HTTPS listing requests from ChatGPT returned 502. Retrieve the
+actual listing in the Windows lab; retain a dated private copy, enumerate
+relevant child directories and files, and cross-reference the results
+with DM_PROGS.TXT, the existing catalog and period advertisements.
+Separate native DeskMate applications and bundled runtimes from ordinary
+DOS software and other platforms. Record exact names, editions, publisher,
+catalog numbers where evidenced, archive URLs, acquisition status and
+verification method. Do not infer contents from directory names alone.
+Prioritize DeskMate editions and resources relevant to shared fonts,
+printing, word processing, database and graphics. Acquire relevant media
+privately with SHA-256 receipts, preserving originals and deduplicating
+identical files. Use a bounded, polite download process; if the archive
+is unavailable, retain the lead and report the error. Identify missing
+catalog titles and newly discovered candidates. No indiscriminate mirror
+of unrelated commercial software, public rehosting of original media,
+or bulk installation in the core research image. Extensive per-title
+reverse engineering belongs to later campaigns; the next typography
+campaign should undertake the inventory and useful adjacent acquisitions
+without displacing its primary research objectives.
