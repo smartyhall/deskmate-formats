@@ -26,7 +26,7 @@ def failure(error):
     return 'other_constraint'
 
 
-def inventory(root, instruments):
+def inventory(root, instruments, *, rate=sampled_music.OUTPUT_RATE):
     counts = dict.fromkeys(('distinct', 'structural', 'interpreted_words', 'midi'), 0)
     midi_failures = Counter()
     rendered = {policy: Counter(full=0, unmapped=0, no_audio=0)
@@ -50,7 +50,7 @@ def inventory(root, instruments):
             counts['midi'] += 1
         for policy, results in rendered.items():
             try:
-                audio = sampled_music.render(score, instruments, sample_policy=policy)
+                audio = sampled_music.render(score, instruments, rate=rate, sample_policy=policy)
             except sampled_music.PlaybackError as exc:
                 results[failure(exc)] += 1
             else:
@@ -58,7 +58,7 @@ def inventory(root, instruments):
                 results[status] += 1
     return {
         'model': sampled_music.MODEL,
-        'output_rate': sampled_music.OUTPUT_RATE,
+        'output_rate': rate,
         'instruments': [{'slot': instrument.instrument_number, 'sha256': sha256(instrument.source).hexdigest()}
                         for instrument in sorted(instruments, key=lambda item: item.instrument_number)],
         'counts': counts,
@@ -72,12 +72,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('corpus', type=Path)
     parser.add_argument('instruments', type=Path)
+    parser.add_argument('--rate', type=int, default=sampled_music.OUTPUT_RATE)
     args = parser.parse_args()
     if not args.corpus.is_dir():
         parser.error('expected a corpus directory')
     try:
         instruments = sampled_music.load_instruments(args.instruments)
-        report = inventory(args.corpus, instruments)
+        if not 8_000 <= args.rate <= 96_000:
+            parser.error('output rate must be from 8000 to 96000 Hz')
+        report = inventory(args.corpus, instruments, rate=args.rate)
     except (OSError, ValueError) as exc:
         parser.error(str(exc))
     print(json.dumps(report, indent=2))

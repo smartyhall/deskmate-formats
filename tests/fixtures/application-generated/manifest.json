@@ -2503,7 +2503,7 @@
       "source_sha256": "981d5455517ff715737573e44531b8363541857ca534c69cca4b62b5d974321f",
       "version": "RSX OEM 3.04 module with generic 03.05.00 runtime",
       "experiment": "2026-11-18 sampled playback baseline",
-      "evidence_class": "Tool-generated, native-playback accepted in the baseline; Sound resave and editing untested",
+      "evidence_class": "Tool-generated input accepted by Music. A separate native Sound Save As reproduced these exact bytes.",
       "native_saved": false,
       "expected_content": "Instrument 9, 11,000 Hz, pitch code 28, range codes 25–63, 5,500 PCM frames, stored loop words 1100 and 2200. Physical regions 500, 900 and 1400 Hz."
     },
@@ -2518,7 +2518,7 @@
       "source_sha256": "07993101fcae1fbcaaacab71396a956b80085874ab1015e20395c2ac7a7d1309",
       "version": "RSX OEM 3.04 module with generic 03.05.00 runtime",
       "experiment": "2026-11-18 sampled playback baseline",
-      "evidence_class": "Tool-generated, native-playback accepted in the baseline; Sound resave and editing untested",
+      "evidence_class": "Tool-generated input accepted for playback in the RSX baseline.",
       "native_saved": false,
       "expected_content": "One whole note at stored pitch code 28 in voice 1, slot 9, 96 conductor ticks."
     },
@@ -2538,6 +2538,23 @@
       "synthetic_data": true,
       "native_saved": false,
       "expected_content": "Written C4 E4 G4 A4. Playback C4 E4 C4 G4 A4, using slot 9. Both endings precede the repeat end."
+    },
+    {
+      "path": "music/marker-a-native.sng",
+      "size": 96,
+      "sha256": "c8774546109c163a64e455dee17f4cbc982898aff2d7cfddfa791552d4b5bf5f",
+      "application": "Tandy DeskMate Music",
+      "version": "RSX OEM 3.04 module with generic 03.05.00 runtime",
+      "experiment": "2026-11-18 score marker insert and search",
+      "origin": "Inserted marker A through the native Insert menu, moved away, searched for A, and saved as UIMARK.SNG. Independent FAT16 and 7-Zip reads agreed.",
+      "generation_method": "See docs/research/sampled-music-playback-20261118.md for the generated UICOMP input and native procedure.",
+      "source_path": "music/m11.sng",
+      "source_size": 90,
+      "source_sha256": "07993101fcae1fbcaaacab71396a956b80085874ab1015e20395c2ac7a7d1309",
+      "evidence_class": "Native application-saved synthetic score marker",
+      "synthetic_data": true,
+      "native_saved": true,
+      "expected_content": "Marker A at tick 0. Four quarter notes C4 E4 G4 A4 in voice 1 with slot 9."
     }
   ]
 }

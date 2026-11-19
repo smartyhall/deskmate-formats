@@ -25,11 +25,13 @@ SAMPLE_POLICIES = ('rsx-ranges', 'strict', 'nearest-root')
 # 10 in DAC output units. The unmarked RSX default has the third step's gain.
 DYNAMIC_WEIGHTS = (1, 2, 3, 4, 5, 6)
 DEFAULT_DYNAMIC_WEIGHT = 3
-SCORE_TO_NATIVE_CLOCK = Fraction(27_358, 28_800)
-MEASURED_QUARTER_FRAMES = {100: 27_358, 125: 22_384}
-DAC_BLOCK_SECONDS = Fraction(2_487, 48_000)
-RSX_SAMPLE_RATE = 11_000
-PITCH_CALIBRATION = 1.0106
+# Each voice contributes at most one centered 8-bit sample per output frame.
+MIX_BOUNDS = 128 * DYNAMIC_WEIGHTS[-1] * music.VOICE_COUNT
+MIX_LEVELS = {value: round(value * 5 / 3) for value in range(-MIX_BOUNDS, MIX_BOUNDS + 1)}
+# The observed 48 kHz frame intervals fit a 1,152-sample PSSJ block at
+# 3.579545 MHz / 161. At the root pitch, two DAC updates span one source frame.
+DAC_RATE = Fraction(3_579_545, 161)
+DAC_BLOCK_SECONDS = 1152 / DAC_RATE
 PHASE_BITS = 32
 
 
@@ -143,9 +145,8 @@ class _Clock:
 
     @staticmethod
     def _step(bpm):
-        if bpm in MEASURED_QUARTER_FRAMES:
-            return Fraction(MEASURED_QUARTER_FRAMES[bpm], 48_000 * music.TICKS_PER_QUARTER)
-        return SCORE_TO_NATIVE_CLOCK * Fraction(60, music.TICKS_PER_QUARTER) / Fraction(bpm)
+        blocks = (60 / Fraction(bpm)) // DAC_BLOCK_SECONDS
+        return blocks * DAC_BLOCK_SECONDS / music.TICKS_PER_QUARTER
 
     def at(self, tick):
         index = bisect_right(self.ticks, tick) - 1
@@ -215,7 +216,7 @@ def _sample_data(instrument, index):
 
 
 def _voice_notes(voice, default_slot):
-    notes = iter(music._connected_notes(voice))
+    notes = iter(music._connected_notes(voice, split_controls=True))
     note = next(notes, None)
     slot, dynamic = default_slot, None
     for event in voice:
@@ -265,8 +266,8 @@ def _plan(sequence, by_slot, clock, rate, sample_policy, default_slots):
                 gate = max(Fraction(0), duration - DAC_BLOCK_SECONDS)
             elif first is last:
                 gate = min(duration, max(Fraction(57, 400), duration * Fraction(13, 16) - Fraction(3, 40)))
-            step = round((1 << PHASE_BITS) * RSX_SAMPLE_RATE / rate
-                         * 2 ** ((pitch - descriptor.midi_pitch) / 12) * PITCH_CALIBRATION)
+            step = round((1 << PHASE_BITS) * float(DAC_RATE / (2 * rate))
+                         * 2 ** ((pitch - descriptor.midi_pitch) / 12))
             notes.append(Note(voice_number, first.offset, first.tick, last.tick + last.duration_ticks,
                               start, end, round(start * rate), round((start + gate) * rate),
                               slot, index, pitch, dynamic, step, first.connection in ('continue', 'end')))
@@ -274,14 +275,16 @@ def _plan(sequence, by_slot, clock, rate, sample_policy, default_slots):
 
 
 def _mix(notes, decoded, frames):
-    output = array('i', [0]) * frames
+    output = array('h', [0]) * frames
     previous = None
+    previous_geometry = None
     phase = 0
     for note in notes:
         pcm, loop_start, loop_end = decoded[note.slot, note.sample_index]
         weight = DEFAULT_DYNAMIC_WEIGHT if note.dynamic_index is None else DYNAMIC_WEIGHTS[note.dynamic_index]
+        geometry = len(pcm), loop_start, loop_end
         if not (note.continues_previous and previous is not None and previous.voice == note.voice
-                and (previous.slot, previous.sample_index) == (note.slot, note.sample_index)):
+                and previous_geometry == geometry):
             phase = 0
         loop_limit = loop_end << PHASE_BITS
         loop_period = (loop_end - loop_start) << PHASE_BITS
@@ -294,10 +297,11 @@ def _mix(notes, decoded, frames):
             output[frame] += (pcm[phase >> PHASE_BITS] - 128) * weight
             phase += note.source_step
         previous = note
-    clipped = array('h', (max(-32768, min(32767, round(value * 5 / 3))) for value in output))
+        previous_geometry = geometry
+    pcm_output = array('h', map(MIX_LEVELS.__getitem__, output))
     if sys.byteorder == 'big':
-        clipped.byteswap()
-    return clipped.tobytes()
+        pcm_output.byteswap()
+    return pcm_output.tobytes()
 
 
 def render(score, instruments, *, rate=OUTPUT_RATE, sample_policy='rsx-ranges', default_slots=DEFAULT_SLOTS,

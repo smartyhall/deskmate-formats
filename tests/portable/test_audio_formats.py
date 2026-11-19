@@ -291,7 +291,7 @@ class SampledMusicTests(unittest.TestCase):
         self.assertEqual(len(played.notes), 3)
         self.assertEqual(played.notes[0].written_end_tick, 48)
         self.assertEqual(played.notes[0].native_end_seconds,
-                         sampled_music.SCORE_TO_NATIVE_CLOCK)  # 0.6 + 0.4 written seconds
+                         18 * sampled_music.DAC_BLOCK_SECONDS)  # 11 and 7 native blocks
         self.assertEqual(unpack_from('<h', played.pcm)[0], 200)
         self.assertEqual(unpack_from('<h', played.pcm, played.notes[0].gate_frame * 2)[0], 140)
 
@@ -337,7 +337,16 @@ class SampledMusicTests(unittest.TestCase):
         self.assertEqual([n.slot for n in played.notes], [9, 9, 10, 10, 10, 10, 10, 10])
         self.assertEqual([n.dynamic_index for n in played.notes], [None, None, 1, 1, 1, 1, 1, 1])
         self.assertEqual([b.start_frame - a.start_frame for a, b in zip(played.notes, played.notes[1:])],
-                         [27358, 27358, 22384, 22384, 22384, 22384, 22384])
+                         [27358, 27358, 22384, 22384, 22383, 22384, 22384])
+
+    def test_native_tempo_quantization_with_three_beat_units(self):
+        voice = (0x7308, *([0xea1c] * 12))
+        conductor = (0x114b, 0x2048, 0x1178, 0x2048, 0x104b, 0x2048, 0x1297, 0x2048)
+        score = music.parse_bytes(score_bytes((voice, (), ()), conductor))
+        playback = sampled_music.render(score, [playback_instrument()])
+        intervals = [b.start_frame - a.start_frame for a, b in zip(playback.notes, playback.notes[1:])]
+        native = [37306, 37306, 37307, 22384, 22383, 22384, 17410, 17410, 17409, 37307, 37306]
+        self.assertTrue(all(abs(estimate - capture) <= 1 for estimate, capture in zip(intervals, native, strict=True)))
 
     def test_connected_rest_advances_time_and_pauses_sample_position(self):
         encoded = score_bytes(((0x7308, 0xca1c, 0x8a00, 0xaa1c), (), ()), (0x2048,))
@@ -349,6 +358,15 @@ class SampledMusicTests(unittest.TestCase):
         self.assertFalse(any(played.pcm[first.gate_frame * 2:last.start_frame * 2]))
         self.assertNotEqual(unpack_from('<h', played.pcm, last.start_frame * 2)[0], 0)
         self.assertIn(b'\x18\x80\x3c\x00\x18\x90\x3c\x40', music.to_midi(music.project(score)))
+
+    def test_connected_instrument_and_dynamic_changes_keep_compatible_phase(self):
+        voice = (0x7308, 0xca1c, 0x7200, 0x7309, 0x8a1c, 0x7205, 0xaa1c)
+        score = music.parse_bytes(score_bytes((voice, (), ()), (0x2048,)))
+        source = [playback_instrument(slot=slot, payload=bytes([128, 128, *([amplitude] * 4000)]),
+                                      loop=(2, 4002)) for slot, amplitude in ((9, 140), (10, 152))]
+        audio = sampled_music.render(score, source)
+        self.assertEqual([(n.slot, n.dynamic_index) for n in audio.notes], [(9, None), (10, 0), (10, 5)])
+        self.assertEqual([unpack_from('<h', audio.pcm, n.start_frame * 2)[0] for n in audio.notes], [0, 40, 240])
 
     def test_rsx_music_uses_same_step_for_three_declared_rates(self):
         score = music.parse_bytes(score_bytes(((0x7308, 0xea1c), (), ()), (0x2018,)))
@@ -412,6 +430,11 @@ class SampledMusicTests(unittest.TestCase):
         markers = [(e.tick, e.marker) for e in sequence.conductor if e.kind == 'score_marker']
         self.assertEqual(markers, [(24, 'A'), (48, 'Z')])
         self.assertIn(b'\x18\xff\x06\x01A\x18\xff\x06\x01Z', music.to_midi(sequence))
+        saved = (FIXTURES / 'music/marker-a-native.sng').read_bytes()
+        score = music.project(music.parse_bytes(saved))
+        marker, advance = score.conductor
+        self.assertEqual((marker.word, marker.marker, marker.tick), (0x7441, 'A', 0))
+        self.assertEqual(advance.duration_ticks, 96)
 
     def test_render_committed_held_score_through_cli(self):
         score = FIXTURES / 'music/region-hold-tool-generated.sng'

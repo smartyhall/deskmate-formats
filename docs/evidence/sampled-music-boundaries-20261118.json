@@ -1,0 +1,426 @@
+{
+  "boundary": {
+    "emulated_ms": 29818,
+    "frames": 1972,
+    "pcm_frames": 1430400,
+    "pcm_rate": 48000,
+    "pcm_sha256": "5250f5956ff2e420c07dc76215451665c5d53478ec95c24df4e72171e8a83f5b",
+    "configuration": "3c4bdd3a5dccac3997f4e8cdf57571704dd00cd75a360752a3e83b665f462b6c",
+    "inputs": {
+      "sha256": "a40df3a095341a6bdeb2721f2ddc6140d4ff5aacac656f7d43d24d625b131bac",
+      "files": {
+        "AAA12.SND": {
+          "size": 5660,
+          "sha256": "553a141d5d747d1efe39276b893039ee9d08b5fb36559888a2130f2f28caf858"
+        },
+        "DUP12.SNG": {
+          "size": 88,
+          "sha256": "0ce625865d0adb8536fca7b996571e9c00e5b2a7deb56619d4a7756f8a28ab54"
+        },
+        "DYNCON.SNG": {
+          "size": 96,
+          "sha256": "7b03f71eeac942045c08ee287328fd1f5c9ba65b1e9b8b72135d57f9f829edee"
+        },
+        "HOT3.SNG": {
+          "size": 102,
+          "sha256": "0838bb1b184e6ef8cb42f763cd0d42659b51e1def855ebaf87c48d4a6d6402c7"
+        },
+        "INSTCON.SNG": {
+          "size": 94,
+          "sha256": "48f98ec0e1d5a3f91421a902e30427ebfb9de19a2d1fb7a6c7e1d5885fc2fea2"
+        },
+        "LOUD11.SND": {
+          "size": 5660,
+          "sha256": "c37463bfc486b429e019e9f519f52f1cf5c4b544fc7418de3aa5d05657b8a7c1"
+        },
+        "MARK9.SND": {
+          "size": 5660,
+          "sha256": "b4405cc280eb050a3896d7079e9be853cd67ad326a921fbb596c6c2d05b73b12"
+        },
+        "OTHER10.SND": {
+          "size": 5660,
+          "sha256": "7c57f49b4c1312ebe9ca74833a805a9a987ddfd9231dba4456ed5b47193d43ac"
+        },
+        "REND.SNG": {
+          "size": 100,
+          "sha256": "3f6a6705a120b019a6ac909df72589c135b48668992363f235a2ee366729a27e"
+        },
+        "RNOTE.SNG": {
+          "size": 100,
+          "sha256": "79839fa531276d56e5852f6f9b0281553473fbe770b870300db795d003a8cb25"
+        },
+        "RREST.SNG": {
+          "size": 102,
+          "sha256": "d1540cdb06d5cedec6f5e70555044d259ff8b5e541973a1b410e1a32399eb3b1"
+        },
+        "ZZZ12.SND": {
+          "size": 5660,
+          "sha256": "14cfdcff672af9072cd3ebd62c49e7de4db9d0c403e183fc1eca1c189db5c684"
+        }
+      }
+    },
+    "cases": {
+      "RREST": {
+        "start_ms": 23786,
+        "stop_ms": 28394,
+        "measurements": [
+          {
+            "onset": 8557,
+            "frames": 9947,
+            "peak": 238,
+            "rms": 167.653,
+            "early_hz": [
+              505.273
+            ]
+          },
+          {
+            "onset": 76952,
+            "frames": 8703,
+            "peak": 238,
+            "rms": 166.716,
+            "early_hz": [
+              634.589
+            ]
+          },
+          {
+            "onset": 90631,
+            "frames": 17406,
+            "peak": 238,
+            "rms": 163.025,
+            "early_hz": [
+              756.055
+            ]
+          }
+        ],
+        "words": [
+          [
+            "7308",
+            "ee1c",
+            "e600",
+            "ee20",
+            "ea23"
+          ],
+          [],
+          [],
+          [
+            "2018",
+            "3002",
+            "2030",
+            "50ff",
+            "2018"
+          ]
+        ]
+      }
+    }
+  },
+  "boundary2": {
+    "emulated_ms": 83752,
+    "frames": 5282,
+    "pcm_frames": 4019520,
+    "pcm_rate": 48000,
+    "pcm_sha256": "ec538fd6cd52ba1c1a377bfd100ebb5b1ce682d1e922eee7232378975ad99050",
+    "configuration": "3c4bdd3a5dccac3997f4e8cdf57571704dd00cd75a360752a3e83b665f462b6c",
+    "inputs": {
+      "sha256": "a40df3a095341a6bdeb2721f2ddc6140d4ff5aacac656f7d43d24d625b131bac",
+      "files": {
+        "AAA12.SND": {
+          "size": 5660,
+          "sha256": "553a141d5d747d1efe39276b893039ee9d08b5fb36559888a2130f2f28caf858"
+        },
+        "DUP12.SNG": {
+          "size": 88,
+          "sha256": "0ce625865d0adb8536fca7b996571e9c00e5b2a7deb56619d4a7756f8a28ab54"
+        },
+        "DYNCON.SNG": {
+          "size": 96,
+          "sha256": "7b03f71eeac942045c08ee287328fd1f5c9ba65b1e9b8b72135d57f9f829edee"
+        },
+        "HOT3.SNG": {
+          "size": 102,
+          "sha256": "0838bb1b184e6ef8cb42f763cd0d42659b51e1def855ebaf87c48d4a6d6402c7"
+        },
+        "INSTCON.SNG": {
+          "size": 94,
+          "sha256": "48f98ec0e1d5a3f91421a902e30427ebfb9de19a2d1fb7a6c7e1d5885fc2fea2"
+        },
+        "LOUD11.SND": {
+          "size": 5660,
+          "sha256": "c37463bfc486b429e019e9f519f52f1cf5c4b544fc7418de3aa5d05657b8a7c1"
+        },
+        "MARK9.SND": {
+          "size": 5660,
+          "sha256": "b4405cc280eb050a3896d7079e9be853cd67ad326a921fbb596c6c2d05b73b12"
+        },
+        "OTHER10.SND": {
+          "size": 5660,
+          "sha256": "7c57f49b4c1312ebe9ca74833a805a9a987ddfd9231dba4456ed5b47193d43ac"
+        },
+        "REND.SNG": {
+          "size": 100,
+          "sha256": "3f6a6705a120b019a6ac909df72589c135b48668992363f235a2ee366729a27e"
+        },
+        "RNOTE.SNG": {
+          "size": 100,
+          "sha256": "79839fa531276d56e5852f6f9b0281553473fbe770b870300db795d003a8cb25"
+        },
+        "RREST.SNG": {
+          "size": 102,
+          "sha256": "d1540cdb06d5cedec6f5e70555044d259ff8b5e541973a1b410e1a32399eb3b1"
+        },
+        "ZZZ12.SND": {
+          "size": 5660,
+          "sha256": "14cfdcff672af9072cd3ebd62c49e7de4db9d0c403e183fc1eca1c189db5c684"
+        }
+      }
+    },
+    "cases": {
+      "DUP12": {
+        "start_ms": 78920,
+        "stop_ms": 82328,
+        "measurements": [
+          {
+            "onset": 9262,
+            "frames": 87046,
+            "peak": 238,
+            "rms": 170.394,
+            "early_hz": [
+              505.283
+            ]
+          }
+        ],
+        "words": [
+          [
+            "730b",
+            "e21c"
+          ],
+          [],
+          [],
+          [
+            "2060"
+          ]
+        ]
+      },
+      "DYNCON": {
+        "start_ms": 48830,
+        "stop_ms": 52738,
+        "measurements": [
+          {
+            "onset": 9080,
+            "frames": 24869,
+            "peak": 238,
+            "rms": 166.267,
+            "early_hz": [
+              505.297
+            ]
+          },
+          {
+            "onset": 36441,
+            "frames": 24866,
+            "peak": 89,
+            "rms": 55.52,
+            "early_hz": [
+              909.533
+            ]
+          },
+          {
+            "onset": 63796,
+            "frames": 19895,
+            "peak": 477,
+            "rms": 332.149,
+            "early_hz": [
+              909.548
+            ]
+          }
+        ],
+        "words": [
+          [
+            "7308",
+            "ca1c",
+            "7200",
+            "8a1c",
+            "7205",
+            "aa1c"
+          ],
+          [],
+          [],
+          [
+            "2048"
+          ]
+        ]
+      },
+      "HOT3": {
+        "start_ms": 69230,
+        "stop_ms": 72638,
+        "measurements": [
+          {
+            "onset": 9892,
+            "frames": 87046,
+            "peak": 3763,
+            "rms": 2675.676,
+            "early_hz": [
+              505.279
+            ]
+          }
+        ],
+        "words": [
+          [
+            "730a",
+            "7205",
+            "e21c"
+          ],
+          [
+            "730a",
+            "7205",
+            "e21c"
+          ],
+          [
+            "730a",
+            "7205",
+            "e21c"
+          ],
+          [
+            "2060"
+          ]
+        ]
+      },
+      "INSTCON": {
+        "start_ms": 59044,
+        "stop_ms": 62952,
+        "measurements": [
+          {
+            "onset": 8612,
+            "frames": 24869,
+            "peak": 238,
+            "rms": 166.36,
+            "early_hz": [
+              505.29
+            ]
+          },
+          {
+            "onset": 35970,
+            "frames": 57199,
+            "peak": 238,
+            "rms": 162.519,
+            "early_hz": [
+              1111.666
+            ]
+          }
+        ],
+        "words": [
+          [
+            "7308",
+            "ca1c",
+            "7309",
+            "8a1c",
+            "aa1c"
+          ],
+          [],
+          [],
+          [
+            "2048"
+          ]
+        ]
+      },
+      "REND": {
+        "start_ms": 36300,
+        "stop_ms": 40908,
+        "measurements": [
+          {
+            "onset": 9119,
+            "frames": 19895,
+            "peak": 238,
+            "rms": 166.537,
+            "early_hz": [
+              505.297
+            ]
+          },
+          {
+            "onset": 36477,
+            "frames": 17408,
+            "peak": 238,
+            "rms": 164.858,
+            "early_hz": [
+              635.555
+            ]
+          },
+          {
+            "onset": 63835,
+            "frames": 39792,
+            "peak": 238,
+            "rms": 162.13,
+            "early_hz": [
+              756.012
+            ]
+          }
+        ],
+        "words": [
+          [
+            "7308",
+            "ea1c",
+            "ea20",
+            "e623"
+          ],
+          [],
+          [],
+          [
+            "2018",
+            "3002",
+            "2030",
+            "50ff",
+            "2018"
+          ]
+        ]
+      },
+      "RNOTE": {
+        "start_ms": 23786,
+        "stop_ms": 28394,
+        "measurements": [
+          {
+            "onset": 8557,
+            "frames": 44766,
+            "peak": 238,
+            "rms": 165.893,
+            "early_hz": [
+              505.273
+            ]
+          },
+          {
+            "onset": 63273,
+            "frames": 17408,
+            "peak": 238,
+            "rms": 164.881,
+            "early_hz": [
+              635.566
+            ]
+          },
+          {
+            "onset": 90631,
+            "frames": 17406,
+            "peak": 238,
+            "rms": 163.025,
+            "early_hz": [
+              756.055
+            ]
+          }
+        ],
+        "words": [
+          [
+            "7308",
+            "e61c",
+            "ea20",
+            "ea23"
+          ],
+          [],
+          [],
+          [
+            "2018",
+            "3002",
+            "2030",
+            "50ff",
+            "2018"
+          ]
+        ]
+      }
+    }
+  }
+}

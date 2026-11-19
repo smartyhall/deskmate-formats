@@ -24,7 +24,8 @@ Slot 9 avoids substituting the existing slot 7 file. The paired copies use
 slots 10 and 11 to isolate a changed end word and cleared loop words. The
 generator reproduced the exact eight privately archived probe files. The
 published MARK9 and MARKLONG bytes are tool-generated and were accepted for
-playback together. Sound resave and edit behavior remain untested.
+playback together. A later native Sound Save As reproduced MARK9 byte
+for byte.
 
 | Control | Observed activity and periodic signal |
 | --- | --- |
@@ -170,9 +171,8 @@ signal. The independent model plays the full tied score interval of
 1,709.9 ms. SLUR9, C4 to G4, resumed the sustain waveform at the new pitch
 without replaying the intro. The first span ended 51.9 ms before the new
 onset. The independent model uses one measured DAC block for this gap and
-retains the sample phase if the same descriptor remains selected. Exact
-phase, tie release beyond score time and slurs that cross sample ranges
-remain open.
+retains the sample phase for compatible sample geometry. Exact phase and
+tie release beyond score time remain open.
 
 Outside a note connection, `8a00` was a timed silent quarter. The paired
 `8e00` and `8600` controls gave silent eighth and half intervals.
@@ -221,3 +221,58 @@ events. [Tandy Music manual archive](http://ftp.oldskool.org/pub/tvdog/tandy1000
 
 The sequence trials ran for 51,510, 73,678, 92,212 and 91,464 emulated
 milliseconds respectively. [Exact words, capture hashes and comparison windows](../evidence/sampled-music-sequencing-20261118.json)
+
+## Tempo quantization and native saves
+
+In the editor trial, quarter = 100, half = 50 and eighth = 200 produced
+the same 27,358-frame quarter. A second score used quarter = 75,
+quarter = 120, half = 75 and eighth = 151. The corresponding quarters
+spanned about 37,306, 22,384, 17,410 and 37,306 frames at 48 kHz.
+Along with the 125 BPM repeat, the observations fit whole blocks of
+1,152 samples at 3,579,545 Hz divided by 161. One block is about
+51.8144 ms, and a quarter is the integer number of blocks that fit in
+the requested quarter duration. The longest error after onset alignment
+was one output frame in the tested tempo sequence. The same clock with
+two DAC updates per source frame predicts the observed sustain-pulse
+spacing. The divisor and block size are inferred from capture timing and
+the emulator's PSSJ clock equation. The guest register writes were not
+recorded. Musical ticks, native scheduling time, and the sampled output
+frame clock remain separate in the renderer's note plan.
+
+In Music, the scratch UICOMP starts with slot 9 and four quarters
+C4, E4, G4 and A4. It uses M11 as the source for `score_probe`, voice
+words `7308 ea1c ea20 ea23 ea25`, two empty voices and conductor `2060`.
+The native Insert menu added marker A. After moving the cursor away,
+Search → Score marker returned to A. Save As produced UIMARK.SNG,
+with conductor words `7441 2060` and the voice streams preserved.
+Sound played MARK9 and saved it as SND9. Its 5,660 bytes, including
+the marked PCM and sustain metadata, match the generated input exactly.
+Independent FAT16 and 7-Zip extraction agreed for both outputs.
+The editor trial ran for 86,050 emulated milliseconds. [Save identities and tempo measurements](../evidence/sampled-music-tempo-editor-20261118.json)
+
+## Controls during note connections and repeat cuts
+
+Changing the dynamic between connected C4 quarters changed the gain
+on the next note boundary. The marked waveform resumed in the sustain
+region at pp and again at ff, with first steady-window RMS of about
+170, 55 and 333. Changing from slot 9 to slot 10 at the first connected
+boundary moved from the 900 Hz source region to slot 10's 1,100 Hz
+region without playing slot 10's 700 Hz intro. Both samples share the
+same extent and loop coordinates. The renderer keeps phase for this
+geometry and starts a new sample for incompatible geometry. Other
+release and gain details remain approximate.
+
+Three in-phase ff voices with a nearly full-scale source peaked at
+±3,763 DAC units. There was no observed wrap or signed-16-bit clipping
+in that control. A duplicate-slot control selected the first of two
+files in the test's FAT and filename order. This did not distinguish
+file enumeration, filename ordering or another resolver policy. The
+independent renderer rejects distinct files claiming the same slot.
+
+In separate controls, a repeat boundary fell inside a rest, inside an
+entry note or inside an ending note. Each yielded the written-order
+notes once, and the editor remained in its playing state past the
+expected repeated section. Playback was cancelled before leaving
+Music. The interpreter rejects these cuts instead of assuming a
+repeat expansion. The two trials ended at 29,818 and 83,752
+emulated milliseconds. [Capture boundaries and note windows](../evidence/sampled-music-boundaries-20261118.json)

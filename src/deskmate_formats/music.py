@@ -247,13 +247,18 @@ def _midi_tempo(bpm):
     return b'\xff\x51\x03' + micros.to_bytes(3, 'big')
 
 
-def _connected_notes(voice):
+def _connected_notes(voice, *, split_controls=False):
     """Yield the first and last written event of each sounding pitch."""
     first = last = None
     connected = False
     for event in voice:
         if event.kind == 'rest' and event.connection == 'continue':
             if first is not None:
+                yield first, last
+                first = last = None
+            continue
+        if event.kind in ('dynamic', 'instrument'):
+            if split_controls and first is not None:
                 yield first, last
                 first = last = None
             continue
