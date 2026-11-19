@@ -37,15 +37,18 @@ def _endpoints(plan, decoded, root_pitches):
         step = MEASURED_STEPS.get(semitones)
         if step is None:
             step = round(256 * 2 ** (semitones / 12))
-        # Two phase-reset patterns fit the first four traced endpoint blocks.
-        # Start the simplified pattern at the attack and retain the existing gate.
+        # Clear the fractional part at the first boundary and then at
+        # 576-endpoint intervals. The observed first boundary depends on pitch.
         half_reset = semitones in HALF_BUFFER_RESET
-        remainder = ((288 if half_reset else 576) * step) % 256
+        first_reset = 288 if half_reset else 576
+        first_remainder = (first_reset * step) % 256
+        block_remainder = (576 * step) % 256
         weight = DEFAULT_DYNAMIC_WEIGHT if note.dynamic_index is None else DYNAMIC_WEIGHTS[note.dynamic_index]
         carry = initial
         for index, frame in enumerate(range(note.start_frame, note.gate_frame)):
-            cuts = (index + (288 if half_reset else 0)) // 576
-            phase = initial + index * step - cuts * remainder
+            phase = initial + index * step
+            if index >= first_reset:
+                phase -= first_remainder + (index - first_reset) // 576 * block_remainder
             position = phase >> 8
             if loop_end and position >= loop_end:
                 position = loop_start + (position - loop_end) % (loop_end - loop_start)
