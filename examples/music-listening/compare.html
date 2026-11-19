@@ -22,17 +22,20 @@
 </head>
 <body>
 <h1>DeskMate Music listening comparisons</h1>
-<p>PR #118 baseline. Native recordings capture the Tandy 1000 RSX PSSJ DAC before mixing.
+<p>Native recordings capture the Tandy 1000 RSX PSSJ DAC before mixing.
 Both tracks retain their original levels. “Restart pair” starts both tracks from zero
 and plays the selected track aloud. Switch tracks while listening with the Native and
 Renderer buttons.</p>
+<p id="milestone-field" hidden><label for="milestone">Renderer milestone</label>
+<select id="milestone"><option value="baseline">PR #118 baseline</option>
+<option value="interleaved">Interleaved DAC v2</option></select></p>
 <section>
 <h2>Synthetic instruments</h2>
 <article>
 <h3>Major scale</h3>
 <div class="tracks">
-<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Major scale, native synthetic" src="v1/baseline-pr118/major-scale-native.wav"></audio></p>
-<p>Independent renderer<audio controls preload="metadata" aria-label="Major scale, renderer synthetic" src="v1/baseline-pr118/major-scale-renderer.wav"></audio></p>
+<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Major scale, native synthetic" src="v1/baseline-pr118/major-scale-native.wav" data-baseline="v1/baseline-pr118/major-scale-native.wav" data-interleaved="v1/baseline-pr118/major-scale-native.wav"></audio></p>
+<p>Independent renderer<audio controls preload="metadata" aria-label="Major scale, renderer synthetic" src="v1/baseline-pr118/major-scale-renderer.wav" data-baseline="v1/baseline-pr118/major-scale-renderer.wav" data-interleaved="v1/interleaved-v2/major-scale-renderer.wav"></audio></p>
 </div>
 <div class="actions" hidden>
 <button type="button" data-restart>Restart pair</button>
@@ -43,8 +46,8 @@ Renderer buttons.</p>
 <article>
 <h3>Minor scale</h3>
 <div class="tracks">
-<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Minor scale, native synthetic" src="v1/baseline-pr118/minor-scale-native.wav"></audio></p>
-<p>Independent renderer<audio controls preload="metadata" aria-label="Minor scale, renderer synthetic" src="v1/baseline-pr118/minor-scale-renderer.wav"></audio></p>
+<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Minor scale, native synthetic" src="v1/baseline-pr118/minor-scale-native.wav" data-baseline="v1/baseline-pr118/minor-scale-native.wav" data-interleaved="v1/baseline-pr118/minor-scale-native.wav"></audio></p>
+<p>Independent renderer<audio controls preload="metadata" aria-label="Minor scale, renderer synthetic" src="v1/baseline-pr118/minor-scale-renderer.wav" data-baseline="v1/baseline-pr118/minor-scale-renderer.wav" data-interleaved="v1/interleaved-v2/minor-scale-renderer.wav"></audio></p>
 </div>
 <div class="actions" hidden>
 <button type="button" data-restart>Restart pair</button>
@@ -55,8 +58,8 @@ Renderer buttons.</p>
 <article>
 <h3>Chromatic scale</h3>
 <div class="tracks">
-<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Chromatic scale, native synthetic" src="v1/baseline-pr118/chromatic-scale-native.wav"></audio></p>
-<p>Independent renderer<audio controls preload="metadata" aria-label="Chromatic scale, renderer synthetic" src="v1/baseline-pr118/chromatic-scale-renderer.wav"></audio></p>
+<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Chromatic scale, native synthetic" src="v1/baseline-pr118/chromatic-scale-native.wav" data-baseline="v1/baseline-pr118/chromatic-scale-native.wav" data-interleaved="v1/baseline-pr118/chromatic-scale-native.wav"></audio></p>
+<p>Independent renderer<audio controls preload="metadata" aria-label="Chromatic scale, renderer synthetic" src="v1/baseline-pr118/chromatic-scale-renderer.wav" data-baseline="v1/baseline-pr118/chromatic-scale-renderer.wav" data-interleaved="v1/interleaved-v2/chromatic-scale-renderer.wav"></audio></p>
 </div>
 <div class="actions" hidden>
 <button type="button" data-restart>Restart pair</button>
@@ -67,8 +70,8 @@ Renderer buttons.</p>
 <article>
 <h3>Major cadence</h3>
 <div class="tracks">
-<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Major cadence, native synthetic" src="v1/baseline-pr118/major-cadence-native.wav"></audio></p>
-<p>Independent renderer<audio controls preload="metadata" aria-label="Major cadence, renderer synthetic" src="v1/baseline-pr118/major-cadence-renderer.wav"></audio></p>
+<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Major cadence, native synthetic" src="v1/baseline-pr118/major-cadence-native.wav" data-baseline="v1/baseline-pr118/major-cadence-native.wav" data-interleaved="v1/baseline-pr118/major-cadence-native.wav"></audio></p>
+<p>Independent renderer<audio controls preload="metadata" aria-label="Major cadence, renderer synthetic" src="v1/baseline-pr118/major-cadence-renderer.wav" data-baseline="v1/baseline-pr118/major-cadence-renderer.wav" data-interleaved="v1/interleaved-v2/major-cadence-renderer.wav"></audio></p>
 </div>
 <div class="actions" hidden>
 <button type="button" data-restart>Restart pair</button>
@@ -79,8 +82,8 @@ Renderer buttons.</p>
 <article>
 <h3>Minor cadence</h3>
 <div class="tracks">
-<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Minor cadence, native synthetic" src="v1/baseline-pr118/minor-cadence-native.wav"></audio></p>
-<p>Independent renderer<audio controls preload="metadata" aria-label="Minor cadence, renderer synthetic" src="v1/baseline-pr118/minor-cadence-renderer.wav"></audio></p>
+<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Minor cadence, native synthetic" src="v1/baseline-pr118/minor-cadence-native.wav" data-baseline="v1/baseline-pr118/minor-cadence-native.wav" data-interleaved="v1/interleaved-v2/minor-cadence-native.wav"></audio></p>
+<p>Independent renderer<audio controls preload="metadata" aria-label="Minor cadence, renderer synthetic" src="v1/baseline-pr118/minor-cadence-renderer.wav" data-baseline="v1/baseline-pr118/minor-cadence-renderer.wav" data-interleaved="v1/interleaved-v2/minor-cadence-renderer.wav"></audio></p>
 </div>
 <div class="actions" hidden>
 <button type="button" data-restart>Restart pair</button>
@@ -94,8 +97,8 @@ Renderer buttons.</p>
 <article>
 <h3>Major scale</h3>
 <div class="tracks">
-<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Major scale, native oem" src="v1/baseline-pr118/oem-major-scale-native.wav"></audio></p>
-<p>Independent renderer<audio controls preload="metadata" aria-label="Major scale, renderer oem" src="v1/baseline-pr118/oem-major-scale-renderer.wav"></audio></p>
+<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Major scale, native oem" src="v1/baseline-pr118/oem-major-scale-native.wav" data-baseline="v1/baseline-pr118/oem-major-scale-native.wav" data-interleaved="v1/baseline-pr118/oem-major-scale-native.wav"></audio></p>
+<p>Independent renderer<audio controls preload="metadata" aria-label="Major scale, renderer oem" src="v1/baseline-pr118/oem-major-scale-renderer.wav" data-baseline="v1/baseline-pr118/oem-major-scale-renderer.wav" data-interleaved="v1/interleaved-v2/oem-major-scale-renderer.wav"></audio></p>
 </div>
 <div class="actions" hidden>
 <button type="button" data-restart>Restart pair</button>
@@ -106,8 +109,8 @@ Renderer buttons.</p>
 <article>
 <h3>Minor scale</h3>
 <div class="tracks">
-<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Minor scale, native oem" src="v1/baseline-pr118/oem-minor-scale-native.wav"></audio></p>
-<p>Independent renderer<audio controls preload="metadata" aria-label="Minor scale, renderer oem" src="v1/baseline-pr118/oem-minor-scale-renderer.wav"></audio></p>
+<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Minor scale, native oem" src="v1/baseline-pr118/oem-minor-scale-native.wav" data-baseline="v1/baseline-pr118/oem-minor-scale-native.wav" data-interleaved="v1/baseline-pr118/oem-minor-scale-native.wav"></audio></p>
+<p>Independent renderer<audio controls preload="metadata" aria-label="Minor scale, renderer oem" src="v1/baseline-pr118/oem-minor-scale-renderer.wav" data-baseline="v1/baseline-pr118/oem-minor-scale-renderer.wav" data-interleaved="v1/interleaved-v2/oem-minor-scale-renderer.wav"></audio></p>
 </div>
 <div class="actions" hidden>
 <button type="button" data-restart>Restart pair</button>
@@ -118,8 +121,8 @@ Renderer buttons.</p>
 <article>
 <h3>Chromatic scale</h3>
 <div class="tracks">
-<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Chromatic scale, native oem" src="v1/baseline-pr118/oem-chromatic-scale-native.wav"></audio></p>
-<p>Independent renderer<audio controls preload="metadata" aria-label="Chromatic scale, renderer oem" src="v1/baseline-pr118/oem-chromatic-scale-renderer.wav"></audio></p>
+<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Chromatic scale, native oem" src="v1/baseline-pr118/oem-chromatic-scale-native.wav" data-baseline="v1/baseline-pr118/oem-chromatic-scale-native.wav" data-interleaved="v1/baseline-pr118/oem-chromatic-scale-native.wav"></audio></p>
+<p>Independent renderer<audio controls preload="metadata" aria-label="Chromatic scale, renderer oem" src="v1/baseline-pr118/oem-chromatic-scale-renderer.wav" data-baseline="v1/baseline-pr118/oem-chromatic-scale-renderer.wav" data-interleaved="v1/interleaved-v2/oem-chromatic-scale-renderer.wav"></audio></p>
 </div>
 <div class="actions" hidden>
 <button type="button" data-restart>Restart pair</button>
@@ -130,8 +133,8 @@ Renderer buttons.</p>
 <article>
 <h3>Major cadence</h3>
 <div class="tracks">
-<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Major cadence, native oem" src="v1/baseline-pr118/oem-major-cadence-native.wav"></audio></p>
-<p>Independent renderer<audio controls preload="metadata" aria-label="Major cadence, renderer oem" src="v1/baseline-pr118/oem-major-cadence-renderer.wav"></audio></p>
+<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Major cadence, native oem" src="v1/baseline-pr118/oem-major-cadence-native.wav" data-baseline="v1/baseline-pr118/oem-major-cadence-native.wav" data-interleaved="v1/baseline-pr118/oem-major-cadence-native.wav"></audio></p>
+<p>Independent renderer<audio controls preload="metadata" aria-label="Major cadence, renderer oem" src="v1/baseline-pr118/oem-major-cadence-renderer.wav" data-baseline="v1/baseline-pr118/oem-major-cadence-renderer.wav" data-interleaved="v1/interleaved-v2/oem-major-cadence-renderer.wav"></audio></p>
 </div>
 <div class="actions" hidden>
 <button type="button" data-restart>Restart pair</button>
@@ -142,8 +145,8 @@ Renderer buttons.</p>
 <article>
 <h3>Minor cadence</h3>
 <div class="tracks">
-<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Minor cadence, native oem" src="v1/baseline-pr118/oem-minor-cadence-native.wav"></audio></p>
-<p>Independent renderer<audio controls preload="metadata" aria-label="Minor cadence, renderer oem" src="v1/baseline-pr118/oem-minor-cadence-renderer.wav"></audio></p>
+<p>Native PSSJ DAC<audio controls preload="metadata" aria-label="Minor cadence, native oem" src="v1/baseline-pr118/oem-minor-cadence-native.wav" data-baseline="v1/baseline-pr118/oem-minor-cadence-native.wav" data-interleaved="v1/baseline-pr118/oem-minor-cadence-native.wav"></audio></p>
+<p>Independent renderer<audio controls preload="metadata" aria-label="Minor cadence, renderer oem" src="v1/baseline-pr118/oem-minor-cadence-renderer.wav" data-baseline="v1/baseline-pr118/oem-minor-cadence-renderer.wav" data-interleaved="v1/interleaved-v2/oem-minor-cadence-renderer.wav"></audio></p>
 </div>
 <div class="actions" hidden>
 <button type="button" data-restart>Restart pair</button>
@@ -153,6 +156,14 @@ Renderer buttons.</p>
 </article>
 </section>
 <script>
+const selector = document.querySelector("#milestone");
+document.querySelector("#milestone-field").hidden = false;
+selector.addEventListener("change", () => {
+  for (const audio of document.querySelectorAll("audio")) {
+    audio.pause();
+    audio.src = audio.dataset[selector.value];
+  }
+});
 for (const article of document.querySelectorAll('article')) {
   const tracks = [...article.querySelectorAll('audio')];
   const actions = article.querySelector('.actions');

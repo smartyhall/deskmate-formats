@@ -9,6 +9,12 @@ Clarinet, Piano, Bells and Cello bank. The frozen score and instrument
 specification, capture provenance, and quantitative comparisons accompany
 the audio.
 
+The experimental interleaved RSX DAC mode improves aligned waveform
+correlation in all ten listening cases. The default Music CLI can
+stream longer scores with an explicit frame budget. The historical
+comparison now covers 40 of 62 scores at 48 kHz using the established
+bank. [Trace and compatibility report](docs/research/music-playback-trace-20261118.md)
+
 The Music CLI and Preservation Workbench render sampled PCM/WAV using an
 explicit SND collection. The RSX model uses measured numeric binding,
 sample ranges, sustain boundaries, block-quantized tempo and bounded

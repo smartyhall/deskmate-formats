@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "music-listening-fidelity",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 22,
+    "token_records": 2917,
+    "sessions": 22
+  },
+  "checkpoint": "interleaved-publication",
+  "collected_at": "2026-11-19T03:40:53.366830+00:00",
+  "commit": "b37b4c677139494616713d2abd0f6fea98ab8e06",
+  "observation": {
+    "session": "1dfe1681b9a161e97e254618",
+    "measured_at": "2026-11-19T03:40:33.198000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 29188303,
+      "cached_input": 28679424,
+      "output": 88017,
+      "reasoning_output": 20630,
+      "total": 29276320
+    },
+    "reported_last": {
+      "input": 264078,
+      "cached_input": 263424,
+      "output": 50,
+      "reasoning_output": 20,
+      "total": 264128
+    },
+    "windows": {
+      "300": {
+        "used_percent": 90.0,
+        "reset_epoch": 1795065981,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 14.0,
+        "reset_epoch": 1795652781,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  },
+  "account": {
+    "source": "account/rateLimits/read",
+    "measured_at": "2026-11-19T03:40:23.577096+00:00",
+    "windows": {
+      "300": {
+        "used_percent": 90,
+        "reset_epoch": 1795065981,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 14,
+        "reset_epoch": 1795652781,
+        "status": "observed"
+      }
+    }
+  }
+}

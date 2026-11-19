@@ -89,7 +89,79 @@
   {
     "name": "snd001.zip",
     "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/snd001.zip",
-    "error": "NotImplementedError: That compression method is not supported"
+    "sha256": "b8aa35c3f28cd5dce9bf6d459a9cf34352511055fabb44c6a56ae305087b6013",
+    "sounds": [
+      {
+        "member": "STTNG.SND",
+        "size": 249019,
+        "sha256": "40979be89f7a0953e174dda59912f290538ab89589107cdafec2b48b1a18f080",
+        "slot": 0,
+        "name": "",
+        "sample_rate": 11000,
+        "profile": "sound-original-table",
+        "compression": 0
+      },
+      {
+        "member": "NCCCOM.SND",
+        "size": 32098,
+        "sha256": "1277788d91537aeff12b9ff6c7a38be7045a794f0e60586f86fb2294f59d2cd9",
+        "slot": 0,
+        "name": "",
+        "sample_rate": 11000,
+        "profile": "sound-original-table",
+        "compression": 0
+      },
+      {
+        "member": "BABUSH.SND",
+        "size": 22811,
+        "sha256": "41ce994b0742c2d43fe0570384254912bae8e5c2133b617a4144e3caf7baf2be",
+        "slot": 0,
+        "name": "",
+        "sample_rate": 11000,
+        "profile": "sound-original-table",
+        "compression": 0
+      },
+      {
+        "member": "HAIL.SND",
+        "size": 34051,
+        "sha256": "f9d72f4bcb6ab07c616ec9a3d63895f06529801d0fcd6fd92f8116eb2f7f34e5",
+        "slot": 0,
+        "name": "",
+        "sample_rate": 11000,
+        "profile": "sound-original-table",
+        "compression": 0
+      },
+      {
+        "member": "ROMULN.SND",
+        "size": 129867,
+        "sha256": "52e630127db093fbc3c0f72aa87daa7df9d6996feabfc828099b39091454fe21",
+        "slot": 0,
+        "name": "",
+        "sample_rate": 11000,
+        "profile": "sound-original-table",
+        "compression": 0
+      },
+      {
+        "member": "ENGAGE.SND",
+        "size": 40420,
+        "sha256": "352ffd90f616425dc490768b7aaa105ac9ddf7c3226ea17e9eb576be586bc9c2",
+        "slot": 0,
+        "name": "",
+        "sample_rate": 11000,
+        "profile": "sound-original-table",
+        "compression": 0
+      },
+      {
+        "member": "FIRCRK.SND",
+        "size": 70858,
+        "sha256": "af9b29868af912dfe0e077ef92736dc61ff58373262fa499db3ccd47818124e7",
+        "slot": 0,
+        "name": "",
+        "sample_rate": 11000,
+        "profile": "sound-original-table",
+        "compression": 0
+      }
+    ]
   },
   {
     "name": "dm300dk1.zip",

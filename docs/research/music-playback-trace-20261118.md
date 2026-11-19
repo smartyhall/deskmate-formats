@@ -131,8 +131,51 @@ descriptor fields and no sustain loop appeared by name. That trial
 did not complete playback, including a retry that ended after
 33,708 emulated ms. The original bank has no verified RSX slot-5
 addition. Compatibility totals use the established RSX instruments
-and retained Marimba. The user-group `snd001.zip` required ZIP
-compression support beyond Python's zip reader in the initial scan.
+and retained Marimba. 7-Zip decoded seven Sound files from the user-group
+archive `snd001.zip`. All seven declare slot 0.
+
+## Interleaved renderer milestone
+
+The explicit `--playback-model rsx-dac-interleaved-v2` option selects
+integer source increments, buffer-local phase resets, alternating
+endpoint and midpoint transfers, and the observed PSSJ DAC scale.
+The measured pattern clears fractional phase at the first boundary
+(288 or 576 endpoint samples depending on pitch) and then every 576
+endpoints. It reproduced 31,104 endpoint bytes and 31,077 intervening
+midpoints across 27 ff attacks on the dense root-28 sample. The
+renderer extends this measured pattern to its approximate handling of
+other roots and connected notes. Pitch increments outside the measured
+set are derived from equal temperament.
+
+V2 keeps the prior note-gate model and uses approximate mixing,
+dynamics, connected transitions and sustain phase. Its explicit frame
+limit is 12 million. The default CLI and Preservation Workbench retain
+the original acoustic model. The larger streaming frame budget
+applies to that original model.
+
+All ten cases were replayed in four fresh, disposable RSX runs,
+using the exact frozen v1 scores and banks. Nine fresh native crops
+matched their prior WAV bytes. The synthetic minor cadence uses a
+new native WAV. Its native crop differs from the first baseline run
+and is measured independently at this milestone.
+
+| Bank and passage | PR #118 waveform correlation | Interleaved waveform correlation | PR #118 → interleaved envelope |
+| --- | ---: | ---: | ---: |
+| Synthetic major scale | −0.319 | 0.827 | 0.731 → 0.724 |
+| Synthetic minor scale | 0.843 | 0.986 | 0.993 → 0.992 |
+| Synthetic chromatic scale | 0.686 | 0.840 | 0.851 → 0.851 |
+| Synthetic major cadence | 0.204 | 0.947 | 0.952 → 0.952 |
+| Synthetic minor cadence | 0.152 | 0.898 | 0.937 → 0.937 |
+| OEM major scale | −0.010 | 0.888 | 0.925 → 0.927 |
+| OEM minor scale | 0.681 | 0.958 | 0.953 → 0.952 |
+| OEM chromatic scale | 0.559 | 0.865 | 0.867 → 0.865 |
+| OEM major cadence | 0.591 | 0.987 | 0.998 → 0.999 |
+| OEM minor cadence | 0.220 | 0.918 | 0.931 → 0.934 |
+
+The comparisons use the baseline onset rule and 50 ms RMS windows.
+The largest envelope regression is the synthetic major scale, where
+note durations are still approximate. These are correlations on
+aligned recordings at original levels. [Exact metrics and identities](../../examples/music-listening/v1/interleaved-v2/manifest.json)
 
 ## Bounded streaming output
 
@@ -152,3 +195,9 @@ required a 24 kHz run. Structural and written-word coverage were
 audio blocks were 11 repeat-boundary cases and 11 missing
 instrument bindings across both sample policies once the longer
 output budget was applied.
+
+An installed-style CLI run with the larger frame budget wrote and
+reopened a 40,435,178-byte private historical WAV. Its 20,217,567
+frames span about 421.20 seconds at 48 kHz.
+The [corpus inventory](../evidence/music-streaming-inventory-20261118.json)
+records the bank identities, rate and policy counts.
