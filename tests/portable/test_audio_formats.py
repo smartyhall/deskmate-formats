@@ -406,6 +406,17 @@ class SampledMusicTests(unittest.TestCase):
             sampled_music.write_wav(score, source, stream, rate=8000, max_frames=1024)
         self.assertEqual(stream.getvalue(), b'')
 
+    def test_interleaved_model_uses_dac_midpoints_and_distinct_code_levels(self):
+        score = music.parse_bytes(score_bytes(((0x7308, 0x7205, 0xea1c), (), ()), (0x2018,)))
+        source = [playback_instrument(payload=bytes([0, 255, 128, 128]), loop=(0, 0))]
+        stream = BytesIO()
+        info = sampled_music.write_wav(score, source, stream, model=sampled_music.INTERLEAVED_MODEL)
+        self.assertEqual(info['model'], 'rsx-dac-interleaved-v2')
+        # 0 maps to DAC byte 85 and 255 to 170 at ff. The intervening byte
+        # is floor((85 + 170) / 2) = 127; the initial midpoint is 106.
+        self.assertEqual(unpack_from('<9h', stream.getvalue(), 44),
+                         (-657, -657, -657, -1284, -1284, -29, -29, 1254, 1254))
+
     def test_repeat_boundaries_and_expansion_limits(self):
         for voice, conductor, error in (
                 ((0xea1c,), (0x2018, 0x50ff), 'no start'),

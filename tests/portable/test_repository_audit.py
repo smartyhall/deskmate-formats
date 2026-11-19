@@ -275,6 +275,30 @@ class FixtureAuditTest(unittest.TestCase):
         (self.root / 'PKG-INFO').write_text('Metadata-Version: 2.4\n')
         self.assertEqual(self.audit()['listening_wavs_checked'], 0)
 
+    def test_fresh_canonical_reference_must_match_baseline_identity(self):
+        baseline, manifest, wav = self.listening_example()
+        milestone = baseline.parent.parent / 'interleaved-v2'
+        milestone.mkdir()
+        later = milestone / 'manifest.json'
+        manifest['milestone'] = milestone.name
+        native = []
+        for entry in manifest['recordings']:
+            if entry['playback'] == 'native':
+                native.append(entry)
+                entry['native_reference'] = 'fresh-byte-identical'
+            else:
+                target = milestone / Path(entry['path']).name
+                target.write_bytes(wav)
+                target.with_suffix('.wav.license').write_text(
+                    f'SPDX-License-Identifier: {audit_repository.LISTENING_LICENSE}\n# Tandy material notice\n')
+                entry['path'] = target.relative_to(self.root).as_posix()
+        later.write_text(json.dumps(manifest))
+        self.assertEqual(self.audit()['listening_wavs_checked'], 30)
+        native[0]['sha256'] = '0' * 64
+        later.write_text(json.dumps(manifest))
+        with self.assertRaisesRegex(ValueError, 'unverified canonical listening reference'):
+            self.audit()
+
 
 if __name__ == '__main__':
     unittest.main()

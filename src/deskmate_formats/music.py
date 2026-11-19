@@ -455,11 +455,14 @@ def main(argv=None):
                         help='sample range resolution for WAV output (default rsx-ranges)')
     parser.add_argument('--max-frames', type=int,
                         help=f'WAV frame budget (default {sampled_music.MAX_FRAMES}, maximum {sampled_music.MAX_STREAM_FRAMES})')
+    parser.add_argument('--playback-model', choices=sampled_music.PLAYBACK_MODELS,
+                        help='WAV playback model, including the experimental interleaved DAC model')
     args = parser.parse_args(argv)
     if bool(args.wav) != bool(args.instruments):
         parser.error('--wav and --instruments must be supplied together')
-    if not args.wav and any(value is not None for value in (args.rate, args.sample_policy, args.max_frames)):
-        parser.error('--rate, --sample-policy and --max-frames require --wav')
+    if not args.wav and any(value is not None for value in (
+            args.rate, args.sample_policy, args.max_frames, args.playback_model)):
+        parser.error('--rate, --sample-policy, --max-frames and --playback-model require --wav')
     created = []
     try:
         with args.source.open('rb') as stream:
@@ -480,6 +483,7 @@ def main(argv=None):
                     rate=sampled_music.OUTPUT_RATE if args.rate is None else args.rate,
                     sample_policy=args.sample_policy or 'rsx-ranges',
                     max_frames=sampled_music.MAX_FRAMES if args.max_frames is None else args.max_frames,
+                    model=args.playback_model or sampled_music.MODEL,
                 )
     except (OSError, ValueError, KeyboardInterrupt) as exc:
         for path in reversed(created):

@@ -22,6 +22,8 @@ MAX_INSTRUMENT_FILES = 128
 MAX_SOURCE_BYTES = 32 * 1024 * 1024
 DEFAULT_SLOTS = (1, 2, 3)
 MODEL = 'rsx-dac-approximation-v1'
+INTERLEAVED_MODEL = 'rsx-dac-interleaved-v2'
+PLAYBACK_MODELS = (MODEL, INTERLEAVED_MODEL)
 SAMPLE_POLICIES = ('rsx-ranges', 'strict', 'nearest-root')
 # Six measured gain steps approximately scale unsigned PCM by 5/3 through
 # 10 in DAC output units. The unmarked RSX default has the third step's gain.
@@ -105,6 +107,7 @@ class _RenderPlan:
     sample_policy: str
     written_ticks: int
     playback_ticks: int
+    root_pitches: dict[tuple[int, int], int]
     model: str = MODEL
 
 
@@ -376,7 +379,7 @@ def _mix_blocks(notes, decoded, frames):
         yield pcm_output.tobytes()
 
 
-def _prepare(score, instruments, rate, sample_policy, default_slots, max_frames, hard_limit):
+def _prepare(score, instruments, rate, sample_policy, default_slots, max_frames, hard_limit, *, mix_rate=None):
     if type(rate) is not int or not 8_000 <= rate <= 96_000:
         raise PlaybackError('output rate must be an integer from 8000 to 96000 Hz')
     if type(max_frames) is not int or not 1 <= max_frames <= hard_limit:
@@ -394,7 +397,9 @@ def _prepare(score, instruments, rate, sample_policy, default_slots, max_frames,
         if frames > max_frames:
             raise PlaybackError(f'render needs {frames} frames and exceeds the {max_frames}-frame output limit')
         by_slot = _instrument_map(instruments)
-        notes, decoded, used_slots, unmapped = _plan(sequence, by_slot, clock, rate, sample_policy, default_slots)
+        notes, decoded, used_slots, unmapped = _plan(
+            sequence, by_slot, clock, rate if mix_rate is None else mix_rate, sample_policy, default_slots,
+        )
     except PlaybackError:
         raise
     except music.MusicFormatError as exc:
@@ -406,8 +411,9 @@ def _prepare(score, instruments, rate, sample_policy, default_slots, max_frames,
     bindings = tuple(Binding(slot, by_slot[slot].name, sha256(by_slot[slot].source).hexdigest(), tuple(sorted(indices)))
                      for slot, indices in sorted(selected.items()))
     omitted = tuple(UnmappedPitch(slot, pitch, count) for (slot, pitch), count in sorted(unmapped.items()))
+    roots = {(slot, index): by_slot[slot].samples[index].midi_pitch for slot, index in decoded}
     return (_RenderPlan(rate, frames, bindings, tuple(notes), omitted, sample_policy,
-                        written.written_ticks, sequence.written_ticks), decoded)
+                        written.written_ticks, sequence.written_ticks, roots), decoded)
 
 
 def render(score, instruments, *, rate=OUTPUT_RATE, sample_policy='rsx-ranges', default_slots=DEFAULT_SLOTS,
@@ -420,13 +426,23 @@ def render(score, instruments, *, rate=OUTPUT_RATE, sample_policy='rsx-ranges', 
 
 
 def write_wav(score, instruments, stream, *, rate=OUTPUT_RATE, sample_policy='rsx-ranges',
-              default_slots=DEFAULT_SLOTS, max_frames=MAX_FRAMES):
+              default_slots=DEFAULT_SLOTS, max_frames=MAX_FRAMES, model=MODEL):
     """Stream a WAV to a binary writer and return the playback description."""
-    plan, decoded = _prepare(score, instruments, rate, sample_policy, default_slots, max_frames, MAX_STREAM_FRAMES)
+    if model == INTERLEAVED_MODEL:
+        from . import music_dac
+
+        plan, decoded = _prepare(score, instruments, rate, sample_policy, default_slots, max_frames, MAX_FRAMES,
+                                 mix_rate=DAC_RATE / 2)
+        blocks = music_dac.blocks(plan, decoded)
+    elif model == MODEL:
+        plan, decoded = _prepare(score, instruments, rate, sample_policy, default_slots, max_frames, MAX_STREAM_FRAMES)
+        blocks = _mix_blocks(plan.notes, decoded, plan.frames)
+    else:
+        raise PlaybackError(f'unknown sampled playback model {model!r}')
     header = _wav_header(rate, plan.frames)
     if stream.write(header) != len(header):
         raise OSError('incomplete Music WAV header write')
-    for pcm in _mix_blocks(plan.notes, decoded, plan.frames):
+    for pcm in blocks:
         if stream.write(pcm) != len(pcm):
             raise OSError('incomplete Music WAV PCM write')
-    return _describe(plan)
+    return {**_describe(plan), 'model': model}

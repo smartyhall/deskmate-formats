@@ -159,8 +159,9 @@ def listening_manifest(fixtures):
         scores[case['id']] = case['score_sha256']
 
     index, metadata = {}, set()
-    manifests = sorted(base.glob('*/manifest.json'))
-    if not manifests or base / 'baseline-pr118/manifest.json' not in manifests:
+    baseline_path = base / 'baseline-pr118/manifest.json'
+    manifests = sorted(base.glob('*/manifest.json'), key=lambda path: (path != baseline_path, path))
+    if not manifests or manifests[0] != baseline_path:
         raise ValueError('missing baseline listening manifest')
     total = 0
     for manifest_path in manifests:
@@ -189,7 +190,9 @@ def listening_manifest(fixtures):
             bank = expected[case]
             bank_hashes, rights = banks[bank]
             rel = (LISTENING_DIR / milestone / f'{case}-{role}.wav').as_posix()
-            if (entry['path'] != rel or entry['bank'] != bank or entry['classification'] != rights
+            canonical = (LISTENING_DIR / 'baseline-pr118' / f'{case}-native.wav').as_posix()
+            reuse = (role == 'native' and milestone != 'baseline-pr118' and entry['path'] == canonical)
+            if ((entry['path'] != rel and not reuse) or entry['bank'] != bank or entry['classification'] != rights
                     or entry['license'] != LISTENING_LICENSE or entry['score_sha256'] != scores[case]
                     or entry['instrument_sha256'] != {str(k): v for k, v in bank_hashes.items()}
                     or not is_digest(entry['sha256'])):
@@ -208,8 +211,15 @@ def listening_manifest(fixtures):
                     or not entry['model']
                     or (milestone == 'baseline-pr118' and entry['model'] != 'rsx-dac-approximation-v1')):
                 raise ValueError(f'invalid independent render provenance: {rel}')
-            index[rel] = entry
-            metadata.add(rel + '.license')
+            if reuse:
+                baseline = index.get(canonical)
+                if (entry.get('native_reference') != 'fresh-byte-identical'
+                        or not baseline
+                        or any(entry[field] != baseline[field] for field in ('frames', 'size', 'sha256'))):
+                    raise ValueError(f'unverified canonical listening reference: {rel}')
+            else:
+                index[rel] = entry
+                metadata.add(rel + '.license')
             milestone_bytes += size
         if pairs != {(case, role) for case in expected for role in ('native', 'renderer')}:
             raise ValueError(f'incomplete listening comparison: {milestone}')
