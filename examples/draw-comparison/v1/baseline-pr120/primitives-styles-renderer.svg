@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-389.75 135.25 7969.5 4504.5">
+<desc>DeskMate geometry preview with approximate fills, stroke styles and text spacing. Omitted element type bytes (hex) 5541.</desc>
+<rect x="-389.75" y="135.25" width="7969.5" height="4504.5" fill="#000080"/>
+<line x1="500" y1="325" x2="1150" y2="325" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="500" y1="480" x2="1000" y2="815" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="1150" y1="490" x2="1150" y2="830" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="500" y="1120" width="690" height="550" fill="#00c000" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<ellipse cx="845" cy="2120" rx="345" ry="275" fill="#00c000" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="1375" y1="325" x2="2025" y2="325" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="1375" y1="480" x2="1875" y2="815" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="2025" y1="490" x2="2025" y2="830" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="1375" y="1120" width="690" height="550" fill="#800080" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<ellipse cx="1720" cy="2120" rx="345" ry="275" fill="#800080" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="2250" y1="325" x2="2900" y2="325" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="2250" y1="480" x2="2750" y2="815" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="2900" y1="490" x2="2900" y2="830" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="2250" y="1120" width="690" height="550" fill="#808000" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<ellipse cx="2595" cy="2120" rx="345" ry="275" fill="#808000" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="3125" y1="325" x2="3775" y2="325" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="3125" y1="480" x2="3625" y2="815" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="3775" y1="490" x2="3775" y2="830" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="3125" y="1120" width="690" height="550" fill="#c000c0" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<ellipse cx="3470" cy="2120" rx="345" ry="275" fill="#c000c0" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="4000" y1="325" x2="4650" y2="325" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="4000" y1="480" x2="4500" y2="815" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="4650" y1="490" x2="4650" y2="830" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="4000" y="1120" width="690" height="550" fill="#00c000" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<ellipse cx="4345" cy="2120" rx="345" ry="275" fill="#00c000" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="4875" y1="325" x2="5525" y2="325" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="4875" y1="480" x2="5375" y2="815" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="5525" y1="490" x2="5525" y2="830" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="4875" y="1120" width="690" height="550" fill="#800080" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<ellipse cx="5220" cy="2120" rx="345" ry="275" fill="#800080" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="5750" y1="325" x2="6400" y2="325" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="5750" y1="480" x2="6250" y2="815" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="6400" y1="490" x2="6400" y2="830" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="5750" y="1120" width="690" height="550" fill="#808000" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<ellipse cx="6095" cy="2120" rx="345" ry="275" fill="#808000" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="6625" y1="325" x2="7275" y2="325" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="6625" y1="480" x2="7125" y2="815" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="7275" y1="490" x2="7275" y2="830" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="6625" y="1120" width="690" height="550" fill="#c000c0" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<ellipse cx="6970" cy="2120" rx="345" ry="275" fill="#c000c0" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="500" y="2710" width="1250" height="790" fill="none" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<ellipse cx="1480" cy="3300" rx="530" ry="420" fill="#c000c0" stroke="#c000c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<polyline points="2300,3700 2300,2710 3230,3420 3470,2830" fill="none" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<polygon points="3710,3020 4210,2710 4820,2890 4620,3550 3940,3490" fill="#008080" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="-200" y1="4200" x2="1400" y2="4200" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="500" y="4050" width="365" height="400" fill="#000080" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="935" y="4050" width="365" height="400" fill="#c0c000" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="1370" y="4050" width="365" height="400" fill="#c0c0c0" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="1805" y="4050" width="365" height="400" fill="#800000" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="2240" y="4050" width="365" height="400" fill="#008080" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="2675" y="4050" width="365" height="400" fill="#0000c0" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="3110" y="4050" width="365" height="400" fill="#c00000" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="3545" y="4050" width="365" height="400" fill="#808080" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="3980" y="4050" width="365" height="400" fill="#404040" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="4415" y="4050" width="365" height="400" fill="#008080" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="4850" y="4050" width="365" height="400" fill="#00c000" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="5285" y="4050" width="365" height="400" fill="#800080" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="5720" y="4050" width="365" height="400" fill="#808000" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="6155" y="4050" width="365" height="400" fill="#c000c0" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="6590" y="4050" width="365" height="400" fill="#008000" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="7025" y="4050" width="365" height="400" fill="#000000" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+</svg>

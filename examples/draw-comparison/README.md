@@ -1,10 +1,11 @@
 # Draw visual comparison library
 
-**Status:** operator-approved structure, 2026-11-19. The four featured
-drawings and matched visual outputs have not yet been created. The
-[planning manifest](suite-plan-v1.json) pins the existing 19 exact
-native FIG controls and related Text/Filer controls. The current renderer
-baseline is `5e1b24f8d8d262ac165b125474f7807163afbcc1` (PR #120 merge).
+The [frozen suite](suite-v1.json) contains four original Draw documents
+and 19 native FIG diagnostic controls. The
+[PR #120 baseline](v1/baseline-pr120/README.md) compares every drawing
+with the corresponding independent projection. The
+[planning manifest](suite-plan-v1.json) records the original test design
+and pins the related Text and Filer controls.
 
 ## Purpose and featured specimens
 
@@ -43,7 +44,7 @@ The repository provides the following structure:
 
 - `suite-plan-v1.json`: planned case IDs, requirements and pinned
   existing diagnostic/cross-application inputs.
-- `suite-v1.json` (to be created): frozen actual featured FIG paths,
+- `suite-v1.json`: frozen actual featured FIG paths,
   hashes, object/feature coverage, capture profile, metric versions.
 - `v1/baseline-pr120/`: first genuine matched native/independent
   comparisons using the pinned renderer, before any fidelity changes.
@@ -93,21 +94,15 @@ traces in the private laboratory.
 
 ## Publication and test contract
 
-This commit establishes documentation and the proposed paths only.
-The present audit still bans PNG; implement a narrowly scoped exception
-for actual manifest-listed, eligible comparison PNGs below this tree
-when establishing the baseline. Use the Music listening precedent,
-but do not change its rules or allow unrelated artwork/screenshots.
-Validate canonical paths, exact source linkage, unique entries, hashes,
+The repository audit permits manifest-listed comparison PNGs and safe
+renderer SVGs in the versioned library. Validation covers canonical paths,
+exact source linkage, unique entries, hashes,
 dimensions, bounded decoded pixel counts and file/aggregate sizes,
 PNG signature and chunk integrity, allowed pixel encodings, decompression
 bounds, absence of unexpected payloads/metadata, licensing and symlinks.
-Restrict SVG/HTML to authored safe static content; do not embed arbitrary
-historical file data or executable SVG from untrusted inputs. Test
-unlisted, tampered, malformed, oversized and out-of-scope images.
-Update both audit implementations consistently and keep comparison
-binaries out of the wheel and sdist. Preserve source-package metadata
-audit behavior and accurate REUSE notices.
+The standalone and supervisor audits share the validator. Wheels and
+source distributions exclude the comparison images and vectors. The
+source distribution retains provenance metadata and REUSE notices.
 
 Publish drawing-only crops of original synthetic documents where rights
 permit; do not include proprietary application UI chrome, raw font
@@ -119,7 +114,7 @@ The operator's goal is actual accessible comparisons, not a blanket
 ban on original work produced by Draw. Document any real contrary terms
 and seek review; never assert rights the project does not hold.
 
-The next campaign must complete the initial featured gallery and
-baseline before major renderer modifications; incremental diagnostic
-checkpoints are encouraged. See the [native graphics report](../../docs/research/graphics-native-20261117.md)
+The [native oracle report](../../docs/research/draw-oracle-20261119.md) records
+the capture procedure and coordinate observations. See also the
+[prior native graphics report](../../docs/research/graphics-native-20261117.md)
 and [standing policy](../../AGENTS.md).

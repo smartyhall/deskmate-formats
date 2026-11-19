@@ -2780,6 +2780,102 @@
       "synthetic_data": true,
       "native_saved": true,
       "expected_content": "Four quarter notes with words EA21, EA62, EA21 and EAA0, sounding pitches F4, F-sharp 4, F4 and E4. The last note is displayed as F-flat."
+    },
+    {
+      "path": "draw/suite-v1-primitives-styles.fig",
+      "sha256": "49d43144b8c19166d7984f645fbff1dd71a404c43c52e5f867c03e1ae3c65a7b",
+      "size": 1879,
+      "application": "Tandy DeskMate Draw",
+      "version": "DeskMate 03.05.00",
+      "experiment": "2026-11-19 Draw comparison suite v1",
+      "origin": "Original tool-authored synthetic drawing, opened and saved with native Draw Save As.",
+      "expected_content": "Lines, weights, dashes, arcs, patterns and 16 palette swatches.",
+      "generation_method": "PYTHONPATH=src python tools/experimental/draw_suite_candidates.py tests/fixtures/application-generated/draw <private-dir>",
+      "evidence_class": "Native Draw Save As and independent stopped-disk extraction",
+      "synthetic_data": true,
+      "native_saved": true,
+      "native_reopened": true,
+      "generator_output": {
+        "dos_name": "PRIM2.FIG",
+        "sha256": "121defc87382ee379c62be598a577bc23c76863ad93f9d5b5228cc364ebd1b15",
+        "size": 1879
+      },
+      "templates": {
+        "draw/d01.fig": "adf9cbc2906115e97d462a7fed32f1ce325f1f7a006bbabaaf716f621b29bd53",
+        "draw/d23.fig": "3a65ae65872af24f5a50291503158bb2b983c3b403aad1838387c043ab893613"
+      }
+    },
+    {
+      "path": "draw/suite-v1-technical-plan.fig",
+      "sha256": "9c683be4c20d93190a7224dd337095a6b900f1561e2f843292c1f9cd2c314fd4",
+      "size": 1563,
+      "application": "Tandy DeskMate Draw",
+      "version": "DeskMate 03.05.00",
+      "experiment": "2026-11-19 Draw comparison suite v1",
+      "origin": "Original tool-authored synthetic drawing, opened and saved with native Draw Save As.",
+      "expected_content": "Floor plan with door arcs, windows, dimensions and six Cobb labels.",
+      "generation_method": "PYTHONPATH=src python tools/experimental/draw_suite_candidates.py tests/fixtures/application-generated/draw <private-dir>",
+      "evidence_class": "Native Draw Save As and independent stopped-disk extraction",
+      "synthetic_data": true,
+      "native_saved": true,
+      "native_reopened": true,
+      "generator_output": {
+        "dos_name": "PLAN2.FIG",
+        "sha256": "45ef786c71f9d2f10f7432a93a63f1563af334ffb979ca0ba3f61a70f8d03313",
+        "size": 1563
+      },
+      "templates": {
+        "draw/d01.fig": "adf9cbc2906115e97d462a7fed32f1ce325f1f7a006bbabaaf716f621b29bd53",
+        "draw/d23.fig": "3a65ae65872af24f5a50291503158bb2b983c3b403aad1838387c043ab893613"
+      }
+    },
+    {
+      "path": "draw/suite-v1-compound-landscape.fig",
+      "sha256": "3bb86807a385f73d341be34ed33c10fe7de082e56bbe5248074728b966c3ceab",
+      "size": 1055,
+      "application": "Tandy DeskMate Draw",
+      "version": "DeskMate 03.05.00",
+      "experiment": "2026-11-19 Draw comparison suite v1",
+      "origin": "Original tool-authored synthetic drawing, opened and saved with native Draw Save As.",
+      "expected_content": "Original lake scene with a house, nested window group and patterned roof.",
+      "generation_method": "PYTHONPATH=src python tools/experimental/draw_suite_candidates.py tests/fixtures/application-generated/draw <private-dir>",
+      "evidence_class": "Native Draw Save As and independent stopped-disk extraction",
+      "synthetic_data": true,
+      "native_saved": true,
+      "native_reopened": true,
+      "generator_output": {
+        "dos_name": "LAND2.FIG",
+        "sha256": "33cbc35497655ff81f09ad89077a10a85ea68d599245079e75c0e6afb9e3265a",
+        "size": 1055
+      },
+      "templates": {
+        "draw/d01.fig": "adf9cbc2906115e97d462a7fed32f1ce325f1f7a006bbabaaf716f621b29bd53",
+        "draw/d23.fig": "3a65ae65872af24f5a50291503158bb2b983c3b403aad1838387c043ab893613"
+      }
+    },
+    {
+      "path": "draw/suite-v1-typography.fig",
+      "sha256": "dbbec667a3a4d566bf5aea5bd2ced0534da2e5d498d7a5d7fcbae2e35c05f0ba",
+      "size": 967,
+      "application": "Tandy DeskMate Draw",
+      "version": "DeskMate 03.05.00",
+      "experiment": "2026-11-19 Draw comparison suite v1",
+      "origin": "Original tool-authored synthetic drawing, opened and saved with native Draw Save As.",
+      "expected_content": "Cobb heading, alphabet and numerals with varied serialized reference bounds.",
+      "generation_method": "PYTHONPATH=src python tools/experimental/draw_suite_candidates.py tests/fixtures/application-generated/draw <private-dir>",
+      "evidence_class": "Native Draw Save As and independent stopped-disk extraction",
+      "synthetic_data": true,
+      "native_saved": true,
+      "native_reopened": true,
+      "generator_output": {
+        "dos_name": "TYPE2.FIG",
+        "sha256": "3329691fde0ec0b6c64c77e3e503cf69b851d121afbd8af3cf9da8ed23d4dba4",
+        "size": 967
+      },
+      "templates": {
+        "draw/d01.fig": "adf9cbc2906115e97d462a7fed32f1ce325f1f7a006bbabaaf716f621b29bd53",
+        "draw/d23.fig": "3a65ae65872af24f5a50291503158bb2b983c3b403aad1838387c043ab893613"
+      }
     }
   ]
 }
