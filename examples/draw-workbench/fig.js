@@ -488,10 +488,19 @@ const DrawFig = (() => {
     return { data, first, hint, listBytes };
   }
 
+  function editableOutline(part) {
+    const { raw } = part;
+    return part.kind === 'Uf' && part.fontName && raw[20] === 1 && raw[21] === 255
+      && raw.slice(22, 26).every(v => v === 0)
+      && (raw[56] || raw[57]) && (raw[58] || raw[59])
+      && raw.slice(60, 68).every((v, i) => v === ([0, 0, 0, 0, 12, 0, 255, 0][i]))
+      && raw.slice(68, 84).every(v => v === 0) && raw[90] === 1 && raw[91] === 0;
+  }
+
   function knownLeaves(parts) {
     require(parts.every(e => {
       if (Object.hasOwn(sizes, e.kind)) return e.raw.length === sizes[e.kind];
-      if (e.kind !== 'UA' && e.kind !== 'UP' && !(e.kind === 'Uf' && e.fontName)) return false;
+      if (e.kind !== 'UA' && e.kind !== 'UP' && !editableOutline(e)) return false;
       const size = 2 * (e.raw[18] + 256 * e.raw[19]);
       return size === e.raw.length && (e.kind !== 'UA' || size === 44);
     }), 'Structural edit would relocate an unsupported record');
@@ -551,6 +560,10 @@ const DrawFig = (() => {
   }
 
   function addOutlineText(model, face, label, [x, y], pointSize, width) {
+    return appendRecord(model, outlineTextRecord(face, label, [x, y], pointSize, width));
+  }
+
+  function outlineTextRecord(face, label, [x, y], pointSize, width) {
     require(/^[ -~]{1,29}$/.test(face.name) && /^[ -~]{1,255}$/.test(label)
       && [pointSize, width].every(v => Number.isInteger(v) && v >= 1 && v <= 255)
       && [x, y].every(Number.isInteger), 'Use printable ASCII and integer size and width from 1 to 255');
@@ -583,7 +596,15 @@ const DrawFig = (() => {
       view.setUint16(at, value, true);
     }
     raw.set(text, 100);
-    return appendRecord(model, raw);
+    return raw;
+  }
+
+  function replaceOutlineText(model, tag, face, label, origin, pointSize, width) {
+    const profile = packed(model), parts = flat(model);
+    const target = parts.find(part => part.tag === tag);
+    require(target && editableOutline(target), 'Replacement requires a top-level base outline text run');
+    target.raw = outlineTextRecord(face, label, origin, pointSize, width);
+    return wrap(profile, packList(parts, profile.first), profile.hint);
   }
 
   function remove(model, tag) {
@@ -717,7 +738,8 @@ const DrawFig = (() => {
   }
 
   return Object.freeze({ read, leaves, preview, arcQuadratic, canEdit, edit, readOutlineFace, MAX_BYTES, MAX_FF1_BYTES,
-    blank, structuralProfile, add, addOutlineText, remove, reorder, group, ungroup, paletteColor, canPermute, permuteLabel });
+    blank, structuralProfile, add, addOutlineText, replaceOutlineText, editableOutline, remove, reorder, group,
+    ungroup, paletteColor, canPermute, permuteLabel });
 })();
 
 if (typeof module === 'object') module.exports = DrawFig;

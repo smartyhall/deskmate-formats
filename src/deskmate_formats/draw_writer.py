@@ -82,12 +82,20 @@ def _packed(source):
     return data, form, first, tag_hint
 
 
+def _editable_outline(element):
+    run = graphics.external_font_run(element) if element.kind == 'Uf' else None
+    return (run is not None and run.attributes == b'\x01\xff\0\0\0\0'
+            and run.descriptor[4:28] == b'\0\0\0\0\x0c\0\xff' + bytes(17)
+            and run.descriptor[34:36] == b'\x01\0'
+            and run.point_size_word and run.width_percent_word)
+
+
 def _known_leaves(elements):
     for element in elements:
         expected = graphics.PRIMITIVE_SIZES.get(element.kind)
         if element.kind in ('UA', 'UP'):
             expected = 2 * unpack_from('<H', element.raw, 18)[0]
-        if element.kind == 'Uf' and graphics.external_font_run(element) is not None:
+        if _editable_outline(element):
             expected = 2 * unpack_from('<H', element.raw, 18)[0]
         if len(element.raw) != expected or (element.kind == 'UA' and expected != 44):
             raise graphics.GraphicsFormatError('structural edit would relocate an unsupported record')
@@ -128,7 +136,7 @@ def _new_tag(form, hint, added=1):
     return tag
 
 
-def _rebuild_flat(source, *, new=None, remove=None):
+def _rebuild_flat(source, *, new=None, remove=None, replace=None):
     data, form, first, tag_hint = _packed(source)
     records = {element.offset: element for element in form.elements}
     if len(records) != len(form.entries):
@@ -137,6 +145,12 @@ def _rebuild_flat(source, *, new=None, remove=None):
     if remove is not None and (type(remove) is not int or remove not in {e.tag for e in form.entries}):
         raise graphics.GraphicsFormatError('the requested top-level delete tag does not exist')
     ordered = [(entry.tag, records[entry.offset].raw) for entry in form.entries if entry.tag != remove]
+    if replace is not None:
+        tag, raw = replace
+        target = next((records[entry.offset] for entry in form.entries if entry.tag == tag), None)
+        if type(tag) is not int or target is None or not _editable_outline(target):
+            raise graphics.GraphicsFormatError('replacement requires a top-level base outline text run')
+        ordered = [(old_tag, raw if old_tag == tag else old_raw) for old_tag, old_raw in ordered]
     if new is not None:
         tag_hint = _new_tag(form, tag_hint)
         ordered.append((tag_hint, new))
@@ -236,6 +250,11 @@ def new_outline_drawing(face, label, origin, **options):
 def add_outline_text(source, face, label, origin, **options):
     """Append an outline run, retaining all other supported leaf bytes."""
     return _rebuild_flat(source, new=outline_text_record(face, label, origin, **options))
+
+
+def replace_outline_text(source, tag, face, label, origin, **options):
+    """Replace one base outline run, recalculating its own cache and extent."""
+    return _rebuild_flat(source, replace=(tag, outline_text_record(face, label, origin, **options)))
 
 
 def delete(source, tag):

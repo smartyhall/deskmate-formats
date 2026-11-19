@@ -49,7 +49,7 @@ TELEMETRY_FIXTURES = {
 BAD_EXT = {'.exe', '.com', '.dll', '.img', '.ima', '.iso', '.zip', '.7z',
            '.png', '.pdf', '.pdm', '.res', '.r89', '.hlp',
            '.tut', '.nvr', '.rom', '.vhd', '.vhdx', '.hdi', '.raw', '.token', '.wav', '.mid',
-           '.ff1', '.otf', '.ttf'} | DATA_EXT
+           '.ff1', '.otf', '.ttf', '.prn'} | DATA_EXT
 PATTERNS = {
     'host Windows user path': r'(?i)[a-z]:[\\/]Users[\\/]',
     'host POSIX user path': r'/(?:home|Users)/[^/\s]+',
@@ -271,6 +271,8 @@ def check_listening_wav(rel, data, entry):
 
 def typography_manifest():
     relative = TYPOGRAPHY_DIR / 'manifest.json'
+    if not (ROOT / relative).exists():
+        return {}, set()
     manifest = draw_audit.read_json(ROOT, relative)
     if manifest.get('schema_version') != 1 or set(manifest.get('images', {})) != TYPOGRAPHY_IMAGES:
         raise ValueError('unexpected typography comparison manifest')
@@ -335,6 +337,12 @@ def audit():
             entry = allowed[rel]
             if len(data) != entry['size'] or hashlib.sha256(data).hexdigest() != entry['sha256']:
                 raise ValueError('fixture digest or size mismatch: ' + rel)
+            if rel == (FIXTURE_DIR / SYNTHETIC_FF1).as_posix():
+                from deskmate_formats.ff1 import serialize_resource
+                from deskmate_formats.ff1_geometric import geometric_face
+
+                if data != serialize_resource(geometric_face('Labgrid', face_id=28)):
+                    raise ValueError('FF1 fixture does not reproduce from the independent generator: ' + rel)
             # Native binary structure is permitted, not credentials or host paths.
             for text_variant in (data.decode('latin-1'),
                                  data.replace(b'\x00', b'').decode('latin-1')):

@@ -2,6 +2,7 @@
 from dataclasses import replace
 from importlib.util import find_spec
 from io import BytesIO
+from pathlib import Path
 from struct import pack_into, unpack_from
 import unittest
 
@@ -55,6 +56,19 @@ class FontWriterTests(unittest.TestCase):
         self.assertEqual(len({draw_outline_slot(i) for i in range(128, 224)}), 96)
         self.assertEqual({draw_outline_slot(i) for i in range(224, 256)}, {32})
         self.assertEqual(draw_outline_slot(ord('A')), ord('A'))
+
+    def test_native_verified_labgrid_resource(self):
+        path = (Path(__file__).resolve().parents[1]
+                / 'fixtures/application-generated/draw/typography-lab-grid.ff1')
+        if not path.exists():
+            self.skipTest('Git-only binary fixture')
+        installed = path.read_bytes()
+        model = ff1.parse_resource(installed)
+        self.assertEqual(model.family, 'Labgrid')
+        self.assertEqual(len(model.descriptors), 1)
+        self.assertEqual(unpack_from('<HI', model.bank_descriptor), (1, 116))
+        self.assertEqual(ff1.serialize_resource(model), installed)
+        self.assertEqual(ff1.serialize_resource(ff1_geometric.geometric_face('Labgrid', face_id=28)), installed)
 
     @unittest.skipUnless(find_spec('fontTools'), 'optional FontTools extra')
     def test_interchange(self):

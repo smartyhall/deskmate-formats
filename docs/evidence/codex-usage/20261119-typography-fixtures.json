@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "typography-lab",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 25,
+    "token_records": 3945,
+    "sessions": 25
+  },
+  "checkpoint": "fixtures",
+  "collected_at": "2026-11-19T19:37:25.068376+00:00",
+  "commit": "eef393abb47138b5bb87385b0ad3d8b7109ba064",
+  "observation": {
+    "session": "897b9d041b5258246822a60e",
+    "measured_at": "2026-11-19T19:37:24.942000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 81868088,
+      "cached_input": 81288448,
+      "output": 124276,
+      "reasoning_output": 26426,
+      "total": 81992364
+    },
+    "reported_last": {
+      "input": 349855,
+      "cached_input": 349440,
+      "output": 280,
+      "reasoning_output": 257,
+      "total": 350135
+    },
+    "windows": {
+      "300": {
+        "used_percent": 87.0,
+        "reset_epoch": 1795131045,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 56.0,
+        "reset_epoch": 1795652781,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  }
+}

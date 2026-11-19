@@ -107,6 +107,9 @@ FP.EXE, FPSTART.PDM, FP.PDM and FP.OVL are candidate application components.
 FPVID.EXE and FPVID.PDM ship with DMVD*.RRS display resources and
 DMCSR/DMCSRHX/DMGUF resources. The disks contain zero FF1s. Native
 installation and shared runtime calls remain open.
+The FP.EXE string table identifies the bundled DeskMate runtime as
+03.02.00. FP.PDM contains references to MASTER.FNT, DMCSR.RRS and
+DMVDA.RRS. The latter two identify dependencies in that runtime path.
 
 ### Rockwell and additional leads
 
@@ -120,6 +123,22 @@ The attribute bytes match the known external outline profile. The record
 does not establish the historical resource, import path or printer behavior.
 
 The bounded search found no matching Express Publisher or DeskMate Q&A
-Write disk, original DMQNAFNT.TXT, DM_PROGS.TXT, or Rockwell FF1.
+Write disk or Rockwell FF1. The Q&A Write 1.02 download listing is
+for the DOS product and does not identify a DeskMate edition.
 [Historical Tandy Files Listing](https://groups.google.com/g/comp.sys.tandy/c/hlUY-62ApTM)
 · [Q&A Write 1.x catalog](https://winworldpc.com/product/qa-write/1x)
+
+Two historical text files are preserved privately. The 15,962-byte
+DM_PROGS.TXT copy from the laboratory's Oldskool archive is dated
+1994-09-20 internally and has SHA-256
+4699f28b2ae9d699c767e212b38f547805b3a1a96579ced524dc6b8f0c56c68a.
+It identifies Express Publisher as using DeskMate 3.05 Atech fonts.
+This is a contemporary lead for shared outline resources.
+[DM_PROGS.TXT](http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm_progs.txt)
+
+The 6,013-byte DMQNAFNT.TXT download has SHA-256
+50f613d3c1b3d76ece1e5ef7e74440870de4d39eaee8326c13b95aed4f1ae8e5.
+Its example modifies IBM ProPrinter font-selection descriptions,
+control sequences and spacing fields in Q&A Write's IBMPRO.FNT.
+It documents printer definitions and provides no FF1 outline grammar.
+[DMQNAFNT.TXT](http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dmqnafnt.txt)

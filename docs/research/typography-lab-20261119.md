@@ -182,3 +182,94 @@ and 48 points and widths of 75, 100 and 125 percent. Native Save As
 reopened with the same appearance. The
 [typography comparison v1](../../examples/typography-comparison/v1/README.md)
 binds the exact original specimen FIGs, crops and independent raster outputs.
+
+## Hints, placement and display modes
+
+A Dixon control used the same I H E L O I label at 9, 12, 16, 24, 32,
+48 and 60 points. Removing every marker-2 auxiliary section changed 4,
+26, 59, 123, 139, 131 and 154 pixels in those rows. The unchanged
+paths rendered in every case. Editing just the third word of Dixon
+I's first X row from 92 to 230 changed 42 pixels at 24 points and
+zero at the six other measured sizes. Each I gained one 21-pixel
+column at its right edge. Removing auxiliary data produced the same
+right edge in that I. This isolates a size-dependent stem effect in
+a row whose first two words match I's stored edges (91 and 186).
+The interpolation and grid-fitting rules remain open.
+
+The synthetic repeated-I grid spans eight point-size and width settings.
+Within each row every native stem has the same pixel width despite
+fractional nominal origins along the row. For (point size, width percent)
+of (10,100), (12,100), (15,100), (19,125), (24,100), (29,75), (36,95),
+and (48,100), the native widths were respectively 3, 3, 5, 6, 7, 6, 8,
+and 11 pixels. All left edges were within one pixel of truncating the
+nominal projected outline start. A straight floor-of-accumulation
+model with the nominal exact advance cannot fit every row by adjusting
+only its origin. The independent projection retains nominal advances
+and its existing scan converter.
+
+The mode grid changes only byte 20 or 21 of otherwise identical Labgrid
+records. Byte 20 values 0–15 show distinct outline-size and fallback
+classes, including the correct outline at 01 FF, small bitmap-like
+projections, and Cobb-like outlines. Byte 21 changes geometry and
+family resolution with byte 20 held at 1. The exact bit semantics
+remain open and the renderer keeps its existing guard. After the
+new remap, all 23 frozen Draw rasters still match the previous pen
+milestone byte for byte. The typography gallery covers additional
+cases without replacing any earlier comparison.
+
+## Native saves and reproducible fixtures
+
+The installed Labgrid resource has 5,664 bytes and SHA-256
+b57cf48e972b1025c7a4e1925bccb9b909e332ef5135d51941cc5a9ee2c3c484.
+The [exact FF1 fixture](../../tests/fixtures/application-generated/draw/typography-lab-grid.ff1)
+reproduces via the CLI above. The ten-descriptor Dixon reference used
+for the first comparison milestone remains reproducible with
+`create --family Dixon --dixon-slot` (6,078 bytes, SHA-256
+ceba26564c5e0d0d631504ed264a5c202e97fbf6c9d600d6e2e631fe65952967).
+The two independent FAT16 extractors agreed on the installed Labgrid,
+Lab Serif and Lab Mono file bytes and each published FIG.
+
+| Published FIG | Verified workflow |
+| --- | --- |
+| [Labgrid native authoring](../../tests/fixtures/application-generated/draw/typography-labgrid-native.fig) | Select Labgrid, draw and save a 24 pt label |
+| [Browser Labgrid input](../../tests/fixtures/application-generated/draw/typography-browser-labgrid.fig) and [native edit](../../tests/fixtures/application-generated/draw/typography-browser-labgrid-native.fig) | Three browser runs opened in Draw. Clear the first run and reauthor AV OI 10! at 32 pt and 115%. Save As and reopen |
+| [Browser Lab Mono input](../../tests/fixtures/application-generated/draw/typography-browser-mono.fig) and [native save](../../tests/fixtures/application-generated/draw/typography-browser-mono-native.fig) | Load the converted TrueType resource offline, create runs, change a label's length, size and width, save FIG, reopen and save in original Draw |
+| [Lab Serif](../../tests/fixtures/application-generated/draw/typography-serif-native.fig) and [Lab Mono](../../tests/fixtures/application-generated/draw/typography-mono-native.fig) | Named modern conversions display ASCII and accented CP437 specimens, then save and reopen |
+
+The separate modern FF1s have SHA-256
+78b232e749d6a18fe1c422d4fa93e65a8d4547a405cfdef2ab9d96b3e5b7f7c6
+for Lab Serif (31,127 bytes) and
+07e0f36aef45ee684b728f48f233b1a0b023657958826aed10ef6f923f31bc81
+for Lab Mono (39,104 bytes). Both were independently regenerated with
+`--native-text-map`, using IDs 29 and 30 respectively. The modern fonts
+and converted resources stay private. The public FIGs carry references
+and synthetic labels without embedded glyph banks.
+
+Native Save As recalculated the three cache words at 84–89 even when
+the label, family, size and width were unchanged. For the first
+Dixon-slot browser label, the writer cache was (356,353,3100), and
+native Save As stored (417,389,3103). The replacement Labgrid run's
+native cache was (394,366,2417). The Python and browser constructors
+use the shared modeled bounds for supported records. Their emitted
+bytes match each other under the portable test. Exact native cache
+equivalence remains open.
+
+The principal disposable RSX run ended through the authenticated socket
+at 1,413,202 emulated ms and 91,119 frames. The stopped FAT16 disk
+has SHA-256 5fa0f78f88989b68eaa0f32e765d1d130f22df5eb63fd71725aa21812386989d.
+The starting stopped image (75fa3a3eec1f2ddf820df855edfe044548bfbcfbf68f42b2a3f94085ac064e585)
+and original resources stayed unchanged. Oracle intents and frames,
+three acquired FAT12 images, native-staged FIG/FF1 pairs, placement
+and auxiliary controls, Ghidra files and held-step receipts are under
+`C:/DeskMateLab/private-evidence/typography-20261119`. The initial
+graphics mode grid reached a display but subsequent inputs showed no
+normal completion. The native print follow-up therefore used a fresh
+clone of the stopped disk.
+
+In the private OEM FF1 → CFF → FF1 probe, all 191 mapped nominal
+advances match for each original font. Raw contour sequences differ
+in 12 Cobb glyphs, one Dixon glyph and 57 Marin glyphs. After merging
+adjacent collinear line subdivisions, all drawn sequences match.
+The interchange still drops variant identities, hint data, pair
+tables and unmapped glyph semantics. The lossless native writer retains
+the exact original bytes for all three files.

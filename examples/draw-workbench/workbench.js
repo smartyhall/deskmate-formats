@@ -383,11 +383,12 @@ function closeMenus(except = null) {
 function updateMenus() {
   const entry = activeEntry(), model = state.model;
   if (!model) return;
+  const item = entry && model.elements.get(entry.offset);
   const limits = {
     save: model === state.original || model.blank,
     download: state.original.blank,
     undo: !state.past.length, redo: !state.future.length,
-    edit: get('edit').disabled, label: !entry || !DrawFig.canPermute(model, entry.tag),
+    edit: get('edit').disabled, label: !entry || !(canReplaceLabel(item) || DrawFig.canPermute(model, entry.tag)),
     delete: !entry || state.profile !== 'flat' || model.entries.length <= 1,
     top: !entry || model.entries.at(-1) === entry, bottom: !entry || model.entries[0] === entry,
     group: state.profile !== 'flat' || model.entries.length < 2, ungroup: state.profile !== 'group',
@@ -403,16 +404,22 @@ function updateMenus() {
   }
 }
 
+function canReplaceLabel(item) {
+  return state.profile === 'flat' && state.faces.size && item && DrawFig.editableOutline(item)
+    && item.text.every(byte => byte >= 32 && byte <= 126);
+}
+
 function commandDialog(title, fields, apply) {
   const form = get('command-form'), dialog = get('command-dialog');
   get('command-title').textContent = title;
   get('command-error').textContent = '';
-  get('command-fields').replaceChildren(...fields.map(([key, caption, type, value]) => {
+  get('command-fields').replaceChildren(...fields.map(([key, caption, type, value, selected]) => {
     const choices = type === 'select';
     const label = node('label', caption), field = node(choices ? 'select' : 'input');
     field.name = key;
     if (choices) {
       for (const choice of value) field.append(node('option', choice));
+      if (value.includes(selected)) field.value = selected;
     } else {
       field.type = type;
       field.value = value;
@@ -456,6 +463,21 @@ const commands = {
   ungroup: () => commitRevision(DrawFig.ungroup(state.model), null),
   label: () => {
     const entry = activeEntry(), item = state.model.elements.get(entry.offset);
+    if (canReplaceLabel(item)) {
+      const { raw } = item, view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+      const families = Array.from(state.faces.values(), face => face.name);
+      commandDialog('Edit outline text', [
+        ['family', 'Outline family', 'select', families, item.fontName],
+        ['label', 'Text', 'text', String.fromCharCode(...item.text)],
+        ['size', 'Point size', 'number', view.getUint16(56, true)],
+        ['width', 'Width percent', 'number', view.getUint16(58, true)],
+        ['x', 'Baseline X', 'number', view.getInt16(92, true)],
+        ['y', 'Baseline Y', 'number', view.getInt16(94, true)],
+      ], values => commitRevision(DrawFig.replaceOutlineText(state.model, entry.tag,
+        state.faces.get(values.family.toLowerCase()), values.label, [Number(values.x), Number(values.y)],
+        Number(values.size), Number(values.width)), entry.tag));
+      return;
+    }
     commandDialog('Edit outline label', [['label', 'Use the same characters', 'text', String.fromCharCode(...item.text)]],
       values => commitRevision(DrawFig.permuteLabel(state.model, entry.tag, values.label)));
   },
