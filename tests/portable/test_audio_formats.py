@@ -255,6 +255,24 @@ class MusicTests(unittest.TestCase):
 
 
 class NativeSoundTests(unittest.TestCase):
+    def test_region_marked_playback_candidates(self):
+        source = (FIXTURES / 'sound/region-marked-tool-generated.snd').read_bytes()
+        sample = sound.parse_bytes(source)
+        descriptor, = sample.samples
+        self.assertEqual((sample.instrument_number, sample.sample_rate), (9, 11000))
+        self.assertEqual((descriptor.pitch, descriptor.low_note, descriptor.high_note), (28, 25, 63))
+        self.assertEqual((descriptor.sustain_start, descriptor.sustain_end), (1100, 2200))
+        pcm = sample.pcm(0)
+        self.assertEqual(len(pcm), 5500)
+        for lo, hi, cycles in ((0, 1100, 50), (1100, 2200, 90), (2200, 5500, 420)):
+            self.assertEqual(sum(pcm[i] <= 128 < pcm[i + 1] for i in range(lo, hi - 1)), cycles)
+
+        source = (FIXTURES / 'music/region-hold-tool-generated.sng').read_bytes()
+        sequence = music.project(music.parse_bytes(source))
+        slot, held = sequence.voices[0]
+        self.assertEqual((slot.instrument_slot, held.midi_pitch, held.duration_ticks), (9, 60, 96))
+        self.assertEqual(sequence.written_ticks, 96)
+
     def test_native_tone_sample_bytes(self):
         source = (FIXTURES / 'sound/tone-native-pcm.snd').read_bytes()
         document = sound.parse_bytes(source)

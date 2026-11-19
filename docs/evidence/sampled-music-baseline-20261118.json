@@ -1,0 +1,210 @@
+{
+  "emulator_revision": "855258da966f1594f568350be59e8e1eca082ed1",
+  "instrumented_build_sha256": "348df44531bea6ab349a487af6b7e46171b9b90652448ad5816d5a9c6301ce59",
+  "applied_config_sha256": "3c4bdd3a5dccac3997f4e8cdf57571704dd00cd75a360752a3e83b665f462b6c",
+  "seed": 1,
+  "parent": "followup",
+  "disk_sha256": "3570cc700d0d0f1c92c034451d8e427e36b2dfca7389aa98f20e2eb424096010",
+  "config_sha256": "b2209ab9c9168355263c6b31b902dfe75fe39271c2348280360bbf98d93d82c6",
+  "nvr_sha256": "6e3a5c9688697c3ccd310d2eca1d67faab530ee39a973b6bbb81a96f48615cee",
+  "scratch_floppy": {
+    "sha256": "52dee30c90880d7b8636c42da1698501a827ed9273e2b21f40a87fcd387f4257",
+    "files": {
+      "MARK9.SND": {
+        "size": 5660,
+        "sha256": "b4405cc280eb050a3896d7079e9be853cd67ad326a921fbb596c6c2d05b73b12"
+      },
+      "MARKFAST.SNG": {
+        "size": 92,
+        "sha256": "ec04e1aa5ee0a177c81ecfd357496e126f9c99d1dd7d174fefa391f595b6f8b5"
+      },
+      "MARKHI.SNG": {
+        "size": 88,
+        "sha256": "a5154c6d02b6468fe3f33c0521a7fb191417e9d2b214c391daea8252fe528cb0"
+      },
+      "MARKLONG.SNG": {
+        "size": 88,
+        "sha256": "3fd3d61e004b567d3a717be53838807fb69fb1c9497b306c44d5b2ad188318d6"
+      },
+      "NOLOOP.SNG": {
+        "size": 88,
+        "sha256": "2878ea6a1d258bff2ff0e4d525782b493647f28ef76f4741affc7dc2408b7ec2"
+      },
+      "NOLOOP11.SND": {
+        "size": 5660,
+        "sha256": "e9cc949f8737e3aee761767ff3dff1a153ebddad6f7e096d9f5efec468d624e2"
+      },
+      "SHIFT.SNG": {
+        "size": 88,
+        "sha256": "38b317f460297465e4ad9a866f36c05b33c8b885e75a407fd5152ddb0006c292"
+      },
+      "SHIFT10.SND": {
+        "size": 5660,
+        "sha256": "2dddbd7b986d311fe69bac9c92c044c0eb44d5df79a43291ccd750beeb528f23"
+      }
+    }
+  },
+  "emulated_ms": 81720,
+  "video_frames": 5132,
+  "pcm": {
+    "size": 7845120,
+    "sha256": "34e4e2e1df4a40be7443899047d5415b94a4ea3cc57e530507b2076ee80e196d",
+    "frames": 3922560,
+    "rate": 48000,
+    "channels": 1,
+    "bits": 16
+  },
+  "playback": {
+    "markfast": {
+      "start_ms": 49288,
+      "stop_ms": 51996,
+      "start_video_frame": 3147,
+      "stop_video_frame": 3309,
+      "intervals": [
+        {
+          "start": 49.488,
+          "end": 49.868,
+          "duration": 0.38,
+          "peak": 238,
+          "crossing_hz_median": 505.26,
+          "rms": 164.195
+        },
+        {
+          "start": 49.918,
+          "end": 50.328,
+          "duration": 0.41,
+          "peak": 238,
+          "crossing_hz_median": 914.22,
+          "rms": 164.885
+        }
+      ],
+      "early_middle_late_hz": {}
+    },
+    "markhi": {
+      "start_ms": 58724,
+      "stop_ms": 61432,
+      "start_video_frame": 3736,
+      "stop_video_frame": 3898,
+      "intervals": [
+        {
+          "start": 58.894,
+          "end": 60.664,
+          "duration": 1.77,
+          "peak": 238,
+          "crossing_hz_median": 1828.28,
+          "rms": 157.497
+        }
+      ],
+      "early_middle_late_hz": {
+        "intro": 1000.0,
+        "sustain": 1828.28,
+        "tail": 1828.28
+      }
+    },
+    "marklong": {
+      "start_ms": 39836,
+      "stop_ms": 42544,
+      "start_video_frame": 2569,
+      "stop_video_frame": 2732,
+      "intervals": [
+        {
+          "start": 40.056,
+          "end": 41.876,
+          "duration": 1.82,
+          "peak": 238,
+          "crossing_hz_median": 914.22,
+          "rms": 165.339
+        }
+      ],
+      "early_middle_late_hz": {
+        "intro": 505.26,
+        "sustain": 914.21,
+        "tail": 914.23
+      }
+    },
+    "noloop": {
+      "start_ms": 77588,
+      "stop_ms": 80296,
+      "start_video_frame": 4888,
+      "stop_video_frame": 5050,
+      "intervals": [
+        {
+          "start": 77.778,
+          "end": 78.278,
+          "duration": 0.5,
+          "peak": 238,
+          "crossing_hz_median": 1425.51,
+          "rms": 163.268
+        }
+      ],
+      "early_middle_late_hz": {
+        "intro": 505.26,
+        "sustain": 914.23,
+        "tail": 1411.76
+      }
+    },
+    "octave": {
+      "start_ms": 30784,
+      "stop_ms": 33092,
+      "start_video_frame": 2009,
+      "stop_video_frame": 2147,
+      "intervals": [
+        {
+          "start": 30.964,
+          "end": 31.394,
+          "duration": 0.43,
+          "peak": 328,
+          "crossing_hz_median": 444.44,
+          "rms": 214.853
+        },
+        {
+          "start": 31.534,
+          "end": 31.914,
+          "duration": 0.38,
+          "peak": 328,
+          "crossing_hz_median": 888.89,
+          "rms": 211.159
+        }
+      ],
+      "early_middle_late_hz": {}
+    },
+    "shift": {
+      "start_ms": 68152,
+      "stop_ms": 70860,
+      "start_video_frame": 4311,
+      "stop_video_frame": 4474,
+      "intervals": [
+        {
+          "start": 68.322,
+          "end": 70.102,
+          "duration": 1.78,
+          "peak": 238,
+          "crossing_hz_median": 914.22,
+          "rms": 164.818
+        }
+      ],
+      "early_middle_late_hz": {
+        "intro": 505.26,
+        "sustain": 914.23,
+        "tail": 914.21
+      }
+    },
+    "sound": {
+      "start_ms": 22560,
+      "stop_ms": 23668,
+      "start_video_frame": 1503,
+      "stop_video_frame": 1569,
+      "intervals": [
+        {
+          "start": 22.64,
+          "end": 23.14,
+          "duration": 0.5,
+          "peak": 1881,
+          "crossing_hz_median": 448.6,
+          "rms": 1314.644
+        }
+      ],
+      "early_middle_late_hz": {}
+    }
+  }
+}

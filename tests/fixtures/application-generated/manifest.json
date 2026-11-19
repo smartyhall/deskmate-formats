@@ -2491,6 +2491,36 @@
       "source_path": "worksheet/wref.wks",
       "source_sha256": "8e2bc6dce7ab199c2c33b7233cf842efae00073986b2fd7903b0fd11235bba7b",
       "source_size": 275
+    },
+    {
+      "path": "sound/region-marked-tool-generated.snd",
+      "size": 5660,
+      "sha256": "b4405cc280eb050a3896d7079e9be853cd67ad326a921fbb596c6c2d05b73b12",
+      "application": "Sound/Music RSX OEM 3.05.00",
+      "synthetic_data": true,
+      "origin": "Tool-generated candidate, not application-produced. MARK9.SND from tools/experimental/sampled_music_probe.py using tracked music/m11.sng and sound/labinst-native.snd; see docs/research/sampled-music-playback-20261118.md for exact command.",
+      "source_path": "sound/labinst-native.snd",
+      "source_sha256": "981d5455517ff715737573e44531b8363541857ca534c69cca4b62b5d974321f",
+      "version": "RSX OEM 3.04 module with generic 03.05.00 runtime",
+      "experiment": "2026-11-18 sampled playback baseline",
+      "evidence_class": "Tool-generated, native-playback accepted in the baseline; Sound resave and editing untested",
+      "native_saved": false,
+      "expected_content": "Instrument 9, 11,000 Hz, pitch code 28, range codes 25–63, 5,500 PCM frames, stored loop words 1100 and 2200. Physical regions 500, 900 and 1400 Hz."
+    },
+    {
+      "path": "music/region-hold-tool-generated.sng",
+      "size": 88,
+      "sha256": "3fd3d61e004b567d3a717be53838807fb69fb1c9497b306c44d5b2ad188318d6",
+      "application": "Music RSX OEM 3.05.00",
+      "synthetic_data": true,
+      "origin": "Tool-generated candidate, not application-produced. MARKLONG.SNG from tools/experimental/sampled_music_probe.py using tracked music/m11.sng and sound/labinst-native.snd; see docs/research/sampled-music-playback-20261118.md for exact command.",
+      "source_path": "music/m11.sng",
+      "source_sha256": "07993101fcae1fbcaaacab71396a956b80085874ab1015e20395c2ac7a7d1309",
+      "version": "RSX OEM 3.04 module with generic 03.05.00 runtime",
+      "experiment": "2026-11-18 sampled playback baseline",
+      "evidence_class": "Tool-generated, native-playback accepted in the baseline; Sound resave and editing untested",
+      "native_saved": false,
+      "expected_content": "One whole note at stored pitch code 28 in voice 1, slot 9, 96 conductor ticks."
     }
   ]
 }

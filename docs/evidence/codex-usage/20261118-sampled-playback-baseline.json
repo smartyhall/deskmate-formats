@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "music-sampled-playback",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 21,
+    "token_records": 2586,
+    "sessions": 21
+  },
+  "checkpoint": "native-baseline",
+  "collected_at": "2026-11-19T00:32:52.013493+00:00",
+  "commit": "a39ef57369ab2460693b46b7094d2166f2bba9e5",
+  "observation": {
+    "session": "26b7cdccaea0f517e454f58a",
+    "measured_at": "2026-11-19T00:32:19.215000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 1921160,
+      "cached_input": 1826176,
+      "output": 10129,
+      "reasoning_output": 1256,
+      "total": 1931289
+    },
+    "reported_last": {
+      "input": 96984,
+      "cached_input": 94848,
+      "output": 108,
+      "reasoning_output": 28,
+      "total": 97092
+    },
+    "windows": {
+      "300": {
+        "used_percent": 5.0,
+        "reset_epoch": 1795065981,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 1.0,
+        "reset_epoch": 1795652781,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  }
+}
