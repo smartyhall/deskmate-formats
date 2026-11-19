@@ -69,16 +69,27 @@ def build(args):
                       'arc and polygon stepping. Strokes are one-pixel solid approximations. Text is omitted. '
                       'The companion SVG is the separate shared scalable projection.',
         },
+        'vga-strokes-02': {
+            'mode': 'experimental RSX raster with measured axis-aligned strokes',
+            'rasterizer': {'name': 'Independent RSX raster', 'version': '2', 'png_encoder': f'Pillow {pillow_version}'},
+            'limits': 'Adds measured horizontal and vertical line styles and widths. Diagonal and shape '
+                      'outlines remain approximate. Text is omitted. The SVG is a separate scalable preview.',
+        },
     }
-    for name, profile in profiles.items():
+    for name in args.milestone:
+        profile = profiles[name]
         directory = library / name
+        if (directory / 'manifest.json').exists():
+            previous = json.loads((directory / 'manifest.json').read_text(encoding='utf-8'))
+            if previous['renderer_revision'] != revision:
+                raise ValueError(f'committed milestone belongs to a different renderer revision: {name}')
         directory.mkdir(exist_ok=True)
         cases = []
         for (original, native, receipt, drawing, preview), svg_image in zip(source_receipts, vector):
             case = {key: original[key] for key in ('id', 'source_path', 'source_sha256', 'title', 'dimensions',
                                                    'font_resources', 'native_background')}
             case['native_capture'] = receipt
-            if name == 'vga-raster-01':
+            if name.startswith('vga-'):
                 raster = graphics_raster.preview_rsx(drawing.form, drawing.palette)
                 projection = Image.frombytes('RGB', (raster.width, raster.height), raster.rgb)
                 background = raster.background
@@ -120,4 +131,6 @@ if __name__ == '__main__':
     for name in ('evidence', 'disk-verification', 'browser'):
         parser.add_argument('--' + name, type=Path, required=True)
     parser.add_argument('--browser-version', required=True)
+    parser.add_argument('--milestone', choices=('arc-vector-01', 'vga-raster-01', 'vga-strokes-02'),
+                        action='append', required=True)
     build(parser.parse_args())

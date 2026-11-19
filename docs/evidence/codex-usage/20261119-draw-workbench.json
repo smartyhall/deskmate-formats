@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "draw-native-20261119",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 23,
+    "token_records": 3202,
+    "sessions": 23
+  },
+  "checkpoint": "browser-native-shared",
+  "collected_at": "2026-11-19T08:16:25.119611+00:00",
+  "commit": "b9b96d89a3c6177ffdd9a16949d4c1048e4fd2f9",
+  "observation": {
+    "session": "74643f8c130a75c5bae8c2a8",
+    "measured_at": "2026-11-19T08:16:24.515000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 53533967,
+      "cached_input": 53150976,
+      "output": 163694,
+      "reasoning_output": 37800,
+      "total": 53697661
+    },
+    "reported_last": {
+      "input": 337942,
+      "cached_input": 336512,
+      "output": 1290,
+      "reasoning_output": 110,
+      "total": 339232
+    },
+    "windows": {
+      "300": {
+        "used_percent": 66.0,
+        "reset_epoch": 1795088836,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 25.0,
+        "reset_epoch": 1795652781,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  },
+  "account": {
+    "source": "account/rateLimits/read",
+    "measured_at": "2026-11-19T08:03:55.277066+00:00",
+    "windows": {
+      "300": {
+        "used_percent": 56,
+        "reset_epoch": 1795088836,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 24,
+        "reset_epoch": 1795652781,
+        "status": "observed"
+      }
+    }
+  }
+}

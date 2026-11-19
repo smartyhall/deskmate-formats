@@ -48,6 +48,62 @@ class ArcRecoveryTest(unittest.TestCase):
         self.assertIn('d="M 400 800 Q 1100 200 1800 800"', preview.svg)
 
 
+class ExternalFontTest(unittest.TestCase):
+    def test_descriptor_and_optional_safe_substitution(self):
+        original = bytearray((FIXTURES / 'draw/d23.fig').read_bytes())
+        drawing = draw.parse_bytes(original)
+        element, = drawing.form.draw_order()
+        start = 44 + element.offset
+        original[start + 26:start + 31] = b'Dixon'
+        original[start + 100:start + 109] = b'LAB <& 42'
+        renamed = draw.parse_bytes(original)
+        run = graphics.external_font_run(next(renamed.form.draw_order()))
+        self.assertEqual(run.name, 'Dixon')
+        self.assertEqual(run.text_bytes, b'LAB <& 42')
+        self.assertEqual(run.padding, b'\0')
+        self.assertEqual(len(run.descriptor), 40)
+        self.assertEqual((run.point_size_word, run.width_percent_word), (24, 100))
+        self.assertNotIn('<text ', graphics.render_svg(renamed.form, renamed.palette))
+        substitute = graphics.render_svg(renamed.form, renamed.palette, substitute_external_fonts=True)
+        self.assertIn('Generic monospace substitutes for 1 external font runs', substitute)
+        self.assertIn('LAB &lt;&amp; 42', substitute)
+
+    def test_native_dixon_and_marin(self):
+        drawing = read_drawing('outline-fonts-native')
+        refs = [graphics.external_font_run(item) for item in drawing.form.draw_order()]
+        self.assertEqual([(ref.name, ref.text_bytes, ref.point_size_word, ref.width_percent_word) for ref in refs],
+                         [('Dixon', b'DIXON 24', 24, 100), ('Marin', b'MARIN 24', 24, 100)])
+
+
+class ArcTransferTest(unittest.TestCase):
+    def test_arc_and_rectangle_across_native_wrappers(self):
+        drawing = read_drawing('arc-transfer-native').form
+        document = text.parse_file(FIXTURES / 'text/arc-transfer-native.doc')
+        picture, = document.pictures
+        data = filer.parse_file(FIXTURES / 'filer/arc-transfer-native.fil')
+        card, report = filer_graphics.decode(data)
+        self.assertEqual((picture.column, picture.payload[-1]), (0, 25))
+        self.assertEqual((card.marker, report.marker), ('F', 'R'))
+        self.assertEqual((len(card.payload), len(report.payload)), (122, 122))
+        self.assertEqual([len(chunk) for item in (card, report) for chunk in item.encoded_chunks], [205, 205])
+        wrapped = (
+            (graphics.parse_bytes(picture.payload, text_picture=True), (-850, -410)),
+            (card.form, (850, 140)),
+            (report.form, (1050, 580)),
+        )
+        for form, (dx, dy) in wrapped:
+            with self.subTest(dx=dx, dy=dy):
+                self.assertEqual(len(form.entries), 1)
+                for source, copy in zip(drawing.draw_order(), form.draw_order(), strict=True):
+                    self.assertEqual(source.kind, copy.kind)
+                    self.assertEqual(source.raw[18:], copy.raw[18:])
+                    a, b, c, d = source.bounds
+                    self.assertEqual(copy.bounds, (a + dx, b + dy, c + dx, d + dy))
+                preview = graphics.preview_svg(form)
+                self.assertEqual(preview.rendered_elements, 2)
+                self.assertIn('<path d="M ', preview.svg)
+
+
 def read_text(name):
     return text.parse_file(FIXTURES / 'text' / (name + '.doc'))
 

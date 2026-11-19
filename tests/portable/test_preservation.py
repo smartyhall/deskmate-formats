@@ -149,6 +149,12 @@ class GraphicsPreservationTest(unittest.TestCase):
     def test_draw_native_palette_and_opaque_elements(self):
         for path in sorted((FIXTURES / 'draw').glob('*.fig')):
             with self.subTest(path=path.name):
+                if path.name == 'arc-extent-native-resaved.fig':
+                    # The Workbench uses strict intake. The exact native
+                    # malformed-length control requires explicit Draw recovery.
+                    with self.assertRaisesRegex(PreservationError, 'extended element exceeds its record'):
+                        bundle.prepare(path)
+                    continue
                 result = bundle.prepare(path)
                 self.assertIsNotNone(ElementTree.fromstring(result.files['drawing.svg']).get('viewBox'))
         rectangle = bundle.prepare(FIXTURES / 'draw/d07c.fig')
@@ -160,6 +166,19 @@ class GraphicsPreservationTest(unittest.TestCase):
         self.assertIn('graphics_elements_omitted', codes(opaque))
         self.assertNotIn(b'<text', opaque.files['drawing.svg'])
         self.assertIn(b'No supported geometry', opaque.files['preview.html'])
+
+    def test_native_arc_in_draw_text_and_both_filer_graphics(self):
+        cases = (
+            ('draw/arc-transfer-native.fig', ('drawing.svg',)),
+            ('text/arc-transfer-native.doc', ('assets/picture-001.svg',)),
+            ('filer/arc-transfer-native.fil', ('assets/card.svg', 'assets/report.svg')),
+        )
+        for name, assets in cases:
+            item = bundle.prepare(FIXTURES / name)
+            for asset in assets:
+                with self.subTest(name=name, asset=asset):
+                    shape = ElementTree.fromstring(item.files[asset]).find(SVG + 'path')
+                    self.assertIn(' Q ', shape.get('d'))
 
     def test_filer_native_records_and_card_graphics(self):
         for path in sorted((FIXTURES / 'filer').glob('*.fil')):

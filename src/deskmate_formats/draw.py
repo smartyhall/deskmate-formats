@@ -63,13 +63,16 @@ def main(argv=None):
     parser.add_argument('--svg', action='store_true', help='write an SVG geometry preview to stdout')
     parser.add_argument('--recover-arc-length', action='store_true',
                         help='permit one measured legacy arc length disagreement')
+    parser.add_argument('--substitute-external-fonts', action='store_true',
+                        help='use labeled generic monospace glyphs for unresolved font references in SVG')
     args = parser.parse_args(argv)
     try:
         drawing = parse_file(args.source, recover_arc_length=args.recover_arc_length)
         if drawing.recovered_arcs:
             print(f'recovered arc length at list byte {drawing.recovered_arcs[0]}', file=sys.stderr)
         if args.svg:
-            sys.stdout.write(graphics.render_svg(drawing.form, drawing.palette))
+            sys.stdout.write(graphics.render_svg(drawing.form, drawing.palette,
+                                                 substitute_external_fonts=args.substitute_external_fonts))
         else:
             print(json.dumps(asdict(drawing), default=bytes.hex, indent=2))
     except (OSError, ValueError) as exc:

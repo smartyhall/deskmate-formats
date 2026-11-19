@@ -1,0 +1,13 @@
+{
+  "figure_sha256": "babff34ba9d6a1d821f2747768f06078d085ecb18cea141309a136d0d7db2531",
+  "framebuffer_sha256": "eeb054fa2079553530f1b39ed04f2207cd703d90283851a5f38f03e9560d03fd",
+  "dimensions": [
+    640,
+    418
+  ],
+  "counts": {
+    "axis_color_masks": 64,
+    "exact_axis_color_masks": 64,
+    "exact_rgb_neighborhoods": 55
+  }
+}

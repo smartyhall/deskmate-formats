@@ -1,6 +1,13 @@
 # DeskMate Draw Workbench — Classic interface
 
-**Status:** design specification; no web application is implemented here.
+Open [workbench.html](workbench.html) directly from a local checkout.
+It is a single offline HTML file with the four frozen Draw examples.
+Rebuild it with `python tools/experimental/build_draw_workbench.py`.
+
+The first implementation uses an independently designed period-style
+interface. It follows the observed open, select, zoom, edit and Save As
+workflow. The native title/menu organization, tool interactions and
+dialogs remain documented research references for further work.
 
 The operator requests a faithful reconstruction of original DeskMate Draw
 rather than a contemporary editor with decorative retro styling. The
@@ -10,7 +17,42 @@ interaction receipts for interface details, not an imagined mockup.
 A concept illustration in a simulated AROS browser is aesthetic direction
 only; it is not evidence of actual AROS compatibility or native UI details.
 
-## Classic UI
+## Implemented interface
+
+- Open or drop a local FIG. Pan by dragging or with the arrow keys after
+  focusing the canvas. Use Normal, Fit drawing or the zoom buttons. The
+  mouse wheel zooms at the pointer.
+- Select an object in the canvas or its display-list row. Inspect native
+  coordinate words, resolved bounds, raw attributes, group children,
+  palette indices and external-font metadata.
+- Edit a top-level line's position or palette index, or resize an ordered
+  top-level rectangle. The editor preserves all enclosing bytes and
+  unrelated records. Undo and redo keep up to 32 prior models.
+- Download the original FIG byte for byte or save the edited copy as a
+  new FIG. SVG and PNG export the current scalable viewport. The optional
+  generic text mode is explicitly marked as a substitution in the view
+  and exported SVG.
+
+The browser uses `O` or the Open FIG button in place of application-level
+function keys. In the native program F2 opens File, F3 Edit, F4 Actions,
+F5 Zoom, F6 Options and F7 Tools. Browser Find and Reload often reserve
+F3 and F5, respectively. Native menu placement and behavior were
+observed over the RSX socket. The browser does not claim the complete
+native menu set or keyboard-mode drawing.
+
+## Native validation
+
+Chromium opened and edited D01 and D04 from a file URL, downloaded both
+FIGs, and exercised selection, undo/redo, exact original download and
+SVG/PNG export. The two emitted FIGs matched the Python writer byte for
+byte. Original Draw opened them on the RSX. The moved green line was
+then moved again in the native keyboard workflow and saved as a new FIG.
+The resized rectangle was saved directly. Both native saves reopened
+in original Draw and in Chromium. Both were independently extracted
+from the stopped FAT16 image. See the
+[round-trip evidence](../../docs/research/draw-writing-20261119.md).
+
+## Classic interface research
 
 Reproduce the native layout, title and menu strips, menu labels and order,
 function-key assignments, dialogs, tool symbols, palette, borders, pointer,

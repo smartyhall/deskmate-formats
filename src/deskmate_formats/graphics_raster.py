@@ -37,6 +37,10 @@ def _tile(width, encoded):
 
 
 TILES = tuple(_tile(*pattern) for pattern in _PATTERN_ROWS)
+AXIS_STROKES = (
+    ('1', '0', '1000', '11100111', '10011100', '10', '1100', '00010000'),
+    ('1', '0', '00000011', '1111100011111111', '0000111111100011', '1001', '11100011', '0000011000000000'),
+)
 
 
 @dataclass(frozen=True)
@@ -93,6 +97,26 @@ def _line(image, start, end, rgb):
         if double <= dx:
             error += dx
             y += sy
+
+
+def _axis_stroke(image, start, end, rgb, style, weight, vertical):
+    major, minor = (1, 0) if vertical else (0, 1)
+    length, span = (HEIGHT, WIDTH) if vertical else (WIDTH, HEIGHT)
+    first, last, center = start[major], end[major], start[minor]
+    lead = max(0, weight - 1)
+    trail = weight
+    direction = 1 if last >= first else -1
+    low = max(0, min(first, last) - (lead if direction > 0 else trail))
+    high = min(length - 1, max(first, last) + (trail if direction > 0 else lead))
+    pattern = AXIS_STROKES[weight][style] if weight < 2 else '1'
+    for step in range(low, high + 1):
+        phase = (step - first) * direction
+        if pattern[phase % len(pattern)] == '0' or (style == 5 and weight == 1 and phase == 0):
+            continue
+        for offset in range(max(0, center - lead), min(span - 1, center + trail) + 1):
+            x, y = (offset, step) if vertical else (step, offset)
+            index = 3 * (y * WIDTH + x)
+            image[index:index + 3] = rgb
 
 
 def _fill_span(image, x0, x1, y, tile, fg, bg):
@@ -154,9 +178,9 @@ def _shape(element):
 def preview_rsx(form, palette):
     """Render the Normal-zoom RSX drawing crop with the measured fill profiles.
 
-    Uses one-pixel solid outlines, measured screen-phase fill tiles and
+    Uses measured axis-aligned line styles and screen-phase fill tiles, with
     approximate ellipse/curve stepping and polygon scan conversion. Stroke
-    widths, patterned strokes and text are outside this first raster profile.
+    styles of other outlines use a one-pixel solid approximation. Text is omitted.
     """
     colors = {index: bytes((channel >> 2) * 255 // 63 for channel in rgb) for index, *rgb in palette}
     background = colors.get(0, b'\0\0\x81')
@@ -181,7 +205,12 @@ def preview_rsx(form, palette):
             tile, fg, bg = TILES[fill[0]], colors.get(fill[1], bytes(3)), colors.get(fill[2], background)
             _fill_polygon(image, edges, min_y, max_y, tile, fg, bg)
         outline = colors.get(color_index, bytes(3))
-        for a, b in edges:
-            _line(image, a, b, outline)
+        x0, y0, x1, y1 = record.bounds
+        if (record.kind == 'L' and (x0 == x1 or y0 == y1)
+                and record.modifier < 8 and record.raw[19] < 4):
+            _axis_stroke(image, *points, outline, record.modifier, record.raw[19], vertical=x0 == x1)
+        else:
+            for a, b in edges:
+                _line(image, a, b, outline)
         rendered += 1
     return RasterPreview(WIDTH, HEIGHT, bytes(image), rendered, tuple(omitted), tuple(background))

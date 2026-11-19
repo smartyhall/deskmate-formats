@@ -47,3 +47,13 @@ class NativeRasterTest(unittest.TestCase):
         grid = self.render('arc-grid-native')
         self.assertEqual(grid.rendered_elements, 10)
         self.assertEqual(len(grid.omissions), 1)
+
+    def test_axis_dash_phase_and_thick_solid_fallback(self):
+        frame = self.render('stroke-grid-native')
+        y = int((380 + 4 * 510) * 19 / 220)
+        style = ''.join('1' if self.pixel(frame, x, y) == (194, 194, 194) else '0' for x in range(36, 60))
+        self.assertEqual(style, '10011100' * 3)
+        y = int((380 + 510) * 19 / 220)
+        self.assertEqual(self.pixel(frame, 36, y), frame.background)
+        self.assertEqual([self.pixel(frame, 340, y + dy) for dy in range(-2, 4)],
+                         [frame.background, *([(194, 194, 194)] * 4), frame.background])

@@ -36,6 +36,22 @@ def pattern_controls():
     ]
 
 
+def shared_controls(base):
+    transfer = [
+        arc((950, 520, 2050, 1240), (0, 720, 1100, 720, 550, 0), 2),
+        shape('R', (2200, 600, 2650, 1250), 10, 1, 9),
+    ]
+    strokes = []
+    for style in range(8):
+        y = 380 + style * 510
+        for weight in range(4):
+            x = 450 + weight * 1830
+            strokes.extend([line(x, y, x + 1100, y, 2, style, weight),
+                            line(x, y + 200, x + 700, y + 430, 10, style, weight),
+                            line(x + 1330, y, x + 1330, y + 380, 1, style, weight)])
+    return {'XARC.FIG': encode(base, transfer), 'STROKES.FIG': encode(base, strokes)}
+
+
 def main(base, arc_save, destination):
     base = draw.parse_file(base)
     saved = arc_save.read_bytes()
@@ -55,6 +71,7 @@ def main(base, arc_save, destination):
         'ARCGOOD.FIG': saved,
         'LINECTRL.FIG': encode(base, [line(1200, 1400, 5425, 1400, 10)]),
     }
+    data.update(shared_controls(base))
     for name, contents in data.items():
         with (destination / name).open('xb') as output:
             output.write(contents)

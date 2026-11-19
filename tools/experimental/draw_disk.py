@@ -1,4 +1,4 @@
-"""Read FIG bytes directly from a stopped RSX FAT16 clone for independent verification."""
+"""Read a native document directly from a stopped RSX FAT16 clone for verification."""
 import argparse
 from hashlib import sha256
 import json
@@ -57,13 +57,13 @@ def extract(image, names):
     entries = dict(directory(chain(word(desk + 26)), cluster_size))
     result = {}
     for name in names:
-        if not re.fullmatch(r'[A-Z0-9]{1,8}\.FIG', name):
-            raise ValueError('expected uppercase DOS FIG filename')
-        entry = entries[(name[:-4].ljust(8) + 'FIG').encode('ascii')]
+        if not re.fullmatch(r'[A-Z0-9]{1,8}\.(?:FIG|DOC|FIL)', name):
+            raise ValueError('expected an uppercase DOS FIG, DOC or FIL filename')
+        entry = entries[(name[:-4].ljust(8) + name[-3:]).encode('ascii')]
         size = dword(entry + 28)
         blocks = chain(word(entry + 26))
         if image[entry + 11] & 16 or not blocks or not (len(blocks) - 1) * cluster_size < size <= len(blocks) * cluster_size:
-            raise ValueError(f'FIG length or allocation disagrees for {name}')
+            raise ValueError(f'Document length or allocation disagrees for {name}')
         result[name] = b''.join(image[p:p + cluster_size] for p in blocks)[:size]
     return result
 

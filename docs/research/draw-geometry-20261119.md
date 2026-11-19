@@ -75,6 +75,25 @@ in its expected band. The chart varies width and style together, so
 the profile leaves those combinations as measurements pending a
 one-variable-at-a-time stroke grid.
 
+## One-variable stroke control
+
+The native-saved 96-line grid crosses styles 0–7 with weights 0–3 in
+three orientations. At Normal zoom the horizontal and vertical lines
+share the same major-axis color masks for each style and weight.
+Weights 0 and 1 have one- and two-pixel thickness respectively,
+with distinct repeating masks. Style 1 is invisible for those
+weights. Weights 2 and 3 use solid four- and six-pixel bands for
+all eight sampled styles, including style 1. Their end caps extend
+by one/two and two/three pixels on the measured ascending spans.
+
+The independent raster applies the measured masks and caps to
+axis-aligned lines. The [stroke metrics](../evidence/draw-stroke-masks-20261119.json)
+show exact matching colors for all 64 sampled axis-aligned masks.
+Fifty-five entire neighborhoods also match. Neighboring diagonal
+stroke pixels account for the remaining neighborhood differences.
+Diagonal thickness, diagonal dash phase, descending spans and
+overlap with other drawing colors still need targeted qualification.
+
 The same raster function accepts a shared graphics form and palette.
 Its current viewport, VGA color mapping and tile phase apply to the
 standalone RSX Draw capture. Native Text and Filer contexts may use

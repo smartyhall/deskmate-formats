@@ -78,6 +78,25 @@ class StrokeGlyph:
 
 
 @dataclass(frozen=True)
+class ExternalFontRun:
+    """Measured Uf descriptor and label bytes; glyph data is external."""
+
+    name: str
+    attributes: bytes
+    descriptor: bytes
+    text_bytes: bytes
+    padding: bytes
+
+    @property
+    def point_size_word(self):
+        return unpack_from('<H', self.descriptor, 0)[0]
+
+    @property
+    def width_percent_word(self):
+        return unpack_from('<H', self.descriptor, 2)[0]
+
+
+@dataclass(frozen=True)
 class SvgOmission:
     """Location and reason for an element excluded from the geometry preview."""
 
@@ -128,6 +147,27 @@ def parse_strokes(source):
         glyphs[key] = StrokeGlyph(font, code, tuple(paths))
         cursor = end
     return tuple(glyphs.values())
+
+
+def _font_run(raw, length):
+    if length < 102 or raw[98:100] != b'\0\0':
+        return None
+    name, terminator, padding = raw[26:56].partition(b'\0')
+    count, = unpack_from('<H', raw, 96)
+    end = 100 + count
+    if (not terminator or not name or any(padding) or any(not 32 <= code <= 126 for code in name)
+            or not end <= length <= end + 1 or b'\0' in raw[100:end]):
+        return None
+    return ExternalFontRun(name.decode('ascii'), raw[20:26], raw[56:96],
+                           raw[100:end], raw[end:length])
+
+
+def external_font_run(element):
+    """Inspect a validated Uf record without loading its external resource."""
+    if element.kind != 'Uf' or len(element.raw) < 20:
+        return None
+    size, = unpack_from('<H', element.raw, 18)
+    return _font_run(element.raw, 2 * size) if 2 * size <= len(element.raw) else None
 
 
 def _elements(data, entries, directory_end, *, recover_arc_length=False):
@@ -185,11 +225,10 @@ def _elements(data, entries, directory_end, *, recover_arc_length=False):
                 _require(words * 2 == 36 + 4 * count, 'polyline point count disagrees with size')
                 flat = unpack_from(f'<{2 * count}H', raw, 36)
                 points = tuple(zip(flat[::2], flat[1::2]))
-            elif kind == 'Uf' and words >= 51 and raw[26:31] == b'Cobb\x00':
-                count, = unpack_from('<H', raw, 96)
-                text_end = 100 + count
-                if raw[98:100] == b'\x00\x00' and text_end < words * 2 and raw[text_end] == 0:
-                    label, font_name = raw[100:text_end], 'Cobb'
+            elif kind == 'Uf':
+                font = _font_run(raw, 2 * words)
+                if font:
+                    label, font_name = font.text_bytes, font.name
         elements.append(Element(offset, kind, raw[1], coords, raw, children, points, label, font_name))
     return tuple(elements)
 
@@ -295,7 +334,7 @@ def _svg_stroke_text(element, glyphs, colors):
             f'fill="none" stroke="{color}" stroke-width="1">' + ''.join(paths) + '</g>')
 
 
-def preview_svg(form, palette=()):
+def preview_svg(form, palette=(), *, substitute_external_fonts=False):
     """Return the geometry preview, dimensions and omitted element locations.
 
     Palette entries are (index, red, green, blue). Stroke styles and patterned
@@ -314,6 +353,7 @@ def preview_svg(form, palette=()):
     point_costs = {key: sum(map(len, glyph.paths)) for key, glyph in glyphs.items()}
     point_budget = MAX_PREVIEW_STROKE_POINTS
     shapes, bounds, missing = [], [], []
+    substitutions = 0
     for element in leaves:
         if element.kind == 'UP' and len(element.points) < 2:
             missing.append(SvgOmission(element.offset, '5550', 'polyline_has_too_few_points'))
@@ -326,6 +366,14 @@ def preview_svg(form, palette=()):
             shape = _svg_arc(element, colors, arc)
         elif element.kind in PREVIEW_KINDS:
             shape = _svg_element(element, colors)
+        elif substitute_external_fonts and element.kind == 'Uf' and element.text_bytes:
+            x0, y0, x1, y1 = element.bounds
+            label = ''.join(c if ord(c) >= 0x20 else '\ufffd' for c in element.text_bytes.decode('cp437'))
+            color = colors.get(element.raw[20], '#333333')
+            shape = (f'<text x="{_number(min(x0, x1))}" y="{_number(max(y0, y1))}" '
+                     f'font-size="{_number(max(1, abs(y1-y0)))}" font-family="monospace" '
+                     f'fill="{color}">{escape(label)}</text>')
+            substitutions += 1
         elif (element.kind == 'T' and element.text_bytes and element.raw[21] == 0
               and all((element.modifier, code) in glyphs for code in element.text_bytes)):
             cost = sum(point_costs[element.modifier, code] for code in element.text_bytes)
@@ -347,6 +395,8 @@ def preview_svg(form, palette=()):
     box = (min(xs) - pad, min(ys) - pad, max(xs) - min(xs) + 2*pad, max(ys) - min(ys) + 2*pad)
     view = ' '.join(map(_number, box))
     description = 'DeskMate geometry preview with approximate fills, stroke styles and text spacing.'
+    if substitutions:
+        description += f' Generic monospace substitutes for {substitutions} external font runs.'
     if missing:
         kinds = sorted({item.kind_hex for item in missing})
         description += ' Omitted element type bytes (hex) ' + ', '.join(kinds) + '.'
@@ -361,6 +411,6 @@ def preview_svg(form, palette=()):
     return SvgPreview(svg, box, geometry, len(shapes), tuple(missing))
 
 
-def render_svg(form, palette=()):
+def render_svg(form, palette=(), *, substitute_external_fonts=False):
     """Return the stand-alone SVG string for the measured geometry preview."""
-    return preview_svg(form, palette).svg
+    return preview_svg(form, palette, substitute_external_fonts=substitute_external_fonts).svg
