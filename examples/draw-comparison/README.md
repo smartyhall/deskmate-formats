@@ -1,0 +1,125 @@
+# Draw visual comparison library
+
+**Status:** operator-approved structure, 2026-11-19. The four featured
+drawings and matched visual outputs have not yet been created. The
+[planning manifest](suite-plan-v1.json) pins the existing 19 exact
+native FIG controls and related Text/Filer controls. The current renderer
+baseline is `5e1b24f8d8d262ac165b125474f7807163afbcc1` (PR #120 merge).
+
+## Purpose and featured specimens
+
+Maintain a permanent, public, longitudinal visual comparison gallery
+analogous to the Music listening library. The featured gallery is four
+new original drawings, designed to be recognizable and useful beyond
+isolated primitive tests:
+
+| Case ID | Drawing | Coverage |
+| --- | --- | --- |
+| primitives-styles | Primitive and style chart | Geometry, line weights, dashes, fills, palette, brush and clipping |
+| technical-plan | Architectural / technical floor plan | Dimensions, fine lines, door arcs, labels, coordinate precision |
+| compound-landscape | Original house/landscape illustration | Layering, nested groups, transforms, repeated objects, patterned fills |
+| typography | Graphical typography specimen | Embedded strokes, external fonts, size, spacing, rotation |
+
+The plan manifest defines the intended features, not a claim that
+every feature works in native Draw. Create the actual specimens in
+native Draw where feasible, using the existing serial-mouse/keyboard
+automation. Exact native saves with independent stopped-disk extraction
+are preferred. If tool-assisted creation is needed, distinguish
+tool-generated, native-open-accepted and native-resaved bytes. Do not
+fabricate native acceptance. Use independently authored graphics and
+labels, not reproductions of historical artwork. Freeze the real FIG
+bytes, exact object attributes and capture settings before changing
+the renderer. Include eligible native source files in the existing
+`tests/fixtures/application-generated/draw/` manifest, rather than
+duplicating them in the gallery. The four featured drawings should
+appear prominently in the comparison page, with the earlier 19
+diagnostic files available in a secondary view. The related Text
+picture and Filer card/report controls are additional shared-engine
+regressions, not substitutes for the featured drawings.
+
+## Layout and immutable baselines
+
+The repository provides the following structure:
+
+- `suite-plan-v1.json`: planned case IDs, requirements and pinned
+  existing diagnostic/cross-application inputs.
+- `suite-v1.json` (to be created): frozen actual featured FIG paths,
+  hashes, object/feature coverage, capture profile, metric versions.
+- `v1/baseline-pr120/`: first genuine matched native/independent
+  comparisons using the pinned renderer, before any fidelity changes.
+- `v1/<milestone-id>/`: immutable later comparisons with manifests.
+- `compare.html` (to be created): self-contained local gallery.
+- [Draw Workbench](../draw-workbench/README.md): separate application
+  source and interface design, not a substitute for the gallery.
+
+For each case and milestone publish eligible `<case>-native.png`,
+`<case>-renderer.png`, `<case>-diff.png`, and where useful
+`<case>-renderer.svg`. Each milestone manifest binds case/source
+hash, renderer revision and mode, native machine/viewport identity,
+capture and extraction recipe, output paths/hashes/dimensions, mapping
+parameters, metrics, font-resource identities when used, omissions and
+limitations. Keep the full framebuffer original privately; crop only
+the drawing area with recorded integer boundaries. Use matched dimensions
+and an explicit common world-to-pixel mapping. Preserve the original
+renderer SVG, and rasterize it reproducibly rather than silently changing
+its geometry to improve the baseline. Record any alignment and rasterizer
+configuration. Do not label a renderer approximation as native output.
+Retain earlier results; a changed fixture, mapping or metric is a newly
+versioned comparison or clearly labeled additional mode.
+
+Re-capture the fixed drawings natively and regenerate the independent
+outputs at major rendering/interpreter milestones. Canonical reference
+reuse is allowed only when a fresh capture has the same verified bytes
+(or if unavailable, explicitly label the prior reference and blocker).
+Include actual downloadable comparison images, not just hashes. Gallery
+controls: side-by-side, linked pan/zoom, slider overlay, A/B switch,
+pixel diff, details/metrics, version and case selector. Prefer an
+offline gallery with no external services; direct static links must work.
+Do not require the editor to view comparison artifacts.
+
+## Measurements and provenance
+
+Pin the original native VGA framebuffer/crop, palette, viewport origin,
+zoom, background, display mode, and cursor/selection-free repaint state.
+Record emulator build and guest/application identities. Use the existing
+86Box native socket; no host screenshot or RDP input substitution.
+Measure foreground masks, per-color agreement, pixel equality on relevant
+regions, intersection-over-union, boundary distances, stroke widths,
+pattern correspondence, and omitted records. Report exact-pixel and
+vector-projection results separately. A large blank background must not
+dominate the fidelity score. Where no comparable reference exists, state
+that limitation. Keep original assets, native screenshots and detailed
+traces in the private laboratory.
+
+## Publication and test contract
+
+This commit establishes documentation and the proposed paths only.
+The present audit still bans PNG; implement a narrowly scoped exception
+for actual manifest-listed, eligible comparison PNGs below this tree
+when establishing the baseline. Use the Music listening precedent,
+but do not change its rules or allow unrelated artwork/screenshots.
+Validate canonical paths, exact source linkage, unique entries, hashes,
+dimensions, bounded decoded pixel counts and file/aggregate sizes,
+PNG signature and chunk integrity, allowed pixel encodings, decompression
+bounds, absence of unexpected payloads/metadata, licensing and symlinks.
+Restrict SVG/HTML to authored safe static content; do not embed arbitrary
+historical file data or executable SVG from untrusted inputs. Test
+unlisted, tampered, malformed, oversized and out-of-scope images.
+Update both audit implementations consistently and keep comparison
+binaries out of the wheel and sdist. Preserve source-package metadata
+audit behavior and accurate REUSE notices.
+
+Publish drawing-only crops of original synthetic documents where rights
+permit; do not include proprietary application UI chrome, raw font
+assets, historical artwork or logos in the public comparison corpus.
+A drawing with original external-font text can be a private diagnostic
+if its public raster output has an unresolved rights issue; document the
+reason and use a cleared equivalent for the public typography case.
+The operator's goal is actual accessible comparisons, not a blanket
+ban on original work produced by Draw. Document any real contrary terms
+and seek review; never assert rights the project does not hold.
+
+The next campaign must complete the initial featured gallery and
+baseline before major renderer modifications; incremental diagnostic
+checkpoints are encouraged. See the [native graphics report](../../docs/research/graphics-native-20261117.md)
+and [standing policy](../../AGENTS.md).

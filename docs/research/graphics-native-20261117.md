@@ -309,3 +309,14 @@ placement, escape and group-pointer controls. The readers are read-only.
 The next discriminating experiments are independent arc and brush controls,
 the external `Uf` font format and precise character advances, and comparison
 against an actual Drawlist-generated array if the utility becomes available.
+
+## Recurring visual comparisons and Classic Workbench
+
+The operator established a permanent [visual comparison library](../../examples/draw-comparison/README.md)
+and [Classic Draw Workbench design](../../examples/draw-workbench/README.md).
+Reuse the exact native synthetic controls above, and feature four new
+original drawings alongside the diagnostic corpus. Establish the pinned
+pre-change renderer baseline before further fidelity development. Regenerate
+matched native and independent images at major graphics milestones, retaining
+earlier results and explicit metrics. Native UI behavior is the reference
+for the independent browser recreation.
