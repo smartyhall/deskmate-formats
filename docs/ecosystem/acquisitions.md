@@ -205,3 +205,36 @@ or bulk installation in the core research image. Extensive per-title
 reverse engineering belongs to later campaigns; the next typography
 campaign should undertake the inventory and useful adjacent acquisitions
 without displacing its primary research objectives.
+
+## Historical documentation and community archive
+
+The operator supplied the [TVDog documentation index](http://www.oldskool.org/guides/tvdog/documents.html)
+and its pasted listing. The listed filenames and descriptions were
+inspected, not the underlying downloads. Check existing private archives
+first. Retain a dated listing and acquire relevant files from
+http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/ .
+
+| Priority | Listed files | Research purpose |
+| --- | --- | --- |
+| Immediate | aoldesk.zip | AOL DeskMate forum: search FF1, Atech, Rockwell, font installation, hinting, variants, printing, layout, undocumented formats, SDK and third-party titles |
+| Immediate | videomem.zip | Historical DeskMate Text document; inventory and test reader privately |
+| Immediate | cblmgc.zip | Two Print Magic documents; identify edition and format, preserve privately |
+| High | mm.zip, cistanne.zip | Radio Shack newsletters and monthly memos, official CompuServe announcements; release dates, catalog numbers and product changes |
+| High | expsoft.zip, rscat87.zip, rscat89.zip, rscat90.zip, rscat91.zip, rscat92.zip, rssoft86.zip, rssoft87.zip, tccat85.zip, tccat87.zip, tccat88.zip, edulist.zip | Software and hardware catalogs; dated sales offerings, editions, prices, compatibility |
+| High | direct.txt | 1992 factory-direct price list |
+| High | cistanfo.zip, aoltan.txt, delfor88.zip through delfor94.zip, tandy.zip, turp2_2.txt, julynl.txt | Community discussions and leads |
+| As needed | dmp120.txt, 2100cod.txt, 26-1255.zip, 26-1280.zip, 26-1280a.zip, 26-2839.zip, dmp240.txt | Printer codes and device profiles |
+| As needed | 1kprog.zip, 1ktech.zip, tltech.zip, sltech.zip, whichvid.txt, tandymap.txt, 1ktech-1.zip, 1ktech-2.zip | Hardware/video/I/O/audio context; verify model applicability |
+| Later | 1kguide.zip, pdmquik.zip, sxquik.zip, practsl.zip, practtl.zip, tl3user.zip, rlinst.zip, rlxuser.zip, rlxauser.zip | Early application workflows and machine-specific references |
+| Later | meetpcl.zip, tandy2.txt, tandy7.txt, sensman.zip | PC-Link, SchoolMate, WinMate context; distinct platform/service research, no live legacy service connection |
+
+Record URL, acquisition date, hashes, archive members, document date/title,
+and page or message locators. Build a searchable private text/OCR index
+where useful, with uncertain OCR flagged. Distinguish community reports
+from independently reproduced behavior. Keep original archives, scans,
+forum messages, personal contact details and historical documents private.
+Publish independent findings, citations, metadata and eligible synthetic
+fixtures only. Retain dated price and product evidence for the future
+demonstrator's internally consistent purchase records. Do not invent the
+family canon. Prioritize immediate acquisitions in the next typography/
+Express Publisher campaign without displacing primary research objectives.

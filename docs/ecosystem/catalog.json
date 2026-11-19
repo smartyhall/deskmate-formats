@@ -62,6 +62,11 @@
       "title": "TVDog Tandy 1000 commercial software archive",
       "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/",
       "verification": "Operator identified numerous DeskMate software packages here on 2026-11-19. HTTP and HTTPS listing retrieval returned 502 in ChatGPT; inventory and media identities pending VM verification."
+    },
+    "tvdog-documents": {
+      "title": "TVDog Tandy 1000 documentation index",
+      "url": "http://www.oldskool.org/guides/tvdog/documents.html",
+      "verification": "Operator supplied index and pasted entries on 2026-11-19; listing inspected, underlying downloads not yet verified. Priorities in acquisitions.md."
     }
   },
   "entries": [
