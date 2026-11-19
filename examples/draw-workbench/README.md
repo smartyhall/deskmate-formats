@@ -8,6 +8,7 @@ The first implementation uses an independently designed period-style
 interface. It follows the observed open, select, zoom, edit and Save As
 workflow. The native title/menu organization, tool interactions and
 dialogs remain documented research references for further work.
+See the [native interface observations](../../docs/research/draw-native-ui-20261119.md).
 
 The operator requests a faithful reconstruction of original DeskMate Draw
 rather than a contemporary editor with decorative retro styling. The

@@ -103,6 +103,28 @@ class ArcTransferTest(unittest.TestCase):
                 self.assertEqual(preview.rendered_elements, 2)
                 self.assertIn('<path d="M ', preview.svg)
 
+    def test_independent_text_replacement_and_native_resave(self):
+        folder = FIXTURES / 'text'
+        records = [text.parse_file(folder / name) for name in (
+            'arc-replacement-tool-generated.doc', 'arc-replacement-native.doc')]
+        forms = []
+        for document in records:
+            self.assertEqual(document.text, 'ARC SAMPLE\n')
+            picture, = document.pictures
+            self.assertEqual((picture.offset, picture.column, len(picture.payload), picture.payload[-1]),
+                             (34, 3, 123, 25))
+            forms.append(graphics.parse_bytes(picture.payload, text_picture=True))
+        self.assertEqual(forms[0].list_data, forms[1].list_data)
+        self.assertEqual([e.kind for e in forms[1].draw_order()], ['UA', 'R'])
+
+    def test_brush_tools_saved_as_extended_paths(self):
+        open_path, closed_path = read_drawing('brushes-native').form.draw_order()
+        self.assertEqual([part.kind for part in (open_path, closed_path)], ['UP', 'UP'])
+        self.assertEqual((len(open_path.points), len(closed_path.points)), (8, 6))
+        self.assertEqual(open_path.raw[32:34], b'\0\0')
+        self.assertEqual(closed_path.raw[32:34], b'\xff\xff')
+        self.assertEqual(open_path.raw[22:25], closed_path.raw[22:25])
+
 
 def read_text(name):
     return text.parse_file(FIXTURES / 'text' / (name + '.doc'))

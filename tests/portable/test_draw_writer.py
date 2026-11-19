@@ -86,6 +86,35 @@ class WriterTest(unittest.TestCase):
         self.assertEqual(polygon.points, ((0, 0), (0, 10), (20, 0)))
         self.assertEqual(polygon.raw[32:34], b'\xff\xff')
 
+    def test_group_and_ungroup_preserve_leaves(self):
+        source = read('writer-add-ellipse-browser-independent')
+        grouped = draw_writer.group_all(source)
+        self.assertEqual(grouped, read('writer-group-tool-generated'))
+        group = draw.parse_bytes(grouped).form
+        self.assertEqual([element.kind for element in group.elements], ['OO', 'E', 'R'])
+        root = group.elements[0]
+        self.assertEqual(root.bounds, (600, 985, 3501, 2721))
+        self.assertEqual(root.children, (54, 30))
+        ungrouped = draw_writer.ungroup_all(grouped)
+        self.assertEqual(ungrouped, read('writer-ungroup-tool-generated'))
+        for data in (ungrouped, read('writer-break-object-native'), read('writer-make-object-native')):
+            leaves = draw.parse_bytes(data).form.draw_order()
+            self.assertEqual([e.raw for e in leaves], [e.raw for e in group.draw_order()])
+
+    def test_palette_and_outline_label_edits_preserve_other_bytes(self):
+        source = read('d07c')
+        doc = draw.parse_bytes(source)
+        result = draw_writer.replace_palette_color(source, 10, (192, 64, 192))
+        changed = draw.parse_bytes(result)
+        self.assertEqual(changed.form, doc.form)
+        self.assertEqual(changed.palette[10], (10, 192, 64, 192))
+        source = read('outline-fonts-native')
+        amended = draw_writer.permute_outline_label(source, 1, b'DIXON 42')
+        self.assertEqual([e.text_bytes for e in draw.parse_bytes(amended).form.draw_order()],
+                         [b'DIXON 42', b'MARIN 24'])
+        with self.assertRaisesRegex(graphics.GraphicsFormatError, 'permutation'):
+            draw_writer.permute_outline_label(source, 1, b'DIXON 99')
+
 
 @unittest.skipUnless(which('node') and CODEC.is_file(), 'Node.js and the Git-only Workbench source are required')
 class BrowserCodecTest(unittest.TestCase):

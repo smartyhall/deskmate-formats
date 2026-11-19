@@ -104,3 +104,13 @@ def polyline_record(points, color, closed, fill):
     return (_record('U', ord('P'), bounds) + pack('<H', 18 + 2 * len(points)) + attrs
             + pack('<HHBBH', x1 - x0, y1 - y0, 255 if fill is not None else 0, 255 if closed else 0, len(points))
             + b''.join(pack('<HH', x - x0, y - y0) for x, y in points))
+
+
+def group_header(elements, child_word_offsets):
+    """Build the measured OO envelope for a flat sequence of known leaves."""
+    bounds = [_fixed(element) for element in elements]
+    xs = [value for coords in bounds for value in coords[::2]]
+    ys = [value for coords in bounds for value in coords[1::2]]
+    coords = (min(xs), min(ys), max(xs) + FIXED_ONE, max(ys) + FIXED_ONE)
+    return (_record('O', ord('O'), coords) + pack('<H', len(elements))
+            + b''.join(pack('<H', word) for word in child_word_offsets))

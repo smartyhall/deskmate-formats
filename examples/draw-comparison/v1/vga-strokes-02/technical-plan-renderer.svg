@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="756.25 881.25 6247.5 3607.5">
+<desc>DeskMate geometry preview with approximate fills, stroke styles and text spacing. Omitted element type bytes (hex) 5566.</desc>
+<rect x="756.25" y="881.25" width="6247.5" height="3607.5" fill="#000080"/>
+<rect x="950" y="1050" width="5860" height="2860" fill="none" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="1025" y="1125" width="5710" height="2710" fill="none" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="3660.5" y1="1125" x2="3660.5" y2="2560" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="3735.5" y1="1125" x2="3735.5" y2="2560" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="3660.5" y1="3260" x2="3660.5" y2="3835" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="3735.5" y1="3260" x2="3735.5" y2="3835" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="1025" y1="2560" x2="2450" y2="2560" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="3100" y1="2560" x2="3660" y2="2560" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="1025" y1="2635" x2="2450" y2="2635" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="3100" y1="2635" x2="3660" y2="2635" stroke="#c0c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="3736" y1="3260" x2="4436" y2="3260" stroke="#008080" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<path d="M 3736 2560 Q 4376 2620 4436 3260" fill="none" stroke="#008080" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="2450" y1="2560" x2="2450" y2="1910" stroke="#008080" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<path d="M 2450 1910 Q 3045 1965 3100 2560" fill="none" stroke="#008080" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="1400" y="1030" width="750" height="115" fill="#000080" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="1400" y1="1087" x2="2150" y2="1087" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="4550" y="1030" width="750" height="115" fill="#000080" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="4550" y1="1087" x2="5300" y2="1087" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="5500" y="1030" width="750" height="115" fill="#000080" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="5500" y1="1087" x2="6250" y2="1087" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="950" y1="3910" x2="950" y2="4340" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="905" y1="4290" x2="995" y2="4200" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="3660" y1="3910" x2="3660" y2="4340" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="3615" y1="4290" x2="3705" y2="4200" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="6810" y1="3910" x2="6810" y2="4340" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="6765" y1="4290" x2="6855" y2="4200" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<line x1="950" y1="4245" x2="6810" y2="4245" stroke="#c0c0c0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="5150" y="1570" width="1250" height="510" fill="none" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<rect x="5320" y="1660" width="910" height="310" fill="none" stroke="#00c000" stroke-width="1" vector-effect="non-scaling-stroke"/>
+</svg>

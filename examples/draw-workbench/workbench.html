@@ -224,7 +224,8 @@ const DrawFig = (() => {
           const area = data.slice(start + 26, start + 56);
           const boundary = area.indexOf(0);
           const name = area.slice(0, boundary);
-          if (u16(start + 98) === 0 && end <= start + size && start + size <= end + 1
+          if (u16(start + 98) === 0 && end <= start + size && start + size <= end + 2
+              && (start + size !== end + 2 || (data[end] === 0 && data[end + 1] === 0))
               && boundary > 0 && area.slice(boundary).every(value => value === 0)
               && name.every(value => 32 <= value && value <= 126)
               && !data.slice(start + 100, end).includes(0)) {

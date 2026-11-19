@@ -61,6 +61,60 @@ ellipse-over-rectangle canvas in 153 pixels inside crop bounds
 18,619 frames, including the stroke milestone recaptures.
 
 The browser exposes the three verified in-place edits. The additional
-flat list operations are qualified in the Python writer. Group
-creation, ungrouping, palette writes and graphical-text editing
-remain separate compatibility goals.
+flat list operations are available in the Python writer.
+
+## Grouping, native transforms and Text writing
+
+The Python writer wraps known flat leaves in one `OO` and can flatten
+one group of directly owned known leaves. It preserves the leaves'
+original bytes and display order. The writer allocates fresh
+top-level tags when ungrouping because the saved children have
+no per-child directory tags. Both independent candidates were opened,
+saved and reopened in original Draw. Their canvases matched exactly.
+
+Break Object was enabled on this valid group. It removed the group
+without changing a leaf or a pixel. Make Object on those leaves
+rebuilt the same bounds and offsets, with a new top-level identity.
+On a separate copy, Flip horizontal reflected the children around
+`(600 + 3501) / 2 = 2050.5` world units and removed the group wrapper.
+The ellipse's x bounds changed from 1080.5–3500 to 601–3020.5.
+The rectangle's changed from 600–2000 to 2101–3501.
+The native result shows a change to serialized child geometry and
+ownership for this operation. It does not establish how all native
+transforms handle arbitrary or nested groups.
+
+The experimental
+[cross-writing tool](../../tools/experimental/draw_cross_writing_trials.py)
+also generated one replacement Text picture form in the existing
+synthetic `ARC SAMPLE` document. It sets display column 3, constructs
+both duplicated payload lengths and preserves the measured trailing
+byte `0x19`. Text reopened and displayed the new green arc and striped
+rectangle, saved the candidate and reopened the native output.
+The native save changed four form-header bytes at file positions
+53–56. The picture's 123-byte length, column, suffix, leaves and
+surrounding text survived. This qualifies one existing-envelope
+replacement. General Text insertion and Filer database allocation
+and index writing remain outside the verified profile.
+
+The grouping, Text and brush run ended at 182,942 emulated ms
+and 11,346 frames. The exact sources, independent candidates and
+native saves have separate entries in the fixture manifest.
+
+## Palette and fixed-length outline labels
+
+Changing palette index 10 in the D07C rectangle to stored RGB
+`(192,64,192)` changed the native line pixels to `(194,64,194)`.
+Draw Save As preserved all 143 candidate bytes. The writer changes
+the existing entry's channels and retains its index and position.
+
+In the native Dixon/Marin control the writer changed `DIXON 24`
+to `DIXON 42` by permuting the existing printable ASCII bytes.
+Native Draw displayed both the changed Dixon and untouched Marin
+labels and then saved and reopened the result. The native save
+rewrote bytes 32, 172 and 250, including the Dixon right edge
+from 2780 to 2768 world units. The same glyph set can therefore
+produce a different native width in a different order. The writer
+changes only the label bytes and leaves stored geometry and
+resource metadata available for the native application. Arbitrary
+text changes and recalculation of native extents remain unqualified.
+This trial ended at 60,368 emulated ms and 3,852 frames.

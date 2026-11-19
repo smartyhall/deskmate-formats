@@ -61,5 +61,23 @@ left Break Object disabled in the Actions menu. The test does not isolate
 why selection failed. The stopped clone, native captures and commands
 are retained privately in the Draw campaign's `failures` run. That run
 ended at 139,830 emulated ms and 8,697 frames. Strict validation remains
-in place for PIPES. Static traversal evidence and a successful Break
-Object control remain open.
+in place for PIPES. The Break Object command remains unqualified on
+PIPES itself. The separate valid-group control exercised it successfully.
+
+## Static group accessor
+
+A bounded Ghidra 12.1.4 decode of the pinned Draw load image locates
+a group-child accessor at file offset `0x7ba3`. It compares the child
+index with the count word at element +18, indexes the word array at
++20, doubles the stored value and adds the list base `0x1c78`.
+It returns `ffff` at the count boundary. The subsidiary routine at
+`0x7bd8` iterates this accessor and recurses for type byte `O`.
+The accessor's decoded path contains a count check. It does not check
+the target against the list length in that instruction window.
+
+The recursive routine also tests for an external-font form. It is
+evidence of the application reading the serialized child offsets in
+at least one code path. The runtime renderer's path during PIPES
+repaint remains unverified. The static result alone cannot determine
+which of the five damaged references led to the observed 108-pixel
+difference.

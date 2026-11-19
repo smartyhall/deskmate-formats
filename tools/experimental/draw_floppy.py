@@ -16,13 +16,13 @@ def data_floppy(files):
     fat[:3] = b'\xf0\xff\xff'
     next_cluster = 2
     for index, (name, data) in enumerate(sorted(files.items()), 1):
-        if not re.fullmatch(r'[A-Z0-9]{1,8}\.FIG', name):
-            raise ValueError('expected unique uppercase DOS FIG names')
+        if not re.fullmatch(r'[A-Z0-9]{1,8}\.(?:FIG|DOC|FIL)', name):
+            raise ValueError('expected unique uppercase DOS FIG, DOC or FIL names')
         blocks = (len(data) + 511) // 512
         if blocks < 1 or next_cluster + blocks > 2849:
             raise ValueError('floppy capacity exceeded')
         entry = 9728 + index * 32
-        image[entry:entry + 11] = (name[:-4].ljust(8) + 'FIG').encode('ascii')
+        image[entry:entry + 11] = (name[:-4].ljust(8) + name[-3:]).encode('ascii')
         image[entry + 11] = 32
         pack_into('<HHI', image, entry + 24, (46 << 9) | (11 << 5) | 4, next_cluster, len(data))
         start = 16_896 + 512 * (next_cluster - 2)

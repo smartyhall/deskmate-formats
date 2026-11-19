@@ -156,7 +156,8 @@ def _font_run(raw, length):
     count, = unpack_from('<H', raw, 96)
     end = 100 + count
     if (not terminator or not name or any(padding) or any(not 32 <= code <= 126 for code in name)
-            or not end <= length <= end + 1 or b'\0' in raw[100:end]):
+            or not end <= length <= end + 2 or (length == end + 2 and raw[end:length] != b'\0\0')
+            or b'\0' in raw[100:end]):
         return None
     return ExternalFontRun(name.decode('ascii'), raw[20:26], raw[56:96],
                            raw[100:end], raw[end:length])

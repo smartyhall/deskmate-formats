@@ -7,8 +7,9 @@ with the corresponding independent projection. The
 [planning manifest](suite-plan-v1.json) records the original test design
 and pins the related Text and Filer controls.
 
-The [quadratic SVG milestone](v1/arc-vector-01/README.md) and
-[experimental RSX raster](v1/vga-raster-01/README.md) preserve the
+The [quadratic SVG milestone](v1/arc-vector-01/README.md),
+[experimental RSX raster](v1/vga-raster-01/README.md) and
+[axis-stroke raster](v1/vga-strokes-02/README.md) preserve the
 same native inputs and viewport with separately measured output modes.
 
 Open [compare.html](compare.html) from a local checkout. Use the featured

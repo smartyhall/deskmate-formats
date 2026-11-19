@@ -98,3 +98,32 @@ The same raster function accepts a shared graphics form and palette.
 Its current viewport, VGA color mapping and tile phase apply to the
 standalone RSX Draw capture. Native Text and Filer contexts may use
 different origins, clipping and backgrounds.
+
+## Brush records and native dispatch
+
+The original serial-mouse Brush and Filled Brush control saves two
+`UP` records, with eight and six points respectively. Both carry line
+attribute bytes 1 and 18 at +22 and +23 in the measured default brush.
+The open stroke has zero fill/connect flags. The filled-brush stroke
+sets both flags to `ff` and retains the default `fe` pattern. It closes
+the contour, with an unfilled interior in that capture. The native
+brush traces widen with direction. The shared projections preserve
+the recorded point path and closure and approximate the wide stroke.
+This distinguishes the measured brush serialization from the
+separate historical `B` records labeled bevel in the SDK.
+
+Ghidra 12.1.4 decoded the load image of the pinned
+`DRAW.PDM` (512-byte MZ header excluded, synthetic 16-bit x86 base
+`1000:0000`). The dispatch at file offsets `0x9467–0x9486` checks
+`U/A` and `U/P` separately. The `UA` callee at file `0x960e`
+contains a transform branch that maps each local coordinate pair
+`(x,y)` to `(yext-y,x)` and exchanges the x/y extents. It operates
+on the inline fields +28–43. That part of the listing concerns record
+transformation. The curve formula above comes from framebuffer
+measurements and does not depend on identifying the Video Manager
+raster routine.
+
+The private run also produced a valid-group Break Object control,
+contrasting with the disabled command in the PIPES trial. The
+[writing report](draw-writing-20261119.md) records the native break,
+make and reflect outcomes.

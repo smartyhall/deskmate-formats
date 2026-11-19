@@ -201,8 +201,14 @@ function flip() {
 }
 
 const version = lookup('milestone');
+const milestoneNames = {
+  'baseline-pr120': 'PR #120 baseline',
+  'arc-vector-01': 'Quadratic SVG',
+  'vga-raster-01': 'RSX VGA raster',
+  'vga-strokes-02': 'RSX VGA raster + axis strokes',
+};
 for (const key of Object.keys(catalogue)) {
-  version.append(element('option', key === 'baseline-pr120' ? 'PR #120 baseline' : key, { value: key }));
+  version.append(element('option', milestoneNames[key] ?? key, { value: key }));
 }
 version.value = state.milestone;
 version.addEventListener('change', () => { state.milestone = version.value; change(state.id); });

@@ -32,6 +32,20 @@ class FontResource:
     variants: tuple[FontVariant, ...]
 
 
+@dataclass(frozen=True)
+class GlyphEntry:
+    code: int
+    advance_word: int
+    offset: int
+    size: int
+
+
+@dataclass(frozen=True)
+class GlyphIndex:
+    units_per_em_word: int
+    entries: tuple[GlyphEntry, ...]
+
+
 def parse_bytes(data):
     """Read names and descriptor bytes without interpreting resource glyphs."""
     if not isinstance(data, bytes) or not DIRECTORY_OFFSET <= len(data) <= MAX_SIZE:
@@ -63,12 +77,40 @@ def parse_file(path):
         return parse_bytes(file.read(MAX_SIZE + 1))
 
 
+def parse_glyph_index(data):
+    """Read the verified code-to-glyph extent table and nominal advance words."""
+    resource = parse_bytes(data)
+    outer_end = DIRECTORY_OFFSET + len(resource.variants) * RECORD_SIZE
+    inner = outer_end + 4
+    if inner + 48 > len(data) or data[inner:inner+4] != b'\x1e\xf3\x01\x01':
+        raise FontResourceError('unsupported FF1 inner glyph index profile')
+    declared_size, = unpack_from('<I', data, inner + 4)
+    units, first, count = unpack_from('<HHH', data, inner + 12)
+    widths_rel, = unpack_from('<H', data, outer_end + 2)
+    index_rel, = unpack_from('<H', data, inner + 46)
+    if (declared_size > len(data) - inner or not units
+            or (first, count) != (resource.first_code_word, resource.code_count_word)
+            or widths_rel < 48 or widths_rel + 2 * count != index_rel
+            or index_rel + 4 * count >= declared_size):
+        raise FontResourceError('inconsistent FF1 inner glyph index extent')
+    widths = unpack_from(f'<{count}H', data, inner + widths_rel)
+    offsets = (*unpack_from(f'<{count}I', data, inner + index_rel), declared_size)
+    if offsets[0] != index_rel + 4 * count or any(a >= b for a, b in zip(offsets, offsets[1:])):
+        raise FontResourceError('overlapping or unordered FF1 glyph extents')
+    entries = tuple(GlyphEntry(first + i, width, inner + a, b - a)
+                    for i, (width, a, b) in enumerate(zip(widths, offsets, offsets[1:])))
+    return GlyphIndex(units, entries)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('resource', type=Path)
+    parser.add_argument('--glyph-index', action='store_true', help='read nominal advances and verified glyph extents')
     args = parser.parse_args()
     try:
-        result = parse_file(args.resource)
+        with args.resource.open('rb') as source:
+            data = source.read(MAX_SIZE + 1)
+        result = parse_glyph_index(data) if args.glyph_index else parse_bytes(data)
     except (OSError, FontResourceError) as error:
         parser.exit(2, f'{error}\n')
     print(json.dumps(asdict(result), default=bytes.hex, indent=2))
