@@ -28,6 +28,12 @@ MAX_LISTENING_FRAMES = 20 * 48_000
 MAX_MILESTONE_BYTES = 26 * 1024 * 1024
 MAX_LISTENING_BYTES = 128 * 1024 * 1024
 DATA_EXT = {'.cln', '.adr', '.fil', '.pcl', '.doc', '.fig', '.wks', '.snd', '.sng'}
+SYNTHETIC_FF1 = 'draw/typography-lab-grid.ff1'
+TYPOGRAPHY_DIR = Path('examples/typography-comparison/v1')
+TYPOGRAPHY_IMAGES = {
+    f'{case}-{kind}.png' for case in ('lab-grid', 'bonum', 'liberation-mono')
+    for kind in ('native', 'independent')
+}
 PRIVATE_SPOOL_FILES = {'events.jsonl', 'writer.lock'}
 PRIVATE_SPOOL_FILES.update(
     database + suffix for database in ('operations.sqlite3', 'task-queue.sqlite3')
@@ -42,7 +48,8 @@ TELEMETRY_FIXTURES = {
 }
 BAD_EXT = {'.exe', '.com', '.dll', '.img', '.ima', '.iso', '.zip', '.7z',
            '.png', '.pdf', '.pdm', '.res', '.r89', '.hlp',
-           '.tut', '.nvr', '.rom', '.vhd', '.vhdx', '.hdi', '.raw', '.token', '.wav', '.mid'} | DATA_EXT
+           '.tut', '.nvr', '.rom', '.vhd', '.vhdx', '.hdi', '.raw', '.token', '.wav', '.mid',
+           '.ff1', '.otf', '.ttf', '.prn'} | DATA_EXT
 PATTERNS = {
     'host Windows user path': r'(?i)[a-z]:[\\/]Users[\\/]',
     'host POSIX user path': r'/(?:home|Users)/[^/\s]+',
@@ -83,7 +90,8 @@ def fixture_manifest():
         rel = PurePosixPath(name)
         if rel.is_absolute() or '..' in rel.parts or len(rel.parts) < 2:
             raise ValueError('unsafe fixture path: ' + name)
-        if rel.suffix.lower() not in DATA_EXT and not native_text_export(FIXTURE_DIR / rel):
+        if (rel.suffix.lower() not in DATA_EXT and not native_text_export(FIXTURE_DIR / rel)
+                and name != SYNTHETIC_FF1):
             raise ValueError('unexpected fixture extension: ' + name)
         if (FIXTURE_DIR / name).as_posix() in index or not re.fullmatch(r'[0-9a-f]{64}', str(item.get('sha256', ''))):
             raise ValueError('duplicate or invalid fixture digest: ' + name)
@@ -261,9 +269,32 @@ def check_listening_wav(rel, data, entry):
         raise ValueError('missing underlying Tandy material notice: ' + rel)
 
 
+def typography_manifest():
+    relative = TYPOGRAPHY_DIR / 'manifest.json'
+    if not (ROOT / relative).exists():
+        return {}, set()
+    manifest = draw_audit.read_json(ROOT, relative)
+    if manifest.get('schema_version') != 1 or set(manifest.get('images', {})) != TYPOGRAPHY_IMAGES:
+        raise ValueError('unexpected typography comparison manifest')
+    metadata = {(TYPOGRAPHY_DIR / name).as_posix()
+                for name in ('manifest.json', 'manifest.json.license', 'README.md', 'README.md.license')}
+    result = {}
+    for name, entry in manifest['images'].items():
+        if (entry.get('dimensions') != [640, 418] or not draw_audit.digest(entry.get('sha256'))
+                or type(entry.get('size')) is not int or not 0 < entry['size'] <= 512 * 1024):
+            raise ValueError('invalid typography comparison image identity: ' + name)
+        path = (TYPOGRAPHY_DIR / name).as_posix()
+        result[path] = {**entry, 'dimensions': tuple(entry['dimensions'])}
+        metadata.add(path + '.license')
+    return result, metadata
+
+
 def audit():
     allowed = fixture_manifest()
     comparisons, comparison_metadata = draw_audit.comparison_manifest(ROOT, allowed)
+    typography, typography_metadata = typography_manifest()
+    comparisons.update(typography)
+    comparison_metadata.update(typography_metadata)
     comparisons_found = set()
     listening, listening_metadata = listening_manifest(allowed)
     listening_found = set()
@@ -282,6 +313,8 @@ def audit():
             comparisons_found.add(rel)
             count += 1
             continue
+        if rel_path.is_relative_to(TYPOGRAPHY_DIR) and rel not in comparison_metadata:
+            raise ValueError('unlisted typography comparison file: ' + rel)
         if rel_path.is_relative_to(draw_audit.TREE) and rel not in comparison_metadata:
             if rel_path.name not in ('README.md', 'README.md.license') or len(rel_path.parts) != 5:
                 raise ValueError('unlisted Draw comparison file: ' + rel)
@@ -304,6 +337,12 @@ def audit():
             entry = allowed[rel]
             if len(data) != entry['size'] or hashlib.sha256(data).hexdigest() != entry['sha256']:
                 raise ValueError('fixture digest or size mismatch: ' + rel)
+            if rel == (FIXTURE_DIR / SYNTHETIC_FF1).as_posix():
+                from deskmate_formats.ff1 import serialize_resource
+                from deskmate_formats.ff1_geometric import geometric_face
+
+                if data != serialize_resource(geometric_face('Labgrid', face_id=28)):
+                    raise ValueError('FF1 fixture does not reproduce from the independent generator: ' + rel)
             # Native binary structure is permitted, not credentials or host paths.
             for text_variant in (data.decode('latin-1'),
                                  data.replace(b'\x00', b'').decode('latin-1')):

@@ -178,6 +178,14 @@ const DrawFig = (() => {
   }
 
   const MAX_FF1_BYTES = 128 * 1024;
+  const drawOutlineSlots = [
+    180, 207, 197, 192, 204, 200, 212, 181, 193, 205, 201, 221, 209, 217, 216, 208,
+    220, 215, 211, 194, 206, 202, 195, 203, 239, 218, 219, 191, 187, 188, 186, 190,
+    196, 213, 198, 199, 183, 182, 249, 250, 185, 128, 129, 130, 131, 184, 251, 253,
+    226, 234, 210, 214, 241, 240, 161, 225, 233, 189, 244, 243, 242, 168, 169, 170,
+    160, 255, 176, 252, 246, 245, 179, 224, 162, 163, 164, 165, 230, 229, 166, 167,
+    232, 231, 223, 235, 236, 173, 237, 174, 238, 222, 247, 248, 254, 175, 227, 228,
+  ];
 
   function readOutlineFace(source) {
     require(source instanceof Uint8Array && source.length >= 66 && source.length <= MAX_FF1_BYTES,
@@ -215,6 +223,12 @@ const DrawFig = (() => {
     return {
       name: String.fromCharCode(...nameBytes.subarray(0, nameBytes.indexOf(0))),
       first, units, entries,
+      glyphBounds(code) {
+        this.commands(code);
+        const { at } = entries[code - first];
+        if (!word(at + 10)) return null;
+        return [2, 4, 6, 8].map(offset => view.getInt16(at + offset, true));
+      },
       same: other => other instanceof Uint8Array && other.length === data.length && data.every((v, i) => v === other[i]),
       commands(code) {
         const { at, size } = entries[code - first];
@@ -261,7 +275,10 @@ const DrawFig = (() => {
       && raw.slice(68, 84).every(v => v === 0)
       && word(90) === 1 && pointSize && width, 'Unsupported external font transform or style');
     let cost = 0;
-    for (const code of text) {
+    const codes = raw[20] === 1 && face.units === 1000 && face.first === 32 && face.entries.length === 224
+      ? Array.from(text, code => code < 128 ? code : drawOutlineSlots[code - 128] ?? 32)
+      : text;
+    for (const code of codes) {
       const entry = face.entries[code - face.first];
       require(entry, `Code ${code} is outside the ${face.name} glyph index`);
       cost += entry.size;
@@ -271,7 +288,7 @@ const DrawFig = (() => {
     const sy = pointSize * 1000 / (72 * face.units), sx = sy * width / 100;
     const cache = new Map(), paths = [];
     let advance = 0;
-    for (const code of text) {
+    for (const code of codes) {
       if (!cache.has(code)) cache.set(code, face.commands(code));
       const contours = cache.get(code);
       const coord = ([px, py]) => `${safeNumber(x + (advance + px) * sx)} ${safeNumber(y + py * sy)}`;
@@ -471,10 +488,19 @@ const DrawFig = (() => {
     return { data, first, hint, listBytes };
   }
 
+  function editableOutline(part) {
+    const { raw } = part;
+    return part.kind === 'Uf' && part.fontName && raw[20] === 1 && raw[21] === 255
+      && raw.slice(22, 26).every(v => v === 0)
+      && (raw[56] || raw[57]) && (raw[58] || raw[59])
+      && raw.slice(60, 68).every((v, i) => v === ([0, 0, 0, 0, 12, 0, 255, 0][i]))
+      && raw.slice(68, 84).every(v => v === 0) && raw[90] === 1 && raw[91] === 0;
+  }
+
   function knownLeaves(parts) {
     require(parts.every(e => {
       if (Object.hasOwn(sizes, e.kind)) return e.raw.length === sizes[e.kind];
-      if (e.kind !== 'UA' && e.kind !== 'UP') return false;
+      if (e.kind !== 'UA' && e.kind !== 'UP' && !editableOutline(e)) return false;
       const size = 2 * (e.raw[18] + 256 * e.raw[19]);
       return size === e.raw.length && (e.kind !== 'UA' || size === 44);
     }), 'Structural edit would relocate an unsupported record');
@@ -516,18 +542,69 @@ const DrawFig = (() => {
   }
 
   function flat(model) {
-    const parts = model.entries.map(e => ({ ...e, raw: model.elements.get(e.offset).raw,
-      kind: model.elements.get(e.offset).kind }));
+    const parts = model.entries.map(e => ({ ...model.elements.get(e.offset), ...e }));
     require(parts.length === model.elements.size, 'Structural edit requires a packed flat Draw list');
     knownLeaves(parts);
     return parts;
   }
 
   function add(model, kind, geometry, { color = 1, fill = null } = {}) {
+    return appendRecord(model, primitive(kind, geometry, color, fill));
+  }
+
+  function appendRecord(model, raw) {
     const profile = packed(model), parts = flat(model);
     const tag = nextTag(model, profile.hint);
-    parts.push({ tag, raw: primitive(kind, geometry, color, fill) });
+    parts.push({ tag, raw });
     return wrap(profile, packList(parts, profile.first), tag);
+  }
+
+  function addOutlineText(model, face, label, [x, y], pointSize, width) {
+    return appendRecord(model, outlineTextRecord(face, label, [x, y], pointSize, width));
+  }
+
+  function outlineTextRecord(face, label, [x, y], pointSize, width) {
+    require(/^[ -~]{1,29}$/.test(face.name) && /^[ -~]{1,255}$/.test(label)
+      && [pointSize, width].every(v => Number.isInteger(v) && v >= 1 && v <= 255)
+      && [x, y].every(Number.isInteger), 'Use printable ASCII and integer size and width from 1 to 255');
+    const text = Array.from(label, c => c.charCodeAt(0));
+    let cursor = 0, left = 0, right = 0, top = 0, bottom = 0;
+    for (const code of text) {
+      const entry = face.entries[code - face.first];
+      require(entry, `Code ${code} is outside the local FF1 glyph index`);
+      const bounds = face.glyphBounds(code);
+      if (bounds) {
+        left = Math.min(left, cursor + bounds[0]);
+        right = Math.max(right, cursor + bounds[2]);
+        top = Math.min(top, bounds[1]);
+        bottom = Math.max(bottom, bounds[3]);
+      }
+      cursor += entry.advance;
+    }
+    const scaledY = v => v * pointSize * 1000 / (72 * face.units);
+    const scaledX = v => v * pointSize * width * 10 / (72 * face.units);
+    const l = Math.floor(scaledX(left)), r = Math.max(1, Math.ceil(scaledX(Math.max(cursor, right))));
+    const t = Math.min(-1, Math.floor(scaledY(top))), b = Math.max(1, Math.ceil(scaledY(bottom)));
+    const raw = new Uint8Array(102 + text.length - text.length % 2), view = new DataView(raw.buffer);
+    raw.set([85, 102]);
+    setCoords(view, 2, [x + l, y + t, x + r, y + b].map(v => v * FIXED_ONE));
+    require([b - t, -t, r - l].every(v => v <= 65535), 'Outline text cache exceeds native field limits');
+    raw.set([1, 255], 20);
+    raw.set(Array.from(face.name, c => c.charCodeAt(0)), 26);
+    for (const [at, value] of [[18, raw.length / 2], [56, pointSize], [58, width], [64, 12],
+      [66, 255], [84, b - t], [86, -t], [88, r - l], [90, 1], [92, x], [94, y], [96, text.length]]) {
+      view.setUint16(at, value, true);
+    }
+    raw.set(text, 100);
+    return raw;
+  }
+
+  function replaceOutlineText(model, tag, face, label, origin, pointSize, width) {
+    const profile = packed(model), parts = flat(model);
+    const target = parts.find(part => part.tag === tag);
+    require(target && editableOutline(target), 'Replacement requires a top-level base outline text run');
+    target.raw = outlineTextRecord(face, label, origin, pointSize, width);
+    return wrap(profile, packList(parts, profile.first), profile.hint);
   }
 
   function remove(model, tag) {
@@ -661,7 +738,8 @@ const DrawFig = (() => {
   }
 
   return Object.freeze({ read, leaves, preview, arcQuadratic, canEdit, edit, readOutlineFace, MAX_BYTES, MAX_FF1_BYTES,
-    blank, structuralProfile, add, remove, reorder, group, ungroup, paletteColor, canPermute, permuteLabel });
+    blank, structuralProfile, add, addOutlineText, replaceOutlineText, editableOutline, remove, reorder, group,
+    ungroup, paletteColor, canPermute, permuteLabel });
 })();
 
 if (typeof module === 'object') module.exports = DrawFig;

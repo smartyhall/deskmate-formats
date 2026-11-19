@@ -383,11 +383,12 @@ function closeMenus(except = null) {
 function updateMenus() {
   const entry = activeEntry(), model = state.model;
   if (!model) return;
+  const item = entry && model.elements.get(entry.offset);
   const limits = {
     save: model === state.original || model.blank,
     download: state.original.blank,
     undo: !state.past.length, redo: !state.future.length,
-    edit: get('edit').disabled, label: !entry || !DrawFig.canPermute(model, entry.tag),
+    edit: get('edit').disabled, label: !entry || !(canReplaceLabel(item) || DrawFig.canPermute(model, entry.tag)),
     delete: !entry || state.profile !== 'flat' || model.entries.length <= 1,
     top: !entry || model.entries.at(-1) === entry, bottom: !entry || model.entries[0] === entry,
     group: state.profile !== 'flat' || model.entries.length < 2, ungroup: state.profile !== 'group',
@@ -397,20 +398,32 @@ function updateMenus() {
     menuBar.querySelector(`[data-command="${name}"]`).disabled = Boolean(disabled);
   }
   for (const button of menuBar.querySelectorAll('[data-tool]')) {
-    button.disabled = state.profile !== 'flat' && button.dataset.tool !== 'select';
+    button.disabled = (state.profile !== 'flat' && button.dataset.tool !== 'select')
+      || (button.dataset.tool === 'text' && !state.faces.size);
     button.setAttribute('aria-pressed', String(state.tool === button.dataset.tool));
   }
+}
+
+function canReplaceLabel(item) {
+  return state.profile === 'flat' && state.faces.size && item && DrawFig.editableOutline(item)
+    && item.text.every(byte => byte >= 32 && byte <= 126);
 }
 
 function commandDialog(title, fields, apply) {
   const form = get('command-form'), dialog = get('command-dialog');
   get('command-title').textContent = title;
   get('command-error').textContent = '';
-  get('command-fields').replaceChildren(...fields.map(([key, caption, type, value]) => {
-    const label = node('label', caption), field = node('input');
+  get('command-fields').replaceChildren(...fields.map(([key, caption, type, value, selected]) => {
+    const choices = type === 'select';
+    const label = node('label', caption), field = node(choices ? 'select' : 'input');
     field.name = key;
-    field.type = type;
-    field.value = value;
+    if (choices) {
+      for (const choice of value) field.append(node('option', choice));
+      if (value.includes(selected)) field.value = selected;
+    } else {
+      field.type = type;
+      field.value = value;
+    }
     field.required = key !== 'fill';
     label.append(field);
     return label;
@@ -450,6 +463,21 @@ const commands = {
   ungroup: () => commitRevision(DrawFig.ungroup(state.model), null),
   label: () => {
     const entry = activeEntry(), item = state.model.elements.get(entry.offset);
+    if (canReplaceLabel(item)) {
+      const { raw } = item, view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+      const families = Array.from(state.faces.values(), face => face.name);
+      commandDialog('Edit outline text', [
+        ['family', 'Outline family', 'select', families, item.fontName],
+        ['label', 'Text', 'text', String.fromCharCode(...item.text)],
+        ['size', 'Point size', 'number', view.getUint16(56, true)],
+        ['width', 'Width percent', 'number', view.getUint16(58, true)],
+        ['x', 'Baseline X', 'number', view.getInt16(92, true)],
+        ['y', 'Baseline Y', 'number', view.getInt16(94, true)],
+      ], values => commitRevision(DrawFig.replaceOutlineText(state.model, entry.tag,
+        state.faces.get(values.family.toLowerCase()), values.label, [Number(values.x), Number(values.y)],
+        Number(values.size), Number(values.width)), entry.tag));
+      return;
+    }
     commandDialog('Edit outline label', [['label', 'Use the same characters', 'text', String.fromCharCode(...item.text)]],
       values => commitRevision(DrawFig.permuteLabel(state.model, entry.tag, values.label)));
   },
@@ -532,7 +560,8 @@ function setTool(tool) {
   if (tool !== 'select') {
     viewport.focus();
     const path = tool === 'polyline' || tool === 'polygon';
-    report(path ? 'Click or press Space to add points. Enter finishes. Escape cancels.'
+    if (tool === 'text') report('Click or press Space to place the left baseline of outline text.');
+    else report(path ? 'Click or press Space to add points. Enter finishes. Escape cancels.'
       : 'Click or press Space to set each endpoint. Escape cancels.');
   }
 }
@@ -592,7 +621,20 @@ function finishDrawing(points) {
 
 function placePoint() {
   const point = [...state.cursor];
-  if (state.points.length && twoPointTool()) finishDrawing([state.points[0], point]);
+  if (state.tool === 'text') {
+    const families = Array.from(state.faces.values(), face => face.name);
+    commandDialog('Text Options', [
+      ['family', 'Outline family', 'select', families],
+      ['label', 'Text', 'text', ''],
+      ['size', 'Point size', 'number', 24],
+      ['width', 'Width percent', 'number', 100],
+    ], values => {
+      const face = state.faces.get(values.family.toLowerCase());
+      const next = DrawFig.addOutlineText(state.model, face, values.label, point.map(Math.round),
+        Number(values.size), Number(values.width));
+      commitRevision(next, next.entries.at(-1).tag);
+    });
+  } else if (state.points.length && twoPointTool()) finishDrawing([state.points[0], point]);
   else if (state.points.length >= 4096) report('Finish the current path before adding more points.');
   else {
     state.points.push(point);

@@ -48,6 +48,11 @@ only; it is not evidence of actual AROS compatibility or native UI details.
   in scalable exports. Use **Clear fonts** to release the session copies.
   The renderer uses nominal advances and unhinted outlines. See the
   [FF1 measurements](../../docs/research/draw-ii-20261119.md).
+- With a local FF1 loaded, choose **Tools → Text**. Click or press Space
+  at the desired left baseline. Choose a family, type a printable ASCII
+  label, and enter its point size and width percentage. Save the FIG and
+  install the matching FF1 on the native machine to reopen the drawing
+  in DeskMate. The verified profile uses filled, left-justified outline text.
 
 The visible menu strip follows Help F1, File F2, Edit F3, Actions F4,
 Zoom F5, Options F6 and Tools F7. Use Shift+1 through Shift+7 if your

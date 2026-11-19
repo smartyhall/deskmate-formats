@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "profile": "Draw 03.05.00 RSX VGA Normal",
+  "cases": {
+    "lab-grid": {
+      "figure": {
+        "sha256": "289a5c884de5dd13eef20a3cf1f978da39d5ed1a5fabb3f0736cbe0a0eee2115",
+        "size": 457
+      },
+      "font": {
+        "sha256": "ceba26564c5e0d0d631504ed264a5c202e97fbf6c9d600d6e2e631fe65952967",
+        "size": 6078
+      },
+      "full_frame_sha256": "d0234d73c0ebebd7f9ff75c09090dc3042fa59f20839dc037b9b274b64c44b26",
+      "emulated_ms": 703511,
+      "frames": 45847,
+      "native_foreground": 4597,
+      "independent_foreground": 4556,
+      "intersection": 4222,
+      "union": 4931,
+      "foreground_iou": 0.8562157777327114
+    },
+    "bonum": {
+      "figure": {
+        "sha256": "a45eb0a0ede3c7ad108647cc9d360388af782b64f3c82bd7dde934959ed072b7",
+        "size": 607
+      },
+      "font": {
+        "sha256": "7349b715754d3365531767a45d7b1d92d257f14b2f408f461285e450ef352a88",
+        "size": 31541
+      },
+      "full_frame_sha256": "29e0d5a889050b6742ef30bbd3cfc175ecac7ef75c1b381fd61568c1c18a9e85",
+      "emulated_ms": 753499,
+      "frames": 49109,
+      "native_foreground": 7980,
+      "independent_foreground": 7951,
+      "intersection": 5510,
+      "union": 10421,
+      "foreground_iou": 0.5287400441416371
+    },
+    "liberation-mono": {
+      "figure": {
+        "sha256": "cc1837b2f2203900f81027d207fd26c264d1ba714dba77a887c6e553c4620e01",
+        "size": 607
+      },
+      "font": {
+        "sha256": "f1f9c316d1eb12cf97c6f6ed15974a38f4efdcec7e0c654a63a8d0f9cc8e615c",
+        "size": 39518
+      },
+      "full_frame_sha256": "644f12be9583cfe6137a16fecdef1e6dfc5b35b39cc3ce8182d7b9fdf3103bae",
+      "emulated_ms": 790553,
+      "frames": 51465,
+      "native_foreground": 8023,
+      "independent_foreground": 7971,
+      "intersection": 7034,
+      "union": 8960,
+      "foreground_iou": 0.7850446428571428
+    }
+  },
+  "images": {
+    "lab-grid-native.png": {
+      "sha256": "04b40cb9935ef150adb8c0158a1776aa083ad0c30e553867b6a1a7a4f995aad5",
+      "size": 2255,
+      "dimensions": [
+        640,
+        418
+      ]
+    },
+    "lab-grid-independent.png": {
+      "sha256": "30a61477256b658d07f3419fa2d264cd04a6f12eac966cdd04028bde313520f9",
+      "size": 2255,
+      "dimensions": [
+        640,
+        418
+      ]
+    },
+    "bonum-native.png": {
+      "sha256": "623b0513ad7f5dfbb10796568ac18788a2d3da1f397fefea3451b07450ee5624",
+      "size": 4537,
+      "dimensions": [
+        640,
+        418
+      ]
+    },
+    "bonum-independent.png": {
+      "sha256": "3603059a97d4cd8a506090a71e20d3cfd00696a6a0d68d642174c28de50a5c44",
+      "size": 4616,
+      "dimensions": [
+        640,
+        418
+      ]
+    },
+    "liberation-mono-native.png": {
+      "sha256": "4f7d5eeb3147083c18a43a3876a1dd2947352d89db22239e700970b2156533dc",
+      "size": 4144,
+      "dimensions": [
+        640,
+        418
+      ]
+    },
+    "liberation-mono-independent.png": {
+      "sha256": "7d1b5b4a8283b00427c950a322300fdb277beedd767cb61164e05fd6a9db39bf",
+      "size": 4006,
+      "dimensions": [
+        640,
+        418
+      ]
+    }
+  }
+}

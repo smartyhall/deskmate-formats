@@ -358,7 +358,8 @@ def outline_layout(element, faces, byte_budget):
             or not run.point_size_word or not run.width_percent_word):
         return (), 0, 'unsupported_external_font_transform_or_style'
     try:
-        entries = [face.entry(code) for code in run.text_bytes]
+        entries = [face.draw_entry(code) if run.attributes[0] == 1 else face.entry(code)
+                   for code in run.text_bytes]
     except FontResourceError as error:
         return (), 0, str(error)
     cost = sum(entry.size for entry in entries)

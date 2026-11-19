@@ -1,7 +1,10 @@
 """Conservative FIG serialization around length-preserving graphics-form edits."""
-from struct import pack, pack_into, unpack_from
+from fractions import Fraction
+from math import ceil, floor
+from struct import error as StructError, pack, pack_into, unpack_from
 
 from . import draw, graphics, graphics_edit
+from .font_resources import FontResourceError, parse_glyph_outline
 
 
 LIST_START = draw.PAGE_SETUP_SIZE + graphics.PREFIX_SIZE
@@ -79,10 +82,20 @@ def _packed(source):
     return data, form, first, tag_hint
 
 
+def _editable_outline(element):
+    run = graphics.external_font_run(element) if element.kind == 'Uf' else None
+    return (run is not None and run.attributes == b'\x01\xff\0\0\0\0'
+            and run.descriptor[4:28] == b'\0\0\0\0\x0c\0\xff' + bytes(17)
+            and run.descriptor[34:36] == b'\x01\0'
+            and run.point_size_word and run.width_percent_word)
+
+
 def _known_leaves(elements):
     for element in elements:
         expected = graphics.PRIMITIVE_SIZES.get(element.kind)
         if element.kind in ('UA', 'UP'):
+            expected = 2 * unpack_from('<H', element.raw, 18)[0]
+        if _editable_outline(element):
             expected = 2 * unpack_from('<H', element.raw, 18)[0]
         if len(element.raw) != expected or (element.kind == 'UA' and expected != 44):
             raise graphics.GraphicsFormatError('structural edit would relocate an unsupported record')
@@ -123,7 +136,7 @@ def _new_tag(form, hint, added=1):
     return tag
 
 
-def _rebuild_flat(source, *, new=None, remove=None):
+def _rebuild_flat(source, *, new=None, remove=None, replace=None):
     data, form, first, tag_hint = _packed(source)
     records = {element.offset: element for element in form.elements}
     if len(records) != len(form.entries):
@@ -132,6 +145,12 @@ def _rebuild_flat(source, *, new=None, remove=None):
     if remove is not None and (type(remove) is not int or remove not in {e.tag for e in form.entries}):
         raise graphics.GraphicsFormatError('the requested top-level delete tag does not exist')
     ordered = [(entry.tag, records[entry.offset].raw) for entry in form.entries if entry.tag != remove]
+    if replace is not None:
+        tag, raw = replace
+        target = next((records[entry.offset] for entry in form.entries if entry.tag == tag), None)
+        if type(tag) is not int or target is None or not _editable_outline(target):
+            raise graphics.GraphicsFormatError('replacement requires a top-level base outline text run')
+        ordered = [(old_tag, raw if old_tag == tag else old_raw) for old_tag, old_raw in ordered]
     if new is not None:
         tag_hint = _new_tag(form, tag_hint)
         ordered.append((tag_hint, new))
@@ -171,6 +190,10 @@ def new_drawing(kind, geometry, *, color=1, fill=None):
         record = graphics_edit.polyline_record(geometry, color, kind == 'polygon', fill)
     else:
         raise graphics.GraphicsFormatError('unsupported first primitive')
+    return _new_with_record(record)
+
+
+def _new_with_record(record):
     first = 0x1C78
     listing = _rebuild_listing([(1, record)], first)
     palette = b''.join(bytes((index, *rgb)) for index, rgb in enumerate(_DEFAULT_PALETTE))
@@ -178,6 +201,60 @@ def new_drawing(kind, geometry, *, color=1, fill=None):
     data = _DEFAULT_PAGE_SETUP + header + pack('<HH', len(listing), 2) + listing + b'\0\0\x10\0' + palette + b'\0'
     draw.parse_bytes(data)
     return data
+
+
+def outline_text_record(face, label, origin, *, point_size=24, width_percent=100):
+    """Construct a left-justified filled Uf with nominal, ink-enclosing cache."""
+    try:
+        name = face.name.encode('ascii')
+        text = label.encode('cp437')
+        x, y = origin
+        if (not 1 <= len(name) <= 29 or any(not 32 <= n <= 126 for n in name)
+                or not 1 <= len(text) <= 255 or any(n < 32 or n == 127 for n in text)
+                or any(type(n) is not int for n in (x, y, point_size, width_percent))
+                or not 1 <= point_size <= 255 or not 1 <= width_percent <= 255):
+            raise graphics.GraphicsFormatError('unsupported outline text name, label, origin, size or width')
+        sy = Fraction(point_size * 1000, 72 * face.index.units_per_em_word)
+        sx = sy * Fraction(width_percent, 100)
+        cursor = left = right = top = bottom = 0
+        for code in text:
+            entry = face.draw_entry(code)
+            glyph = parse_glyph_outline(face.data, entry)
+            if glyph.contours:
+                gx, gy, gr, gb = glyph.bounds
+                left, right = min(left, cursor + gx), max(right, cursor + gr)
+                top, bottom = min(top, gy), max(bottom, gb)
+            cursor += entry.advance_word
+        l, r = floor(left * sx), max(1, ceil(max(cursor, right) * sx))
+        t, b = min(-1, floor(top * sy)), max(1, ceil(bottom * sy))
+        raw = bytearray(100)
+        raw[:2] = b'Uf'
+        for i, coordinate in enumerate((x + l, y + t, x + r, y + b)):
+            pack_into('<hH', raw, 2 + 4 * i, coordinate, 0)
+        raw[20:22] = b'\x01\xff'
+        raw[26:26 + len(name)] = name
+        pack_into('<6H', raw, 56, point_size, width_percent, 0, 0, 12, 255)
+        pack_into('<4H2hH', raw, 84, b - t, -t, r - l, 1, x, y, len(text))
+        raw.extend(text + bytes(2 - len(text) % 2))
+        pack_into('<H', raw, 18, len(raw) // 2)
+    except (UnicodeError, StructError, FontResourceError) as error:
+        raise graphics.GraphicsFormatError(f'cannot encode outline text ({error})') from error
+    return bytes(raw)
+
+
+def new_outline_drawing(face, label, origin, **options):
+    """Construct a single-run FIG in the measured packed form."""
+    return _new_with_record(outline_text_record(face, label, origin, **options))
+
+
+def add_outline_text(source, face, label, origin, **options):
+    """Append an outline run, retaining all other supported leaf bytes."""
+    return _rebuild_flat(source, new=outline_text_record(face, label, origin, **options))
+
+
+def replace_outline_text(source, tag, face, label, origin, **options):
+    """Replace one base outline run, recalculating its own cache and extent."""
+    return _rebuild_flat(source, replace=(tag, outline_text_record(face, label, origin, **options)))
 
 
 def delete(source, tag):

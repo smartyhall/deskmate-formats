@@ -10,6 +10,23 @@ from struct import iter_unpack, unpack_from
 MAX_SIZE = 128 * 1024
 DIRECTORY_OFFSET = 0x42
 RECORD_SIZE = 46
+DRAW_EXTENDED_OUTLINE_SLOTS = bytes((
+    180, 207, 197, 192, 204, 200, 212, 181, 193, 205, 201, 221, 209, 217, 216, 208,
+    220, 215, 211, 194, 206, 202, 195, 203, 239, 218, 219, 191, 187, 188, 186, 190,
+    196, 213, 198, 199, 183, 182, 249, 250, 185, 128, 129, 130, 131, 184, 251, 253,
+    226, 234, 210, 214, 241, 240, 161, 225, 233, 189, 244, 243, 242, 168, 169, 170,
+    160, 255, 176, 252, 246, 245, 179, 224, 162, 163, 164, 165, 230, 229, 166, 167,
+    232, 231, 223, 235, 236, 173, 237, 174, 238, 222, 247, 248, 254, 175, 227, 228,
+))
+
+
+def draw_outline_slot(code):
+    """Translate an input byte in the measured Draw base-outline mode."""
+    if code < 128:
+        return code
+    if code < 224:
+        return DRAW_EXTENDED_OUTLINE_SLOTS[code - 128]
+    return 32
 
 
 class FontResourceError(ValueError):
@@ -19,7 +36,9 @@ class FontResourceError(ValueError):
 @dataclass(frozen=True)
 class FontVariant:
     name: str
+    # Name offset within the original snapshot.
     offset: int
+    # Native record's twelve leading and two trailing bytes.
     attributes: bytes
 
 
@@ -115,6 +134,12 @@ class OutlineFace:
             raise FontResourceError(f'code {code} is outside the {self.name} glyph index')
         return self.index.entries[position]
 
+    def draw_entry(self, code):
+        if (self.index.units_per_em_word == 1000 and len(self.index.entries) == 224
+                and self.index.entries[0].code == 32):
+            code = draw_outline_slot(code)
+        return self.entry(code)
+
 
 def load_outline_faces(paths):
     """Load explicitly supplied base faces and reject ambiguous family names."""
@@ -154,7 +179,7 @@ def parse_bytes(data):
         if label.casefold() in names:
             raise FontResourceError('duplicate FF1 variant name')
         names.add(label.casefold())
-        variants.append(FontVariant(label, offset, raw[32:]))
+        variants.append(FontVariant(label, offset, data[offset-12:offset] + raw[32:34]))
     return FontResource(len(data), sha256(data).hexdigest(), first, codes, tuple(variants))
 
 

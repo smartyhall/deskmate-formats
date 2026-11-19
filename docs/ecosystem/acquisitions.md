@@ -46,3 +46,112 @@ reverse-engineering diversion. Search for additional FF1 resources,
 especially the historical Rockwell reference, and for Express Publisher
 and the Q&A Write font-import documentation. Record blocked acquisition
 honestly; no paid acquisition or contacts without separate authorization.
+
+## Verified Windows VM acquisition
+
+Dos Days disk 9 and WinWorld's Quebec mirror delivered the exact hashes
+and sizes above. The original archives and full per-file receipt are in
+the private typography evidence directory. No alternate identity was used.
+
+Cobb and Marin match the [pinned original fonts](../research/draw-fonts-20261119.md).
+The eight DMVE entries all begin with DOS MZ headers. Device identities,
+sizes and hashes are recorded below. Their roles in System text and
+graphical primitives remain unverified by execution tracing.
+
+| Member | Bytes | SHA-256 |
+| --- | ---: | --- |
+| DMVE1000.RES | 5314 | ce3131cdbf1c1595a9547078c9ff88cb935aa64534ae8657c91be64dbd41df1f |
+| DMVECGA.RES | 5378 | b6dd694cec5420e182032678bea3e3b416f8f8f1516e6ebe0b1c86340ee6fac6 |
+| DMVEEGA.RES | 5330 | 590243846fe0cfeca35abe44fcee74c4f71ed155f4e6cbac0cd689a457525b4b |
+| DMVEHERC.RES | 5378 | 07dbc1e5c3fa947ba9846794f2d6fff80275eb66c3fb479b2ffb10e4e77bf982 |
+| DMVEMCGA.RES | 5250 | 8852ec86acdedf476c8fb28127aa9ef4ea9ec7059dd69018d0af0a1f43d41c6f |
+| DMVET.RES | 5314 | 4c9468af3f3b9fc6db0d76eb7e859dcd04e5ff0aadebc67833be6d5a24f0ce08 |
+| DMVETC16.RES | 5474 | 3b4ab1f0f9bc46a71edde25e13886ffc1ccf2fdbee149cc90a9b7dd1dd3016b1 |
+| DMVEVGA.RES | 5426 | 4e582f82dd1727832e92802c86b508f0b0a777b8cfd9c9e94d4edeb780148a09 |
+
+### First Publisher 2.01
+
+7-Zip 26.05 and the independent
+[typography inventory](../../tools/experimental/typography_acquisitions.py)
+agree byte for byte on the files on all three 737,280-byte FAT12 images.
+
+| Image | SHA-256 |
+| --- | --- |
+| FPDISK1.IMG | e762608bc736a6786b99b4062fdf462081398e19578e89a7b5dff10eb140c339 |
+| FPDISK2.IMG | 5c3604401d224446b9a6f6a081c29a8b657b01838d9cf35226ca23bc8526d45f |
+| FPDISK3.IMG | 8901b0779a0cb61e03ff5332d0baf4a3050eb42ca145352a4741555101e22af5 |
+
+The five libraries use a big-endian Macintosh-style map with one FONT type.
+Its 12-byte references contain a resource ID, a Pascal-string name offset,
+an attribute byte, a 24-bit payload offset and a handle field. Names carry
+family, point size, style and display-name metadata. Payloads begin with a
+big-endian length. The glyph payload grammar remains opaque.
+
+| Library | Entries | Bytes | SHA-256 |
+| --- | ---: | ---: | --- |
+| MASTER.FNT | 36 | 166766 | abcfddb2274b6e77a46afe21d178add9448a384fb1791f348a8cda7e83aaf20e |
+| EXTRA.FNT | 26 | 102856 | 3cff5594b1d731ff8c54413006501a44f276f07fc115ead30400d2f11a3dba1f |
+| APLASER.FNT | 54 | 349901 | 79f4848e7ce347853b89a072f85ad0aee002890e9ec1004d5e29d5d244c91b15 |
+| HPLASER.FNT | 7 | 16034 | 7d8bce1e19367de7b0a65af6db43b80251083f4f0cac9a096a8b6034a7d1cc6a |
+| DESKJET.FNT | 36 | 85928 | ab13520c21f1238719238b4ba24f07e925b2a00ba7402f0be2795934cd09d82c |
+
+FONTMOVE.EXE is a 55,664-byte MZ program
+(SHA-256 ec4c97f5ea09139ba1921008d2f9cea400bd629eec5fbb240997295856719167).
+Its UI describes copying, erasing and importing portrait HP soft fonts,
+with outputs in an FNT library and FONTSLJS.DIC/FONTSLJS.WID.
+FONTSLJ.DIC and FONTSDJ.DIC contain PCL escape sequences. LASERDEF.PS
+and FONTSLW.DIC accompany the Apple LaserWriter support. The distribution
+has FP.HLP and 16 PUB examples with signature AA AA AA 01.
+
+FP.EXE, FPSTART.PDM, FP.PDM and FP.OVL are candidate application components.
+FPVID.EXE and FPVID.PDM ship with DMVD*.RRS display resources and
+DMCSR/DMCSRHX/DMGUF resources. The disks contain zero FF1s. Native
+installation and shared runtime calls remain open.
+The FP.EXE string table identifies the bundled DeskMate runtime as
+03.02.00. FP.PDM contains references to MASTER.FNT, DMCSR.RRS and
+DMVDA.RRS. The latter two identify dependencies in that runtime path.
+
+### Rockwell and additional leads
+
+The sole Rockwell reference is in RSX disk 4, DOCUMENT/ILLSTRTN/COOKWARE.FIG
+(SHA-256 20c70a4486e631c5c01511b53457a77e852c6c5f981da6a3fbd7dd787e83d499).
+Its Uf starts at file offset 992. The attributes are 01 FF 00 00 00 00,
+with an ASCII Rockwell field padded to 30 bytes, point size 5, width 81,
+and six label bytes. Descriptor bytes 56–95 are
+05005100000000000c00ff00000000000000000000000000007d005400c4000900d303d7025566d303.
+The attribute bytes match the known external outline profile. The record
+does not establish the historical resource, import path or printer behavior.
+
+The bounded search found no matching Express Publisher or DeskMate Q&A
+Write disk or Rockwell FF1. The Q&A Write 1.02 download listing is
+for the DOS product and does not identify a DeskMate edition.
+[Historical Tandy Files Listing](https://groups.google.com/g/comp.sys.tandy/c/hlUY-62ApTM)
+· [Q&A Write 1.x catalog](https://winworldpc.com/product/qa-write/1x)
+
+Two historical text files are preserved privately. The 15,962-byte
+DM_PROGS.TXT copy from the laboratory's Oldskool archive is dated
+1994-09-20 internally and has SHA-256
+4699f28b2ae9d699c767e212b38f547805b3a1a96579ced524dc6b8f0c56c68a.
+It identifies Express Publisher as using DeskMate 3.05 Atech fonts.
+This is a contemporary lead for shared outline resources.
+[DM_PROGS.TXT](http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm_progs.txt)
+
+The 6,013-byte DMQNAFNT.TXT download has SHA-256
+50f613d3c1b3d76ece1e5ef7e74440870de4d39eaee8326c13b95aed4f1ae8e5.
+Its example modifies IBM ProPrinter font-selection descriptions,
+control sequences and spacing fields in Q&A Write's IBMPRO.FNT.
+It documents printer definitions and provides no FF1 outline grammar.
+[DMQNAFNT.TXT](http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dmqnafnt.txt)
+
+### Isolated First Publisher launch
+
+The follow-up RSX clone copied all three 720 KiB images into a separate
+DOS directory, C:\FP201. The three final copy summaries accounted for
+21, 32 and 16 files. After setting DMCONFIG to that directory,
+launching FP from DOS reached the First Pub editor with a new PUB
+document and the native font menu. The 3.02 runtime stayed in the
+private test directory. No production or established 3.05 files were
+replaced by the First Publisher runtime. Shared runtime and clipboard
+calls remain open. See the
+[typography laboratory report](../research/typography-lab-20261119.md)
+for the stopped disk and emulated time.

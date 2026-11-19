@@ -56,6 +56,26 @@ class FixtureAuditTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'excluded evidence/software type'):
             self.audit()
 
+    def test_ff1_exception_requires_the_generated_resource_and_exact_path(self):
+        from deskmate_formats.ff1 import serialize_resource
+        from deskmate_formats.ff1_geometric import geometric_face
+
+        name = audit_repository.SYNTHETIC_FF1
+        path = self.base / name
+        path.parent.mkdir()
+        data = serialize_resource(geometric_face('Labgrid', face_id=28))
+        path.write_bytes(data)
+        self.manifest([self.entry(name, data)])
+        self.assertEqual(self.audit()['application_generated_fixtures_checked'], 1)
+        other = serialize_resource(geometric_face('Different', face_id=28))
+        path.write_bytes(other)
+        self.manifest([self.entry(name, other)])
+        with self.assertRaisesRegex(ValueError, 'independent generator'):
+            self.audit()
+        self.manifest([self.entry('draw/other.ff1', data)])
+        with self.assertRaisesRegex(ValueError, 'unexpected fixture extension'):
+            self.audit()
+
     def test_missing_declared_binary_rejected(self):
         self.manifest([self.entry('calendar/E02.cln', b'data')])
         with self.assertRaisesRegex(ValueError, 'missing declared fixtures'):

@@ -157,3 +157,14 @@ with `measured_at` and a `windows` list of at most two entries
 References for the installed release:
 [Codex App Server](https://learn.chatgpt.com/docs/app-server);
 [Codex upstream discussion on rollout rate-limit snapshots](https://github.com/openai/codex/discussions/56932).
+
+The [typography laboratory](../../research/typography-lab-20261119.md)
+records [startup](20261119-typography-startup.json),
+[acquisitions](20261119-typography-acquisitions.json),
+[outline interchange](20261119-typography-outlines.json),
+[native rendering](20261119-typography-native-interchange.json),
+[additive installation](20261119-typography-installation.json), and
+[fixture publication](20261119-typography-fixtures.json).
+
+The [typography completion receipt](20261119-typography-completion.json)
+records the final research checkpoint.

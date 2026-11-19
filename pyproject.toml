@@ -19,12 +19,14 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
+fonts = ["fonttools>=4.55,<5"]
 dev = ["build>=1.2", "ruff>=0.11", "reuse[charset-normalizer]>=6.0"]
 mcp = ["mcp>=2.3,<3", "anyio>=4.9,<5"]
 observer = ["Pillow>=13.0.0,<14"]
 supervisor = ["jsonschema>=4.23,<5"]
 
 [project.scripts]
+deskmate-font = "deskmate_formats.font_cli:main"
 deskmate-preserve = "deskmate_formats.preservation.cli:main"
 deskmate-sound = "deskmate_formats.sound:main"
 deskmate-music = "deskmate_formats.music:main"

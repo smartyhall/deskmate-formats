@@ -57,8 +57,8 @@ def extract(image, names):
     entries = dict(directory(chain(word(desk + 26)), cluster_size))
     result = {}
     for name in names:
-        if not re.fullmatch(r'[A-Z0-9]{1,8}\.(?:FIG|DOC|FIL)', name):
-            raise ValueError('expected an uppercase DOS FIG, DOC or FIL filename')
+        if not re.fullmatch(r'[A-Z0-9]{1,8}\.(?:FIG|DOC|FIL|FF1|PRN)', name):
+            raise ValueError('expected an uppercase DOS research filename')
         entry = entries[(name[:-4].ljust(8) + name[-3:]).encode('ascii')]
         size = dword(entry + 28)
         blocks = chain(word(entry + 26))
