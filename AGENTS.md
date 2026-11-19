@@ -152,3 +152,20 @@ must treat native forms as authoritative and enable only validated edits;
 verify browser-written FIGs in original DeskMate. Preserve unsupported
 records or reject affected operations. The illustrative AROS concept is
 not a compatibility claim or authoritative UI specification.
+
+## DeskMate ecosystem preservation — operator decision 2026-11-19
+
+Maintain the [ecosystem catalog](docs/ecosystem/README.md) as a secondary
+research track: identify commercial and community DeskMate software,
+acquire media privately, inventory native file formats and eventually
+extend the independent recovery suite to those formats. Distinguish
+documented products from acquired and installed copies and distinguish
+native/runtime applications from DOS launcher entries. Preserve exact
+editions and provenance. Use the [enthusiast demonstrator](docs/ecosystem/demonstrator.md)
+as a separate, richly populated living-system target and native fixture
+laboratory; do not modify verified core research baselines to build it.
+Do not publish commercial media or a preinstalled commercial disk
+image. The [acquisition handoff](docs/ecosystem/acquisitions.md) pins
+the two operator-provided archives for the next campaign. In the near
+term prioritize core Draw/font reconstruction and independent font
+conversion, with bounded adjacent acquisitions and inventory.

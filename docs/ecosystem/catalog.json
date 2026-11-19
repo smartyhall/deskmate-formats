@@ -1,0 +1,476 @@
+{
+  "schema_version": 1,
+  "status": "initial-seed-not-comprehensive",
+  "updated": "2026-11-19",
+  "scope": "PC/DOS DeskMate ecosystem, principally 3.x; companion, dedicated and runtime applications distinguished from DOS launcher-only programs, other platform variants and unverified candidates",
+  "sources": {
+    "rs1990": {
+      "title": "Radio Shack 1990 catalog",
+      "url": "https://www.worldradiohistory.com/Archive-Catalogs/Radio-Shack/Radio-Shack-1990.pdf",
+      "locator": "printed p. 180",
+      "verification": "catalog text accessed; page image retrieval failed"
+    },
+    "rs1992": {
+      "title": "Radio Shack 1992 catalog",
+      "url": "https://www.worldradiohistory.com/Archive-Catalogs/Radio-Shack/Radio-Shack-1992.pdf",
+      "locator": "printed pp. 188, 190",
+      "verification": "catalog text accessed; page image retrieval failed"
+    },
+    "rs1993": {
+      "title": "Radio Shack 1993 catalog",
+      "url": "https://www.worldradiohistory.com/Archive-Catalogs/Radio-Shack/Radio-Shack-1993.pdf",
+      "locator": "printed p. 153; RSX product specification near end",
+      "verification": "catalog text accessed; page image retrieval failed"
+    },
+    "review1989": {
+      "title": "Brit Hume, contemporary DeskMate review",
+      "url": "https://www.washingtonpost.com/archive/business/1989/11/27/tandys-deskmate-proves-to-be-friendly-graphical-user-interface/4fd1e259-915d-4b87-905f-dfb14d6fd87d/",
+      "locator": "November 1989 review",
+      "verification": "article text accessed"
+    },
+    "pfs": {
+      "title": "WinWorld PFS First Publisher 2.01 for DeskMate",
+      "url": "https://winworldpc.com/product/first-publisher/201-for-deskmate",
+      "verification": "release catalog accessed"
+    },
+    "quicken": {
+      "title": "WinWorld Quicken 2.x for DeskMate",
+      "url": "https://winworldpc.com/product/quicken/2x-for-deskmate",
+      "verification": "release catalog accessed"
+    },
+    "filelist": {
+      "title": "Historical Tandy Files Listing",
+      "url": "https://groups.google.com/g/comp.sys.tandy/c/hlUY-62ApTM",
+      "verification": "listing lead; obtain original listed files"
+    },
+    "legacy": {
+      "title": "Daniel's Legacy Software Catalog",
+      "url": "https://www.scribd.com/document/377834130/Dlcc-Legacy-Sw-Catalog-Commercial",
+      "verification": "secondary catalog lead; verify individual entries"
+    },
+    "tvdog": {
+      "title": "TVDog DeskMate archive",
+      "url": "http://www.oldskool.org/guides/tvdog/deskmate.html",
+      "verification": "known archive lead; current page retrieval timed out"
+    }
+  },
+  "entries": [
+    {
+      "id": "first-publisher",
+      "title": "PFS: First Publisher",
+      "publisher": "Software Publishing Corporation",
+      "category": "publishing",
+      "relationship": "third-party-dedicated",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1990",
+        "pfs"
+      ],
+      "catalog_number": "25-1279",
+      "versions": [
+        "2.01"
+      ],
+      "media_status": "operator-supplied-chat-archive-vm-pending",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "2.01 archive supplied by operator; verify media and runtime 3.02 in VM. Separate FNT libraries and FONTMOVE lead."
+    },
+    {
+      "id": "express-publisher",
+      "title": "Express Publisher",
+      "publisher": "Power Up Software Corporation",
+      "category": "publishing",
+      "relationship": "third-party-dedicated",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1992",
+        "rs1993",
+        "legacy"
+      ],
+      "catalog_number": "25-1438",
+      "versions": [
+        "1.00 (secondary catalog lead)"
+      ],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Scalable font and page composition research; highest acquisition priority."
+    },
+    {
+      "id": "qa-write",
+      "title": "DeskMate Q&A Write",
+      "publisher": "Symantec",
+      "category": "word-processing",
+      "relationship": "third-party-dedicated",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1992",
+        "review1989",
+        "filelist"
+      ],
+      "catalog_number": "25-1299",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Locate native edition, demo and DMQNAFNT.TXT; investigate fonts and mail merge."
+    },
+    {
+      "id": "homeword-ii",
+      "title": "HomeWord II",
+      "publisher": "Sierra On-Line",
+      "category": "word-processing",
+      "relationship": "third-party-dedicated",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1990",
+        "rs1992",
+        "review1989"
+      ],
+      "catalog_number": "25-1266",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Identify exact DeskMate-native versions and saved document formats."
+    },
+    {
+      "id": "form-finisher",
+      "title": "DeskMate Form Finisher",
+      "publisher": null,
+      "category": "forms",
+      "relationship": "third-party-or-licensed-title",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1990",
+        "rs1992"
+      ],
+      "catalog_number": "25-1295",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Verify publisher and versions; print placement and form records."
+    },
+    {
+      "id": "lotus-spreadsheet",
+      "title": "Lotus Spreadsheet for DeskMate",
+      "publisher": "Lotus",
+      "category": "spreadsheet",
+      "relationship": "third-party-dedicated",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1990",
+        "rs1992",
+        "review1989"
+      ],
+      "catalog_number": "25-1283",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Advertised 1-2-3 file compatibility; measure exact variants, charts and clipboard."
+    },
+    {
+      "id": "filepro",
+      "title": "FilePro for DeskMate",
+      "publisher": null,
+      "category": "database",
+      "relationship": "third-party-or-licensed-title",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1992"
+      ],
+      "catalog_number": "25-1334",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Investigate database structure and advertised mail merge with Text and Q&A Write."
+    },
+    {
+      "id": "quicken",
+      "title": "Quicken for DeskMate",
+      "publisher": "Intuit",
+      "category": "finance",
+      "relationship": "third-party-dedicated",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1990",
+        "quicken"
+      ],
+      "catalog_number": "25-1246",
+      "versions": [
+        "2.0",
+        "2.1"
+      ],
+      "media_status": "archive-listing-located",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Archive listings for versions 2.0 and 2.1; acquire privately and distinguish from DOS/Windows editions."
+    },
+    {
+      "id": "memorymate",
+      "title": "MemoryMate",
+      "publisher": null,
+      "category": "information-management",
+      "relationship": "edition-unverified",
+      "evidence_status": "candidate",
+      "source_ids": [
+        "rs1990"
+      ],
+      "catalog_number": "25-1247",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Listed alongside DeskMate products; verify genuine DeskMate version before promotion."
+    },
+    {
+      "id": "rightwriter",
+      "title": "RightWriter",
+      "publisher": null,
+      "category": "writing-assistance",
+      "relationship": "third-party-or-licensed-title",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1992"
+      ],
+      "catalog_number": "25-1300",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Verify exact edition and generated files."
+    },
+    {
+      "id": "home-lawyer",
+      "title": "Home Lawyer",
+      "publisher": null,
+      "category": "legal-documents",
+      "relationship": "third-party-or-licensed-title",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1992"
+      ],
+      "catalog_number": "25-1434",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Original synthetic legal-document examples only; not legal advice."
+    },
+    {
+      "id": "checkfree",
+      "title": "CheckFree DeskMate",
+      "publisher": null,
+      "category": "finance-service",
+      "relationship": "third-party-or-licensed-title",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1992"
+      ],
+      "catalog_number": "25-1367",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Offline configuration and format research only; do not connect to obsolete/live account services."
+    },
+    {
+      "id": "financial-assistant",
+      "title": "Financial Assistant",
+      "publisher": null,
+      "category": "finance",
+      "relationship": "companion",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1992"
+      ],
+      "catalog_number": "25-1366",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Companion; investigate local financial file types."
+    },
+    {
+      "id": "business-graphs",
+      "title": "Business Graphs",
+      "publisher": null,
+      "category": "graphics",
+      "relationship": "companion",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1992"
+      ],
+      "catalog_number": "25-1363",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Chart data and graphics interchange priority."
+    },
+    {
+      "id": "outliner",
+      "title": "The Outliner",
+      "publisher": null,
+      "category": "writing",
+      "relationship": "companion",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1992"
+      ],
+      "catalog_number": "25-1364",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Hierarchy and export formats."
+    },
+    {
+      "id": "thesaurus",
+      "title": "Thesaurus Companion",
+      "publisher": null,
+      "category": "writing-assistance",
+      "relationship": "companion",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1992"
+      ],
+      "catalog_number": "25-1365",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Dictionary resources and Text integration."
+    },
+    {
+      "id": "macros",
+      "title": "Macros",
+      "publisher": null,
+      "category": "automation",
+      "relationship": "companion",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1992"
+      ],
+      "catalog_number": "25-1361",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Potential native keystroke/mouse automation and macro data formats."
+    },
+    {
+      "id": "home-organizer",
+      "title": "DeskMate Home Organizer",
+      "publisher": "Tandy",
+      "category": "household",
+      "relationship": "companion",
+      "evidence_status": "documented",
+      "source_ids": [
+        "rs1992"
+      ],
+      "catalog_number": "25-1370",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Inventory all 15 advertised modules and dataset types; use synthetic household examples."
+    },
+    {
+      "id": "print-magic",
+      "title": "Print Magic",
+      "publisher": null,
+      "category": "publishing",
+      "relationship": "edition-unverified",
+      "evidence_status": "candidate",
+      "source_ids": [
+        "legacy",
+        "tvdog"
+      ],
+      "catalog_number": null,
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Prior lead; find primary evidence and verify DeskMate edition."
+    },
+    {
+      "id": "instant-pages",
+      "title": "Instant Pages",
+      "publisher": null,
+      "category": "publishing",
+      "relationship": "edition-unverified",
+      "evidence_status": "candidate",
+      "source_ids": [
+        "legacy",
+        "tvdog"
+      ],
+      "catalog_number": null,
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Prior lead; verify actual edition, publisher and media."
+    },
+    {
+      "id": "music-studio",
+      "title": "The Music Studio",
+      "publisher": null,
+      "category": "music",
+      "relationship": "edition-unverified",
+      "evidence_status": "candidate",
+      "source_ids": [
+        "legacy",
+        "tvdog"
+      ],
+      "catalog_number": null,
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Check DeskMate-specific edition and song/instrument formats."
+    },
+    {
+      "id": "typing-tutor",
+      "title": "Typing Tutor IV",
+      "publisher": null,
+      "category": "education",
+      "relationship": "edition-unverified",
+      "evidence_status": "candidate",
+      "source_ids": [
+        "rs1992"
+      ],
+      "catalog_number": "25-1818",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested-in-demonstrator",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Catalog associates DeskMate label; verify runtime/edition and data files."
+    }
+  ]
+}

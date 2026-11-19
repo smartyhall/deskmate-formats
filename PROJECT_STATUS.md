@@ -1,5 +1,16 @@
 # Project status — DeskMate formats
 
+## Ecosystem preservation and living demonstrator — 2026-11-19
+
+The operator expanded the long-term preservation scope to dedicated
+third-party DeskMate applications, companion modules and their native
+file formats. The initial [ecosystem catalog](docs/ecosystem/README.md)
+and [demonstrator plan](docs/ecosystem/demonstrator.md) distinguish
+historical documentation, media acquisition, installation and format
+qualification. No new installation or third-party parser is claimed.
+The [acquisition handoff](docs/ecosystem/acquisitions.md) pins two
+operator-supplied archives for the next Draw/font campaign.
+
 ## Draw II typography, raster and browser authoring — 2026-11-19
 
 The shared graphics engine reads the outline command streams in all
