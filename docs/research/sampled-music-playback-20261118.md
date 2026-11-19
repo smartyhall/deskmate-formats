@@ -308,3 +308,71 @@ ZZZ12. Both captures selected those bytes at about 505.3 Hz. That
 distinguishes directory order from filename sorting for this same-folder
 case. Search across folders remains open. These two trials ended at
 87,628 and 61,294 emulated milliseconds. [Native saves, clock bounds and rest windows](../evidence/sampled-music-rests-accidentals-20261118.json)
+
+## Historical corpus and Workbench
+
+The campaign repeated the audit on all 62 distinct historical scores,
+deduplicated by SHA-256. The explicit bank used the retained later OEM
+Clarinet, Piano, Bells and Cello for slots 1–4 and the later Marimba for
+slot 6. Marimba's four explicit ranges overlap and share the same upper
+bound. The bank identifies the comparison configuration. Earlier
+Personal DeskMate 2 releases can use different instruments for those
+numbers.
+
+| Checkpoint | Structural | All written words interpreted | MIDI exports | Complete sampled outputs at 48 kHz |
+| --- | ---: | ---: | ---: | ---: |
+| Before the campaign | 62 | 19 | 15 | — |
+| Repeat, ending, marker and accidental interpretation | 62 | 49 | 42 | 33 |
+| Initial connected rests | 62 | 51 | 42 | 33 |
+| Final | 62 | 62 | 51 | 37 |
+
+The 37 complete WAVs contain signal and have every pitch mapped under
+the explicit bank. The nearest-root policy produced the same acceptance
+count. The first remaining blockers were 11 repeat cuts, 10 missing
+instrument bindings and four frame-limit failures. Three of the four
+long scores then rendered successfully at 24 kHz, bringing complete
+coverage to 40. The remaining long score needs an unavailable slot 5
+instrument. Written-word acceptance describes the interpreter's syntax
+coverage. Render and MIDI acceptance also require supported execution.
+
+```powershell
+$env:PYTHONPATH = 'src'
+python tools/experimental/music_playback_inventory.py <extracted-corpus> <explicit-snd-bank>
+```
+
+Four representative WAVs remain in the private lab. The comparison
+below aligns first activity above 25 PCM units, then correlates RMS
+over 50 ms blocks without additional time warping. It compares the
+native DAC with the model using the later OEM instruments on both sides.
+
+| Private comparator | Measured activity | First 40 ms waveform correlation | 50 ms RMS-envelope correlation |
+| --- | --- | ---: | ---: |
+| Earlier two-voice linear score | Native 12.487 s, independent 12.263 s | 0.989 | 0.845 |
+| Later OEM two-voice demo | Native 29.741 s, independent 29.563 s | 0.706 | 0.957 |
+| Earlier three-voice score with dynamics and an alternate ending | 72.95 s paired prefix of a 105.08 s independent WAV | 0.947 | 0.892 |
+| Earlier three-voice repeated score | 49.74 s independent WAV | — | — |
+
+The first two historical captures used 80,620 emulated milliseconds.
+The alternate-ending capture ran for 96,746 emulated milliseconds
+and reached the tap's 96-second file cap. Its paired window covers the
+opening and first ending. The comparison leaves the remaining playback
+unmeasured. The native and independent peak 50 ms RMS levels were
+405.6 / 416.0, 312.2 / 321.7 and 888.2 / 909.5 DAC units respectively.
+Quantizing tempo improved the first and third envelope correlations
+from 0.180 to 0.845 and from 0.613 to 0.892. These results measure
+useful concordance while leaving audible articulation and mixing
+differences. [Aggregate counts and comparison identities](../evidence/sampled-music-corpus-20261118.json)
+
+Workbench exports preserve the original SNG, the complete written
+event JSON and available MIDI. Supplying an explicit SND directory also
+adds a playable local WAV, a model label, instrument hashes, selected
+descriptor indices and omissions. The committed synthetic alternate score
+and region-marked instrument were verified through both installed CLI
+entry points. [Reproduce the offline bundle](../preservation-workbench.md#reproduce-the-native-demo)
+
+The highest-value continuation is a native repeat-cut experiment on
+the affected original scores and a provenance search for slot 5.
+Capturing DAC register writes and the PSG path would help separate
+native interpolation, gain and gate calculations from the renderer's
+approximations. A targeted capture that starts at playback could
+cover the full alternate-ending comparator.

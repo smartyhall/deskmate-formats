@@ -1,5 +1,20 @@
 # Project status — DeskMate formats
 
+## Independent sampled Music playback — 2026-11-18
+
+The Music CLI and Preservation Workbench render sampled PCM/WAV using an
+explicit SND collection. The RSX model uses measured numeric binding,
+sample ranges, sustain boundaries, block-quantized tempo and bounded
+repeat execution. Native DAC comparisons cover synthetic instruments,
+ties, slurs, dynamics, multiple voices and historical scores. Gate and
+mixing approximations remain visible in exported metadata.
+
+All 62 historical scores now pass written-word interpretation. MIDI
+coverage grew from 15 to 51. The retained instrument bank rendered 37
+complete scores at 48 kHz and three additional long scores at 24 kHz.
+Remaining execution failures center on repeat cuts and missing instruments.
+[Campaign and reproducibility report](docs/research/sampled-music-playback-20261118.md)
+
 ## Sound and Music preservation campaign — 2026-11-18
 
 The standalone 3.05.00 distribution lacks the audio modules. The RSX OEM
