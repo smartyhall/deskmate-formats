@@ -27,7 +27,6 @@ NOTE_TICKS = {
     0xf5: 4, 0xf6: 3, 0xf7: 2,
 }
 NOTE_CONNECTION = {0x00: 'continue', 0x20: 'end', 0x40: 'start', 0x60: None}
-CONNECTED_RESTS = {0x8600, 0x8a00, 0x8e00}
 TEMPO_DENOMINATORS = {0x10: 2, 0x11: 4, 0x12: 8}
 METER_DENOMINATORS = (2, 4, 8, 16, 32)
 
@@ -151,8 +150,7 @@ def project(score):
                 events.append(Event(item.offset, item.word, 'instrument', tick, instrument_slot=value + 1))
             elif code == 0x72 and value < 6:
                 events.append(Event(item.offset, item.word, 'dynamic', tick, dynamic_index=value))
-            elif duration_code in NOTE_TICKS and (
-                    pitch or (not value and connection is None) or item.word in CONNECTED_RESTS):
+            elif duration_code in NOTE_TICKS and (pitch or not value):
                 duration = NOTE_TICKS[duration_code]
                 kind = 'note' if pitch else 'rest'
                 midi_pitch = 32 + pitch if pitch else None
@@ -250,12 +248,16 @@ def _midi_tempo(bpm):
 def _connected_notes(voice, *, split_controls=False):
     """Yield the first and last written event of each sounding pitch."""
     first = last = None
-    connected = False
+    open_connection = None
     for event in voice:
-        if event.kind == 'rest' and event.connection == 'continue':
+        if event.kind == 'rest' and event.connection is not None:
             if first is not None:
                 yield first, last
                 first = last = None
+            if event.connection == 'start':
+                open_connection = 'rest'
+            elif event.connection == 'end':
+                open_connection = None
             continue
         if event.kind in ('dynamic', 'instrument'):
             if split_controls and first is not None:
@@ -263,27 +265,28 @@ def _connected_notes(voice, *, split_controls=False):
                 first = last = None
             continue
         if event.kind != 'note':
-            if connected:
+            if open_connection == 'note':
                 raise MusicFormatError(f'interrupted tie or slur at {event.offset}')
+            open_connection = None
             continue
         if event.connection in ('continue', 'end'):
-            if not connected:
+            if open_connection is None:
                 raise MusicFormatError(f'tie or slur has no start at {event.offset}')
             if first is not None and first.midi_pitch != event.midi_pitch:
                 yield first, last
                 first = None
             if first is None:
                 first = event
-        elif connected:
+        elif open_connection == 'note':
             raise MusicFormatError(f'tie or slur has no end before {event.offset}')
         else:
             first = event
         last = event
-        connected = event.connection in ('start', 'continue')
-        if not connected:
+        open_connection = 'note' if event.connection in ('start', 'continue') else None
+        if open_connection is None:
             yield first, last
             first = last = None
-    if connected:
+    if open_connection == 'note':
         raise MusicFormatError('tie or slur ends outside the voice stream')
 
 
@@ -365,8 +368,8 @@ def _validate_repeat_notes(voice, boundaries):
             continue
         if event.kind == 'note':
             connected = event.connection in ('start', 'continue')
-        elif event.connection is None:
-            connected = False
+        elif event.connection != 'continue':
+            connected = event.connection == 'start'
         end = event.tick + event.duration_ticks
         index = bisect_right(boundaries, event.tick)
         if index < len(boundaries):

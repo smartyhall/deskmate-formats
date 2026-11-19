@@ -308,7 +308,7 @@ class SampledMusicTests(unittest.TestCase):
         with self.assertRaisesRegex(sampled_music.PlaybackError, 'output limit'):
             sampled_music.render(score, [playback_instrument()], max_frames=128)
         with self.assertRaisesRegex(sampled_music.PlaybackError, 'unsupported score word'):
-            unsupported = music.parse_bytes(score_bytes(((0x8800,), (), ()), (0x2018,)))
+            unsupported = music.parse_bytes(score_bytes(((0x8f00,), (), ()), (0x2018,)))
             sampled_music.render(unsupported, [])
         fallback = sampled_music.render(score, [playback_instrument(note_range=(29, 31))],
                                         sample_policy='nearest-root')
@@ -359,6 +359,18 @@ class SampledMusicTests(unittest.TestCase):
         self.assertNotEqual(unpack_from('<h', played.pcm, last.start_frame * 2)[0], 0)
         self.assertIn(b'\x18\x80\x3c\x00\x18\x90\x3c\x40', music.to_midi(music.project(score)))
 
+    def test_zero_pitch_starts_ends_and_triplet_rests(self):
+        voice = (0x7308, 0xca00, 0xaa1c, 0xca20, 0xae00, 0xea23, 0xd600, 0xea25)
+        score = music.parse_bytes(score_bytes((voice, (), ()), (0x2087,)))
+        sequence = music.project(score)
+        rests = [event for event in sequence.voices[0] if event.kind == 'rest']
+        self.assertEqual([(e.duration_ticks, e.connection) for e in rests], [(24, 'start'), (12, 'end'), (3, 'start')])
+        wav = sampled_music.render(score, [playback_instrument()])
+        self.assertEqual([note.score_tick for note in wav.notes], [24, 48, 84, 111])
+        self.assertFalse(any(wav.pcm[:wav.notes[0].start_frame * 2]))
+        self.assertEqual(unpack_from('<h', wav.pcm, wav.notes[0].start_frame * 2)[0], 40)
+        self.assertEqual(unpack_from('<h', wav.pcm, wav.notes[-1].start_frame * 2)[0], 0)
+
     def test_connected_instrument_and_dynamic_changes_keep_compatible_phase(self):
         voice = (0x7308, 0xca1c, 0x7200, 0x7309, 0x8a1c, 0x7205, 0xaa1c)
         score = music.parse_bytes(score_bytes((voice, (), ()), (0x2048,)))
@@ -395,6 +407,10 @@ class SampledMusicTests(unittest.TestCase):
                 self.assertEqual([event.midi_pitch for event in sequence.voices[0]], [65, 66, 65, 66, 65, 65])
                 self.assertEqual([event.accidental_flags for event in sequence.voices[0]], [0, 0, 128, 128, 192, 64])
                 music.to_midi(sequence)
+        saved = music.parse_bytes((FIXTURES / 'music/accidentals-native.sng').read_bytes())
+        events = music.project(saved).voices[0]
+        self.assertEqual([event.midi_pitch for event in events], [65, 66, 65, 64])
+        self.assertEqual([event.accidental_flags for event in events], [0, 64, 0, 128])
 
     def test_nested_repeats_and_numbered_endings(self):
         voice = (0xea1c, 0xea20, 0xea23, 0xea25)

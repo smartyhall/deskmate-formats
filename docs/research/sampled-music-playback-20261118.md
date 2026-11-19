@@ -177,9 +177,10 @@ tie release beyond score time remain open.
 Outside a note connection, `8a00` was a timed silent quarter. The paired
 `8e00` and `8600` controls gave silent eighth and half intervals.
 Inside a C4 connection, `8a00` gave a silent quarter and the following
-note resumed the sustain region without its intro. The interpreter now
-preserves these words as rests with continuation flags. Other zero-pitch
-word variants still require tests.
+note resumed the sustain region without its intro. The interpreter
+preserves these as rests with continuation flags. The later start, end
+and triplet controls below extend that result to the other zero-pitch
+forms in the historical corpus.
 
 ## Repeats, endings, pitch flags and markers
 
@@ -263,11 +264,11 @@ geometry and starts a new sample for incompatible geometry. Other
 release and gain details remain approximate.
 
 Three in-phase ff voices with a nearly full-scale source peaked at
-±3,763 DAC units. There was no observed wrap or signed-16-bit clipping
-in that control. A duplicate-slot control selected the first of two
-files in the test's FAT and filename order. This did not distinguish
-file enumeration, filename ordering or another resolver policy. The
-independent renderer rejects distinct files claiming the same slot.
+±3,763 DAC units. The measured waveform stayed within the signed 16-bit
+range without visible wrap. A duplicate-slot control selected the first
+of two files in the test's FAT and filename order. The rename comparison
+below distinguishes those orders within the tested folder. The independent
+renderer rejects distinct files claiming the same slot.
 
 In separate controls, a repeat boundary fell inside a rest, inside an
 entry note or inside an ending note. Each yielded the written-order
@@ -276,3 +277,34 @@ expected repeated section. Playback was cancelled before leaving
 Music. The interpreter rejects these cuts instead of assuming a
 repeat expansion. The two trials ended at 29,818 and 83,752
 emulated milliseconds. [Capture boundaries and note windows](../evidence/sampled-music-boundaries-20261118.json)
+
+## Native accidental entry and the remaining zero-pitch words
+
+In a disposable copy of M00 in C major, Music saved F4 and Shift+F
+as `EA21 EA62` with Using Sharps selected. Ctrl+U selected Using Flats.
+Another F4 and Shift+F saved as `EA21 EAA0`. The unmarked F4 remained
+F4 after an accidental, and the last note showed F-flat with encoded
+sounding pitch E4. Together with the G-major natural control M14 and the
+C/G DAC comparisons, these establish sharp `40h`, flat `80h` and
+natural `C0h` as notation metadata on already resolved sounding pitches.
+The independent FAT16 and 7-Zip extractions agreed on the native ACCBITS
+save. The reader includes its original flags, pitch bits and words.
+
+The auxiliary zero-pitch controls tested the seven remaining serialized
+words seen in the corpus. `9500` advances four ticks in silence.
+`AA00` and `AE00` end a connection with a quarter and an eighth of
+silence respectively. A normal note following the end rest starts its
+intro again. `CA00`, `D100`, `D500` and `D600` open a connection with
+24, 8, 4 and 3 silent ticks. A following connected note began in its
+sustain region, including the case at the start of the score. Following
+an unconnected note instead produced an ordinary attack. The independent
+model uses the loop entry for a connected attack opened by a silent rest.
+The exact native phase at that attack is unquantified.
+
+In the renamed duplicate-slot trial, AAA12 and ZZZ12 occupied different
+FAT directory entries and held 500 Hz and 900 Hz source tones. Exchanging
+the filenames left the 500 Hz bytes in the earlier directory entry under
+ZZZ12. Both captures selected those bytes at about 505.3 Hz. That
+distinguishes directory order from filename sorting for this same-folder
+case. Search across folders remains open. These two trials ended at
+87,628 and 61,294 emulated milliseconds. [Native saves, clock bounds and rest windows](../evidence/sampled-music-rests-accidentals-20261118.json)

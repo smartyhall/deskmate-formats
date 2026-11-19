@@ -2555,6 +2555,23 @@
       "synthetic_data": true,
       "native_saved": true,
       "expected_content": "Marker A at tick 0. Four quarter notes C4 E4 G4 A4 in voice 1 with slot 9."
+    },
+    {
+      "path": "music/accidentals-native.sng",
+      "size": 92,
+      "sha256": "685cc1ba4d41091fde9f6206799f59c630dd904ce6d9a71064e0c9c73c2af30a",
+      "application": "Tandy DeskMate Music",
+      "version": "RSX OEM 3.04 module with generic 03.05.00 runtime",
+      "experiment": "2026-11-18 native sharp and flat input",
+      "origin": "Entered F4 and Shift+F in C major with Using Sharps, switched to Using Flats, entered F4 and Shift+F, then saved as ACCBITS.SNG. Independent FAT16 and 7-Zip reads agreed.",
+      "generation_method": "See docs/research/sampled-music-playback-20261118.md for the native accidental and duplicate-slot comparison.",
+      "source_path": "music/m00.sng",
+      "source_size": 82,
+      "source_sha256": "8806f7acad3299a7ea17626ea1ededba038caf0ae54e0fd05c8fec5accce6713",
+      "evidence_class": "Native application-saved synthetic accidental flags",
+      "synthetic_data": true,
+      "native_saved": true,
+      "expected_content": "Four quarter notes with words EA21, EA62, EA21 and EAA0, sounding pitches F4, F-sharp 4, F4 and E4. The last note is displayed as F-flat."
     }
   ]
 }

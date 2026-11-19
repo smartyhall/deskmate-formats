@@ -1,0 +1,405 @@
+{
+  "zero-final": {
+    "emulated_ms": 87628,
+    "frames": 5547,
+    "pcm_frames": 4205760,
+    "pcm_rate": 48000,
+    "pcm_sha256": "c5a0395553e40716e9cf154bdd91a93df58bc733f14feb0e704c6e61ae7aa926",
+    "configuration": "3c4bdd3a5dccac3997f4e8cdf57571704dd00cd75a360752a3e83b665f462b6c",
+    "inputs": {
+      "sha256": "629611719423ca9a26023e6d084b7cf9217bcf7ac6e904384f7b1fe82eb7214f",
+      "files": {
+        "MARK9.SND": {
+          "size": 5660,
+          "sha256": "b4405cc280eb050a3896d7079e9be853cd67ad326a921fbb596c6c2d05b73b12"
+        },
+        "ZEND.SNG": {
+          "size": 92,
+          "sha256": "2c0ed6e3e7f1e260d4f24d0e6a0adb50aeaf26acfa5004e70fdd04472a2be089"
+        },
+        "ZEND8.SNG": {
+          "size": 92,
+          "sha256": "b1ffe51e9d65dcab0c2dba3652682fea310a7ca532f080fa9cd118908c645cfb"
+        },
+        "ZLOOSE.SNG": {
+          "size": 96,
+          "sha256": "48eae44a4daf6725e489f50e67467f96c8d763ca2261031ff40a65e2e92c276a"
+        },
+        "ZSHORT.SNG": {
+          "size": 92,
+          "sha256": "a76c8134981b1a6d4e1ffa8164c8a9342f883bcfc52d1af3a809154836ed50e1"
+        },
+        "ZSTART.SNG": {
+          "size": 92,
+          "sha256": "fbbec77e2d3c61d1721d8e021ebf187c6227515c934c39bb28ded435640d667c"
+        },
+        "ZTRIPL.SNG": {
+          "size": 98,
+          "sha256": "27427dc4ad1ad6b8fa98cd26e86d036d7bc3a855949bbebea6af01f5e4b303d7"
+        }
+      }
+    },
+    "cases": {
+      "ZEND": {
+        "start_ms": 35234,
+        "stop_ms": 40392,
+        "measurements": [
+          {
+            "onset": 9748,
+            "frames": 24869,
+            "peak": 238,
+            "rms": 166.415,
+            "early_hz": [
+              505.285
+            ]
+          },
+          {
+            "onset": 64464,
+            "frames": 19895,
+            "peak": 238,
+            "rms": 166.662,
+            "early_hz": [
+              505.302
+            ]
+          }
+        ],
+        "words": [
+          [
+            "7308",
+            "ca1c",
+            "aa00",
+            "ea1c"
+          ],
+          [],
+          [],
+          [
+            "2048"
+          ]
+        ]
+      },
+      "ZEND8": {
+        "start_ms": 46678,
+        "stop_ms": 51836,
+        "measurements": [
+          {
+            "onset": 9002,
+            "frames": 24869,
+            "peak": 238,
+            "rms": 166.284,
+            "early_hz": [
+              505.273
+            ]
+          },
+          {
+            "onset": 50039,
+            "frames": 21134,
+            "peak": 238,
+            "rms": 166.474,
+            "early_hz": [
+              505.279
+            ]
+          }
+        ],
+        "words": [
+          [
+            "7308",
+            "ca1c",
+            "ae00",
+            "ea1c"
+          ],
+          [],
+          [],
+          [
+            "203c"
+          ]
+        ]
+      },
+      "ZLOOSE": {
+        "start_ms": 81046,
+        "stop_ms": 86204,
+        "measurements": [
+          {
+            "onset": 10072,
+            "frames": 19894,
+            "peak": 238,
+            "rms": 166.653,
+            "early_hz": [
+              505.325
+            ]
+          },
+          {
+            "onset": 64788,
+            "frames": 17407,
+            "peak": 238,
+            "rms": 164.837,
+            "early_hz": [
+              635.572
+            ]
+          },
+          {
+            "onset": 95566,
+            "frames": 16474,
+            "peak": 238,
+            "rms": 163.053,
+            "early_hz": [
+              754.892
+            ]
+          }
+        ],
+        "words": [
+          [
+            "7308",
+            "ea1c",
+            "aa00",
+            "ea20",
+            "d600",
+            "ea23"
+          ],
+          [],
+          [],
+          [
+            "2063"
+          ]
+        ]
+      },
+      "ZSHORT": {
+        "start_ms": 69590,
+        "stop_ms": 74748,
+        "measurements": [
+          {
+            "onset": 9136,
+            "frames": 19894,
+            "peak": 238,
+            "rms": 166.656,
+            "early_hz": [
+              505.33
+            ]
+          },
+          {
+            "onset": 41054,
+            "frames": 15334,
+            "peak": 238,
+            "rms": 165.116,
+            "early_hz": [
+              635.694
+            ]
+          }
+        ],
+        "words": [
+          [
+            "7308",
+            "ea1c",
+            "9500",
+            "ea20"
+          ],
+          [],
+          [],
+          [
+            "2034"
+          ]
+        ]
+      },
+      "ZSTART": {
+        "start_ms": 23794,
+        "stop_ms": 28952,
+        "measurements": [
+          {
+            "onset": 35531,
+            "frames": 19895,
+            "peak": 238,
+            "rms": 165.387,
+            "early_hz": [
+              909.546
+            ]
+          },
+          {
+            "onset": 62889,
+            "frames": 17408,
+            "peak": 238,
+            "rms": 164.855,
+            "early_hz": [
+              635.582
+            ]
+          }
+        ],
+        "words": [
+          [
+            "7308",
+            "ca00",
+            "aa1c",
+            "ea20"
+          ],
+          [],
+          [],
+          [
+            "2048"
+          ]
+        ]
+      },
+      "ZTRIPL": {
+        "start_ms": 58134,
+        "stop_ms": 63292,
+        "measurements": [
+          {
+            "onset": 16486,
+            "frames": 20724,
+            "peak": 238,
+            "rms": 165.365,
+            "early_hz": [
+              909.525
+            ]
+          },
+          {
+            "onset": 47264,
+            "frames": 19791,
+            "peak": 238,
+            "rms": 163.398,
+            "early_hz": [
+              1144.095
+            ]
+          },
+          {
+            "onset": 79182,
+            "frames": 17718,
+            "peak": 238,
+            "rms": 161.501,
+            "early_hz": [
+              1360.793
+            ]
+          }
+        ],
+        "words": [
+          [
+            "7308",
+            "d100",
+            "aa1c",
+            "d600",
+            "aa20",
+            "d500",
+            "aa23"
+          ],
+          [],
+          [],
+          [
+            "2057"
+          ]
+        ]
+      }
+    }
+  },
+  "accidentals": {
+    "sha256": "d34091071ce05f2aa42213d8d4d97b55db2b64054afd932d9ea65eb12b89cb82",
+    "frames": 2941440,
+    "rate": 48000,
+    "applied_config_sha256": "3c4bdd3a5dccac3997f4e8cdf57571704dd00cd75a360752a3e83b665f462b6c",
+    "emulated_ms": 61294,
+    "video_frames": 3925,
+    "stopped_disk": {
+      "stopped_disk_sha256": "12c496a43ab5b1a5fdd6bf9b3672e56c09b22419b172194aaf630e3a06fcae43",
+      "files": {
+        "ACCBITS.SNG": {
+          "sha256": "685cc1ba4d41091fde9f6206799f59c630dd904ce6d9a71064e0c9c73c2af30a",
+          "bytes": 92,
+          "fat_extraction_agrees": true,
+          "directory_entry_offset": 5869472,
+          "words": [
+            "ea21",
+            "ea62",
+            "ea21",
+            "eaa0"
+          ],
+          "midi_pitches": [
+            65,
+            66,
+            65,
+            64
+          ]
+        },
+        "AAA12.SND": {
+          "sha256": "14cfdcff672af9072cd3ebd62c49e7de4db9d0c403e183fc1eca1c189db5c684",
+          "bytes": 5660,
+          "fat_extraction_agrees": true,
+          "directory_entry_offset": 5869568
+        },
+        "ZZZ12.SND": {
+          "sha256": "553a141d5d747d1efe39276b893039ee9d08b5fb36559888a2130f2f28caf858",
+          "bytes": 5660,
+          "fat_extraction_agrees": true,
+          "directory_entry_offset": 5869504
+        }
+      }
+    },
+    "scratch_floppy": {
+      "sha256": "9d4520aaa977e26aeaa804d6091c97ff614dec6fadb5097c985361f5bd78a362",
+      "files": {
+        "ACCINIT.SNG": {
+          "size": 82,
+          "sha256": "8806f7acad3299a7ea17626ea1ededba038caf0ae54e0fd05c8fec5accce6713"
+        }
+      }
+    },
+    "duplicate_floppy": {
+      "sha256": "23a6ed2c772172f1d850876db9f79bd6ac5d313a899b85d51068b9e317c6a70a",
+      "files": {
+        "AAA12.SND": {
+          "size": 5660,
+          "sha256": "553a141d5d747d1efe39276b893039ee9d08b5fb36559888a2130f2f28caf858"
+        },
+        "DUP12.SNG": {
+          "size": 88,
+          "sha256": "0ce625865d0adb8536fca7b996571e9c00e5b2a7deb56619d4a7756f8a28ab54"
+        },
+        "ZZZ12.SND": {
+          "size": 5660,
+          "sha256": "14cfdcff672af9072cd3ebd62c49e7de4db9d0c403e183fc1eca1c189db5c684"
+        }
+      }
+    },
+    "duplicate_results": {
+      "duplicate-original": {
+        "start_ms": 43660,
+        "stop_ms": 47068,
+        "active_frames": 87046,
+        "early_spectral_hz": 505.345654
+      },
+      "duplicate-swapped": {
+        "start_ms": 56062,
+        "stop_ms": 59470,
+        "active_frames": 87046,
+        "early_spectral_hz": 505.270646
+      }
+    },
+    "editor_checkpoints": {
+      "ACCINIT-ready": {
+        "emulated_ms": 20086,
+        "frame": 1347,
+        "framebuffer_sha256": "647dce5f6e9a74b12ffe355cfec597957c99f6f6935c462bbff1821a4036064f"
+      },
+      "sharp-notes": {
+        "emulated_ms": 22342,
+        "frame": 1482,
+        "framebuffer_sha256": "09870d34ab55e4eb88f8b3ead213f957d9a046adec35535326a867e9cdf514df"
+      },
+      "flat-mode": {
+        "emulated_ms": 24648,
+        "frame": 1620,
+        "framebuffer_sha256": "a1a60ef8fe19d9bdddf94d85ed25f1177d209e44bdf7fee9d25d4cb5715b9467"
+      },
+      "flat-notes": {
+        "emulated_ms": 26930,
+        "frame": 1757,
+        "framebuffer_sha256": "7f042651f75e21e4797f06d8a20ab620816b661ed85fc41854681aff4d6da46c"
+      },
+      "accidental-save": {
+        "emulated_ms": 32680,
+        "frame": 2102,
+        "framebuffer_sha256": "4655d115aec6e27743926d3079090de3b2d4932ab2c8d0ebe8cb28462c264417"
+      },
+      "duplicate-swap": {
+        "emulated_ms": 50774,
+        "frame": 3276,
+        "framebuffer_sha256": "e722a85bdb2a88891ffefe9cf6f43e70ed8e42072f4d303dd4134022e2a30d0f"
+      }
+    }
+  }
+}

@@ -63,6 +63,7 @@ class Note:
     dynamic_index: int | None
     source_step: int
     continues_previous: bool
+    continues_next: bool
 
 
 @dataclass(frozen=True)
@@ -262,7 +263,8 @@ def _plan(sequence, by_slot, clock, rate, sample_policy, default_slots):
             # Plain notes use a duration-dependent gate. A tie keeps the
             # source active for its written span. Slurs use a one-block gap.
             gate = duration
-            if last.connection in ('start', 'continue'):
+            continues_next = last.connection in ('start', 'continue')
+            if continues_next:
                 gate = max(Fraction(0), duration - DAC_BLOCK_SECONDS)
             elif first is last:
                 gate = min(duration, max(Fraction(57, 400), duration * Fraction(13, 16) - Fraction(3, 40)))
@@ -270,7 +272,8 @@ def _plan(sequence, by_slot, clock, rate, sample_policy, default_slots):
                          * 2 ** ((pitch - descriptor.midi_pitch) / 12))
             notes.append(Note(voice_number, first.offset, first.tick, last.tick + last.duration_ticks,
                               start, end, round(start * rate), round((start + gate) * rate),
-                              slot, index, pitch, dynamic, step, first.connection in ('continue', 'end')))
+                              slot, index, pitch, dynamic, step, first.connection in ('continue', 'end'),
+                              continues_next))
     return notes, decoded, used_slots, unmapped
 
 
@@ -283,9 +286,12 @@ def _mix(notes, decoded, frames):
         pcm, loop_start, loop_end = decoded[note.slot, note.sample_index]
         weight = DEFAULT_DYNAMIC_WEIGHT if note.dynamic_index is None else DYNAMIC_WEIGHTS[note.dynamic_index]
         geometry = len(pcm), loop_start, loop_end
-        if not (note.continues_previous and previous is not None and previous.voice == note.voice
-                and previous_geometry == geometry):
+        previous_connected = previous is not None and previous.voice == note.voice and previous.continues_next
+        if not note.continues_previous or (previous_connected and previous_geometry != geometry):
             phase = 0
+        elif not previous_connected:
+            # A silent connection start has no preceding PCM phase to carry.
+            phase = loop_start << PHASE_BITS
         loop_limit = loop_end << PHASE_BITS
         loop_period = (loop_end - loop_start) << PHASE_BITS
         limit = len(pcm) << PHASE_BITS
