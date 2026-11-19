@@ -105,3 +105,27 @@ do not wait for an additional model turn to preserve existing work. Never
 redeem a usage reset, purchase credits, or launch extra model turns merely to
 measure quota without separate operator authorization. This policy does not
 authorize unattended dispatch or expand existing live-launch gates.
+
+## Sampled Music listening references — operator decision 2026-11-18
+
+Maintain the [fixed synthetic listening suite](examples/music-listening/README.md).
+At each major sampled-renderer fidelity milestone, regenerate the same
+musical controls in native DeskMate and with the independent renderer;
+publish the actual matched, eligible WAV files, provenance and quantitative
+comparisons in a review PR. Preserve earlier milestones and immutable native
+score/instrument identities. Label capture path and remaining approximations.
+Use original test music with both independently synthesized instruments
+and the actual Tandy-provided musical instrument bank. On 2026-11-18 the
+operator explicitly authorized publishing rendered performances of original
+test compositions using Tandy's supplied musical instruments, based on
+their intended use in user compositions. Record that basis and source
+provenance; do not claim a verified express vendor license or ownership of
+underlying samples. Review any applicable contrary terms before publication.
+Do not publish OEM SND files, extracted PCM, isolated sample dumps, historical
+compositions or other third-party material under this grant. See LICENSING.md
+and the listening suite for the distinction. Implement a manifest-verified,
+path-specific WAV exception
+to the publication audit with regression coverage; do not relax the general
+audio embargo or package research binaries in wheel/sdist. Record a blocked
+native re-capture honestly rather than substituting renderer output or
+mislabeling a prior reference as fresh.
