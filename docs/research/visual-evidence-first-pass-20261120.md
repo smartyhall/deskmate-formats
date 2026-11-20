@@ -79,3 +79,12 @@ Three additional 640×480 exemplars expand the interface anchors.
 | `1d22f4bb829552c6` | Calendar day view, with a highlighted appointment time range and Previous and Next navigation flanking the date. | Schedule navigation and selected rows |
 | `b17d38e0b3ef1acf` | Worksheet Edit menu with dithered Paste and a yellow selected cell visible behind it. | Disabled controls and document selection |
 | `128875a5bc6ffb4e` | Express Publisher monochrome Save As dialog with a drive list, document and template selectors, and the underlying page ruler. | Third-party file dialogs and monochrome controls |
+
+The native File menu, Zoom menu, font chooser, Calendar day view and
+Worksheet menu each used four decoded RGB colors. The shared measured
+values are RGB 0/0/129, 194/194/194, 129/0/0 and 194/194/0. The Save
+File exemplar has 15 RGB values because its underlying synthetic
+drawing uses additional colors. The Express Publisher Save As frame
+has only white and black. These values describe the captured frames
+and the measured rendering path. The private exemplar manifest keeps
+the pixel counts and capture provenance.
