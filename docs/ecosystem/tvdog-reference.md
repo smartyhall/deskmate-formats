@@ -75,3 +75,10 @@ The CompuServe newsletter's Worksheet list gives specific function names to chec
 ## Using the catalog
 
 Use record IDs for cross-links and cite the original source URL and ordered member chain. The [schema](tvdog-reference.schema.json) describes public records and the lead register. The full archive index and extracted historical files remain private. For offline querying, use the [archive tools](../../tools/archive/README.md).
+
+The [second-pass TVDog report](../research/tvdog-second-pass-20261120.md)
+cross-references Faxback technical documents, Sensation/WinMate media
+and the VIS compatibility packages independently identified on the
+Radio Shack Retail Services CD. See the machine-readable
+[extraction capabilities](tvdog-extraction-capabilities.json) for
+measured optical media coverage.

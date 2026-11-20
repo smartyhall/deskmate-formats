@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "extended-20261120",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 29,
+    "token_records": 4490,
+    "sessions": 26
+  },
+  "checkpoint": "faxback-optical",
+  "collected_at": "2026-11-20T09:49:22.785228+00:00",
+  "commit": "1eff9155ef965f68e2c72769dfbcfdc87e9f6998",
+  "observation": {
+    "session": "4871937bf1d0e9e73d85d912",
+    "measured_at": "2026-11-20T09:49:21.743000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 15478029,
+      "cached_input": 15265536,
+      "output": 55482,
+      "reasoning_output": 8732,
+      "total": 15533511
+    },
+    "reported_last": {
+      "input": 205383,
+      "cached_input": 203776,
+      "output": 1229,
+      "reasoning_output": 582,
+      "total": 206612
+    },
+    "windows": {
+      "300": {
+        "used_percent": 26.0,
+        "reset_epoch": 1795184165,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 78.0,
+        "reset_epoch": 1795652781,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  }
+}

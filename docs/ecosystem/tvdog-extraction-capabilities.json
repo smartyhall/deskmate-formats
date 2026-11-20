@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "tested_external": {"7-Zip": "26.05 x64", "PyCdlib (test producer)": "1.22.0"},
+  "formats": [
+    {
+      "name": "ISO 9660 with 2048-byte logical blocks",
+      "identify": "bounded primary descriptor with mirrored volume sizes and logical block length",
+      "list": "qualified with explicit 7-Zip Iso handler",
+      "extract": "qualified bounded single-member stdout; nested ZIP and image provenance retained",
+      "evidence": "synthetic control plus four real TVDog images",
+      "limitations": "no completeness claim for multisession, all extensions or every member"
+    },
+    {
+      "name": "UDF on cooked media",
+      "identify": "NSR02/NSR03 recognition when no preceding ISO primary descriptor wins",
+      "list": "qualified explicit 7-Zip Udf handler on synthetic bridge",
+      "extract": "qualified explicit Udf handler, one independently generated known-byte member",
+      "evidence": "PyCdlib synthetic bridge",
+      "limitations": "no real-corpus or UDF-only extraction qualification; hybrid selection currently favors ISO"
+    },
+    {
+      "name": "2352-byte raw Mode 1 or Mode 2 Form 1 sector candidate",
+      "identify": "sync, mode and compatible ISO descriptor",
+      "list": "unsupported",
+      "extract": "unsupported",
+      "evidence": "synthetic raw Mode 1 descriptor",
+      "limitations": "partial structural recognition; no raw-track decoding, CUE pairing or per-sector integrity verification"
+    },
+    {
+      "name": "Windows-family New Executable",
+      "identify": "bounded MZ pointer and NE header",
+      "list": "header target OS and first ordinal-zero resident and nonresident names",
+      "extract": "bounded optical member extraction; executable remains inert",
+      "evidence": "synthetic NE header and optical members where selected",
+      "limitations": "no resource-table extraction or operating-system compatibility inference"
+    }
+  ]
+}
