@@ -208,3 +208,12 @@ the comprehensive offline index and cross-reference campaign.
 If blocked or unfinished, commit the safe tooling, metadata and
 exact resumable handoff without implying all files were obtained.
 Record usage at standard checkpoints; do not redeem the banked reset.
+
+## Reusable acquisition implementation
+
+Use the [configuration-driven archive mirror](../../tools/archive/README.md)
+for subsequent downloads and maintenance. Keep operator configurations private,
+review source-specific policy, and run the local-only portable tests before
+changing transfer behavior. The TVDog example retains the earlier mirror's
+state layout. The operator requested the 256 KiB/s, one-second settings;
+source policy and server health still override those settings.
