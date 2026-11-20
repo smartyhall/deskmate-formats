@@ -49,6 +49,19 @@ class FontWriterTests(unittest.TestCase):
         with self.assertRaisesRegex(FontResourceError, 'name'):
             ff1_geometric.geometric_face('Non-ASCII \N{LATIN CAPITAL LETTER E WITH ACUTE}')
 
+    def test_alternate_outline_profile_preserves_markers(self):
+        original = ff1.parse_resource(self.data)
+        header = bytearray(original.header)
+        header[2] = 1
+        inner = bytearray(original.inner_header)
+        inner[2] = 0
+        alternate = replace(original, header=bytes(header), inner_header=bytes(inner))
+        encoded = ff1.serialize_resource(alternate)
+        self.assertEqual(ff1.parse_resource(encoded), alternate)
+        self.assertEqual(ff1.serialize_resource(ff1.parse_resource(encoded)), encoded)
+        with self.assertRaisesRegex(FontResourceError, 'inner glyph index profile'):
+            ff1.serialize_resource(replace(alternate, inner_header=self.model.inner_header))
+
     def test_draw_outline_slot_routing(self):
         self.assertEqual(draw_outline_slot(0x82), 197)
         self.assertEqual(draw_outline_slot(0x90), 220)

@@ -69,6 +69,9 @@ belong in the private lab. Dropping `--summary` from the native inventory
 returns per-digest parser outcomes, source chains and evidence including Sound
 slot/sample information and Music MIDI projection status. Supply prior hash
 receipts to distinguish byte identities outside the selected comparison set.
+Pass `--allow-sector-padding` to include SNG files whose complete four-stream
+payload is followed by bytes ending at the next 128-byte boundary. The
+strict reader is the default and the original trailer stays in the score.
 
 ## Extend extraction
 

@@ -115,7 +115,8 @@ def parse_bytes(source, *, include_controls=False, control_limit=None):
         elif formatted and ATTRIBUTE_OFF.get(byte) in active:
             active.remove(ATTRIBUTE_OFF[byte])
             control_length = 1
-        elif formatted and byte == 0x03 and data[cursor:cursor + 5] in LAYOUT_COMMANDS:
+        elif formatted and byte == 0x03 and cursor + 5 <= end and data[cursor + 4] == 0x04:
+            # Tandy documents three opaque margin bytes between these markers.
             control_length = 5
         else:
             raise TextFormatError(f'unsupported byte or control 0x{byte:02X} at 0x{cursor:04X}')

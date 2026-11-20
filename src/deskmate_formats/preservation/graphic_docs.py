@@ -117,7 +117,7 @@ def _document_body(document, figures, *, use_controls, dense_lines):
     body, line, active = [], [], set()
     position = 0
     centered = False
-    layout_inside_line = False
+    unmeasured_layout = False
 
     def flush():
         if dense_lines:
@@ -159,9 +159,9 @@ def _document_body(document, figures, *, use_controls, dense_lines):
                 flush()
             body.append(figures[picture_number])
             picture_number += 1
-        elif event.raw in text.LAYOUT_COMMANDS:
-            if line:
-                layout_inside_line = True
+        elif event.raw[0] == 0x03:
+            if line or event.raw not in text.LAYOUT_COMMANDS:
+                unmeasured_layout = True
             else:
                 centered = event.raw == text.LAYOUT_COMMANDS[0]
         elif event.raw[0] in text.ATTRIBUTE_ON:
@@ -174,7 +174,7 @@ def _document_body(document, figures, *, use_controls, dense_lines):
         flush()
     if not body:
         body.append('<p>No previewable text or pictures.</p>')
-    return '<article class="document">' + ''.join(body) + '</article>', layout_inside_line
+    return '<article class="document">' + ''.join(body) + '</article>', unmeasured_layout
 
 
 def convert_text(document, filename, *, outline_faces=None):
@@ -202,7 +202,7 @@ def convert_text(document, filename, *, outline_faces=None):
     if unmeasured_layout:
         conversion.diagnostics.append(Diagnostic(
             'text_line_layout_omitted', 'omission',
-            'A layout control inside a line is retained in JSON. Centering is applied at measured line boundaries.'))
+            'Unmeasured paragraph layout is retained in JSON. Centering is applied at measured line boundaries.'))
     conversion.artifacts.update({
         'text.txt': document.text.encode('utf-8'),
         'preview.html': html_page(filename, 'DeskMate Text · document preview', body,

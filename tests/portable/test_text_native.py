@@ -39,6 +39,21 @@ class TextNativeTest(unittest.TestCase):
         )
         self.assertEqual(text.extract_file(path), expected)
 
+    def test_margin_records_preserve_opaque_payload_and_offsets(self):
+        first = bytes.fromhex('03 09 00 00 04')
+        second = bytes.fromhex('03 04 1A 03 04')
+        raw = text.FORMATTED_HEADER + first + b'Atlas\r\n' + second + b'Index\x1a'
+        doc = text.parse_bytes(raw, include_controls=True)
+        self.assertEqual(doc.text, 'Atlas\nIndex')
+        self.assertEqual(doc.controls, (
+            text.TextControl(22, 0, first),
+            text.TextControl(34, 6, second),
+        ))
+        self.assertEqual(doc.control_count, 2)
+        for malformed in (first[:-1], first[:-1] + b'\x06'):
+            with self.subTest(malformed=malformed), self.assertRaises(text.TextFormatError):
+                text.extract_bytes(text.FORMATTED_HEADER + malformed + b'\x1a')
+
     def test_rejects_truncation_and_unsupported_structure(self):
         raw = (FIXTURES / 't11.doc').read_bytes()
         for data in (

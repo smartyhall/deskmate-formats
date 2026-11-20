@@ -12,6 +12,10 @@ earlier and incompatible releases may require separate profiles.
 Distinguish period-correct hardware and original software from modern
 reconstruction conveniences and experimental font conversions.
 
+Use the period purchase evidence for advertised prices, configurations,
+peripherals and bundled software when developing the exhibit's purchase
+history. [TVDog purchase facts](demonstrator-purchase-facts.md)
+
 ## Separate exhibit and research machines
 
 Use the already verified 86Box Tandy 1000 RSX / 25 MHz 386SX / VGA /

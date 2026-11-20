@@ -26,10 +26,22 @@ APPLICATIONS = {
 MAX_BYTES = 16 * 1024 * 1024
 
 
-def qualify(data, kind):
+def qualify(data, kind, *, allow_sector_padding=False):
     if kind == 'ff1':
         font = ff1.parse_resource(data)
         return {'application': 'ff1', 'roundtrip_identical': ff1.serialize_resource(font) == data}
+    if kind == 'sng':
+        score = music.parse_bytes(data, allow_sector_padding=allow_sector_padding)
+        result = {'application': 'music', 'profile': 'music-0c-sng-four-stream',
+                  'trailer_bytes': len(score.trailer)}
+        sequence = music.project(score)
+        try:
+            music.to_midi(sequence)
+        except ValueError as exc:
+            result['midi_error'] = str(exc)
+        else:
+            result['midi'] = True
+        return result
     doc = open_native(data, APPLICATIONS[kind])
     result = {'application': doc.application, 'profile': doc.profile}
     if doc.application == 'sound':
@@ -40,18 +52,10 @@ def qualify(data, kind):
             result['decoded_pcm_frames'] = sum(len(sound.pcm(i)) for i in range(len(sound.samples)))
         except ValueError as exc:
             result['pcm_error'] = str(exc)
-    elif doc.application == 'music':
-        sequence = music.project(doc.value)
-        try:
-            music.to_midi(sequence)
-        except ValueError as exc:
-            result['midi_error'] = str(exc)
-        else:
-            result['midi'] = True
     return result
 
 
-def inventory(db, known):
+def inventory(db, known, *, allow_sector_padding=False):
     store = Path(db.execute("SELECT value FROM configuration WHERE key='store'").fetchone()[0])
     grouped = defaultdict(list)
     for row in db.execute(
@@ -77,7 +81,7 @@ def inventory(db, known):
                 data = stream.read(MAX_BYTES + 1)
             if len(data) != row['size'] or sha256(data).hexdigest() != digest:
                 raise ValueError('candidate no longer matches index')
-            result.update(qualify(data, kind), status='accepted')
+            result.update(qualify(data, kind, allow_sector_padding=allow_sector_padding), status='accepted')
         except (ValueError, OSError) as exc:
             result.update(status='rejected', error=str(exc))
             if isinstance(exc, PreservationError):
@@ -97,12 +101,14 @@ def main():
     parser.add_argument('--compare', type=Path, action='append', default=[],
                         help='prior JSON receipt containing SHA-256 keys or values')
     parser.add_argument('--summary', action='store_true')
+    parser.add_argument('--allow-sector-padding', action='store_true',
+                        help='qualify SNG candidates with trailers ending at the next 128-byte boundary')
     args = parser.parse_args()
     known = set()
     for receipt in args.compare:
         known.update(re.findall(r'"([a-fA-F0-9]{64})"', receipt.read_text(encoding='utf-8-sig').lower()))
     with closing(open_index(args.database)) as db:
-        result = inventory(db, known)
+        result = inventory(db, known, allow_sector_padding=args.allow_sector_padding)
     print(json.dumps(result['summary'] if args.summary else result, indent=2, sort_keys=True))
 
 

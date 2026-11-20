@@ -105,7 +105,7 @@ def _stream(data, offset, end):
     raise MusicFormatError('missing stream end within declared score extent')
 
 
-def parse_bytes(source):
+def parse_bytes(source, *, allow_sector_padding=False):
     """Split the bounded SNG container into three voice streams and a conductor."""
     if not isinstance(source, (bytes, bytearray, memoryview)) or not 42 <= memoryview(source).nbytes <= MAX_BYTES:
         raise MusicFormatError('invalid Music file size')
@@ -113,7 +113,10 @@ def parse_bytes(source):
     if data[:4] != SIGNATURE:
         raise MusicFormatError('unrecognized Music signature')
     end = 22 + unpack_from('<H', data, 22)[0]
-    if end % 2 or not 42 <= end <= len(data) or len(data) - end > 1:
+    if end % 2 or not 42 <= end <= len(data):
+        raise MusicFormatError('invalid declared Music extent')
+    padded_sector = allow_sector_padding and len(data) == ((end + 127) // 128) * 128
+    if len(data) - end > 1 and not padded_sector:
         raise MusicFormatError('invalid declared Music extent')
 
     title_end = data.find(b'\0', 24, end - 16)
@@ -447,6 +450,8 @@ def main(argv=None):
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source', type=Path)
+    parser.add_argument('--allow-sector-padding', action='store_true',
+                        help='accept and retain a trailer ending at the next 128-byte boundary')
     parser.add_argument('--midi', type=Path, help='write a fully interpreted score to a new MIDI file')
     parser.add_argument('--wav', type=Path, help='write approximate sampled playback to a new WAV file')
     parser.add_argument('--instruments', type=Path, help='directory of explicit SND instruments for --wav')
@@ -466,7 +471,7 @@ def main(argv=None):
     created = []
     try:
         with args.source.open('rb') as stream:
-            score = parse_bytes(stream.read(MAX_BYTES + 1))
+            score = parse_bytes(stream.read(MAX_BYTES + 1), allow_sector_padding=args.allow_sector_padding)
         sequence = project(score)
         result = describe(score, sequence)
         if args.midi:

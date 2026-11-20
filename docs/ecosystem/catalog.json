@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "initial-seed-not-comprehensive",
+  "status": "expanded-evidence-catalog",
   "updated": "2026-11-19",
   "scope": "PC/DOS DeskMate ecosystem, principally 3.x; companion, dedicated and runtime applications distinguished from DOS launcher-only programs, other platform variants and unverified candidates",
   "sources": {
@@ -56,12 +56,12 @@
     "express-publisher-archive": {
       "title": "Express Publisher for DeskMate — Oldskool archive directory",
       "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Express-Publisher-for-DeskMate/",
-      "verification": "Operator supplied direct directory URL on 2026-11-19; HTTP and HTTPS retrieval failed in ChatGPT. Contents, version and media integrity not yet verified."
+      "verification": "Four TVDog ZIPs verified locally. All 14 embedded LHA packages extracted and inventoried."
     },
     "tvdog-wares": {
       "title": "TVDog Tandy 1000 commercial software archive",
       "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/",
-      "verification": "Operator identified numerous DeskMate software packages here on 2026-11-19. HTTP and HTTPS listing retrieval returned 502 in ChatGPT; inventory and media identities pending VM verification."
+      "verification": "Locally enumerated. Consult the TVDog reference catalog for verified archive identities and individual package coverage."
     },
     "tvdog-documents": {
       "title": "TVDog Tandy 1000 documentation index",
@@ -71,7 +71,72 @@
     "tvdog-root": {
       "title": "TVDog archive at Oldskool — complete public subtree",
       "url": "http://ftp.oldskool.org/pub/tvdog/",
-      "verification": "Operator authorized a private, server-friendly mirror of the entire publicly accessible subtree on 2026-11-19. Scope and acquisition protocol in archive-mirror.md. Inventory and completion not yet verified."
+      "verification": "Local mirror enumerated and independently checked. See tvdog-mirror-verification.md for exact acquisition status."
+    },
+    "tvdog-ref-express-publisher": {
+      "title": "Power Up! Express Publisher for DeskMate",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Express-Publisher-for-DeskMate/EPDisk1.zip",
+      "verification": "Private bytes inspected. Source and member identities in tvdog-reference.json."
+    },
+    "tvdog-ref-qa-write": {
+      "title": "DeskMate Q&A Write",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Q%26A-Write/QWD.zip",
+      "verification": "Private bytes inspected. Source and member identities in tvdog-reference.json."
+    },
+    "tvdog-ref-print-magic": {
+      "title": "Print Magic 1.1 for DeskMate",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Print-Magic/pm.zip",
+      "verification": "Private bytes inspected. Source and member identities in tvdog-reference.json."
+    },
+    "tvdog-ref-instant-pages": {
+      "title": "Instant Pages 1.0",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Instant-Pages-for-DeskMate/instant.zip",
+      "verification": "Private bytes inspected. Source and member identities in tvdog-reference.json."
+    },
+    "tvdog-ref-backup-pro": {
+      "title": "Backup Pro 1.0",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Backup-Pro-for-DeskMate/bp-720k.zip",
+      "verification": "Private bytes inspected. Source and member identities in tvdog-reference.json."
+    },
+    "tvdog-ref-solitaire-poker": {
+      "title": "DeskMate Solitaire and Poker bundle",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Solitaire-Poker/SOL.zip",
+      "verification": "Private bytes inspected. Source and member identities in tvdog-reference.json."
+    },
+    "tvdog-ref-studyware-chemistry": {
+      "title": "StudyWare for Chemistry",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-StudyWare-for-Chemistry/instdisk.zip",
+      "verification": "Private bytes inspected. Source and member identities in tvdog-reference.json."
+    },
+    "tvdog-ref-studyware-economics": {
+      "title": "StudyWare for Economics",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-StudyWare-for-Economics/econdisk.zip",
+      "verification": "Private bytes inspected. Source and member identities in tvdog-reference.json."
+    },
+    "tvdog-ref-studyware-act": {
+      "title": "StudyWare for the ACT",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-StudyWare-for-the-ACT/actdisk.zip",
+      "verification": "Private bytes inspected. Source and member identities in tvdog-reference.json."
+    },
+    "tvdog-ref-clipart-editor": {
+      "title": "Tandy ClipArt Editor beta",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dmclip.zip",
+      "verification": "Private bytes inspected. Source and member identities in tvdog-reference.json."
+    },
+    "tvdog-ref-undesk": {
+      "title": "UnDesk Text converter",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/undesk.zip",
+      "verification": "Private bytes inspected. Source and member identities in tvdog-reference.json."
+    },
+    "tvdog-ref-dm-music": {
+      "title": "DM_Music 1.04",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/dm_music.zip",
+      "verification": "Private bytes inspected. Source and member identities in tvdog-reference.json."
+    },
+    "tvdog-ref-sdk-guides": {
+      "title": "DeskMate SDK 3.03 shelf",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Development-System-3.03/DeskMate-Development-Guide.zip",
+      "verification": "Private bytes inspected. Source and member identities in tvdog-reference.json."
     }
   },
   "entries": [
@@ -106,43 +171,65 @@
       "title": "Express Publisher",
       "publisher": "Power Up Software Corporation",
       "category": "publishing",
-      "relationship": "third-party-dedicated",
-      "evidence_status": "documented",
+      "relationship": "third-party-with-runtime",
+      "evidence_status": "media-identified",
       "source_ids": [
         "rs1992",
         "rs1993",
         "legacy",
-        "express-publisher-archive"
+        "express-publisher-archive",
+        "tvdog-ref-express-publisher"
       ],
       "catalog_number": "25-1438",
       "versions": [
-        "1.00 (secondary catalog lead)"
+        "1.00"
       ],
-      "media_status": "operator-supplied-archive-directory-lead-unverified",
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
-      "format_status": "not-inventoried",
-      "formats": [],
-      "notes": "DM_PROGS.TXT reports DeskMate 3.05 Atech fonts. Operator supplied a direct Oldskool archive directory after the typography campaign; prioritize acquisition and compare any FF1s with pinned originals, investigate Rockwell and native rendering/printing. Media contents and release remain unverified."
+      "format_status": "resource-inventory",
+      "formats": [
+        "EPT",
+        "FF1",
+        "PRS"
+      ],
+      "notes": "Application PDM and help identify version 1.00 and 1.0 respectively. Three disk-file sets, a separate manual, and 14 LHA packages. Shared-mode installer offers a DMFONT.RES upgrade.",
+      "runtime_markers": [
+        "DESKMATE$05.00 901001$"
+      ],
+      "runtime_versions": [
+        "03.05.00"
+      ]
     },
     {
       "id": "qa-write",
       "title": "DeskMate Q&A Write",
       "publisher": "Symantec",
       "category": "word-processing",
-      "relationship": "third-party-dedicated",
-      "evidence_status": "documented",
+      "relationship": "third-party-with-runtime",
+      "evidence_status": "media-identified",
       "source_ids": [
         "rs1992",
         "review1989",
-        "filelist"
+        "filelist",
+        "tvdog-ref-qa-write"
       ],
       "catalog_number": "25-1299",
-      "versions": [],
-      "media_status": "not-yet-verified",
+      "versions": [
+        "1.00"
+      ],
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
-      "format_status": "not-inventoried",
-      "formats": [],
-      "notes": "Recovered DMQNAFNT.TXT documents IBM ProPrinter FNT definitions and spacing. Native edition and demo remain unverified."
+      "format_status": "resource-inventory",
+      "formats": [
+        "FNT"
+      ],
+      "notes": "QWD.DIS identifies version 1.00. QWD.EXE, QWD.PDM, DMTOQWD.PDM and six printer font libraries. Separate archive note documents a printer font library for the IBM ProPrinter.",
+      "runtime_markers": [
+        "DESKMATE$03.01 890725$"
+      ],
+      "runtime_versions": [
+        "03.03.01"
+      ]
     },
     {
       "id": "homeword-ii",
@@ -426,40 +513,55 @@
     {
       "id": "print-magic",
       "title": "Print Magic",
-      "publisher": null,
+      "publisher": "Epyx",
       "category": "publishing",
-      "relationship": "edition-unverified",
-      "evidence_status": "candidate",
+      "relationship": "third-party-with-runtime",
+      "evidence_status": "media-identified",
       "source_ids": [
         "legacy",
-        "tvdog"
+        "tvdog",
+        "tvdog-ref-print-magic"
       ],
       "catalog_number": null,
-      "versions": [],
-      "media_status": "not-yet-verified",
+      "versions": [
+        "1.1"
+      ],
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
-      "format_status": "not-inventoried",
-      "formats": [],
-      "notes": "Prior lead; find primary evidence and verify DeskMate edition."
+      "format_status": "resource-inventory",
+      "formats": [
+        "PMP",
+        "PMF",
+        "PMG"
+      ],
+      "notes": "Executable gives Epyx 1988 copyright; source readme claims DeskMate 3.00 to 3.02 compatibility. Two historical PMP pages start with PMPAGE and NUL.",
+      "runtime_markers": [
+        "DESKMATE$880901$"
+      ]
     },
     {
       "id": "instant-pages",
       "title": "Instant Pages",
-      "publisher": null,
+      "publisher": "Robert P. Plummer",
       "category": "publishing",
-      "relationship": "edition-unverified",
-      "evidence_status": "candidate",
+      "relationship": "third-party-with-runtime",
+      "evidence_status": "media-identified",
       "source_ids": [
         "legacy",
-        "tvdog"
+        "tvdog",
+        "tvdog-ref-instant-pages"
       ],
       "catalog_number": null,
-      "versions": [],
-      "media_status": "not-yet-verified",
+      "versions": [
+        "1.0"
+      ],
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
-      "format_status": "not-inventoried",
-      "formats": [],
-      "notes": "Prior lead; verify actual edition, publisher and media."
+      "format_status": "resource-inventory",
+      "formats": [
+        "IPD"
+      ],
+      "notes": "IP.PDM declares 1.0. A hard-disk installer and 125 IPD members are preserved. Product copyright spans 1987 and 1988."
     },
     {
       "id": "music-studio",
@@ -497,6 +599,204 @@
       "format_status": "not-inventoried",
       "formats": [],
       "notes": "Catalog associates DeskMate label; verify runtime/edition and data files."
+    },
+    {
+      "id": "backup-pro",
+      "title": "Backup Pro",
+      "publisher": "Software Toolworks (timer copyright)",
+      "category": "backup",
+      "relationship": "third-party-with-runtime",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-ref-backup-pro"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "1.0"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [],
+      "notes": "BP.PDM declares 1.0 and the timer shows a 1989 copyright. The media includes standalone backup inspection tools.",
+      "runtime_markers": [
+        "DESKMATE$880901$"
+      ]
+    },
+    {
+      "id": "solitaire-poker",
+      "title": "DeskMate Solitaire and Poker bundle",
+      "publisher": null,
+      "category": "games",
+      "relationship": "third-party-with-runtime",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-ref-solitaire-poker"
+      ],
+      "catalog_number": null,
+      "versions": [],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [],
+      "notes": "Two distinct PDM/EXE pairs with corresponding help files. Component product version and publisher open.",
+      "runtime_markers": [
+        "DESKMATE$05.00 901001$"
+      ],
+      "runtime_versions": [
+        "03.05.00"
+      ]
+    },
+    {
+      "id": "studyware-chemistry",
+      "title": "StudyWare for Chemistry",
+      "publisher": "Cliffs StudyWare",
+      "category": "education",
+      "relationship": "runtime-unverified",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-ref-studyware-chemistry"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "4.5 revision B"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [
+        "RED"
+      ],
+      "notes": "Product identity and version verified in the installer. DeskMate relationship awaits inspection inside packed RED resources."
+    },
+    {
+      "id": "studyware-economics",
+      "title": "StudyWare for Economics",
+      "publisher": "Cliffs StudyWare",
+      "category": "education",
+      "relationship": "runtime-unverified",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-ref-studyware-economics"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "4.5 revision B"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [
+        "RED"
+      ],
+      "notes": "Product identity and version verified in the installer. DeskMate relationship awaits inspection inside packed RED resources."
+    },
+    {
+      "id": "studyware-act",
+      "title": "StudyWare for the ACT",
+      "publisher": "Cliffs StudyWare",
+      "category": "education",
+      "relationship": "runtime-unverified",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-ref-studyware-act"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "4.5 revision B"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [
+        "RED"
+      ],
+      "notes": "Product identity and version verified in the installer. DeskMate relationship awaits inspection inside packed RED resources."
+    },
+    {
+      "id": "clipart-editor",
+      "title": "DeskMate ClipArt Editor beta",
+      "publisher": "Tandy",
+      "category": "drawing",
+      "relationship": "tandy-companion",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-ref-clipart-editor"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "beta"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [
+        "CLP"
+      ],
+      "notes": "Packed PDM and documentation corroborate a contemporary forum description of the Draw Object to CLP workflow."
+    },
+    {
+      "id": "undesk",
+      "title": "UnDesk",
+      "publisher": null,
+      "category": "format-conversion",
+      "relationship": "dos-standalone-utility",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-ref-undesk"
+      ],
+      "catalog_number": null,
+      "versions": [],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [
+        "DOC"
+      ],
+      "notes": "The COM converter and readme describe exporting DeskMate DOC files to standard text. Product version and compatibility boundaries remain open."
+    },
+    {
+      "id": "dm-music",
+      "title": "DM_Music",
+      "publisher": "W. H. Baldwin with TVDog",
+      "category": "format-conversion",
+      "relationship": "windows-standalone-utility",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-ref-dm-music"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "1.04"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [
+        "SNG",
+        "HDS"
+      ],
+      "notes": "The original archive matches the November 18 private acquisition. The converter has an x86 GUI and a Visual Basic 6 runtime dependency, with a 1.04 PE version resource."
+    },
+    {
+      "id": "deskmate-sdk",
+      "title": "DeskMate Development System",
+      "publisher": "Tandy",
+      "category": "development",
+      "relationship": "tandy-developer-tools",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-ref-sdk-guides"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "3.03"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [],
+      "notes": "Development Guide and Technical Reference PDFs and DMDB header identities match local pins. PSSJ, Sound and Samples toolkits are independently indexed."
     }
   ]
 }

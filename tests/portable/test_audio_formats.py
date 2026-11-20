@@ -120,6 +120,19 @@ class SoundTests(unittest.TestCase):
 
 
 class MusicTests(unittest.TestCase):
+    def test_opt_in_sector_padding_preserves_opaque_tail(self):
+        source = score_bytes(((0x4010,), (), ()))
+        trailer = bytes(range(128 - len(source)))
+        padded = source + trailer
+        with self.assertRaisesRegex(music.MusicFormatError, 'declared Music extent'):
+            music.parse_bytes(padded)
+        parsed = music.parse_bytes(padded, allow_sector_padding=True)
+        self.assertEqual(parsed.trailer, trailer)
+        self.assertEqual(parsed.voices, music.parse_bytes(source).voices)
+        for invalid in (padded[:-1], padded + bytes(128)):
+            with self.assertRaisesRegex(music.MusicFormatError, 'declared Music extent'):
+                music.parse_bytes(invalid, allow_sector_padding=True)
+
     def test_streams_and_unassigned_bytes(self):
         encoded = score_bytes(((0xea1c,), (0xea00, 0xea28), ()), (0x2030,),
                               trailer=b'\x1a', alignment=0x72)

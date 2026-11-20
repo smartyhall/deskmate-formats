@@ -6,11 +6,12 @@ files actually left on a DeskMate system, not only those created by the
 bundled applications. The core formats and current Draw/font research
 remain the immediate priorities.
 
-[Machine-readable initial catalog](catalog.json) records 22 candidate
-or documented products. It is a seed, not a comprehensive inventory, and
-no new third-party installation or parser is claimed. A catalog listing,
-a downloadable archive, an acquired disk, a verified installation and
-a decoded native format are distinct facts.
+[Machine-readable catalog](catalog.json) records 31 products and toolkits.
+The [TVDog reference library](tvdog-reference.md) links recovered media and
+documents to exact source identities, a release coverage matrix and
+research leads. A catalog listing, a downloadable archive, an acquired
+disk, a verified installation and a decoded native format are distinct
+facts.
 
 ## Scope and evidence
 
