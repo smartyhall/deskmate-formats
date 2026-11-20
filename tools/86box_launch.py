@@ -19,7 +19,8 @@ import sys
 import time
 import uuid
 
-Client = importlib.import_module('86box_client').Client
+client_module = importlib.import_module('86box_client')
+Client = client_module.Client
 ROOT = Path(__file__).resolve().parents[1]
 MODES = ('visible', 'headless', 'background')
 
@@ -193,8 +194,8 @@ def launch(executable, machine, runtime, mode='visible', port=8765, seed=1, time
                     if mode != 'visible' or any(w['visible'] and '86Box' in w['title'] for w in window['windows']):
                         ready = True
                         break
-                except (ConnectionRefusedError, FileNotFoundError):
-                    pass  # Startup readiness only; no guest mutation is retried.
+                except (ConnectionRefusedError, FileNotFoundError, client_module.ProtocolError):
+                    pass  # The only requests here are authentication, status and info.
             time.sleep(0.1)
         if not ready:
             raise TimeoutError('startup/window readiness timed out; inspect launch receipt; no automatic kill')

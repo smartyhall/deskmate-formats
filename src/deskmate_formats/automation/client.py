@@ -148,6 +148,18 @@ class Client:
     def hold(self):
         return self._call('hold')
 
+    def release(self):
+        return self._call('release')
+
+    def execution_state(self, held):
+        """Change execution mode and verify the observed state."""
+        with self.lock:
+            (self.hold if held else self.release)()
+            status = self.status()
+            if status.get('held') is not held:
+                raise ProtocolError('requested execution state was not observed')
+            return status
+
     def registers(self):
         return self._call('regs')
 
@@ -177,6 +189,18 @@ class Client:
             self.close()
             raise ProtocolError('invalid CP437 text response') from exc
         return dict(result, lines=rows)
+
+    def text_attributes(self):
+        """Read screen text and the corresponding raw VGA attribute bytes."""
+        result = self.text()
+        try:
+            attributes = [bytes.fromhex(row) for row in result['attrs']]
+            if len(attributes) != result['rows'] or any(len(row) != result['cols'] for row in attributes):
+                raise ValueError('wrong attribute dimensions')
+        except (KeyError, TypeError, ValueError) as exc:
+            self.close()
+            raise ProtocolError('invalid text attribute response') from exc
+        return list(zip(result['lines'], attributes, strict=True))
 
     def framebuffer(self):
         result = self._call('screenshot')
@@ -227,6 +251,33 @@ class Client:
                 raise ProtocolError(f'step interrupted: requested {milliseconds}, actual {delta}')
             return dict(result, actual_delta_ms=delta)
 
+    def advance(self, milliseconds, stop=None):
+        """Advance a held machine in bounded steps; acknowledge STOP at a boundary."""
+        if type(milliseconds) is not int or milliseconds < 0:
+            raise ValueError('advance requires nonnegative milliseconds')
+        with self.lock:
+            start = self.status()
+            quantum = start.get('quantum_ms')
+            if (start.get('held') is not True or start.get('paused') is not False
+                    or quantum not in (1, 10) or milliseconds % quantum):
+                raise ValueError('advance requires held, unpaused, quantum-aligned machine')
+            advanced = 0
+            stopped = False
+            while advanced < milliseconds:
+                if stop is not None and stop.exists():
+                    stopped = True
+                    break
+                delta = min(milliseconds - advanced, 1000)
+                self.step(delta)
+                advanced += delta
+            status = self.status()
+            if (status.get('held') is not True or status.get('paused') is not False
+                    or status['ms'] - start['ms'] != advanced):
+                raise ProtocolError('advance ended in an unexpected execution state')
+            if stopped:
+                stop.unlink(missing_ok=True)
+            return {'actual_delta_ms': advanced, 'stopped': stopped, 'status': status}
+
     def key(self, action, *codes):
         if (action not in ('down', 'up') or not 1 <= len(codes) <= 8
                 or any(type(c) is not int or not 1 <= c <= 0x1ff for c in codes)):
@@ -238,7 +289,7 @@ class Client:
             self.key('down', code)
             return self.key('up', code)
 
-    def type_ascii(self, text):
+    def type_ascii(self, text, *, pace_ms=None):
         # US set-1 keyboard. Validate the entire string before sending any input.
         plain = '1234567890-=qwertyuiop[]asdfghjkl;\'`\\zxcvbnm,./'
         scans = list(range(2, 14)) + list(range(16, 28)) + list(range(30, 42)) + [43] + list(range(44, 54))
@@ -253,12 +304,21 @@ class Client:
                 raise ValueError('unsupported character in keyboard input')
             events.append((shift, mapping[base]))
         with self.lock:
+            if pace_ms is not None:
+                status = self.status()
+                quantum = status.get('quantum_ms')
+                if (type(pace_ms) is not int or not 1 <= pace_ms <= 1000
+                        or status.get('held') is not True or status.get('paused') is not False
+                        or quantum not in (1, 10) or pace_ms % quantum):
+                    raise ValueError('paced input requires held, unpaused, quantum-aligned machine')
             for shift, code in events:
                 if shift:
                     self.key('down', 42)
                 self.tap(code)
                 if shift:
                     self.key('up', 42)
+                if pace_ms is not None:
+                    self.step(pace_ms)
 
     def floppy(self, drive, path=None):
         if type(drive) is not int or drive not in (0, 1):
@@ -312,14 +372,18 @@ def main():
     parser.add_argument('--port', type=int, default=8765)
     parser.add_argument('--journal', type=Path)
     sub = parser.add_subparsers(dest='action', required=True)
-    for action in ('status', 'info', 'hold', 'registers', 'text', 'quit'):
+    for action in ('status', 'info', 'hold', 'release', 'registers', 'text', 'quit'):
         sub.add_parser(action)
     step = sub.add_parser('step')
     step.add_argument('milliseconds', type=int)
+    advance = sub.add_parser('advance')
+    advance.add_argument('milliseconds', type=int)
+    advance.add_argument('--stop', type=Path)
     key = sub.add_parser('tap')
     key.add_argument('code', type=lambda s: int(s, 0))
     typing = sub.add_parser('type')
     typing.add_argument('text')
+    typing.add_argument('--pace-ms', type=int)
     mem = sub.add_parser('memory')
     mem.add_argument('address', type=lambda s: int(s, 0))
     mem.add_argument('length', type=lambda s: int(s, 0))
@@ -344,7 +408,11 @@ def main():
         elif args.action == 'memory':
             print(client.memory(args.address, args.length).hex())
         elif args.action == 'type':
-            client.type_ascii(args.text)
+            client.type_ascii(args.text, pace_ms=args.pace_ms)
+        elif args.action in ('hold', 'release'):
+            print(json.dumps(client.execution_state(args.action == 'hold'), indent=2))
+        elif args.action == 'advance':
+            print(json.dumps(client.advance(args.milliseconds, stop=args.stop), indent=2))
         else:
             values = {'step': ('milliseconds',), 'tap': ('code',),
                       'floppy': ('drive', 'path'), 'reset': ('kind',)}

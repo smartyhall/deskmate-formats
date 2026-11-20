@@ -212,6 +212,39 @@ class ClientTests(unittest.TestCase):
         with self.assertRaisesRegex(box.ProtocolError, 'actual 5'):
             client.step(10)
 
+    def test_release_reports_observed_state(self):
+        client, wire = self.client([line(ms=0), line(protocol=1, held=False, ms=1)])
+        self.assertFalse(client.execution_state(False)['held'])
+        self.assertEqual(wire.sent[1:], [b'release\n', b'status\n'])
+
+    def test_advance_stop_acknowledgement_requires_held_state(self):
+        stop = self.root / 'STOP'
+        stop.touch()
+        status = dict(protocol=1, held=True, paused=False, quantum_ms=1, ms=40)
+        client, _ = self.client([line(**status), line(**dict(status, held=False))])
+        with self.assertRaises(box.ProtocolError):
+            client.advance(2500, stop=stop)
+        self.assertTrue(stop.exists())
+        client, wire = self.client([line(**status), line(**status)])
+        self.assertEqual(client.advance(2500, stop=stop)['actual_delta_ms'], 0)
+        self.assertFalse(stop.exists())
+        self.assertEqual(wire.sent[1:], [b'status\n', b'status\n'])
+
+    def test_advance_splits_at_native_step_limit(self):
+        status = dict(protocol=1, held=True, paused=False, quantum_ms=10, ms=100)
+        initial, middle, end = [line(**dict(status, ms=ms)) for ms in (100, 1100, 1110)]
+        client, wire = self.client([initial, initial, line(), middle,
+                                    middle, line(), end, end])
+        self.assertEqual(client.advance(1010)['actual_delta_ms'], 1010)
+        self.assertEqual([v for v in wire.sent if v.startswith(b'step')], [b'step 1000\n', b'step 10\n'])
+
+    def test_text_attributes_match_columns(self):
+        client, _ = self.client([line(chars=['4142'], attrs=['071f'], cols=2, rows=1)])
+        self.assertEqual(client.text_attributes(), [('AB', b'\x07\x1f')])
+        client, _ = self.client([line(chars=['4142'], attrs=['07'], cols=2, rows=1)])
+        with self.assertRaises(box.ProtocolError):
+            client.text_attributes()
+
     def test_observation_rejects_reset_or_time_changes(self):
         status = dict(protocol=1, held=True, paused=False, ms=100, frames=2,
                       bios_mode=19, w=1, h=1, version='SYNTHETIC')
