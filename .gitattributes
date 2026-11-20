@@ -27,4 +27,4 @@ tests/fixtures/application-generated/worksheet/*.wks binary
 tests/fixtures/application-generated/sound/*.snd binary
 tests/fixtures/application-generated/music/*.sng binary
 docs/research/codex-app-server-0.166.0.json text eol=lf
-tests/fixtures/application-generated/dm-music/major-scale-dm-music-1.04.hds binary
+tests/fixtures/application-generated/dm-music/*.hds binary

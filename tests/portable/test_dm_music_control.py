@@ -30,6 +30,34 @@ class DmMusicControlTests(unittest.TestCase):
                         '[Inst. 1 dyn. = mp]', '[Inst. 1 dyn. = mf]'):
             self.assertIn(control, lines)
 
+    def test_duration_and_accidental_controls(self):
+        tempo = project(parse_bytes((FIXTURES / 'music/mtempo.sng').read_bytes()))
+        self.assertEqual(tempo.conductor[0].quarter_bpm, 140)
+        self.assertEqual([e.duration_ticks for e in tempo.voices[0]], [24, 24, 24, 12, 48, 96, 6, 3])
+        duration = (FIXTURES / 'dm-music/duration-tempo-dm-music-1.04.hds').read_bytes()
+        self.assertIn(b'Pace=100\r\n', duration)
+        self.assertIn(b'[Tempo= 1/4 = 140]\r\n', duration)
+        self.assertIn(b'1F3/x/x\r\n16D3/x/x\r\n32B3/x/x', duration)
+
+        accidental = project(parse_bytes((FIXTURES / 'music/accidentals-native.sng').read_bytes()))
+        self.assertEqual([e.midi_pitch for e in accidental.voices[0]], [65, 66, 65, 64])
+        hds = (FIXTURES / 'dm-music/accidentals-dm-music-1.04.hds').read_bytes()
+        self.assertIn(b'4F3/x/x\r\n4F#3/x/x\r\n4F3/x/x\r\n4E3/x/x', hds)
+
+    def test_alternate_endings_preserve_control_order(self):
+        synthetic = FIXTURES / 'music/alternate-endings-tool-generated.sng'
+        sequence = project(parse_bytes(synthetic.read_bytes()))
+        controls = [e for e in sequence.conductor if e.kind != 'advance']
+        self.assertEqual([(e.kind, e.tick) for e in controls], [
+            ('repeat_start', 0), ('alternate_ending', 24),
+            ('alternate_ending', 48), ('repeat_end', 72)])
+        self.assertEqual([e.ending_number for e in controls[1:3]], [1, 2])
+        output = (FIXTURES / 'dm-music/alternate-endings-dm-music-1.04.hds').read_bytes()
+        events = output.decode('ascii').split('[Notes]\r\n')[1].splitlines()
+        self.assertEqual([line for line in events if line], [
+            '[Repeat 2x]', '[Inst. 1 = 9]', '4C3/x/x', '[Ending 1]', '4E3/x/x',
+            '[Ending 2]', '4G3/x/x', '[Repeat End]', '4A3/x/x'])
+
 
 if __name__ == '__main__':
     unittest.main()
