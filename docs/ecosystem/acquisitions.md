@@ -343,3 +343,47 @@ Keep third-party binaries and historical arrangements private; publish
 only original synthetic eligible data, independent findings and provenance.
 This is a bounded follow-up to sampled Music/SNG research, not a reason
 to abandon the next typography/Express Publisher campaign.
+
+### Operator clarification and supplied MidiMapper archive
+
+The operator identified **DM_Music.zip** as the expected separate
+converter package in TVDog. Locate it case-insensitively in the local
+mirror's manifest, directory listings and nested archives before making
+further requests. Pin the observed exact original URL and hash; do not
+guess a direct link. MidiMapper.zip is the companion player, not a
+substitute for DM_Music. The author independently distinguishes these
+programs in the December 2006 Usenet discussion.
+
+The operator supplied MidiMapper.zip (440,568 bytes; SHA-256
+323a06e1ae757de09ac25721d94a29ac7bbb1d4038d91cd74cdcdaee2dad798b).
+Its four ZIP entries are MidiMapper.CAB, pad_file.xml, setup.exe and
+SETUP.LST. The manifest identifies MidiMapper.exe 6.25.0.0, dated
+2007-03-24, while the included PAD XML declares 6.12 (2007-01-28).
+Preserve both metadata observations; verify actual PE resources in the lab.
+The PAD identifies W. H. Baldwin / Horizon Software and freeware status,
+not a source-code license. The CAB was independently read in memory
+using libarchive without executing or installing any component; 46
+members include 33 HDS files, MidiMapper.exe, a MIDI OCX, setup support
+and Midi_ReadMe.htm. No DM_Music executable is listed. CAB SHA-256:
+85ca490767cc0882d0aaa7a37e6f1b4debcecb73c195dfa6c5f3d68741324b4e.
+The extracted readme was 31,955 bytes (manifest advertises 35,166;
+reverify extraction and possible version mismatch), SHA-256
+10fda8778e0b89459541faf0eb1eb434337f4f592c1d9fa2255fe17342a71835.
+
+Readme sections describe [Song] and [Notes], PolyDur=True, PolyPhony,
+slash-separated voices with different durations, dotted durations,
+per-voice dynamics (pp through ff), velocity scaling, raw MIDI events,
+and annotations for key, meter, bars and score markers. Some annotations
+are ignored by the player. Treat these as documented HDS semantics,
+not established SNG field meanings. The bundled Canon, Sonatina and
+Bach arrangement candidates may correlate with the native SNG corpus;
+manual edits and new voices/instrument assignments are possible. Compare
+new converter output before using bundled HDS as historical controls.
+
+Use privately archived bytes and readme for the offline investigation.
+The uploaded file is not automatically available on the Windows VM;
+acquire the exact package through an operator-provided local copy or
+verified original archive URL. No installer execution, server download,
+or transfer to the VM was performed in this ChatGPT turn. Do not
+publish third-party binaries, historical arrangements, full readme or
+contact information in Git.
