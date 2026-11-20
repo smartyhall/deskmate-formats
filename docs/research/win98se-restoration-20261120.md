@@ -219,9 +219,22 @@ Creative lists the period SDR-95UPD-1-US release 16 for Windows 95/98.
 The archived package digest is
 `9c78b6ddb5de1647927af105b046c7cef9899c137a4282e877341006c273fa6e`.
 The vendor's update utility was run on the driver trial clone after
-the documented whole-package staging step. Its result requires
-post-restart comparison. The disabled logical-device functions of the
-non-IDE SB16 profile remain distinct from the wave playback result.
+the documented whole-package staging step. The two unused logical-device
+functions remained visible on the non-IDE SB16 profile.
+
+The Creative installer requested a guest restart. After restarting,
+Multimedia Properties listed SB16 Wave Out [220] and SB16 Wave In [220].
+The registry retained CTL0031 binding and reported the guest installation
+date. Windows Media Player reproduced its unavailable-audio error.
+Sound Recorder played the same two-second synthetic 440 Hz WAV to its
+end. The emulator's 48 kHz main stream measured 440 positive crossings
+per second and −29.28 dBFS RMS in the strongest 250 ms window. This
+qualifies the Sound Recorder wave-output path after one Windows restart.
+Cold-boot repeatability, Media Player compatibility, MIDI/FM, and the
+cause of the stock-versus-runtime differential remain open.
+The guest reached its safe shutdown screen at 332,642 emulated ms.
+A verified four-file 01 checkpoint preserves the result, with active
+Creative wave output and the observed Media Player limitation.
 
 - [Creative release 16 package registration](https://support.creative.com/downloads/download.aspx?nDownloadId=417)
 
@@ -240,8 +253,59 @@ CD wizard with all configured network links down. The 640×480 prompt
 required raising the display to 800×600. The IE6 component install
 reached its automatic restart prompt at 421,844 emulated ms. The
 first post-reboot Windows Setup frame showed Updating System Settings
-at 473,844 ms. Further verification is required to qualify the 04
-checkpoint. There is no separate early maintenance, IE6-only or
-end-of-support environment in this checkpoint.
+at 473,844 ms. A series of held observations continued through 693,844
+ms. Bounded free-running intervals subsequently showed the continuing
+updates stage at 719,956 ms and the final update round at 737,680 ms.
+The emulator was returned to verified held state at every sampling
+boundary. This trial does not isolate the effect of release from
+elapsed emulated time.
+
+The second reboot was observed at 884,847 ms. The disc wizard reached
+its final page at 974,861 ms with the offline round complete. The
+post-disc Windows Update link was visible and the guest stayed offline.
+System Properties reported Windows 98 SE 4.10.2222B at 1,026,179 ms.
+Registry exports measure Internet Explorer 6.0.2800.1106, DirectX
+4.09.00.0902 (9.0b), and Windows Media Player 9.00.00.2980. These
+program and OS versions, both observed restart cycles, and the CD's
+completion page establish the offline installation. Individual KB
+file-level verification remains an open inventory task.
+
+The resumed observer found the guest held at 1,038,165 emulated ms.
+The new framebuffer and the interrupted campaign's final framebuffer
+matched byte-for-byte. Both showed the normal safe-to-power-off screen.
+Native quit was acknowledged at that same time. The stopped machine
+was copied and verified as a four-file checkpoint at
+`checkpoints/win98se/04-feb2004-security-cd-20261120` under the private
+lab root. Its 4,294,950,912-byte disk has SHA-256
+`99250bd5319add275515464e456016b3b32528a8a1aef7e7101dd5b0ae809743`.
+The checkpoint restore must rebase the CD path from the original working
+directory with a verified external ISO inventory. The copy has yet to
+receive a separate restore boot and post-update application smoke test.
+
+The [offline update inventory](../evidence/win98-feb2004-update-inventory.json)
+compares named FAT32 paths from the stopped clone and sealed stock disk,
+using PyFatFS 1.1.0 and pefile 2024.8.26. The installed `IEXPLORE.EXE`
+changed from 5.0.2614.3500 to 6.0.2800.1106. The current Direct3D 9
+DLL and Media Player executable report 4.9.0.902 and 9.0.0.2980. The
+MDAC ADO and OLE DB DLLs changed from 2.10.3711.9 to 2.80.1022.0.
+The 28 executables selected from the 98-class updates directory and the
+four base component launchers returned `Valid` under the host's
+Authenticode check and presented a Microsoft signer.
+
+The disc's 98 SE file checklist has 22 KB groups. Nineteen groups had
+at least one changed path and three had none of their named targets on
+either disk. Those three are 329048 (ZIP folders), 274548 (HyperTerminal
+paths in the checklist) and 314941 (UPnP). The before/after setup logs
+and selected file hashes are retained privately. Several KBs share
+destinations, such as VIP.386 or the HTML Help binaries, so their final
+versions cannot establish individual installer outcomes. The setup INF
+also invokes `q240308.exe`, which has no named 98 SE file-checklist row.
+The inventory keeps that package as an unmatched setup entry. The early
+maintenance, IE6-only and end-of-support targets remain open.
+
+The [end-of-support inventory seed](../evidence/win98-end-of-support-seed.json)
+records three June 2006 bulletin entries for the 98-family Windows Update
+channel. The seed is a package acquisition starting point. No binaries
+from those entries were verified or installed during the CD trial.
 
 - [Archived February 2004 disc catalog entry](https://www.vogonsdrivers.com/getfile.php?fileid=873&menustate=50,0)
