@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "edges": [
+    {
+      "catalog": "250-1601",
+      "relation": "music_instrument_workflow",
+      "document": "01209",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01209.txt",
+      "sha256": "d54c34f72e660bc716f9d4aac97c2d6d23ed2b486bc3c4fca26d4419844b75ab",
+      "evidence": "reviewed title and targeted topic"
+    },
+    {
+      "catalog": "250-1602",
+      "relation": "music_instrument_workflow",
+      "document": "01229",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01229.txt",
+      "sha256": "49256e49a93fb06a2a23fd1041615a660b941f6c7a66ff7f8ea61a3838fe6554",
+      "evidence": "reviewed title and targeted topic"
+    },
+    {
+      "catalog": "250-1601",
+      "relation": "video_modes_reference",
+      "document": "01207",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01207.txt",
+      "sha256": "d9377c8bf994c2f80d902956c611e8059a538e65c303a53adcf502a95fa6f5e7",
+      "evidence": "reviewed title and targeted topic"
+    },
+    {
+      "catalog": "250-1602",
+      "relation": "video_modes_reference",
+      "document": "01227",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01227.txt",
+      "sha256": "03de6301f22f128751ab0738c31c64171c240b86e5e8067a7b1e7ad096829cfe",
+      "evidence": "reviewed title and targeted topic"
+    },
+    {
+      "catalog": "250-1650",
+      "relation": "windows_driver_reference",
+      "document": "01188",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01188.txt",
+      "sha256": "41dbf884fc1044b6d572b384b6c7a30d69801899fb73e1108aece99b74a148f7",
+      "evidence": "reviewed title and targeted topic"
+    },
+    {
+      "catalog": "250-1650",
+      "relation": "winmate_door_repair",
+      "document": "02611",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/02611.txt",
+      "sha256": "147bcb4a068b158a6125cf9b0173ef078c7ae9bc7e142a717a40333645c559fd",
+      "evidence": "reviewed title and targeted topic"
+    },
+    {
+      "catalog": "250-1650",
+      "relation": "winmate_menu_inventory",
+      "document": "02636",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/02636.txt",
+      "sha256": "b66c9bda5cec6cd99de94019528c8f99e6f4eb1b939f99ce1e6857fb7fa97794",
+      "evidence": "reviewed title and targeted topic"
+    },
+    {
+      "catalog": "250-1651",
+      "relation": "winmate_menu_inventory",
+      "document": "02862",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/02862.txt",
+      "sha256": "085ed84d5d54ba77de14fd7919914831f2e4adffeaa0a809658f716430e87d44",
+      "evidence": "reviewed title and targeted topic"
+    },
+    {
+      "catalog": "250-1651",
+      "relation": "winmate_door_repair",
+      "document": "02875",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/02875.txt",
+      "sha256": "93d03417f386cdcbd4ca262a63072984e5af60e368f267466210ccb35c0bfe8c",
+      "evidence": "reviewed title and targeted topic"
+    },
+    {
+      "catalog": "250-1651",
+      "relation": "winmate_program_icon_procedure",
+      "document": "02876",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/02876.txt",
+      "sha256": "6919a771cc157ac3beda2b9f75b98728433033b2375a2417831854405b163c5c",
+      "evidence": "reviewed title and targeted topic"
+    },
+    {
+      "catalog": "250-3063",
+      "relation": "catalog_record",
+      "document": "05381",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/05381.txt",
+      "sha256": "65ce1669ea6edbecfdd7741f2b7e36a8fc502f3aa4301fc824fd1a3b02c46445",
+      "evidence": "reviewed title and targeted topic"
+    },
+    {
+      "catalog": "250-3063",
+      "relation": "system_requirements",
+      "document": "05387",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/05387.txt",
+      "sha256": "694f2fa985428c57de112b69078e5452f7cf5de3605d3b70071cd6ca6bab1f2d",
+      "evidence": "reviewed title and targeted topic"
+    },
+    {
+      "catalog": "250-3063",
+      "relation": "deskmate_installation",
+      "document": "05390",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/05390.txt",
+      "sha256": "4bc26bb7165d0fc8c339e12c39dcfa14b7bdac5ea90ccf8cba75e16a5f5adb62",
+      "evidence": "reviewed title and targeted topic"
+    },
+    {
+      "catalog": "260-2839",
+      "relation": "catalog_record",
+      "document": "04344",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/04344.txt",
+      "sha256": "ddfc3393d22dd58910d64d0ecaaf378f12a557d67afb83fe809aed3fc666dd09",
+      "evidence": "reviewed title and targeted topic"
+    },
+    {
+      "catalog": "260-2839",
+      "relation": "deskmate_color_driver",
+      "document": "04347",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/04347.txt",
+      "sha256": "a51abae48bb9391da00a10077d1f7229ff38039b83256e21b69c6a86ff50c0df",
+      "evidence": "reviewed title and targeted topic"
+    },
+    {
+      "catalog": "260-2839",
+      "relation": "printer_driver_reference",
+      "document": "04360",
+      "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/04360.pdf",
+      "sha256": "0efba5fa4d0a6beb69da9f6a7f8a1b26d2ff9a7709871b32f18bec2eac905e04",
+      "evidence": "reviewed title and targeted topic"
+    }
+  ]
+}
