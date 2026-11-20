@@ -111,3 +111,44 @@ and test installation with guest networking disabled.
 - [Windows Update Restored v4](https://windowsupdaterestored.com/en/windows-update-v4.htm)
 - [Microsoft KB 836570 archive](https://www.betaarchive.com/wiki/index.php/Microsoft_KB_Archive/836570)
 - [Microsoft lifecycle announcement](https://www.microsoft.com/en-us/msrc/blog/2006/06/windows-98-98se-and-me-information-about-support-lifecycle-and-ms06-015)
+
+## Compressed round trip
+
+A second representation of the sealed stock checkpoint completed
+explicit 7z testing, extraction and SHA-256 comparison for all 18
+inventory files. The resulting archive is 206,548,904 bytes with SHA-256
+`884ec9d6cf295402891d05b188aa5de4c6f591e34e51216fe7782b9363384845`.
+The preserved baseline remains authoritative. The original incomplete
+184 MiB artifact was retained for provenance.
+
+## DM_Music compatibility
+
+The unmodified stock software environment reached the converter's loader
+error because `MSVBVM60.DLL` was absent. The archived Microsoft Visual Basic
+6.0 SP6 runtime wrapper matched the Download Center snapshot's SHA-1.
+The current Windows host validated its Microsoft Authenticode signature.
+The wrapper SHA-256 is
+`467b5a10c369865f2021d379fc0933cb382146b702bbca4bcb703fc86f4322bb`.
+After offline wrapper extraction, redistributable installation and
+guest restart, `DM_Music` opened. The pinned application SHA-256 is
+`b84f1a9a9dab3252c6c85127a7c9d25f68c0cde53a572ede80a4674230a02150`.
+
+The third-party converter produced an HDS file from the published
+synthetic major-scale SNG, at octave offset +0. Independent SNG
+projection yields a quarter-note tempo of 100, instrument slot 9, a
+15-note scale with MIDI pitches 60 through 72, a final half-note tonic
+and a quarter rest. The recovered 383-byte HDS preserves the note and
+duration sequence, slot and mp-to-mf dynamic labels. It writes the
+low C as `C3` and the upper tonic literally as `C+2`. A standalone HDS
+player check would be needed to assign an exact absolute MIDI mapping to
+those labels. The exact CRLF export is a Git-only synthetic fixture,
+with provenance in the fixture manifest.
+
+Five decoded framebuffer observations from the held converter used
+intervals of 0, 237, 431, 659 and 929 ms. They had zero changed pixels
+between observations after excluding a documented pointer rectangle.
+Pixel comparisons are advisory. The pager, boot and installation
+experiments used state and affirmative UI observations to decide when
+to move.
+
+- [Archived Microsoft VB6 SP6 runtime metadata](https://legacyupdate.net/download-center/download/24417/service-pack-6-for-visual-basic-6.0-run-time-redistribution-pack-vbrun60sp6.exe)

@@ -126,6 +126,10 @@ class Client:
                 if 'png' in safe:
                     safe['png'] = '<base64 omitted; capture stored separately>'
                 self._log({'event': 'reply', 'response': safe})
+            except KeyboardInterrupt:
+                self.close()
+                self._log({'event': 'interrupted', 'delivery': 'uncertain'})
+                raise
             except (OSError, ProtocolError) as exc:
                 self.close()
                 self._log({'event': 'transport_failure', 'delivery': 'uncertain',
@@ -372,7 +376,7 @@ def main():
     parser.add_argument('--port', type=int, default=8765)
     parser.add_argument('--journal', type=Path)
     sub = parser.add_subparsers(dest='action', required=True)
-    for action in ('status', 'info', 'hold', 'release', 'registers', 'text', 'quit'):
+    for action in ('status', 'info', 'identity', 'hold', 'release', 'registers', 'text', 'quit'):
         sub.add_parser(action)
     step = sub.add_parser('step')
     step.add_argument('milliseconds', type=int)
@@ -409,6 +413,10 @@ def main():
             print(client.memory(args.address, args.length).hex())
         elif args.action == 'type':
             client.type_ascii(args.text, pace_ms=args.pace_ms)
+        elif args.action == 'identity':
+            print(json.dumps({'machine_path': str(args.machine.resolve()),
+                              'endpoint': f'127.0.0.1:{args.port}',
+                              'info': client.info()}, indent=2))
         elif args.action in ('hold', 'release'):
             print(json.dumps(client.execution_state(args.action == 'hold'), indent=2))
         elif args.action == 'advance':
