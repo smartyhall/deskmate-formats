@@ -82,6 +82,16 @@
       "title": "Archive Team Yahoo! Groups preservation collection",
       "url": "https://archive.org/details/archiveteam_yahoogroups",
       "verification": "General archive collection lead, not proof that Tandy1000 is included."
+    },
+    "wb-sng-converter": {
+      "title": "WB and TVDog DM_Music SNG-to-HDS converter — archived author page",
+      "url": "https://web.archive.org/web/20120204044413/http://members.fortunecity.com/whb11/Midi/MyMidiPlayer.htm",
+      "verification": "Operator supplied snapshot; replay failed in ChatGPT. Author's Usenet announcement independently located; executable not acquired."
+    },
+    "wb-sng-usenet": {
+      "title": "New program available to convert and play Deskmate Music .SNG files",
+      "url": "https://groups.google.com/g/comp.sys.tandy/c/fq1OO44yLtI",
+      "verification": "Discussion inspected, beginning 2006-12-14; converter and original developers' first-person accounts, technical claims require independent verification."
     }
   },
   "entries": [

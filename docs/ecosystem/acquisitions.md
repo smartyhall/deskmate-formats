@@ -286,3 +286,60 @@ fonts, Atech/Rockwell, Express Publisher, utilities, printer drivers,
 Tandy hardware, and links to otherwise missing software. Public
 repository output should be curated technical summaries and source
 references, not raw messages, member details or attachments.
+
+## DM_Music and MidiMapper — independent SNG interpretation
+
+Operator-supplied author page:
+https://web.archive.org/web/20120204044413/http://members.fortunecity.com/whb11/Midi/MyMidiPlayer.htm
+
+Replay retrieval here failed; recover the page and linked README(s) in the
+lab if accessible. Independently located primary discussion:
+https://groups.google.com/g/comp.sys.tandy/c/fq1OO44yLtI
+
+On 2006-12-14 WB announced the Windows 32-bit SNG-to-HDS text converter,
+co-developed with TVDog. The 2007-02-05 post describes conversion of
+instrument dynamics in converter version 1.4 or later, and a default
+of mf in DeskMate versus p in the author's player. The 2007-03-08 post
+calls DM_Music version 1.05 and reports manual adjustments to distributed
+MIDI examples. Preserve the version spelling discrepancy; do not assume
+1.05 sorts before or after 1.4 without the actual release files/readme.
+The 2014-06-14 post gives the moved author site and converted MIDI page;
+the 2015-08-19 post names MidiMapper 6.49. A 2017-12-20 reply reports
+failure to find backed-up applications, not proof they are unavailable.
+
+Acquisition leads (not verified live downloads):
+- http://whb.comli.com/Midi/MyMidiPlayer.htm#DM_Music
+- http://whb.comli.com/Midi/MyPDM2toMidi.htm
+- http://my.voyager.net/~wb/misc/MidiMapper.zip (player/docs, not proven converter)
+- TVDog mirror private inventory and Tandy1000 Yahoo Groups file archives.
+- Bounded Wayback CDX lookup for the original and moved page directories,
+  then exact linked executable/ZIP and readme URLs; avoid indiscriminate crawl.
+
+The same thread contains first-person posts from DeskMate Music project
+manager Kevin Michael Vail (2006-12-15), describing sampled-note
+interpolation, the shared mouse/audio converter, and RTC-assisted buffer
+servicing; and Frank Durda IV (2006-12-19), describing earlier PSSJ recording
+limitations, the TL/3-era hardware revision and SND header changes to
+identify recording hardware. Treat these as historical hypotheses for
+native timing/recording experiments, not offsets or exact algorithms.
+Preserve links and dates, not wholesale copies of the posts.
+
+After acquiring and hashing an exact converter release and docs privately,
+run it in a disposable isolated Windows guest (no network; not the core
+research VM). Use fresh original synthetic controls and private historical
+SNGs with unresolved semantics. Compare untouched HDS output against the
+independent parser event stream and original DeskMate native evidence.
+Vary one field at a time: initial/changed dynamics for each voice, instrument
+slots and names, tempo, meter/key, accidentals, ties/rests/dots, repeat
+boundaries and crossings, missing slots and unsupported records. Include
+same-note timing and duration controls, and test absent versus explicit
+metadata. Record byte offsets, exact input hash, converter version/hash,
+raw HDS hash, normalized differences, warnings and omissions. Compare
+HDS before MIDI, and distinguish converter behavior from player defaults,
+manual edits, articulation and MIDI channel mapping. A plausible HDS result
+is an independent hypothesis, not proof of original DeskMate semantics;
+confirm discrepancies with native UI/save/playback and static evidence.
+Keep third-party binaries and historical arrangements private; publish
+only original synthetic eligible data, independent findings and provenance.
+This is a bounded follow-up to sampled Music/SNG research, not a reason
+to abandon the next typography/Express Publisher campaign.
