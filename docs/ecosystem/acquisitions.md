@@ -155,3 +155,99 @@ replaced by the First Publisher runtime. Shared runtime and clipboard
 calls remain open. See the
 [typography laboratory report](../research/typography-lab-20261119.md)
 for the stopped disk and emulated time.
+
+## Express Publisher — operator-supplied acquisition lead
+
+After the typography laboratory campaign, the operator identified this
+specific archive directory:
+
+http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Express-Publisher-for-DeskMate/
+
+HTTP and HTTPS retrieval from ChatGPT failed. Do not infer the directory
+contents, exact version, or successful acquisition from the URL alone.
+The next Codex native campaign should retrieve its listing and relevant
+media from the VM (try the original HTTP URL, HTTPS or the archival FTP
+service if available), preserve original bytes privately, inventory and
+hash every acquired file, and verify edition and media integrity. Install
+in a disposable isolated clone, without replacing the verified 3.05
+baseline. Inspect FF1 resources and internal family/variant names against
+Cobb, Dixon and Marin, especially the OEM Rockwell reference, plus shared
+DMFONT resources, example documents and print drivers. Test actual font
+selection, native saves and printing where practical. Update the catalog
+with measured results; if acquisition remains blocked, record the failure
+rather than substituting an unrelated DOS/Windows edition. No commercial
+media or extracted proprietary font resources belong in Git.
+
+## Broader commercial software inventory
+
+The operator also identified the parent archive directory as containing
+numerous DeskMate software packages:
+
+http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/
+
+Treat this as a priority acquisition source for the ecosystem catalog.
+HTTP and HTTPS listing requests from ChatGPT returned 502. Retrieve the
+actual listing in the Windows lab; retain a dated private copy, enumerate
+relevant child directories and files, and cross-reference the results
+with DM_PROGS.TXT, the existing catalog and period advertisements.
+Separate native DeskMate applications and bundled runtimes from ordinary
+DOS software and other platforms. Record exact names, editions, publisher,
+catalog numbers where evidenced, archive URLs, acquisition status and
+verification method. Do not infer contents from directory names alone.
+Prioritize DeskMate editions and resources relevant to shared fonts,
+printing, word processing, database and graphics. Acquire relevant media
+privately with SHA-256 receipts, preserving originals and deduplicating
+identical files. Use a bounded, polite download process; if the archive
+is unavailable, retain the lead and report the error. Identify missing
+catalog titles and newly discovered candidates. The subsequent operator decision authorizes a full private mirror of
+/pub/tvdog/ under [the archive protocol](archive-mirror.md), superseding
+this earlier selective acquisition limit. No public rehosting of original
+media or bulk installation in the core research image. Extensive per-title
+reverse engineering belongs to later campaigns; the next typography
+campaign should undertake the inventory and useful adjacent acquisitions
+without displacing its primary research objectives.
+
+## Historical documentation and community archive
+
+The operator supplied the [TVDog documentation index](http://www.oldskool.org/guides/tvdog/documents.html)
+and its pasted listing. The listed filenames and descriptions were
+inspected, not the underlying downloads. Check existing private archives
+first. Retain a dated listing and acquire relevant files from
+http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/ .
+
+| Priority | Listed files | Research purpose |
+| --- | --- | --- |
+| Immediate | aoldesk.zip | AOL DeskMate forum: search FF1, Atech, Rockwell, font installation, hinting, variants, printing, layout, undocumented formats, SDK and third-party titles |
+| Immediate | videomem.zip | Historical DeskMate Text document; inventory and test reader privately |
+| Immediate | cblmgc.zip | Two Print Magic documents; identify edition and format, preserve privately |
+| High | mm.zip, cistanne.zip | Radio Shack newsletters and monthly memos, official CompuServe announcements; release dates, catalog numbers and product changes |
+| High | expsoft.zip, rscat87.zip, rscat89.zip, rscat90.zip, rscat91.zip, rscat92.zip, rssoft86.zip, rssoft87.zip, tccat85.zip, tccat87.zip, tccat88.zip, edulist.zip | Software and hardware catalogs; dated sales offerings, editions, prices, compatibility |
+| High | direct.txt | 1992 factory-direct price list |
+| High | cistanfo.zip, aoltan.txt, delfor88.zip through delfor94.zip, tandy.zip, turp2_2.txt, julynl.txt | Community discussions and leads |
+| As needed | dmp120.txt, 2100cod.txt, 26-1255.zip, 26-1280.zip, 26-1280a.zip, 26-2839.zip, dmp240.txt | Printer codes and device profiles |
+| As needed | 1kprog.zip, 1ktech.zip, tltech.zip, sltech.zip, whichvid.txt, tandymap.txt, 1ktech-1.zip, 1ktech-2.zip | Hardware/video/I/O/audio context; verify model applicability |
+| Later | 1kguide.zip, pdmquik.zip, sxquik.zip, practsl.zip, practtl.zip, tl3user.zip, rlinst.zip, rlxuser.zip, rlxauser.zip | Early application workflows and machine-specific references |
+| Later | meetpcl.zip, tandy2.txt, tandy7.txt, sensman.zip | PC-Link, SchoolMate, WinMate context; distinct platform/service research, no live legacy service connection |
+
+Record URL, acquisition date, hashes, archive members, document date/title,
+and page or message locators. Build a searchable private text/OCR index
+where useful, with uncertain OCR flagged. Distinguish community reports
+from independently reproduced behavior. Keep original archives, scans,
+forum messages, personal contact details and historical documents private.
+Publish independent findings, citations, metadata and eligible synthetic
+fixtures only. Retain dated price and product evidence for the future
+demonstrator's internally consistent purchase records. Do not invent the
+family canon. Use the prioritized list to order the initial transfers within the full
+private mirror; all permitted in-scope files remain eventual targets.
+See the [archive protocol](archive-mirror.md).
+
+## Complete TVDog archive — operator decision
+
+The operator expanded the acquisition scope to the entire publicly
+accessible subtree at http://ftp.oldskool.org/pub/tvdog/ . The
+[archive mirror protocol](archive-mirror.md) governs server-friendly
+acquisition, persistent verification, offline indexing and publication
+of annotated source references. This replaces earlier selective-only
+acquisition instructions within this subtree; it does not expand the
+scope to other hosts or parent directories. Prioritize the existing
+DeskMate leads first within the mirror queue. No mirror is yet claimed.
