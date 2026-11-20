@@ -112,6 +112,39 @@ The Express Publisher manual identifies EPD publications, EPT templates
 and external TIFF dependencies during printing. The corpus contains
 four EPT controls and a large printer resource set.
 
+### Native Express Publisher installation and save
+
+The original installer completed in a disposable network-disabled Tandy
+1000 RSX clone with 25 MHz 386SX, 4 MiB memory, internal VGA and DOS 5.
+The three reconstructed 720 KiB FAT12 floppies preserved every ZIP
+member. The existing independent FAT12 reader verified all 23 byte
+identities. Their SHA-256 hashes in disk order are
+`986dec1a7b9ee5342e659d6413e40b30b5fc1566788b7ed6b373b4b1848ee8a5`,
+`537bfad21856e891d52edd28ef2e3e1a6b2691c4a69cd73ce73082d63683d539`,
+and `4e0d5e8f1d8d495927d80c4c3e7588e4e17d5703a21b5c7b83e675b9feee606e`.
+The RSX automation executable and ROM profile follow the
+[typography laboratory](typography-lab-20261119.md).
+
+The installer copied the standalone runtime, printer drivers and font
+support to `C:\EXPRESS`. Its font utility installed Dingbat2 and Springer
+after selection. Both installed FF1s match the exact recovered archive
+hashes. Initial launch requested FILES=20 in CONFIG.SYS. After backing
+up and changing the clone's FILES value from 10 to 20 and rebooting,
+EPDM opened a blank publication. The native Choose Font panel listed
+all five faces. A Springer text run was added and Save As wrote a
+synthetic `UNTITLED.EPD` to disposable FAT12 media after a disk-path
+error on the initial save attempt. Two extractors agree on the 3,277-byte
+publication, SHA-256
+`5942011fa156acc92177c6a617d1243e857d05d9e66888d40d2060ef0bd9df8a`.
+It starts with the same `00 04 4A 4F 52 47 45 00` marker as the archived
+EPT templates. Reopen, print and shared-runtime comparison remain open.
+
+The clone stopped through the authenticated loopback socket at
+1,703,578 emulated ms and 107,206 frames. The stopped disk SHA-256 is
+`d87c5ff3306ddd1fd4f45385479653a42d7206ce0ed2211fdccc5adb90206fbd`.
+The private native directory holds commands, pinned input hashes, frames,
+the disposable scratch disk and the verified synthetic publication.
+
 The Text reader now retains documented paragraph-margin control envelopes.
 Its recovered projection of the historical VIDEOMEM document contains
 2,016 characters and six independently located margin records. The two
@@ -149,3 +182,26 @@ inventory exposed DOS RSX profiles and the principal Windows research VM.
 No HDS capture or differential is claimed. The
 [acquisition handoff](../ecosystem/acquisitions.md) pins leads for the
 companion MidiMapper and Yahoo Groups archive from PR #129.
+
+## Checks and remaining work
+
+The focused archive, catalog and format tests passed. Ruff, REUSE,
+publication audit, and wheel and source archive builds passed. The
+package inspection found no private index or research binaries.
+The local full portable run executed 656 tests with two skips and
+one failure. Its isolated rerun reproduced the Supervisor
+`test_owner_termination_leaves_permanent_fence_and_read_only_restart`
+failure because the synthetic owner acknowledgment was never observed.
+The campaign left Supervisor code unchanged.
+
+Continue acquisition through the operator's downloader and repeat the
+private ingestion commands. The remaining archive work includes
+image-only PDF OCR and compressed ARC resources. Target the original
+MoreType or AllType releases for Rockwell and test alternate FF1 pair
+tables and printing in isolated native profiles. Run DM_Music in a
+disposable VB6-capable Windows guest and compare untouched HDS against
+the independent parser and original Music controls.
+
+The published work is tracked in
+[draft review PR #131](https://github.com/smartyhall/deskmate-formats/pull/131).
+See the [usage ledger](../evidence/codex-usage/README.md) for checkpoints.

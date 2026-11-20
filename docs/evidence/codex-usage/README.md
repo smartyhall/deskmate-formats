@@ -1,5 +1,12 @@
 # Codex research usage ledger
 
+The TVDog campaign recorded [startup](20261119-tvdog-startup.json),
+[mirror verification](20261119-tvdog-mirror.json),
+[retry changes](20261119-tvdog-retry.json),
+[indexing](20261119-tvdog-index.json),
+[discoveries](20261119-tvdog-discoveries.json), and
+[completion](20261119-tvdog-completion.json).
+
 The [recovered Draw campaign tail](20261119-draw-pr122-recovered-tail.json)
 contains observations after PR #122's published completion receipt
 through the interrupted turn's last recorded event.

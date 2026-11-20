@@ -32,7 +32,7 @@ Here, acquired means the inspected release archive passed file/member checks. Id
 
 | Product or release | Acquired | Identity evidence | Installation evidence | Native format evidence |
 | --- | --- | --- | --- | --- |
-| Express Publisher 1.00 | Three disk file sets and manual | App and help agree on 1.00, launcher banner 03.05.00 | Installer examined | Four EPT templates, five FF1 identities, 47 PRS members |
+| Express Publisher 1.00 | Three disk file sets and manual | App and help agree on 1.00, launcher banner 03.05.00 | Standalone install and launch on disposable RSX | Native EPD save, four EPT templates, five FF1 identities, 47 PRS members |
 | First Publisher 2.01 | Three FAT12 disks from earlier campaign | FP.EXE runtime 03.02.00 | Previously launched on disposable RSX | PUB samples and independently read FNT maps |
 | Q&A Write 1.00 | QWD.ZIP | Symantec, documented version 1.00 and launcher banner 03.03.01 | Install PDM inspected statically | Six printer FNTs plus DMTOQWD.PDM |
 | Print Magic 1.1 | PM.ZIP and compatibility readme | Epyx, 1988, application version 1.1 | Install PDM inspected statically | PMP page, PMG graphic and PMF font corpus |

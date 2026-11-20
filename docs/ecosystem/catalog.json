@@ -190,14 +190,15 @@
         "1.00"
       ],
       "media_status": "private-archive-hash-verified",
-      "installation_status": "not-tested-in-demonstrator",
-      "format_status": "resource-inventory",
+      "installation_status": "standalone-install-and-launch-on-disposable-rsx",
+      "format_status": "native-epd-save-and-resource-inventory",
       "formats": [
+        "EPD",
         "EPT",
         "FF1",
         "PRS"
       ],
-      "notes": "Application PDM and help identify version 1.00 and 1.0 respectively. Three disk-file sets, a separate manual, and 14 LHA packages. Shared-mode installer offers a DMFONT.RES upgrade.",
+      "notes": "Application PDM and help identify version 1.00 and 1.0 respectively. The standalone native trial installed both extra faces, launched with FILES=20 and saved a synthetic EPD. Shared-mode installer offers a DMFONT.RES upgrade.",
       "runtime_markers": [
         "DESKMATE$05.00 901001$"
       ],
