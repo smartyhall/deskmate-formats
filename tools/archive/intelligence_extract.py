@@ -94,8 +94,12 @@ def identify(path: Path, name: str) -> str:
         data = stream.read(4096)
     if kind := NATIVE_SIGNATURES.get(data[:4]):
         return kind
-    if data.startswith(b'\xbd\x7a\0\x01\x01') and data[32:34] == b'\x2e\0':
+    if data[:5] in (b'\xbd\x7a\0\x01\x01', b'\xbd\x7a\x01\x01\x01') and data[32:34] == b'\x2e\0':
         return 'ff1'
+    if data.startswith(b'RIFF') and data[8:12] == b'WAVE':
+        return 'wav'
+    if data.startswith((b'II*\0', b'MM\0*')):
+        return 'tiff'
     if data.startswith(b'%PDF-'):
         return 'pdf'
     if data.startswith(b'7z\xbc\xaf\x27\x1c'):

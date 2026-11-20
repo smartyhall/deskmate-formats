@@ -22,6 +22,23 @@
       "source_sha256": "e3df3f361c32d0fe1a64e7ead88d2d972a37d45dc67f90b8cfe640350ecfc610"
     },
     {
+      "id": "express-order-guide-1988",
+      "title": "Express Order Software Buyer's Guide",
+      "kind": "vendor-catalog",
+      "document_date": "1988",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/expsoft.zip",
+      "acquired_utc": "2026-11-20T04:48:54.708094+00:00",
+      "source_bytes": 8444333,
+      "source_sha256": "cb154cc3c183711b1312f1f7634021a29b861e23b31158c2dcc2ce313b98c9c6",
+      "pages": 84,
+      "member": {
+        "name": "expsoft.pdf",
+        "ordinal": 0,
+        "bytes": 8474931,
+        "sha256": "a68d77dd078727f4a51855b51afbaf65198bddf8fbc4bf1760ad4fe008214f5c"
+      }
+    },
+    {
       "id": "factory-direct-announcement",
       "title": "Radio Shack Introduces Tandy Factory Direct",
       "kind": "press-release",
@@ -35,6 +52,16 @@
         "bytes": 5766,
         "sha256": "173618b263e18fd3736e90b05cff4a3cf5dfc9a4d18ecf305028f6d4a39a98fe"
       }
+    },
+    {
+      "id": "factory-direct-price-sheet-1992",
+      "title": "Tandy Factory-Direct Pricing and Availability, effective November 10, 1992",
+      "kind": "price-sheet-transcription",
+      "document_date": "1992-11-10",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/direct.txt",
+      "acquired_utc": "2026-11-20T04:47:41.201646+00:00",
+      "source_bytes": 2841,
+      "source_sha256": "6205545895c4103ea3de78b85f4fe3546f1be6b4898571bc801a413d1faee07d"
     },
     {
       "id": "home-lawyer-announcement",
@@ -948,6 +975,502 @@
           ]
         }
       ]
+    },
+    {
+      "id": "retail-deskmate-1988",
+      "product": "DeskMate retail package",
+      "catalog_number": "25-1250",
+      "price_usd_cents": 9995,
+      "basis": "advertised",
+      "notes": "The guide does not give a runtime build number.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 9,
+          "section": "DeskMate"
+        }
+      ]
+    },
+    {
+      "id": "workgroup-companion-1988",
+      "product": "DeskMate Workgroup Companion",
+      "catalog_number": "25-1251",
+      "price_usd_cents": 14995,
+      "basis": "advertised",
+      "catalog_id": "workgroup-companion",
+      "requires": "DeskMate (25-1250) at each station.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 9,
+          "section": "DeskMate Workgroup Companion"
+        }
+      ]
+    },
+    {
+      "id": "tandylink-plus",
+      "product": "TandyLink Board Plus",
+      "catalog_number": "26-5602",
+      "price_usd_cents": 11995,
+      "basis": "option",
+      "notes": "Listed for Tandy 1000 HX and EX.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 9,
+          "section": "DeskMate Workgroup Companion"
+        }
+      ]
+    },
+    {
+      "id": "tandylink-pc",
+      "product": "TandyLink Board PC",
+      "catalog_number": "26-5601",
+      "price_usd_cents": 11995,
+      "basis": "option",
+      "notes": "Listed for other Tandy PC-compatible machines.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 9,
+          "section": "DeskMate Workgroup Companion"
+        }
+      ]
+    },
+    {
+      "id": "schoolmate-1988",
+      "product": "SchoolMate",
+      "catalog_number": "25-1241",
+      "price_usd_cents": 99995,
+      "basis": "advertised",
+      "catalog_id": "schoolmate",
+      "notes": "The catalog names DeskMate and 3Com 3+Share as the system foundations.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 9,
+          "section": "SchoolMate"
+        }
+      ]
+    },
+    {
+      "id": "venture-1988",
+      "product": "Venture",
+      "catalog_number": "25-1249",
+      "price_usd_cents": 34900,
+      "basis": "advertised",
+      "catalog_id": "venture",
+      "requires": "512 KB RAM and hard disk.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 10,
+          "section": "Venture"
+        }
+      ]
+    },
+    {
+      "id": "quicken-deskmate-1988",
+      "product": "Quicken for DeskMate",
+      "catalog_number": "25-1246",
+      "price_usd_cents": 4995,
+      "basis": "advertised",
+      "catalog_id": "quicken",
+      "requires": "512 KB RAM or Tandy 1000 SL.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 10,
+          "section": "QUICKEN"
+        }
+      ]
+    },
+    {
+      "id": "memorymate-deskmate-1988",
+      "product": "MemoryMate for DeskMate",
+      "catalog_number": "25-1247",
+      "price_usd_cents": 6995,
+      "basis": "advertised",
+      "catalog_id": "memorymate",
+      "requires": "384 KB RAM and two floppy drives.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 10,
+          "section": "MemoryMate"
+        }
+      ]
+    },
+    {
+      "id": "homeword-ii-deskmate-1988",
+      "product": "HomeWord II",
+      "catalog_number": "25-1266",
+      "price_usd_cents": 8995,
+      "basis": "advertised",
+      "catalog_id": "homeword-ii",
+      "requires": "512 KB RAM or Tandy 1000 SL.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 10,
+          "section": "HomeWord II"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 51,
+          "section": "HomeWord II"
+        }
+      ]
+    },
+    {
+      "id": "pc-link-starter-1988",
+      "product": "PC-Link starter kit",
+      "catalog_number": "25-1255",
+      "price_usd_cents": 2995,
+      "basis": "advertised",
+      "catalog_id": "pc-link",
+      "includes": [
+        "PC-Link terminal software",
+        "One month of service"
+      ],
+      "requires": "384 KB RAM and modem.",
+      "notes": "The same advertisement lists ongoing access separately at $9.95 a month.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 10,
+          "section": "PC-Link"
+        }
+      ]
+    },
+    {
+      "id": "instant-pages-1988",
+      "product": "Instant Pages",
+      "catalog_number": "25-1262",
+      "price_usd_cents": 4495,
+      "basis": "advertised",
+      "catalog_id": "instant-pages",
+      "requires": "512 KB RAM or Tandy 1000 SL.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 10,
+          "section": "Instant Pages"
+        }
+      ]
+    },
+    {
+      "id": "fundamentals-25-1233",
+      "product": "The FUNdamentals, DeskMate edition",
+      "catalog_number": "25-1233",
+      "price_usd_cents": 1995,
+      "basis": "advertised",
+      "catalog_id": "fundamentals-deskmate",
+      "notes": "Page 11 assigns this SKU to the SL and page 28 to the TL.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "The FUNdamentals"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 28,
+          "section": "The FUNdamentals"
+        }
+      ]
+    },
+    {
+      "id": "fundamentals-25-1236",
+      "product": "The FUNdamentals, DeskMate edition",
+      "catalog_number": "25-1236",
+      "price_usd_cents": 1995,
+      "basis": "advertised",
+      "catalog_id": "fundamentals-deskmate",
+      "notes": "Page 11 assigns this SKU to the TL and page 28 to the SL.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "The FUNdamentals"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 28,
+          "section": "The FUNdamentals"
+        }
+      ]
+    },
+    {
+      "id": "mathtalk-1988",
+      "product": "MathTalk",
+      "catalog_number": "90-3366",
+      "price_usd_cents": 3495,
+      "basis": "advertised",
+      "catalog_id": "mathtalk",
+      "available_from": "1988-10-30",
+      "requires": "384 KB RAM.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "MathTalk"
+        }
+      ]
+    },
+    {
+      "id": "kidtalk-1988",
+      "product": "KidTalk",
+      "catalog_number": "90-3365",
+      "price_usd_cents": 3495,
+      "basis": "advertised",
+      "catalog_id": "kidtalk",
+      "available_from": "1988-10-30",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "KidTalk"
+        }
+      ]
+    },
+    {
+      "id": "speller-bee-1988",
+      "product": "Speller Bee",
+      "catalog_number": "25-1232",
+      "price_usd_cents": 3495,
+      "basis": "advertised",
+      "catalog_id": "speller-bee",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "Speller Bee"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 26,
+          "section": "Speller Bee"
+        }
+      ],
+      "notes": "The guide gives conflicting planned dates for the same SKU. Page 11 states 1988-09-30 and page 26 states 1988-10-30."
+    },
+    {
+      "id": "smoothtalker-1988",
+      "product": "SmoothTalker",
+      "catalog_number": "90-3368",
+      "price_usd_cents": 3495,
+      "basis": "advertised",
+      "catalog_id": "smoothtalker",
+      "available_from": "1988-10-30",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "Software-only text-to-speech listing"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 26,
+          "section": "SmoothTalker"
+        }
+      ]
+    },
+    {
+      "id": "computer-mad-libs-1988",
+      "product": "Computer MAD LIBS",
+      "catalog_number": "90-3348",
+      "price_usd_cents": 1995,
+      "basis": "advertised",
+      "catalog_id": "computer-mad-libs",
+      "available_from": "1988-10-30",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "Computer MAD LIBS"
+        }
+      ]
+    },
+    {
+      "id": "print-magic-deskmate-1988",
+      "product": "Print Magic",
+      "catalog_number": "25-1265",
+      "price_usd_cents": 5495,
+      "basis": "advertised",
+      "catalog_id": "print-magic",
+      "requires": "512 KB RAM or Tandy 1000 SL.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "Print Magic"
+        }
+      ]
+    },
+    {
+      "id": "childrens-writing-and-publishing-center-1988",
+      "product": "The Children's Writing & Publishing Center",
+      "catalog_number": "25-1237",
+      "price_usd_cents": 5495,
+      "basis": "advertised",
+      "catalog_id": "childrens-writing-and-publishing-center",
+      "available_from": "1988-10-30",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "The Children's Writing & Publishing Center"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 29,
+          "section": "The Children's Writing & Publishing Center"
+        }
+      ]
+    },
+    {
+      "id": "music-studio-3-1988",
+      "product": "The Music Studio 3.0",
+      "catalog_number": "25-1234",
+      "price_usd_cents": 7995,
+      "basis": "advertised",
+      "catalog_id": "music-studio",
+      "available_from": "1988-10-30",
+      "requires": "512 KB RAM or Tandy 1000 SL.",
+      "notes": "Advertises both MIDI directions and a digitized sound editor. These functions do not establish SNG compatibility.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "The Music Studio 3.0"
+        }
+      ]
+    },
+    {
+      "id": "factory-direct-486sx25-base",
+      "product": "OMNI-Profile 486SX/25 base configuration",
+      "catalog_number": "259-5146",
+      "price_usd_cents": 79600,
+      "basis": "advertised",
+      "available_from": "1992-11-10",
+      "notes": "Reported in a transcription of a local Radio Shack price sheet.",
+      "evidence": [
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            17,
+            17
+          ]
+        },
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            6,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "factory-direct-120mb",
+      "product": "120 MB hard drive option",
+      "catalog_number": "259-4127",
+      "price_usd_cents": 32900,
+      "basis": "advertised",
+      "available_from": "1992-11-10",
+      "notes": "Reported in a transcription of a local Radio Shack price sheet.",
+      "evidence": [
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            27,
+            27
+          ]
+        },
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            6,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "factory-direct-4mb",
+      "product": "Memory upgrade to 4 MB total",
+      "catalog_number": "259-7210",
+      "price_usd_cents": 4500,
+      "basis": "advertised",
+      "available_from": "1992-11-10",
+      "notes": "Reported in a transcription of a local Radio Shack price sheet.",
+      "evidence": [
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            38,
+            38
+          ]
+        },
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            6,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "factory-direct-cdr1000",
+      "product": "CDR1000 internal CD-ROM drive",
+      "catalog_number": "259-1077",
+      "price_usd_cents": 19900,
+      "basis": "advertised",
+      "available_from": "1992-11-10",
+      "notes": "Reported in a transcription of a local Radio Shack price sheet.",
+      "evidence": [
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            78,
+            78
+          ]
+        },
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            6,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "factory-direct-vgm441",
+      "product": "VGM-441 color monitor",
+      "catalog_number": "259-4048",
+      "price_usd_cents": 39900,
+      "basis": "advertised",
+      "available_from": "1992-11-10",
+      "notes": "Reported in a transcription of a local Radio Shack price sheet.",
+      "evidence": [
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            96,
+            96
+          ]
+        },
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            6,
+            12
+          ]
+        }
+      ]
     }
   ],
   "observations": [
@@ -1066,13 +1589,20 @@
     {
       "id": "tandy-vgm450-replacement",
       "subject": "Tandy VGM-450 monitor",
-      "claim": "A vendor article identifies VGM-450 25-4049 as the replacement for VGM-441. The text renders the predecessor code as 259-4048 and leaves that code in need of independent confirmation.",
+      "claim": "A vendor article identifies VGM-450 25-4049 as the replacement for VGM-441 259-4048. The acquired November 1992 Factory Direct price-sheet transcription independently reports that predecessor number.",
       "evidence": [
         {
           "source_id": "vgm-450-announcement",
           "lines": [
             5,
             14
+          ]
+        },
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            96,
+            96
           ]
         }
       ]
@@ -1111,6 +1641,57 @@
           ]
         }
       ]
+    },
+    {
+      "id": "fundamentals-sku-conflict",
+      "subject": "The FUNdamentals DeskMate retail variants",
+      "claim": "The Express Order catalog reverses the same two SL and TL SKUs between pages 11 and 28. The two prices agree. Disk or box evidence is needed to assign a hardware variant to either SKU. Page 28 separately lists an HX/TX edition at 25-1186 without the DeskMate interface designation.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "The FUNdamentals"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 28,
+          "section": "The FUNdamentals"
+        }
+      ]
+    },
+    {
+      "id": "qa-write-dos-vs-deskmate",
+      "subject": "Q&A Write retail editions",
+      "claim": "The 1988 catalog puts 90-3265 at $129.00 in DOS Word Processors. Its layout marks nearby HomeWord II with the DeskMate logo, but lacks that indicator for Q&A Write. This is evidence for the ordinary DOS listing. The DeskMate edition needs its own price and SKU evidence.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 51,
+          "section": "Q&A Write"
+        }
+      ]
+    },
+    {
+      "id": "catalog-platform-separation",
+      "subject": "Distinct platform generations",
+      "claim": "The same guide separately offers XENIX DeskMate, DeskMate Model 4, Color Computer DeskMate and Color Computer DeskMate 3. These are platform-specific listings. Their catalog entries do not establish PC DeskMate 3 compatibility.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 57,
+          "section": "XENIX DeskMate"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 65,
+          "section": "DeskMate Model 4"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 81,
+          "section": "Color DeskMate"
+        }
+      ]
     }
   ],
   "acquisition_leads": [
@@ -1124,7 +1705,8 @@
           291,
           292
         ]
-      }
+      },
+      "resolved_by_source_id": "factory-direct-price-sheet-1992"
     },
     {
       "title": "Express Order Software Buyer's Guide",
@@ -1136,7 +1718,8 @@
           337,
           338
         ]
-      }
+      },
+      "resolved_by_source_id": "express-order-guide-1988"
     },
     {
       "title": "1987 Radio Shack catalog, computer pages",

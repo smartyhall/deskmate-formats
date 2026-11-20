@@ -6,12 +6,18 @@ files actually left on a DeskMate system, not only those created by the
 bundled applications. The core formats and current Draw/font research
 remain the immediate priorities.
 
-[Machine-readable catalog](catalog.json) records 31 products and toolkits.
+[Machine-readable catalog](catalog.json) records 42 products and toolkits.
 The [TVDog reference library](tvdog-reference.md) links recovered media and
 documents to exact source identities, a release coverage matrix and
 research leads. A catalog listing, a downloadable archive, an acquired
 disk, a verified installation and a decoded native format are distinct
 facts.
+
+The recovered 1988 Express Order Software Buyer's Guide identifies eleven
+additional products. The catalog records the interface as advertised where
+the guide displays the DeskMate logo, with exact runtime and native file
+support still open. The accompanying purchase evidence links named products
+to exact guide pages. [Period purchase evidence](demonstrator-purchase-facts.md)
 
 ## Scope and evidence
 

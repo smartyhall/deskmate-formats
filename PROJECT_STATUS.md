@@ -1,5 +1,24 @@
 # Project status — DeskMate formats
 
+## TVDog archive intelligence — 2026-11-19
+
+The first [mirror verification](docs/ecosystem/tvdog-mirror-verification.md)
+rehashes 958 originals and 62 directory listings. The manifest records
+9,015 remaining transfers at that checkpoint. The downloader now persists
+and honors bounded retry cooldowns. The private
+[offline index](tools/archive/intelligence.md) follows committed verified
+receipts and reuses extraction and text by content identity.
+
+The [annotated reference catalog](docs/ecosystem/tvdog-reference.md) records
+Express Publisher 1.00, Q&A Write 1.00, DM_Music 1.04, SDK materials, and
+period community collections. Express Publisher adds the Dingbat2 and
+Springer FF1 profiles. Historical files drove bounded Text margin recovery
+and opt-in Music sector-padding recovery. The
+[demonstrator purchase facts](docs/ecosystem/demonstrator-purchase-facts.md)
+pin period prices and source-specific compatibility evidence. See the
+[campaign handoff](docs/research/tvdog-intelligence-20261119.md) for
+measurements, private locations and remaining native trials.
+
 ## Ecosystem preservation and living demonstrator — 2026-11-19
 
 The operator expanded the long-term preservation scope to dedicated

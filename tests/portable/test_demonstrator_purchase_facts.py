@@ -20,8 +20,13 @@ class DemonstratorPurchaseFactsTests(unittest.TestCase):
         self.assertTrue(evidence)
         for ref in evidence:
             self.assertIn(ref["source_id"], self.sources)
-            first, last = ref["lines"]
-            self.assertTrue(1 <= first <= last)
+            self.assertNotEqual("page" in ref, "lines" in ref)
+            if "page" in ref:
+                self.assertTrue(1 <= ref["page"] <= self.sources[ref["source_id"]]["pages"])
+                self.assertTrue(ref["section"])
+            else:
+                first, last = ref["lines"]
+                self.assertTrue(1 <= first <= last)
 
     def test_source_identities_and_member_locators(self):
         self.assertEqual(self.facts["schema_version"], 1)
@@ -52,11 +57,16 @@ class DemonstratorPurchaseFactsTests(unittest.TestCase):
                 self.assertNotIn(location, occurrences)
                 occurrences.add(location)
                 if period := source["document_date"]:
-                    date.fromisoformat(period + "-01" if len(period) == 7 else period)
+                    precision_suffix = {4: "-01-01", 7: "-01", 10: ""}
+                    date.fromisoformat(period + precision_suffix[len(period)])
 
     def test_prices_conditions_catalog_links_and_leads(self):
         catalog = json.loads((ECOSYSTEM / "catalog.json").read_text(encoding="utf-8"))
         catalog_ids = {entry["id"] for entry in catalog["entries"]}
+        self.assertEqual(catalog["sources"]["express-order-guide-1988"]["url"],
+                         self.sources["express-order-guide-1988"]["url"])
+        for entry in catalog["entries"]:
+            self.assertTrue(set(entry["source_ids"]) <= catalog["sources"].keys())
         facts = self.facts["offers"] + self.facts["observations"]
         self.assertEqual(len({item["id"] for item in facts}), len(facts))
         for offer in self.facts["offers"]:
@@ -78,6 +88,10 @@ class DemonstratorPurchaseFactsTests(unittest.TestCase):
             self.assertEqual(lead["snapshot_status"], "pending")
             self.assertNotIn(lead["url"], urls)
             self.assert_sources([lead["evidence"]])
+            if resolution := lead.get("resolved_by_source_id"):
+                source = self.sources[resolution]
+                self.assertEqual(source["url"], lead["url"])
+                self.assertGreater(source["acquired_utc"], self.facts["mirror_snapshot_utc"])
             urls.add(lead["url"])
 
 

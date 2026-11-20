@@ -318,7 +318,9 @@ def configure(db, profile, store, update_tools):
                         kinds.update(tool_kinds[setting])
                 if kinds:
                     rows = requeue_rows(db)
-                    invalidate(db, rows, [row for row in rows if row["kind"] in kinds])
+                    cache_ids = {row["id"] for row in db.execute("SELECT id,kind FROM analysis")
+                                 if row["kind"] in kinds}
+                    invalidate(db, rows, [row for row in rows if row["kind"] in kinds], cache_ids)
             db.execute("INSERT OR REPLACE INTO configuration VALUES (?,?)", (key, value))
 
 
@@ -381,8 +383,9 @@ def requeue_rows(db):
     ).fetchall()
 
 
-def invalidate(db, rows, selected):
+def invalidate(db, rows, selected, cache_ids=()):
     analyses = {r["analysis_id"] for r in selected if r["analysis_id"] is not None}
+    analyses.update(cache_ids)
     affected = {r["source_id"] for r in selected}
     # A shared analysis may have been reached through a different source.
     affected.update(r["source_id"] for r in rows if r["analysis_id"] in analyses)

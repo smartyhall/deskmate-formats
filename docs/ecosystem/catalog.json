@@ -54,7 +54,7 @@
       "verification": "known archive lead; current page retrieval timed out"
     },
     "express-publisher-archive": {
-      "title": "Express Publisher for DeskMate — Oldskool archive directory",
+      "title": "Express Publisher for DeskMate \u2014 Oldskool archive directory",
       "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Express-Publisher-for-DeskMate/",
       "verification": "Four TVDog ZIPs verified locally. All 14 embedded LHA packages extracted and inventoried."
     },
@@ -69,7 +69,7 @@
       "verification": "Operator supplied index and pasted entries on 2026-11-19; listing inspected, underlying downloads not yet verified. Priorities in acquisitions.md."
     },
     "tvdog-root": {
-      "title": "TVDog archive at Oldskool — complete public subtree",
+      "title": "TVDog archive at Oldskool \u2014 complete public subtree",
       "url": "http://ftp.oldskool.org/pub/tvdog/",
       "verification": "Local mirror enumerated and independently checked. See tvdog-mirror-verification.md for exact acquisition status."
     },
@@ -137,6 +137,11 @@
       "title": "DeskMate SDK 3.03 shelf",
       "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Development-System-3.03/DeskMate-Development-Guide.zip",
       "verification": "Private bytes inspected. Source and member identities in tvdog-reference.json."
+    },
+    "express-order-guide-1988": {
+      "title": "Tandy Express Order Software Buyer's Guide (1988)",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/expsoft.zip",
+      "verification": "84-page expsoft.pdf recovered and DeskMate pages visually checked. See demonstrator-purchase-facts.json for digest, pages, exact offers and limits."
     }
   },
   "entries": [
@@ -241,7 +246,8 @@
       "source_ids": [
         "rs1990",
         "rs1992",
-        "review1989"
+        "review1989",
+        "express-order-guide-1988"
       ],
       "catalog_number": "25-1266",
       "versions": [],
@@ -317,7 +323,8 @@
       "evidence_status": "documented",
       "source_ids": [
         "rs1990",
-        "quicken"
+        "quicken",
+        "express-order-guide-1988"
       ],
       "catalog_number": "25-1246",
       "versions": [
@@ -332,13 +339,14 @@
     },
     {
       "id": "memorymate",
-      "title": "MemoryMate",
-      "publisher": null,
+      "title": "MemoryMate for DeskMate",
+      "publisher": "Broderbund Software",
       "category": "information-management",
-      "relationship": "edition-unverified",
-      "evidence_status": "candidate",
+      "relationship": "advertised-deskmate-interface",
+      "evidence_status": "documented",
       "source_ids": [
-        "rs1990"
+        "rs1990",
+        "express-order-guide-1988"
       ],
       "catalog_number": "25-1247",
       "versions": [],
@@ -346,7 +354,7 @@
       "installation_status": "not-tested-in-demonstrator",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Listed alongside DeskMate products; verify genuine DeskMate version before promotion."
+      "notes": "Express Order guide page 10 displays the DeskMate logo beside retail number 25-1247. The program and exact runtime remain unverified."
     },
     {
       "id": "rightwriter",
@@ -520,7 +528,8 @@
       "source_ids": [
         "legacy",
         "tvdog",
-        "tvdog-ref-print-magic"
+        "tvdog-ref-print-magic",
+        "express-order-guide-1988"
       ],
       "catalog_number": null,
       "versions": [
@@ -549,7 +558,8 @@
       "source_ids": [
         "legacy",
         "tvdog",
-        "tvdog-ref-instant-pages"
+        "tvdog-ref-instant-pages",
+        "express-order-guide-1988"
       ],
       "catalog_number": null,
       "versions": [
@@ -572,7 +582,8 @@
       "evidence_status": "candidate",
       "source_ids": [
         "legacy",
-        "tvdog"
+        "tvdog",
+        "express-order-guide-1988"
       ],
       "catalog_number": null,
       "versions": [],
@@ -797,6 +808,204 @@
       "format_status": "resource-inventory",
       "formats": [],
       "notes": "Development Guide and Technical Reference PDFs and DMDB header identities match local pins. PSSJ, Sound and Samples toolkits are independently indexed."
+    },
+    {
+      "id": "workgroup-companion",
+      "title": "DeskMate Workgroup Companion",
+      "publisher": "Tandy",
+      "category": "workgroup",
+      "relationship": "tandy-companion",
+      "evidence_status": "documented",
+      "source_ids": [
+        "express-order-guide-1988"
+      ],
+      "catalog_number": "25-1251",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Page 9. Requires the retail DeskMate package at each station. The guide describes RS-232 plus TandyLink and 3Com group configurations."
+    },
+    {
+      "id": "schoolmate",
+      "title": "SchoolMate",
+      "publisher": "Tandy",
+      "category": "education",
+      "relationship": "tandy-companion",
+      "evidence_status": "documented",
+      "source_ids": [
+        "express-order-guide-1988"
+      ],
+      "catalog_number": "25-1241",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Page 9. Documented as DeskMate plus 3Com 3+Share with teacher and student tools. Runtime version and media not identified."
+    },
+    {
+      "id": "venture",
+      "title": "Venture",
+      "publisher": "Star Software Systems",
+      "category": "business",
+      "relationship": "advertised-deskmate-interface",
+      "evidence_status": "documented",
+      "source_ids": [
+        "express-order-guide-1988"
+      ],
+      "catalog_number": "25-1249",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Page 10 shows the DeskMate User Interface logo. Advertised with a business planner, word processor, spreadsheet, file manager and general ledger. Actual runtime unverified."
+    },
+    {
+      "id": "pc-link",
+      "title": "PC-Link starter kit",
+      "publisher": "Quantum Computer Services",
+      "category": "communications",
+      "relationship": "deskmate-client-and-service",
+      "evidence_status": "documented",
+      "source_ids": [
+        "express-order-guide-1988"
+      ],
+      "catalog_number": "25-1255",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Page 10 documents the retail terminal-and-service package. Other PC-Link release and DeskMate bundle identities require independent verification."
+    },
+    {
+      "id": "fundamentals-deskmate",
+      "title": "The FUNdamentals for DeskMate",
+      "publisher": "Digital Learning Systems",
+      "category": "education",
+      "relationship": "advertised-deskmate-interface",
+      "evidence_status": "documented",
+      "source_ids": [
+        "express-order-guide-1988"
+      ],
+      "catalog_number": null,
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Pages 11 and 28 reverse the SL/TL assignment of SKUs 25-1233 and 25-1236. The separately listed 25-1186 HX/TX edition is not marked as using the DeskMate interface."
+    },
+    {
+      "id": "mathtalk",
+      "title": "MathTalk",
+      "publisher": "First Byte",
+      "category": "education",
+      "relationship": "advertised-deskmate-interface",
+      "evidence_status": "documented",
+      "source_ids": [
+        "express-order-guide-1988"
+      ],
+      "catalog_number": "90-3366",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Page 11 displays the DeskMate logo and gives 1988-10-30 as planned availability."
+    },
+    {
+      "id": "kidtalk",
+      "title": "KidTalk",
+      "publisher": "First Byte",
+      "category": "education",
+      "relationship": "advertised-deskmate-interface",
+      "evidence_status": "documented",
+      "source_ids": [
+        "express-order-guide-1988"
+      ],
+      "catalog_number": "90-3365",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Page 11 displays the DeskMate logo and gives 1988-10-30 as planned availability."
+    },
+    {
+      "id": "speller-bee",
+      "title": "Speller Bee",
+      "publisher": "First Byte",
+      "category": "education",
+      "relationship": "advertised-deskmate-interface",
+      "evidence_status": "documented",
+      "source_ids": [
+        "express-order-guide-1988"
+      ],
+      "catalog_number": "25-1232",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "The DeskMate logo appears with SKU 25-1232 on pages 11 and 26. The guide gives conflicting availability dates, 1988-09-30 and 1988-10-30 respectively."
+    },
+    {
+      "id": "smoothtalker",
+      "title": "SmoothTalker",
+      "publisher": "First Byte",
+      "category": "speech",
+      "relationship": "advertised-deskmate-interface",
+      "evidence_status": "documented",
+      "source_ids": [
+        "express-order-guide-1988"
+      ],
+      "catalog_number": "90-3368",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Page 11 displays the DeskMate logo and page 26 binds the name to the same SKU. Planned availability 1988-10-30."
+    },
+    {
+      "id": "computer-mad-libs",
+      "title": "Computer MAD LIBS",
+      "publisher": "First Byte",
+      "category": "education",
+      "relationship": "advertised-deskmate-interface",
+      "evidence_status": "documented",
+      "source_ids": [
+        "express-order-guide-1988"
+      ],
+      "catalog_number": "90-3348",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Page 11 displays the DeskMate logo and gives 1988-10-30 as planned availability."
+    },
+    {
+      "id": "childrens-writing-and-publishing-center",
+      "title": "The Children's Writing & Publishing Center",
+      "publisher": "The Learning Company",
+      "category": "publishing",
+      "relationship": "advertised-deskmate-interface",
+      "evidence_status": "documented",
+      "source_ids": [
+        "express-order-guide-1988"
+      ],
+      "catalog_number": "25-1237",
+      "versions": [],
+      "media_status": "not-yet-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "Pages 11 and 29 display the DeskMate logo. The latter describes the DeskMate interface explicitly. Planned availability 1988-10-30."
     }
   ]
 }
