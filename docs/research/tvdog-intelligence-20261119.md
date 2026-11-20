@@ -47,7 +47,7 @@ $priority = "$base/tvdog-priority-20261119"
 $env:PYTHONPATH = (Resolve-Path src).Path
 $tools = @('--seven-zip', 'C:/Program Files/7-Zip/7z.exe',
            '--lhasa', "$priority/lhasa/lha.exe",
-           '--pdf-python', 'C:/Users/DeskMateLab/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe')
+           '--pdf-python', "$env:USERPROFILE/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe")
 python tools/archive/archive_intelligence.py --database $db ingest $mirror --live @tools
 python tools/archive/archive_intelligence.py --database $db ingest $priority --manifest "$priority/inventory.jsonl" @tools
 python tools/archive/archive_intelligence.py --database $db search 'Rockwell OR "MoreType" OR "FastFonts"'
