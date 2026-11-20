@@ -122,3 +122,38 @@ does not redistribute it or any image and member bytes from this pass.
 - [7-Zip capabilities and license](https://www.7-zip.org/)
 
 - [Microsoft Windows 3.1 Programmer’s Reference, Volume 4, section 6.2.3](https://bitsavers.trailing-edge.com/pdf/microsoft/windows_3.1/Windows_3.1_Programmers_Reference_Volume_4_Resources_1992.pdf)
+
+## Settled searchable library
+
+The incremental index processed all 9,973 verified source URLs from
+the final mirror inventory. It reached 24,915 hashed occurrences,
+20,244 distinct digests, and 4,671 repeated occurrences. Its text index
+has 11,610 analyses and 35,469 page-or-document records. Of 2,655 PDF
+analyses, 1,686 yielded text, 968 are OCR candidates and one timed out.
+Across all formats, the library retained 48 partial container analyses,
+seven limited analyses, three failed analyses and 22 member read errors.
+These are extraction and interpretation limits within a complete source
+transfer, and remain queryable. The independent optical inventory
+covers the four large ZIPs whose bulk extraction exceeded ordinary caps.
+
+A small offline OCR pilot rendered page one of Faxback 10000, 10001
+and 10002 at a 2,000-pixel long edge using Poppler 26.07.0 and
+recognized the rasters with the host's Windows OCR engine in en-US.
+All three recovered their printed document number. Two reproduced the
+catalog number as written in the title index, and one omitted a leading
+zero. The first-page OCR text and both source and rendered hashes are
+in a separate, private FTS table. This pilot gives evidence for the
+OCR route and for keeping OCR metadata subject to validation.
+
+The existing native-format inventory accepted 228 of 231 distinct
+Draw candidates, 98 of 98 SNG candidates with sector padding permitted,
+69 of 95 Sound candidates, 17 of 157 DMDB candidates, seven of 39
+Worksheet candidates, eight of nine FF1 candidates and four of six
+signature-classified formatted Text candidates. Relative to the
+specified previously compared hash sets, 24 accepted Draw, 36 accepted
+SNG and 53 accepted Sound identities have additional bytes. The 113
+accepted extension-classified DOC candidates still need application
+attribution. These are structural observations from the independent
+inventory. Native trials remain a separate evidence source.
+
+- [Microsoft Windows OCR engine](https://learn.microsoft.com/en-us/uwp/api/windows.media.ocr.ocrengine?view=winrt-19041)
