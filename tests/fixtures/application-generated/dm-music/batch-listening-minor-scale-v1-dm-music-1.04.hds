@@ -1,0 +1,30 @@
+[Song]
+Name=Untitled Composition, by: Unknown Composer
+Beats Per Measure=4
+Single Beat Note=4
+Pace=100
+PolyDur=True
+
+;Converted from PROBE006.SNG
+
+[Notes]
+[Tempo= 1/4 = 100]
+[Inst. 1 = 10]
+[Inst. 1 dyn. = mp]
+4A-3/x/x
+4B-3/x/x
+4C3/x/x
+4D3/x/x
+4E3/x/x
+4F3/x/x
+4G#3/x/x
+4A3/x/x
+4G#3/x/x
+4F3/x/x
+4E3/x/x
+4D3/x/x
+4C3/x/x
+4B-3/x/x
+[Inst. 1 dyn. = mf]
+2A-3/x/x
+4R/x/x
