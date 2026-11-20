@@ -201,3 +201,15 @@ DeskMate/Tandy documentation. Generator, hosting, repository names and actual
 migration remain future decisions. Preserve history, evidence and compatible
 interfaces; do not undertake a physical split, publish a site, create an
 organization or interrupt active research solely because of this roadmap.
+
+## Archival format coverage — operator decision 2026-11-20
+
+Use the [standing secondary workstream](docs/archive-format-coverage.md)
+and [format backlog](docs/archive-format-backlog.json) for spare capacity
+within already authorized Codex campaigns after primary work is complete.
+Proactively qualify additional archives, compression, sector/track/flux
+images, recording encodings, filesystems and other media; preserve original
+bytes and uncertainty, use modular bounded processing and checkpoint
+independently reviewable work. Do not interfere with the live downloader
+or index writer. Existing usage, authorization, licensing and publication
+rules remain in force; the backlog is not a capability claim.
