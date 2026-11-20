@@ -1,5 +1,6 @@
 """Exercise the actual archive launcher, without contacting a server."""
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -11,7 +12,7 @@ LAUNCHER = Path(__file__).resolve().parents[2] / "tools/archive/Mirror-Archive.p
 POWERSHELL = shutil.which("powershell.exe") or shutil.which("pwsh")
 
 
-@unittest.skipUnless(POWERSHELL, "PowerShell not installed")
+@unittest.skipUnless(os.name == "nt" and POWERSHELL, "Windows PowerShell launcher test")
 class ArchiveLauncherTests(unittest.TestCase):
     def test_default_and_explicit_config(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -36,6 +37,6 @@ class ArchiveLauncherTests(unittest.TestCase):
                 )
                 self.assertEqual(process.returncode, 0, process.stderr)
                 actual = json.loads(process.stdout.strip())
-                self.assertEqual(actual[actual.index("--config") + 1], str(config))
+                self.assertTrue(Path(actual[actual.index("--config") + 1]).samefile(config))
                 self.assertIn("--status", actual)
                 self.assertEqual(actual[actual.index("--target") + 1], "local")
