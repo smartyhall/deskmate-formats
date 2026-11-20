@@ -72,6 +72,16 @@
       "title": "TVDog archive at Oldskool — complete public subtree",
       "url": "http://ftp.oldskool.org/pub/tvdog/",
       "verification": "Operator authorized a private, server-friendly mirror of the entire publicly accessible subtree on 2026-11-19. Scope and acquisition protocol in archive-mirror.md. Inventory and completion not yet verified."
+    },
+    "yahoo-tandy1000": {
+      "title": "Tandy1000 Yahoo! Groups — Wayback Machine capture",
+      "url": "https://web.archive.org/web/20060815140102/http://groups.yahoo.com/group/Tandy1000/",
+      "verification": "Operator supplied capture dated 2006-08-15; replay retrieval failed here. Message, file and attachment coverage not verified."
+    },
+    "yahoo-groups-archiveteam": {
+      "title": "Archive Team Yahoo! Groups preservation collection",
+      "url": "https://archive.org/details/archiveteam_yahoogroups",
+      "verification": "General archive collection lead, not proof that Tandy1000 is included."
     }
   },
   "entries": [

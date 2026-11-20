@@ -251,3 +251,38 @@ of annotated source references. This replaces earlier selective-only
 acquisition instructions within this subtree; it does not expand the
 scope to other hosts or parent directories. Prioritize the existing
 DeskMate leads first within the mirror queue. No mirror is yet claimed.
+
+
+## Tandy1000 Yahoo! Groups — community archive lead
+
+The operator identified this Wayback snapshot (2006-08-15 14:01:02 UTC):
+
+https://web.archive.org/web/20060815140102/http://groups.yahoo.com/group/Tandy1000/
+
+Replay retrieval in ChatGPT failed; message and attachment coverage
+remain unverified. This is separate from the authorized TVDog mirror.
+Prioritize existing downloadable public archive packages over replay-page
+crawling. Investigate:
+
+- Archive Team collection: https://archive.org/details/archiveteam_yahoogroups
+- Group metadata: https://archive.org/details/Yahoo_Groups_Metadata
+- Search: https://archive.org/search?query=subject%3A%22yahoo%20groups%22%20Tandy1000
+- Retrieval guide: https://datahorde.org/how-to-recover-your-yahoo-groups-from-the-internet-archive/
+
+Verify the exact group name in metadata (master_T.csv), then look for
+group-specific WARC or other public export packages. Do not download
+unrelated multi-group batches indiscriminately. If no package is found,
+make a bounded Wayback CDX inventory of the original group's public URLs
+and capture dates, including message, topic, file and link paths and
+the later /neo/groups/Tandy1000/ URL family. Respect archive service
+policies and rate limits; do not infer missing captures or bypass access
+restrictions. No bulk Wayback crawling is authorized by the TVDog mirror
+decision. Preserve original packages and provenance privately when
+separately approved, decode WARC/JSON or message exports offline, and
+deduplicate by message identity and hashes while retaining capture
+provenance. Distinguish user-reported technical claims from verified
+native behavior. Search relevant messages for DeskMate SDK, formats,
+fonts, Atech/Rockwell, Express Publisher, utilities, printer drivers,
+Tandy hardware, and links to otherwise missing software. Public
+repository output should be curated technical summaries and source
+references, not raw messages, member details or attachments.
