@@ -187,3 +187,17 @@ metadata, source links and cross-references under existing project
 publication rules. After transfer, index offline, cross-link the
 ecosystem catalog and technical research, and report exact missing
 or blocked items rather than claiming completeness prematurely.
+
+## Long-term project separation — operator roadmap 2026-11-19
+
+Follow the [preservation ecosystem roadmap](docs/preservation-roadmap.md) when
+designing component boundaries. Keep the current repository as an incubator;
+prepare independently usable generic automation/dispatch/observer and archive
+tooling, a standalone DeskMate/Tandy reference knowledge base, a cohesive core
+native-format library and workbench, and separate adjacent-format or mature
+application projects where justified. The reference site's initial theme must
+be based on BOOTSTRA.386, with an eventual DeskMate-derived visual identity for
+DeskMate/Tandy documentation. Generator, hosting, repository names and actual
+migration remain future decisions. Preserve history, evidence and compatible
+interfaces; do not undertake a physical split, publish a site, create an
+organization or interrupt active research solely because of this roadmap.
