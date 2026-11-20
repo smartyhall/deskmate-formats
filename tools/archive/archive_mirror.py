@@ -65,6 +65,27 @@ class Listing(html.parser.HTMLParser):
             self.title.append(data)
 
 
+def listing_child(origin, base, href):
+    """Return the canonical identity of an in-scope direct child link."""
+    u, b = url.urlsplit(url.urljoin(base, href)), url.urlsplit(base)
+    if (u.scheme not in ("http", "https") or u.netloc != origin.netloc
+            or u.query or u.fragment):
+        return None
+    path, bp, root = (url.unquote(x, errors="strict")
+                      for x in (u.path, b.path, origin.path))
+    if not path.startswith(bp) or path == bp or not path.startswith(root):
+        return None
+    tail = path[len(bp):]
+    kind = "dir" if tail.endswith("/") else "file"
+    leaf = tail.rstrip("/")
+    if (not leaf or "/" in leaf or "\\" in leaf or leaf in (".", "..")
+            or any(ord(c) < 32 for c in leaf)):
+        return None
+    canonical = url.urlunsplit((origin.scheme, origin.netloc,
+                                url.quote(path, safe="/"), "", ""))
+    return path[len(root):], kind, canonical
+
+
 class Robots:
     """Specific user-agent groups, longest rules, Allow wins ties."""
     def __init__(self, text):
@@ -356,23 +377,7 @@ class Mirror:
         self.delay = max(self.delay, self.robots.delay)
 
     def child(self, base, href):
-        u, b = url.urlsplit(url.urljoin(base, href)), url.urlsplit(base)
-        if (u.scheme not in ("http", "https") or u.netloc != self.origin.netloc
-                or u.query or u.fragment):
-            return None
-        path, bp, root = (url.unquote(x, errors="strict")
-                          for x in (u.path, b.path, self.origin.path))
-        if not path.startswith(bp) or path == bp or not path.startswith(root):
-            return None
-        tail = path[len(bp):]
-        kind = "dir" if tail.endswith("/") else "file"
-        leaf = tail.rstrip("/")
-        if (not leaf or "/" in leaf or "\\" in leaf or leaf in (".", "..")
-                or any(ord(c) < 32 for c in leaf)):
-            return None
-        canonical = url.urlunsplit((self.origin.scheme, self.origin.netloc,
-                                    url.quote(path, safe="/"), "", ""))
-        return path[len(root):], kind, canonical
+        return listing_child(self.origin, base, href)
 
     def directory(self, row):
         raw, ctype = self.metadata(row["url"], 16*1024**2)
