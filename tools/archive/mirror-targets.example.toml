@@ -1,0 +1,16 @@
+# One named target per run. Relative paths are relative to this TOML file.
+# Check the source's policy before downloading and lower limits if required.
+[targets.tvdog]
+root = "http://ftp.oldskool.org/pub/tvdog/"
+destination = 'C:\DeskMateLab\references\oldskool\tvdog-mirror'
+rate_kib = 256
+delay_seconds = 1.0
+reserve_gib = 5
+timeout_seconds = 60
+priority_prefixes = [
+    "tandy1000/wares/Express-Publisher-for-DeskMate/",
+    "tandy1000/documents/aoldesk.zip",
+    "tandy1000/deskmate/",
+    "tandy1000/documents/",
+    "tandy1000/wares/",
+]
