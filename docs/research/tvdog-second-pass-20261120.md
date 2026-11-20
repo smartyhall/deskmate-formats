@@ -1,5 +1,16 @@
 # TVDog Faxback and optical media, second pass
 
+## Completed acquisition and independent verification
+
+The operator's downloader completed the discovered subtree at 04:42:27
+Eastern on November 20. An independent read-only audit rehashed all 9,973
+originals (2,346,485,307 bytes) and all 62 directory listings. The 10,035
+exported rows agreed with the durable transfer database. There were zero
+residual entries and zero issues. Five pairs shared exact bytes, yielding
+9,968 distinct file identities. This result covers the discovered,
+permitted subtree represented by its retained listings. No downloader
+process, storage path or configuration was changed during this pass.
+
 ## Faxback catalog
 
 The read-only transfer snapshot started at 04:27:34 Eastern on November
@@ -34,6 +45,13 @@ the join keys for relating this index to the existing library.
 | [Faxback 2611](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/02611.txt) and [2636](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/02636.txt) | WinMate and its options on Sensation! 250-1650 |
 | [Faxback 2862](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/02862.txt), [2875](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/02875.txt) and [2876](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/02876.txt) | Screen options, door replacement and program icon creation on 250-1651 |
 
+At the settled mirror cutoff the specialized index held 8,252 numbered
+records and 18,929 catalog edges. The five later files were PDFs,
+bringing the PDF subset to 2,478 while text bodies and number conflicts
+remained unchanged. Two other verified entries in the subtree are
+outside the numbered document naming pattern. The published numbers
+describe the private, provenance-retaining index.
+
 ## Optical media
 
 Four large ZIP originals independently matched their transfer receipts.
@@ -61,6 +79,16 @@ includes SETUP and references specific Multicom titles. These are
 affirmative VIS-related finds with internal disc provenance. The available
 evidence establishes PC compatibility packages. The presence of native
 VIS titles or a Modular Windows runtime remains unconfirmed.
+
+Selected extraction identified three target-OS 2 NE modules in the
+WinMate tree. The `DESKTOP.EXE` table contains 16 dialog, three menu,
+seven icon and 33 string-table entries. `DMSCW.DLL` and
+`TANDYCLS.DLL` have an empty resource table in the measured copies.
+Discis `INSTALL/MAKEGRPS.EXE` has a dialog and a version resource.
+Multicom `SETUP.EXE` identifies itself in its NE description as an
+InstallSHIELD launcher. `VDISCIS.EXE` and `VINSTALL.EXE` have MZ
+headers and remain MZ-family candidates. Resource metadata was checked
+against file bounds and no executable was run during this pass.
 
 ## Tools and repeatability
 
@@ -92,3 +120,5 @@ does not redistribute it or any image and member bytes from this pass.
 - [ECMA-119 CD-ROM volume structure](https://ecma-international.org/publications-and-standards/standards/ecma-119/)
 - [ECMA-167 volume recognition and file structure](https://ecma-international.org/publications-and-standards/standards/ecma-167/)
 - [7-Zip capabilities and license](https://www.7-zip.org/)
+
+- [Microsoft Windows 3.1 Programmer’s Reference, Volume 4, section 6.2.3](https://bitsavers.trailing-edge.com/pdf/microsoft/windows_3.1/Windows_3.1_Programmers_Reference_Volume_4_Resources_1992.pdf)

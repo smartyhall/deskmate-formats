@@ -80,6 +80,18 @@ class OpticalTests(unittest.TestCase):
         self.assertEqual(optical.executable_header(specimen)['resident_name'], 'HELLO')
         self.assertIsNone(optical.executable_header(specimen[:131])['resident_name'])
 
+    def test_ne_resource_named_id_and_bounded_span(self):
+        specimen = bytearray(224)
+        # Resource table spans bytes 128..164; offset and size scale by four.
+        pack_into('<HHHI4HIH', specimen, 128, 2, 0x8004, 1, 0,
+                  48, 2, 0x20, 24, 0, 0)
+        specimen[152:158] = b'\x05FIRST'
+        result = optical.ne_resources(specimen, 64, 64, 100)
+        self.assertEqual(result, [{'type': 4, 'id': 'FIRST', 'flags': 0x20,
+                                   'offset': 192, 'bytes': 8}])
+        with self.assertRaisesRegex(ValueError, 'outside executable'):
+            optical.ne_resources(specimen[:194], 64, 64, 100)
+
 
 class FaxbackTests(unittest.TestCase):
     def test_verified_header_catalog_links_and_repeatable_index(self):

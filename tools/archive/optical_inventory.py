@@ -18,13 +18,61 @@ MAX_IMAGE_BYTES = 850 * 1024**2
 MAX_MEMBER_BYTES = 2 * 1024**2
 
 
+def ne_resources(data, ne_offset, resource, resident):
+    if resource == 0 or resource == resident:
+        return []
+    start, end = ne_offset + resource, ne_offset + resident
+    if resource < 64 or start + 4 > end or end > len(data):
+        raise ValueError('resource table outside executable')
+    shift, = unpack_from('<H', data, start)
+    if shift > 31:
+        raise ValueError('invalid resource alignment')
+    cursor = start + 2
+    raw = []
+    while cursor + 2 <= end:
+        type_id, = unpack_from('<H', data, cursor)
+        if not type_id:
+            cursor += 2
+            break
+        if cursor + 8 > end:
+            raise ValueError('truncated resource type')
+        count, = unpack_from('<H', data, cursor + 2)
+        cursor += 8
+        if len(raw) + count > 4096 or cursor + count * 12 > end:
+            raise ValueError('truncated or oversized resource entries')
+        for _ in range(count):
+            offset, size, flags, entry_id = unpack_from('<4H', data, cursor)
+            position, length = offset << shift, size << shift
+            if position + length > len(data):
+                raise ValueError('resource byte range outside executable')
+            raw.append((type_id, entry_id, flags, position, length))
+            cursor += 12
+    else:
+        raise ValueError('missing resource type terminator')
+
+    def identifier(value):
+        if value & 0x8000:
+            return value & 0x7fff
+        location = start + value
+        if not cursor <= location < end:
+            raise ValueError('resource name pointer outside name table')
+        size = data[location]
+        if not size or location + 1 + size > end:
+            raise ValueError('truncated resource name')
+        return data[location + 1:location + 1 + size].decode('cp437')
+
+    return [{'type': identifier(t), 'id': identifier(i), 'flags': flags,
+             'offset': offset, 'bytes': length}
+            for t, i, flags, offset, length in raw]
+
+
 def executable_header(data):
     if len(data) < 64 or data[:2] != b'MZ':
         return None
     offset = unpack_from('<I', data, 0x3c)[0]
     if offset < 64 or offset + 64 > len(data) or data[offset:offset + 2] != b'NE':
         return {'format': 'MZ-family'}
-    resident, = unpack_from('<H', data, offset + 0x26)
+    resource, resident = unpack_from('<2H', data, offset + 0x24)
     nonresident, = unpack_from('<I', data, offset + 0x2c)
     nonresident_size, = unpack_from('<H', data, offset + 0x20)
 
@@ -36,9 +84,15 @@ def executable_header(data):
             return None
         return data[position + 1:position + 1 + size].decode('cp437')
 
-    return {'format': 'NE', 'target_os': data[offset + 0x36],
-            'resident_name': first_name(offset + resident, len(data)) if resident >= 64 else None,
-            'description': first_name(nonresident, nonresident + nonresident_size)}
+    result = {'format': 'NE', 'target_os': data[offset + 0x36],
+              'resident_name': first_name(offset + resident, len(data)) if resident >= 64 else None,
+              'description': first_name(nonresident, nonresident + nonresident_size)}
+    if result['target_os'] in (2, 4):
+        try:
+            result['resources'] = ne_resources(data, offset, resource, resident)
+        except ValueError as error:
+            result['resource_error'] = str(error)
+    return result
 
 
 def inspect(source, tool, output, member_select=()):

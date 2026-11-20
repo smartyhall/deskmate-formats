@@ -29,10 +29,10 @@
     {
       "name": "Windows-family New Executable",
       "identify": "bounded MZ pointer and NE header",
-      "list": "header target OS and first ordinal-zero resident and nonresident names",
+      "list": "header target OS, first ordinal-zero names, and bounded resource IDs, flags, offsets and lengths",
       "extract": "bounded optical member extraction; executable remains inert",
-      "evidence": "synthetic NE header and optical members where selected",
-      "limitations": "no resource-table extraction or operating-system compatibility inference"
+      "evidence": "synthetic NE header and resource controls plus real WinMate and VIS installer executables",
+      "limitations": "resource payloads and individual dialog or bitmap formats are not decoded"
     }
   ]
 }
