@@ -1,5 +1,8 @@
 # Reusable archive mirror
 
+For incremental private indexing and provenance queries, see
+[offline archive intelligence](intelligence.md).
+
 A standalone, standard-library Python 3.11+ tool with a Windows PowerShell
 5.1/7 launcher. Archives public HTTP(S) directory indexes (Apache/nginx-style
 HTML); not a general web crawler, FTP client, WARC capture tool or continuous
