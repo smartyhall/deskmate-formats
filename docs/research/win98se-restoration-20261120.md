@@ -147,7 +147,7 @@ with provenance in the fixture manifest.
 Five decoded framebuffer observations from the held converter used
 intervals of 0, 237, 431, 659 and 929 ms. They had zero changed pixels
 between observations after excluding a documented pointer rectangle.
-Pixel comparisons are advisory. The pager, boot and installation
+Pixel comparisons are advisory. The boot and installation
 experiments used state and affirmative UI observations to decide when
 to move.
 
@@ -192,3 +192,56 @@ SHA-256 is
 Fresh end-to-end retail Setup remains pending a valid key for that
 installation. Automatic Setup captures are disabled in the revised
 script to keep the answer state private.
+
+## Driver and audio controls
+
+The stock Windows driver class export ties the displayed S3 ViRGE
+adapter to `DXS3.INF` section S3V and the Intel IDE controller to
+`MSHDC.INF` section DUAL_GOOD_IDE. The recognized Sound Blaster
+function is `SB16AWE.INF` section CTL0031_Device, with mmdevldr.vxd
+and sb16snd.drv for wave output. These inbox entries report April
+23, 1999. Stock IDE boot and file transfer worked. The separate 2004
+test clone retained 800×600 at 16-bit color during the update.
+
+The 06 runtime clone reproduced a synthetic 440 Hz WAV through
+Windows Media Player. In its native 48 kHz main stream the strongest
+250 ms window measured 440 positive-going crossings per second and
+−33.19 dBFS RMS. The independently restored stock-driver trial
+showed an unavailable audio device at cold boot and after a Windows
+restart with the same control. Its captured sound did not establish
+successful playback. The differential warrants a separate
+driver-qualified classification only after a reproducible positive
+result. The 06 runtime clone shut down normally at or before the
+278,984 ms observation and was copied to a verified four-file private
+checkpoint.
+
+Creative lists the period SDR-95UPD-1-US release 16 for Windows 95/98.
+The archived package digest is
+`9c78b6ddb5de1647927af105b046c7cef9899c137a4282e877341006c273fa6e`.
+The vendor's update utility was run on the driver trial clone after
+the documented whole-package staging step. Its result requires
+post-restart comparison. The disabled logical-device functions of the
+non-IDE SB16 profile remain distinct from the wave playback result.
+
+- [Creative release 16 package registration](https://support.creative.com/downloads/download.aspx?nDownloadId=417)
+
+## February 2004 official-media trial
+
+The private archived ZIP is 469,938,862 bytes and its validated
+`Security9_enu_15.iso` member is 476,715,008 bytes. The ISO SHA-256 is
+`83ce5d3244ee3e3dbb723391bbced6f5edbd5918b77a8950c954880b8e10020f`.
+The modern host validated the Microsoft signatures of both
+`Autorun.exe` and `W9XSetup.exe`. The 98 SE finish INF sets the
+subversion letter to B. This metadata identifies the intended path.
+A B suffix alone cannot establish the installed component inventory.
+
+A second independent restored stock clone entered the Security Update
+CD wizard with all configured network links down. The 640×480 prompt
+required raising the display to 800×600. The IE6 component install
+reached its automatic restart prompt at 421,844 emulated ms. The
+first post-reboot Windows Setup frame showed Updating System Settings
+at 473,844 ms. Further verification is required to qualify the 04
+checkpoint. There is no separate early maintenance, IE6-only or
+end-of-support environment in this checkpoint.
+
+- [Archived February 2004 disc catalog entry](https://www.vogonsdrivers.com/getfile.php?fileid=873&menustate=50,0)
