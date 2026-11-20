@@ -59,7 +59,7 @@ def scan(roots, labels, previous):
                             with Image.open(stream) as image:
                                 images[sha] = {
                                     'format': image.format, 'display_pixels': list(image.size),
-                                    'pixel_mode': image.mode, 'frames': image.n_frames,
+                                    'pixel_mode': image.mode, 'frames': getattr(image, 'n_frames', 1),
                                     'first_frame_dhash64': compare_pixels(image),
                                 }
                     metadata = path.stat()

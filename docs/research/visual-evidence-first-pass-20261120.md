@@ -52,3 +52,30 @@ Use the same output and labels for subsequent runs. Unchanged entries
 reuse observations based on locator, size and file times. The optional
 `--labels` JSON supplies reviewed root-level provenance. Keep outcome
 labels based on visual inspection in a separate private exemplar manifest.
+
+## Expanded pass
+
+The next pass located the shared graphics captures at the November 17
+root and added Calendar, Worksheet, Express Publisher and the native
+application index. There are now 2,348 occurrences, 1,525 SHA-256
+identities and 262 similarity groups. The original five roots reused
+unchanged observations. The ten supplied roots had zero observation
+gaps. Twelve native-index bitmaps were included in addition to its PNG
+captures. The measured bitmap reader treats still formats without an
+explicit frame count as one frame.
+
+| Additional collection | Occurrences |
+| --- | ---: |
+| Shared graphics | 183 |
+| Calendar | 113 |
+| Worksheet | 82 |
+| Express Publisher | 41 |
+| Native application index | 34 |
+
+Three additional 640×480 exemplars expand the interface anchors.
+
+| ID | Observed state | Proposed anchor |
+| --- | --- | --- |
+| `1d22f4bb829552c6` | Calendar day view, with a highlighted appointment time range and Previous and Next navigation flanking the date. | Schedule navigation and selected rows |
+| `b17d38e0b3ef1acf` | Worksheet Edit menu with dithered Paste and a yellow selected cell visible behind it. | Disabled controls and document selection |
+| `128875a5bc6ffb4e` | Express Publisher monochrome Save As dialog with a drive list, document and template selectors, and the underlying page ruler. | Third-party file dialogs and monochrome controls |

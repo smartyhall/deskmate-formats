@@ -34,6 +34,14 @@ class VisualEvidenceTests(unittest.TestCase):
             self.assertEqual(len(latest['unobserved_previous_occurrences']), 1)
             self.assertEqual(latest['summary']['occurrences'], 1)
 
+    def test_still_bmp_defaults_to_one_frame(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            with Image.new('RGB', (2, 2), 'navy') as image:
+                image.save(root / 'still.bmp')
+            observation, = scan({'bitmap': root}, {}, {})['images'].values()
+            self.assertEqual((observation['format'], observation['frames']), ('BMP', 1))
+
     def test_reports_missing_root_and_unreadable_image(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
