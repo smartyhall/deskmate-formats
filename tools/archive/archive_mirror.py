@@ -9,6 +9,7 @@ import json
 import math
 import os
 from pathlib import Path
+import random
 import re
 import shutil
 import sqlite3
@@ -21,6 +22,9 @@ import urllib.request as request
 
 AGENT = "DeskMatePreservationMirror/1.0 (private research; single connection)"
 CHUNK = 16384
+BACKOFF_SECONDS = (60, 300, 900, 3600)
+MAX_EPOCH = 253402300799  # End of year 9999 in UTC.
+ACCESS_RESTRICTED = {401, 403, 407, 451}
 
 
 class Stop(Exception):
@@ -31,8 +35,33 @@ class Invalid(Exception):
     pass
 
 
+class Transient(Exception):
+    def __init__(self, reason, retry_after=None):
+        super().__init__(reason)
+        self.retry_after = retry_after
+
+
 def now():
     return dt.datetime.now(dt.timezone.utc).isoformat()
+
+
+def retry_after_epoch(header, now_epoch):
+    """Interpret Retry-After as HTTP delta-seconds or an absolute HTTP date."""
+    if not header:
+        return 0
+    header = header.strip()
+    if re.fullmatch(r"[0-9]+", header):
+        digits = header.lstrip("0") or "0"
+        if len(digits) > len(str(MAX_EPOCH)):
+            return MAX_EPOCH
+        return min(MAX_EPOCH, now_epoch + int(digits))
+    try:
+        date = email.utils.parsedate_to_datetime(header)
+        if date.tzinfo is None:
+            date = date.replace(tzinfo=dt.timezone.utc)
+        return min(MAX_EPOCH, date.timestamp())
+    except (TypeError, ValueError, OverflowError, OSError):
+        return 0
 
 
 def digest(path):
@@ -269,25 +298,44 @@ class Mirror:
 
     def cooldown(self):
         self.check_stop()
-        remaining = float(self.meta("not_before", "0")) - time.time()
-        if remaining > 0:
-            raise Stop("Host cooldown remains active until " +
-                       dt.datetime.fromtimestamp(time.time()+remaining, dt.timezone.utc).isoformat())
+        epoch = float(self.meta("not_before", "0"))
+        remaining = epoch - time.time()
+        if remaining <= 0:
+            return
+        until = dt.datetime.fromtimestamp(epoch, dt.timezone.utc).isoformat()
+        print(f"[{now()}] Waiting for host cooldown until {until}.", flush=True)
+        while remaining > 0:
+            # Recheck wall time so a clock adjustment cannot shorten a persisted cooldown.
+            self.wait(remaining)
+            remaining = epoch - time.time()
 
-    def pause(self, reason, retry=None):
+    def record_transient(self, error, row=None):
         count = int(self.meta("host_failures", "0")) + 1
-        seconds = [60, 300, 900, 3600][min(count-1, 3)]
-        if retry:
-            try:
-                seconds = max(seconds, int(retry))
-            except ValueError:
-                try:
-                    seconds = max(seconds, email.utils.parsedate_to_datetime(retry).timestamp()-time.time())
-                except (ValueError, TypeError, OverflowError):
-                    pass
-        self.setmeta("host_failures", count)
-        self.setmeta("not_before", time.time()+seconds)
-        raise Stop(reason + "; host paused for at least " + str(int(seconds)) + " seconds.")
+        base_delay = BACKOFF_SECONDS[min(count - 1, len(BACKOFF_SECONDS) - 1)]
+        now_epoch = time.time()
+        epoch = max(now_epoch + base_delay + random.uniform(0, base_delay / 10),
+                    retry_after_epoch(error.retry_after, now_epoch))
+        until = dt.datetime.fromtimestamp(epoch, dt.timezone.utc).isoformat()
+        message = f"{error}; host cooldown until {until} (consecutive failure {count})."
+        with self.db:
+            self.db.executemany("INSERT OR REPLACE INTO meta VALUES (?,?)",
+                                [("host_failures", str(count)), ("not_before", str(epoch)),
+                                 ("host_last_error", str(error))])
+            if row is not None:
+                self.db.execute("UPDATE entries SET status=CASE WHEN status='partial' THEN 'partial' "
+                                "ELSE 'deferred' END,error=?,observed=? WHERE rel=?",
+                                (message, now(), row["rel"]))
+        print(f"[{now()}] {message}", flush=True)
+        self.export()
+        if count >= len(BACKOFF_SECONDS):
+            raise Stop("Persistent host failures; review the source before resuming.") from error
+
+    def reset_cooldown(self):
+        if self.meta("host_failures", "0") != "0":
+            with self.db:
+                self.db.executemany("INSERT OR REPLACE INTO meta VALUES (?,?)",
+                                    [("host_failures", "0"), ("not_before", "0")])
+                self.db.execute("DELETE FROM meta WHERE key='host_last_error'")
 
     def open(self, address, headers=None, policy=False):
         self.cooldown()
@@ -309,14 +357,14 @@ class Mirror:
                         and a.path == b.path and not b.query and not b.fragment):
                     return self.open(target, headers, policy)
                 raise Invalid("Unapproved redirect: " + target)
-            if e.code == 429 or e.code >= 500:
+            if e.code in (408, 429) or e.code >= 500:
                 code, retry = e.code, e.headers.get("Retry-After")
                 e.close()
-                self.pause("HTTP " + str(code), retry)
+                raise Transient("HTTP " + str(code), retry) from e
             raise
-        except (urllib.error.URLError, TimeoutError, OSError) as e:
+        except (OSError, http.client.HTTPException) as e:
             self.last = time.monotonic()
-            self.pause(str(e))
+            raise Transient(str(e)) from e
 
     def stream(self, response, output, limit=None, existing=0):
         start, total = time.monotonic(), 0
@@ -327,7 +375,7 @@ class Mirror:
                 # read1 returns available buffered bytes rather than filling a full chunk.
                 data = response.read1(CHUNK)
             except (OSError, http.client.HTTPException) as e:
-                self.pause("Read failure: " + str(e))
+                raise Transient("Read failure: " + str(e)) from e
             if not data:
                 break
             total += len(data)
@@ -352,7 +400,7 @@ class Mirror:
                 size = self.stream(response, buf, maximum)
                 expected = response.headers.get("Content-Length")
                 if expected is not None and size != int(expected):
-                    self.pause("Incomplete metadata response")
+                    raise Transient("Incomplete metadata response")
                 return buf.getvalue(), response.headers.get("Content-Type", "")
         finally:
             self.last = time.monotonic()
@@ -455,7 +503,7 @@ class Mirror:
                         f.flush()
                         os.fsync(f.fileno())
                 if expected is not None and size != expected:
-                    self.pause("Incomplete file response")
+                    raise Transient("Incomplete file response")
                 if expected is None and response.headers.get("Transfer-Encoding", "").lower() != "chunked":
                     raise Invalid("No verified length or chunked framing; partial retained.")
                 with part.open("rb") as f:
@@ -482,15 +530,21 @@ class Mirror:
                                    "('pending','partial','deferred')"), key=order, default=None)
 
     def run(self, limit=0, retry=False):
-        self.cooldown()
-        self.load_robots()
+        # A successful policy fetch does not clear a failure streak on queued content.
+        while True:
+            try:
+                self.load_robots()
+            except Transient as error:
+                self.record_transient(error)
+            else:
+                break
         if retry:
             self.db.execute("UPDATE entries SET status='pending',error=NULL "
                             "WHERE status IN ('invalid','unavailable')")
             self.db.commit()
         count = 0
         while not limit or count < limit:
-            self.check_stop()
+            self.cooldown()
             row = self.next_row()
             if row is None:
                 break
@@ -498,12 +552,14 @@ class Mirror:
             print(f"[{now()}] {row['kind']} {row['rel'] or '/'}", flush=True)
             try:
                 (self.directory if row["kind"] == "dir" else self.file)(row)
-                self.setmeta("host_failures", 0)
-                self.setmeta("not_before", 0)
+                self.reset_cooldown()
+            except Transient as error:
+                self.record_transient(error, row)
+                continue
             except urllib.error.HTTPError as e:
                 code = e.code
                 e.close()
-                status = "blocked" if code in (401, 403) else "unavailable" if code in (404, 410) else "invalid"
+                status = "blocked" if code in ACCESS_RESTRICTED else "unavailable" if code in (404, 410) else "invalid"
                 self.update(row["rel"], status=status, observed=now(), error="HTTP "+str(code))
                 if status == "blocked":
                     raise Stop("Access denied; examine source policy before continuing.")
@@ -542,7 +598,9 @@ def summary(db):
     return {"source": meta.get("root"), "observed_utc": now(), "status_counts": counts,
             "verified_files": files, "verified_file_bytes": size,
             "complete_for_discovered_tree": bool(counts) and counts.get("verified", 0) == sum(counts.values()),
-            "host_not_before_epoch": float(meta.get("not_before", 0))}
+            "host_not_before_epoch": float(meta.get("not_before", 0)),
+            "host_consecutive_failures": int(meta.get("host_failures", 0)),
+            "host_last_error": meta.get("host_last_error")}
 
 
 def acquire_lock(dest):

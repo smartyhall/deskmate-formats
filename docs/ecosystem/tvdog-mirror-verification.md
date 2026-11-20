@@ -32,7 +32,18 @@ double quote. Its URL and exact source name remain in the manifest.
 
 The state records a single deferred file, the [26-1271 archive](http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/26-1271.zip).
 The server reset the connection on its first attempt and the downloader
-recorded a host-wide cooldown. The snapshot records 9,013 pending files
+recorded a host-wide cooldown until 04:18:29 UTC. The row identifies
+Windows error 10054 at 04:17:29 UTC and records no partial bytes. The
+legacy `Mirror-TVDog.ps1` inspected in the lab, SHA-256
+`0b6fccdf3663b9fc4519798d66367e26420f1584094ea87f95281b4152935e6a`,
+raises its termination exception immediately after persisting a cooldown.
+Its loop marks the item deferred and re-raises. Its command-line handler
+exports receipts and returns status `2`. That control flow explains the
+saved queue and cooldown. The original process exit code was not captured
+in the saved receipts. The revised [reusable downloader](../../tools/archive/README.md)
+waits through recoverable failures and preserves the cooldown on interruption.
+
+The snapshot records 9,013 pending files
 under `tandy1000/` and one pending top-level note. Rechecking file hashes
 establishes that the lab copies agree with their transfer receipts. The
 saved directory indexes establish discovery coverage as of the observation
