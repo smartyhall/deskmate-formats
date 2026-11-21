@@ -37,7 +37,7 @@ jobs:
     steps:
       - name: Record intentional site-only portable skip
         if: ${{ needs.changes.outputs.portable == 'false' }}
-        run: echo "Site-only changes: required portable matrix check completed; full tests covered by reference preview."
+        run: echo "Site-only changes; required portable matrix status completed; full tests covered by reference preview."
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: ${{ needs.changes.outputs.portable == 'true' }}
         with:
