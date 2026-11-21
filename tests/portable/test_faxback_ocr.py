@@ -17,6 +17,12 @@ class FaxbackOcrTests(unittest.TestCase):
         self.assertEqual(result['catalog_exact'], ['026-4567'])
         self.assertEqual(result['catalog_zero_variant'], ['26-0123'])
         self.assertTrue(metadata_evidence(['Document #88888'], '01234', ())['number_conflict'])
+        revision = metadata_evidence(['Catalog 25-1082A and 025-1082A and 25-1082'],
+                                     '01234', ('025-1082A',))
+        self.assertEqual(revision['catalog_exact'], ['025-1082A'])
+        self.assertEqual(revision['catalog_zero_variant'], ['25-1082A'])
+        self.assertNotIn('25-1082', revision['catalog_zero_variant'])
+
 
     def test_select_only_scans_in_general_triage(self):
         with TemporaryDirectory() as temp:
@@ -28,6 +34,7 @@ class FaxbackOcrTests(unittest.TestCase):
                 CREATE TABLE catalog_ref(url, catalog);
                 INSERT INTO record VALUES ('u1', '01001.pdf', 'a', 1001, 'pdf');
                 INSERT INTO record VALUES ('u2', '01002.pdf', 'b', 1002, 'pdf');
+                INSERT INTO record VALUES ('u3', '01003.pdf', 'c', 1003, 'pdf');
                 INSERT INTO catalog_ref VALUES ('u2', '026-0123');
             """)
             db.close()
@@ -36,8 +43,12 @@ class FaxbackOcrTests(unittest.TestCase):
                 CREATE TABLE analysis(kind, digest, status, detail);
                 INSERT INTO analysis VALUES ('pdf', 'a', 'ok', 'has text');
                 INSERT INTO analysis VALUES ('pdf', 'b', 'unsupported', '1 page; ocr-triage');
+                INSERT INTO analysis VALUES ('pdf', 'c', 'unsupported', 'no-pdf-text-ocr-required');
             """)
             db.close()
             self.assertEqual(list(candidates(index, library, 1001)),
-                             [('u2', '01002.pdf', 'b', 1002, ('026-0123',))])
-            self.assertEqual(list(candidates(index, library, 1003)), [])
+                             [('u2', '01002.pdf', 'b', 1002, ('026-0123',)),
+                              ('u3', '01003.pdf', 'c', 1003, ())])
+            self.assertEqual(list(candidates(index, library, 1003)),
+                             [('u3', '01003.pdf', 'c', 1003, ())])
+            self.assertEqual(list(candidates(index, library, 1004)), [])
