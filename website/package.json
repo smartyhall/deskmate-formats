@@ -6,7 +6,10 @@
   "scripts": {
     "build": "eleventy --config=eleventy.config.cjs",
     "dev": "eleventy --serve --config=eleventy.config.cjs",
-    "test": "node --test test/*.test.cjs"
+    "test": "node --test test/*.test.cjs",
+    "theme:sync": "python3 scripts/vendor_bootstra.py",
+    "prebuild": "npm run theme:sync",
+    "predev": "npm run theme:sync"
   },
   "devDependencies": {
     "@11ty/eleventy": "3.1.8",
