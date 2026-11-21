@@ -11,16 +11,11 @@ jobs:
     outputs:
       portable: ${{ steps.scope.outputs.portable }}
     steps:
-      - name: Record intentional site-only portable skip
-        if: ${{ needs.changes.outputs.portable == 'false' }}
-        run: echo "Site-only PR; full portable checks are covered by site preview. Required matrix status reported for branch protection."
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        if: ${{ needs.changes.outputs.portable == 'true' }}
         with:
           fetch-depth: 0
           persist-credentials: false
       - name: Classify changes conservatively
-        if: ${{ needs.changes.outputs.portable == 'true' }}
         id: scope
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -40,6 +35,9 @@ jobs:
       PYTHONDONTWRITEBYTECODE: '1'
       PYTHONUTF8: '1'
     steps:
+      - name: Record intentional site-only portable skip
+        if: ${{ needs.changes.outputs.portable == 'false' }}
+        run: echo "Site-only changes: required portable matrix check completed; full tests covered by reference preview."
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: ${{ needs.changes.outputs.portable == 'true' }}
         with:
