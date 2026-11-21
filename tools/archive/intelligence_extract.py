@@ -147,6 +147,8 @@ def identify(path: Path, name: str) -> str:
         return 'ff1'
     if data.startswith(b'RIFF') and data[8:12] == b'WAVE':
         return 'wav'
+    if data.startswith(b'Creative Voice File\x1a'):
+        return 'voc'
     if data.startswith((b'II*\0', b'MM\0*')):
         return 'tiff'
     if data.startswith(b'%PDF-'):
@@ -186,8 +188,10 @@ def identify(path: Path, name: str) -> str:
         member_name, nul, _padding = data[2:15].partition(b'\0')
         if nul and b'.' in member_name and re.fullmatch(rb'[!-~]{1,12}', member_name):
             return 'arc'
-    if data.startswith(b'\x1a') and len(data) >= 28 and data[1] < 4 and 0 < data[2] <= 128:
-        if data[3] <= 32 or data[3] == 255:
+    if data.startswith(b'\x1a') and len(data) >= 44 and data[1] in (0, 1, 2) and data[2]:
+        table_end = 16 + 28 * data[2]
+        first_sample = unpack_from('<I', data, 20)[0]
+        if (data[3] <= 32 or data[3] == 255) and table_end <= first_sample <= size:
             return 'snd'
     if data[:4] == b'\x03\0\0\0' and extension == 'adr':
         return 'adr'
