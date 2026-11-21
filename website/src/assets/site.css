@@ -1,0 +1,116 @@
+/*
+ * Initial reference preview, independently authored.
+ * BOOTSTRA.386-inspired EGA palette and typographic geometry.
+ * No upstream BOOTSTRA.386 assets or fonts included.
+ */
+:root {
+  color-scheme: dark;
+  --screen: #0000aa;
+  --panel: #000070;
+  --back: #00003e;
+  --light: #f2f2ee;
+  --muted: #d1d1d1;
+  --cyan: #55ffff;
+  --yellow: #ffff55;
+  --magenta: #ff55ff;
+  --border: #aaaaaa;
+  --focus: #ffff55;
+  font-family: ui-monospace, "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+  line-height: 1.6;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; min-height: 100vh; color: var(--light); background: var(--back);
+  display: flex; flex-direction: column;
+}
+a { color: var(--yellow); text-underline-offset: .18em; }
+a:hover { color: var(--cyan); }
+a:focus-visible, button:focus-visible, input:focus-visible,
+summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.skip-link {
+  position: absolute; top: -10rem; left: .7rem; padding: .6rem;
+  z-index: 100; background: #fff; color: #000;
+}
+.skip-link:focus { top: .7rem; }
+.site-header { background: var(--screen); border-bottom: 4px double var(--border); }
+.masthead {
+  display: flex; flex-wrap: wrap; gap: .65rem; align-items: center; padding: 1rem 1.25rem;
+  font-weight: 700; letter-spacing: .035em;
+}
+.masthead a { color: #fff; text-decoration: none; }
+.site-mark { background: var(--cyan); color: #000; padding: .08rem .4rem; }
+.site-version { color: var(--cyan); font-size: .73rem; font-weight: 400; }
+.top-nav { display: flex; flex-wrap: wrap; gap: .2rem; background: #aaa; padding: .3rem .75rem; }
+.top-nav a { color: #000; font-weight: 700; padding: .25rem .65rem; text-decoration: none; }
+.top-nav a:hover, .top-nav a:focus-visible { background: #000; color: #fff; }
+.site-shell {
+  display: grid; grid-template-columns: minmax(15rem, 19rem) minmax(0, 1fr);
+  max-width: 100rem; margin: 0 auto; width: 100%; flex: 1;
+}
+.sidebar { padding: 1rem; border-right: 2px solid var(--border); background: var(--panel); }
+.sidebar details { margin-bottom: .6rem; }
+.sidebar summary {
+  cursor: pointer; color: var(--cyan); background: #000; padding: .35rem .5rem;
+  font-weight: 700;
+}
+.sidebar ul { margin: .35rem 0 1rem; padding-left: 1.1rem; list-style: square; }
+.sidebar li { margin: .28rem 0; overflow-wrap: anywhere; }
+.sidebar a { font-size: .87rem; text-decoration: none; }
+.sidebar a[aria-current="page"] { background: var(--yellow); color: #000; padding: .15rem .25rem; }
+.main-content { min-width: 0; padding: 1.35rem clamp(1rem, 4vw, 3rem) 3rem; background: var(--screen); }
+.document { max-width: 82ch; }
+.document-notice {
+  display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
+  border: 1px solid var(--cyan); padding: .4rem .65rem; font-size: .84rem;
+  margin-bottom: 1.7rem;
+}
+.document-kind { background: var(--cyan); color: #000; padding: 0 .4rem; text-transform: uppercase; }
+h1, h2, h3, h4 { line-height: 1.25; color: #fff; overflow-wrap: anywhere; }
+h1 { border-bottom: .23em solid var(--cyan); margin-top: .3rem; font-size: clamp(1.4rem, 2.2vw, 2rem); }
+h2 { color: var(--yellow); border-bottom: 1px dashed var(--border); font-size: 1.3rem; margin-top: 2rem; }
+h3 { color: var(--cyan); font-size: 1.12rem; margin-top: 1.6rem; }
+h4 { color: var(--magenta); font-size: 1rem; margin-top: 1.35rem; }
+p, li { overflow-wrap: anywhere; }
+p { margin: .8rem 0 1.15rem; }
+code, pre { font-family: inherit; }
+code { color: #fff; background: #000; padding: .05rem .25rem; overflow-wrap: anywhere; }
+pre { overflow-x: auto; padding: 1rem; background: #000; border: 1px solid var(--border); }
+pre code { padding: 0; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .5rem 1rem; border-left: .4rem solid var(--cyan); background: var(--panel); }
+table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; margin: 1.5rem 0; }
+td, th { border: 1px solid var(--border); padding: .45rem .65rem; text-align: left; vertical-align: top; }
+th { color: #000; background: #aaa; }
+tr:nth-child(even) { background: rgba(0, 0, 0, .25); }
+hr { border: 0; border-top: 1px dashed #aaa; margin: 1.8rem 0; }
+.source-note { margin-top: 3rem; padding-top: 1rem; border-top: 2px solid #aaa; font-size: .85rem; }
+.site-footer { background: #000; border-top: 2px solid var(--border); padding: 1rem 1.5rem; font-size: .8rem; }
+.landing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; }
+.landing-card { border: 2px solid var(--border); background: var(--panel); padding: .7rem 1rem; }
+.landing-card h2 { margin-top: .5rem; }
+.landing-card ul { padding-left: 1.2rem; }
+.eyebrow { color: var(--cyan); text-transform: uppercase; font-size: .84rem; font-weight: 700; }
+.action-link, button { display: inline-block; border: 2px solid #fff; color: #000; background: var(--yellow); padding: .5rem .8rem; text-decoration: none; font: inherit; font-weight: 700; cursor: pointer; }
+.action-link:hover, button:hover { color: #fff; background: #000; }
+#reference-search { display: flex; align-items: end; flex-wrap: wrap; gap: .6rem; margin: 1.2rem 0; }
+#reference-search label { width: 100%; color: var(--cyan); font-weight: 700; }
+#search-query { flex: 1; min-width: 14rem; padding: .55rem; border: 2px solid var(--border); background: #000; color: #fff; font: inherit; }
+#search-results { padding-left: 1.5rem; }
+#search-results li { margin: 1.1rem 0; }
+#search-results p { font-size: .87rem; color: var(--muted); }
+@media (max-width: 850px) {
+  .site-shell { display: flex; flex-direction: column; }
+  .sidebar { border-right: none; border-bottom: 2px solid #aaa; }
+  .main-content { padding: 1.1rem; }
+  .sidebar nav { display: grid; grid-template-columns: repeat(auto-fit,minmax(13rem,1fr)); gap: .5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+@media print {
+  :root { color-scheme: light; }
+  body, .main-content { background: #fff; color: #000; }
+  .sidebar, .top-nav, .site-footer, .skip-link { display: none; }
+  .site-shell { display: block; } a, h2, h3 { color: #000; }
+  pre, code { color: #000; background: #f5f5f5; }
+}
