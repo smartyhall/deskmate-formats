@@ -34,13 +34,13 @@ jobs:
       - name: Test navigation and hosting paths
         working-directory: website
         run: npm test
-      - name: Build GitHub Pages path preview
+      - name: Build custom-domain root preview
         working-directory: website
         env:
-          SITE_BASE_PATH: /deskmate-formats/
+          SITE_BASE_PATH: /
         run: npm run build
       - name: Audit generated internal links
-        run: python website/scripts/check_generated_site.py website/_site /deskmate-formats/
+        run: python website/scripts/check_generated_site.py website/_site /
       - name: Verify upstream theme is packaged with the preview
         run: |
           test -s website/_site/assets/vendor/bootstra386/css/bootstrap.min.css

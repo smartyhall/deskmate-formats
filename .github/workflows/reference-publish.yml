@@ -39,10 +39,10 @@ jobs:
       - name: Build for GitHub Pages
         working-directory: website
         env:
-          SITE_BASE_PATH: /deskmate-formats/
+          SITE_BASE_PATH: /
         run: npm run build
       - name: Audit generated internal links
-        run: python website/scripts/check_generated_site.py website/_site /deskmate-formats/
+        run: python website/scripts/check_generated_site.py website/_site /
       - name: Verify original theme and attribution
         run: |
           test -s website/_site/assets/vendor/bootstra386/css/bootstrap.min.css
