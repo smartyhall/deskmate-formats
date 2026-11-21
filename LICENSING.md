@@ -72,6 +72,48 @@ requirement; scholarly citation remains good practice, not ownership of facts.
 
 ## Third-party material and dependencies
 
+### Historical excerpts, fair use, and rights-holder contact
+
+**Third-party content notice.** This is an independent historical preservation,
+research, and educational reference. Selected archival material—such as
+period advertisements, catalog excerpts, packaging, disk-label photographs,
+manual illustrations, software-interface screenshots, and brief quotations—may
+appear to identify, document, compare, or comment on historical products.
+These materials remain the property of their respective rights holders; their
+appearance here does not imply affiliation, endorsement, sponsorship, or
+transfer of copyright or trademark rights.
+
+We aim to use such material with appropriate attribution, source links, and
+context, relying on permission, applicable licenses, public-domain status,
+or, **where warranted for a particular use**, fair use under
+[17 U.S.C. § 107](https://www.copyright.gov/fair-use/). Fair use is
+fact-specific; the educational or noncommercial character of this project
+does **not** automatically establish that every reproduction qualifies.
+Where practicable, prefer limited, relevant excerpts and links to original
+sources over unnecessary full-document reproductions, especially for
+independently photographed artifacts or complete commercial publications.
+Our GPL and Creative Commons licenses cover only original project
+contributions and rights we can grant. They do **not** relicense
+third-party source material or grant downstream reuse rights in it.
+
+**Rights holders and attribution corrections are welcome.** If you own or
+represent rights in a work reproduced here and believe we have made a
+mistake, would like a credit or link corrected, or would prefer that your
+material be removed, please [open a repository issue](https://github.com/smartyhall/deskmate-formats/issues/new)
+so we can review it. Identify the relevant page or file, the material
+in question, and the requested correction, replacement, or removal.
+Please do not post private contact information or sensitive documents in
+a public issue. We will consider requests in good faith and, where
+appropriate, correct the attribution, replace the reproduction with a
+source link, or remove the material. This informal review path is not a
+precondition for exercising legal rights; formal copyright claims may
+also be submitted through [GitHub's copyright contact process](https://github.com/contact/dmca).
+
+This notice explains the project's editorial practice; it is **not** a
+blanket assertion of fair use for everything in the archive, a copyright
+license from the original owners, or a substitute for case-specific review.
+
+
 ### Original musical performances using supplied Tandy instruments
 
 Operator decision, 2026-11-18: the fixed listening suite may include WAV
