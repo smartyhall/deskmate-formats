@@ -1,6 +1,8 @@
 """Publication audit tests for application-generated synthetic-data specimens."""
 import hashlib
 import json
+from binascii import crc32
+import zlib
 import tempfile
 import unittest
 from pathlib import Path
@@ -32,6 +34,87 @@ class FixtureAuditTest(unittest.TestCase):
     def audit(self):
         with patch.object(audit_repository, 'ROOT', self.root):
             return audit_repository.audit()
+
+    @staticmethod
+    def example_site_png():
+        def chunk(kind, payload):
+            return pack('>I', len(payload)) + kind + payload + pack('>I', crc32(kind + payload))
+        header = pack('>IIBBBBB', 1, 1, 8, 2, 0, 0, 0)
+        pixels = zlib.compress(b'\\x00\\xaa\\xbb\\xcc')
+        return b'\\x89PNG\\r\\n\\x1a\\n' + chunk(b'IHDR', header) + chunk(b'IDAT', pixels) + chunk(b'IEND', b'')
+
+    def site_image(self, data=None, with_sidecar=True):
+        data = data if data is not None else self.example_site_png()
+        rel = 'calendar/day-view.png'
+        base = self.root / audit_repository.SITE_IMAGE_DIR
+        path = base / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+        if with_sidecar:
+            (path.parent / (path.name + '.license')).write_text(
+                'SPDX-FileCopyrightText: 2026 Example contributor\\n'
+                'SPDX-License-Identifier: CC-BY-4.0\\n', encoding='utf-8')
+        spec = {'schema_version': 1, 'images': [{
+            'id': 'ui.calendar.day-view',
+            'path': rel,
+            'sha256': hashlib.sha256(data).hexdigest(),
+            'source_sha256': hashlib.sha256(data).hexdigest(),
+            'size': len(data), 'width': 1, 'height': 1,
+            'origin': 'documentary-software-ui-capture',
+            'source_id': 'capture-test-001',
+            'caption': 'Synthetic Calendar day-view test',
+            'alt': 'One-pixel test image standing in for a calendar screenshot',
+            'rights_note': 'Illustrative synthetic-content UI capture; vendor art not relicensed.',
+        }]}
+        manifest = self.root / audit_repository.SITE_IMAGE_MANIFEST
+        manifest.parent.mkdir(parents=True, exist_ok=True)
+        manifest.write_text(json.dumps(spec), encoding='utf-8')
+        return path, spec
+
+    def test_manifested_ordinary_site_screenshot_passes_publication_audit(self):
+        self.manifest([])
+        self.site_image()
+        self.assertEqual(self.audit()['documentary_site_images_checked'], 1)
+
+    def test_site_screenshot_digest_and_missing_sidecar_are_rejected(self):
+        self.manifest([])
+        path, _ = self.site_image()
+        path.write_bytes(path.read_bytes() + b'garbage')
+        with self.assertRaisesRegex(ValueError, 'digest or size mismatch'):
+            self.audit()
+        path, _ = self.site_image(with_sidecar=False)
+        path.with_suffix('.png.license').unlink()
+        with self.assertRaisesRegex(ValueError, 'requires accurate REUSE sidecar'):
+            self.audit()
+
+    def test_unlisted_or_mislocated_site_screenshot_is_still_forbidden(self):
+        self.manifest([])
+        path, spec = self.site_image()
+        spec['images'] = []
+        (self.root / audit_repository.SITE_IMAGE_MANIFEST).write_text(json.dumps(spec))
+        with self.assertRaisesRegex(ValueError, 'unlisted site image'):
+            self.audit()
+        path.unlink()
+        path.with_suffix('.png.license').unlink()
+        (self.root / audit_repository.SITE_IMAGE_MANIFEST).write_text(json.dumps(spec))
+        stray = self.root / 'unknown.png'
+        stray.write_bytes(self.example_site_png())
+        with self.assertRaisesRegex(ValueError, 'excluded evidence/software type'):
+            self.audit()
+
+    def test_site_png_embedded_text_and_traversal_rejected(self):
+        self.manifest([])
+        png = self.example_site_png()
+        def chunk(kind, payload):
+            return pack('>I', len(payload)) + kind + payload + pack('>I', crc32(kind + payload))
+        png = png[:-12] + chunk(b'tEXt', b'Comment\\x00private metadata') + png[-12:]
+        path, spec = self.site_image(data=png)
+        with self.assertRaisesRegex(ValueError, 'unsafe site PNG chunk'):
+            self.audit()
+        spec['images'][0]['path'] = '../outside.png'
+        (self.root / audit_repository.SITE_IMAGE_MANIFEST).write_text(json.dumps(spec))
+        with self.assertRaisesRegex(ValueError, 'unsafe site image path'):
+            self.audit()
 
     def test_generated_fil_database_accepted(self):
         data = b'\x03FIL' + b'\x00' * 24
