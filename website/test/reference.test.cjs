@@ -7,7 +7,7 @@ const { ROOT, pages, sections, siteUrl, resolveLink, renderSource, searchRecord 
   require("../lib/reference.cjs");
 
 test("source-map entries resolve to existing, uniquely identified Markdown", () => {
-  assert.equal(pages.length, 26);
+  assert.equal(pages.length, 27);
   const ids = new Set(), slugs = new Set();
   for (const entry of pages) {
     assert.equal(ids.has(entry.id), false);
@@ -102,4 +102,55 @@ test("site layout preserves independently scrollable technical tables on phones"
   assert.match(css, /\.document\s*\{[^}]*overflow-x:\s*clip/);
   assert.match(css, /\.document pre\s*\{[^}]*overflow-x:\s*auto/);
   assert.match(css, /\.document table\s*\{[^}]*overflow-x:\s*auto/);
+});
+
+
+test("newcomer introduction leads the reference and search index", () => {
+  const entry = pages.find((item) => item.id === "history.introduction");
+  assert.equal(entry.slug, "start");
+  assert.equal(sections[0].id, "introduction");
+  assert.equal(sections[0].pages[0].id, entry.id);
+  const record = searchRecord(entry);
+  assert.equal(record.url, "/start/");
+  assert.match(record.text, /approachable/);
+  const rendered = renderSource(entry);
+  assert.match(rendered, /Discover DeskMate/);
+  assert.match(rendered, /original software/i);
+  for (const name of [
+    "ui.desktop.launcher.png", "ui.desktop.desktop-menu.png",
+    "ui.calendar.day-view.png", "ui.express-publisher.workspace.png",
+  ]) {
+    assert.ok(rendered.includes(name), "Introduction does not show " + name);
+  }
+  assert.equal((rendered.match(/class="reference-figure"/g) || []).length, 4);
+});
+
+test("homepage prioritizes illustrated discovery, technical reference and recovery", () => {
+  const Home = require("../src/index.11ty.js");
+  const html = new Home().render();
+  assert.match(html, /Meet the other desktop of the PC era/);
+  assert.match(html, /Where would you like to begin/);
+  assert.match(html, /href="\/start\/"/);
+  assert.match(html, /href="\/system\/tandy-crosswalk\/"/);
+  assert.match(html, /href="\/recovery\/workbench\/"/);
+  assert.match(html, /assets\/reference\/collection-01\/ui.desktop.launcher.png/);
+  assert.match(html, /width="640" height="480"/);
+  assert.doesNotMatch(html, /Private evidence paths|raw ROMs/);
+});
+
+test("discovery page and homepage honor non-root path deployment", () => {
+  const previous = process.env.SITE_BASE_PATH;
+  try {
+    process.env.SITE_BASE_PATH = "/deskmate-formats/";
+    const Home = require("../src/index.11ty.js");
+    const html = new Home().render();
+    assert.match(html, /href="\/deskmate-formats\/start\/"/);
+    assert.match(html, /src="\/deskmate-formats\/assets\/reference\//);
+    const entry = pages.find((item) => item.id === "history.introduction");
+    const intro = renderSource(entry);
+    assert.match(intro, /src="\/deskmate-formats\/assets\/reference\//);
+  } finally {
+    if (previous === undefined) delete process.env.SITE_BASE_PATH;
+    else process.env.SITE_BASE_PATH = previous;
+  }
 });
