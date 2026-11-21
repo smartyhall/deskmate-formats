@@ -1,0 +1,1672 @@
+{
+  "schema_version": 1,
+  "product": "Microsoft Windows 98 Second Edition",
+  "locale": "en-US",
+  "source_class": "official-offline-media",
+  "documentation": "https://www.betaarchive.com/wiki/index.php/Microsoft_KB_Archive/836570",
+  "disc": {
+    "filename": "Security9_enu_15.iso",
+    "sha256": "83ce5d3244ee3e3dbb723391bbced6f5edbd5918b77a8950c954880b8e10020f"
+  },
+  "source_manifest_sha256": "452e8fe17fc801200f6b580b8d1806e77d48762b226bd6707cd794cfa416a4a0",
+  "observation": {
+    "stock": "4.10.2222A",
+    "post_update": "4.10.2222B",
+    "shutdown_observed_emulated_ms": 1038165,
+    "sha256_guest_before_log": "10d3f93a6b7af687ca0cf77b0afd63d943300c3e4e4c50a29612f50167782290",
+    "sha256_guest_after_log": "f5655ba8f4ee1691d1431b86751938160d08842e28e0a4fda5a940377478f076"
+  },
+  "limitations": [
+    "File changes are cumulative across the complete CD run.",
+    "Shared destination names do not identify which package last wrote the file.",
+    "Null release, prerequisite, and supersedence fields indicate unverified catalog metadata."
+  ],
+  "updates": [
+    {
+      "kb": "238453",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "238453USA8.EXE",
+        "Bytes": 201376,
+        "SHA256": "8257b4d8710da58da1f554a1797cd56ab095460a3474c84589d97fdd8cbef0ee",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 1,
+      "targets_changed": 1,
+      "files": {
+        "/WINDOWS/SYSTEM/VIP.386": {
+          "stock": {
+            "bytes": 80385,
+            "sha256": "d14d4262b51caaa13336b25da9673e30b34110944f3e19d929ceaede3f39873a",
+            "pe_file_version": null
+          },
+          "feb2004": {
+            "bytes": 80409,
+            "sha256": "3225c77dc36cb7e04947e98a6cbbefc2d5a26a1de0c6fb469caa73dc8324b240",
+            "pe_file_version": null
+          }
+        }
+      }
+    },
+    {
+      "kb": "245729",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "245729US8.EXE",
+        "Bytes": 173544,
+        "SHA256": "460e6d895fb156bbd00aae51737ba921eefee60d31397044f837c93c9d3fe8d4",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 1,
+      "targets_changed": 1,
+      "files": {
+        "/WINDOWS/SYSTEM/MSNET32.DLL": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 61952,
+            "sha256": "aac333b86cf17709613d509d16060d4e7769acae5567497835759a2f426d1b1c",
+            "pe_file_version": "4.10.0.2224"
+          }
+        }
+      }
+    },
+    {
+      "kb": "256015",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "256015USA8.EXE",
+        "Bytes": 227512,
+        "SHA256": "ca16ec3028d3fe63b06c8c2573c9ffade5fd168d778ae2a0e8e11d02b34aa952",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 1,
+      "targets_changed": 1,
+      "files": {
+        "/WINDOWS/SYSTEM/VMM32/IFSMGR.VXD": {
+          "stock": {
+            "bytes": 185902,
+            "sha256": "91f8fb987c468b418904a9cc8428f62dcad1334035737357958766c6add95f4a",
+            "pe_file_version": null
+          },
+          "feb2004": {
+            "bytes": 185926,
+            "sha256": "78d29391b442f98f6a32e5a7a64931a7d988342118c32e2d4e2741e45c95bfa6",
+            "pe_file_version": null
+          }
+        }
+      }
+    },
+    {
+      "kb": "259728",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "259728USA8.EXE",
+        "Bytes": 197280,
+        "SHA256": "b853868de8cda3f0bef6f3239e6971e7e4b595e173e94f21d8f9d2f0269b5c90",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 1,
+      "targets_changed": 1,
+      "files": {
+        "/WINDOWS/SYSTEM/VIP.386": {
+          "stock": {
+            "bytes": 80385,
+            "sha256": "d14d4262b51caaa13336b25da9673e30b34110944f3e19d929ceaede3f39873a",
+            "pe_file_version": null
+          },
+          "feb2004": {
+            "bytes": 80409,
+            "sha256": "3225c77dc36cb7e04947e98a6cbbefc2d5a26a1de0c6fb469caa73dc8324b240",
+            "pe_file_version": null
+          }
+        }
+      }
+    },
+    {
+      "kb": "273727",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "273727USA8.EXE",
+        "Bytes": 243360,
+        "SHA256": "e417564904f97e8c92380e33e4b2dcd4c3df029c4ca4f39c34a0611157277e1a",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 2,
+      "targets_changed": 2,
+      "files": {
+        "/WINDOWS/SYSTEM/NWLINK.VXD": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 51551,
+            "sha256": "738eb5f8c3a18793186c11db005a060dce9df646d17799eea6d0a60411e61d50",
+            "pe_file_version": null
+          }
+        },
+        "/WINDOWS/SYSTEM/VSERVER.VXD": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 112912,
+            "sha256": "c0c85a756c3f7d12eeb1fd1236f12e86801b81cb7004a2c50ff236bbe1735015",
+            "pe_file_version": null
+          }
+        }
+      }
+    },
+    {
+      "kb": "314147",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "314147USA8.EXE",
+        "Bytes": 163432,
+        "SHA256": "591ec3d95b990301753d7a862c087223ee75eed1e19961686c507e97d1e8359b",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 2,
+      "targets_changed": 2,
+      "files": {
+        "/WINDOWS/SNMP.EXE": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 16144,
+            "sha256": "ee47b74ce7302ddb61eefffc021e50d6a93f3b70c8743904a92dd6e5d8f1fc49",
+            "pe_file_version": "5.0.2195.5513"
+          }
+        },
+        "/WINDOWS/SNMPAPI.DLL": {
+          "stock": {
+            "bytes": 32768,
+            "sha256": "2f30d6ffe5ae11ef4aa9927eb97902b93f210107327b0dabba1291ffefd00faf",
+            "pe_file_version": "5.0.1662.1"
+          },
+          "feb2004": {
+            "bytes": 18192,
+            "sha256": "dca6fc532314383ed5a2e4782579fc0f2bdac725acc6bb70f57c033002bf4b13",
+            "pe_file_version": "5.0.2195.5513"
+          }
+        }
+      }
+    },
+    {
+      "kb": "329048",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "329048USA8.EXE",
+        "Bytes": 273744,
+        "SHA256": "84fbb600e8cebff778df1f2b0b31a65e9fdef6588e6c2a0d8a1b19fdf721505b",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:a /r:n",
+      "file_observation": "absent",
+      "standalone_install_result": null,
+      "targets_present": 0,
+      "targets_changed": 0,
+      "files": {
+        "/WINDOWS/SYSTEM/DUNZIP32.DLL": {
+          "stock": null,
+          "feb2004": null
+        },
+        "/WINDOWS/SYSTEM/DZIP32.DLL": {
+          "stock": null,
+          "feb2004": null
+        },
+        "/WINDOWS/SYSTEM/ZIPFLDR.DLL": {
+          "stock": null,
+          "feb2004": null
+        }
+      }
+    },
+    {
+      "kb": "249973",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "249973USA8.exe",
+        "Bytes": 838328,
+        "SHA256": "102361e92e0e895bb25b6dff646d16f8eac8deebc4b4666b71ec0b09425f90a4",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 3,
+      "targets_changed": 3,
+      "files": {
+        "/WINDOWS/SYSTEM/RICHED32.DLL": {
+          "stock": {
+            "bytes": 188416,
+            "sha256": "dcf26e0b616b269d57e488a092b1f0480d8b61dbcfbae486398dac1b87498610",
+            "pe_file_version": "4.0.834.839"
+          },
+          "feb2004": {
+            "bytes": 203024,
+            "sha256": "0ba92e929a94c2ba7ee893c5c6b0516da80c882ad8b4f909bc941f992109dc57",
+            "pe_file_version": "5.0.1461.82"
+          }
+        },
+        "/WINDOWS/SYSTEM/RICHED20.DLL": {
+          "stock": {
+            "bytes": 298768,
+            "sha256": "77eb45a2be045ea655e22cfc6d4005117b541766516f65afc228e994da2109de",
+            "pe_file_version": "5.0.152.0"
+          },
+          "feb2004": {
+            "bytes": 286208,
+            "sha256": "3741ffddda7c35daf835b721c72b79ebe83a23f296cb791220922c7ead8112dc",
+            "pe_file_version": "5.0.153.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/USP10.DLL": {
+          "stock": {
+            "bytes": 274432,
+            "sha256": "301cae07515e16c9a8b6d8167ec03bf9a0586fabb44c65522bfc2276c7cec5f1",
+            "pe_file_version": "1.175.0.1"
+          },
+          "feb2004": {
+            "bytes": 315152,
+            "sha256": "9b229e275902c2dfaec8aa69b17ba7ba73451099de551f17721b73f98428e08e",
+            "pe_file_version": "1.325.2180.1"
+          }
+        }
+      }
+    },
+    {
+      "kb": "274548",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "274548USA8.EXE",
+        "Bytes": 309632,
+        "SHA256": "33b1ee942ea452ee282093c0be8ec27fe998a3c1b5e869a384b908f63378156a",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:a /r:n",
+      "file_observation": "absent",
+      "standalone_install_result": null,
+      "targets_present": 0,
+      "targets_changed": 0,
+      "files": {
+        "/Program Files/Accessories/HyperTerminal/HTICONS.DLL": {
+          "stock": null,
+          "feb2004": null
+        },
+        "/Program Files/Accessories/HyperTerminal/HYPERTRM.DLL": {
+          "stock": null,
+          "feb2004": null
+        },
+        "/Program Files/Accessories/HyperTerminal/HYPERTRM.EXE": {
+          "stock": null,
+          "feb2004": null
+        }
+      }
+    },
+    {
+      "kb": "323172",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "323172USA8.EXE",
+        "Bytes": 219472,
+        "SHA256": "d65cc961a4003494270bcb628e0fc5177ef0829a52015b56d4f54bbd807b29dc",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 1,
+      "targets_changed": 1,
+      "files": {
+        "/WINDOWS/SYSTEM/XENROLL.DLL": {
+          "stock": {
+            "bytes": 102400,
+            "sha256": "e2309053ba196e64c332c9f21fea9d590c7af288ffc77796b035c9b309ba28ff",
+            "pe_file_version": "5.131.1877.3"
+          },
+          "feb2004": {
+            "bytes": 172664,
+            "sha256": "d1a8873e0b2ff3cb93001992026da72cb6c6ee448e594b22d08b114fc64405d6",
+            "pe_file_version": "5.131.3659.0"
+          }
+        }
+      }
+    },
+    {
+      "kb": "329115",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "329115USA8.EXE",
+        "Bytes": 417104,
+        "SHA256": "64de2e717b16a4da50a0cefb7460331dc3c92b5663122422f5c31d79f7a2b47c",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 4,
+      "targets_changed": 4,
+      "files": {
+        "/WINDOWS/SYSTEM/CRYPT32.DLL": {
+          "stock": {
+            "bytes": 385024,
+            "sha256": "a26df044f23ee06a843bd6e4fd21025847e5725b437250cd49bdc9169251af32",
+            "pe_file_version": "5.131.1877.4"
+          },
+          "feb2004": {
+            "bytes": 372496,
+            "sha256": "9491bddbb23f68e07ff7519cc26dcb5bf5320ace2969bf723fdb70976100b461",
+            "pe_file_version": "5.131.1878.12"
+          }
+        },
+        "/WINDOWS/SYSTEM/CRYPTDLG.DLL": {
+          "stock": {
+            "bytes": 102400,
+            "sha256": "50354d94fff24b904f536b9f8550f6f31bb331fc8faf612171ad450a0d2afb1d",
+            "pe_file_version": "5.0.1555.1"
+          },
+          "feb2004": {
+            "bytes": 90384,
+            "sha256": "2d8287050bdba74d8b95358f72ab6f3a4310c255771a98796e17a36fa4a850e6",
+            "pe_file_version": "5.0.1558.6072"
+          }
+        },
+        "/WINDOWS/SYSTEM/SCHANNEL.DLL": {
+          "stock": {
+            "bytes": 163840,
+            "sha256": "d0d8091eff5b991f45bc1cddcc88260ffae39d19d4346fd2dc59cc3dbec5cfdc",
+            "pe_file_version": "4.84.1901.1877"
+          },
+          "feb2004": {
+            "bytes": 112912,
+            "sha256": "177e0dc53e95b122c8e94bbd07e18183c85aece3b81538da6787e7a89570e367",
+            "pe_file_version": "4.87.1964.1878"
+          }
+        },
+        "/WINDOWS/SYSTEM/SOFTPUB.DLL": {
+          "stock": {
+            "bytes": 69632,
+            "sha256": "979c29f84c6792a246e6bb52b46104bb80e115408bc59065ca8d7207f24f0ace",
+            "pe_file_version": "5.131.1877.4"
+          },
+          "feb2004": {
+            "bytes": 62736,
+            "sha256": "294b54dc72237f294d9a5d67582f3b5fc98133b27b8aa4b808acb6c9da6023cd",
+            "pe_file_version": "5.131.1877.9"
+          }
+        }
+      }
+    },
+    {
+      "kb": "811630",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "811630USA8.EXE",
+        "Bytes": 511312,
+        "SHA256": "915f58ce15b9dc02fe781f83cd559b623dada59f7ce16bfaa0796f110e1636a5",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 33,
+      "targets_changed": 33,
+      "files": {
+        "/WINDOWS/hh.exe": {
+          "stock": {
+            "bytes": 36864,
+            "sha256": "16e65c1a6db5074f4bb79fc42fb79c24185e6ed5304e86e4190706a6b05d2cf6",
+            "pe_file_version": "4.73.8412.0"
+          },
+          "feb2004": {
+            "bytes": 10752,
+            "sha256": "19be0ed3378218e6d2087e5ed2427d4eb5045141d6fabd4b93974b9a66292574",
+            "pe_file_version": "5.2.3644.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/hhctrl.ocx": {
+          "stock": {
+            "bytes": 520528,
+            "sha256": "87a135e3e253175f146a9cc07f627a16d273b9e269856a744ab2874180186282",
+            "pe_file_version": "4.73.8412.0"
+          },
+          "feb2004": {
+            "bytes": 516192,
+            "sha256": "34073513dd43bfea102ddb40a07d593e5de67bcafb0a9ff6379568082583da42",
+            "pe_file_version": "5.2.3735.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0401/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "60f5a379cf4ce1771411a5c8726cb90fa1b01d1a48425563666825ef7d7b9534",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0403/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 90112,
+            "sha256": "f410fc15e16ab3496abb7437d5a408ec995d4b393bf96ed5088d582fb9a4b5d6",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0404/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "32bf4f297fd682ab89cef60c2154bb0d50e719e18501d3655359ffc46c0f8f6f",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0405/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "d0e97790a3f600baa85e821f63a5e2b3442cfaa943ea0e60c23f7d2d08571eb8",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0406/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "82c93fe272257a8f31970cae183ac049e95049d96b5c41c1b18f9f531534ac70",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0407/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 91136,
+            "sha256": "fdc02f4c630010b88e083bb7f5ec385d13ee9cd49d3209edb89932f62a0c9418",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0408/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 92160,
+            "sha256": "f97b7fa8f83d5ded950107c527d71fbb3d1af6c12b678f186b4ebef161e60272",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0409/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "7f71f2ce214d0e7cefe8212ba46cc3cd3de2e78f5926824f65be167a6a0f66d6",
+            "pe_file_version": "5.2.3664.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/040A/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 90112,
+            "sha256": "8c473cea6a67ce53c18eeb98db5a4a6b70e33d3016a9d82e29d83bfdcfc6f938",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/040B/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "de403b83ca9b15c9fb1b022606ac693272d3eafbaada7e048f44dca12b057a6b",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/040C/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 92160,
+            "sha256": "12d5d98420bdef23aa05f4e46c848acd1402fb53a71b62ddd2a188f08fc9a21d",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/040D/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "c859d6dae9a52d6e9228436ead581d1f55200c111b525c4d566a6723120c756b",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/040E/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88576,
+            "sha256": "117d83f47e779d79aa025668ab2fb025cb3438c9bb04f135a82179637925f84a",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0410/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 90112,
+            "sha256": "39ccae3530dcab60a0ef71632c28e5a0f25115288f96d7fb70144c521515677e",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0411/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "e8bda29c7818bb6d5b1eafdacaa2b3dae00e1aa6cabe6cfa292b8e8bd3f0dbc8",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0412/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "c9bbded150289e9b4eb860873505e2250bae53d3f137164787dd58133bf34b25",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0413/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 90112,
+            "sha256": "8c4415c3f08a19fbf4fba418fb4438e833271f01d171e7ce7c956ebabd29b8a1",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0414/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "b983739df36e16385601f6554f5291ed059da0d1ef56a9433eeead882efbfb2f",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0415/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 89088,
+            "sha256": "0744497c341696ac3ea80504c6589bb539f8f3b194f23cf9fd32c23f36cb389d",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0416/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 89600,
+            "sha256": "437eecfb8dfe1208ef98ccddd1034e91aeaaaa9e0cbed2b4a35fb1c4cdd1ce50",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0419/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "6a70b0b2576c4b50bc3e69d1d424534c33e80ee88ea07378f6cab6f866b005fb",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/041B/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "d4933c2c46d4d2b0d2435b0846badf4fb16d8ffb36184771052eb40476a5eca9",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/041D/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88576,
+            "sha256": "3e8a8f9723f56dcb4408a16944ddf1c7ff4be064c715145897e6f9a8af983139",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/041F/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "d314f34def27523ee9e88f2569e46485058a14e2507e19ef0ef3dd492efff7d9",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0424/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "0ce10203ca0f3e9406f8807dfeb2ed12858aaecebeb767f917c605b6e0792fb0",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/042D/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "fd2a31d8c3323d3c3c46e90bc37b08a8a7eca533a912edfb0f25d8fd22748136",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0804/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "6ae7c30a907e36477931d403ed7aa9bc89b36a625318be924946bf68d9960cea",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0816/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 90624,
+            "sha256": "1aa3ef66e83e42a67daf2973cebde05082b345e9171da35fc9ba9635a941c501",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/hhsetup.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 37888,
+            "sha256": "b5bda3f2ef722b8079ae291077eca85ce1605c380c866a9590c384f71254a2fd",
+            "pe_file_version": "5.2.3644.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/itircl.dll": {
+          "stock": {
+            "bytes": 147456,
+            "sha256": "753aad82d9416f953a77f9512453da8b726621ca82ec02051d5e1f4123f29fe5",
+            "pe_file_version": "4.72.7276.0"
+          },
+          "feb2004": {
+            "bytes": 143872,
+            "sha256": "d644f6481a6655d2871fdd70e927b946cb00a8a7d7dc62bc65e313eae213922d",
+            "pe_file_version": "5.2.3644.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/itss.dll": {
+          "stock": {
+            "bytes": 147456,
+            "sha256": "8ee8e3eaf8e90621260998a0727fd76eb68ef7b8e8260e8010949157639bd9c4",
+            "pe_file_version": "4.72.8084.0"
+          },
+          "feb2004": {
+            "bytes": 122368,
+            "sha256": "3a71f7e1a89e036a2278d1667f89a068250f5071c3f893299d471849a7dba446",
+            "pe_file_version": "5.2.3644.0"
+          }
+        }
+      }
+    },
+    {
+      "kb": "823559",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "823559USA8.EXE",
+        "Bytes": 311904,
+        "SHA256": "f8776827dd54de41eb8a5fbf3f7fe24066320c1d4d187211bbb0b75b89ec73d1",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 2,
+      "targets_changed": 2,
+      "files": {
+        "/Program Files/Common Files/Microsoft Shared/TEXTCONV/HTML32.CNV": {
+          "stock": {
+            "bytes": 382464,
+            "sha256": "72eb4549d52fed478dddb97f32f00a649216f8f703a08769bfb478b5cbc6c414",
+            "pe_file_version": "1998.10.4.0"
+          },
+          "feb2004": {
+            "bytes": 311864,
+            "sha256": "fed05e55c47b3e3e1877536393a6a1c2cb182d853d27c715819e8cff87632777",
+            "pe_file_version": "2003.1100.5426.0"
+          }
+        },
+        "/Program Files/Common Files/Microsoft Shared/TEXTCONV/MSCONV97.DLL": {
+          "stock": {
+            "bytes": 143360,
+            "sha256": "118c134a166a81bfed167a54ef3907242c587f3a1b920c61ef49a718410c09e0",
+            "pe_file_version": "1998.1.27.0"
+          },
+          "feb2004": {
+            "bytes": 116288,
+            "sha256": "a9092fc72a623ce16327e6b98896a8f42634d35b085be6c2b176e8442f8340d1",
+            "pe_file_version": "2003.1100.5426.0"
+          }
+        }
+      }
+    },
+    {
+      "kb": "273991",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "273991USA8.EXE",
+        "Bytes": 214720,
+        "SHA256": "f18d557f82bcf9855d6229a6800a497af729d8f324d785f8084e751d2792b5fd",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 1,
+      "targets_changed": 1,
+      "files": {
+        "/WINDOWS/SYSTEM/VSERVER.VXD": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 112912,
+            "sha256": "c0c85a756c3f7d12eeb1fd1236f12e86801b81cb7004a2c50ff236bbe1735015",
+            "pe_file_version": null
+          }
+        }
+      }
+    },
+    {
+      "kb": "314941",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "314941USA8.EXE",
+        "Bytes": 228936,
+        "SHA256": "5a5097615095c015edf09057cda32f639f14371be116418f9cb16dbf4914dcbf",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:a /r:n",
+      "file_observation": "absent",
+      "standalone_install_result": null,
+      "targets_present": 0,
+      "targets_changed": 0,
+      "files": {
+        "/WINDOWS/SYSTEM/SSDPAPI.DLL": {
+          "stock": null,
+          "feb2004": null
+        },
+        "/WINDOWS/SYSTEM/SSDPSRV.EXE": {
+          "stock": null,
+          "feb2004": null
+        },
+        "/WINDOWS/SYSTEM/UPNP.DLL": {
+          "stock": null,
+          "feb2004": null
+        }
+      }
+    },
+    {
+      "kb": "323255",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "323255USA8.EXE",
+        "Bytes": 507728,
+        "SHA256": "746d98db87839bd76041bc2c6f8787e12c67f6495cf5c3c85e735bb11ecd6121",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 33,
+      "targets_changed": 33,
+      "files": {
+        "/WINDOWS/hh.exe": {
+          "stock": {
+            "bytes": 36864,
+            "sha256": "16e65c1a6db5074f4bb79fc42fb79c24185e6ed5304e86e4190706a6b05d2cf6",
+            "pe_file_version": "4.73.8412.0"
+          },
+          "feb2004": {
+            "bytes": 10752,
+            "sha256": "19be0ed3378218e6d2087e5ed2427d4eb5045141d6fabd4b93974b9a66292574",
+            "pe_file_version": "5.2.3644.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/hhctrl.ocx": {
+          "stock": {
+            "bytes": 520528,
+            "sha256": "87a135e3e253175f146a9cc07f627a16d273b9e269856a744ab2874180186282",
+            "pe_file_version": "4.73.8412.0"
+          },
+          "feb2004": {
+            "bytes": 516192,
+            "sha256": "34073513dd43bfea102ddb40a07d593e5de67bcafb0a9ff6379568082583da42",
+            "pe_file_version": "5.2.3735.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0401/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "60f5a379cf4ce1771411a5c8726cb90fa1b01d1a48425563666825ef7d7b9534",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0403/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 90112,
+            "sha256": "f410fc15e16ab3496abb7437d5a408ec995d4b393bf96ed5088d582fb9a4b5d6",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0404/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "32bf4f297fd682ab89cef60c2154bb0d50e719e18501d3655359ffc46c0f8f6f",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0405/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "d0e97790a3f600baa85e821f63a5e2b3442cfaa943ea0e60c23f7d2d08571eb8",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0406/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "82c93fe272257a8f31970cae183ac049e95049d96b5c41c1b18f9f531534ac70",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0407/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 91136,
+            "sha256": "fdc02f4c630010b88e083bb7f5ec385d13ee9cd49d3209edb89932f62a0c9418",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0408/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 92160,
+            "sha256": "f97b7fa8f83d5ded950107c527d71fbb3d1af6c12b678f186b4ebef161e60272",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0409/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "7f71f2ce214d0e7cefe8212ba46cc3cd3de2e78f5926824f65be167a6a0f66d6",
+            "pe_file_version": "5.2.3664.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/040A/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 90112,
+            "sha256": "8c473cea6a67ce53c18eeb98db5a4a6b70e33d3016a9d82e29d83bfdcfc6f938",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/040B/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "de403b83ca9b15c9fb1b022606ac693272d3eafbaada7e048f44dca12b057a6b",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/040C/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 92160,
+            "sha256": "12d5d98420bdef23aa05f4e46c848acd1402fb53a71b62ddd2a188f08fc9a21d",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/040D/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "c859d6dae9a52d6e9228436ead581d1f55200c111b525c4d566a6723120c756b",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/040E/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88576,
+            "sha256": "117d83f47e779d79aa025668ab2fb025cb3438c9bb04f135a82179637925f84a",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0410/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 90112,
+            "sha256": "39ccae3530dcab60a0ef71632c28e5a0f25115288f96d7fb70144c521515677e",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0411/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "e8bda29c7818bb6d5b1eafdacaa2b3dae00e1aa6cabe6cfa292b8e8bd3f0dbc8",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0412/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "c9bbded150289e9b4eb860873505e2250bae53d3f137164787dd58133bf34b25",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0413/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 90112,
+            "sha256": "8c4415c3f08a19fbf4fba418fb4438e833271f01d171e7ce7c956ebabd29b8a1",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0414/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "b983739df36e16385601f6554f5291ed059da0d1ef56a9433eeead882efbfb2f",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0415/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 89088,
+            "sha256": "0744497c341696ac3ea80504c6589bb539f8f3b194f23cf9fd32c23f36cb389d",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0416/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 89600,
+            "sha256": "437eecfb8dfe1208ef98ccddd1034e91aeaaaa9e0cbed2b4a35fb1c4cdd1ce50",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0419/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "6a70b0b2576c4b50bc3e69d1d424534c33e80ee88ea07378f6cab6f866b005fb",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/041B/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "d4933c2c46d4d2b0d2435b0846badf4fb16d8ffb36184771052eb40476a5eca9",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/041D/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88576,
+            "sha256": "3e8a8f9723f56dcb4408a16944ddf1c7ff4be064c715145897e6f9a8af983139",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/041F/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "d314f34def27523ee9e88f2569e46485058a14e2507e19ef0ef3dd492efff7d9",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0424/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "0ce10203ca0f3e9406f8807dfeb2ed12858aaecebeb767f917c605b6e0792fb0",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/042D/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 88064,
+            "sha256": "fd2a31d8c3323d3c3c46e90bc37b08a8a7eca533a912edfb0f25d8fd22748136",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0804/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 87552,
+            "sha256": "6ae7c30a907e36477931d403ed7aa9bc89b36a625318be924946bf68d9960cea",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/mui/0816/hhctrlui.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 90624,
+            "sha256": "1aa3ef66e83e42a67daf2973cebde05082b345e9171da35fc9ba9635a941c501",
+            "pe_file_version": "4.74.9273.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/hhsetup.dll": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 37888,
+            "sha256": "b5bda3f2ef722b8079ae291077eca85ce1605c380c866a9590c384f71254a2fd",
+            "pe_file_version": "5.2.3644.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/itircl.dll": {
+          "stock": {
+            "bytes": 147456,
+            "sha256": "753aad82d9416f953a77f9512453da8b726621ca82ec02051d5e1f4123f29fe5",
+            "pe_file_version": "4.72.7276.0"
+          },
+          "feb2004": {
+            "bytes": 143872,
+            "sha256": "d644f6481a6655d2871fdd70e927b946cb00a8a7d7dc62bc65e313eae213922d",
+            "pe_file_version": "5.2.3644.0"
+          }
+        },
+        "/WINDOWS/SYSTEM/itss.dll": {
+          "stock": {
+            "bytes": 147456,
+            "sha256": "8ee8e3eaf8e90621260998a0727fd76eb68ef7b8e8260e8010949157639bd9c4",
+            "pe_file_version": "4.72.8084.0"
+          },
+          "feb2004": {
+            "bytes": 122368,
+            "sha256": "3a71f7e1a89e036a2278d1667f89a068250f5071c3f893299d471849a7dba446",
+            "pe_file_version": "5.2.3644.0"
+          }
+        }
+      }
+    },
+    {
+      "kb": "240163",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "TelnetUp.EXE",
+        "Bytes": 149984,
+        "SHA256": "86a6a642559294e4b5da74cebb5f9b71cc38c5e4cb2a5e8616f3cfe2d5d43c1f",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 1,
+      "targets_changed": 1,
+      "files": {
+        "/WINDOWS/TELNET.EXE": {
+          "stock": {
+            "bytes": 77824,
+            "sha256": "24b7282a028a9c59211b1d3cef84946516e0ff191f6cce076811b675262b27ea",
+            "pe_file_version": "5.0.1717.1"
+          },
+          "feb2004": {
+            "bytes": 107520,
+            "sha256": "d966b7308846f84fe23f5e604ff256b133bbaa7fa1a6e0e811450462a3519c95",
+            "pe_file_version": "5.0.1755.2"
+          }
+        }
+      }
+    },
+    {
+      "kb": "313829",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "q313829.exe",
+        "Bytes": 854096,
+        "SHA256": "f76c332781520b19207ce97995b76924127d05bec511c92e0eac06c4ae963cc1",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:a /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 1,
+      "targets_changed": 1,
+      "files": {
+        "/WINDOWS/SYSTEM/SHELL32.DLL": {
+          "stock": {
+            "bytes": 1400832,
+            "sha256": "533c5809a9b6bdb236cce17a14c03ff251c4ca4d00790ea8e8034ee5d14d7f61",
+            "pe_file_version": "4.72.3612.1700"
+          },
+          "feb2004": {
+            "bytes": 1388816,
+            "sha256": "f7d4ef144ea4ee9fc594e2879acbf6378ad449e5a0165aa0d810fde5559a7d41",
+            "pe_file_version": "4.72.3812.600"
+          }
+        }
+      }
+    },
+    {
+      "kb": "330994",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "q330994.exe",
+        "Bytes": 1992832,
+        "SHA256": "fbf1f71816d2f2e650b95efb8595c98a8bb1723b9be86c51b73a3e56f6363ae2",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:a /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 17,
+      "targets_changed": 17,
+      "files": {
+        "/WINDOWS/SYSTEM/msoert2.dll": {
+          "stock": {
+            "bytes": 73728,
+            "sha256": "9a61f6dd085deeae6fadb591a873c46092942d51139df94fa6d459494d549f88",
+            "pe_file_version": "5.0.2615.200"
+          },
+          "feb2004": {
+            "bytes": 91136,
+            "sha256": "27acc93fc65d598e1fea0cdaab057406567a80a8c8ef197ba700b98f9cbd4ed8",
+            "pe_file_version": "6.0.2800.1123"
+          }
+        },
+        "/WINDOWS/SYSTEM/msoeacct.dll": {
+          "stock": {
+            "bytes": 184320,
+            "sha256": "2a1d492b91d3973828170db070f07400a0b37a0b0d03af248979abd93bd6c98c",
+            "pe_file_version": "5.0.2615.200"
+          },
+          "feb2004": {
+            "bytes": 228864,
+            "sha256": "7ca89b0e7a0a08cfd0a872ef519c72fa212c4f066a09861950cfecfca0ba60f2",
+            "pe_file_version": "6.0.2800.1123"
+          }
+        },
+        "/WINDOWS/SYSTEM/inetres.dll": {
+          "stock": {
+            "bytes": 53248,
+            "sha256": "81751e5cfac63d23582f89e73e252d05fa170e83dba94bcd1ceeb83e8529c368",
+            "pe_file_version": "5.0.2314.1300"
+          },
+          "feb2004": {
+            "bytes": 47616,
+            "sha256": "3a3cd8db20c21072bef0ca023dc90da9e6c6b40eaee73e8d7f6620d36bc9bc97",
+            "pe_file_version": "6.0.2800.1123"
+          }
+        },
+        "/WINDOWS/SYSTEM/inetcomm.dll": {
+          "stock": {
+            "bytes": 532480,
+            "sha256": "03c52d0c07a56855ca2582676c43bca57ec417bad6f83ec3cdba62bf8d0c8b54",
+            "pe_file_version": "5.0.2615.200"
+          },
+          "feb2004": {
+            "bytes": 592384,
+            "sha256": "e922bfefab46b92e6db2591dd4a24f92b1783378415aecf80b7541e7ce2a188d",
+            "pe_file_version": "6.0.2800.1165"
+          }
+        },
+        "/WINDOWS/SYSTEM/msident.dll": {
+          "stock": {
+            "bytes": 60480,
+            "sha256": "1bd2cadaca73727831533f0d1cea54b2f63ddbfec9a047933f1531cd6585574d",
+            "pe_file_version": "5.0.2614.3500"
+          },
+          "feb2004": {
+            "bytes": 44032,
+            "sha256": "df731c917716485a678abcc5079d659cafe644e1bc3fcb6c77c99eebaaed2be6",
+            "pe_file_version": "6.0.2800.1123"
+          }
+        },
+        "/Program Files/Outlook Express/msoeres.dll": {
+          "stock": {
+            "bytes": 921600,
+            "sha256": "f80b0eff02a273fa3c7da27340434cbf462b6f54822619aa1a94642b1f9b65ce",
+            "pe_file_version": "5.0.2314.1300"
+          },
+          "feb2004": {
+            "bytes": 2479616,
+            "sha256": "9d795f23778383c8ea24a3d618adfa4a7536343db6f824aeb7e658e61b08b374",
+            "pe_file_version": "6.0.2800.1123"
+          }
+        },
+        "/Program Files/Outlook Express/msoe.dll": {
+          "stock": {
+            "bytes": 1097728,
+            "sha256": "f6d6aad8f57f0608e5e56a61d5429fd8f128e9cd91247d8b83675d43a1e51131",
+            "pe_file_version": "5.0.2615.200"
+          },
+          "feb2004": {
+            "bytes": 1174528,
+            "sha256": "b91e4a8901e559ccbae8e9875ee30d87e82608b771e8030b9d4d28a05424682a",
+            "pe_file_version": "6.0.2800.1158"
+          }
+        },
+        "/Program Files/Outlook Express/oeimport.dll": {
+          "stock": {
+            "bytes": 86016,
+            "sha256": "be89683bc9fff045e9b13e8092ea6a08eb77bcc8d52d496d7ab71cb57de487ae",
+            "pe_file_version": "5.0.2615.200"
+          },
+          "feb2004": {
+            "bytes": 93184,
+            "sha256": "4ad0710a5efa6457ef378a00e73a989f5cfd61953b31d04250736bd980109d70",
+            "pe_file_version": "6.0.2800.1123"
+          }
+        },
+        "/Program Files/Outlook Express/msimn.exe": {
+          "stock": {
+            "bytes": 49152,
+            "sha256": "76092d25a05739860d3d13e15c91c6ccac87e5af345203c4e868f6d4e7736fa0",
+            "pe_file_version": "5.0.2615.200"
+          },
+          "feb2004": {
+            "bytes": 56832,
+            "sha256": "ed7c77766d33e1738b3486a663e64312886be93d0bc50c376dc2402a00985713",
+            "pe_file_version": "6.0.2800.1123"
+          }
+        },
+        "/Program Files/Outlook Express/oemig50.exe": {
+          "stock": {
+            "bytes": 73728,
+            "sha256": "0a157f718e0d09be3968a9a3fee3e12dc0bffdadd8a40730c6124a49236206c4",
+            "pe_file_version": "5.0.2615.200"
+          },
+          "feb2004": {
+            "bytes": 55808,
+            "sha256": "dd1741e83dd6e85a34c8b2210a37dedf9e1e9da0c8b41978fd6032a4c1345835",
+            "pe_file_version": "6.0.2800.1123"
+          }
+        },
+        "/Program Files/Outlook Express/oemiglib.dll": {
+          "stock": {
+            "bytes": 49152,
+            "sha256": "d83c96e0df665297329c8aa39ec63f971d4cad5023f2d79380c122079b968ba9",
+            "pe_file_version": "5.0.2615.200"
+          },
+          "feb2004": {
+            "bytes": 31744,
+            "sha256": "ed1b6e307d367f67384cb0381cc1ac4e7b53fbf684de0517cef83c3247205937",
+            "pe_file_version": "6.0.2800.1123"
+          }
+        },
+        "/Program Files/Outlook Express/wabimp.dll": {
+          "stock": {
+            "bytes": 98304,
+            "sha256": "f2711d5423782a2ce98603cc2b9ea2188d96e7d06b92499edca81b4833ee7f2b",
+            "pe_file_version": "5.0.2615.200"
+          },
+          "feb2004": {
+            "bytes": 77824,
+            "sha256": "318838f8d85f6a3d828aae8ad1772edb1ee73ce76b53c43becd6ff1b63d938ab",
+            "pe_file_version": "6.0.2800.1123"
+          }
+        },
+        "/Program Files/Outlook Express/wabfind.dll": {
+          "stock": {
+            "bytes": 16384,
+            "sha256": "7088930950b1ff6b993c5914f36bd449709b2b46193bebbea10b00e170435167",
+            "pe_file_version": "5.0.2615.200"
+          },
+          "feb2004": {
+            "bytes": 30208,
+            "sha256": "8f5fd5272cd5661f852faa0743635bebad41d44338ca6c62fcad49635a4f87c1",
+            "pe_file_version": "6.0.2800.1123"
+          }
+        },
+        "/Program Files/Outlook Express/wabmig.exe": {
+          "stock": {
+            "bytes": 40960,
+            "sha256": "991c2bb7fd06789ae5836f7253c639f4a65b1add746b0f4550c56c1aeea754b0",
+            "pe_file_version": "5.0.2615.200"
+          },
+          "feb2004": {
+            "bytes": 27648,
+            "sha256": "956d130657aac90b1214187bb5c29b49a61f90d0222dfa7fb042d6d6d4774b0c",
+            "pe_file_version": "6.0.2800.1123"
+          }
+        },
+        "/Program Files/Outlook Express/wab.exe": {
+          "stock": {
+            "bytes": 32768,
+            "sha256": "6b7c82fadc1b1c61513738791828ecf06ff16a876478e28dd8a0f40aeff401f1",
+            "pe_file_version": "5.0.2615.200"
+          },
+          "feb2004": {
+            "bytes": 42496,
+            "sha256": "9d997edd29a8321037799f72fc76c35c7dbde65f54bca704f48de0f3caa8868d",
+            "pe_file_version": "6.0.2800.1123"
+          }
+        },
+        "/Program Files/Common Files/SYSTEM/directdb.dll": {
+          "stock": {
+            "bytes": 73728,
+            "sha256": "da0657a92fd6515db98f9b38fc1fdea49aac1719a557ae70fdf6fc8fc3e0cfa5",
+            "pe_file_version": "5.0.2615.200"
+          },
+          "feb2004": {
+            "bytes": 75776,
+            "sha256": "b080b56b5defcc21d01c1ec3181c3c8e5c0cde1f1a5972386f08c815a40a69ea",
+            "pe_file_version": "6.0.2800.1123"
+          }
+        },
+        "/Program Files/Common Files/SYSTEM/wab32.dll": {
+          "stock": {
+            "bytes": 421888,
+            "sha256": "1c2afe10b08a9f416db9efd6671d7c1928d9293414c42012d0cad052b57d379b",
+            "pe_file_version": "5.0.2615.200"
+          },
+          "feb2004": {
+            "bytes": 462848,
+            "sha256": "8a6eb75304372ab5a633de117daeb9e9f089569f689ff71c8af9b5866b3611a7",
+            "pe_file_version": "6.0.2800.1123"
+          }
+        }
+      }
+    },
+    {
+      "kb": "828750",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "q828750.exe",
+        "Bytes": 2203776,
+        "SHA256": "0c48ac3fc789f52513f257db1a16de81dc333d61f3603b9097c8028d21b2d9cf",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:a /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 4,
+      "targets_changed": 4,
+      "files": {
+        "/WINDOWS/SYSTEM/SHDOCVW.DLL": {
+          "stock": {
+            "bytes": 946448,
+            "sha256": "128c0df32fb5e688597ed7233cd9f883cebaf766ea643a7e01c15b393df3a687",
+            "pe_file_version": "5.0.2614.3500"
+          },
+          "feb2004": {
+            "bytes": 1338880,
+            "sha256": "7721180699a0137c574b7ef308e498d0a6fc6581f91c508bec9d833580bb5d16",
+            "pe_file_version": "6.0.2800.1203"
+          }
+        },
+        "/WINDOWS/SYSTEM/SHLWAPI.DLL": {
+          "stock": {
+            "bytes": 282896,
+            "sha256": "731b1ffdcb821a87e8ef1aa92fc956a0c385eaa6b8f4ad20c89db8b923f1aeae",
+            "pe_file_version": "5.0.2614.3500"
+          },
+          "feb2004": {
+            "bytes": 395264,
+            "sha256": "178b04788ec696730d19007ae0c27df8d421bf716adc389152333992957b7cc9",
+            "pe_file_version": "6.0.2800.1226"
+          }
+        },
+        "/WINDOWS/SYSTEM/URLMON.DLL": {
+          "stock": {
+            "bytes": 446736,
+            "sha256": "5a4c54d01385b41bfbbe8649503c9d065b717e39e72ffdc48b921e7ee9d60692",
+            "pe_file_version": "5.0.2614.3500"
+          },
+          "feb2004": {
+            "bytes": 444928,
+            "sha256": "7dc2bfa16a5d57e819e798ae02c4ebb7848842e958dc0ee61be596df3ee6564d",
+            "pe_file_version": "6.0.2800.1259"
+          }
+        },
+        "/WINDOWS/SYSTEM/MSHTML.DLL": {
+          "stock": {
+            "bytes": 2359568,
+            "sha256": "bf84b5bb80c8cff53922db112b70bd972f2f148a22814211d8f4b5e3592f0ab0",
+            "pe_file_version": "5.0.2614.3500"
+          },
+          "feb2004": {
+            "bytes": 2793984,
+            "sha256": "89b60eaf9a1cc21045e05a12fe56127de689e5e496d08348c893c900e516affb",
+            "pe_file_version": "6.0.2800.1264"
+          }
+        }
+      }
+    },
+    {
+      "kb": "814078",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "js56men.exe",
+        "Bytes": 369504,
+        "SHA256": "34f5f16d90044e301214c1248ecbe1f185085654e2b5c4b24b4cce532fc28a83",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 1,
+      "targets_changed": 1,
+      "files": {
+        "/WINDOWS/SYSTEM/JSCRIPT.DLL": {
+          "stock": {
+            "bytes": 487696,
+            "sha256": "efbe7314934b586b27e6d81afdab1dac9cfe74ac60c741b8a68a7d34cb8538ed",
+            "pe_file_version": "5.0.0.3715"
+          },
+          "feb2004": {
+            "bytes": 589881,
+            "sha256": "c6d832be72b3635ff362d930abc1b6fbd8bb86aa98fffc2856be5ad4ba914340",
+            "pe_file_version": "5.6.0.8513"
+          }
+        }
+      }
+    },
+    {
+      "kb": "819639",
+      "release_date": null,
+      "prerequisites": null,
+      "supersedence": null,
+      "media_package": {
+        "File": "KB819639.exe",
+        "Bytes": 1947784,
+        "SHA256": "f03a655667bae4926a5a23cfea51cc7bb4bad8c045405991c4f0cf88d64f85cb",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:a /r:n",
+      "file_observation": "changed",
+      "standalone_install_result": null,
+      "targets_present": 1,
+      "targets_changed": 1,
+      "files": {
+        "/WINDOWS/SYSTEM/WMP.DLL": {
+          "stock": null,
+          "feb2004": {
+            "bytes": 4653056,
+            "sha256": "efe66277bea3976bf298cfe110af2492ecc32be283c61dc9457bcbb60830e7a7",
+            "pe_file_version": "9.0.0.3008"
+          }
+        }
+      }
+    }
+  ],
+  "components": {
+    "Internet Explorer 6 SP1": {
+      "media_package": {
+        "File": "ie6setup.exe",
+        "Bytes": 490608,
+        "SHA256": "c85a62aeff4db7c8d3f0e2b9df4b9c4cb6d6dc61c43ecb30ad28738b7d7d1268",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/c:\"\"ie6wzd /S:\"\"\"\"#e\"\"\"\" /q:c /r:n /x:1\"\"\""
+    },
+    "Windows Media Player 9": {
+      "media_package": {
+        "File": "MPSetup.exe",
+        "Bytes": 13951112,
+        "SHA256": "678c102847c18a92abf13c3fae404c3473a0770c871a046b45efe623c9938fc0",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:u /r:n /c:\"\"\"setup_wm.exe /Q /R:N\"\"\"\""
+    },
+    "DirectX 9.0b": {
+      "media_package": {
+        "File": "DX9_98.EXE",
+        "Bytes": 13846304,
+        "SHA256": "c6fa8ed6f39fc2cb46ea8212183d228ab56668ee00a233bb5fd05500e87b6db5",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/q:a /r:n"
+    },
+    "MDAC 2.8": {
+      "media_package": {
+        "File": "MDAC_TYP.EXE",
+        "Bytes": 5556616,
+        "SHA256": "57fa7dc3cf4084a9b34406b3f42af74c14a11bf0085426fce1c578dd9660c0f4",
+        "Signature": "Valid",
+        "Microsoft": true
+      },
+      "setup_arguments": "/c:\"\"\"dasetup /qnt\"\"\""
+    }
+  },
+  "component_files": {
+    "/Program Files/Common Files/System/ado/msado15.dll": {
+      "stock": {
+        "bytes": 340240,
+        "sha256": "11dffdb1fa441486e17026c03e9bb6ec24edfee20ff07072b68347d118ff119d",
+        "pe_file_version": "2.10.3711.9"
+      },
+      "feb2004": {
+        "bytes": 512000,
+        "sha256": "ccf7d8aa01fecb48920e2fe782f4ce3a092340f429aff8192fd34efe4373fac8",
+        "pe_file_version": "2.80.1022.0"
+      }
+    },
+    "/Program Files/Common Files/System/OLE DB/oledb32.dll": {
+      "stock": {
+        "bytes": 370960,
+        "sha256": "fad82ecf9d128b9166b096203e09e5cb8f8e930369715a458ebab718380b45bd",
+        "pe_file_version": "2.10.3711.9"
+      },
+      "feb2004": {
+        "bytes": 442368,
+        "sha256": "c754ecadf7143db47ecb42f8ea76955fe725feab2b0f3470b2aac27723b5d349",
+        "pe_file_version": "2.80.1022.0"
+      }
+    },
+    "/Program Files/Internet Explorer/IEXPLORE.EXE": {
+      "stock": {
+        "bytes": 78272,
+        "sha256": "9d3adb3de7da9e741498f60250f29674eb10bab5db6c0df2f9dc1e48791afc83",
+        "pe_file_version": "5.0.2614.3500"
+      },
+      "feb2004": {
+        "bytes": 91136,
+        "sha256": "414d5191aebccfcb8c23b9f81ead7e455587373cd4efdaf8e4484d0b4589ebc8",
+        "pe_file_version": "6.0.2800.1106"
+      }
+    },
+    "/WINDOWS/SYSTEM/D3D9.DLL": {
+      "stock": null,
+      "feb2004": {
+        "bytes": 1648640,
+        "sha256": "ee8838a3526f20444ae162f4a41acf515a366e6bb7ec59159b232c42778b9ce9",
+        "pe_file_version": "4.9.0.902"
+      }
+    },
+    "/Program Files/Windows Media Player/WMPLAYER.EXE": {
+      "stock": null,
+      "feb2004": {
+        "bytes": 73728,
+        "sha256": "dca3f6019af8d57ff7f90027158fb42be158dae4439d07be9a6f78d9a326103c",
+        "pe_file_version": "9.0.0.2980"
+      }
+    }
+  },
+  "disc_setup_extra_unmapped": {
+    "media_package": {
+      "File": "q240308.exe",
+      "Bytes": 111208,
+      "SHA256": "c7784a8d5eda801d59573f4816e4663761c75aea9c2909671a0d7ca4b17529db",
+      "Signature": "Valid",
+      "Microsoft": true
+    },
+    "setup_arguments": "/q:a /r:n"
+  }
+}

@@ -1,0 +1,19 @@
+[Song]
+Name=Untitled Composition, by: Unknown Composer
+Beats Per Measure=4
+Single Beat Note=4
+Pace=100
+PolyDur=True
+
+;Converted from ENDINGS.SNG
+
+[Notes]
+[Repeat 2x]
+[Inst. 1 = 9]
+4C3/x/x
+[Ending 1]
+4E3/x/x
+[Ending 2]
+4G3/x/x
+[Repeat End]
+4A3/x/x

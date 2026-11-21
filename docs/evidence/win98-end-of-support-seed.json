@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "product": "Microsoft Windows 98 Second Edition",
+  "target_locale": "en-US",
+  "support_cutoff": "2006-07-11",
+  "source_class": "official-bulletin-catalog-seed",
+  "distribution_note": "The June 2006 bulletin summary identifies the original Windows Update service as the distribution channel for the 98-family packages below. Locale-specific recovered installers are pending.",
+  "distribution_source": "https://learn.microsoft.com/en-us/security-updates/securitybulletinsummaries/2006/ms06-jun",
+  "catalog_discovery_source": "https://windowsupdaterestored.com/en/windows-update-v4.htm",
+  "updates": [
+    {
+      "kb": "916281",
+      "bulletin": "MS06-021",
+      "release_date": "2006-06-13",
+      "component": "Internet Explorer cumulative update",
+      "prerequisites": ["Internet Explorer 6 SP1 for the scoped target"],
+      "supersedence": null,
+      "package": null,
+      "signature": null,
+      "install_switches": null,
+      "observed_installation": null,
+      "observed_file_versions": null,
+      "source": "https://learn.microsoft.com/en-us/security-updates/securitybulletins/2006/ms06-021"
+    },
+    {
+      "kb": "918439",
+      "bulletin": "MS06-022",
+      "release_date": "2006-06-13",
+      "component": "ART image support",
+      "prerequisites": null,
+      "supersedence": [],
+      "package": null,
+      "signature": null,
+      "install_switches": null,
+      "observed_installation": null,
+      "observed_file_versions": null,
+      "source": "https://learn.microsoft.com/en-us/security-updates/securitybulletins/2006/ms06-022"
+    },
+    {
+      "kb": "917344",
+      "bulletin": "MS06-023",
+      "release_date": "2006-06-13",
+      "component": "Microsoft JScript",
+      "prerequisites": null,
+      "supersedence": null,
+      "package": null,
+      "signature": null,
+      "install_switches": null,
+      "observed_installation": null,
+      "observed_file_versions": null,
+      "source": "https://learn.microsoft.com/en-us/security-updates/securitybulletins/2006/ms06-023"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "extended-resume-20261120",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 30,
+    "token_records": 4673,
+    "sessions": 27
+  },
+  "checkpoint": "startup",
+  "collected_at": "2026-11-20T15:41:04.658036+00:00",
+  "commit": "401b2b0ca98f552c3634eab08d7866f20332428c",
+  "observation": {
+    "session": "0f8b884339e1619d1cca295e",
+    "measured_at": "2026-11-20T15:40:55.563000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 103482,
+      "cached_input": 76160,
+      "output": 774,
+      "reasoning_output": 0,
+      "total": 104256
+    },
+    "reported_last": {
+      "input": 42138,
+      "cached_input": 35712,
+      "output": 287,
+      "reasoning_output": 0,
+      "total": 42425
+    },
+    "windows": {
+      "300": {
+        "used_percent": 1.0,
+        "reset_epoch": 1795207224,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 89.0,
+        "reset_epoch": 1795652781,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  }
+}
