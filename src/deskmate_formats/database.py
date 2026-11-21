@@ -1,6 +1,7 @@
 """Bounded readers for observed DeskMate database structures, not an allocator.
 
-One directory page and one index page per table; low-ID, page-local rows only.
+The common profile uses one directory and one index page per table. The
+separate Help profile also supports chained indexes and wider live row IDs.
 Unknown header bytes, descriptor tokens and field values are retained verbatim.
 Packed-12 data chains and four index subdivisions are validated. Application
 codecs, general collation and next-ID policy deliberately do not live here.
@@ -123,6 +124,15 @@ class Database:
         return self.data[:PAGE_SIZE]
 
 
+@dataclass(frozen=True)
+class HelpDirectory:
+    """The observed Help table descriptors and the opaque post-marker bytes."""
+
+    tables: tuple[Table, ...]
+    marker_offset: int
+    tail: bytes
+
+
 def _directory(data):
     cursor, limit, result, names = PAGE_SIZE, 2 * PAGE_SIZE, [], set()
     while cursor < limit and data[cursor] != 3:
@@ -144,9 +154,9 @@ def _directory(data):
         result.append(Table(name, cursor, data[cursor:end + 2], tokens, page, index,
                             columns, count, next_id))
         cursor = end + 2
-    require(result and cursor < limit and data[cursor] == 3 and not any(data[cursor + 1:limit]),
+    require(result and cursor < limit and data[cursor] == 3,
             'unsupported_layout', 'missing directory marker or nonzero tail', cursor)
-    return result
+    return tuple(result), cursor
 
 
 def page_link(data, page):
@@ -172,24 +182,24 @@ def _chain(data, start):
         page = link
 
 
-def _index(data, table):
-    base = table.index_page * PAGE_SIZE
-    limit = base + PAGE_SIZE
+def _index(data, table, index_pages, id_limit):
+    last_base = index_pages[-1] * PAGE_SIZE
     entries, groups, ids, targets = [], [], set(), set()
     empty_seen = False
-    for group in range(4):
+    subdivisions = ((page * PAGE_SIZE, group) for page in index_pages for group in range(4))
+    for base, group in subdivisions:
         cursor = base + INDEX_HEADER_SIZE + INDEX_GROUP_BYTES * group
         end = cursor + INDEX_GROUP_BYTES
         live = []
         while cursor < end:
             page, offset, ident = struct.unpack_from('<HHH', data, cursor)
             if (page, offset, ident) == (0, 0, 0):
-                require(not any(data[cursor:end]), 'invalid_index',
+                require(base == last_base and not any(data[cursor:end]), 'invalid_index',
                         'index holes or nonzero subdivision tail', cursor)
                 break
             require(not empty_seen and page in table.data_pages and offset < PAGE_SIZE,
                     'invalid_index', 'index target outside owning chain or nonempty group after gap', cursor)
-            require(0x10 <= ident < 0x80, 'unsupported_layout', 'long/unknown record ID framing', cursor)
+            require(0x10 <= ident < id_limit, 'unsupported_layout', 'long/unknown record ID framing', cursor)
             entry = IndexEntry(cursor, page, offset, ident)
             require(ident not in ids and entry.address not in targets,
                     'invalid_index', 'duplicate record ID or target', cursor)
@@ -203,15 +213,16 @@ def _index(data, table):
         require(live or key == INDEX_SENTINEL, 'invalid_index', 'finite route for empty group', routing)
         groups.append(IndexGroup(routing, key, tuple(live)))
         entries.extend(live)
-    require(end == limit, 'unsupported_layout', 'index subdivision size mismatch', base)
-    require(len(entries) == table.record_count, 'invalid_index', 'count disagrees with index', base)
+    require(len(entries) == table.record_count, 'invalid_index',
+            'count disagrees with index', table.index_page * PAGE_SIZE)
     return tuple(entries), tuple(groups)
 
 
-def _row(data, start, fields, *, index_offset=None, retired=False, allow_missing_uniq=False):
+def _row(data, start, fields, *, index_offset=None, retired=False, allow_missing_uniq=False, id_limit=0x80):
     limit = (start // PAGE_SIZE + 1) * PAGE_SIZE
-    require(start + 2 <= limit and data[start] == (0x44 if retired else 0x80)
-            and 0x10 <= data[start + 1] < 0x80,
+    prefix = 0x4400 if retired else 0x8000
+    ident = int.from_bytes(data[start:start + 2], 'big') - prefix
+    require(start + 2 <= limit and 0x10 <= ident < id_limit,
             'invalid_record', 'unknown row prefix/ID', start)
     end = data.find(b'\x01\x02', start + 2, limit)
     require(end >= 0, 'invalid_record', 'missing page-bounded row terminator', start)
@@ -220,10 +231,10 @@ def _row(data, start, fields, *, index_offset=None, retired=False, allow_missing
     values = tuple(payload.split(b'\x01'))
     legacy = allow_missing_uniq and len(values) == 5 and values[1] != b'DBCOLS'
     require(len(values) == fields or legacy, 'invalid_record', 'field count disagrees with schema', start)
-    return Row(start, data[start + 1], data[start:end + 2], values, index_offset, retired)
+    return Row(start, ident, data[start:end + 2], values, index_offset, retired)
 
 
-def _rows(data, table, entries, reserved, page_owners, allow_retired, allow_missing_uniq):
+def _rows(data, table, entries, reserved, page_owners, allow_retired, allow_missing_uniq, id_limit):
     targets = {e.address: e for e in entries}
     pages = table.data_pages
     live, retired = {}, []
@@ -236,7 +247,7 @@ def _rows(data, table, entries, reserved, page_owners, allow_retired, allow_miss
             entry = targets.get(cursor)
             if entry is not None:
                 row = _row(data, cursor, table.column_count, index_offset=entry.index_offset,
-                           allow_missing_uniq=allow_missing_uniq)
+                           allow_missing_uniq=allow_missing_uniq, id_limit=id_limit)
                 require(row.record_id == entry.record_id, 'invalid_record', 'index/row ID mismatch', cursor)
                 live[cursor] = row
             else:
@@ -291,7 +302,43 @@ def parse_bytes(source, *, allow_retired=False, max_pages=MAX_PAGES, allow_legac
     Retired-row scanning follows each validated packed-12 data-page chain.
     Unreferenced pages stay opaque in ``Database.data``; they are not free space.
     """
-    from dataclasses import replace
+    return _parse_snapshot(_snapshot(source, max_pages), allow_retired, allow_legacy_filer_schema)
+
+
+def inspect_help_directory(source):
+    """Identify the measured DeskMate Help profile without decoding table rows."""
+    data = _snapshot(source, MAX_PAGES)
+    tables, marker = _directory(data)
+    profile = _help_directory(data, tables, marker)
+    _check_header_links(data)
+    return profile
+
+
+def parse_help_bytes(source, *, allow_retired=False, max_pages=MAX_PAGES):
+    """Read framed Help tables when covered by the common row and index reader."""
+    return _parse_snapshot(_snapshot(source, max_pages), allow_retired, False, help_profile=True)
+
+
+_HELP_TAILS = (b'6\x017\x01\x02\x03', b'\x02\x037\x011\x01\x02\x03',
+               b'5\x01\x02\x037\x014\x011\x01\x02\x03')
+
+
+def _help_directory(data, tables, marker):
+    roles = tuple((table.name, table.data_page, table.index_page, table.column_count)
+                  for table in tables)
+    tail = data[marker + 1:2 * PAGE_SIZE].rstrip(b'\0')
+    require(data[:4] == b'\x03FIL' and marker == 0x464 and tail in _HELP_TAILS
+            and roles in (
+                (('DBCOLS', 2, 3, 6), ('Rules', 4, 5, 8), ('Text', 6, 7, 3)),
+                (('DBCOLS', 2, 3, 6), ('Rules', 4, 5, 9), ('Text', 6, 7, 3)),
+                (('DBCOLS', 2, 3, 6), ('Rules', 4, 5, 9), ('Text', 6, 7, 4)),
+            )
+            and tuple(table.tokens[8:] for table in tables) == ((b'2', b'3'), (), ()),
+            'unsupported_layout', 'unknown DeskMate Help directory profile', marker)
+    return HelpDirectory(tables, marker, tail)
+
+
+def _snapshot(source, max_pages):
     require(isinstance(source, (bytes, bytearray, memoryview)), 'invalid_input', 'expected byte snapshot')
     require(type(max_pages) is int, 'unsupported_layout', 'page bound must be an integer')
     data = bytes(source)
@@ -300,24 +347,43 @@ def parse_bytes(source, *, allow_retired=False, max_pages=MAX_PAGES, allow_legac
     require(len(data) % PAGE_SIZE == 0 and len(data) <= max_pages * PAGE_SIZE,
             'unsupported_layout', 'partial page or file exceeds bounded profile')
     require(data[:4] in (b'\x03FIL', b'\x03\x00\x00\x00'), 'invalid_header', 'unknown database header', 0)
-    tables = _directory(data)
+    return data
+
+
+def _check_header_links(data):
     require(page_link(data, 0) == page_link(data, 1) == 0xFF8
             and page_link(data, len(data) // PAGE_SIZE) == 0xFFF,
             'invalid_chain', 'unsupported header/directory chains or extent marker', 0x20)
+
+
+def _parse_snapshot(data, allow_retired, allow_legacy_filer_schema, *, help_profile=False):
+    from dataclasses import replace
+    tables, marker = _directory(data)
+    if help_profile:
+        _help_directory(data, tables, marker)
+    else:
+        require(not any(data[marker + 1:2 * PAGE_SIZE]),
+                'unsupported_layout', 'missing directory marker or nonzero tail', marker)
+    _check_header_links(data)
     reserved = {0, 1}
+    index_chains = {}
     for table in tables:
         require(table.index_page not in reserved, 'invalid_index', 'shared index page')
-        require(_chain(data, table.index_page) == (table.index_page,),
+        chain = _chain(data, table.index_page)
+        require(help_profile or len(chain) == 1,
                 'unsupported_layout', 'multiple index pages unsupported', table.index_page * PAGE_SIZE)
-        reserved.add(table.index_page)
+        require(reserved.isdisjoint(chain), 'invalid_index', 'shared index page')
+        index_chains[table.name] = chain
+        reserved.update(chain)
+    id_limit = 0x200 if help_profile else 0x80
     page_owners = set()
     parsed = []
     for table in tables:
         table = replace(table, data_pages=_chain(data, table.data_page))
-        entries, groups = _index(data, table)
+        entries, groups = _index(data, table, index_chains[table.name], id_limit)
         legacy = (allow_legacy_filer_schema and data[:4] == b'\x03FIL'
                   and table.name == 'DBCOLS' and table.column_count == 6)
-        rows, retired = _rows(data, table, entries, reserved, page_owners, allow_retired, legacy)
+        rows, retired = _rows(data, table, entries, reserved, page_owners, allow_retired, legacy, id_limit)
         table = replace(table, entries=entries, rows=rows, retired_rows=retired, index_groups=groups)
         _routing(table)
         parsed.append(table)
