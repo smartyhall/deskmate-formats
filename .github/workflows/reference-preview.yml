@@ -4,14 +4,18 @@ on:
   pull_request:
     paths:
       - "website/**"
-      - "docs/site/**"
+      - "docs/**"
+      - "tools/check_reference_pages.py"
       - ".github/workflows/reference-preview.yml"
+      - ".github/workflows/reference-publish.yml"
   push:
     branches: [main]
     paths:
       - "website/**"
-      - "docs/site/**"
+      - "docs/**"
+      - "tools/check_reference_pages.py"
       - ".github/workflows/reference-preview.yml"
+      - ".github/workflows/reference-publish.yml"
   workflow_dispatch:
 
 permissions:
@@ -28,6 +32,10 @@ jobs:
           node-version: "22"
       - name: Validate source map
         run: python tools/check_reference_pages.py
+      - name: Check CI change-scope classifier
+        run: python -m unittest discover -s tests/portable -p "test_ci_scope.py" -v
+      - name: Audit repository publication boundaries
+        run: python tools/audit_repository.py
       - name: Install pinned direct dependencies
         working-directory: website
         run: npm install --no-audit --no-fund --ignore-scripts
