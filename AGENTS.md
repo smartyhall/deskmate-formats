@@ -63,6 +63,28 @@ Challenge scope drift: evidence, consequence, rollback, minimum control.
   but do not presume routine UI screenshots are categorically forbidden.
   ChatGPT can independently review and merge eligible, passing PRs under the
   existing housekeeping grant; producing Codex workers still cannot merge.
+- Representative visual evidence in Codex pull requests (operator, 2026-11-21):
+  Every research PR should include a small, **representative set of exemplar
+  images whenever the work has meaningful visual states or outputs**. Choose
+  images proportional to the work: cover the principal applications, workflows,
+  before/after states, or findings, rather than dumping every capture or
+  selecting only the most attractive screen. Prefer direct evidence over
+  decorative images, and use existing verified captures before considering
+  any new experiment. In the PR description, embed eligible images or link
+  to stable committed exemplars, each with a concise caption identifying
+  the application, version, experiment/state, and what it demonstrates.
+  A contact sheet is useful for broad coverage, but should not replace
+  full-resolution exemplars when detail matters. Keep source provenance,
+  integrity references, and native-versus-synthetic status traceable.
+  Publish eligible samples under the standing documentary-image rules;
+  do not upload private raw evidence, credentials, commercial binaries,
+  or unsuitable third-party content simply to satisfy this guideline.
+  If the research is entirely nonvisual or has no suitable publishable
+  image, say **"visual exemplars: not applicable"** in the PR and explain
+  briefly; do not fabricate images, launch an unapproved emulator, or
+  make unrelated visual changes. For public-site publication, also follow
+  [visual asset guidance](docs/site/visual-assets.md).
+
 - When a user requests publication of an eligible synthetic-data sample or
   native-acceptance candidate, commit and push the **actual independently checked
   binary bytes**, not just a private archive, SHA-256 digest or semantic JSON.
