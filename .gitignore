@@ -50,3 +50,7 @@ task-queue.sqlite3-wal
 task-queue.sqlite3-shm
 !/examples/music-listening/v1/*/*-native.wav
 !/examples/music-listening/v1/*/*-renderer.wav
+
+# Local Eleventy installation and generated site
+website/node_modules/
+website/_site/
