@@ -58,7 +58,10 @@ function resolveLink(href, entry) {
   }
   const mapped = bySource.get(resolved);
   if (mapped) return pageUrl(mapped) + suffix;
-  if (!["docs/", "examples/", "src/", "tools/", "tests/"].some((p) => resolved.startsWith(p)))
+  // The public root status file is explicitly eligible as an external reference.
+  // Do not admit arbitrary root files through the publication boundary.
+  if (resolved !== "PROJECT_STATUS.md" &&
+      !["docs/", "examples/", "src/", "tools/", "tests/"].some((p) => resolved.startsWith(p)))
     return "#unpublished-source";
   return "https://github.com/smartyhall/deskmate-formats/blob/main/" +
     encodeURI(resolved) + suffix;
