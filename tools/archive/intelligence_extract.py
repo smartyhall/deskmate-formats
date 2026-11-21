@@ -13,6 +13,7 @@ from struct import unpack_from
 import subprocess
 import sys
 import tarfile
+from tempfile import TemporaryDirectory
 from threading import Thread
 from time import monotonic
 import zipfile
@@ -464,9 +465,10 @@ def _fat(path, limits):
         return _members(entries(), limits)
 
 
-def _arc(path, limits):
-    """Inventory ARC headers and recover uncompressed members with checked CRCs."""
+def _arc(path, limits, nomarch=None):
+    """Inventory ARC headers and check CRCs for stored and supported compressed members."""
     size = path.stat().st_size
+    deadline = monotonic() + limits.tool_seconds
     with path.open('rb') as stream:
         def entries():
             while stream.tell() < size:
@@ -487,13 +489,27 @@ def _arc(path, limits):
                     raise ValueError('truncated ARC member')
 
                 def load(cap):
-                    data = stream.read(packed)
+                    if method in (1, 2):
+                        data = stream.read(packed)
+                    else:
+                        # Isolate the exact ordinal without passing an archive-controlled
+                        # path or a wildcard to the external decoder.
+                        with TemporaryDirectory(prefix='deskmate-arc-') as scratch:
+                            member = Path(scratch) / 'member.arc'
+                            member.write_bytes(marker + header + stream.read(packed) + b'\x1a\0')
+                            code, data = _capture([str(nomarch.resolve()), '-p', str(member)],
+                                                  min(cap, unpacked), deadline - monotonic())
+                        if code != 0:
+                            raise ValueError('nomarch rejected ARC member')
                     if _arc_crc(data) != crc:
                         raise ValueError('ARC CRC mismatch')
                     return data
 
                 reason = None
-                if method not in (1, 2):
+                if method in (8, 9) and nomarch is not None:
+                    if packed > limits.member_bytes:
+                        reason = 'packed-byte-limit'
+                elif method not in (1, 2):
                     reason = f'unsupported-arc-method-{method}'
                 elif packed != unpacked:
                     reason = 'size-mismatch'
@@ -835,7 +851,8 @@ def _text(path, kind, limits):
 
 def extract(path: Path, name: str, kind: str, limits: Limits = Limits(), *,
             seven_zip: Path | None = None, pdftotext: Path | None = None,
-            lhasa: Path | None = None, pdf_python: Path | None = None) -> Extraction:
+            lhasa: Path | None = None, pdf_python: Path | None = None,
+            nomarch: Path | None = None) -> Extraction:
     """Read one identified file. The caller owns recursion, persistence and hashing."""
     # The optical helpers seek into an image; extraction and listing retain their
     # ordinary output limits. Permit one single-layer DVD-sized input.
@@ -852,7 +869,7 @@ def extract(path: Path, name: str, kind: str, limits: Limits = Limits(), *,
         if kind in ('fat', 'disk-image'):
             return _fat(path, limits)
         if kind == 'arc':
-            return _arc(path, limits)
+            return _arc(path, limits, nomarch)
         if kind == 'lzh' and lhasa is not None:
             if lhasa_result := _lhasa(path, lhasa, limits):
                 return lhasa_result
