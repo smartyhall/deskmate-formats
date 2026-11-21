@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Evidence-based Tandy DeskMate format and application reference">
+  <title>{{ title | default("Reference") | escape }} | DeskMate Reference</title>
+  <link rel="stylesheet" href="{{ '/assets/vendor/bootstra386/css/bootstrap.min.css' | siteurl }}">
+  <link rel="stylesheet" href="{{ '/assets/site-layout.css' | siteurl }}">
+</head>
+<body>
+  <a class="visually-hidden-focusable" href="#content">Skip to content</a>
+  <div class="container-fluid">
+    <header class="py-3">
+      <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+        <span aria-hidden="true">[DM]</span>
+        <a href="{{ '/' | siteurl }}">DESKMATE REFERENCE</a>
+        <small>EXPERIMENTAL DOCUMENTATION</small>
+      </div>
+      <nav class="navbar navbar-expand bg-body-tertiary" aria-label="Primary">
+        <div class="navbar-nav flex-row flex-wrap">
+          <a class="nav-link px-2" href="{{ '/' | siteurl }}">Home</a>
+          <a class="nav-link px-2" href="{{ '/search/' | siteurl }}">Search</a>
+          <a class="nav-link px-2" href="#reference-sections">Browse topics</a>
+          <a class="nav-link px-2" href="https://github.com/smartyhall/deskmate-formats">Source repository</a>
+        </div>
+      </nav>
+    </header>
+    <div class="row g-4">
+      <main id="content" class="col-12 col-lg-9 order-1 order-lg-2" tabindex="-1">
+        {% if sourceRole %}
+        <div class="alert alert-info" role="note">
+          <strong>{{ sourceRole }}</strong>
+          <span>— Interpret source claims in the context of their date and verified evidence.</span>
+        </div>
+        {% endif %}
+        <article class="document">{{ content | safe }}</article>
+        {% if sourceLink %}
+        <p class="source-note"><a href="{{ sourceLink }}">Review the source Markdown and history</a></p>
+        {% endif %}
+      </main>
+      <aside class="col-12 col-lg-3 order-2 order-lg-1" id="reference-sections" aria-label="Documentation index">
+        <nav aria-label="Reference sections">
+        {% for section in navigation %}
+          {% if section.pages.length %}
+          <details open>
+            <summary>{{ section.title }}</summary>
+            <ul>
+            {% for item in section.pages %}
+              <li><a href="{{ ('/' + item.slug + '/') | siteurl }}"
+               {% if currentId == item.id %}aria-current="page"{% endif %}>{{ item.title }}</a></li>
+            {% endfor %}
+            </ul>
+          </details>
+          {% endif %}
+        {% endfor %}
+        </nav>
+      </aside>
+    </div>
+    <footer class="border-top mt-5 py-3">
+      <p>Independent preservation research. Not affiliated with Tandy or Radio Shack.
+      <a href="https://github.com/smartyhall/deskmate-formats/blob/main/LICENSING.md">Project licensing</a>.</p>
+      <p>Unmodified <a href="https://github.com/kristopolous/BOOTSTRA.386">BOOTSTRA.386</a> display theme.
+      Bootstrap (MIT); BOOTSTRA.386 (Apache-2.0); typeface by VileR (CC BY-SA 4.0).
+      <a href="{{ '/assets/vendor/bootstra386/ATTRIBUTION.txt' | siteurl }}">Theme attribution</a>.</p>
+    </footer>
+  </div>
+  <script defer src="{{ '/assets/vendor/bootstra386/js/bootstrap.bundle.min.js' | siteurl }}"></script>
+  <script defer src="{{ '/assets/vendor/bootstra386/js/bootstrap-386.js' | siteurl }}"></script>
+</body>
+</html>

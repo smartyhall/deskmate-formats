@@ -1,0 +1,21 @@
+{
+  "name": "deskmate-reference-preview",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Eleventy reference preview from reviewed DeskMate page map",
+  "scripts": {
+    "build": "eleventy --config=eleventy.config.cjs",
+    "dev": "eleventy --serve --config=eleventy.config.cjs",
+    "test": "node --test test/*.test.cjs",
+    "theme:sync": "python3 scripts/vendor_bootstra.py",
+    "prebuild": "npm run theme:sync",
+    "predev": "npm run theme:sync"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "3.1.8",
+    "markdown-it": "14.1.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

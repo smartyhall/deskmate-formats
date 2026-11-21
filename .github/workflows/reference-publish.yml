@@ -1,0 +1,63 @@
+# Manual publishing only. This workflow does NOT publish on merge or push.
+# Run it via GitHub Actions after approving the review artifact and Pages settings.
+name: Publish DeskMate reference
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "deskmate-reference-pages"
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate reviewed reference map
+        run: python tools/check_reference_pages.py
+      - name: Install dependencies
+        working-directory: website
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Test site
+        working-directory: website
+        run: npm test
+      - name: Build for GitHub Pages
+        working-directory: website
+        env:
+          SITE_BASE_PATH: /deskmate-formats/
+        run: npm run build
+      - name: Audit generated internal links
+        run: python website/scripts/check_generated_site.py website/_site /deskmate-formats/
+      - name: Verify original theme and attribution
+        run: |
+          test -s website/_site/assets/vendor/bootstra386/css/bootstrap.min.css
+          test -s website/_site/assets/vendor/bootstra386/js/bootstrap.bundle.min.js
+          test -s website/_site/assets/vendor/bootstra386/js/bootstrap-386.js
+          test -s website/_site/assets/vendor/bootstra386/fonts/Px437_IBM_EGA8.otf
+          test -s website/_site/assets/vendor/bootstra386/ATTRIBUTION.txt
+          test -s website/_site/index.html
+          test -s website/_site/search/index.html
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: website/_site
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
