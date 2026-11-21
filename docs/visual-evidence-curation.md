@@ -13,6 +13,10 @@ fresh native sessions to inventory existing evidence. Do not launch an
 emulator, access unrelated files, dispatch new turns or spend additional
 quota solely under this workstream. Existing native-control rules apply.
 
+The [future site visual-asset workflow](site/visual-assets.md) describes the
+separate, review-gated transition from this private catalog to an eventual
+public UI atlas and independently authored DeskMate design system.
+
 ## Private inventory
 
 Locate available captures in project-controlled research output directories,

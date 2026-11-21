@@ -20,6 +20,15 @@ activity, **distinct from public redistribution**. See the operator's
 [experimental laboratory posture](docs/research/experimental-lab-operating-posture.md):
 favor recoverable progress over speculative confinement requirements.
 
+## Future reference knowledge base
+
+The [generator-neutral reference-site staging index](docs/site/README.md) maps
+existing documentation to stable page identities and records the core-format,
+application-comparison and visual-evidence work needed before publication.
+This does not launch a site or change implementation ownership. The eventual
+initial presentation is based on BOOTSTRA.386; the planned DeskMate-derived
+theme remains a later design milestone.
+
 ## Project status
 
 | Area | Status | What is available or being investigated |

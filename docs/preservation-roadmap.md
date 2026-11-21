@@ -168,6 +168,13 @@ rules from its [plan](ecosystem/demonstrator.md).
 
 ## Migration sequence and readiness criteria
 
+The [reference-site preparation directory](site/README.md) now stages
+navigation identities for existing source documents, an evidence-led
+cross-application workplan, and the private-to-public image review workflow.
+These do not select a static generator, activate a website, approve image
+publication, or move authoritative sources out of this repository.
+
+
 1. Begin now with internal boundaries, explicit dependencies and cohesive
    modules in the current repo. Prefer generic mechanisms plus subject adapters.
    Keep useful research and tests moving; do not refactor for its own sake.
