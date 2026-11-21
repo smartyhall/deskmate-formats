@@ -9,6 +9,7 @@ const pages = Object.freeze(JSON.parse(
 ).pages);
 const bySource = new Map(pages.map((p) => [p.source, p]));
 const names = Object.freeze({
+  introduction: "Start here",
   planning: "Project and planning",
   system: "System architecture",
   formats: "Native formats",
