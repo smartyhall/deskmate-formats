@@ -66,7 +66,8 @@ def install() -> None:
             "dist/js/bootstrap.bundle.min.js",
             "dist/js/bootstrap-386.js",
         ):
-            source = select(names, relative)
+            # Published ZIPs may omit the source-tree dist/ prefix.
+            source = select(names, relative.removeprefix("dist/"))
             mapping[relative.removeprefix("dist/")] = z.read(source)
 
         css = mapping["css/bootstrap.min.css"].decode("utf-8")
