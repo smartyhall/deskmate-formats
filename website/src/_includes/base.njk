@@ -17,11 +17,22 @@
     <nav class="top-nav" aria-label="Primary">
       <a href="{{ '/' | siteurl }}">Home</a>
       <a href="{{ '/search/' | siteurl }}">Search</a>
+      <a href="#reference-sections">Browse topics</a>
       <a href="https://github.com/smartyhall/deskmate-formats">Source repository</a>
     </nav>
   </header>
   <div class="site-shell">
-    <aside class="sidebar" aria-label="Documentation index">
+    <main id="content" class="main-content" tabindex="-1">
+      {% if sourceRole %}
+        <div class="document-notice"><span class="document-kind">{{ sourceRole }}</span>
+          <span>Interpret source claims in the context of their date and verified evidence.</span></div>
+      {% endif %}
+      <article class="document">{{ content | safe }}</article>
+      {% if sourceLink %}
+      <p class="source-note"><a href="{{ sourceLink }}">Review the source Markdown and history</a></p>
+      {% endif %}
+    </main>
+    <aside class="sidebar" id="reference-sections" aria-label="Documentation index">
       <nav aria-label="Reference sections">
       {% for section in navigation %}
         {% if section.pages.length %}
@@ -38,16 +49,6 @@
       {% endfor %}
       </nav>
     </aside>
-    <main id="content" class="main-content" tabindex="-1">
-      {% if sourceRole %}
-        <div class="document-notice"><span class="document-kind">{{ sourceRole }}</span>
-          <span>Interpret source claims in the context of their date and verified evidence.</span></div>
-      {% endif %}
-      <article class="document">{{ content | safe }}</article>
-      {% if sourceLink %}
-      <p class="source-note"><a href="{{ sourceLink }}">Review the source Markdown and history</a></p>
-      {% endif %}
-    </main>
   </div>
   <footer class="site-footer">
     Independently maintained preservation research. Not affiliated with Tandy or Radio Shack.
