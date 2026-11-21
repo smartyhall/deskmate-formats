@@ -1,5 +1,8 @@
 # Reusable archive mirror
 
+For incremental private indexing and provenance queries, see
+[offline archive intelligence](intelligence.md).
+
 A standalone, standard-library Python 3.11+ tool with a Windows PowerShell
 5.1/7 launcher. Archives public HTTP(S) directory indexes (Apache/nginx-style
 HTML); not a general web crawler, FTP client, WARC capture tool or continuous
@@ -41,8 +44,8 @@ Or create the destination's STOP file directly:
 
     New-Item -ItemType File -Force C:\DeskMateLab\references\oldskool\tvdog-mirror\STOP
 
-The new engine checks the sentinel between transfers, before requests, between
-read chunks and during rate-limit waits. A blocked network read, connection,
+The engine checks the sentinel between transfers, before requests, between
+read chunks and during pacing and cooldown waits. A blocked network read, connection,
 disk operation or hash may delay stopping; the default socket timeout is 60
 seconds, not a hard overall deadline. The legacy embedded script does not
 understand the sentinel. Wait for the active process to exit. The sentinel is
@@ -54,15 +57,35 @@ persistent and never cleared automatically.
 Then use the ordinary start command again. Status reads SQLite without
 claiming the writer lock or sending network requests. ClearStop refuses to
 operate while the destination is locked. The direct Python equivalents are
---status, --stop and --clear-stop. --max-items bounds a trial; --retry-unavailable
-requeues invalid or unavailable entries (not robots or access-denied blocks).
+`--status`, `--stop` and `--clear-stop`. `--max-items` bounds the number of
+processed entries in a trial. A transient retry still belongs to the same
+entry. `--retry-unavailable` requeues invalid or unavailable entries and
+respects recorded robots and access-denied blocks.
+
+### Transient failures
+
+A connection error, incomplete response, HTTP 408 or 429, or HTTP 5xx pauses
+all requests to the source. The downloader persists the host cooldown,
+consecutive failure count, error, and any partial transfer before waiting.
+It resumes the same queue automatically after waits of at least 1, 5 and 15
+minutes, with a small additive jitter. A valid `Retry-After` delta or HTTP
+date can lengthen any wait. The fourth consecutive failure saves a cooldown
+of at least one hour and exits with status `2` for operator review. A later
+manual restart waits out any remaining cooldown before issuing even a robots
+request and retains the failure count until a queued entry succeeds. Status
+reports `host_not_before_epoch`, `host_consecutive_failures`, and
+`host_last_error` without taking the download lock.
+
+Explicit HTTP access denials stop the run immediately. Paths excluded by
+robots are recorded as blocked without requesting them. During a transient
+interruption, a partial can resume with a verified byte range and matching
+validator. An operator stop preserves the pending cooldown for a later run.
 
 ## Scope and limits
 
 The engine retains directory listings, JSONL receipts, SQLite state, original
 files and partials in the original layout. It refuses unrelated redirects,
-uses a single sequential request stream, observes robots pacing and Retry-After,
-pauses after server errors and validates range responses and lengths. It only
+uses a single sequential request stream and validates range responses and lengths. It only
 supports recognizable UTF-8 HTML directory indexes and direct child links;
 unrecognized listings, other encodings and unsupported response framing are
 reported rather than guessed. It does not extract or execute downloaded files.

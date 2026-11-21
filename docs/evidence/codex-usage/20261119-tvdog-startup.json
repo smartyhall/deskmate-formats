@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "tvdog-intelligence",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 28,
+    "token_records": 3929,
+    "sessions": 25
+  },
+  "checkpoint": "startup",
+  "collected_at": "2026-11-20T04:32:00.904336+00:00",
+  "commit": "546da48efe5b23349e6746884d18602c118a6f4e",
+  "observation": {
+    "session": "67f94e3e737404af50a87e4e",
+    "measured_at": "2026-11-20T04:32:00.526000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 144348,
+      "cached_input": 124672,
+      "output": 667,
+      "reasoning_output": 0,
+      "total": 145015
+    },
+    "reported_last": {
+      "input": 40857,
+      "cached_input": 38528,
+      "output": 132,
+      "reasoning_output": 0,
+      "total": 40989
+    },
+    "windows": {
+      "300": {
+        "used_percent": 3.0,
+        "reset_epoch": 1795165459,
+        "status": "observed",
+        "boundary": "decrease"
+      },
+      "10080": {
+        "used_percent": 59.0,
+        "reset_epoch": 1795652781,
+        "status": "observed"
+      }
+    },
+    "counter_state": "decreased"
+  }
+}

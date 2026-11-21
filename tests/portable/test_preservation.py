@@ -146,6 +146,18 @@ class GraphicsPreservationTest(unittest.TestCase):
             with self.assertRaises(PreservationError):
                 bundle.prepare(source)
 
+    def test_text_unmeasured_margins_keep_preview_and_control_bytes(self):
+        with TemporaryDirectory() as directory:
+            source = Path(directory) / 'layout.doc'
+            margin = bytes.fromhex('03 09 00 00 04')
+            source.write_bytes(text.FORMATTED_HEADER + margin + b'Atlas\x1a')
+            result = bundle.prepare(source)
+            self.assertEqual(result.files['text.txt'], b'Atlas')
+            self.assertIn(b'Atlas</p>', result.files['preview.html'])
+            self.assertIn('text_line_layout_omitted', codes(result))
+            item, = json.loads(result.files['content.json'])['controls']
+            self.assertEqual(item['raw'], margin.hex())
+
     def test_draw_native_palette_and_opaque_elements(self):
         for path in sorted((FIXTURES / 'draw').glob('*.fig')):
             with self.subTest(path=path.name):

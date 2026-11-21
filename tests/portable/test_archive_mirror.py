@@ -1,9 +1,11 @@
 """Local-only regression tests for the research mirror."""
+from collections import deque
+from email.utils import formatdate
 import hashlib
 import http.server
 import importlib.util
+import json
 from pathlib import Path
-import sqlite3
 import tempfile
 import threading
 import unittest
@@ -22,6 +24,17 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
         self.server.seen.append((self.path, self.headers.get("Range")))
+        if self.server.disconnect == self.path:
+            self.server.disconnect = None
+            return
+        responses = self.server.responses.get(self.path)
+        if responses:
+            status, retry_after = responses.popleft()
+            self.send_response(status)
+            if retry_after is not None:
+                self.send_header("Retry-After", retry_after)
+            self.end_headers()
+            return
         if self.path == "/robots.txt":
             content, kind = b"User-agent: *\nDisallow: /tree/excluded.bin\n", "text/plain"
         elif self.path == "/tree/":
@@ -33,11 +46,6 @@ class Handler(http.server.BaseHTTPRequestHandler):
             content, kind = b"<title>Index of sub</title><a href='b.bin'>b</a>", "text/html"
         else:
             content, kind = self.body, "application/octet-stream"
-        if self.server.fail == self.path:
-            self.send_response(503)
-            self.send_header("Retry-After", "120")
-            self.end_headers()
-            return
         offset = int(self.headers["Range"][6:-1]) if self.headers.get("Range") else 0
         self.send_response(206 if offset else 200)
         if offset:
@@ -46,6 +54,10 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.send_header("Content-Type", kind)
         self.send_header("Content-Length", str(len(content)-offset))
         self.end_headers()
+        if self.server.cut == self.path:
+            self.server.cut = None
+            self.wfile.write(content[:4])
+            return
         self.wfile.write(content[offset:])
 
 
@@ -54,7 +66,8 @@ class MirrorTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
-        self.server.seen, self.server.fail = [], None
+        self.server.seen, self.server.responses = [], {}
+        self.server.cut = self.server.disconnect = None
         thread = threading.Thread(target=self.server.serve_forever, daemon=True)
         thread.start()
         self.addCleanup(self.server.server_close)
@@ -65,6 +78,23 @@ class MirrorTests(unittest.TestCase):
         self.addCleanup(self.m.db.close)
         # No real pacing delays in local-only tests; stop checks remain active.
         self.m.wait = lambda _: self.m.check_stop()
+
+    def mock_clock(self):
+        self.epoch = 1_800_000_000
+        self.cooldown_waits = []
+        clock = patch.object(mirror.time, "time", lambda: self.epoch)
+        jitter = patch.object(mirror.random, "uniform", return_value=0)
+        clock.start()
+        jitter.start()
+        self.addCleanup(clock.stop)
+        self.addCleanup(jitter.stop)
+        self.m.wait = self.advance_cooldown
+
+    def advance_cooldown(self, delay):
+        # The fixture removes rate waits but records host waits against wall time.
+        if delay >= 30:
+            self.cooldown_waits.append(delay)
+            self.epoch += delay
 
     def test_tree_resume_and_robots(self):
         self.m.run(limit=1)
@@ -110,14 +140,96 @@ class MirrorTests(unittest.TestCase):
         self.m.run()
         self.assertEqual((self.m.dest/"originals/a.bin").read_bytes(), Handler.body)
 
-    def test_cooldown_persists(self):
-        self.server.fail = "/tree/"
+    def test_stop_during_cooldown_and_restart_respects_saved_epoch(self):
+        self.mock_clock()
+        self.server.responses["/tree/"] = deque([(503, "120")])
+        initial_epoch = self.epoch
+
+        def stop_during_wait(delay):
+            if delay >= 60:
+                with patch.object(mirror.time, "sleep", lambda _: self.m.stop_file.touch()):
+                    mirror.Mirror.wait(self.m, delay)
+
+        self.m.wait = stop_during_wait
+        with self.assertRaisesRegex(mirror.Stop, "STOP file"):
+            self.m.run(limit=1)
+        self.assertEqual(self.server.seen, [("/robots.txt", None), ("/tree/", None)])
+        summary = json.loads((self.m.dest / "manifests" / "summary.json").read_text(encoding="utf-8"))
+        self.assertEqual(summary["host_not_before_epoch"], initial_epoch + 120)
+        self.assertEqual(summary["host_last_error"], "HTTP 503")
+        self.assertEqual(self.m.db.execute("SELECT status,attempts FROM entries WHERE rel=''").fetchone()[:],
+                         ("deferred", 1))
+
+        reopened = mirror.Mirror(self.root, self.m.dest, reserve_gib=0)
+        self.addCleanup(reopened.db.close)
+        reopened.wait = self.advance_cooldown
         with self.assertRaises(mirror.Stop):
+            reopened.run(limit=1)
+        self.assertEqual(len(self.server.seen), 2)
+        self.epoch += 30
+        self.m.stop_file.unlink()
+        reopened.run(limit=1)
+        self.assertEqual(self.cooldown_waits, [90])
+        self.assertEqual(self.server.seen[-2:], [("/robots.txt", None), ("/tree/", None)])
+        self.assertEqual(reopened.meta("host_failures"), "0")
+        self.assertEqual(reopened.meta("not_before"), "0")
+
+    def test_automatic_policy_and_entry_retry_honors_date_and_seconds(self):
+        self.mock_clock()
+        self.server.responses["/robots.txt"] = deque([(408, "120")])
+        self.server.responses["/tree/"] = deque([(429, formatdate(self.epoch + 640, usegmt=True))])
+        self.m.run(limit=1)
+        self.assertEqual(self.cooldown_waits, [120, 520])
+        self.assertEqual(self.server.seen, [("/robots.txt", None), ("/robots.txt", None),
+                                           ("/tree/", None), ("/tree/", None)])
+        self.assertEqual(self.m.db.execute("SELECT status,attempts FROM entries WHERE rel=''").fetchone()[:],
+                         ("verified", 2))
+
+    def test_persistent_failure_stops_and_retains_extended_cooldown(self):
+        self.mock_clock()
+        self.server.responses["/tree/"] = deque([(503, None)] * 4)
+        with self.assertRaisesRegex(mirror.Stop, "Persistent host failures"):
             self.m.run()
-        count = len(self.server.seen)
-        with self.assertRaises(mirror.Stop):
+        self.assertEqual(self.cooldown_waits, [60, 300, 900])
+        self.assertEqual(self.m.meta("host_failures"), "4")
+        self.assertEqual(float(self.m.meta("not_before")), self.epoch + 3600)
+        self.assertEqual(self.m.db.execute("SELECT status,attempts FROM entries WHERE rel=''").fetchone()[:],
+                         ("deferred", 4))
+        self.assertEqual(self.server.seen.count(("/tree/", None)), 4)
+
+    def test_early_disconnect_preserves_partial_and_resumes_with_range(self):
+        self.mock_clock()
+        self.m.run(limit=1)
+        self.m.priorities = ["a.bin"]
+        self.server.cut = "/tree/a.bin"
+        self.m.run(limit=1)
+        self.assertEqual(self.cooldown_waits, [60])
+        self.assertEqual(self.server.seen[-2:], [("/tree/a.bin", None), ("/tree/a.bin", "bytes=4-")])
+        self.assertEqual((self.m.dest / "originals/a.bin").read_bytes(), Handler.body)
+        self.assertEqual(self.m.db.execute("SELECT status,attempts FROM entries WHERE rel='a.bin'").fetchone()[:],
+                         ("verified", 2))
+
+    def test_disconnect_before_headers_automatically_retries(self):
+        self.mock_clock()
+        self.m.run(limit=1)
+        self.m.priorities = ["a.bin"]
+        self.server.disconnect = "/tree/a.bin"
+        self.m.run(limit=1)
+        self.assertEqual(self.cooldown_waits, [60])
+        self.assertEqual(self.server.seen[-2:], [("/tree/a.bin", None), ("/tree/a.bin", None)])
+        self.assertEqual((self.m.dest / "originals/a.bin").read_bytes(), Handler.body)
+
+    def test_access_denial_terminates_without_retry(self):
+        self.mock_clock()
+        self.m.run(limit=1)
+        self.m.priorities = ["a.bin"]
+        self.server.responses["/tree/a.bin"] = deque([(403, "300")])
+        with self.assertRaisesRegex(mirror.Stop, "Access denied"):
             self.m.run()
-        self.assertEqual(len(self.server.seen), count)
+        self.assertEqual(self.cooldown_waits, [])
+        self.assertEqual(self.server.seen[-2:], [("/robots.txt", None), ("/tree/a.bin", None)])
+        self.assertEqual(self.m.db.execute("SELECT status,attempts FROM entries WHERE rel='a.bin'").fetchone()[:],
+                         ("blocked", 1))
 
     def test_config_and_existing_state(self):
         cfg = self.m.dest/"targets.toml"

@@ -10,6 +10,11 @@ from struct import iter_unpack, unpack_from
 MAX_SIZE = 128 * 1024
 DIRECTORY_OFFSET = 0x42
 RECORD_SIZE = 46
+# The optional Express Publisher faces use the second measured profile.
+OUTLINE_PROFILES = {
+    b'\xbd\x7a\x00\x01\x01': b'\x1e\xf3\x01\x01',
+    b'\xbd\x7a\x01\x01\x01': b'\x1e\xf3\x00\x01',
+}
 DRAW_EXTENDED_OUTLINE_SLOTS = bytes((
     180, 207, 197, 192, 204, 200, 212, 181, 193, 205, 201, 221, 209, 217, 216, 208,
     220, 215, 211, 194, 206, 202, 195, 203, 239, 218, 219, 191, 187, 188, 186, 190,
@@ -161,7 +166,7 @@ def parse_bytes(data):
     """Read names and descriptor bytes without interpreting resource glyphs."""
     if not isinstance(data, bytes) or not DIRECTORY_OFFSET <= len(data) <= MAX_SIZE:
         raise FontResourceError('invalid FF1 snapshot size')
-    if data[:5] != b'\xbd\x7a\x00\x01\x01' or data[32:34] != b'\x2e\0':
+    if data[:5] not in OUTLINE_PROFILES or data[32:34] != b'\x2e\0':
         raise FontResourceError('unsupported FF1 directory profile')
     count, = unpack_from('<H', data, 10)
     first, codes = unpack_from('<HH', data, 14)
@@ -193,7 +198,7 @@ def parse_glyph_index(data):
     resource = parse_bytes(data)
     outer_end = DIRECTORY_OFFSET + len(resource.variants) * RECORD_SIZE
     inner = outer_end + 4
-    if inner + 48 > len(data) or data[inner:inner+4] != b'\x1e\xf3\x01\x01':
+    if inner + 48 > len(data) or data[inner:inner+4] != OUTLINE_PROFILES[data[:5]]:
         raise FontResourceError('unsupported FF1 inner glyph index profile')
     declared_size, = unpack_from('<I', data, inner + 4)
     units, first, count = unpack_from('<HHH', data, inner + 12)

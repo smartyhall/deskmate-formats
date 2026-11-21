@@ -1,0 +1,1821 @@
+{
+  "schema_version": 1,
+  "market": "US",
+  "mirror_snapshot_utc": "2026-11-20T04:17:29.418924+00:00",
+  "sources": [
+    {
+      "id": "deskmate-3-book",
+      "title": "Getting the Most Out of DeskMate 3, Second Edition",
+      "kind": "press-release",
+      "document_date": null,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dmbook.txt",
+      "source_bytes": 2402,
+      "source_sha256": "56e8e36cce6f43193466fa7130c4cab53d075b30b6021c2fbb5a5b0b1c0ccfe7"
+    },
+    {
+      "id": "documents-index",
+      "title": "TVDog documents directory description",
+      "kind": "archive-description",
+      "document_date": null,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/00_index.txt",
+      "source_bytes": 43199,
+      "source_sha256": "e3df3f361c32d0fe1a64e7ead88d2d972a37d45dc67f90b8cfe640350ecfc610"
+    },
+    {
+      "id": "express-order-guide-1988",
+      "title": "Express Order Software Buyer's Guide",
+      "kind": "vendor-catalog",
+      "document_date": "1988",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/expsoft.zip",
+      "acquired_utc": "2026-11-20T04:48:54.708094+00:00",
+      "source_bytes": 8444333,
+      "source_sha256": "cb154cc3c183711b1312f1f7634021a29b861e23b31158c2dcc2ce313b98c9c6",
+      "pages": 84,
+      "member": {
+        "name": "expsoft.pdf",
+        "ordinal": 0,
+        "bytes": 8474931,
+        "sha256": "a68d77dd078727f4a51855b51afbaf65198bddf8fbc4bf1760ad4fe008214f5c"
+      }
+    },
+    {
+      "id": "factory-direct-announcement",
+      "title": "Radio Shack Introduces Tandy Factory Direct",
+      "kind": "press-release",
+      "document_date": "1992-10-02",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/cistanne.zip",
+      "source_bytes": 267737,
+      "source_sha256": "2487cddf06b9b27f2e5984e8b76d32db1fe3f1ac8e2dc1380e6ac9e1d1fec58b",
+      "member": {
+        "name": "3367EA7A.TXT",
+        "ordinal": 7,
+        "bytes": 5766,
+        "sha256": "173618b263e18fd3736e90b05cff4a3cf5dfc9a4d18ecf305028f6d4a39a98fe"
+      }
+    },
+    {
+      "id": "factory-direct-price-sheet-1992",
+      "title": "Tandy Factory-Direct Pricing and Availability, effective November 10, 1992",
+      "kind": "price-sheet-transcription",
+      "document_date": "1992-11-10",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/direct.txt",
+      "acquired_utc": "2026-11-20T04:47:41.201646+00:00",
+      "source_bytes": 2841,
+      "source_sha256": "6205545895c4103ea3de78b85f4fe3546f1be6b4898571bc801a413d1faee07d"
+    },
+    {
+      "id": "home-lawyer-announcement",
+      "title": "DeskMate Home Lawyer",
+      "kind": "vendor-article",
+      "document_date": null,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/cistanne.zip",
+      "source_bytes": 267737,
+      "source_sha256": "2487cddf06b9b27f2e5984e8b76d32db1fe3f1ac8e2dc1380e6ac9e1d1fec58b",
+      "member": {
+        "name": "336802A2.TXT",
+        "ordinal": 157,
+        "bytes": 5348,
+        "sha256": "88d393c139ad0778e18f7180f5b220dc84a873efb711c8f2eb124a444439548b"
+      }
+    },
+    {
+      "id": "newsletter-1992-02",
+      "title": "Tandy User Group Newsletter, February 1992",
+      "kind": "vendor-newsletter",
+      "document_date": "1992-02",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/cistanne.zip",
+      "source_bytes": 267737,
+      "source_sha256": "2487cddf06b9b27f2e5984e8b76d32db1fe3f1ac8e2dc1380e6ac9e1d1fec58b",
+      "member": {
+        "name": "336806C4.TXT",
+        "ordinal": 173,
+        "bytes": 7517,
+        "sha256": "6ca39c32aef635a12d8a5933d5cc47876f26ea1dadf89bfd63756b509bbea839"
+      }
+    },
+    {
+      "id": "newsletter-1992-07",
+      "title": "Tandy User Group Newsletter, July 1992",
+      "kind": "vendor-newsletter",
+      "document_date": "1992-07",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/cistanne.zip",
+      "source_bytes": 267737,
+      "source_sha256": "2487cddf06b9b27f2e5984e8b76d32db1fe3f1ac8e2dc1380e6ac9e1d1fec58b",
+      "member": {
+        "name": "336805E3.TXT",
+        "ordinal": 168,
+        "bytes": 8526,
+        "sha256": "1c20d55b9988e5762c8b0064d36f710341a2a97c5511580eacd59b6658abd884"
+      }
+    },
+    {
+      "id": "newsletter-1992-08",
+      "title": "Tandy User Group Newsletter, August 1992",
+      "kind": "vendor-newsletter",
+      "document_date": "1992-08",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/cistanne.zip",
+      "source_bytes": 267737,
+      "source_sha256": "2487cddf06b9b27f2e5984e8b76d32db1fe3f1ac8e2dc1380e6ac9e1d1fec58b",
+      "member": {
+        "name": "336805AD.TXT",
+        "ordinal": 167,
+        "bytes": 8751,
+        "sha256": "e54667f4274a2ceb596b177ecfc0b501a71edc4e70a893573b9e42bdea459734"
+      }
+    },
+    {
+      "id": "newsletter-1992-10",
+      "title": "Tandy User Group Newsletter, October 1992",
+      "kind": "vendor-newsletter",
+      "document_date": "1992-10",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/cistanne.zip",
+      "source_bytes": 267737,
+      "source_sha256": "2487cddf06b9b27f2e5984e8b76d32db1fe3f1ac8e2dc1380e6ac9e1d1fec58b",
+      "member": {
+        "name": "3368055C.TXT",
+        "ordinal": 166,
+        "bytes": 4578,
+        "sha256": "7d8544e9a0a497ce325d8665417ebed00eb2048b323ad23c7a0a6f59b3c19159"
+      }
+    },
+    {
+      "id": "printer-dmp136",
+      "title": "Tandy DMP 136 Color Dot Matrix Printer",
+      "kind": "vendor-article",
+      "document_date": null,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/cistanne.zip",
+      "source_bytes": 267737,
+      "source_sha256": "2487cddf06b9b27f2e5984e8b76d32db1fe3f1ac8e2dc1380e6ac9e1d1fec58b",
+      "member": {
+        "name": "3367FD02.TXT",
+        "ordinal": 120,
+        "bytes": 2500,
+        "sha256": "f8918077169656a9b0312eff2ecad94d2a18b51500a5f67c2219ae82a9f75b43"
+      }
+    },
+    {
+      "id": "qa-write-discussion",
+      "title": "Delphi Tandy forum, December 1991",
+      "kind": "community-discussion",
+      "document_date": "1991-12",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/delfor91.zip",
+      "source_bytes": 409235,
+      "source_sha256": "ca6289bd2762adfdc37003f61982b4396adf71cd75d8af7edfbac31021f506c6",
+      "member": {
+        "name": "DEC91TAN.TXT",
+        "ordinal": 10,
+        "bytes": 125472,
+        "sha256": "37f70f7df4022c512ed4146ae76da8d4ccb92ce317a47152f205657fb18adfa6"
+      }
+    },
+    {
+      "id": "tandy-1000-ex",
+      "title": "Tandy Corporation Announces the Tandy 1000 EX Computer",
+      "kind": "press-release",
+      "document_date": null,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/1kexrel.txt",
+      "source_bytes": 6854,
+      "source_sha256": "8a1b1a62f8e60d820c4147d82b6ceb411c3fc1e8628316be19ccf0d9d548d107"
+    },
+    {
+      "id": "tandy-1000-rl",
+      "title": "The New Tandy 1000 RL",
+      "kind": "vendor-article",
+      "document_date": null,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/rlpr2.txt",
+      "source_bytes": 12151,
+      "source_sha256": "22ebff453bbf9389fcf9566edbf2e7c8a6e36ef18c5f4591aa850de29d02fbb1"
+    },
+    {
+      "id": "tandy-1000-rlx",
+      "title": "The New Tandy 1000 RLX",
+      "kind": "vendor-article",
+      "document_date": null,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/cistanne.zip",
+      "source_bytes": 267737,
+      "source_sha256": "2487cddf06b9b27f2e5984e8b76d32db1fe3f1ac8e2dc1380e6ac9e1d1fec58b",
+      "member": {
+        "name": "3367EB04.TXT",
+        "ordinal": 10,
+        "bytes": 16510,
+        "sha256": "90b9da584eff62b055642f459a737195a8e8aa21b56388cfe325db6e7fc46d80"
+      }
+    },
+    {
+      "id": "tandy-1000-rlx-software",
+      "title": "Tandy 1000 RLX: Another Home Run",
+      "kind": "vendor-article",
+      "document_date": null,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/cistanne.zip",
+      "source_bytes": 267737,
+      "source_sha256": "2487cddf06b9b27f2e5984e8b76d32db1fe3f1ac8e2dc1380e6ac9e1d1fec58b",
+      "member": {
+        "name": "3367EB44.TXT",
+        "ordinal": 11,
+        "bytes": 10968,
+        "sha256": "f04552405c04f05f7bd1bdf637cf68e037bab970e5047627d91cf5d1d65394b6"
+      }
+    },
+    {
+      "id": "tandy-1000-rsx",
+      "title": "The New Tandy 1000 RSX",
+      "kind": "vendor-article",
+      "document_date": null,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/cistanne.zip",
+      "source_bytes": 267737,
+      "source_sha256": "2487cddf06b9b27f2e5984e8b76d32db1fe3f1ac8e2dc1380e6ac9e1d1fec58b",
+      "member": {
+        "name": "3367EABE.TXT",
+        "ordinal": 8,
+        "bytes": 8088,
+        "sha256": "a3f4d34a6637e78926b6e476273e18d802cb73fc93312923ae58e51b6c0afda2"
+      }
+    },
+    {
+      "id": "tandy-1000-sl",
+      "title": "New Tandy 1000 SL Personal Computer",
+      "kind": "press-release",
+      "document_date": "1988-07-27",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/1kslrel.txt",
+      "source_bytes": 5656,
+      "source_sha256": "7ff5e71ced15211647212e0b49fa20264ce02fa04f53010f0d52ef1ffd8d4bda"
+    },
+    {
+      "id": "tandy-1000-sx",
+      "title": "Tandy Corporation Announces the Tandy 1000 SX Computer",
+      "kind": "press-release",
+      "document_date": null,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/1ksxrel.txt",
+      "source_bytes": 8962,
+      "source_sha256": "4d59abafed7a4306a33f2d3fd764c9f9520ff5e8aa384cea2c743cbaa20ca3cd"
+    },
+    {
+      "id": "tandy-1000-tl",
+      "title": "Easy-to-Use Tandy 1000 TL Personal Computer",
+      "kind": "press-release",
+      "document_date": "1988-07-27",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/1ktlrel.txt",
+      "source_bytes": 5304,
+      "source_sha256": "5114815369dbc9392916f7302cc0a664667a42864b171a55dbaa6f93a766309f"
+    },
+    {
+      "id": "vgm-450-announcement",
+      "title": "New VGM-450 SVGA Monitor",
+      "kind": "vendor-article",
+      "document_date": null,
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/cistanne.zip",
+      "source_bytes": 267737,
+      "source_sha256": "2487cddf06b9b27f2e5984e8b76d32db1fe3f1ac8e2dc1380e6ac9e1d1fec58b",
+      "member": {
+        "name": "3367FE01.TXT",
+        "ordinal": 128,
+        "bytes": 874,
+        "sha256": "c191cedb04accd947b374e79c925b85696b8d03edc13a6ba8135a4aa12eeb753"
+      }
+    }
+  ],
+  "offers": [
+    {
+      "id": "book-deskmate-3-second-edition",
+      "product": "Getting the Most Out of DeskMate 3, Second Edition",
+      "catalog_number": "25-1254",
+      "price_usd_cents": 2195,
+      "basis": "suggested-retail",
+      "notes": "Brady Books reference for DeskMate 3.02, 3.03 and 3.5.",
+      "evidence": [
+        {
+          "source_id": "deskmate-3-book",
+          "lines": [
+            35,
+            39
+          ]
+        },
+        {
+          "source_id": "deskmate-3-book",
+          "lines": [
+            7,
+            15
+          ]
+        }
+      ]
+    },
+    {
+      "id": "software-home-lawyer",
+      "product": "Home Lawyer for DeskMate",
+      "catalog_number": null,
+      "price_usd_cents": 6995,
+      "basis": "advertised",
+      "catalog_id": "home-lawyer",
+      "notes": "This is the price for the DeskMate edition. The article separately compares the DOS edition.",
+      "evidence": [
+        {
+          "source_id": "home-lawyer-announcement",
+          "lines": [
+            137,
+            143
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-1000-ex",
+      "product": "Tandy 1000 EX",
+      "catalog_number": "25-1050",
+      "price_usd_cents": 79900,
+      "basis": "launch",
+      "includes": [
+        "Personal DeskMate",
+        "MS-DOS 2.11",
+        "GW-BASIC"
+      ],
+      "evidence": [
+        {
+          "source_id": "tandy-1000-ex",
+          "lines": [
+            4,
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-1000-sx",
+      "product": "Tandy 1000 SX",
+      "catalog_number": "25-1051",
+      "price_usd_cents": 119900,
+      "basis": "launch",
+      "includes": [
+        "DeskMate II",
+        "MS-DOS 3.2",
+        "GW-BASIC"
+      ],
+      "evidence": [
+        {
+          "source_id": "tandy-1000-sx",
+          "lines": [
+            4,
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "id": "monitor-vm4-sx",
+      "product": "Tandy VM-4 monochrome monitor",
+      "catalog_number": "25-1020",
+      "price_usd_cents": 12995,
+      "basis": "option",
+      "evidence": [
+        {
+          "source_id": "tandy-1000-sx",
+          "lines": [
+            142,
+            147
+          ]
+        }
+      ]
+    },
+    {
+      "id": "monitor-cm5-sx",
+      "product": "Tandy CM-5 RGBI monitor",
+      "catalog_number": "25-1023",
+      "price_usd_cents": 29995,
+      "basis": "option",
+      "evidence": [
+        {
+          "source_id": "tandy-1000-sx",
+          "lines": [
+            142,
+            147
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hard-card-sx-20mb",
+      "product": "20 MB Hard Disk Card",
+      "catalog_number": "25-1029",
+      "price_usd_cents": 79900,
+      "basis": "option",
+      "evidence": [
+        {
+          "source_id": "tandy-1000-sx",
+          "lines": [
+            168,
+            169
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-1000-sl",
+      "product": "Tandy 1000 SL",
+      "catalog_number": "25-1401",
+      "price_usd_cents": 89900,
+      "basis": "suggested-retail",
+      "available_from": "1988-09",
+      "includes": [
+        "DeskMate in ROM",
+        "MS-DOS 3.3 in ROM"
+      ],
+      "evidence": [
+        {
+          "source_id": "tandy-1000-sl",
+          "lines": [
+            15,
+            17
+          ]
+        },
+        {
+          "source_id": "tandy-1000-sl",
+          "lines": [
+            27,
+            34
+          ]
+        },
+        {
+          "source_id": "tandy-1000-sl",
+          "lines": [
+            80,
+            82
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-1000-tl",
+      "product": "Tandy 1000 TL",
+      "catalog_number": "25-1601",
+      "price_usd_cents": 129900,
+      "basis": "suggested-retail",
+      "available_from": "1988-09",
+      "includes": [
+        "DeskMate in ROM",
+        "MS-DOS 3.3 in ROM"
+      ],
+      "evidence": [
+        {
+          "source_id": "tandy-1000-tl",
+          "lines": [
+            16,
+            19
+          ]
+        },
+        {
+          "source_id": "tandy-1000-tl",
+          "lines": [
+            24,
+            28
+          ]
+        },
+        {
+          "source_id": "tandy-1000-tl",
+          "lines": [
+            86,
+            88
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-1000-rl",
+      "product": "Tandy 1000 RL",
+      "catalog_number": "25-1450",
+      "price_usd_cents": 59995,
+      "basis": "launch",
+      "includes": [
+        "DeskMate Home Organizer",
+        "DeskMate in ROM",
+        "MS-DOS in ROM"
+      ],
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rl",
+          "lines": [
+            3,
+            9
+          ]
+        },
+        {
+          "source_id": "tandy-1000-rl",
+          "lines": [
+            126,
+            138
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-1000-rl-hd",
+      "product": "Tandy 1000 RL HD",
+      "catalog_number": "25-1451",
+      "price_usd_cents": 99995,
+      "basis": "launch",
+      "includes": [
+        "20 MB SmartDrive",
+        "SmartWatch",
+        "DeskMate and MS-DOS preinstalled"
+      ],
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rl",
+          "lines": [
+            3,
+            9
+          ]
+        },
+        {
+          "source_id": "tandy-1000-rl",
+          "lines": [
+            126,
+            143
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ram-rl-base",
+      "product": "Tandy 1000 RL memory upgrade to 768 KB",
+      "catalog_number": "25-1082",
+      "price_usd_cents": 5995,
+      "basis": "option",
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rl",
+          "lines": [
+            121,
+            124
+          ]
+        }
+      ]
+    },
+    {
+      "id": "smartwatch-rl",
+      "product": "SmartWatch real-time clock for floppy-based RL",
+      "catalog_number": "25-1033",
+      "price_usd_cents": 3995,
+      "basis": "option",
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rl",
+          "lines": [
+            135,
+            142
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mouse-rl",
+      "product": "PS/2 style mouse",
+      "catalog_number": "25-1042",
+      "price_usd_cents": 4995,
+      "basis": "option",
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rl",
+          "lines": [
+            116,
+            119
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mouse-rl-introductory",
+      "product": "PS/2 style mouse",
+      "catalog_number": "25-1042",
+      "price_usd_cents": 0,
+      "basis": "conditional-promotion",
+      "requires": "Introductory purchase of a Tandy 1000 RL with a monitor.",
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rl",
+          "lines": [
+            199,
+            202
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-1000-rlx",
+      "product": "Tandy 1000 RLX",
+      "catalog_number": "25-1452",
+      "price_usd_cents": 79995,
+      "basis": "launch",
+      "includes": [
+        "DeskMate in ROM",
+        "MS-DOS in ROM",
+        "DeskMate Home Organizer",
+        "PS/2 style mouse"
+      ],
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rlx",
+          "lines": [
+            5,
+            11
+          ]
+        },
+        {
+          "source_id": "tandy-1000-rlx",
+          "lines": [
+            15,
+            33
+          ]
+        },
+        {
+          "source_id": "tandy-1000-rlx",
+          "lines": [
+            36,
+            41
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-1000-rlx-hd",
+      "product": "Tandy 1000 RLX HD",
+      "catalog_number": "25-1453",
+      "price_usd_cents": 119995,
+      "basis": "launch",
+      "includes": [
+        "40 MB SmartDrive",
+        "1 MB RAM",
+        "DeskMate and MS-DOS preinstalled"
+      ],
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rlx",
+          "lines": [
+            5,
+            11
+          ]
+        },
+        {
+          "source_id": "tandy-1000-rlx",
+          "lines": [
+            15,
+            34
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ram-rlx",
+      "product": "RLX memory upgrade to 1 MB",
+      "catalog_number": "25-1083",
+      "price_usd_cents": 7995,
+      "basis": "option",
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rlx",
+          "lines": [
+            15,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-1000-rlx-color",
+      "product": "Tandy 1000 RLX plus VGM-220",
+      "catalog_number": "25-1452",
+      "price_usd_cents": 119990,
+      "basis": "bundle",
+      "includes": [
+        "VGM-220 color monitor (25-4044)"
+      ],
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rlx",
+          "lines": [
+            37,
+            44
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-1000-rlx-hd-color",
+      "product": "Tandy 1000 RLX HD plus color monitor",
+      "catalog_number": "25-1453",
+      "price_usd_cents": 159990,
+      "basis": "suggested-retail",
+      "includes": [
+        "Color monitor"
+      ],
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rlx",
+          "lines": [
+            292,
+            321
+          ]
+        },
+        {
+          "source_id": "tandy-1000-rlx",
+          "lines": [
+            5,
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-1000-rlx-hd-vga-1992-02",
+      "product": "Tandy 1000 RLX HD plus VGA monitor",
+      "catalog_number": "25-1453",
+      "price_usd_cents": 99990,
+      "basis": "bundle",
+      "available_from": "1992-01",
+      "includes": [
+        "VGA monitor, model unspecified",
+        "40 MB drive",
+        "DeskMate Home Organizer with voice messaging"
+      ],
+      "notes": "The newsletter specifies that the price took effect at the end of January.",
+      "evidence": [
+        {
+          "source_id": "newsletter-1992-02",
+          "lines": [
+            143,
+            151
+          ]
+        },
+        {
+          "source_id": "tandy-1000-rlx",
+          "lines": [
+            5,
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-1000-rsx",
+      "product": "Tandy 1000 RSX",
+      "catalog_number": "25-1455",
+      "price_usd_cents": 79995,
+      "basis": "launch",
+      "includes": [
+        "MS-DOS 5.0",
+        "Print Companion",
+        "America Online",
+        "DeskMate Home Organizer"
+      ],
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rsx",
+          "lines": [
+            9,
+            13
+          ]
+        },
+        {
+          "source_id": "tandy-1000-rsx",
+          "lines": [
+            24,
+            38
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-1000-rsx-hd",
+      "product": "Tandy 1000 RSX HD",
+      "catalog_number": "25-1454",
+      "price_usd_cents": 99995,
+      "basis": "advertised",
+      "includes": [
+        "52 MB SmartDrive",
+        "MS-DOS 5.0",
+        "Print Companion",
+        "America Online",
+        "DeskMate Home Organizer"
+      ],
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rsx",
+          "lines": [
+            9,
+            13
+          ]
+        },
+        {
+          "source_id": "tandy-1000-rsx",
+          "lines": [
+            24,
+            42
+          ]
+        },
+        {
+          "source_id": "newsletter-1992-08",
+          "lines": [
+            97,
+            115
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-1000-rsx-hd-vgm220",
+      "product": "Tandy 1000 RSX HD plus VGM-220",
+      "catalog_number": "25-1454",
+      "price_usd_cents": 129990,
+      "basis": "bundle",
+      "includes": [
+        "VGM-220 color monitor (25-4044)"
+      ],
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rsx",
+          "lines": [
+            15,
+            19
+          ]
+        },
+        {
+          "source_id": "newsletter-1992-08",
+          "lines": [
+            97,
+            115
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ram-rsx-2mb",
+      "product": "2 MB SIMM Kit for RSX",
+      "catalog_number": "25-5137",
+      "price_usd_cents": 14995,
+      "basis": "option",
+      "notes": "Advertised expansion to 3 MB system RAM.",
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rsx",
+          "lines": [
+            153,
+            162
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ram-rsx-4mb",
+      "product": "4 MB SIMM Kit for RSX",
+      "catalog_number": "25-5136",
+      "price_usd_cents": 49995,
+      "basis": "option",
+      "notes": "The source associates this option with 9 MB total system RAM. The kit complement required for that ceiling is unverified.",
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rsx",
+          "lines": [
+            153,
+            162
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vram-rsx-256kb",
+      "product": "256 KB video RAM expansion for RSX",
+      "catalog_number": "25-1082A",
+      "price_usd_cents": 3995,
+      "basis": "option",
+      "notes": "The article calls out the A suffix for 512 KB total VRAM.",
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rsx",
+          "lines": [
+            153,
+            162
+          ]
+        }
+      ]
+    },
+    {
+      "id": "printer-dmp136",
+      "product": "Tandy DMP 136 color dot-matrix printer",
+      "catalog_number": "26-2868",
+      "price_usd_cents": 29995,
+      "basis": "advertised",
+      "evidence": [
+        {
+          "source_id": "printer-dmp136",
+          "lines": [
+            7,
+            15
+          ]
+        }
+      ]
+    },
+    {
+      "id": "printer-dmp136-serial",
+      "product": "RS-232C serial interface for Tandy DMP 136",
+      "catalog_number": "26-2875",
+      "price_usd_cents": 5995,
+      "basis": "option",
+      "evidence": [
+        {
+          "source_id": "printer-dmp136",
+          "lines": [
+            24,
+            25
+          ]
+        }
+      ]
+    },
+    {
+      "id": "omni-profile-486sx-25",
+      "product": "Tandy OMNI Profile 486SX/25 example",
+      "catalog_number": null,
+      "price_usd_cents": 169900,
+      "basis": "advertised",
+      "available_from": "1992-10",
+      "includes": [
+        "4 MB RAM",
+        "120 MB hard disk",
+        "Standard keyboard",
+        "Super VGA monitor"
+      ],
+      "notes": "Example custom Factory Direct configuration. The launch release separately specifies shipping and handling.",
+      "evidence": [
+        {
+          "source_id": "newsletter-1992-10",
+          "lines": [
+            79,
+            84
+          ]
+        },
+        {
+          "source_id": "factory-direct-announcement",
+          "lines": [
+            31,
+            39
+          ]
+        }
+      ]
+    },
+    {
+      "id": "factory-direct-service-plan",
+      "product": "Tandy Factory Direct two-year service plan",
+      "catalog_number": null,
+      "price_usd_cents": 9900,
+      "basis": "option",
+      "notes": "The option extended the one-year warranty to two years and included 90 days of telephone support.",
+      "evidence": [
+        {
+          "source_id": "factory-direct-announcement",
+          "lines": [
+            40,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "id": "retail-deskmate-1988",
+      "product": "DeskMate retail package",
+      "catalog_number": "25-1250",
+      "price_usd_cents": 9995,
+      "basis": "advertised",
+      "notes": "The guide does not give a runtime build number.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 9,
+          "section": "DeskMate"
+        }
+      ]
+    },
+    {
+      "id": "workgroup-companion-1988",
+      "product": "DeskMate Workgroup Companion",
+      "catalog_number": "25-1251",
+      "price_usd_cents": 14995,
+      "basis": "advertised",
+      "catalog_id": "workgroup-companion",
+      "requires": "DeskMate (25-1250) at each station.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 9,
+          "section": "DeskMate Workgroup Companion"
+        }
+      ]
+    },
+    {
+      "id": "tandylink-plus",
+      "product": "TandyLink Board Plus",
+      "catalog_number": "26-5602",
+      "price_usd_cents": 11995,
+      "basis": "option",
+      "notes": "Listed for Tandy 1000 HX and EX.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 9,
+          "section": "DeskMate Workgroup Companion"
+        }
+      ]
+    },
+    {
+      "id": "tandylink-pc",
+      "product": "TandyLink Board PC",
+      "catalog_number": "26-5601",
+      "price_usd_cents": 11995,
+      "basis": "option",
+      "notes": "Listed for other Tandy PC-compatible machines.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 9,
+          "section": "DeskMate Workgroup Companion"
+        }
+      ]
+    },
+    {
+      "id": "schoolmate-1988",
+      "product": "SchoolMate",
+      "catalog_number": "25-1241",
+      "price_usd_cents": 99995,
+      "basis": "advertised",
+      "catalog_id": "schoolmate",
+      "notes": "The catalog names DeskMate and 3Com 3+Share as the system foundations.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 9,
+          "section": "SchoolMate"
+        }
+      ]
+    },
+    {
+      "id": "venture-1988",
+      "product": "Venture",
+      "catalog_number": "25-1249",
+      "price_usd_cents": 34900,
+      "basis": "advertised",
+      "catalog_id": "venture",
+      "requires": "512 KB RAM and hard disk.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 10,
+          "section": "Venture"
+        }
+      ]
+    },
+    {
+      "id": "quicken-deskmate-1988",
+      "product": "Quicken for DeskMate",
+      "catalog_number": "25-1246",
+      "price_usd_cents": 4995,
+      "basis": "advertised",
+      "catalog_id": "quicken",
+      "requires": "512 KB RAM or Tandy 1000 SL.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 10,
+          "section": "QUICKEN"
+        }
+      ]
+    },
+    {
+      "id": "memorymate-deskmate-1988",
+      "product": "MemoryMate for DeskMate",
+      "catalog_number": "25-1247",
+      "price_usd_cents": 6995,
+      "basis": "advertised",
+      "catalog_id": "memorymate",
+      "requires": "384 KB RAM and two floppy drives.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 10,
+          "section": "MemoryMate"
+        }
+      ]
+    },
+    {
+      "id": "homeword-ii-deskmate-1988",
+      "product": "HomeWord II",
+      "catalog_number": "25-1266",
+      "price_usd_cents": 8995,
+      "basis": "advertised",
+      "catalog_id": "homeword-ii",
+      "requires": "512 KB RAM or Tandy 1000 SL.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 10,
+          "section": "HomeWord II"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 51,
+          "section": "HomeWord II"
+        }
+      ]
+    },
+    {
+      "id": "pc-link-starter-1988",
+      "product": "PC-Link starter kit",
+      "catalog_number": "25-1255",
+      "price_usd_cents": 2995,
+      "basis": "advertised",
+      "catalog_id": "pc-link",
+      "includes": [
+        "PC-Link terminal software",
+        "One month of service"
+      ],
+      "requires": "384 KB RAM and modem.",
+      "notes": "The same advertisement lists ongoing access separately at $9.95 a month.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 10,
+          "section": "PC-Link"
+        }
+      ]
+    },
+    {
+      "id": "instant-pages-1988",
+      "product": "Instant Pages",
+      "catalog_number": "25-1262",
+      "price_usd_cents": 4495,
+      "basis": "advertised",
+      "catalog_id": "instant-pages",
+      "requires": "512 KB RAM or Tandy 1000 SL.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 10,
+          "section": "Instant Pages"
+        }
+      ]
+    },
+    {
+      "id": "fundamentals-25-1233",
+      "product": "The FUNdamentals, DeskMate edition",
+      "catalog_number": "25-1233",
+      "price_usd_cents": 1995,
+      "basis": "advertised",
+      "catalog_id": "fundamentals-deskmate",
+      "notes": "Page 11 assigns this SKU to the SL and page 28 to the TL.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "The FUNdamentals"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 28,
+          "section": "The FUNdamentals"
+        }
+      ]
+    },
+    {
+      "id": "fundamentals-25-1236",
+      "product": "The FUNdamentals, DeskMate edition",
+      "catalog_number": "25-1236",
+      "price_usd_cents": 1995,
+      "basis": "advertised",
+      "catalog_id": "fundamentals-deskmate",
+      "notes": "Page 11 assigns this SKU to the TL and page 28 to the SL.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "The FUNdamentals"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 28,
+          "section": "The FUNdamentals"
+        }
+      ]
+    },
+    {
+      "id": "mathtalk-1988",
+      "product": "MathTalk",
+      "catalog_number": "90-3366",
+      "price_usd_cents": 3495,
+      "basis": "advertised",
+      "catalog_id": "mathtalk",
+      "available_from": "1988-10-30",
+      "requires": "384 KB RAM.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "MathTalk"
+        }
+      ]
+    },
+    {
+      "id": "kidtalk-1988",
+      "product": "KidTalk",
+      "catalog_number": "90-3365",
+      "price_usd_cents": 3495,
+      "basis": "advertised",
+      "catalog_id": "kidtalk",
+      "available_from": "1988-10-30",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "KidTalk"
+        }
+      ]
+    },
+    {
+      "id": "speller-bee-1988",
+      "product": "Speller Bee",
+      "catalog_number": "25-1232",
+      "price_usd_cents": 3495,
+      "basis": "advertised",
+      "catalog_id": "speller-bee",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "Speller Bee"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 26,
+          "section": "Speller Bee"
+        }
+      ],
+      "notes": "The guide gives conflicting planned dates for the same SKU. Page 11 states 1988-09-30 and page 26 states 1988-10-30."
+    },
+    {
+      "id": "smoothtalker-1988",
+      "product": "SmoothTalker",
+      "catalog_number": "90-3368",
+      "price_usd_cents": 3495,
+      "basis": "advertised",
+      "catalog_id": "smoothtalker",
+      "available_from": "1988-10-30",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "Software-only text-to-speech listing"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 26,
+          "section": "SmoothTalker"
+        }
+      ]
+    },
+    {
+      "id": "computer-mad-libs-1988",
+      "product": "Computer MAD LIBS",
+      "catalog_number": "90-3348",
+      "price_usd_cents": 1995,
+      "basis": "advertised",
+      "catalog_id": "computer-mad-libs",
+      "available_from": "1988-10-30",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "Computer MAD LIBS"
+        }
+      ]
+    },
+    {
+      "id": "print-magic-deskmate-1988",
+      "product": "Print Magic",
+      "catalog_number": "25-1265",
+      "price_usd_cents": 5495,
+      "basis": "advertised",
+      "catalog_id": "print-magic",
+      "requires": "512 KB RAM or Tandy 1000 SL.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "Print Magic"
+        }
+      ]
+    },
+    {
+      "id": "childrens-writing-and-publishing-center-1988",
+      "product": "The Children's Writing & Publishing Center",
+      "catalog_number": "25-1237",
+      "price_usd_cents": 5495,
+      "basis": "advertised",
+      "catalog_id": "childrens-writing-and-publishing-center",
+      "available_from": "1988-10-30",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "The Children's Writing & Publishing Center"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 29,
+          "section": "The Children's Writing & Publishing Center"
+        }
+      ]
+    },
+    {
+      "id": "music-studio-3-1988",
+      "product": "The Music Studio 3.0",
+      "catalog_number": "25-1234",
+      "price_usd_cents": 7995,
+      "basis": "advertised",
+      "catalog_id": "music-studio",
+      "available_from": "1988-10-30",
+      "requires": "512 KB RAM or Tandy 1000 SL.",
+      "notes": "Advertises both MIDI directions and a digitized sound editor. These functions do not establish SNG compatibility.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "The Music Studio 3.0"
+        }
+      ]
+    },
+    {
+      "id": "factory-direct-486sx25-base",
+      "product": "OMNI-Profile 486SX/25 base configuration",
+      "catalog_number": "259-5146",
+      "price_usd_cents": 79600,
+      "basis": "advertised",
+      "available_from": "1992-11-10",
+      "notes": "Reported in a transcription of a local Radio Shack price sheet.",
+      "evidence": [
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            17,
+            17
+          ]
+        },
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            6,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "factory-direct-120mb",
+      "product": "120 MB hard drive option",
+      "catalog_number": "259-4127",
+      "price_usd_cents": 32900,
+      "basis": "advertised",
+      "available_from": "1992-11-10",
+      "notes": "Reported in a transcription of a local Radio Shack price sheet.",
+      "evidence": [
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            27,
+            27
+          ]
+        },
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            6,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "factory-direct-4mb",
+      "product": "Memory upgrade to 4 MB total",
+      "catalog_number": "259-7210",
+      "price_usd_cents": 4500,
+      "basis": "advertised",
+      "available_from": "1992-11-10",
+      "notes": "Reported in a transcription of a local Radio Shack price sheet.",
+      "evidence": [
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            38,
+            38
+          ]
+        },
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            6,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "factory-direct-cdr1000",
+      "product": "CDR1000 internal CD-ROM drive",
+      "catalog_number": "259-1077",
+      "price_usd_cents": 19900,
+      "basis": "advertised",
+      "available_from": "1992-11-10",
+      "notes": "Reported in a transcription of a local Radio Shack price sheet.",
+      "evidence": [
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            78,
+            78
+          ]
+        },
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            6,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "factory-direct-vgm441",
+      "product": "VGM-441 color monitor",
+      "catalog_number": "259-4048",
+      "price_usd_cents": 39900,
+      "basis": "advertised",
+      "available_from": "1992-11-10",
+      "notes": "Reported in a transcription of a local Radio Shack price sheet.",
+      "evidence": [
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            96,
+            96
+          ]
+        },
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            6,
+            12
+          ]
+        }
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "id": "tandy-rl-announcement-day",
+      "subject": "Tandy 1000 RL",
+      "claim": "The article places the New York introduction on July 25 and cites the 1991 computer catalog elsewhere. The announcement year is implicit in this copy.",
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rl",
+          "lines": [
+            5,
+            9
+          ]
+        },
+        {
+          "source_id": "tandy-1000-rl",
+          "lines": [
+            319,
+            323
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-rlx-announcement-day",
+      "subject": "Tandy 1000 RLX",
+      "claim": "The article gives April 18 as the introduction day. The February 1992 newsletter establishes that the hard-drive model was already being repriced by then.",
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rlx",
+          "lines": [
+            5,
+            11
+          ]
+        },
+        {
+          "source_id": "newsletter-1992-02",
+          "lines": [
+            143,
+            151
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-rlx-draw-fonts",
+      "subject": "Draw scalable font extension",
+      "claim": "A Radio Shack article describes three included scalable fonts and additional fonts sold through Express Order for the RLX edition of Draw. It gives no order numbers or typeface names.",
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rlx-software",
+          "lines": [
+            175,
+            194
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-rsx-bundle",
+      "subject": "RSX versus RLX software bundles",
+      "claim": "The RLX list includes PC-Link. The RSX article lists eight core applications without PC-Link and names America Online and Print Companion separately in the RSX bundle.",
+      "evidence": [
+        {
+          "source_id": "tandy-1000-rlx",
+          "lines": [
+            151,
+            155
+          ]
+        },
+        {
+          "source_id": "tandy-1000-rsx",
+          "lines": [
+            32,
+            38
+          ]
+        },
+        {
+          "source_id": "tandy-1000-rsx",
+          "lines": [
+            145,
+            148
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-dmp136-deskmate",
+      "subject": "DeskMate printing on the DMP 136",
+      "claim": "The period article directs DeskMate users to its IBM Proprinter driver for monochrome text and graphics. It describes color via printer emulation with compatible applications and reports no DeskMate color driver planned at that time.",
+      "evidence": [
+        {
+          "source_id": "printer-dmp136",
+          "lines": [
+            27,
+            48
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-tl3-discontinuation",
+      "subject": "Tandy 1000 TL/3",
+      "claim": "The July 1992 vendor newsletter reports that the last TL-series machine, the TL/3, was discontinued in 1991. It separately notes the TL/2's 8-bit bus despite its 80286 CPU.",
+      "evidence": [
+        {
+          "source_id": "newsletter-1992-07",
+          "lines": [
+            70,
+            83
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tandy-vgm450-replacement",
+      "subject": "Tandy VGM-450 monitor",
+      "claim": "A vendor article identifies VGM-450 25-4049 as the replacement for VGM-441 259-4048. The acquired November 1992 Factory Direct price-sheet transcription independently reports that predecessor number.",
+      "evidence": [
+        {
+          "source_id": "vgm-450-announcement",
+          "lines": [
+            5,
+            14
+          ]
+        },
+        {
+          "source_id": "factory-direct-price-sheet-1992",
+          "lines": [
+            96,
+            96
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-write-price-unconfirmed",
+      "subject": "Q&A Write for DeskMate",
+      "claim": "A Delphi participant remembers approximately $99 and explicitly expresses uncertainty. Treat this as a primary catalog search lead.",
+      "evidence": [
+        {
+          "source_id": "qa-write-discussion",
+          "lines": [
+            1534,
+            1545
+          ]
+        }
+      ]
+    },
+    {
+      "id": "factory-direct-order-flow",
+      "subject": "Tandy Factory Direct",
+      "claim": "The October 2, 1992 release announces October delivery. The October newsletter describes selecting specifications and paying at a Radio Shack store, with the system built and shipped by Tandy.",
+      "evidence": [
+        {
+          "source_id": "factory-direct-announcement",
+          "lines": [
+            9,
+            17
+          ]
+        },
+        {
+          "source_id": "newsletter-1992-10",
+          "lines": [
+            18,
+            37
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fundamentals-sku-conflict",
+      "subject": "The FUNdamentals DeskMate retail variants",
+      "claim": "The Express Order catalog reverses the same two SL and TL SKUs between pages 11 and 28. The two prices agree. Disk or box evidence is needed to assign a hardware variant to either SKU. Page 28 separately lists an HX/TX edition at 25-1186 without the DeskMate interface designation.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 11,
+          "section": "The FUNdamentals"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 28,
+          "section": "The FUNdamentals"
+        }
+      ]
+    },
+    {
+      "id": "qa-write-dos-vs-deskmate",
+      "subject": "Q&A Write retail editions",
+      "claim": "The 1988 catalog puts 90-3265 at $129.00 in DOS Word Processors. Its layout marks nearby HomeWord II with the DeskMate logo, but lacks that indicator for Q&A Write. This is evidence for the ordinary DOS listing. The DeskMate edition needs its own price and SKU evidence.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 51,
+          "section": "Q&A Write"
+        }
+      ]
+    },
+    {
+      "id": "catalog-platform-separation",
+      "subject": "Distinct platform generations",
+      "claim": "The same guide separately offers XENIX DeskMate, DeskMate Model 4, Color Computer DeskMate and Color Computer DeskMate 3. These are platform-specific listings. Their catalog entries do not establish PC DeskMate 3 compatibility.",
+      "evidence": [
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 57,
+          "section": "XENIX DeskMate"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 65,
+          "section": "DeskMate Model 4"
+        },
+        {
+          "source_id": "express-order-guide-1988",
+          "page": 81,
+          "section": "Color DeskMate"
+        }
+      ]
+    }
+  ],
+  "acquisition_leads": [
+    {
+      "title": "1992 Tandy Factory Direct price list",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/direct.txt",
+      "snapshot_status": "pending",
+      "evidence": {
+        "source_id": "documents-index",
+        "lines": [
+          291,
+          292
+        ]
+      },
+      "resolved_by_source_id": "factory-direct-price-sheet-1992"
+    },
+    {
+      "title": "Express Order Software Buyer's Guide",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/expsoft.zip",
+      "snapshot_status": "pending",
+      "evidence": {
+        "source_id": "documents-index",
+        "lines": [
+          337,
+          338
+        ]
+      },
+      "resolved_by_source_id": "express-order-guide-1988"
+    },
+    {
+      "title": "1987 Radio Shack catalog, computer pages",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/rscat87.zip",
+      "snapshot_status": "pending",
+      "evidence": {
+        "source_id": "documents-index",
+        "lines": [
+          489,
+          490
+        ]
+      }
+    },
+    {
+      "title": "1989 Radio Shack catalog, computer pages",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/rscat89.zip",
+      "snapshot_status": "pending",
+      "evidence": {
+        "source_id": "documents-index",
+        "lines": [
+          491,
+          492
+        ]
+      }
+    },
+    {
+      "title": "1990 Radio Shack catalog, computer pages",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/rscat90.zip",
+      "snapshot_status": "pending",
+      "evidence": {
+        "source_id": "documents-index",
+        "lines": [
+          493,
+          494
+        ]
+      }
+    },
+    {
+      "title": "1991 Radio Shack catalog, computer pages",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/rscat91.zip",
+      "snapshot_status": "pending",
+      "evidence": {
+        "source_id": "documents-index",
+        "lines": [
+          495,
+          496
+        ]
+      }
+    },
+    {
+      "title": "1992 Radio Shack catalog, computer pages",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/rscat92.zip",
+      "snapshot_status": "pending",
+      "evidence": {
+        "source_id": "documents-index",
+        "lines": [
+          497,
+          498
+        ]
+      }
+    },
+    {
+      "title": "1985 Radio Shack Computer Centers catalog",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/tccat85.zip",
+      "snapshot_status": "pending",
+      "evidence": {
+        "source_id": "documents-index",
+        "lines": [
+          583,
+          584
+        ]
+      }
+    },
+    {
+      "title": "1987 Tandy Computer Catalog",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/tccat87.zip",
+      "snapshot_status": "pending",
+      "evidence": {
+        "source_id": "documents-index",
+        "lines": [
+          585,
+          585
+        ]
+      }
+    },
+    {
+      "title": "1988 Tandy Computer Catalog & Software Reference Guide",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/tccat88.zip",
+      "snapshot_status": "pending",
+      "evidence": {
+        "source_id": "documents-index",
+        "lines": [
+          586,
+          587
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,1589 @@
+{
+  "schema_version": 1,
+  "updated": "2026-11-19",
+  "records": [
+    {
+      "id": "express-publisher",
+      "title": "Power Up! Express Publisher 1.00 for DeskMate",
+      "category": "software",
+      "status": "observed-bytes",
+      "description": "The application declares version 1.00 and its help confirms 1.0. Three flat disk-file ZIPs have a 1991 timestamp cohort and a separate scanned manual. An installer path stages a DMFONT.RES update for shared DeskMate. The standalone launcher displays runtime version 03.05.00. DOCS.EPB contains four EPT templates with a common 00 04 JORGE 00 initial marker. The manual identifies Atech FastFonts as supported resources.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Express-Publisher-for-DeskMate/EPDisk1.zip",
+          "bytes": 661409,
+          "sha256": "9427a2f71d12c2bbb8a6c7b7fc2dfe8655d4bc14241fd1362d78992334c4bed2",
+          "members": [
+            {
+              "path": [
+                "DISKMAP.350"
+              ],
+              "bytes": 81,
+              "sha256": "2f8f35e722fd0c90b03b4f8fc8ba499bc593678062b3be4c618ee4281a8ee606"
+            },
+            {
+              "path": [
+                "INSTALL.PDM"
+              ],
+              "bytes": 39983,
+              "sha256": "cb27efc639468752cd789f8654aa4f40ba431a3fc9106068a669d8947b7b2e82"
+            },
+            {
+              "path": [
+                "EPDM.EPB",
+                "EPDM.PDM"
+              ],
+              "bytes": 361194,
+              "sha256": "744f6229d64391d025fe9f9770c51a35deb1b0290125d2e7a7e25ebf74b50d8b"
+            },
+            {
+              "path": [
+                "DOCS.EPB",
+                "AGENDA.EPT"
+              ],
+              "bytes": 4192,
+              "sha256": "b604835921b29099255c31e963360f4dae6c26b4a660fe2aeadddfddbd1bfcb9"
+            },
+            {
+              "path": [
+                "DOCS.EPB",
+                "INVITE.EPT"
+              ],
+              "bytes": 4176,
+              "sha256": "a05e34bcbf682f13b88defb35a341a274b97743ead7f391a977dabcff5e73e30"
+            },
+            {
+              "path": [
+                "DOCS.EPB",
+                "NEWSLTR.EPT"
+              ],
+              "bytes": 4655,
+              "sha256": "f5ffa524a3d4e7203e02ff1a1ffe996ab85a788fb838572d39c8825a50e242ba"
+            },
+            {
+              "path": [
+                "DOCS.EPB",
+                "NEWSLTR2.EPT"
+              ],
+              "bytes": 4873,
+              "sha256": "84670f9f098c131b354503428fb967b8b4740a3c1b28eebe85c53e208e8b639a"
+            }
+          ]
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Express-Publisher-for-DeskMate/EPDisk2.zip",
+          "bytes": 540301,
+          "sha256": "741a1e9b68df704562ef8df2780acf7776be97736da8fb680765e9e370ed9556",
+          "members": [
+            {
+              "path": [
+                "EPDMHELP.EPB",
+                "EPDMHELP.HLP"
+              ],
+              "bytes": 43687,
+              "sha256": "987a68403806c64513a1cdbe42d1315bf6a996e8f50608005521bd67c6e9021f",
+              "locator": "Title and version header"
+            }
+          ]
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Express-Publisher-for-DeskMate/EPDisk3.zip",
+          "bytes": 691674,
+          "sha256": "9138249ce155c82507c9fa17a9db503f3f34ae18bae136a99bcaa3f9088e79b6",
+          "members": [
+            {
+              "path": [
+                "DMFONT.EPB",
+                "DMFONT.RES"
+              ],
+              "bytes": 39949,
+              "sha256": "a69f2e8138b0e100f90673b9d62d5807459323e4023cf24feae1c925315cc16d"
+            },
+            {
+              "path": [
+                "RUNTIME2.EPB",
+                "EPDM.EXE"
+              ],
+              "bytes": 19147,
+              "sha256": "51325106eb6f933a078b8eb6a473a1682a4e653c4ad6193fffae82aa9f2e4f4c"
+            }
+          ]
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Express-Publisher-for-DeskMate/EPMan.zip",
+          "bytes": 6824572,
+          "sha256": "b612fae43988e5be0223689beab240396510281bb0f477c13e24cea8a4831f4e",
+          "members": [
+            {
+              "path": [
+                "epman.pdf"
+              ],
+              "bytes": 7585927,
+              "sha256": "801db45f517f20662e39e6bb65dea7f58eea8dc565c41aacabee224e93d035db",
+              "locator": "PDF pp. 155 and 197–198, Atech FastFonts installation and family list"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "express-publisher"
+      ],
+      "formats": [
+        "EPT",
+        "FF1",
+        "PRS"
+      ],
+      "related_refs": [
+        "express-fonts",
+        "delphi-ff1",
+        "dm-programs"
+      ]
+    },
+    {
+      "id": "express-fonts",
+      "title": "Express Publisher FF1 font resources",
+      "category": "font",
+      "status": "observed-bytes",
+      "description": "The two disk sets contain eight FF1 occurrences and five hashes. Cobb, Dixon and Marin match the full-size project pins. Dingbat2 and Springer each have ten descriptors and 224 glyphs at 1,000 em units. Alternate marker bytes distinguish their directory and glyph-index profiles.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Express-Publisher-for-DeskMate/EPDisk1.zip",
+          "bytes": 661409,
+          "sha256": "9427a2f71d12c2bbb8a6c7b7fc2dfe8655d4bc14241fd1362d78992334c4bed2",
+          "members": [
+            {
+              "path": [
+                "FONT.EPB",
+                "COBB.FF1"
+              ],
+              "bytes": 61503,
+              "sha256": "891e9f07ed2d9fd5f5c8e75d0facd3d4094e891096a6e77a6a8b3db1518a265f"
+            },
+            {
+              "path": [
+                "FONT.EPB",
+                "DIXON.FF1"
+              ],
+              "bytes": 42049,
+              "sha256": "f6cd8cedd1b1a3e6180a8cfca2206f8a5d20c5866bad3629caaf4a87793ff1d7"
+            },
+            {
+              "path": [
+                "FONT.EPB",
+                "MARIN.FF1"
+              ],
+              "bytes": 55782,
+              "sha256": "6ecdba8a835ce2b37481552e9d72027c9b3481e5ee1a2a03566b5e22cd85f0a4"
+            }
+          ]
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Express-Publisher-for-DeskMate/EPDisk2.zip",
+          "bytes": 540301,
+          "sha256": "741a1e9b68df704562ef8df2780acf7776be97736da8fb680765e9e370ed9556",
+          "members": [
+            {
+              "path": [
+                "XTRAFONT.EPB",
+                "DINGBAT2.FF1"
+              ],
+              "bytes": 105653,
+              "sha256": "0f32bc19d21d8245c6a8cb0a4c6ca077de8a66d37277437966b89857038507a9"
+            },
+            {
+              "path": [
+                "XTRAFONT.EPB",
+                "SPRINGER.FF1"
+              ],
+              "bytes": 68611,
+              "sha256": "6506188b6fa4e15e7369952f0ee2cbe5778bec1aa0a8ea478af246375b6b6039"
+            }
+          ]
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Express-Publisher-for-DeskMate/EPDisk3.zip",
+          "bytes": 691674,
+          "sha256": "9138249ce155c82507c9fa17a9db503f3f34ae18bae136a99bcaa3f9088e79b6",
+          "members": [
+            {
+              "path": [
+                "RUNTIME2.EPB",
+                "COBB.FF1"
+              ],
+              "bytes": 61503,
+              "sha256": "891e9f07ed2d9fd5f5c8e75d0facd3d4094e891096a6e77a6a8b3db1518a265f"
+            },
+            {
+              "path": [
+                "RUNTIME2.EPB",
+                "DIXON.FF1"
+              ],
+              "bytes": 42049,
+              "sha256": "f6cd8cedd1b1a3e6180a8cfca2206f8a5d20c5866bad3629caaf4a87793ff1d7"
+            },
+            {
+              "path": [
+                "RUNTIME2.EPB",
+                "MARIN.FF1"
+              ],
+              "bytes": 55782,
+              "sha256": "6ecdba8a835ce2b37481552e9d72027c9b3481e5ee1a2a03566b5e22cd85f0a4"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "express-publisher"
+      ],
+      "formats": [
+        "FF1"
+      ],
+      "related_refs": [
+        "express-publisher",
+        "delphi-ff1",
+        "rlx-fonts"
+      ],
+      "project_refs": [
+        "../research/draw-fonts-20261119.md",
+        "../research/typography-lab-20261119.md"
+      ]
+    },
+    {
+      "id": "rlx-fonts",
+      "title": "1000 RLX HD-B outline and printer-resource variants",
+      "category": "font",
+      "status": "observed-bytes",
+      "description": "Dixon and Marin retain every stock parsed glyph and change descriptor or inner-header bytes and the pair tables. Cobb contains a glyph extent declaring more bytes than supplied and has substantial byte differences from the stock file. Treat as a distinct invalid snapshot pending corroboration.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/1000RLX_HD-B.zip",
+          "bytes": 2431617,
+          "sha256": "c19e395880113fed55ad50e8a8d1e05b6cdf87ca883f700b0d28dd062882463f",
+          "members": [
+            {
+              "path": [
+                "DESKMATE/COBB.FF1"
+              ],
+              "bytes": 25087,
+              "sha256": "8232dea19ee77fecbb26f45e174d852b1ab171d4f256e9dca19ec46d356344c9"
+            },
+            {
+              "path": [
+                "DESKMATE/DIXON.FF1"
+              ],
+              "bytes": 41713,
+              "sha256": "d799a722dbc4a36da652c52db6f19d46a65b8618ea3f10261f86e64d7a9e1de3"
+            },
+            {
+              "path": [
+                "DESKMATE/MARIN.FF1"
+              ],
+              "bytes": 55266,
+              "sha256": "baa6ec3a32a11657a7fcc11d4736528b82a219ad340c433f7093219d01f9c2a1"
+            },
+            {
+              "path": [
+                "DESKMATE/DMFONT.RES"
+              ],
+              "bytes": 39965,
+              "sha256": "ba13300779c8157d7a73e86c330a9253abc7879e648920f2414f429f8025493b"
+            }
+          ]
+        }
+      ],
+      "formats": [
+        "FF1"
+      ],
+      "related_refs": [
+        "express-fonts"
+      ]
+    },
+    {
+      "id": "dm-music",
+      "title": "DM_Music 1.04",
+      "category": "converter",
+      "status": "observed-bytes",
+      "description": "Windows x86 GUI converter by W. H. Baldwin with TVDog. The PE version resource and included changelog both identify 1.04. The ZIP has one program and one readme. The readme describes instrument and dynamic changes, tempo placement, and player workarounds for a set of historical repeat cases.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/dm_music.zip",
+          "bytes": 24629,
+          "sha256": "3f25b8f3367659fc89abd8617a5d4dc9e448e6ee5de51aec5d7f02c0402db902",
+          "members": [
+            {
+              "path": [
+                "DM_Music.exe"
+              ],
+              "bytes": 77824,
+              "sha256": "b84f1a9a9dab3252c6c85127a7c9d25f68c0cde53a572ede80a4674230a02150"
+            },
+            {
+              "path": [
+                "DM_Music_Readme.txt"
+              ],
+              "bytes": 7854,
+              "sha256": "14c9bbd21742d42d736ed8c7befaade0a35e2c694729b53df298b0cd9c8cb0d2",
+              "locator": "Version history plus repeat limitations"
+            }
+          ]
+        },
+        {
+          "url": "https://groups.google.com/g/comp.sys.tandy/c/fq1OO44yLtI"
+        }
+      ],
+      "products": [
+        "dm-music"
+      ],
+      "formats": [
+        "SNG",
+        "HDS"
+      ],
+      "related_refs": [
+        "sdk-pssj",
+        "sdk-sound"
+      ],
+      "project_refs": [
+        "../research/music-playback-trace-20261118.md"
+      ]
+    },
+    {
+      "id": "videomem",
+      "title": "Video memory settings in native DeskMate Text",
+      "category": "document",
+      "status": "observed-bytes",
+      "description": "Native formatted Text example with the stock header, six five-byte margin records and no pictures. The expanded reader projects 34 lines and 2,016 characters while preserving all six control offsets.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/videomem.zip",
+          "bytes": 1179,
+          "sha256": "c17c22dea8298746738d7882d970188ca4d60eb67672cdeaa1fae8cbadc258f8",
+          "members": [
+            {
+              "path": [
+                "VIDEOMEM.DOC"
+              ],
+              "bytes": 2102,
+              "sha256": "6e22ab69c4fed4c3ee3052ed6564f2bae65d3a995783376be1ac3e909aec5189",
+              "locator": "margin records at 0x1A, 0x54, 0x1CC, 0x1DC, 0x228 and 0x238"
+            }
+          ]
+        }
+      ],
+      "formats": [
+        "DOC"
+      ],
+      "related_refs": [
+        "undesk",
+        "qa-write"
+      ],
+      "project_refs": [
+        "../reference/tandy-text-format.md"
+      ]
+    },
+    {
+      "id": "cblmgc",
+      "title": "Printer and serial pinouts in Print Magic",
+      "category": "document",
+      "status": "observed-bytes",
+      "description": "Two preserved page documents carry the PMPAGE plus NUL marker. They provide independent examples for comparison with synthetic saves and bundled Print Magic art and fonts.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/cblmgc.zip",
+          "bytes": 19835,
+          "sha256": "16b8eca6fd4db839bd878210b51e73bdaadc5eb80c878d12de5d90238fd27d2d",
+          "members": [
+            {
+              "path": [
+                "PRNTRINF.PMP"
+              ],
+              "bytes": 24061,
+              "sha256": "6135ab3344be569f9debfa0995192a4a518fcd7d9ee33048f4502362b4d2abc9"
+            },
+            {
+              "path": [
+                "RS232INF.PMP"
+              ],
+              "bytes": 24139,
+              "sha256": "c73b9350568f191ec723fe32bb76115ac196e5116d412705deab9d2281d7fe3b"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "print-magic"
+      ],
+      "formats": [
+        "PMP"
+      ],
+      "related_refs": [
+        "print-magic"
+      ]
+    },
+    {
+      "id": "qa-write",
+      "title": "DeskMate Q&A Write 1.00",
+      "category": "software",
+      "status": "observed-bytes",
+      "description": "Documentation identifies the Symantec release as 1.00. The launcher displays runtime 03.03.01 and contains the separate DESKMATE$03.01 890725$ marker. The 19-file package includes DMTOQWD.PDM and six device-specific FNT libraries.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Q%26A-Write/QWD.zip",
+          "bytes": 223748,
+          "sha256": "aa62e0288470af13b65d32c69414176b723ba5dabb591dd8824f5d82ad98200e",
+          "members": [
+            {
+              "path": [
+                "QWD.EXE"
+              ],
+              "bytes": 16462,
+              "sha256": "f999db4c36e56336e6c8a99d2dfbdf64a5b5a9ce412a093db0e6c1dc00934f07"
+            },
+            {
+              "path": [
+                "QWD.PDM"
+              ],
+              "bytes": 139472,
+              "sha256": "39e803834c8e17fd6f2e6388b99d699a76f2fc8c675d4c7f1949b4613d15874b"
+            },
+            {
+              "path": [
+                "DMTOQWD.PDM"
+              ],
+              "bytes": 15131,
+              "sha256": "4d77414f8031d91920780e377d85b56b171f11bd7e00ecdcd192d8728dd833e0"
+            },
+            {
+              "path": [
+                "EPSONFX.FNT"
+              ],
+              "bytes": 4096,
+              "sha256": "fe07cc6cd0dbc3d62eb6cda46201b7aedd3e7a5fb6515e19aefb0fe0bf5efa20"
+            },
+            {
+              "path": [
+                "EPSONLQ.FNT"
+              ],
+              "bytes": 20480,
+              "sha256": "0c05150bbec74427f95d3abece99ecb40985aad294d1cd45dce3a1a5fb621806"
+            },
+            {
+              "path": [
+                "TANDY21.FNT"
+              ],
+              "bytes": 13824,
+              "sha256": "72b03a1c00163fb0686c326689d641c79214ffaa0636a68c3b7ea5d7efe41b32"
+            },
+            {
+              "path": [
+                "TANDY130.FNT"
+              ],
+              "bytes": 8704,
+              "sha256": "445286ccd403a3d60aa4da3bfd6c923ad4465126ffab3cf3b31e01efa27d583c"
+            },
+            {
+              "path": [
+                "TANDYIBM.FNT"
+              ],
+              "bytes": 10240,
+              "sha256": "19b92a522be4092371315e53cdd69a425d66742231ee5a4a2640168e2f53846a"
+            },
+            {
+              "path": [
+                "TANDYLP1.FNT"
+              ],
+              "bytes": 7168,
+              "sha256": "c72ce0158c96a2bae41c60cd4c6c42f6f8831e43e18fc04fb6d6316856a1cae5"
+            },
+            {
+              "path": [
+                "QWD.DIS"
+              ],
+              "bytes": 106512,
+              "sha256": "ff5cdc5c9b0c7b71872e9fd776982593ec823287d695b8edef721fc3bb804c44",
+              "locator": "Product name and version heading"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "qa-write"
+      ],
+      "formats": [
+        "FNT"
+      ],
+      "related_refs": [
+        "qna-printer-fonts",
+        "videomem",
+        "delphi-ff1"
+      ]
+    },
+    {
+      "id": "qna-printer-fonts",
+      "title": "Q&A Write printer font modification note",
+      "category": "document",
+      "status": "observed-bytes",
+      "description": "Describes printer selection strings, control sequences and spacing values in a printer-font library using IBM ProPrinter as an example. The measured Q&A release supplies other printer families to compare against the note.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dmqnafnt.txt",
+          "bytes": 6013,
+          "sha256": "50f613d3c1b3d76ece1e5ef7e74440870de4d39eaee8326c13b95aed4f1ae8e5"
+        }
+      ],
+      "products": [
+        "qa-write"
+      ],
+      "formats": [
+        "FNT"
+      ],
+      "related_refs": [
+        "qa-write",
+        "print-magic",
+        "express-publisher"
+      ]
+    },
+    {
+      "id": "print-magic",
+      "title": "Print Magic 1.1 for DeskMate",
+      "category": "software",
+      "status": "observed-bytes",
+      "description": "Epyx copyright 1988 and product version 1.1 occur in PM.EXE. The package has 34 graphics and 15 font members. A catalog readme reports compatibility with DeskMate 3.00 through 3.02, pending native testing.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Print-Magic/pm.zip",
+          "bytes": 368836,
+          "sha256": "3dc544dbd6d6c7ecaa61cfb64717d1895a4c38e983a3fd309132153b2b05c90b",
+          "members": [
+            {
+              "path": [
+                "PM.EXE"
+              ],
+              "bytes": 13593,
+              "sha256": "1b4d3ca336d29922f890317b9d8c3bcf743997d9e5e1b20389f67c7b872dc050"
+            },
+            {
+              "path": [
+                "PM.PDM"
+              ],
+              "bytes": 183199,
+              "sha256": "de4262bf6945dd167b1544608d52393aecbf1737cf30ccb4bb6864219cede5ad"
+            }
+          ]
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Print-Magic/readme.txt",
+          "bytes": 97,
+          "sha256": "b413d334bdef12e9f45c61ce45c44ab13ff215d54914fad6d028c7b04c8b2980"
+        }
+      ],
+      "products": [
+        "print-magic"
+      ],
+      "formats": [
+        "PMP",
+        "PMG",
+        "PMF"
+      ],
+      "related_refs": [
+        "cblmgc",
+        "instant-pages"
+      ]
+    },
+    {
+      "id": "instant-pages",
+      "title": "Instant Pages 1.0",
+      "category": "software",
+      "status": "observed-bytes",
+      "description": "IP.EXE carries Robert P. Plummer copyright. IP.PDM identifies version 1.0. The acquired program and data bundle contains 125 IPD members, companion resource modules and hard-disk installation scripts.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Instant-Pages-for-DeskMate/instant.zip",
+          "bytes": 317348,
+          "sha256": "504d2de4176166e66bb2fa747139ccdb59ff634cad8543c8477d19ab12f9163a",
+          "members": [
+            {
+              "path": [
+                "IP.EXE"
+              ],
+              "bytes": 15900,
+              "sha256": "67e6fb339b907db8b8072a959872e9d825e77c154d4c4c9f6e64f0c1c740a97f"
+            },
+            {
+              "path": [
+                "IP.PDM"
+              ],
+              "bytes": 77053,
+              "sha256": "4e6f7da039d489ecc41010e9bc1d41d5f68c35c95d63c1684b8021d8a2620baf"
+            },
+            {
+              "path": [
+                "INSTALL.BAT"
+              ],
+              "bytes": 4046,
+              "sha256": "f658711dc56da58a65924e00b4c35dd9b8824037dd926f534123afe49b051a77"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "instant-pages"
+      ],
+      "formats": [
+        "IPD"
+      ],
+      "related_refs": [
+        "print-magic"
+      ]
+    },
+    {
+      "id": "backup-pro",
+      "title": "Backup Pro 1.0",
+      "category": "software",
+      "status": "observed-bytes",
+      "description": "BP.PDM identifies version 1.0. Its timer identifies Software Toolworks and 1989. The archive includes a launcher, PDM, DeskMate configuration, help and standalone backup inspection utilities.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Backup-Pro-for-DeskMate/bp-720k.zip",
+          "bytes": 467142,
+          "sha256": "b5825e438c41dc0b97f98385da34879f0efb360f574b01253b0b72620716429e",
+          "members": [
+            {
+              "path": [
+                "BP.EXE"
+              ],
+              "bytes": 15992,
+              "sha256": "2dd7c457292285be0082cfb8db8fb997604044575fc2df936a1688ab796b2719"
+            },
+            {
+              "path": [
+                "BP.PDM"
+              ],
+              "bytes": 73569,
+              "sha256": "f25a4f48b86015a147ccc2aae97f6b2502296c9fa73d86e60d94bbd6f4685689"
+            },
+            {
+              "path": [
+                "BPT.COM"
+              ],
+              "bytes": 6699,
+              "sha256": "5054ee76ed9a5aa1e5ee17e96c36156a0184b8b2784a2f7598d5556d9449fd86"
+            },
+            {
+              "path": [
+                "BPUTILS.EXE"
+              ],
+              "bytes": 31471,
+              "sha256": "c1d7e0b805205e3bb537ce6b0c9d7d8fbd0ee9fbae8572e55bf895e5c80d6d12"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "backup-pro"
+      ]
+    },
+    {
+      "id": "solitaire-poker",
+      "title": "DeskMate Solitaire and Poker bundle",
+      "category": "software",
+      "status": "observed-bytes",
+      "description": "Two program and PDM pairs, each with its own help. Both launchers display runtime 03.05.00 and embed DESKMATE$05.00 901001$. The Poker help describes launching Solitaire from the application.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Solitaire-Poker/SOL.zip",
+          "bytes": 335557,
+          "sha256": "e0ebbb62a7fd9f4549974b6119b72b1e58bf46b7095d0125deb02cf377460b8b",
+          "members": [
+            {
+              "path": [
+                "SOL.EXE"
+              ],
+              "bytes": 19147,
+              "sha256": "02f8cca90ea4bf04265f3f4d77aa0024ca0ddaa3588221c738970a175aec2119"
+            },
+            {
+              "path": [
+                "SOL.PDM"
+              ],
+              "bytes": 78664,
+              "sha256": "8d60ccb0a5d658f05c52ff0555a7b29f99407da3eeabd65ea36faafa981a8c1a"
+            },
+            {
+              "path": [
+                "POKER.EXE"
+              ],
+              "bytes": 19147,
+              "sha256": "a63d55dd2047ef93b382d62c44b6dcef8e3e25d0609f3a3998f91968c0ea0e81"
+            },
+            {
+              "path": [
+                "POKER.PDM"
+              ],
+              "bytes": 51280,
+              "sha256": "043ffbf3c600e1929c902c03a123b69469407673990126a51f732124188252f1"
+            },
+            {
+              "path": [
+                "POKER.HLP"
+              ],
+              "bytes": 6243,
+              "sha256": "8355b34568e9f9b167e6f56e405719c733f7a8b663d2f633a09eb545e1e62fee"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "solitaire-poker"
+      ],
+      "related_refs": [
+        "express-publisher"
+      ]
+    },
+    {
+      "id": "studyware-chemistry",
+      "title": "StudyWare for Chemistry",
+      "category": "software",
+      "status": "observed-bytes",
+      "description": "Cliffs StudyWare installer identifies the subject and release 4.5 revision B. Packed RED resources remain opaque. The installation archive alone leaves the DOS versus DeskMate runtime relationship unresolved.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-StudyWare-for-Chemistry/instdisk.zip",
+          "bytes": 723918,
+          "sha256": "ab58a430c0ed80148340332aee7f8c05fcdfebae632b3f934ea6439107da93c3",
+          "members": [
+            {
+              "path": [
+                "DISK.ID"
+              ],
+              "bytes": 52,
+              "sha256": "dc4ace1b5cb4a6a848e305b9979bca4926a8254ce4f8cb419bbd51757f16895f"
+            },
+            {
+              "path": [
+                "INSTALL.DAT"
+              ],
+              "bytes": 33324,
+              "sha256": "98d1c47cd40685f00480932e5c8ccafe76e9b2ae0c6664b41553e885ed414217"
+            },
+            {
+              "path": [
+                "INSTALL.EXE"
+              ],
+              "bytes": 90304,
+              "sha256": "9468355c3b5d123ff88c56d25c9a2621f0196ae769e0b66a0f42e60be1759006"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "studyware-chemistry"
+      ],
+      "formats": [
+        "RED"
+      ]
+    },
+    {
+      "id": "studyware-economics",
+      "title": "StudyWare for Economics",
+      "category": "software",
+      "status": "observed-bytes",
+      "description": "Cliffs StudyWare installer identifies the subject and release 4.5 revision B. Packed RED resources remain opaque. The installation archive alone leaves the DOS versus DeskMate runtime relationship unresolved.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-StudyWare-for-Economics/econdisk.zip",
+          "bytes": 658928,
+          "sha256": "47e7a66aee77e9d68cfa6c7923b583d3973bd34a1e7db40b397b7a5e35e20662",
+          "members": [
+            {
+              "path": [
+                "DISK.ID"
+              ],
+              "bytes": 52,
+              "sha256": "330c8e69be3ccceba0f3baeb1eb4c0fdde3594a550eb4ebc030b5c4761a45a07"
+            },
+            {
+              "path": [
+                "INSTALL.DAT"
+              ],
+              "bytes": 33349,
+              "sha256": "409c7e69a12d0a06f7bc6128af3d333acf797d79530d696159a9a63b18d598cc"
+            },
+            {
+              "path": [
+                "INSTALL.EXE"
+              ],
+              "bytes": 90304,
+              "sha256": "9468355c3b5d123ff88c56d25c9a2621f0196ae769e0b66a0f42e60be1759006"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "studyware-economics"
+      ],
+      "formats": [
+        "RED"
+      ]
+    },
+    {
+      "id": "studyware-act",
+      "title": "StudyWare for the ACT",
+      "category": "software",
+      "status": "observed-bytes",
+      "description": "Cliffs StudyWare installer identifies the subject and release 4.5 revision B. Packed RED resources remain opaque. The installation archive alone leaves the DOS versus DeskMate runtime relationship unresolved.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-StudyWare-for-the-ACT/actdisk.zip",
+          "bytes": 896863,
+          "sha256": "36fbbe1722a54d5005d535bea3dceec9960749c0f0085042d7b6ced144fad2b1",
+          "members": [
+            {
+              "path": [
+                "DISK.ID"
+              ],
+              "bytes": 53,
+              "sha256": "a2cdad9b24849f9b8c74aa35618e8057856b1f958e7bea82b7493517e1ef6e5e"
+            },
+            {
+              "path": [
+                "INSTALL.DAT"
+              ],
+              "bytes": 33813,
+              "sha256": "61a0a4520d6d63e698afaf949a99fad1020d30ed610673d60d41be7497031fde"
+            },
+            {
+              "path": [
+                "INSTALL.EXE"
+              ],
+              "bytes": 90304,
+              "sha256": "9468355c3b5d123ff88c56d25c9a2621f0196ae769e0b66a0f42e60be1759006"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "studyware-act"
+      ],
+      "formats": [
+        "RED"
+      ]
+    },
+    {
+      "id": "clipart-editor",
+      "title": "Tandy ClipArt Editor beta",
+      "category": "software",
+      "status": "observed-bytes",
+      "description": "The archive contains the Tandy beta ClipArt PDM and instructions. The instructions confirm the workflow from a Draw object to a CLP file, corroborating the forum description. Color CLP examples are preserved separately.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dmclip.zip",
+          "bytes": 10150,
+          "sha256": "972997ee565d40e0d532e13c97e8a318cf241defa85352b1ab14135956bd8f19",
+          "members": [
+            {
+              "path": [
+                "CLIPART.PDM"
+              ],
+              "bytes": 13273,
+              "sha256": "1eed5c8685efa9276a4550f952c6b87bd75c4e99074f2d2c4d9cb5f27584b8d2"
+            },
+            {
+              "path": [
+                "CLIPART.DOC"
+              ],
+              "bytes": 2146,
+              "sha256": "c90f484f727cd5ae8acc60049eb5d056d18e1416d7f66b53bf6114bf7baf9f97"
+            }
+          ]
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/colorclp.zip",
+          "bytes": 15526,
+          "sha256": "2acf690b54451d6e351b96038820c7b9d3aef2833373108f93d27f4745661296"
+        }
+      ],
+      "products": [
+        "clipart-editor"
+      ],
+      "formats": [
+        "FIG",
+        "CLP"
+      ],
+      "related_refs": [
+        "delphi-ff1"
+      ]
+    },
+    {
+      "id": "undesk",
+      "title": "UnDesk Text converter",
+      "category": "converter",
+      "status": "observed-bytes",
+      "description": "DOS COM utility with documentation about DeskMate DOC to standard text conversion. Useful as an alternate interpretation for historical plain or formatted documents.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/undesk.zip",
+          "bytes": 16312,
+          "sha256": "b97e9853fb3529fef950a4e53926681f076fc13cfc0c1ed9b81dea12db1fa132",
+          "members": [
+            {
+              "path": [
+                "UNDESK.COM"
+              ],
+              "bytes": 17920,
+              "sha256": "729d20a0420b1048ce568b7351fdc79e51441a8b029e89916f4cfe431b07f5b2"
+            },
+            {
+              "path": [
+                "UNDESK.DOC"
+              ],
+              "bytes": 8143,
+              "sha256": "cf901c830614a1fbd0c3460e5fbbde58c0dbdeb5297d8930ded3bce9d8e881ac"
+            },
+            {
+              "path": [
+                "UDALL.BAT"
+              ],
+              "bytes": 145,
+              "sha256": "9e4ca4fa254b51f833dfe4553d25ce71cfa2db0f2994562d0dcd9d94f8b7aaea"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "undesk"
+      ],
+      "formats": [
+        "DOC"
+      ],
+      "related_refs": [
+        "videomem"
+      ]
+    },
+    {
+      "id": "dm-programs",
+      "title": "DM_PROGS software notes",
+      "category": "document",
+      "status": "observed-bytes",
+      "description": "Contemporary annotated software list with interoperability observations and a claim that Express Publisher uses DeskMate 3.05 Atech fonts. Stock FF1 hashes in the acquired publisher release independently support shared resources.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm_progs.txt",
+          "bytes": 15962,
+          "sha256": "4699f28b2ae9d699c767e212b38f547805b3a1a96579ced524dc6b8f0c56c68a"
+        }
+      ],
+      "formats": [
+        "FF1"
+      ],
+      "related_refs": [
+        "express-publisher",
+        "delphi-ff1"
+      ],
+      "historical_date": "1994-09-20"
+    },
+    {
+      "id": "sdk-guides",
+      "title": "DeskMate SDK 3.03 shelf",
+      "category": "development",
+      "status": "observed-bytes",
+      "description": "The two extracted PDFs match both local SDK copies. Development Disk 1 has DMDB.H and DMDB.INC byte-identical to previous research pins. The companion samples package contains an MZ executable. Additional disk and version coverage remains open.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Development-System-3.03/DeskMate-Development-Guide.zip",
+          "bytes": 15858190,
+          "sha256": "2f573eb49e79ffb4ba01e40e10815981ebb0385cb7d192884c9717d6eed2fff5",
+          "members": [
+            {
+              "path": [
+                "DeskMate-Development-Guide.pdf"
+              ],
+              "bytes": 16801017,
+              "sha256": "8081d5cd34305982844ab3598ebfbdf8887e7e369d1174a88a7631cba08439e0"
+            }
+          ]
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Development-System-3.03/DeskMate-Technical-Reference.zip",
+          "bytes": 24102757,
+          "sha256": "28c1fe248800e1a22f44511e849628076dd16e2e202890ff38a928704383ca34",
+          "members": [
+            {
+              "path": [
+                "DeskMate-Technical-Reference.pdf"
+              ],
+              "bytes": 25868833,
+              "sha256": "c4ce5457339234071ef46ac0ec021b7e2674b77cb869103389193ce2bed1352a"
+            }
+          ]
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Development-System-3.03/Samples.zip",
+          "bytes": 323035,
+          "sha256": "48758152da0c028813f734580769b790882e6e7a63ddfd3e244cff039ed5a6f5",
+          "members": [
+            {
+              "path": [
+                "SAMPLES.EXE"
+              ],
+              "bytes": 344726,
+              "sha256": "aff0b8fefcbde83c9d89b834071266f8da8f735d40b581a8a8e5475928d4283f"
+            }
+          ]
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Development-System-3.03/Development-Disk-1.zip",
+          "bytes": 63553,
+          "sha256": "924a25c479b69a2c27e9ee51adbe14356fba8534d73bd4afd41b9d2832759747",
+          "members": [
+            {
+              "path": [
+                "DMDB.H"
+              ],
+              "bytes": 14093,
+              "sha256": "47c2ff4638d8ab1bcc12aeab3e2dd5b51ccfeef9bbddb1a014912c831df4d5aa"
+            },
+            {
+              "path": [
+                "DMDB.INC"
+              ],
+              "bytes": 13275,
+              "sha256": "2ea33422d68ab2402ca2b83a1c1f5d7fee80db9c36000a8609d42712ce299a29"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "deskmate-sdk"
+      ],
+      "related_refs": [
+        "sdk-pssj",
+        "sdk-sound",
+        "delphi-sdk"
+      ],
+      "project_refs": [
+        "../research/dmdb-page-allocator.md",
+        "../reference/tandy-format-crosswalk.md"
+      ]
+    },
+    {
+      "id": "sdk-pssj",
+      "title": "PSSJ Digital Sound Toolkit 0.9",
+      "category": "development",
+      "status": "observed-bytes",
+      "description": "Frank Durda IV’s October 1994 independent toolkit follows earlier Tandy sound tools. Its 157 files include demo examples, interface headers, decompression code and interrupt support. DISKFMT.N describes the linked SND profile and a hardware skew field. The existing reader accepts both accompanying sample recordings.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Development-System-3.03/PSSJ-Toolkit.zip",
+          "bytes": 576582,
+          "sha256": "3085a225a5138f310f15a25b959f62db35bc689c9e40f5902d6936630fdef59a",
+          "members": [
+            {
+              "path": [
+                "README.1ST"
+              ],
+              "bytes": 3159,
+              "sha256": "048c79f61dd7f7c2b28df6fe5a61d9bcf4bc5b9ebd77eeb46a9f2677b0585b10"
+            },
+            {
+              "path": [
+                "LIBSRC/DECOMP.H"
+              ],
+              "bytes": 818,
+              "sha256": "f26d47233637a28b0391b62c4105ec677bd9cb946fb349dee0336fed40866952"
+            },
+            {
+              "path": [
+                "LIBSRC/IRQ.ASM"
+              ],
+              "bytes": 10343,
+              "sha256": "11575c0e072f44f6bf7ad73c5937417e96a704b8756f8382b559a0a5c4204313"
+            },
+            {
+              "path": [
+                "LIBSRC/DECOMPR.ASM"
+              ],
+              "bytes": 6674,
+              "sha256": "bdb6c7b23a5525a5443c1796eaf2310e6e99782710b85b7630ecb84f92f74405"
+            },
+            {
+              "path": [
+                "LIBSRC/CUE.ASM"
+              ],
+              "bytes": 1691,
+              "sha256": "d816db49fbe11c38dbd607086b82f5f317dce09607d2b2250b43130f725604b9"
+            },
+            {
+              "path": [
+                "LIBDOC/MAN/DISKFMT.N"
+              ],
+              "bytes": 5043,
+              "sha256": "383c9e39e9a219ef2cf797f6de0f94eb3af9129da13377a709c8b57c960e0072"
+            },
+            {
+              "path": [
+                "LIBDOC/MAN/COMPRESS.N"
+              ],
+              "bytes": 15861,
+              "sha256": "d0a27a88032a2ffed7b2a763733bbeccf76f98d9e528e72fc4b999fade8777fd"
+            },
+            {
+              "path": [
+                "SAMPLE/SAMPLE.SND"
+              ],
+              "bytes": 50748,
+              "sha256": "c2562d46dcb41b36da7bf8e67875a4d8b1f23b2ae9e66df061e94380bc2c0963"
+            },
+            {
+              "path": [
+                "SAMPLE/SAMPLE2.SND"
+              ],
+              "bytes": 41371,
+              "sha256": "02734add115379bf49813724959d3dd195912113d0d4f881e57be62fb214aadf"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "deskmate-sdk"
+      ],
+      "formats": [
+        "SND"
+      ],
+      "related_refs": [
+        "sdk-guides",
+        "sdk-sound",
+        "dm-music"
+      ]
+    },
+    {
+      "id": "sdk-sound",
+      "title": "Tandy Sound Toolkit sample code",
+      "category": "development",
+      "status": "observed-bytes",
+      "description": "50 files include standalone and DeskMate-oriented sample implementations, such as game-interface assembly and recording/playback headers.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Development-System-3.03/Tandy-Sound-Toolkit.zip",
+          "bytes": 100888,
+          "sha256": "892bfc3c0922f7091c81dbb7816a05668462d28ce1165497885446fed1fc6e60",
+          "members": [
+            {
+              "path": [
+                "DRECORD.H"
+              ],
+              "bytes": 89,
+              "sha256": "2e2c77d8030b4c2a8f5acbf23473dc98482718dfb8cbb9a89d34a5b4c6619894"
+            },
+            {
+              "path": [
+                "DESKMATE/DMJOY.ASM"
+              ],
+              "bytes": 931,
+              "sha256": "53ed3abe3a8be702eaa6a9cf9734f24361cd6a11094aa0d6d293ae7c27729271"
+            },
+            {
+              "path": [
+                "DESKMATE/DRECORD.H"
+              ],
+              "bytes": 89,
+              "sha256": "2e2c77d8030b4c2a8f5acbf23473dc98482718dfb8cbb9a89d34a5b4c6619894"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "deskmate-sdk"
+      ],
+      "formats": [
+        "SND"
+      ],
+      "related_refs": [
+        "sdk-guides",
+        "sdk-pssj"
+      ]
+    },
+    {
+      "id": "aol-deskmate",
+      "title": "America Online DeskMate forum",
+      "category": "community",
+      "status": "observed-bytes",
+      "description": "The text export contains conversations about Express Publisher and Q&A Write, DeskMate product acquisition, Worksheet and Filer, and configuration dependencies. Claims of trial editions and locally uploaded examples need independent corroboration.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/aoldesk.zip",
+          "bytes": 146733,
+          "sha256": "5b93438fead67d22ddae4801329e72055b838b7f27820441bc04a3e548abf188",
+          "members": [
+            {
+              "path": [
+                "AOLDESK.TXT"
+              ],
+              "bytes": 383833,
+              "sha256": "063d1d7ff58cb233d60198a8019d5f23839a8ad5849ec72b5cffaeab416a5d9d",
+              "locator": "Search for Express Publisher, Q&A Write, Worksheet, clipboard and DeskMate SDK"
+            }
+          ]
+        }
+      ],
+      "related_refs": [
+        "dm-programs",
+        "express-publisher",
+        "qa-write",
+        "compuserve-professional"
+      ]
+    },
+    {
+      "id": "compuserve-professional",
+      "title": "CompuServe Tandy Professional forum",
+      "category": "community",
+      "status": "observed-bytes",
+      "description": "The collection contains 238 files. ACDB.TXT and ACDA.TXT document interest in acquiring the developer kit. AC8E.TXT contains printer discussion.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/cistanfo.zip",
+          "bytes": 241095,
+          "sha256": "1f0d626291e2367c8ef80d699bd24c3910a16d121e0162311927c0680d6672a0",
+          "members": [
+            {
+              "path": [
+                "ACDB.TXT"
+              ],
+              "bytes": 295,
+              "sha256": "14b48d65fa55d3f004c2ddd115da0370b8e394df945574bc5786004b67253101"
+            },
+            {
+              "path": [
+                "ACDA.TXT"
+              ],
+              "bytes": 293,
+              "sha256": "eb255f374ef0ba3e9b3565b0e53f91b01f230ed9f4f7fafb941589090b39dd08"
+            },
+            {
+              "path": [
+                "AC8E.TXT"
+              ],
+              "bytes": 10973,
+              "sha256": "edda0c3abd8a1bd7d9b14ddef31eae438f91d3a43f003b53445286d3d62b87e7"
+            }
+          ]
+        }
+      ],
+      "related_refs": [
+        "sdk-guides",
+        "aol-deskmate",
+        "compuserve-newsletter"
+      ]
+    },
+    {
+      "id": "compuserve-newsletter",
+      "title": "CompuServe Tandy Newsletter forum",
+      "category": "community",
+      "status": "observed-bytes",
+      "description": "The 182-file collection includes a Tandy DeskMate overview with named Worksheet formula functions and claims of upgrade interoperability with Q&A Write, Lotus Spreadsheet and filePro.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/cistanne.zip",
+          "bytes": 267737,
+          "sha256": "2487cddf06b9b27f2e5984e8b76d32db1fe3f1ac8e2dc1380e6ac9e1d1fec58b",
+          "members": [
+            {
+              "path": [
+                "336802FD.TXT"
+              ],
+              "bytes": 3742,
+              "sha256": "f7be2292900cdfea07614b68533e4a7a741936cd2488abd1fadb18c2dc3359f0",
+              "locator": "Moving On Up While Keeping Your Data and preceding Worksheet description"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "qa-write",
+        "lotus-spreadsheet",
+        "filepro"
+      ],
+      "formats": [
+        "WKS",
+        "DOC",
+        "FIL"
+      ],
+      "related_refs": [
+        "compuserve-professional",
+        "delphi-sdk"
+      ]
+    },
+    {
+      "id": "delphi-collection",
+      "title": "Delphi Tandy message archives 1988–94",
+      "category": "community",
+      "status": "observed-bytes",
+      "description": "Seven annual ZIPs hold 84 monthly text members. Two identified September 1992 messages link Draw typography and CLP workflows to software distributed elsewhere.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/delfor88.zip",
+          "bytes": 261993,
+          "sha256": "f8da38abb98e215c604da502d705fc3b24c3d01aeebde74eac9d48df87b62102"
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/delfor89.zip",
+          "bytes": 310565,
+          "sha256": "17c6878066bee46c8f68e7f2ca2e530b52780dc1ca497cb372688277044b6ec7"
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/delfor90.zip",
+          "bytes": 414825,
+          "sha256": "19747f7f9eff0da050cd864cf14d96bb1f1fe60cf1e112b878e11b7a54ad644c"
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/delfor91.zip",
+          "bytes": 409235,
+          "sha256": "ca6289bd2762adfdc37003f61982b4396adf71cd75d8af7edfbac31021f506c6"
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/delfor92.zip",
+          "bytes": 282198,
+          "sha256": "54be3a64664c8b340c24d35b7cc7fab6c97bbe32188d2955ac428abaa5bb9b7e"
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/delfor93.zip",
+          "bytes": 189955,
+          "sha256": "e0289eafae958648140a72de5ec3670eeda2cdb50bd004c5c7386a192d790c9a"
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/delfor94.zip",
+          "bytes": 160203,
+          "sha256": "13c769b44acf20e89b5b19291f01bfb23d29071a8ef713a3699e9555b4b270e3"
+        }
+      ],
+      "related_refs": [
+        "delphi-ff1",
+        "delphi-sdk",
+        "aol-deskmate"
+      ]
+    },
+    {
+      "id": "delphi-ff1",
+      "title": "Delphi Draw outlines and ClipArt Editor thread",
+      "category": "community",
+      "status": "historical-source-claim",
+      "description": "Message 21444 identifies Atech outline format and points to MicroLogic MoreType and Atech AllType as candidate FF1 sources. Message 21446 describes a Tandy ClipArt editor distributed as a beta through PC-Link and America Online. The independently recovered CLIPART.DOC confirms the utility and object workflow.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/delfor92.zip",
+          "bytes": 282198,
+          "sha256": "54be3a64664c8b340c24d35b7cc7fab6c97bbe32188d2955ac428abaa5bb9b7e",
+          "members": [
+            {
+              "path": [
+                "SEP92TAN.TXT"
+              ],
+              "bytes": 47042,
+              "sha256": "ef79118c2230d1c9a42e9088c2dcab37066c2a47209608cc5382c2dddee138f4",
+              "locator": "Messages 21444 and 21446"
+            }
+          ]
+        }
+      ],
+      "formats": [
+        "FF1",
+        "CLP",
+        "FIG"
+      ],
+      "related_refs": [
+        "clipart-editor",
+        "express-fonts",
+        "rlx-fonts",
+        "delphi-collection"
+      ],
+      "historical_date": "1992-09"
+    },
+    {
+      "id": "delphi-sdk",
+      "title": "Delphi SDK pricing and runtime reports",
+      "category": "community",
+      "status": "historical-source-claim",
+      "description": "Message 21177 describes a screen designer, C and assembler support, and a reported $250 price. Message 23212 describes receipt of a kit with the standalone runtime. These claims need contemporary sales literature and exact disk identity for a demonstrator timeline.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/delfor92.zip",
+          "bytes": 282198,
+          "sha256": "54be3a64664c8b340c24d35b7cc7fab6c97bbe32188d2955ac428abaa5bb9b7e",
+          "members": [
+            {
+              "path": [
+                "JUL92TAN.TXT"
+              ],
+              "bytes": 83857,
+              "sha256": "bb8c69b076422ca03e6aa29a243fbfbd62326be801236b57a609d10816f411a3",
+              "locator": "Message 21177"
+            }
+          ]
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/delfor94.zip",
+          "bytes": 160203,
+          "sha256": "13c769b44acf20e89b5b19291f01bfb23d29071a8ef713a3699e9555b4b270e3",
+          "members": [
+            {
+              "path": [
+                "OCT94TAN.TXT"
+              ],
+              "bytes": 43970,
+              "sha256": "7e90504a053824bcd67fd62913fd4d0c6e05d8fcb0d84851dce314b02d7cc5a7",
+              "locator": "Message 23212"
+            }
+          ]
+        }
+      ],
+      "products": [
+        "deskmate-sdk"
+      ],
+      "related_refs": [
+        "sdk-guides",
+        "delphi-collection"
+      ]
+    },
+    {
+      "id": "tandy-users",
+      "title": "Tandy Users Are People Too",
+      "category": "community",
+      "status": "observed-bytes",
+      "description": "Two issues of the electronic newsletter provide user-group context, with potential product and utility leads alongside contemporaneous forum messages.",
+      "sources": [
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/tandy.zip",
+          "bytes": 2909,
+          "sha256": "60a46eb280361d2d288da4d76eb3a877e8b60a3d136081db219d4a143c7c0a55"
+        },
+        {
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/turp2_2.txt",
+          "bytes": 13181,
+          "sha256": "9831ed1d87fb0a31af75906239ebdaed19a278bad15c3dac4a284c9afb4b3e24"
+        }
+      ],
+      "related_refs": [
+        "dm-programs",
+        "aol-deskmate",
+        "delphi-collection"
+      ]
+    }
+  ],
+  "leads": [
+    {
+      "id": "rockwell-font",
+      "question": "Can an original Rockwell FF1 be recovered?",
+      "reference_ids": [
+        "delphi-ff1",
+        "express-publisher",
+        "express-fonts",
+        "rlx-fonts"
+      ],
+      "next_verification": "Inspect Atech FastFonts distribution media identified by the Express Publisher manual, alongside exact AllType and MoreType editions, for compatible FF1 output and possible Rockwell evidence."
+    },
+    {
+      "id": "glyph-auxiliary",
+      "question": "Which renderer behavior changes among the measured FF1 families?",
+      "reference_ids": [
+        "express-fonts",
+        "rlx-fonts"
+      ],
+      "next_verification": "Compare FF1 auxiliary records and DMFONT builds in a disposable runtime. Use the stock and RLX Marin AV pair as a controlled native display/print comparison."
+    },
+    {
+      "id": "express-documents",
+      "question": "How does Express Publisher store text, font choices and placed graphics?",
+      "reference_ids": [
+        "express-publisher",
+        "express-fonts"
+      ],
+      "next_verification": "Generate minimal native EPT and saved-publication controls and compare the bundled templates and EPMDM import paths."
+    },
+    {
+      "id": "qna-printer",
+      "question": "Which Q&A Write printer-font fields govern spacing and substitution?",
+      "reference_ids": [
+        "qna-printer-fonts",
+        "qa-write",
+        "print-magic"
+      ],
+      "next_verification": "Trace concrete FNT records and compare emitted streams for the same text and printer class. Keep each application format independent."
+    },
+    {
+      "id": "clipboard-clp",
+      "question": "What serialization does the native ClipArt Editor use?",
+      "reference_ids": [
+        "clipart-editor",
+        "delphi-ff1"
+      ],
+      "next_verification": "Generate one Draw primitive and trace clipboard, Make Object and CLP save. Compare paths against the recovered color CLP set and existing graphics-form reader."
+    },
+    {
+      "id": "text-fields",
+      "question": "Which formatted Text fields and pagination controls remain beyond verified margin envelopes?",
+      "reference_ids": [
+        "videomem",
+        "undesk",
+        "qa-write"
+      ],
+      "next_verification": "Capture one native field or pagination change per file and compare original UI and converter projections."
+    },
+    {
+      "id": "worksheet-functions",
+      "question": "Which historical Worksheet formula and Lotus conversion claims hold on native versions?",
+      "reference_ids": [
+        "compuserve-newsletter"
+      ],
+      "next_verification": "Compare the list of documented function names against the measured parser/evaluator and test representative old worksheets and Lotus import in a disposable profile."
+    },
+    {
+      "id": "database-bridge",
+      "question": "How do Filer, Calendar, Address Book and filePro reuse DMDB structures?",
+      "reference_ids": [
+        "sdk-guides",
+        "compuserve-newsletter"
+      ],
+      "next_verification": "Use pinned DMDB definitions, build candidate filePro save controls and check indexing, allocation and field conversion independently. The newsletter gives upgrade claims only."
+    },
+    {
+      "id": "tempo-dynamics",
+      "question": "Which HDS annotations reflect native SNG semantics?",
+      "reference_ids": [
+        "dm-music",
+        "sdk-pssj",
+        "sdk-sound"
+      ],
+      "next_verification": "Run confirmed 1.04 in an isolated Windows guest with fixed SNG controls, compare raw HDS, and validate disagreements in original DeskMate. Keep player repeat workarounds separate from converter output."
+    },
+    {
+      "id": "sound-hardware",
+      "question": "Which SND metadata describes recording hardware and sample playback?",
+      "reference_ids": [
+        "sdk-pssj",
+        "sdk-sound",
+        "dm-music"
+      ],
+      "next_verification": "Compare toolkit recording/decompression APIs and library source to native SNDs, then verify on early and late hardware profiles."
+    },
+    {
+      "id": "sdk-samples",
+      "question": "Which SDK sample utilities add APIs or file format examples?",
+      "reference_ids": [
+        "sdk-guides",
+        "sdk-pssj",
+        "sdk-sound",
+        "delphi-sdk"
+      ],
+      "next_verification": "Inventory the self-extracting samples without launching historical code and reconcile remaining disk identities with the pinned 3.03 and 3.05 sources."
+    },
+    {
+      "id": "enthusiast-prices",
+      "question": "Which prices and bundles can support multi-year demonstrator purchases?",
+      "reference_ids": [
+        "delphi-sdk",
+        "compuserve-newsletter",
+        "tandy-users"
+      ],
+      "next_verification": "Join period seller, catalog number, date and currency with an independently confirmed printed catalog or circular for each item. Keep community estimates attributed."
+    }
+  ]
+}

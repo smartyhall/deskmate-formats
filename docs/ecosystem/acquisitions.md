@@ -158,6 +158,11 @@ for the stopped disk and emulated time.
 
 ## Express Publisher — operator-supplied acquisition lead
 
+The TVDog campaign acquired and validated all three Express Publisher
+disk sets and the manual. It also located DeskMate Q&A Write 1.00.
+The [archive reference catalog](tvdog-reference.md) supersedes the
+acquisition status in the original leads below.
+
 After the typography laboratory campaign, the operator identified this
 specific archive directory:
 
@@ -251,3 +256,26 @@ of annotated source references. This replaces earlier selective-only
 acquisition instructions within this subtree; it does not expand the
 scope to other hosts or parent directories. Prioritize the existing
 DeskMate leads first within the mirror queue. No mirror is yet claimed.
+
+## DM_Music, MidiMapper and the Tandy1000 group archive
+
+[PR #129](https://github.com/smartyhall/deskmate-formats/pull/129)
+documents the Tandy1000 Yahoo Groups lead and separates Baldwin and
+Hayes's SNG-to-HDS converter from the companion Windows player. The
+[DM_Music ZIP](http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/dm_music.zip)
+acquired for this campaign matches the earlier private ZIP. Its two
+members are the VB6 converter and its readme. The executable reports
+file and product version 1.04. The differing version spellings in the
+[author's discussion](https://groups.google.com/g/comp.sys.tandy/c/fq1OO44yLtI)
+remain historical references.
+
+PR #129 records the operator-supplied MidiMapper ZIP as 440,568 bytes
+with SHA-256 `323a06e1ae757de09ac25721d94a29ac7bbb1d4038d91cd74cdcdaee2dad798b`.
+Its CAB contains HDS examples and the player readme. SETUP.LST reports
+player version 6.25.0.0 and its PAD XML reports 6.12. These are two
+metadata observations. Record the actual PE resource after obtaining the
+exact ZIP in the Windows lab. The samples may include manual changes or
+different arrangements, so raw HDS from an observed converter run is
+the differential comparison input. The author discussion and the
+Tandy1000 archive remain leads for distinct releases and more
+contemporary Music documentation.

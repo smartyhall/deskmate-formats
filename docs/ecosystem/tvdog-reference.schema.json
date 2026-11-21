@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TVDog archive research reference catalog",
+  "type": "object",
+  "required": ["schema_version", "updated", "records", "leads"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": 1},
+    "updated": {"type": "string", "format": "date"},
+    "records": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/record"}},
+    "leads": {"type": "array", "items": {"$ref": "#/$defs/lead"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
+    "ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "text": {"type": "string", "minLength": 1},
+    "text_list": {"type": "array", "uniqueItems": true, "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+    "bytes": {"type": "integer", "minimum": 0},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "member": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "bytes": {"$ref": "#/$defs/bytes"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "locator": {"$ref": "#/$defs/text"}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url"],
+      "dependentRequired": {"bytes": ["sha256"], "sha256": ["bytes"], "members": ["bytes", "sha256"]},
+      "properties": {
+        "url": {"type": "string", "pattern": "^https?://", "format": "uri"},
+        "bytes": {"$ref": "#/$defs/bytes"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "members": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/member"}}
+      }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "category", "status", "description", "sources"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "title": {"$ref": "#/$defs/text"},
+        "category": {"enum": ["software", "converter", "document", "font", "community", "development"]},
+        "status": {"enum": ["observed-bytes", "historical-source-claim"]},
+        "description": {"$ref": "#/$defs/text"},
+        "historical_date": {"type": "string", "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$"},
+        "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}},
+        "products": {"$ref": "#/$defs/ids"},
+        "formats": {"$ref": "#/$defs/text_list"},
+        "related_refs": {"$ref": "#/$defs/ids"},
+        "project_refs": {"$ref": "#/$defs/text_list"}
+      }
+    },
+    "lead": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "question", "reference_ids", "next_verification"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "question": {"$ref": "#/$defs/text"},
+        "reference_ids": {"$ref": "#/$defs/ids"},
+        "next_verification": {"$ref": "#/$defs/text"}
+      }
+    }
+  }
+}
