@@ -28,4 +28,5 @@ tests/fixtures/application-generated/sound/*.snd binary
 tests/fixtures/application-generated/music/*.sng binary
 docs/research/codex-app-server-0.166.0.json text eol=lf
 tests/fixtures/application-generated/dm-music/*.hds binary
-tests/fixtures/application-generated/midimapper/major-scale-midimapper-6.38.mid binary
+tests/fixtures/application-generated/midimapper/*.mid binary
+tests/fixtures/application-generated/midimapper/*.hds binary

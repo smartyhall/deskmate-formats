@@ -7,6 +7,7 @@ import unittest
 
 from deskmate_formats import hds
 from deskmate_formats.music import parse_bytes, project
+from tools.experimental.midimapper_controls import controls
 
 
 FIXTURES = Path(__file__).resolve().parents[1] / 'fixtures/application-generated'
@@ -92,6 +93,80 @@ class DmMusicControlTests(unittest.TestCase):
         self.assertEqual([slot.kind for slot in song.events[1].slots], ['note', 'unknown', 'placeholder'])
         with self.assertRaises(hds.HdsFormatError):
             hds.parse_bytes(b'[Notes]\n[Song]\n')
+
+    def test_midimapper_syntax_preserves_pitch_and_combined_modifiers(self):
+        raw = (b'[Song]\r\nPolyDur=True\r\nPolyPhony=4\r\n[Notes]\r\n'
+               b'1E-2\r\nSbT8.c#++1/Se8A---3/Lb4C/X\r\nLe4d3/8r/x/x\r\n'
+               b'[Midi 192 11 0]\r\n[Midi &hB0 7 &H40]\r\n[Midi 300 7 64]\r\n')
+        song = hds.parse_bytes(raw)
+        self.assertEqual(song.raw, raw)
+        self.assertEqual(song.lines[2].values, ('PolyPhony', '4'))
+        monophonic, first, second, decimal, hexadecimal, malformed = song.events
+        self.assertEqual([slot.pitch for slot in monophonic.slots], ['E-2'])
+        self.assertEqual([slot.pitch for slot in first.slots], ['c#++1', 'A---3', 'C', None])
+        self.assertEqual([slot.modifier for slot in first.slots], ['SbT', 'Se', 'Lb', ''])
+        self.assertEqual(first.slots[0].quarter_notes, Fraction(1, 2))
+        self.assertEqual([slot.kind for slot in second.slots], ['note', 'rest', 'placeholder', 'placeholder'])
+        self.assertEqual((decimal.kind, decimal.values), ('midi', (192, 11, 0)))
+        self.assertEqual((hexadecimal.kind, hexadecimal.values), ('midi', (176, 7, 64)))
+        self.assertEqual(malformed.kind, 'unknown')
+
+    def test_midimapper_octaves_and_accidentals(self):
+        expected = {'C': 60, 'C1': 60, 'C2': 60, 'C4': 60, 'C+2': 72, 'c#3': 61, 'Db3': 61,
+                    'C++3': 84, 'C---3': 24, 'A-3': 57, 'a-3': 57, 'C----3': 12, 'G+++++3': 127}
+        for spelling, number in expected.items():
+            with self.subTest(spelling=spelling):
+                self.assertEqual(hds.midi_pitch(spelling), number)
+        for spelling in ('C-+2', 'B#3', 'Cb3', 'E#3', 'Fb3', 'C-----3', 'G#+++++3'):
+            with self.subTest(spelling=spelling), self.assertRaises(ValueError):
+                hds.midi_pitch(spelling)
+
+    def test_linear_polydur_projection(self):
+        fixture = FIXTURES / 'dm-music/batch-mtrio-dm-music-1.04.hds'
+        voices = hds.project_linear_voices(hds.read(fixture))
+        self.assertEqual([voice.end_quarters for voice in voices], [2, 2, 2])
+        self.assertEqual([[(n.midi_pitch, n.start_quarters, n.duration_quarters) for n in voice.notes]
+                          for voice in voices], [[(60, 0, 1), (67, 1, 1)], [(64, 0, 1)], [(69, 0, 2)]])
+        fixture = FIXTURES / 'dm-music/batch-listening-minor-scale-v1-dm-music-1.04.hds'
+        voice = hds.project_linear_voices(hds.read(fixture))[0]
+        self.assertEqual([note.midi_pitch for note in voice.notes],
+                         [57, 59, 60, 62, 64, 65, 68, 69, 68, 65, 64, 62, 60, 59, 57])
+        self.assertEqual(voice.end_quarters, 17)
+
+    def test_native_converter_octave_setting_transposes_every_pitch(self):
+        base = FIXTURES / 'dm-music'
+        source, transposed = (hds.project_linear_voices(hds.read(base / f'{name}-dm-music-1.04.hds'))[0]
+                              for name in ('major-scale', 'major-scale-plus-one'))
+        self.assertEqual([b.midi_pitch - a.midi_pitch for a, b in zip(source.notes, transposed.notes, strict=True)],
+                         [12] * 15)
+        self.assertEqual(source.end_quarters, transposed.end_quarters)
+
+    def test_linear_projection_refuses_unmodeled_controls(self):
+        for line in (b'[Repeat 2x]', b'Sb4C3/x/x', b'4C3/x', b'[Midi 192 11 0]'):
+            with self.subTest(line=line), self.assertRaisesRegex(hds.HdsFormatError, 'line 4'):
+                song = hds.parse_bytes(b'[Song]\nPolyDur=True\n[Notes]\n' + line + b'\n')
+                hds.project_linear_voices(song)
+
+    def test_published_midimapper_inputs_and_native_exports(self):
+        entries = json.loads((FIXTURES / 'manifest.json').read_bytes())['fixtures']
+        exports = [entry for entry in entries if entry['path'].startswith('midimapper/')
+                   and entry['path'].endswith('.mid')]
+        self.assertEqual(len(exports), 13)
+        for entry in exports:
+            with self.subTest(fixture=entry['path']):
+                output = (FIXTURES / entry['path']).read_bytes()
+                source = (FIXTURES / entry['source_path']).read_bytes()
+                self.assertEqual(hashlib.sha256(output).hexdigest(), entry['sha256'])
+                self.assertEqual(hashlib.sha256(source).hexdigest(), entry['source_sha256'])
+                self.assertEqual(len(output), entry['size'])
+                self.assertEqual(output[:12], bytes.fromhex('4d5468640000000600010002'))
+                self.assertEqual(int.from_bytes(output[12:14], 'big'), entry.get('ticks_per_quarter', 120))
+        generated = controls()
+        for dos, case in (('PITCH', 'pitch-spelling'), ('T100', 'timing-100'), ('CHANNEL', 'channel-control'),
+                          ('STRUCT', 'structural-control'), ('ENHARM', 'enharmonic-boundary')):
+            with self.subTest(control=case):
+                path = FIXTURES / f'midimapper/{case}-tool-generated.hds'
+                self.assertEqual(path.read_bytes(), generated[f'{dos}.HDS'])
 
     def test_batch_hds_bytes_and_per_voice_durations(self):
         entries = json.loads((FIXTURES / 'manifest.json').read_bytes())['fixtures']

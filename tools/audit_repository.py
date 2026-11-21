@@ -29,11 +29,17 @@ MAX_MILESTONE_BYTES = 26 * 1024 * 1024
 MAX_LISTENING_BYTES = 128 * 1024 * 1024
 DATA_EXT = {'.cln', '.adr', '.fil', '.pcl', '.doc', '.fig', '.wks', '.snd', '.sng'}
 SYNTHETIC_FF1 = 'draw/typography-lab-grid.ff1'
-SYNTHETIC_MID = 'midimapper/major-scale-midimapper-6.38.mid'
+SYNTHETIC_MID = {
+    f'midimapper/{case}-midimapper-6.38.mid'
+    for case in ('major-scale', 'minor-scale', 'pitch-spelling', 'timing-100-audible',
+                 'timing-100-silent', 'channel-control', 'polyphonic-trio', 'alternate-endings',
+                 'enharmonic-boundary', 'structural-control', 'timing-100-480-silent', 'timing-100-480-delay10',
+                 'converter-octave-plus-one')
+}
 SYNTHETIC_HDS = {
     f'dm-music/{control}-dm-music-1.04.hds'
     for control in (
-        'major-scale', 'duration-tempo', 'accidentals', 'alternate-endings',
+        'major-scale', 'major-scale-plus-one', 'duration-tempo', 'accidentals', 'alternate-endings',
         'batch-listening-chromatic-scale-v1', 'batch-listening-major-cadence-v1',
         'batch-listening-minor-cadence-v1', 'batch-listening-minor-scale-v1',
         'batch-listening-oem-chromatic-scale-v1', 'batch-listening-oem-major-cadence-v1',
@@ -45,6 +51,9 @@ SYNTHETIC_HDS = {
         'batch-mloop', 'batch-mmid', 'batch-mreopen', 'batch-mtimes', 'batch-mtrio',
         'batch-mvalues', 'batch-mvol',
     )
+} | {
+    f'midimapper/{case}-tool-generated.hds'
+    for case in ('pitch-spelling', 'timing-100', 'channel-control', 'enharmonic-boundary', 'structural-control')
 }
 TYPOGRAPHY_DIR = Path('examples/typography-comparison/v1')
 TYPOGRAPHY_IMAGES = {
@@ -108,7 +117,7 @@ def fixture_manifest():
         if rel.is_absolute() or '..' in rel.parts or len(rel.parts) < 2:
             raise ValueError('unsafe fixture path: ' + name)
         if (rel.suffix.lower() not in DATA_EXT and not native_text_export(FIXTURE_DIR / rel)
-                and name not in (SYNTHETIC_FF1, SYNTHETIC_MID) and name not in SYNTHETIC_HDS):
+                and name != SYNTHETIC_FF1 and name not in SYNTHETIC_MID and name not in SYNTHETIC_HDS):
             raise ValueError('unexpected fixture extension: ' + name)
         if (FIXTURE_DIR / name).as_posix() in index or not re.fullmatch(r'[0-9a-f]{64}', str(item.get('sha256', ''))):
             raise ValueError('duplicate or invalid fixture digest: ' + name)

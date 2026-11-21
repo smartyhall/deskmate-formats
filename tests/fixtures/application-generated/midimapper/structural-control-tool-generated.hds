@@ -1,0 +1,24 @@
+[Song]
+Name=Structure probe
+Beats Per Measure=4
+Single Beat Note=4
+Pace=100
+PolyDur=True
+
+[Notes]
+[Time 6/8]
+[Key sig=G]
+[Bar 1]
+[Score marker A]
+[Repeat 2x]
+Sb4C3/x/x
+Se4C3/x/x
+[Ending 1]
+Sb8E3/x/x
+Se8F3/x/x
+[Ending 2]
+Lb8G3/x/x
+Le8A3/x/x
+[Repeat End]
+[Tempo= 1/8 = 120]
+4G3/x/x
