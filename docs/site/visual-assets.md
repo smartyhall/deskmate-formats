@@ -42,6 +42,27 @@ Use explicit state labels: *observed*, *reviewed*, *selected candidate*,
 A capture can be observed without being reviewed or legally publishable.
 Do not treat one captured screen as proof of an entire workflow.
 
+## Representative images in research pull requests
+
+For Codex research PRs with meaningful visual output, include a **proportional,
+representative selection of exemplar images** in the PR description or linked,
+reviewable committed assets. Illustrate the most important researched
+applications, controls, sequences, or comparisons; a large capture inventory
+is not itself a reviewable selection. Provide a short factual caption for
+each image (release/version, state or test, and what the image supports), and
+retain traceable provenance and native/synthetic distinctions. Use contact
+sheets where they help compare states, with access to individual native-size
+images when visual detail is evidence.
+
+The existing standing authorization covers eligible synthetic-content
+DeskMate screenshots. Review actual pixels, attribution, metadata, and public
+paths as for any reference image; do not assume raw private screenshots are
+safe for GitHub PRs. An image included as PR evidence is **not automatically
+approved for the public site**, which requires the image manifest and page
+placement. For wholly nonvisual work, explain that no appropriate visual
+exemplars exist rather than inventing imagery or staging additional emulator
+activity without authorization.
+
 ## Selection and future site asset contract
 
 For a proposed exemplar, maintain a **private** record with the full
