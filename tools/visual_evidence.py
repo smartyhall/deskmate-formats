@@ -28,8 +28,11 @@ def compare_pixels(image):
 
 
 def scan(roots, labels, previous):
-    occurrences = {}
-    images = {}
+    # Preserve previously inventoried evidence even when a root is temporarily offline.
+    # Only an affirmative new observation may replace a retained occurrence.
+    occurrences = {key: {**value, 'observed': False}
+                   for key, value in previous.get('occurrences', {}).items()}
+    images = dict(previous.get('images', {}))
     gaps = []
     for label, root in sorted(roots.items()):
         try:
@@ -48,7 +51,8 @@ def scan(roots, labels, previous):
                 metadata = path.stat()
                 before = [metadata.st_size, metadata.st_mtime_ns, metadata.st_ctime_ns]
                 cached = previous.get('occurrences', {}).get(occurrence, {})
-                if before == cached.get('stat') and cached.get('locator') == str(path):
+                if (before == cached.get('stat') and cached.get('locator') == str(path)
+                        and cached.get('sha256') in images):
                     sha = cached['sha256']
                     images[sha] = previous['images'][sha]
                 else:
@@ -69,23 +73,28 @@ def scan(roots, labels, previous):
                               'capture_method', 'screen_state', 'focus', 'selection')}
                 provenance.update(labels.get(label, {}))
                 occurrences[occurrence] = {'root_id': label, 'relative': relative,
-                    'locator': str(path), 'sha256': sha, 'stat': before, 'provenance': provenance}
+                    'locator': str(path), 'sha256': sha, 'stat': before,
+                    'provenance': provenance, 'observed': True}
             except (OSError, ValueError, Image.DecompressionBombError) as error:
                 gaps.append({'root_id': label, 'relative': relative, 'error': str(error)})
-    active = {entry['sha256'] for entry in occurrences.values()}
-    images = {sha: record for sha, record in images.items() if sha in active}
+    observed = {key: entry for key, entry in occurrences.items() if entry['observed']}
+    referenced = {entry['sha256'] for entry in occurrences.values()}
+    images = {sha: record for sha, record in images.items() if sha in referenced}
     # Equal 64-bit difference hashes are candidates for manual comparison only.
     candidates = {}
     for sha, record in images.items():
         key = identity(record['display_pixels'], record['first_frame_dhash64'])
         candidates.setdefault(key, []).append(sha)
-    root_counts = Counter(row['root_id'] for row in occurrences.values())
+    root_counts = Counter(row['root_id'] for row in observed.values())
+    observed_hashes = {entry['sha256'] for entry in observed.values()}
     return {'schema_version': SCHEMA, 'occurrences': occurrences, 'images': images,
-            'unobserved_previous_occurrences': sorted(previous.get('occurrences', {}).keys()
-                                                       - occurrences.keys()),
+            'unobserved_previous_occurrences': sorted(set(occurrences) - set(observed)),
             'near_duplicate_candidates': [sorted(group) for group in candidates.values()
                                           if len(group) > 1],
-            'gaps': gaps, 'summary': {'occurrences': len(occurrences), 'identities': len(images),
+            'gaps': gaps, 'summary': {'occurrences': len(observed),
+                                     'retained_occurrences': len(occurrences),
+                                     'identities': len(observed_hashes),
+                                     'retained_identities': len(images),
                                      'occurrences_by_root': dict(root_counts)}}
 
 
