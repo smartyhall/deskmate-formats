@@ -83,6 +83,14 @@ sets out the operator-approved complete private mirror and derived public
 reference index. See the [demonstrator plan](demonstrator.md)
 for the companion living-system project.
 
+### Express Publisher 1.00 native interface
+
+Express Publisher is one of the separately acquired and investigated
+third-party DeskMate applications. These native frames show the program's
+page-editing workspace and Save As dialog using synthetic demonstration
+content. They document the observed interface, not independent confirmation
+of every save/reopen behavior or underlying file-format capability.
+
 ## Publication
 
 The project publishes independently authored specifications, tools,
