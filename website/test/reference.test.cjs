@@ -62,3 +62,21 @@ test("only explicitly authored assets may be copied to the site", () => {
   assert.match(config, /src\/assets/);
   assert.doesNotMatch(config, /DOSLAB_ROOT|addPassthroughCopy\(\s*["']docs/);
 });
+
+test("unmodified upstream BOOTSTRA.386 replaces the independent demo theme", () => {
+  const template = fs.readFileSync(
+    path.join(ROOT, "website/src/_includes/base.njk"), "utf8"
+  );
+  const adapter = fs.readFileSync(
+    path.join(ROOT, "website/src/assets/site-layout.css"), "utf8"
+  );
+  const installer = fs.readFileSync(
+    path.join(ROOT, "website/scripts/vendor_bootstra.py"), "utf8"
+  );
+  assert.match(template, /bootstra386\/css\/bootstrap\.min\.css/);
+  assert.match(template, /bootstra386\/js\/bootstrap-386\.js/);
+  assert.doesNotMatch(template, /assets\/site\.css/);
+  assert.match(adapter, /SPDX-License-Identifier: Apache-2\.0/);
+  assert.match(installer, /ZIP_BLOB = "[0-9a-f]{40}"/);
+  assert.match(installer, /sha1\(/);
+});
