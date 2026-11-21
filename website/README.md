@@ -1,7 +1,10 @@
 # DeskMate reference — Eleventy website
 
-This is a **reviewable, locally buildable** technical-reference site. It does
-not deploy publicly or redistribute historical media and private screenshots.
+This is the **publicly deployed, locally buildable** DeskMate history and technical
+reference. The homepage introduces newcomers to DeskMate before offering paths
+to the native-format research and preservation tools. Reviewed documentary
+screenshots are published through a manifest; commercial software and private
+research archives are not distributed.
 
 ## Running the site
 
@@ -57,9 +60,10 @@ repository `CNAME` file is not necessary for the Actions-based build.
 All rendered pages come from the reviewed
 [generator-independent page map](../docs/site/page-map.json), using
 existing Markdown files in place. Dated research is not presented as a
-current specification. Unmapped source links go to GitHub; image embeds
-are withheld pending review. Only explicitly authored assets in
-website/src/assets are copied into the build.
+current specification. Unmapped source links go to GitHub; ordinary raw Markdown image embeds
+are withheld. Approved documentary figures are inserted from the verified
+`website/reference-images.json` manifest. Only explicitly authored assets
+under `website/src/assets` are copied into the site build.
 
 Browser search uses a locally generated index. Navigation and documents
 remain usable without JavaScript. The preview now uses **unmodified**
@@ -93,11 +97,28 @@ On systems where `python3` is not the command name, invoke
 `scripts/vendor_bootstra.py` with your Python 3 interpreter before the
 Eleventy build.
 
+## Editorial style for the public website
+
+Use the **Oxford (serial) comma** in public-facing articles, historical
+introductions, explanatory website copy, navigation labels, figure captions,
+and alternative text. This is a consistency and clarity convention for the
+reader-facing reference, not a requirement to restyle technical source reports.
+Codex-generated research reports, experiment notes, and developer-facing
+technical documentation may use whichever style fits the material; do not
+rewrite quoted historical passages or underlying evidence for punctuation.
+
+For factual statements in public-facing prose, cite sourceable claims close
+to their first mention. Distinguish manufacturer claims, contemporary
+independent reports, and our own measured behavior. Cite project reports or
+evidence receipts when those are the source, and qualify version-specific
+findings.
+
 ## Publication checklist
 
-Review the final preview artifact for source eligibility and private information,
-links, headings, accessibility, mobile layout, and search. Merge the reviewed
-change, then run **Publish DeskMate reference** manually from the Actions tab.
-Verify the resulting custom-domain URL, CSS and search, and enforce HTTPS after
-GitHub provisions the certificate. The future portal may add structured release
-records, data-driven catalogs and approved screenshot atlases.
+Review the preview artifact for source eligibility, links, headings,
+accessibility, mobile layout, image attribution, and search. Merging a reviewed
+site or documentation PR into `main` automatically runs **Publish DeskMate
+reference**. Use `workflow_dispatch` for deliberate manual republishing, not
+as an ordinary extra step. Verify the resulting custom-domain URL and GitHub
+Pages deployment status. The site already contains Collection 01's approved
+illustrations; future collections follow the same manifest-reviewed process.

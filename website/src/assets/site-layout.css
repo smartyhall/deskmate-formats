@@ -34,3 +34,29 @@
 .reference-figure figcaption { margin-top: .5rem; max-width: 80ch; line-height: 1.5; }
 .reference-figure-credit { display: block; opacity: .8; margin-top: .25rem; }
 @media print { .reference-figures { display: block; } .reference-figure { break-inside: avoid; margin-bottom: 1rem; } }
+
+/* Reader-first homepage; presentation complements unmodified BOOTSTRA.386. */
+.home-hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); align-items: start; gap: clamp(1rem, 3vw, 2rem); margin: .4rem 0 2.5rem; }
+.home-hero-copy { min-width: 0; }
+.home-hero-copy h1 { line-height: 1.15; }
+.home-hero-copy p { max-width: 66ch; }
+.home-search-link { display: inline-block; margin: .6rem .2rem; }
+.home-hero-image { margin: 0; min-width: 0; }
+.home-hero-image a { display: block; }
+.home-hero-image img { width: 100%; height: auto; aspect-ratio: 4 / 3; max-width: 640px; border: 1px solid currentColor; image-rendering: pixelated; }
+.home-hero-image figcaption { font-size: .9em; line-height: 1.45; margin-top: .5rem; }
+.home-paths { margin-bottom: 2.5rem; }
+.home-path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 1rem; }
+.home-path { display: flex; flex-direction: column; min-width: 0; border: 1px solid currentColor; padding: 1.15rem; }
+.home-path h3 { font-size: 1.25rem; line-height: 1.3; margin-top: 0; }
+.home-path p:last-child { margin-top: auto; margin-bottom: 0; }
+.home-context { max-width: 75ch; }
+@media (max-width: 900px) {
+  .home-hero { grid-template-columns: minmax(0, 1fr); }
+  .home-hero-image { max-width: 640px; }
+}
+@media print {
+  .home-hero { display: block; }
+  .home-path-grid { display: block; }
+  .home-path { break-inside: avoid; margin-bottom: 1rem; }
+}
