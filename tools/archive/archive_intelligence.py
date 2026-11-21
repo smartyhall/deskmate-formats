@@ -308,7 +308,8 @@ def configure(db, profile, store, update_tools):
                 previous = json.loads(current["value"])
                 kinds = set()
                 tool_kinds = {
-                    "seven_zip": {"zip", "arj", "cab", "lzh", "7z", "rar", "mz"},
+                    "seven_zip": {"zip", "arj", "cab", "lzh", "7z", "rar", "mz",
+                                  "iso9660", "udf"},
                     "lhasa": {"lzh"}, "pdftotext": {"pdf"}, "pdf_python": {"pdf"},
                 }
                 for setting in set(previous) | set(profile):
