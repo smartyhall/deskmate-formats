@@ -1,8 +1,15 @@
-# Manual publishing only. This workflow does NOT publish on merge or push.
-# Run it via GitHub Actions after approving the review artifact and Pages settings.
+# Publish reviewed content automatically after merge to main. Manual recovery remains available.
+# The build/audit/deploy steps run together; site assets never bypass validation.
 name: Publish DeskMate reference
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "website/**"
+      - "docs/**"
+      - "tools/check_reference_pages.py"
+      - ".github/workflows/reference-publish.yml"
   workflow_dispatch:
 
 permissions:

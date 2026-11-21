@@ -29,10 +29,21 @@ build for an alternate Pages address can still be made explicitly using
 
 The GitHub Actions **Reference site preview** workflow produces a downloadable
 root-path artifact and validates local links, fragments, and upstream theme files
-without publishing. The **Publish DeskMate reference** workflow only runs via
-`workflow_dispatch`, and deploys the generated site to GitHub Pages using the
-repository's **Settings → Pages → Custom domain** configuration. Pushing or
-merging a PR never publishes automatically.
+without publishing. It also audits the publication boundaries. This preview runs
+for changes to site files, documentation sources, and the site workflows.
+
+**Publish DeskMate reference** builds, checks, and deploys the site automatically
+after a push to `main` that changes `website/**`, `docs/**`, the reference page-map
+checker, or the publishing workflow. A reviewed PR merged to `main` therefore
+publishes automatically when relevant. The manual `workflow_dispatch` option is
+still available for a forced republish. Publishing uses the repository's
+**Settings → Pages → Custom domain** configuration.
+
+For pull requests touching only `website/**`, `docs/site/**`, or the site
+preview/publish workflows, the CI scope classifier skips the unrelated portable
+Python matrix while preserving the job names that may be required by branch
+protection. Changes to application code, general research documentation,
+tests, the publication audit, or other paths still run the full matrix.
 
 GitHub Pages custom domain: `deskmate.retroconnect.org`.
 The `deskmate` DNS CNAME points to `smartyhall.github.io` (no path segment).
