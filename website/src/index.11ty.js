@@ -22,7 +22,7 @@ module.exports = class Index {
       'original applications, recoverable data and unresolved questions.</p>' +
       '<p>This is an early reference preview, not an official Tandy publication. ' +
       'Dated experiments are preserved separately from maintained capabilities.</p>' +
-      '<p><a class="action-link" href="' + siteUrl("/search/") +
+      '<p><a class="btn btn-primary" href="' + siteUrl("/search/") +
       '">Search the reference</a></p></div><div class="landing-grid">' +
       cards + '</div>';
   }
