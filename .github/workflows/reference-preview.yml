@@ -1,0 +1,48 @@
+name: Reference site preview
+
+on:
+  pull_request:
+    paths:
+      - "website/**"
+      - "docs/site/**"
+      - ".github/workflows/reference-preview.yml"
+  push:
+    branches: [main]
+    paths:
+      - "website/**"
+      - "docs/site/**"
+      - ".github/workflows/reference-preview.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate source map
+        run: python tools/check_reference_pages.py
+      - name: Install pinned direct dependencies
+        working-directory: website
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Test navigation and hosting paths
+        working-directory: website
+        run: npm test
+      - name: Build GitHub Pages path preview
+        working-directory: website
+        env:
+          SITE_BASE_PATH: /deskmate-formats/
+        run: npm run build
+      - name: Upload preview without public deployment
+        uses: actions/upload-artifact@v4
+        with:
+          name: deskmate-reference-preview
+          path: website/_site/
+          if-no-files-found: error
+          retention-days: 7
