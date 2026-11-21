@@ -50,7 +50,7 @@ class VisualEvidenceTests(unittest.TestCase):
             third = scan({'guest': root}, {}, second)
             for result in (second, third):
                 self.assertEqual(result['occurrences'][key]['sha256'], sha)
-                self.assertEqual(result['occurrences'][key]['locator'], str(capture))
+                self.assertEqual(result['occurrences'][key]['locator'], original['locator'])
                 self.assertFalse(result['occurrences'][key]['observed'])
                 self.assertIn(sha, result['images'])
                 self.assertIn(key, result['unobserved_previous_occurrences'])
