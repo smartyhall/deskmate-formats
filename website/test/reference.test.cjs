@@ -44,6 +44,9 @@ test("mapped Markdown links are routed internally", () => {
     /^https:\/\/github\.com\/smartyhall\/deskmate-formats\/blob\/main\/docs\/research\//);
   assert.equal(resolveLink("#section", source), "#section");
   assert.equal(resolveLink("https://example.org", source), "https://example.org");
+  assert.equal(resolveLink("../../PROJECT_STATUS.md", source),
+    "https://github.com/smartyhall/deskmate-formats/blob/main/PROJECT_STATUS.md");
+  assert.equal(resolveLink("../../unreviewed-root-secret.md", source), "#unpublished-source");
 });
 
 test("historical Markdown renders and is indexed without copying originals", () => {
