@@ -24,7 +24,18 @@ On PowerShell:
 Unset SITE_BASE_PATH to build for a root-mounted self-hosted domain.
 
 The GitHub Actions **Reference site preview** workflow creates a downloadable
-artifact, but does not enable public deployment.
+artifact, but does not enable public deployment. It also checks local links,
+fragments, and the required upstream theme files.
+
+Once the review artifact has been approved, merge the site PR, enable GitHub
+Pages with **GitHub Actions** as the build/deployment source, and manually
+run **Publish DeskMate reference** from the Actions tab. The publishing
+workflow has only a `workflow_dispatch` trigger; merging or pushing will
+never publish automatically. The initial project-path URL will be
+`https://smartyhall.github.io/deskmate-formats/` if the default GitHub Pages
+project URL remains in use. This is a planned address, **not** a claim that
+the site is already online. For an independent domain, revise the base path,
+hosting settings, and redirects before deploying there.
 
 ## Source and publication policy
 
