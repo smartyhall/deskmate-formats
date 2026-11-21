@@ -195,6 +195,7 @@ links the four review branches.
 The November 21 generic DeskMate installation campaign preserved
 [startup](20261121-deskmate-303-startup.json),
 [3.03.01 installed](20261121-deskmate-303-installed.json),
-[native comparison](20261121-deskmate-303-native-comparison.json), and
+[native comparison](20261121-deskmate-303-native-comparison.json),
+[evidence commit](20261121-deskmate-303-evidence-commit.json), and
 [completion](20261121-deskmate-303-completion.json) receipts.
 [Campaign report](../../research/deskmate-303-305-comparison.md)
