@@ -108,3 +108,68 @@ that screen in view at the measured checkpoint. The emulator quit
 at 72,872 ms. Application editing, save, the program's own exit
 command, and operation on original Tandy 1000 hardware remain open.
 [Image and capture receipt](../evidence/deskmate-evolution-20261121.json)
+
+## DeskMate II 01.00.00 on the Tandy 1000 SX
+
+This carried forward the already booted SX process after the session
+interruption. Its authenticated status confirmed held time at 47,000 ms
+and matched the mounted disk identities. The profile used the SX ROM,
+8088 at 4.77 MHz, 640 KiB, internal video, and two 360 KiB drives.
+
+Extract the four unlabelled 368,640-byte images from verified
+`system/d1000sx.zip`. Mount Disk 1 (DOS) in A: and Disk 3 (DeskMate II)
+in B:. Disk 2 holds supplemental DOS software, and Disk 4 holds samples.
+The boot dialog identified Tandy DOS 03.20.02 and BIOS 01.02.00.
+Enter `10-23-2026` and `12:00:00` at the DOS prompts, switch to B:,
+and run `DESK`. The program disk's exact launcher has SHA-256
+`d0a00742f352538ad0de880d28c03bbd3c00f008a80a08a83657c4364662201d`
+and contains version 01.00.00. [Archive and member identities](../ecosystem/deskmate-installation-media.json)
+
+At 69,214 ms, the 640 × 225 mode-3 task screen had the original
+layout of six application panels, a month calendar, today's events,
+and F1–F10 commands. F2 Name replaced the bottom commands with
+Old filename and New filename prompts. Escape, F7, and a blank Enter
+left the prompt visible at subsequent checkpoints. The run ended by
+socket quit at 71,230 ms. No rename or other document change was
+submitted. The sample disk and the program's own exit remain open.
+
+## DeskMate II Tandy 3000 file sets on an RSX compatibility profile
+
+TVDog identifies the program set as DeskMate II for the 3000 and
+standard PCs. A separate Tandy DOS 5.00 RSX clone used two
+720 KiB FAT12 working images from the two verified `3kdm2dk*.zip`
+archives. The respective working SHA-256 digests were
+`24b9030dbe775f7ab13b4b90436dec3e0fbc07c1912a776dc9716d67a7321ef8` and
+`dc9bc0856474a6c4447aa5a750c3e129241c0c3c1b8917df1af7aeb5d1e22ad6`.
+Image 1 contains 27 program and help files, and image 2 contains
+nine sample and tutorial files. [TVDog index](http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/00_index.txt)
+
+Boot DOS, create `C:\DMII`, and copy `A:\*.*` from each work image
+to that directory in numerical order. DOS reported the two copy
+counts at 37,468 and 46,164 ms. Eject the media, set the same date
+and time as the SX trial, and run `DESK` from `C:\DMII`. This
+procedure changed neither DOS startup file nor disk geometry.
+The version 01.00.00 string is present in the launcher with SHA-256
+`c3c8ae6409707ad78503b22ce4a9d9f35aa998cb96efa5a600fd061b2180e09f`.
+
+The program reached its task screen by 48,918 ms. Layout and footer
+commands parallel the native SX view. This run used BIOS mode 3 at
+720 × 400 with a green frame, blue panels, and red focus. The SX
+run used different video hardware and displayed gray and black,
+so this trial does not isolate which factor determined the palette.
+Right Arrow moved across the application panels. Four presses from
+Text reached Calendar, and Enter opened Calendar's separate
+text-mode weekly schedule. The program showed a filename prompt
+and a function-key bar with Date, Events, and Add. Typing `ATLAS`
+left a zero-byte placeholder on the disposable disk. No event was
+entered, and Escape left the schedule in view. The stopped run
+ended at 70,104 ms with disk SHA-256
+`b39a1c182722bd9b9d21d335d36a6bc855f569e68f74b754f695751a09a35630`.
+
+The same-name program comparison against SX Disk 3 found 15 exact
+matches and 10 differences. All nine `TW*.EXE` programs matched
+byte-for-byte. `DESK.EXE`, `DMPLUS.COM`, `ALARM.ARM`, and seven
+help files differed. This directly establishes shared applications
+alongside different launcher and support bytes. Operation on an
+emulated or physical Tandy 3000 and a whole-suite DOS compatibility
+claim remain open.

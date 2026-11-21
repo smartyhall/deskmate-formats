@@ -38,6 +38,13 @@
         "ii-1000sx"
       ],
       "relationship": "The same version banner appears across separate 3000 and SX media; neither identical edition nor equal media is inferred."
+    },
+    {
+      "releases": [
+        "ii-3000",
+        "ii-1000sx"
+      ],
+      "relationship": "In the program archive and SX Disk 3, 15 same-name files match and 10 differ. All nine TW*.EXE application and auxiliary executables match. DESK.EXE, DMPLUS.COM, ALARM.ARM, and seven help files differ."
     }
   ],
   "releases": [
@@ -91,7 +98,7 @@
       "edition": "Tandy 3000 file sets",
       "version": "01.00.00",
       "target_hardware": "Tandy 3000; standard PCs described by TVDog",
-      "dos_and_runtime": "Minimum DOS and display requirements unverified",
+      "dos_and_runtime": "Desktop and Calendar launched on a Tandy RSX/DOS 5.00 compatibility profile.",
       "distribution_media": [
         {
           "path": "tandy1000/deskmate/3kdm2dk1.zip",
@@ -127,11 +134,14 @@
         "Telecom",
         "Mail"
       ],
-      "evidence": "inspected",
-      "record": null,
-      "uncertainties": "Confirm launcher behavior on PC-compatible control and contemporaneous catalog identity",
+      "evidence": "launched",
+      "record": "../research/deskmate-evolution-native-20261121.md#deskmate-ii-tandy-3000-file-sets-on-an-rsx-compatibility-profile",
+      "uncertainties": "Original Tandy 3000 hardware, exact DOS requirements, and whole-suite compatibility remain open.",
       "dates": [],
-      "public_image_ids": []
+      "public_image_ids": [
+        "ui.evolution.ii3000-menu",
+        "ui.evolution.ii3000-calendar-atlas"
+      ]
     },
     {
       "id": "ii-1000sx",
@@ -139,7 +149,7 @@
       "edition": "Tandy 1000 SX",
       "version": "01.00.00",
       "target_hardware": "Tandy 1000 SX",
-      "dos_and_runtime": "Bundled DOS 3.2",
+      "dos_and_runtime": "Native SX startup with Tandy DOS 03.20.02.",
       "distribution_media": [
         {
           "path": "tandy1000/system/d1000sx.zip",
@@ -169,11 +179,13 @@
         "Telecom",
         "Mail"
       ],
-      "evidence": "inspected",
-      "record": null,
-      "uncertainties": "TeleDisk-to-raw sector equivalence unverified",
+      "evidence": "launched",
+      "record": "../research/deskmate-evolution-native-20261121.md#deskmate-ii-010000-on-the-tandy-1000-sx",
+      "uncertainties": "Sample applications, application exit, and alternate TeleDisk sector equivalence remain open.",
       "dates": [],
-      "public_image_ids": []
+      "public_image_ids": [
+        "ui.evolution.sx-menu"
+      ]
     },
     {
       "id": "personal-ex",

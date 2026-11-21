@@ -799,6 +799,54 @@
       "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
       "page_id": "applications.evolution-atlas",
       "section_heading": "Original DeskMate and DeskMate II"
+    },
+    {
+      "id": "ui.evolution.sx-menu",
+      "path": "evolution-atlas/sx-menu.png",
+      "sha256": "eb127ae2f0155c017361c6711ad80d413ca3587ec5861069a026783ea4521b97",
+      "source_sha256": "66808820809f53bc717ef6286dc666e6375d908ef8a3eadda9de4a91a1c190d4",
+      "size": 4181,
+      "width": 640,
+      "height": 225,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "deskmate-evolution-20261121-sx-menu",
+      "caption": "DeskMate II 01.00.00 starts from its program disk on the emulated Tandy 1000 SX.",
+      "alt": "Text-mode DeskMate II task screen with a month calendar, six task panels, and a function-key bar.",
+      "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
+      "page_id": "applications.evolution-atlas",
+      "section_heading": "Original DeskMate and DeskMate II"
+    },
+    {
+      "id": "ui.evolution.ii3000-menu",
+      "path": "evolution-atlas/ii3000-menu.png",
+      "sha256": "9362c5f04e2eeb42b96c0808ef86338fcf60ef1637f10849831d6e08186a2784",
+      "source_sha256": "300c5df7560fc4793afc9bd9944fc179e511dee1b869a438dd4ae3bd2e16f435",
+      "size": 6299,
+      "width": 720,
+      "height": 400,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "deskmate-evolution-20261121-ii3000-menu",
+      "caption": "The Tandy 3000 DeskMate II file sets reach their task screen on the RSX compatibility profile.",
+      "alt": "Green text-mode frame with six document panels and function-key labels on a blue background.",
+      "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
+      "page_id": "applications.evolution-atlas",
+      "section_heading": "Original DeskMate and DeskMate II"
+    },
+    {
+      "id": "ui.evolution.ii3000-calendar-atlas",
+      "path": "evolution-atlas/ii3000-calendar-atlas.png",
+      "sha256": "74fbf0124d3797a8594b47b9e300b0bcd0fcfd533b1671886b7060c3eb18cd5a",
+      "source_sha256": "189b04f4e3bfdc552a501866253c2c97b0515f40e7f0bf12c2ff880f24b277d6",
+      "size": 5642,
+      "width": 720,
+      "height": 400,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "deskmate-evolution-20261121-ii3000-calendar-atlas",
+      "caption": "DeskMate II Calendar from the 3000 program set shows the weekly schedule for the blank ATLAS control.",
+      "alt": "Weekly time grid, October month calendar, empty appointment list, and Find through Add function-key commands.",
+      "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
+      "page_id": "applications.evolution-atlas",
+      "section_heading": "Original DeskMate and DeskMate II"
     }
   ]
 }

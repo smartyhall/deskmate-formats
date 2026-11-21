@@ -37,6 +37,13 @@ six task panels, a calendar, today's events, and visible function-key
 commands. The original 1000 target remains to be qualified.
 [Native startup and navigation record](../research/deskmate-evolution-native-20261121.md#original-010100-on-a-1000-sx-compatibility-profile)
 
+DeskMate II retained the six task panels in both native runs. On the
+SX, F2 exposed old and new filename prompts. The 3000 file sets
+launched on an RSX compatibility profile, where Calendar used a
+text-mode weekly grid and a separate filename prompt. Nine application
+executables match across the SX and 3000 sets, while the launchers
+and several support files differ. [SX startup](../research/deskmate-evolution-native-20261121.md#deskmate-ii-010000-on-the-tandy-1000-sx) · [3000 compatibility trial](../research/deskmate-evolution-native-20261121.md#deskmate-ii-tandy-3000-file-sets-on-an-rsx-compatibility-profile)
+
 ## Personal DeskMate
 
 The 1000 EX bundle has DOS and two Personal DeskMate disks, with

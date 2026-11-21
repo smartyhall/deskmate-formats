@@ -56,6 +56,48 @@
       "raw_sha256": "6ad349f201114a58d8564e2e5a40b4612db7b831dcf88e2f8edf141e5ab9682a",
       "derivative_sha256": "900e3391f73f9c026afd91ab98c486a535808796b307e4e370699ba62d1bbcf8",
       "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.sx-menu": {
+      "release": "01.00.00",
+      "machine": "tandy1000sx",
+      "ms": 69214,
+      "frame": 4144,
+      "bios_mode": 3,
+      "dimensions": [
+        640,
+        225
+      ],
+      "raw_sha256": "66808820809f53bc717ef6286dc666e6375d908ef8a3eadda9de4a91a1c190d4",
+      "derivative_sha256": "eb127ae2f0155c017361c6711ad80d413ca3587ec5861069a026783ea4521b97",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.ii3000-menu": {
+      "release": "01.00.00",
+      "machine": "tandy1000rsx",
+      "ms": 56418,
+      "frame": 3936,
+      "bios_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "raw_sha256": "300c5df7560fc4793afc9bd9944fc179e511dee1b869a438dd4ae3bd2e16f435",
+      "derivative_sha256": "9362c5f04e2eeb42b96c0808ef86338fcf60ef1637f10849831d6e08186a2784",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.ii3000-calendar-atlas": {
+      "release": "01.00.00",
+      "machine": "tandy1000rsx",
+      "ms": 67500,
+      "frame": 4713,
+      "bios_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "raw_sha256": "189b04f4e3bfdc552a501866253c2c97b0515f40e7f0bf12c2ff880f24b277d6",
+      "derivative_sha256": "74fbf0124d3797a8594b47b9e300b0bcd0fcfd533b1671886b7060c3eb18cd5a",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
     }
   },
   "runs": {
@@ -70,6 +112,23 @@
       "profile": "Tandy 1000 SX compatibility profile",
       "dos": "02.11.22",
       "version_banner": "01.01.00"
+    },
+    "ii-1000sx": {
+      "emulated_ms": 71230,
+      "profile": "Tandy 1000 SX",
+      "dos": "03.20.02",
+      "launcher_sha256": "d0a00742f352538ad0de880d28c03bbd3c00f008a80a08a83657c4364662201d",
+      "mounted_media": {
+        "a": "c21cdefbdce8f1ae8a1edddcba594429b320d57fb5cb3a75af969461022c1dd3",
+        "b": "1ee432d7b0a3dcf72bef91036a131676203cb8a1949bb11f378b820242b65f1b"
+      }
+    },
+    "ii-3000": {
+      "emulated_ms": 70104,
+      "profile": "Tandy 1000 RSX compatibility profile",
+      "dos": "Tandy MS-DOS 5.00",
+      "launcher_sha256": "c3c8ae6409707ad78503b22ce4a9d9f35aa998cb96efa5a600fd061b2180e09f",
+      "disk_sha256": "b39a1c182722bd9b9d21d335d36a6bc855f569e68f74b754f695751a09a35630"
     }
   }
 }
