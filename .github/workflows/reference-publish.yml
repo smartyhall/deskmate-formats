@@ -25,6 +25,7 @@ jobs:
     timeout-minutes: 25
     permissions:
       contents: read
+      actions: read
       pages: write
       id-token: write
     environment:
@@ -65,6 +66,28 @@ jobs:
         uses: actions/upload-pages-artifact@v4
         with:
           path: website/_site
+      # Pages sometimes queries the Actions artifact index before a just-uploaded
+      # artifact is visible. Poll this run's artifacts rather than rerun the
+      # failed deploy job, which would upload a duplicate github-pages artifact.
+      - name: Wait for Pages artifact indexing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for attempt in {1..30}; do
+            if count="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts?per_page=100" --jq '[.artifacts[] | select(.name == "github-pages" and .expired == false)] | length')"; then
+              if [[ "$count" == "1" ]]; then
+                echo "Pages artifact indexed for this run (attempt $attempt)."
+                exit 0
+              fi
+              if [[ "$count" != "0" ]]; then
+                echo "::error::Expected one github-pages artifact; found $count."
+                exit 1
+              fi
+            fi
+            sleep 3
+          done
+          echo "::error::Timed out waiting for the Pages artifact to be indexed."
+          exit 1
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
