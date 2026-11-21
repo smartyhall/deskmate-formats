@@ -13,7 +13,7 @@ if __package__:
 else:
     from archive_intelligence import contained, open_index
 
-from deskmate_formats import ff1, music
+from deskmate_formats import database, ff1, music
 from deskmate_formats.preservation.model import PreservationError
 from deskmate_formats.preservation.native import open_native
 
@@ -42,6 +42,20 @@ def qualify(data, kind, *, allow_sector_padding=False):
         else:
             result['midi'] = True
         return result
+    if kind == 'dmdb':
+        try:
+            directory = database.inspect_help_directory(data)
+        except database.DatabaseError:
+            pass  # Filer, Calendar, and other database profiles use their existing path.
+        else:
+            result = {'application': 'help', 'profile': 'deskmate-help-dmdb',
+                      'directory_tail_bytes': len(directory.tail),
+                      'directory_counts': {table.name: table.record_count for table in directory.tables}}
+            try:
+                database.parse_help_bytes(data)
+            except database.DatabaseError as exc:
+                result.update(status='rejected', error=str(exc), error_code=exc.code)
+            return result
     doc = open_native(data, APPLICATIONS[kind])
     result = {'application': doc.application, 'profile': doc.profile}
     if doc.application == 'sound':
@@ -81,7 +95,8 @@ def inventory(db, known, *, allow_sector_padding=False):
                 data = stream.read(MAX_BYTES + 1)
             if len(data) != row['size'] or sha256(data).hexdigest() != digest:
                 raise ValueError('candidate no longer matches index')
-            result.update(qualify(data, kind, allow_sector_padding=allow_sector_padding), status='accepted')
+            result.update(qualify(data, kind, allow_sector_padding=allow_sector_padding))
+            result.setdefault('status', 'accepted')
         except (ValueError, OSError) as exc:
             result.update(status='rejected', error=str(exc))
             if isinstance(exc, PreservationError):
@@ -90,6 +105,8 @@ def inventory(db, known, *, allow_sector_padding=False):
         counts[kind]['occurrences'] += len(rows)
         counts[kind]['distinct'] += 1
         counts[kind][result['status']] += 1
+        if result.get('application') == 'help':
+            counts[kind]['help_directories'] += 1
         if result['status'] == 'accepted' and digest not in known:
             counts[kind]['accepted_outside_comparison'] += 1
     return {'summary': counts, 'records': records}
