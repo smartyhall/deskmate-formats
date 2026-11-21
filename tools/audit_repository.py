@@ -31,7 +31,19 @@ DATA_EXT = {'.cln', '.adr', '.fil', '.pcl', '.doc', '.fig', '.wks', '.snd', '.sn
 SYNTHETIC_FF1 = 'draw/typography-lab-grid.ff1'
 SYNTHETIC_HDS = {
     f'dm-music/{control}-dm-music-1.04.hds'
-    for control in ('major-scale', 'duration-tempo', 'accidentals', 'alternate-endings')
+    for control in (
+        'major-scale', 'duration-tempo', 'accidentals', 'alternate-endings',
+        'batch-listening-chromatic-scale-v1', 'batch-listening-major-cadence-v1',
+        'batch-listening-minor-cadence-v1', 'batch-listening-minor-scale-v1',
+        'batch-listening-oem-chromatic-scale-v1', 'batch-listening-oem-major-cadence-v1',
+        'batch-listening-oem-major-scale-v1', 'batch-listening-oem-minor-cadence-v1',
+        'batch-listening-oem-minor-scale-v1', 'batch-marker-a-native',
+        'batch-region-hold-tool-generated', 'batch-m01', 'batch-m02', 'batch-m03',
+        'batch-m08', 'batch-m10', 'batch-m11', 'batch-m12', 'batch-m13', 'batch-m14',
+        'batch-mbar', 'batch-mduet', 'batch-medit', 'batch-mextra', 'batch-mgrow',
+        'batch-mloop', 'batch-mmid', 'batch-mreopen', 'batch-mtimes', 'batch-mtrio',
+        'batch-mvalues', 'batch-mvol',
+    )
 }
 TYPOGRAPHY_DIR = Path('examples/typography-comparison/v1')
 TYPOGRAPHY_IMAGES = {
