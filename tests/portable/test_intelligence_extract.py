@@ -52,6 +52,26 @@ class ArchiveExtractionTests(unittest.TestCase):
         kind = archive.identify(self.payload, label)
         return kind, archive.extract(self.payload, label, kind, **kwargs)
 
+    def test_sound_sniff_distinguishes_voc_and_incidental_marker(self):
+        voc = b'Creative Voice File\x1a' + bytes(40)
+        self.payload.write_bytes(voc)
+        self.assertEqual(archive.identify(self.payload, 'recording.snd'), 'voc')
+        self.payload.write_bytes(b'RIFF\0\0\0\0WAVE' + bytes(40))
+        self.assertEqual(archive.identify(self.payload, 'recording.snd'), 'wav')
+
+        menu = b'\x1a\x01\x1e\x01' + bytes(80)
+        self.payload.write_bytes(menu)
+        self.assertNotEqual(archive.identify(self.payload, 'control.mnu'), 'snd')
+
+        # A complete original descriptor can identify a candidate even when its PCM is short.
+        recording = bytearray(58)
+        recording[:4] = b'\x1a\x00\x01\x00'
+        pack_into('<H', recording, 14, 11000)
+        pack_into('<I', recording, 20, 44)
+        pack_into('<I', recording, 32, 32)
+        self.payload.write_bytes(recording)
+        self.assertEqual(archive.identify(self.payload, 'recording.bin'), 'snd')
+
     def test_zip_paths_links_and_budgets(self):
         with zipfile.ZipFile(self.payload, 'w') as package:
             package.writestr('README.TXT', b'index control')
