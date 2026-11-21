@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Evidence-based Tandy DeskMate format and application reference">
+  <title>{{ title | default("Reference") | escape }} | DeskMate Reference</title>
+  <link rel="stylesheet" href="{{ '/assets/site.css' | siteurl }}">
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+  <header class="site-header">
+    <div class="masthead"><span class="site-mark" aria-hidden="true">[DM]</span>
+      <a href="{{ '/' | siteurl }}">DESKMATE REFERENCE</a>
+      <span class="site-version">EXPERIMENTAL DOCUMENTATION</span></div>
+    <nav class="top-nav" aria-label="Primary">
+      <a href="{{ '/' | siteurl }}">Home</a>
+      <a href="{{ '/search/' | siteurl }}">Search</a>
+      <a href="https://github.com/smartyhall/deskmate-formats">Source repository</a>
+    </nav>
+  </header>
+  <div class="site-shell">
+    <aside class="sidebar" aria-label="Documentation index">
+      <nav aria-label="Reference sections">
+      {% for section in navigation %}
+        {% if section.pages.length %}
+        <details open>
+          <summary>{{ section.title }}</summary>
+          <ul>
+          {% for item in section.pages %}
+            <li><a href="{{ ('/' + item.slug + '/') | siteurl }}"
+             {% if currentId == item.id %}aria-current="page"{% endif %}>{{ item.title }}</a></li>
+          {% endfor %}
+          </ul>
+        </details>
+        {% endif %}
+      {% endfor %}
+      </nav>
+    </aside>
+    <main id="content" class="main-content" tabindex="-1">
+      {% if sourceRole %}
+        <div class="document-notice"><span class="document-kind">{{ sourceRole }}</span>
+          <span>Interpret source claims in the context of their date and verified evidence.</span></div>
+      {% endif %}
+      <article class="document">{{ content | safe }}</article>
+      {% if sourceLink %}
+      <p class="source-note"><a href="{{ sourceLink }}">Review the source Markdown and history</a></p>
+      {% endif %}
+    </main>
+  </div>
+  <footer class="site-footer">
+    Independently maintained preservation research. Not affiliated with Tandy or Radio Shack.
+    <a href="https://github.com/smartyhall/deskmate-formats/blob/main/LICENSING.md">Licensing and attribution</a>.
+  </footer>
+</body>
+</html>
