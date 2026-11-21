@@ -1,0 +1,11 @@
+DeskMate documentary software capture
+
+This screenshot is included in the DeskMate reference for historical and
+technical commentary under the project operator's documentary publication
+authorization of 2026-11-21. Publisher attribution appears in its sidecar
+and in the reference image manifest.
+
+No license to the underlying software, user interface, trademarks, fonts,
+or shipped artwork is granted by this notice. Rights remain with their
+respective holders. This notice does not limit uses permitted by applicable
+law or any separate permission from the relevant rights holder.
