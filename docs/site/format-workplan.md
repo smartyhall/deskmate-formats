@@ -13,9 +13,9 @@ of evidence, not interchangeable endorsements.
 Tandy describes a Database Resource for Address Book, Calendar and Filer, and
 a Core Services Form Manager for Draw. Native modules and files expose common
 DMDB/DBCOLS structures. Help resources provide a particularly useful additional
-case, but their identification and broader decoding are currently in
-[PR #140](https://github.com/smartyhall/deskmate-formats/pull/140), not the
-integrated baseline at the time this workplan was written.
+case. The structurally qualified Help reader from
+[PR #140](https://github.com/smartyhall/deskmate-formats/pull/140) is now
+integrated, while Help topic semantics and rule execution remain unresolved.
 
 **A common record engine does not establish common application semantics,
 allocation behavior, index ordering, or serialized document envelopes.**
@@ -44,13 +44,13 @@ Record and distinguish these layers:
 | Sound and Music | [native Sound](../research/sound-native-20261118.md) / [Music](../research/music-native-20261118.md) | Close invalid/truncated sample behavior and unqualified musical control flow; keep MIDI/HDS as independent corroboration rather than a new primary project | Recover source recordings and scores with known playback limitations |
 | Print and shared resources | [SDK reference](../reference/tandy-format-crosswalk.md) | Compare identical content printed or exported by two built-in applications; identify shared printer/resource structures | Explain document layout and export limits across applications |
 
-The Sound corpus, Draw style-word and expanded MidiMapper investigations are
-also under review in PRs
-[#141](https://github.com/smartyhall/deskmate-formats/pull/141),
-[#142](https://github.com/smartyhall/deskmate-formats/pull/142) and
+The Sound corpus and expanded MidiMapper investigations are integrated in
+[#141](https://github.com/smartyhall/deskmate-formats/pull/141) and
 [#143](https://github.com/smartyhall/deskmate-formats/pull/143).
-They should update the relevant maintained references *after* review and
-integration, while their dated reports remain intact.
+The Draw style-word work in
+[#142](https://github.com/smartyhall/deskmate-formats/pull/142) is awaiting
+its final standalone-Workbench CI checks. Synthesize the relevant maintained
+references after reviewing those results; preserve dated reports intact.
 
 ## Other DeskMate software: one comparable questionnaire
 
