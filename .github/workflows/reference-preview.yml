@@ -39,6 +39,8 @@ jobs:
         env:
           SITE_BASE_PATH: /deskmate-formats/
         run: npm run build
+      - name: Audit generated internal links
+        run: python website/scripts/check_generated_site.py website/_site /deskmate-formats/
       - name: Verify upstream theme is packaged with the preview
         run: |
           test -s website/_site/assets/vendor/bootstra386/css/bootstrap.min.css
