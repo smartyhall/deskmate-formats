@@ -191,3 +191,10 @@ The November 20 native-semantics campaign preserved
 and [safe-stop](20261120-native-semantics-completion.json) receipts.
 Its [handoff](../../research/native-semantics-campaign-handoff-20261120.md)
 links the four review branches.
+
+The November 21 generic DeskMate installation campaign preserved
+[startup](20261121-deskmate-303-startup.json),
+[3.03.01 installed](20261121-deskmate-303-installed.json),
+[native comparison](20261121-deskmate-303-native-comparison.json), and
+[completion](20261121-deskmate-303-completion.json) receipts.
+[Campaign report](../../research/deskmate-303-305-comparison.md)

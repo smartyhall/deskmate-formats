@@ -14,6 +14,15 @@ in stored index order, without assuming that order's collation policy. All sixte
 raw values, raw row bytes, index/row locations, full source bytes and opaque
 unrelated tables are retained through `AddressBook.storage`.
 
+The [November 21 native comparison](deskmate-303-305-comparison.md#address-book)
+confirmed the same schema and single-contact storage in 3.03.01 and 3.05.
+The 3.03 first-open default can have an empty `CONFIG.ConfigInfo` value.
+Opening and closing a copied 3.03 book in 3.05 populated that value without
+altering the contact. The 3.02 DATA schema declares Title width 5 and
+Address width 38, versus 10 and 43 in the later builds. The generic database
+reader can inspect the tested 3.02 file. The Address Book reader's exact
+schema guard rejects it with `unsupported_schema`.
+
 | Python field | DATA schema name / zero-based slot | Width | Evidence |
 | --- | --- | ---: | --- |
 | first_name | FirstName / 1 | 18 | A01/A02 controlled First Name length |
