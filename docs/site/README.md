@@ -60,13 +60,15 @@ fallbacks when introducing the theme.
 
 ## Current safety boundary
 
-No raw native screen captures, copyrighted source scans, proprietary
-applications, ROMs, original archival records, private evidence paths, or
-commercial media are site assets. The private inventory is not the public
-media directory. An image may enter a future public site only after an
-explicitly documented publication basis and review of its actual contents.
-Previously authorized, manifest-checked synthetic Draw comparisons are a
-narrow exception, not blanket permission for UI screenshots.
+Raw private evidence, complete applications, ROMs, commercial media,
+credentials, personal records and private locators remain outside Git. The
+private inventory is not automatically a public media directory. The
+operator's 2026-11-21 documentary-image grant, however, authorizes ordinary
+selected software-interface screenshots made with synthetic/public content,
+project-generated illustrations and appropriate public reference figures,
+without separate operator permission for each image. Use the manifest and
+review requirements in [Visual assets](visual-assets.md); preserve third-party
+rights and prohibit bulk extraction or redistribution of proprietary media.
 
 ## Validation
 
