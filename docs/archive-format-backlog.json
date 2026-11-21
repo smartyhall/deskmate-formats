@@ -1,0 +1,322 @@
+{
+  "schema_version": 1,
+  "operator_approved": "2026-11-20",
+  "note": "Candidate work families, not a support matrix. Audit existing handlers before implementation; resolve ambiguous names and split by platform and variant. Priority 1 is highest; prerequisites may take precedence.",
+  "packages": [
+    {
+      "id": "dos-archives",
+      "priority": 1,
+      "layer": "archive",
+      "formats": [
+        "ARC",
+        "PAK",
+        "ARJ",
+        "LHA",
+        "ZOO",
+        "SQZ",
+        "HA",
+        "UC2",
+        "DWC"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "compression",
+      "priority": 1,
+      "layer": "compression",
+      "formats": [
+        "Unix Compress",
+        "Squeeze",
+        "Crunch",
+        "BZIP2",
+        "XZ"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "pc-sector-images",
+      "priority": 1,
+      "layer": "sector-image",
+      "formats": [
+        "IMG",
+        "IMA",
+        "IMD",
+        "TD0",
+        "CopyQM",
+        "DCF"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "fat",
+      "priority": 1,
+      "layer": "filesystem",
+      "formats": [
+        "FAT12 extensions",
+        "FAT16 extensions",
+        "FAT32",
+        "VFAT"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "xdf",
+      "priority": 1,
+      "layer": "disk-layout",
+      "formats": [
+        "XDF"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "bitstreams",
+      "priority": 2,
+      "layer": "track-image",
+      "formats": [
+        "HFE",
+        "EDSK",
+        "86F",
+        "MFM",
+        "G64",
+        "G71",
+        "NIB",
+        "WOZ"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "flux",
+      "priority": 2,
+      "layer": "flux-capture",
+      "formats": [
+        "SCP",
+        "KryoFlux STREAM",
+        "A2R",
+        "DFI",
+        "FluxEngine"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "encoding",
+      "priority": 2,
+      "layer": "recording-encoding",
+      "formats": [
+        "IBM FM",
+        "IBM MFM",
+        "Commodore GCR",
+        "Apple GCR",
+        "Amiga MFM"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "cpm",
+      "priority": 2,
+      "layer": "filesystem",
+      "formats": [
+        "CP/M geometry and allocation variants"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "tandy-images",
+      "priority": 2,
+      "layer": "disk-image",
+      "formats": [
+        "JV1",
+        "JV3",
+        "DMK",
+        "VDK",
+        "JVC"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "tandy-filesystems",
+      "priority": 2,
+      "layer": "filesystem",
+      "formats": [
+        "OS-9",
+        "RS-DOS",
+        "TRSDOS",
+        "LDOS"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "commodore-images",
+      "priority": 2,
+      "layer": "disk-image",
+      "formats": [
+        "D64",
+        "D67",
+        "D71",
+        "D81",
+        "D80",
+        "D82"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "commodore-containers",
+      "priority": 2,
+      "layer": "container",
+      "formats": [
+        "T64",
+        "LNX"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "commodore-filesystems",
+      "priority": 2,
+      "layer": "filesystem",
+      "formats": [
+        "Commodore DOS variants"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "apple2",
+      "priority": 3,
+      "layer": "media-and-archives",
+      "formats": [
+        "DSK",
+        "DO",
+        "PO",
+        "2MG",
+        "ShrinkIt",
+        "Binary II",
+        "Apple DOS",
+        "ProDOS"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "macintosh",
+      "priority": 3,
+      "layer": "media-and-archives",
+      "formats": [
+        "DiskCopy 4.2",
+        "NDIF",
+        "UDIF",
+        "MFS",
+        "HFS",
+        "StuffIt",
+        "MacBinary",
+        "BinHex"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "amiga",
+      "priority": 3,
+      "layer": "media-and-archives",
+      "formats": [
+        "ADF",
+        "ADZ",
+        "DMS",
+        "IPF",
+        "OFS",
+        "FFS",
+        "LZX"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "atari",
+      "priority": 3,
+      "layer": "disk-image",
+      "formats": [
+        "ATR",
+        "ATX",
+        "XFD",
+        "ST",
+        "STX",
+        "MSA"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "other-microcomputers",
+      "priority": 3,
+      "layer": "research-family",
+      "formats": [
+        "Amstrad",
+        "Acorn",
+        "TI-99/4A",
+        "MSX",
+        "ZX Spectrum"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "hard-disk",
+      "priority": 4,
+      "layer": "disk-image",
+      "formats": [
+        "RAW",
+        "VHD",
+        "VHDX",
+        "VMDK",
+        "VDI",
+        "QCOW2",
+        "HDI"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "optical-media",
+      "priority": 4,
+      "layer": "disc-image",
+      "formats": [
+        "ISO",
+        "BIN/CUE",
+        "NRG",
+        "CCD",
+        "MDF/MDS",
+        "CHD"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "optical-filesystems",
+      "priority": 4,
+      "layer": "filesystem",
+      "formats": [
+        "ISO 9660",
+        "High Sierra",
+        "Joliet",
+        "Rock Ridge",
+        "UDF"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "cassette",
+      "priority": 5,
+      "layer": "tape-media",
+      "formats": [
+        "CAS",
+        "TAP",
+        "TZX",
+        "UEF",
+        "CSW",
+        "platform-specific WAV decoding"
+      ],
+      "status": "needs-audit"
+    },
+    {
+      "id": "large-computer",
+      "priority": 5,
+      "layer": "research-family",
+      "formats": [
+        "SIMH tape images",
+        "AWS tapes",
+        "historical minicomputer disk packs"
+      ],
+      "status": "needs-audit"
+    }
+  ]
+}

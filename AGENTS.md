@@ -187,3 +187,40 @@ metadata, source links and cross-references under existing project
 publication rules. After transfer, index offline, cross-link the
 ecosystem catalog and technical research, and report exact missing
 or blocked items rather than claiming completeness prematurely.
+
+## Long-term project separation — operator roadmap 2026-11-19
+
+Follow the [preservation ecosystem roadmap](docs/preservation-roadmap.md) when
+designing component boundaries. Keep the current repository as an incubator;
+prepare independently usable generic automation/dispatch/observer and archive
+tooling, a standalone DeskMate/Tandy reference knowledge base, a cohesive core
+native-format library and workbench, and separate adjacent-format or mature
+application projects where justified. The reference site's initial theme must
+be based on BOOTSTRA.386, with an eventual DeskMate-derived visual identity for
+DeskMate/Tandy documentation. Generator, hosting, repository names and actual
+migration remain future decisions. Preserve history, evidence and compatible
+interfaces; do not undertake a physical split, publish a site, create an
+organization or interrupt active research solely because of this roadmap.
+
+## Archival format coverage — operator decision 2026-11-20
+
+Use the [standing secondary workstream](docs/archive-format-coverage.md)
+and [format backlog](docs/archive-format-backlog.json) for spare capacity
+within already authorized Codex campaigns after primary work is complete.
+Proactively qualify additional archives, compression, sector/track/flux
+images, recording encodings, filesystems and other media; preserve original
+bytes and uncertainty, use modular bounded processing and checkpoint
+independently reviewable work. Do not interfere with the live downloader
+or index writer. Existing usage, authorization, licensing and publication
+rules remain in force; the backlog is not a capability claim.
+
+## Visual evidence curation — operator direction 2026-11-20
+
+Follow the [visual evidence curation workstream](docs/visual-evidence-curation.md)
+periodically after screenshot-heavy campaigns and during spare authorized
+capacity. Incrementally inventory project captures, preserve provenance and
+distinct UI states, select documentation exemplars and identify coverage gaps
+for future native sessions and the DeskMate design system. Keep raw captures
+and private locators private; publish actual exemplars only under applicable
+reviewed publication grants. Do not start new native sessions or expand
+authorization merely to fill gaps.
