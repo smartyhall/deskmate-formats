@@ -85,21 +85,21 @@ test("bare .md filenames do not become Internet links", () => {
   const visual = pages.find((entry) => entry.slug === "evidence/visual-policy");
   const calendar = pages.find((entry) => entry.slug === "formats/calendar");
   assert.ok(visual && calendar);
-  assert.doesNotMatch(renderSource(visual), /https?:\\/\\/AGENTS\\.md/i);
-  assert.doesNotMatch(renderSource(calendar), /https?:\\/\\/compatibility\\.md/i);
+  assert.doesNotMatch(renderSource(visual), /https?:\/\/AGENTS\.md/i);
+  assert.doesNotMatch(renderSource(calendar), /https?:\/\/compatibility\.md/i);
 });
 
 test("combined archival report retains a single top-level heading", () => {
   const calendar = pages.find((entry) => entry.slug === "formats/calendar");
   assert.ok(calendar);
   const html = renderSource(calendar);
-  assert.equal((html.match(/<h1\\b/g) || []).length, 1);
+  assert.equal((html.match(/<h1\b/g) || []).length, 1);
   assert.match(html, /<h2[^>]*id="phase-iii-a-bounded-multi-record-generation-and-deskmate-validation"/);
 });
 
 test("site layout preserves independently scrollable technical tables on phones", () => {
   const css = fs.readFileSync(path.join(ROOT, "website/src/assets/site-layout.css"), "utf8");
-  assert.match(css, /\\.document\\s*\\{[^}]*overflow-x:\\s*clip/);
-  assert.match(css, /\\.document pre\\s*\\{[^}]*overflow-x:\\s*auto/);
-  assert.match(css, /\\.document table\\s*\\{[^}]*overflow-x:\\s*auto/);
+  assert.match(css, /\.document\s*\{[^}]*overflow-x:\s*clip/);
+  assert.match(css, /\.document pre\s*\{[^}]*overflow-x:\s*auto/);
+  assert.match(css, /\.document table\s*\{[^}]*overflow-x:\s*auto/);
 });
