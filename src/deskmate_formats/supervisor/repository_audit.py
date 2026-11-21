@@ -1,5 +1,6 @@
 """Audit publication boundaries, preserving documented application-generated fixtures."""
 from pathlib import Path, PurePosixPath
+from binascii import crc32
 import ast
 import hashlib
 import json
@@ -56,6 +57,15 @@ SYNTHETIC_HDS = {
     for case in ('pitch-spelling', 'timing-100', 'channel-control', 'enharmonic-boundary', 'structural-control')
 }
 TYPOGRAPHY_DIR = Path('examples/typography-comparison/v1')
+SITE_IMAGE_DIR = Path('website/src/assets/reference')
+SITE_IMAGE_MANIFEST = Path('website/reference-images.json')
+SITE_IMAGE_MAX_BYTES = 6 * 1024 * 1024
+SITE_IMAGE_MAX_PIXELS = 4_000_000
+SITE_IMAGE_ORIGINS = {
+    'synthetic-project-illustration',
+    'documentary-software-ui-capture',
+    'publisher-distributed-illustration',
+}
 TYPOGRAPHY_IMAGES = {
     f'{case}-{kind}.png' for case in ('lab-grid', 'bonum', 'liberation-mono')
     for kind in ('native', 'independent')
@@ -87,6 +97,89 @@ PATTERNS = {
     'archive access query': r'(?i)[?&](?:access_token|auth_token|api_key|token)=[A-Za-z0-9_%.-]{8,}',
 }
 
+
+def site_image_manifest():
+    """Allow only declared site illustrations; never infer publication rights from origin."""
+    location = ROOT / SITE_IMAGE_MANIFEST
+    if not location.is_file():
+        return {}
+    spec = json.loads(location.read_text(encoding='utf-8'))
+    if spec.get('schema_version') != 1 or type(spec.get('images')) is not list:
+        raise ValueError('invalid site image manifest')
+    entries, ids = {}, set()
+    for entry in spec['images']:
+        if not isinstance(entry, dict):
+            raise ValueError('invalid site image entry')
+        name = entry.get('path')
+        if (not isinstance(name, str) or not re.fullmatch(r'[a-z0-9][a-z0-9_./-]*\.png', name)
+                or '..' in PurePosixPath(name).parts or str(PurePosixPath(name)) != name
+                or len(name) > 160):
+            raise ValueError('unsafe site image path')
+        rel = (SITE_IMAGE_DIR / name).as_posix()
+        identifier = entry.get('id')
+        if (rel in entries or not isinstance(identifier, str)
+                or not re.fullmatch(r'ui\.[a-z0-9]+(?:[.-][a-z0-9]+)*', identifier)
+                or identifier in ids):
+            raise ValueError('duplicate or invalid site image identifier')
+        ids.add(identifier)
+        if not is_digest(entry.get('sha256')) or not is_digest(entry.get('source_sha256')):
+            raise ValueError('missing site image digest or source provenance')
+        width, height = entry.get('width'), entry.get('height')
+        if (type(width) is not int or type(height) is not int or width < 1 or height < 1
+                or width > 4096 or height > 4096 or width * height > SITE_IMAGE_MAX_PIXELS
+                or type(entry.get('size')) is not int or not 0 < entry['size'] <= SITE_IMAGE_MAX_BYTES):
+            raise ValueError('invalid site image dimensions or size')
+        if entry.get('origin') not in SITE_IMAGE_ORIGINS:
+            raise ValueError('unreviewed site image origin')
+        for key in ('caption', 'alt', 'source_id', 'rights_note'):
+            value = entry.get(key)
+            if not isinstance(value, str) or not value.strip() or len(value) > 500:
+                raise ValueError('missing site image ' + key)
+            if key == 'source_id' and not re.fullmatch(r'[a-zA-Z0-9_.-]{8,100}', value):
+                raise ValueError('invalid site image source identifier')
+            if any(re.search(pattern, value) for pattern in PATTERNS.values()):
+                raise ValueError('private data in site image metadata')
+        entries[rel] = entry
+    return entries
+
+
+def check_site_image(rel, data, entry):
+    """Validate documented PNG bytes; reject arbitrary binary and embedded metadata."""
+    if len(data) != entry['size'] or hashlib.sha256(data).hexdigest() != entry['sha256']:
+        raise ValueError('site image digest or size mismatch: ' + rel)
+    if not data.startswith(b'\x89PNG\r\n\x1a\n'):
+        raise ValueError('site image is not a PNG: ' + rel)
+    allowed = {b'IHDR', b'PLTE', b'tRNS', b'IDAT', b'IEND', b'gAMA', b'sRGB', b'pHYs'}
+    offset, first, last, has_data = 8, True, False, False
+    while offset + 12 <= len(data):
+        length, kind = unpack_from('>I4s', data, offset)
+        end = offset + 12 + length
+        if kind not in allowed or end > len(data):
+            raise ValueError('unsafe site PNG chunk or metadata: ' + rel)
+        payload = data[offset + 8:end - 4]
+        if crc32(kind + payload) != unpack_from('>I', data, end - 4)[0]:
+            raise ValueError('site PNG CRC mismatch: ' + rel)
+        if first:
+            if kind != b'IHDR' or length != 13:
+                raise ValueError('site PNG header missing: ' + rel)
+            width, height, depth, color, compression, filtering, interlace = unpack_from('>IIBBBBB', payload)
+            if ((width, height) != (entry['width'], entry['height'])
+                    or (depth, color) not in {(8, 2), (8, 3), (8, 6), (4, 3), (2, 3), (1, 3)}
+                    or (compression, filtering, interlace) != (0, 0, 0)):
+                raise ValueError('site PNG header dimensions or profile mismatch: ' + rel)
+        elif kind == b'IHDR':
+            raise ValueError('duplicate site PNG header: ' + rel)
+        if kind == b'IDAT':
+            has_data = True
+        if kind == b'IEND':
+            if length != 0 or end != len(data) or not has_data:
+                raise ValueError('site PNG malformed end: ' + rel)
+            last = True
+            break
+        first = False
+        offset = end
+    if not last:
+        raise ValueError('site PNG missing end: ' + rel)
 
 def source_files():
     for path in sorted(ROOT.rglob('*')):
@@ -322,6 +415,8 @@ def audit():
     comparisons.update(typography)
     comparison_metadata.update(typography_metadata)
     comparisons_found = set()
+    site_images = site_image_manifest()
+    site_images_found = set()
     listening, listening_metadata = listening_manifest(allowed)
     listening_found = set()
     found = set()
@@ -334,6 +429,17 @@ def audit():
             raise ValueError('symlink is not permitted: ' + rel)
         if path.name.lower() in PRIVATE_SPOOL_FILES:
             raise ValueError('private Observatory spool file: ' + rel)
+        if rel in site_images:
+            sidecar = ROOT / (rel + '.license')
+            if not sidecar.is_file() or 'SPDX-License-Identifier:' not in sidecar.read_text(encoding='utf-8'):
+                raise ValueError('site image requires accurate REUSE sidecar: ' + rel)
+            check_site_image(rel, path.read_bytes(), site_images[rel])
+            site_images_found.add(rel)
+            count += 1
+            continue
+        if rel_path.is_relative_to(SITE_IMAGE_DIR):
+            if not (rel.endswith('.png.license') and rel[:-8] in site_images):
+                raise ValueError('unlisted site image or sidecar: ' + rel)
         if rel in comparisons:
             draw_audit.check_artifact(ROOT, rel, comparisons[rel])
             comparisons_found.add(rel)
@@ -399,6 +505,9 @@ def audit():
             listening_found or (ROOT / '.git').exists() or not (ROOT / 'PKG-INFO').is_file()):
         raise ValueError('missing declared listening WAVs')
     draw_audit.check_complete(ROOT, comparisons, comparisons_found)
+    if site_images_found != set(site_images) and not (ROOT / 'PKG-INFO').is_file():
+        raise ValueError('missing declared site images: ' +
+                         ', '.join(sorted(set(site_images) - site_images_found)))
     # Git-only binary fixtures are excluded. Pinned synthetic JSONL ships in the sdist.
     for path in (ROOT / 'dist').glob('*'):
         if path.suffix == '.whl':
@@ -431,6 +540,7 @@ def audit():
             'application_generated_fixtures_checked': len(found),
             'listening_wavs_checked': len(listening_found),
             'draw_comparison_artifacts_checked': len(comparisons_found),
+            'documentary_site_images_checked': len(site_images_found),
             'synthetic_jsonl_fixtures_checked': telemetry_count,
             'excluded': 'Commercial software, private data and unlisted binary files.'}
 
