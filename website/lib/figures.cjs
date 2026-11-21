@@ -42,7 +42,7 @@ function renderFigureSet(items, siteUrl) {
   return '<div class="reference-figures" aria-label="Illustrated interface evidence">' +
     figures + '</div>';
 }
-function injectFigures(tokens, pageId, items, Token, siteUrl) {
+function injectFigures(tokens, pageId, items, siteUrl) {
   const groups = new Map();
   for (const item of items) {
     if (item.page_id !== pageId) continue;
@@ -68,9 +68,10 @@ function injectFigures(tokens, pageId, items, Token, siteUrl) {
       const closing = tokens.findIndex((t, j) => j > insertAt && t.type === "paragraph_close");
       if (closing >= 0) insertAt = closing + 1;
     }
-    const block = new Token("reference_figure_block", "", 0);
-    block.block = true;
-    block.content = renderFigureSet(groups.get(heading), siteUrl);
+    const block = {
+      type: "reference_figure_block", tag: "", nesting: 0,
+      block: true, hidden: false, content: renderFigureSet(groups.get(heading), siteUrl)
+    };
     tokens.splice(insertAt, 0, block);
     index = insertAt;
   }
