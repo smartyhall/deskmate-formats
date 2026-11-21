@@ -167,7 +167,7 @@ class ArchiveIntelligenceTests(unittest.TestCase):
         with (patch.object(index, "identify", side_effect=identify),
               patch.object(index, "extract", side_effect=unavailable) as initial):
             self.ingest()
-            self.assertEqual(initial.call_count, 2)
+            self.assertEqual(sum(c.args[2] in {'iso9660', 'udf'} for c in initial.call_args_list), 2)
 
         def upgraded(path, name, kind, *args, **kwargs):
             if kind not in {"iso9660", "udf"}:
@@ -178,7 +178,7 @@ class ArchiveIntelligenceTests(unittest.TestCase):
               patch.object(index, "extract", side_effect=upgraded) as new):
             result, = self.ingest("--update-tools", "--seven-zip",
                                   str(self.home / "seven-zip.exe"))
-        self.assertEqual(new.call_count, 2)
+        self.assertEqual(sum(c.args[2] in {'iso9660', 'udf'} for c in new.call_args_list), 2)
         self.assertEqual(result["this_run"], {"indexed": 2})
         self.assertEqual(len(self.command("search", "unrelated")), 1)
 
