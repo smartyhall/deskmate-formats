@@ -179,3 +179,10 @@ records the final research checkpoint.
 MidiMapper receipts cover [startup](20261120-midimapper-startup.json),
 [verified acquisition](20261120-midimapper-acquisition.json), and
 [native playback and export completion](20261120-midimapper-completion.json).
+
+The November 20 native-semantics campaign preserved
+[startup](20261120-native-semantics-startup.json),
+[MidiMapper fixture qualification](20261120-native-semantics-midi.json),
+and [safe-stop](20261120-native-semantics-completion.json) receipts.
+Its [handoff](../../research/native-semantics-campaign-handoff-20261120.md)
+links the four review branches.

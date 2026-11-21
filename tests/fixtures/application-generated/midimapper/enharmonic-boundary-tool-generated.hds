@@ -1,0 +1,22 @@
+[Song]
+Name=Enharmonic and boundary control
+Beats Per Measure=4
+Single Beat Note=4
+Pace=120
+PolyDur=True
+
+[Notes]
+8D#3/x/x
+8Eb3/x/x
+8F#3/x/x
+8Gb3/x/x
+8G#3/x/x
+8Ab3/x/x
+8A#3/x/x
+8Bb3/x/x
+8B#-3/x/x
+8Cb+3/x/x
+8C----3/x/x
+8C-----3/x/x
+8G+++++3/x/x
+8C99/x/x

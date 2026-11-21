@@ -1,0 +1,29 @@
+[Song]
+Name=Pitch spelling control
+Beats Per Measure=4
+Single Beat Note=4
+Pace=120
+PolyDur=True
+
+[Notes]
+8C3/x/x
+8C+3/x/x
+8C-3/x/x
+8C++3/x/x
+8C--3/x/x
+8C+++3/x/x
+8C---3/x/x
+8C1/x/x
+8C2/x/x
+8C4/x/x
+8C/x/x
+8C+/x/x
+8C-/x/x
+8c#3/x/x
+8Db3/x/x
+8B#3/x/x
+8Cb3/x/x
+8E#3/x/x
+8Fb3/x/x
+8A-3/x/x
+8a-3/x/x

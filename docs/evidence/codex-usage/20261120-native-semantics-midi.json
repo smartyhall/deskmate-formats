@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "semantics-20261120",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 32,
+    "token_records": 5434,
+    "sessions": 29
+  },
+  "checkpoint": "midimapper-fixtures",
+  "collected_at": "2026-11-21T04:28:37.309679+00:00",
+  "commit": "263090892484396022ba291c3c641a3f31d9b64e",
+  "observation": {
+    "session": "c2705fb4347953e5d405f8cd",
+    "measured_at": "2026-11-21T04:28:21.219000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 61230876,
+      "cached_input": 60873088,
+      "output": 100940,
+      "reasoning_output": 31755,
+      "total": 61331816
+    },
+    "reported_last": {
+      "input": 307091,
+      "cached_input": 306688,
+      "output": 91,
+      "reasoning_output": 0,
+      "total": 307182
+    },
+    "windows": {
+      "300": {
+        "used_percent": 66.0,
+        "reset_epoch": 1795249813,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 10.0,
+        "reset_epoch": 1795836613,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  }
+}

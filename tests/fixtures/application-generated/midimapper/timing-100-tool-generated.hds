@@ -1,0 +1,19 @@
+[Song]
+Name=Timing at 100
+Beats Per Measure=4
+Single Beat Note=4
+Pace=100
+PolyDur=True
+
+[Notes]
+4C3/x/x
+4C3/x/x
+4R/x/x
+2D3/x/x
+8.E3/x/x
+16F3/x/x
+32G3/x/x
+T8A3/x/x
+T8B3/x/x
+T8C+3/x/x
+4..C3/x/x

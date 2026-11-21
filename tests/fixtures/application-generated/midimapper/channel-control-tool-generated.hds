@@ -1,0 +1,17 @@
+[Song]
+Name=Channel and program control
+Beats Per Measure=4
+Single Beat Note=4
+Pace=100
+PolyDur=True
+
+[Notes]
+[Inst. 1 = 41]
+[Inst. 2 = 74]
+[Inst. 1 dyn. = pp]
+[Inst. 2 dyn. = ff]
+2C3/4E3/4R
+x/4G3/x
+[Midi 192 11 0]
+[Midi 193 73 0]
+4D3/4F3/4R
