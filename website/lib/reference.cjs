@@ -115,7 +115,23 @@ function renderSource(entry) {
     }
   }
   walk(tokens);
-  injectFigures(tokens, entry.id, readFigures(), siteUrl);
+  const figures = readFigures();
+  if (entry.id === "history.introduction") {
+    // Reuse verified Collection 01 captures in the orientation article without
+    // duplicating binary files or altering their original evidence placements.
+    const guided = [
+      ["ui.desktop.launcher", "A desktop instead of a command prompt"],
+      ["ui.desktop.desktop-menu", "A desktop instead of a command prompt"],
+      ["ui.calendar.day-view", "What could you do with it?"],
+      ["ui.express-publisher.workspace", "Beyond the bundled suite"],
+    ];
+    for (const [id, heading] of guided) {
+      const asset = figures.find((figure) => figure.id === id);
+      if (!asset) throw new Error("Missing approved introduction figure: " + id);
+      figures.push({ ...asset, page_id: entry.id, section_heading: heading });
+    }
+  }
+  injectFigures(tokens, entry.id, figures, siteUrl);
   return md.renderer.render(tokens, md.options, {});
 }
 function searchRecord(entry) {
