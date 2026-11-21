@@ -3,9 +3,10 @@
  * SPDX-FileCopyrightText: Copyright (c) 2026 Michael A. Hall
  * SPDX-License-Identifier: Apache-2.0
  */
-.document { max-width: 95ch; }
-.document pre { overflow-x: auto; }
-.document table { display: block; max-width: 100%; overflow-x: auto; }
+/* Restrict oversized archived diagrams, tables and filenames to the article. */
+.document { min-width: 0; max-width: min(100%, 95ch); overflow-x: clip; overflow-wrap: anywhere; }
+.document pre { display: block; max-width: 100%; overflow-x: auto; }
+.document table { display: block; width: 100%; max-width: 100%; overflow-x: auto; }
 .document img { max-width: 100%; height: auto; }
 #reference-sections { overflow-wrap: anywhere; }
 #reference-sections summary { cursor: pointer; }
