@@ -17,7 +17,7 @@ function readFigures() {
     throw new Error("Invalid reference image manifest");
   return document.images.filter((image) => image.page_id && image.section_heading);
 }
-function renderFigureSet(items, siteUrl) {
+function renderFigureSet(items, siteUrl, assets = assetRoot) {
   const figures = items.map((item) => {
     if (!/^[a-z0-9][a-z0-9_.\/-]*\.png$/.test(item.path) ||
         item.path.split("/").includes("..") ||
@@ -26,7 +26,7 @@ function renderFigureSet(items, siteUrl) {
         typeof item.alt !== "string" || !item.alt.trim() ||
         typeof item.caption !== "string" || !item.caption.trim())
       throw new Error("Invalid illustrated-reference entry " + item.id);
-    const filename = path.join(assetRoot, item.path);
+    const filename = path.join(assets, item.path);
     if (!fs.existsSync(filename))
       throw new Error("Missing approved illustrated-reference PNG " + item.path);
     const url = siteUrl("/assets/reference/" + item.path);
@@ -42,7 +42,7 @@ function renderFigureSet(items, siteUrl) {
   return '<div class="reference-figures" aria-label="Illustrated interface evidence">' +
     figures + '</div>';
 }
-function injectFigures(tokens, pageId, items, siteUrl) {
+function injectFigures(tokens, pageId, items, siteUrl, assets = assetRoot) {
   const groups = new Map();
   for (const item of items) {
     if (item.page_id !== pageId) continue;
@@ -70,7 +70,7 @@ function injectFigures(tokens, pageId, items, siteUrl) {
     }
     const block = {
       type: "reference_figure_block", tag: "", nesting: 0,
-      block: true, hidden: false, content: renderFigureSet(groups.get(heading), siteUrl)
+      block: true, hidden: false, content: renderFigureSet(groups.get(heading), siteUrl, assets)
     };
     tokens.splice(insertAt, 0, block);
     index = insertAt;
