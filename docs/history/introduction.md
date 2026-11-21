@@ -79,4 +79,4 @@ The broad historical account above draws on contemporary reporting and the proje
 - [*BYTE*, September 1988, “Tandy's 1000 Learns to Speak and Listen,” p. 158](https://isaac.lsu.edu/byte/issues/198809_Byte_Magazine_Vol_13-09_Display_Technology_-_Postscript_Printers.pdf) — contemporary account of Sound and Music on the Tandy 1000 SL/TL.
 - [Tandy DeskMate Development System 03.05.00, Appendix A — project evidence crosswalk](../reference/tandy-format-crosswalk.md) — manufacturer-defined file-format descriptions, distinguished from independent native verification.
 
-All screenshots used on this page are already published in **Collection 01**. They show our controlled DeskMate 3.05 installation; they are documentary illustrations, not reconstructions of earlier releases. Software, interface and artwork rights remain with their respective owners.
+All screenshots used on this page are already published in **Collection 01**. They show our controlled DeskMate 3.05 installation; they are documentary illustrations, not reconstructions of earlier releases. Software, interface, and artwork rights remain with their respective owners.
