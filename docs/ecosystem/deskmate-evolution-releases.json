@@ -45,6 +45,13 @@
         "ii-1000sx"
       ],
       "relationship": "In the program archive and SX Disk 3, 15 same-name files match and 10 differ. All nine TW*.EXE application and auxiliary executables match. DESK.EXE, DMPLUS.COM, ALARM.ARM, and seven help files differ."
+    },
+    {
+      "releases": [
+        "personal-hx",
+        "personal2-tx"
+      ],
+      "relationship": "34 common names and 31 exact member matches, including DESK.EXE and MAINMENU.PDM. DMCSR.MOD, ART.PNT, and XMAS.SNG differ; MENUDATA.TAN is HX-only, DMNOTEPD standalone-only."
     }
   ],
   "releases": [
@@ -217,11 +224,20 @@
         "Filer",
         "Worksheet"
       ],
-      "evidence": "inspected",
-      "record": null,
-      "uncertainties": "Exact EX runs and installer destination still open",
-      "dates": [],
-      "public_image_ids": []
+      "evidence": "launched",
+      "record": "../research/deskmate-evolution-native-20261121.md#personal-deskmate-ex-010100-on-a-1000-sx-compatibility-profile",
+      "uncertainties": "Native floppy startup tested on a 1000 SX compatibility profile. Exact EX hardware, INSTALL.EXE, and Disk 2 workflows remain open.",
+      "dates": [
+        {
+          "kind": "launcher-copyright-year",
+          "year": 1986,
+          "source": "../research/deskmate-evolution-native-20261121.md#personal-deskmate-ex-010100-on-a-1000-sx-compatibility-profile"
+        }
+      ],
+      "public_image_ids": [
+        "ui.evolution.ex-desktop-late",
+        "ui.evolution.ex-file-menu"
+      ]
     },
     {
       "id": "personal-hx",
@@ -250,13 +266,25 @@
           "sha256": "70d09ffe398fab3f2e9ee2944efb9ac07f32e676987dc4661dcbcb18b14ae461"
         }
       ],
-      "installation_or_startup": "ROM desktop and drivers with disk-loaded applications, per Faxback 1378",
-      "principal_applications": [],
-      "evidence": "inspected",
-      "record": null,
-      "uncertainties": "Verify matching BIOS ROM, disk materialization, and IMD equivalence",
+      "installation_or_startup": "HX ROM DOS/startup menu and disk-loaded archival DeskMate 2 launcher, desktop, and applications. Tandy documents original ROM-resident components separately.",
+      "principal_applications": [
+        "Text",
+        "Worksheet",
+        "Calendar",
+        "Filer",
+        "Paint",
+        "Music",
+        "Telecom"
+      ],
+      "evidence": "launched",
+      "record": "../research/deskmate-evolution-native-20261121.md#personal-deskmate-hx-media-and-rom-startup",
+      "uncertainties": "The HX archive starts on a native HX profile. Exact ROM service dependency and the separate HXORIG.IMD utility disk remain open.",
       "dates": [],
-      "public_image_ids": []
+      "public_image_ids": [
+        "ui.evolution.hx-rom-initial",
+        "ui.evolution.hx-personal-first",
+        "ui.evolution.hx-calendar"
+      ]
     },
     {
       "id": "personal2-tx",
@@ -286,12 +314,29 @@
         }
       ],
       "installation_or_startup": "Disk-loaded, third-party four- or five-floppy reconstruction",
-      "principal_applications": [],
-      "evidence": "inspected",
-      "record": null,
-      "uncertainties": "Verify prerequisites and manual disk assignment",
-      "dates": [],
-      "public_image_ids": []
+      "principal_applications": [
+        "Text",
+        "Worksheet",
+        "Calendar",
+        "Filer",
+        "Paint",
+        "Music",
+        "Telecom"
+      ],
+      "evidence": "launched",
+      "record": "../research/deskmate-evolution-native-20261121.md#standalone-personal-deskmate-2-on-the-tandy-1000-sx",
+      "uncertainties": "Reconstructed five-floppy startup and Text save validated on the Tandy 1000 SX. TX hardware and remaining applications are open.",
+      "dates": [
+        {
+          "kind": "launcher-copyright-year",
+          "year": 1987,
+          "source": "../research/deskmate-evolution-native-20261121.md#standalone-personal-deskmate-2-on-the-tandy-1000-sx"
+        }
+      ],
+      "public_image_ids": [
+        "ui.evolution.pdm2-desktop",
+        "ui.evolution.pdm2-text-saved"
+      ]
     },
     {
       "id": "professional-3000hl",

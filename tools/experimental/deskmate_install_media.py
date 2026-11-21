@@ -1,4 +1,4 @@
-"""Reconstruct disposable 720 KiB floppies from the verified TVDog ZIP sets."""
+"""Reconstruct disposable FAT12 floppies from verified TVDog file sets."""
 
 import argparse
 from hashlib import sha256
@@ -10,24 +10,35 @@ from zipfile import ZipFile
 
 
 INVENTORY = Path(__file__).resolve().parents[2] / 'docs/ecosystem/deskmate-installation-media.json'
-ROOT_OFFSET = 3584
-DATA_OFFSET = 7168
-CLUSTER_SIZE = 1024
 DISK_COUNTS = {'300': 5, '302': 3, '303': 4}
+SECTOR_SIZE = 512
+# Total sectors, sectors per FAT, sectors per track, sectors per cluster,
+# root directory entries, and media descriptor.
+GEOMETRIES = {
+    '360k': (720, 2, 9, 2, 112, 0xfd),
+    '720k': (1440, 3, 9, 2, 112, 0xf9),
+    '1440k': (2880, 9, 18, 1, 224, 0xf0),
+}
 
 
-def floppy(members, label):
-    if len(label) != 11 or len(members) >= 112:
-        raise ValueError('expected an eleven-byte FAT label and at most 111 files')
-    image = bytearray(737_280)
+def floppy(members, label, geometry='720k'):
+    sectors, fat_sectors, track_sectors, cluster_sectors, root_entries, media = GEOMETRIES[geometry]
+    if len(label) != 11 or len(members) >= root_entries:
+        raise ValueError(f'expected an eleven-byte FAT label and at most {root_entries - 1} files')
+    fat_size = fat_sectors * SECTOR_SIZE
+    cluster_size = cluster_sectors * SECTOR_SIZE
+    root_offset = SECTOR_SIZE + 2 * fat_size
+    data_offset = root_offset + root_entries * 32
+    image = bytearray(sectors * SECTOR_SIZE)
     image[:11] = b'\xeb\x3c\x90MSDOS5.0'
-    pack_into('<HBHBHHBHHHII', image, 11, 512, 2, 1, 2, 112, 1440, 0xf9, 3, 9, 2, 0, 0)
+    pack_into('<HBHBHHBHHHII', image, 11, SECTOR_SIZE, cluster_sectors, 1, 2,
+              root_entries, sectors, media, fat_sectors, track_sectors, 2, 0, 0)
     image[38] = 0x29
     image[43:62] = label + b'FAT12   '
     image[510:512] = b'\x55\xaa'
-    image[ROOT_OFFSET:ROOT_OFFSET + 12] = label + b'\x08'
-    fat = bytearray(1536)
-    fat[:3] = b'\xf9\xff\xff'
+    image[root_offset:root_offset + 12] = label + b'\x08'
+    fat = bytearray(fat_size)
+    fat[:3] = bytes((media, 0xff, 0xff))
     cluster = 2
     seen = set()
     for index, (member, data) in enumerate(members, 1):
@@ -36,11 +47,11 @@ def floppy(members, label):
             raise ValueError(f'expected a unique flat DOS 8.3 filename: {name}')
         seen.add(name)
         stem, _, extension = name.partition('.')
-        count = (len(data) + CLUSTER_SIZE - 1) // CLUSTER_SIZE
-        begin = DATA_OFFSET + (cluster - 2) * CLUSTER_SIZE
-        if begin + count * CLUSTER_SIZE > len(image):
+        count = (len(data) + cluster_size - 1) // cluster_size
+        begin = data_offset + (cluster - 2) * cluster_size
+        if begin + count * cluster_size > len(image):
             raise ValueError('disk capacity exceeded')
-        entry = ROOT_OFFSET + index * 32
+        entry = root_offset + index * 32
         image[entry:entry + 12] = (stem.ljust(8) + extension.ljust(3)).encode('ascii') + b'\x20'
         year, month, day, hour, minute, second = member.date_time
         dos_time = (hour << 11) | (minute << 5) | (second // 2)
@@ -57,7 +68,8 @@ def floppy(members, label):
                 fat[offset] = value & 255
                 fat[offset + 1] |= value >> 8
         cluster += count
-    image[512:2048] = image[2048:3584] = fat
+    image[SECTOR_SIZE:SECTOR_SIZE + fat_size] = fat
+    image[SECTOR_SIZE + fat_size:root_offset] = fat
     return image
 
 

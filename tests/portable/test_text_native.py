@@ -40,6 +40,12 @@ class TextNativeTest(unittest.TestCase):
         )
         self.assertEqual(text.extract_file(path), expected)
 
+    def test_personal_deskmate_2_native_save_envelope(self):
+        early = (FIXTURES / 'pdm2-native-hist.doc').read_bytes()
+        self.assertEqual(len(early), 35)
+        self.assertEqual(early[:5], b'\x01DOC\x00')
+        self.assertEqual(early[22:], (FIXTURES / '300-native-atlas.doc').read_bytes())
+
     def test_margin_records_preserve_opaque_payload_and_offsets(self):
         first = bytes.fromhex('03 09 00 00 04')
         second = bytes.fromhex('03 04 1A 03 04')

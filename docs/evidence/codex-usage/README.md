@@ -201,6 +201,8 @@ The November 21 generic DeskMate installation campaign preserved
 [Campaign report](../../research/deskmate-303-305-comparison.md)
 
 The Evolution Atlas survey recorded [startup](20261121-evolution-startup.json),
-[generic 3.00](20261121-evolution-300-usage.json), and
-[resumed work](20261121-evolution-resume-usage.json).
+[generic 3.00](20261121-evolution-300-usage.json),
+[resumed work](20261121-evolution-resume-usage.json),
+[DeskMate II](20261121-evolution-dmii.json), and
+[Personal DeskMate](20261121-evolution-personal.json).
 [Survey and native records](../../ecosystem/deskmate-evolution-atlas.md)

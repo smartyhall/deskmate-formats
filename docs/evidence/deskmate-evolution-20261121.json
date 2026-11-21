@@ -98,6 +98,104 @@
       "raw_sha256": "189b04f4e3bfdc552a501866253c2c97b0515f40e7f0bf12c2ff880f24b277d6",
       "derivative_sha256": "74fbf0124d3797a8594b47b9e300b0bcd0fcfd533b1671886b7060c3eb18cd5a",
       "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.ex-desktop-late": {
+      "release": "01.01.00",
+      "machine": "tandy1000sx",
+      "ms": 83834,
+      "frame": 5019,
+      "bios_mode": 10,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "3459c635f1284394c0acd8696c23a63d78d37f984aceac3549cc669655e17f1f",
+      "derivative_sha256": "fcb6fb6b838e74069fcabe71542f1d8a7e7fd42501ff136cb550e43059e65f20",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.ex-file-menu": {
+      "release": "01.01.00",
+      "machine": "tandy1000sx",
+      "ms": 85196,
+      "frame": 5101,
+      "bios_mode": 10,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "159bbf23d5b878620da7ec5cc2f05af9ed26ce30d14a773a8e9fbe6765ffa044",
+      "derivative_sha256": "aebc01448eb04467b0a533b61171fb7a194b1ef245f2eb07e39068452f8c8766",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.hx-rom-initial": {
+      "release": "02.11.26 (ROM DOS)",
+      "machine": "tandy1000hx",
+      "ms": 47000,
+      "frame": 2814,
+      "bios_mode": 3,
+      "dimensions": [
+        640,
+        225
+      ],
+      "raw_sha256": "93636a67452d2a87f3478f1521e27fe2a128682cb24a3c436626df49739947e2",
+      "derivative_sha256": "f47ce87c0249ad5d647205a8d1cbdb352af2f22507e703f3f06aae18c39bd406",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.hx-personal-first": {
+      "release": "01.00.00",
+      "machine": "tandy1000hx",
+      "ms": 77008,
+      "frame": 4609,
+      "bios_mode": 10,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "7c507d3e546cea6f252809fa5397d54f307f51cbf4048a13d104190956bbb9a9",
+      "derivative_sha256": "922e1866d7900c7a20c6eaa1b11e0c8bd12d002e0748ea9974e6dc29651ece63",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.hx-calendar": {
+      "release": "01.00.00",
+      "machine": "tandy1000hx",
+      "ms": 95284,
+      "frame": 5705,
+      "bios_mode": 10,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "64478e6a31ebd5dd3514ebe770dbba0ed631772b5e821775f3854700ec459a49",
+      "derivative_sha256": "44f3bf951a8c8596e0618c26265e2b85a9840a63e930d4974d03faef5d4954ae",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.pdm2-desktop": {
+      "release": "01.00.00",
+      "machine": "tandy1000sx",
+      "ms": 81684,
+      "frame": 4890,
+      "bios_mode": 10,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "0f6c6a32b7ccb5e1a237e0a3b227bf5fad6293fb66190bcf9c885e97fac19eeb",
+      "derivative_sha256": "6bf2db8b77ee832dfe11c6af856356f761c356d95ca8a0770bac7ab8bccd3620",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.pdm2-text-saved": {
+      "release": "01.00.00",
+      "machine": "tandy1000sx",
+      "ms": 159476,
+      "frame": 9551,
+      "bios_mode": 10,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "c8bc9cff4280ae153c296e7db608581757cc2f1e5ff17f1f17a6fb1411b6184f",
+      "derivative_sha256": "abc24863ad46805e9fba4801e162d27f0dffc3225f63bd97becef8698ae1f4c2",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
     }
   },
   "runs": {
@@ -129,6 +227,33 @@
       "dos": "Tandy MS-DOS 5.00",
       "launcher_sha256": "c3c8ae6409707ad78503b22ce4a9d9f35aa998cb96efa5a600fd061b2180e09f",
       "disk_sha256": "b39a1c182722bd9b9d21d335d36a6bc855f569e68f74b754f695751a09a35630"
+    },
+    "personal-ex": {
+      "emulated_ms": 88974,
+      "profile": "Tandy 1000 SX compatibility profile",
+      "dos": "02.11.24",
+      "final_state": "Exit chose mode 3; DOS prompt not verified"
+    },
+    "personal-hx": {
+      "emulated_ms": 98592,
+      "profile": "Tandy 1000 HX",
+      "dos": "02.11.26 from ROM",
+      "rom_sha256": "c7d7cb0cdec5178898001cdde05442a9d2f64b56bfdf94003ee5e814f98f6bce",
+      "working_disk_sha256": "2fc5ad0b196be404e424448ad29174b9dd2179437271f1c8c9257d3baefef5e9"
+    },
+    "personal2-tx": {
+      "emulated_ms": 164184,
+      "profile": "Tandy 1000 SX compatibility profile",
+      "dos": "03.20.02",
+      "working_media_sha256": [
+        "48b932d2a0285452bc98cf628e62383e5393488e112cd11e5649a4d431da6985",
+        "4b967ed64090a09f93fc90c89a95baa0a03337dc5983c827ecc8d6d45cf99717",
+        "561556523d452800384c3659e944451297a2829f59138766bd1423ab24b1ec4b",
+        "fc5507ae3b78ad7553b839f4c3a878ed5848401330f16a4aff8fc9f111ac6442",
+        "f75a9130f2630a6757e51eb0c7382c4110a136a0797aaf5afb006a43de4bd194"
+      ],
+      "text_work_disk_after_sha256": "4c2c3d9a6cb51a2efcf6ff05586382b0ecacd89781df7d56232bee86ec741fdf",
+      "text_sha256": "89444e6419f4fc936ff2da8eed8fce570986b2800c8778499f901f77fec5e9e4"
     }
   }
 }

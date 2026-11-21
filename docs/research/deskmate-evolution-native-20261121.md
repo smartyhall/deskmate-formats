@@ -173,3 +173,114 @@ help files differed. This directly establishes shared applications
 alongside different launcher and support bytes. Operation on an
 emulated or physical Tandy 3000 and a whole-suite DOS compatibility
 claim remain open.
+
+## Personal DeskMate EX 01.01.00 on a 1000 SX compatibility profile
+
+The verified `system/d1000ex.zip` supplies three unlabelled 360 KiB
+raw disks. Boot `MSDOS.DSK` in A: and put `PDDISK1.DSK` in B: on
+the same floppy-only SX profile used above. Their respective
+SHA-256 digests are
+`b1ec150fea5d6caf2d2aa72a392b13a3332534ce974514808d274b2623e52bca` and
+`d13f0c1b9b80986f35650cda9d6ecde576dc85e28be15f6f0cc375005a72b45d`.
+`PDDISK2.DSK`, SHA-256
+`57e5061a84b31006f5be69fac76aafc88c82163d6adf29bfabe7541fc9293567`,
+holds Text, Paint, Telecom, Filer, and Worksheet. Disk 1 holds Calendar,
+the desktop, accessories, and `INSTALL.EXE`.
+[EX media and bundled DOS](../ecosystem/deskmate-installation-media.json)
+
+Bundled Tandy DOS 02.11.24 asked for date at 47,000 ms. Enter
+`10-23-2026` and `12:00:00` at its prompts, switch to B:, and run
+`DESK`. The program reports 01.01.00 and a 1986 copyright on the
+graphical startup screen. The Desktop was visible by 83,834 ms in
+mode `0x0A` at 640 × 200. A calendar, Note Pad, and calculator
+sit beside seven file panels. The focus outline moves as Tab
+cycles through the panels. F2 alone did not open File in the
+measured state. Alt+F displayed Get Info, Copy, Delete, Rename,
+and Quit DeskMate. Up selected Quit DeskMate, and Enter switched
+back to mode 3. The run ended at 88,974 ms before a DOS prompt
+was verified. Exact EX hardware, the installer, and use of Disk 2
+remain open.
+
+## Personal DeskMate HX media and ROM startup
+
+Use a fresh 86Box Tandy 1000 HX profile with internal video, an 8088
+at 4.77 MHz, 640 KiB RAM, and 720 KiB floppy drives. The ROM
+`v020000.u12` has SHA-256
+`c7d7cb0cdec5178898001cdde05442a9d2f64b56bfdf94003ee5e814f98f6bce`.
+The HX startup menu appeared with both drives empty at 47,000 ms
+and showed Tandy DOS 02.11.26. Its options include Run Personal
+DeskMate, Set System Date and Time, View Programs on Drive A:, and
+Startup from Internal Drive. F1 with an empty A: showed a
+DeskMate-not-found message. Tandy's Faxback separately documents
+the original ROM desktop, drivers, and EEPROM startup choices.
+[Faxback 1378](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01378.txt)
+
+Extract nested `personal.zip` from verified `system/hxdisks.zip`.
+Use the atlas FAT12 writer's default 720 KiB geometry with the label
+`HX PERSONAL`. The working image SHA-256 is
+`2fc5ad0b196be404e424448ad29174b9dd2179437271f1c8c9257d3baefef5e9`.
+Mount it in A: and press F1 again. The disk launcher has version
+01.00.00, SHA-256
+`1bfa0cf19c46f5e99a6fd6d689c3daff483c2787bd8038d74c583244d5a6f3f6`.
+The Desktop at 77,008 ms says **DeskMate 2 - A:\** in 640 × 200
+mode `0x0A`, with Text, Worksheet, Filer, Music, Paint, Calendar,
+and Telecom panels. The observed boot used the default January 1980
+date. The nested `msdos.zip` and distinct `HXORIG.IMD` utility disk
+were outside the boot path.
+
+Alt+F opened File. Down selected Run, and Enter opened fields for
+Program and Data file and controls for Normal/Fast CPU speed.
+Run `CALENDAR.PDM` with Data file blank for the graphical month
+view. Enter opened January 1's day view. Escape left that view in
+place. The trial ended by socket quit at 98,592 ms. No appointment
+or save was submitted. Exact ROM service usage and the ImageDisk
+utility original remain open.
+
+The HX nested program set and standalone Personal DeskMate 2 ZIP
+share 34 names with 31 exact byte matches. Their launchers and
+`MAINMENU.PDM` match. `DMCSR.MOD`, `ART.PNT`, and `XMAS.SNG`
+differ. The HX runtime is 28,595 bytes and the standalone copy
+is 57,203 bytes. HX adds `MENUDATA.TAN`, while the standalone
+ZIP adds `DMNOTEPD`. These file identities distinguish the
+acquisitions despite their shared program title and launcher version.
+
+## Standalone Personal DeskMate 2 on the Tandy 1000 SX
+
+Use the five-disk option in the [TVDog recipe](http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/pdm2_360.txt)
+with verified `pdm2.zip`. Take `COMMAND.COM`, `DISKCOPY.COM`, and
+`FORMAT.COM` from the SX DOS Disk 1, with working timestamps set to
+1987-06-29 00:00:00 for those three copies. Keep program member bytes,
+archive timestamps, and recipe order on each disk. Use the actual
+`DMPDASCI.MOD` member for the recipe's `DMPDACSI.MOD`. Assemble
+360 KiB FAT12 images with `floppy(members, label, '360k')` in
+the [reconstruction tool](../../tools/experimental/deskmate_install_media.py);
+use `PDM2 DISK1 ` through `PDM2 DISK5 ` as eleven-byte labels.
+The [media receipt](../evidence/deskmate-evolution-20261121.json)
+lists the exact reconstructed image hashes.
+
+Boot the separate Tandy DOS 03.20.02 copy in A: on a fresh 1000 SX
+profile with two 360 KiB drives. Put the startup image in B:, set the
+shared October 23, 2026 date and noon time, switch to B:, and run
+`DESK`. The launcher banner at 58,684 ms reported Personal
+DeskMate 2 01.00.00 and a 1987 copyright. The Desktop was
+visible at 81,684 ms in 640 × 200 mode `0x0A`.
+
+File → Run rejected `A:\TEXT.PDM` with Invalid program name
+while B: was the desktop drive. Put Text/Worksheet Disk 2 in B:
+and choose Disk → Swap (Alt+S). The Text and Worksheet panels
+then showed the corresponding files. Keep DOS Disk 1 in A:,
+use File → Run, enter `TEXT.PDM` in the Program field, leave
+Data file blank, and press Enter. The untitled editor opened
+with **Non-ASCII** in its status bar. Alt+F and three Down presses
+selected Save as because Save was disabled. Type ALPHA, Enter,
+and BETA as two lines, and save using basename `HIST`. The
+title became `HIST.DOC` by 159,476 ms. Ctrl+Q left a blue
+frame before the trial ended by socket quit at 164,184 ms.
+
+The actual [35-byte Text save](../../tests/fixtures/application-generated/text/pdm2-native-hist.doc)
+has SHA-256 `89444e6419f4fc936ff2da8eed8fce570986b2800c8778499f901f77fec5e9e4`.
+7-Zip and independent FAT12 extraction agree. A 22-byte formatted
+envelope precedes a 13-byte body identical to the 3.00 ASCII save.
+This establishes the default mode and bytes for this synthetic case.
+Cross-release read and write compatibility and operation on a TX
+proper remain open.

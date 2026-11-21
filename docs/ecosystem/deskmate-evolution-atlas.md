@@ -53,6 +53,21 @@ and ImageDisk material establish different media representations. The
 TX-associated Personal DeskMate 2 material survives as a downloadable
 file set with a manual disk reconstruction recipe. [Tandy Faxback 1378](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01378.txt) · [Personal DeskMate 2 recipe](http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/pdm2_360.txt)
 
+The EX disks launched graphically on the SX compatibility profile.
+Alt+F opened File, and Tab moved among file panels. On the native HX
+profile, the ROM boot menu required a program disk in A: for the
+surviving archival copy. The Desktop calls itself DeskMate 2 and
+adds Music and a Run dialog. Calendar has a graphical month grid and
+buttons for moving through dates. The HX and standalone Personal
+DeskMate 2 sets share their launcher and desktop, with differing
+runtime bytes. [EX startup](../research/deskmate-evolution-native-20261121.md#personal-deskmate-ex-010100-on-a-1000-sx-compatibility-profile) · [HX startup and file comparison](../research/deskmate-evolution-native-20261121.md#personal-deskmate-hx-media-and-rom-startup)
+
+The standalone Personal DeskMate 2 file set also launched from
+reconstructed 360 KiB disks on the SX. Its Disk → Swap command
+refreshed the file panels after a floppy change. Text started in
+Non-ASCII mode and saved a 35-byte document for the same two lines
+that generic 3.00 saved as 13 bytes. [Standalone startup and Text save](../research/deskmate-evolution-native-20261121.md#standalone-personal-deskmate-2-on-the-tandy-1000-sx)
+
 ## Generic DeskMate 3
 
 The 3.00 and 3.02 archive instructions specify manual DOS copying and

@@ -4723,6 +4723,18 @@
       "expected_content": "ALPHA and BETA with CRLF, one editor-written trailing space, and DOS EOF. Exact match to the later native Text control.",
       "synthetic_data": true,
       "native_saved": true
+    },
+    {
+      "path": "text/pdm2-native-hist.doc",
+      "size": 35,
+      "sha256": "89444e6419f4fc936ff2da8eed8fce570986b2800c8778499f901f77fec5e9e4",
+      "application": "Tandy Personal DeskMate 2 Text",
+      "version": "01.00.00",
+      "experiment": "Evolution Atlas native Personal DeskMate 2 on the 1000 SX",
+      "origin": "Opened native Text from reconstructed Disk 2, typed the two synthetic lines, and saved as HIST. Independent FAT12 and 7-Zip extraction agreed.",
+      "expected_content": "Non-ASCII header followed by ALPHA, CRLF, BETA, trailing space, and DOS EOF.",
+      "synthetic_data": true,
+      "native_saved": true
     }
   ]
 }
