@@ -126,7 +126,9 @@ def save(source, destination, names, seven_zip=None):
 def restore(root, manifest, destination, original, port, media_manifest=None):
     root = root.resolve(strict=True)
     destination = destination.resolve()
-    original = original.resolve(strict=True)
+    # The former machine is a path-rebasing reference, not an input dependency.
+    # A sealed, self-contained checkpoint must survive deletion of its source.
+    original = original.resolve()
     if (destination.exists() or destination.is_relative_to(root)
             or destination.is_relative_to(original)):
         raise ValueError('restore requires a new destination outside the source machines')
