@@ -80,3 +80,19 @@ test("unmodified upstream BOOTSTRA.386 replaces the independent demo theme", () 
   assert.match(installer, /ZIP_BLOB = "[0-9a-f]{40}"/);
   assert.match(installer, /sha1\(/);
 });
+
+test("bare .md filenames do not become Internet links", () => {
+  const visual = pages.find((entry) => entry.slug === "evidence/visual-policy");
+  const calendar = pages.find((entry) => entry.slug === "formats/calendar");
+  assert.ok(visual && calendar);
+  assert.doesNotMatch(renderSource(visual), /https?:\\/\\/AGENTS\\.md/i);
+  assert.doesNotMatch(renderSource(calendar), /https?:\\/\\/compatibility\\.md/i);
+});
+
+test("combined archival report retains a single top-level heading", () => {
+  const calendar = pages.find((entry) => entry.slug === "formats/calendar");
+  assert.ok(calendar);
+  const html = renderSource(calendar);
+  assert.equal((html.match(/<h1\\b/g) || []).length, 1);
+  assert.match(html, /<h2[^>]*id="phase-iii-a-bounded-multi-record-generation-and-deskmate-validation"/);
+});
