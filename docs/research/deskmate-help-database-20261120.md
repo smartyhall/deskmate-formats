@@ -33,7 +33,7 @@ validates the row and index data separately.
 A first in-memory diagnostic that zeroed the directory tail accepted 70
 specimens in the shared storage reader. The first remaining failures were
 25 chained indexes, 13 row IDs outside the shared profile, and one data
-page with a nonzero tail after its marker. Inspection of the original
+page whose last indexed record fills its extent. Inspection of the original
 bytes resolved the first two:
 
 - Across the 109 files, 32 table indexes span two packed-12-linked pages.
@@ -49,8 +49,13 @@ bytes resolved the first two:
   Help profile. Retired-row framing and general allocation are unchanged.
 - `DMSETUP.HLP` (SHA-256
   `9fb468108d09136a72c594a52ceb383310d1b95684bc1e7b751bc289ea01a053`)
-  retains bytes after a row-list marker at `0x2C00`. Its directory is
-  recognized, but no row-tail or free-space interpretation was established.
+  has a single indexed Text row (ID 16) starting at page 10 offset zero
+  and ending exactly at its last byte. The first reported error at
+  `0x2C00` names the following page boundary, where ID 17 starts. Page 11
+  contains five structurally framed indexed rows, with no missing prefix.
+  An isolated in-memory reader probe allowing the fully occupied page
+  then reached a finite Text index route without declared sort ordinals.
+  Its directory is recognized and both additional checks remain in force.
 
 The read API is `database.inspect_help_directory(source)` for descriptors
 and `database.parse_help_bytes(source)` for validated rows with exact
@@ -109,4 +114,4 @@ cross-page indexes, IDs above 255, unknown tails and mismatched index targets.
 The next format experiment is to trace the native read of one address
 Help topic from its indexed Rules row to Text, then compare the compressed
 bytes against the matching framebuffer. Use a setup guest with the exact
-DMSETUP.HLP to investigate the data-page tail.
+DMSETUP.HLP to verify fully occupied Text pages and the finite index-route keys.
