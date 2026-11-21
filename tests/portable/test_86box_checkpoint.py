@@ -53,7 +53,7 @@ class CheckpointTests(unittest.TestCase):
             disk = original / 'disk.img'
             disk.write_bytes(b'preserved disk')
             (original / '86box.cfg').write_text(
-                f'[Hard disks]\\nhdd_01_fn = {disk}\\n', encoding='utf-8')
+                f'[Hard disks]\nhdd_01_fn = {disk}\n', encoding='utf-8')
             sealed = root / 'checkpoint'
             checkpoint.save(original, sealed, ['86box.cfg', 'disk.img'])
             original.rename(root / 'removed-machine')
