@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "pages": [
+    {
+      "id": "site.overview",
+      "slug": "planning/overview",
+      "title": "Reference-site preparation",
+      "section": "planning",
+      "role": "site-plan",
+      "source": "docs/site/README.md"
+    },
+    {
+      "id": "site.authoring",
+      "slug": "planning/authoring",
+      "title": "Authoring and migration conventions",
+      "section": "planning",
+      "role": "site-plan",
+      "source": "docs/site/authoring.md"
+    },
+    {
+      "id": "site.workplan",
+      "slug": "planning/core-formats",
+      "title": "Core format and application workplan",
+      "section": "planning",
+      "role": "site-plan",
+      "source": "docs/site/format-workplan.md"
+    },
+    {
+      "id": "site.visual-workflow",
+      "slug": "planning/visual-assets",
+      "title": "Visual asset publication workflow",
+      "section": "planning",
+      "role": "site-plan",
+      "source": "docs/site/visual-assets.md"
+    },
+    {
+      "id": "system.architecture",
+      "slug": "system/architecture",
+      "title": "Architecture and scope boundaries",
+      "section": "system",
+      "role": "current-guide",
+      "source": "docs/architecture.md"
+    },
+    {
+      "id": "system.manufacturer-crosswalk",
+      "slug": "system/tandy-crosswalk",
+      "title": "Tandy Appendix A format crosswalk",
+      "section": "system",
+      "role": "manufacturer-reference",
+      "source": "docs/reference/tandy-format-crosswalk.md"
+    },
+    {
+      "id": "system.page-setup",
+      "slug": "system/page-setup",
+      "title": "Common Page Setup header",
+      "section": "system",
+      "role": "manufacturer-reference",
+      "source": "docs/reference/tandy-common-headers.md"
+    },
+    {
+      "id": "system.database-study",
+      "slug": "system/database-components",
+      "title": "Database components research",
+      "section": "system",
+      "role": "dated-research",
+      "source": "docs/research/database-components.md"
+    },
+    {
+      "id": "formats.calendar",
+      "slug": "formats/calendar",
+      "title": "DeskMate Calendar laboratory specification",
+      "section": "formats",
+      "role": "dated-snapshot",
+      "source": "docs/formats/calendar/CALENDAR_FORMAT.md"
+    },
+    {
+      "id": "formats.address-book",
+      "slug": "formats/address-book",
+      "title": "Tandy Address Book format reference",
+      "section": "formats",
+      "role": "manufacturer-reference",
+      "source": "docs/reference/tandy-addressbook-format.md"
+    },
+    {
+      "id": "formats.filer",
+      "slug": "formats/filer",
+      "title": "Tandy Filer format reference",
+      "section": "formats",
+      "role": "manufacturer-reference",
+      "source": "docs/reference/tandy-filer-format.md"
+    },
+    {
+      "id": "formats.text",
+      "slug": "formats/text",
+      "title": "Tandy Text format reference",
+      "section": "formats",
+      "role": "manufacturer-reference",
+      "source": "docs/reference/tandy-text-format.md"
+    },
+    {
+      "id": "formats.draw",
+      "slug": "formats/draw",
+      "title": "Tandy Draw format reference",
+      "section": "formats",
+      "role": "manufacturer-reference",
+      "source": "docs/reference/tandy-draw-format.md"
+    },
+    {
+      "id": "formats.worksheet",
+      "slug": "formats/worksheet",
+      "title": "Tandy Worksheet format reference",
+      "section": "formats",
+      "role": "manufacturer-reference",
+      "source": "docs/reference/tandy-worksheet-format.md"
+    },
+    {
+      "id": "formats.sound-research",
+      "slug": "formats/sound-research",
+      "title": "Native Sound research",
+      "section": "formats",
+      "role": "dated-research",
+      "source": "docs/research/sound-native-20261118.md"
+    },
+    {
+      "id": "formats.music-research",
+      "slug": "formats/music-research",
+      "title": "Native Music research",
+      "section": "formats",
+      "role": "dated-research",
+      "source": "docs/research/music-native-20261118.md"
+    },
+    {
+      "id": "applications.inventory",
+      "slug": "applications/inventory",
+      "title": "Built-in application and format inventory",
+      "section": "applications",
+      "role": "current-guide",
+      "source": "docs/inventory.md"
+    },
+    {
+      "id": "applications.ecosystem",
+      "slug": "applications/ecosystem",
+      "title": "DeskMate ecosystem catalog",
+      "section": "applications",
+      "role": "current-guide",
+      "source": "docs/ecosystem/README.md"
+    },
+    {
+      "id": "research.filer",
+      "slug": "research/filer",
+      "title": "Filer native experiments",
+      "section": "research",
+      "role": "dated-research",
+      "source": "docs/research/filer-native-20261117.md"
+    },
+    {
+      "id": "research.text",
+      "slug": "research/text",
+      "title": "Text native experiments",
+      "section": "research",
+      "role": "dated-research",
+      "source": "docs/research/text-native-20261117.md"
+    },
+    {
+      "id": "research.draw",
+      "slug": "research/draw",
+      "title": "Native graphics experiments",
+      "section": "research",
+      "role": "dated-research",
+      "source": "docs/research/graphics-native-20261117.md"
+    },
+    {
+      "id": "research.worksheet",
+      "slug": "research/worksheet",
+      "title": "Worksheet native experiments",
+      "section": "research",
+      "role": "dated-research",
+      "source": "docs/research/worksheet-native-20261117.md"
+    },
+    {
+      "id": "evidence.visual-catalog",
+      "slug": "evidence/visual-inventory",
+      "title": "First private visual-evidence inventory report",
+      "section": "evidence",
+      "role": "dated-research",
+      "source": "docs/research/visual-evidence-first-pass-20261120.md"
+    },
+    {
+      "id": "evidence.visual-policy",
+      "slug": "evidence/visual-policy",
+      "title": "Visual-evidence curation policy",
+      "section": "evidence",
+      "role": "current-guide",
+      "source": "docs/visual-evidence-curation.md"
+    },
+    {
+      "id": "recovery.workbench",
+      "slug": "recovery/workbench",
+      "title": "DeskMate Preservation Workbench",
+      "section": "recovery",
+      "role": "current-guide",
+      "source": "docs/preservation-workbench.md"
+    },
+    {
+      "id": "project.roadmap",
+      "slug": "project/roadmap",
+      "title": "Preservation ecosystem roadmap",
+      "section": "planning",
+      "role": "site-plan",
+      "source": "docs/preservation-roadmap.md"
+    }
+  ]
+}
