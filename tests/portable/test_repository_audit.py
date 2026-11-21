@@ -40,8 +40,8 @@ class FixtureAuditTest(unittest.TestCase):
         def chunk(kind, payload):
             return pack('>I', len(payload)) + kind + payload + pack('>I', crc32(kind + payload))
         header = pack('>IIBBBBB', 1, 1, 8, 2, 0, 0, 0)
-        pixels = zlib.compress(b'\\x00\\xaa\\xbb\\xcc')
-        return b'\\x89PNG\\r\\n\\x1a\\n' + chunk(b'IHDR', header) + chunk(b'IDAT', pixels) + chunk(b'IEND', b'')
+        pixels = zlib.compress(b'\x00\xaa\xbb\xcc')
+        return b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', header) + chunk(b'IDAT', pixels) + chunk(b'IEND', b'')
 
     def site_image(self, data=None, with_sidecar=True):
         data = data if data is not None else self.example_site_png()
@@ -52,8 +52,8 @@ class FixtureAuditTest(unittest.TestCase):
         path.write_bytes(data)
         if with_sidecar:
             (path.parent / (path.name + '.license')).write_text(
-                'SPDX-FileCopyrightText: 2026 Example contributor\\n'
-                'SPDX-License-Identifier: CC-BY-4.0\\n', encoding='utf-8')
+                'SPDX-FileCopyrightText: 2026 Example contributor\n'
+                'SPDX-License-Identifier: CC-BY-4.0\n', encoding='utf-8')
         spec = {'schema_version': 1, 'images': [{
             'id': 'ui.calendar.day-view',
             'path': rel,
@@ -107,7 +107,7 @@ class FixtureAuditTest(unittest.TestCase):
         png = self.example_site_png()
         def chunk(kind, payload):
             return pack('>I', len(payload)) + kind + payload + pack('>I', crc32(kind + payload))
-        png = png[:-12] + chunk(b'tEXt', b'Comment\\x00private metadata') + png[-12:]
+        png = png[:-12] + chunk(b'tEXt', b'Comment\x00private metadata') + png[-12:]
         path, spec = self.site_image(data=png)
         with self.assertRaisesRegex(ValueError, 'unsafe site PNG chunk'):
             self.audit()
