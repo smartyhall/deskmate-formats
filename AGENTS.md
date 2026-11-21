@@ -116,10 +116,13 @@ project's native observations. Cite our own experiment reports, receipts, or
 fixtures as primary evidence when applicable, and limit each claim to the
 versions and behaviors actually documented.
 
-Use the **Oxford (serial) comma** in lists of three or more items, including
-narrative prose, captions, and alternative text. Do not insert an unnecessary
-comma into a list of two items or alter verbatim historical quotations merely
-to enforce house style.
+Use the **Oxford (serial) comma** in public-facing reference-site prose:
+articles, historical introductions, editorial explanations, navigation text,
+captions, and alternative text. This is a reader-facing house style, not a
+requirement for Codex's internal research reports, experiment logs, source
+notes, or technical developer documentation; those may use the style most
+appropriate to their content. Do not rewrite original research evidence or
+verbatim historical quotations merely to enforce house style.
 
 ## Codex usage receipts — operator decision 2026-11-18
 
