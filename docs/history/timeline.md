@@ -52,6 +52,12 @@ The surviving Tandy ecosystem documentation records later **DeskMate 3.x** revis
 
 Our current **DeskMate 3.05** laboratory captures and file-format studies establish how a particular surviving configuration behaves; they should be cited as modern experimental evidence, not projected backward onto untested editions. [Application inventory](../inventory.md); [manufacturer format crosswalk](../reference/tandy-format-crosswalk.md)
 
+## Selected illustrations for this first edition
+
+The initial illustrated timeline will use **four sourced figures**: the [1988 Tandy 1000 HX catalog offer](https://colorcomputerarchive.com/repo/Documents/Catalogs/Radio%20Shack/Tandy%20Computer%20Catalog%20and%20Software%20Reference%20Guide%20%281988%29%28Tandy%29.pdf#page=9) (DOS in ROM, Personal DeskMate 2 included); the [1988 catalog's side-by-side DeskMate software listings](https://colorcomputerarchive.com/repo/Documents/Catalogs/Radio%20Shack/Tandy%20Computer%20Catalog%20and%20Software%20Reference%20Guide%20%281988%29%28Tandy%29.pdf#page=102); an original [1988 Tandy 1000 SL advertisement](https://colorcomputerarchive.com/repo/Documents/Magazines/Compute%20%28Clean%29/Compute_Issue_101_1988_Oct.pdf) explicitly promoting DeskMate in ROM; and a [photograph of surviving Personal DeskMate 2 manuals](https://www.vintagecomputer.net/tandy/1000_tx/) showing what the physical documentation looked like. See [the reviewed editorial selections, exact captions, and publication status](period-visual-sources.md#selected-illustrations-for-the-first-edition).
+
+These are **source links and selected figure specifications**, not yet local published image files. Before public display, generate reviewed copies with suitable attribution, stable provenance, accessible alt text, and compliant image metadata. Keep the original full pages accessible from every excerpt; do not treat a catalog illustration as a native software capture.
+
 ## How this chronology will grow
 
 Each verified release can eventually acquire a stable record with its **product and edition identity**, **year evidence**, **original catalog or announcement**, **observed media**, **installation guide**, **hardware requirements**, **approved screenshots**, **native file formats**, and **known uncertainties**. Cross-link those records to the [installation project](https://github.com/smartyhall/deskmate-formats/issues/153) and, where relevant, the curated [Tandy Faxback publication project](https://github.com/smartyhall/deskmate-formats/issues/154).
