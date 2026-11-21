@@ -107,6 +107,20 @@ Challenge scope drift: evidence, consequence, rollback, minimum control.
   2026-11-08 post-run housekeeping grant. Do not infer approval for unrelated
   repository mutations, unattended dispatch, emulator control or paid calls.
 
+## Editorial evidence and style — operator decision 2026-11-21
+
+For historical and technical reference prose, cite sourceable facts close to
+their first mention rather than relying only on an end bibliography. Clearly
+distinguish vendor claims, contemporary independent accounts, and this
+project's native observations. Cite our own experiment reports, receipts, or
+fixtures as primary evidence when applicable, and limit each claim to the
+versions and behaviors actually documented.
+
+Use the **Oxford (serial) comma** in lists of three or more items, including
+narrative prose, captions, and alternative text. Do not insert an unnecessary
+comma into a list of two items or alter verbatim historical quotations merely
+to enforce house style.
+
 ## Codex usage receipts — operator decision 2026-11-18
 
 For every Codex research campaign, record available usage telemetry at startup,
