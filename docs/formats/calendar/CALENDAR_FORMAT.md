@@ -9,6 +9,14 @@ comparison on the E02 appointment. Absolute offsets are zero-based.
 structural interpretation supported by repeated examples. **Speculative**
 means an untested semantic explanation.
 
+The [November 21 native comparison](../../research/deskmate-303-305-comparison.md#calendar)
+exercised the same core appointment format in 3.03.01 under `PERSONAL.CAL`
+and in 3.05 under `PERSONAL.CLN`. The measured single-event payload, index,
+edit, and deletion agree. In one no-edit 3.03 open and close, the foreign
+file's configuration byte at `0x100d` changed from `63` to `65`. The 3.02
+matched appointment also parses and differs from the 3.03 counterpart only
+in header byte `0x0018` (`43` versus `57`).
+
 ## Evidence and provenance
 
 All paths below are relative to DOSLAB. Each experiment preserves a complete 126-file installed tree, a manifest with SHA-256 hashes, and action metadata. Calendar was exited cleanly to the DOS prompt before collection. No originals or functioning installation files were edited.

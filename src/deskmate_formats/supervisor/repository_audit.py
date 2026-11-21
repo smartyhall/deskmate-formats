@@ -28,7 +28,7 @@ MIN_LISTENING_FRAMES = 4 * 48_000
 MAX_LISTENING_FRAMES = 20 * 48_000
 MAX_MILESTONE_BYTES = 26 * 1024 * 1024
 MAX_LISTENING_BYTES = 128 * 1024 * 1024
-DATA_EXT = {'.cln', '.adr', '.fil', '.pcl', '.doc', '.fig', '.wks', '.snd', '.sng'}
+DATA_EXT = {'.cal', '.cln', '.adr', '.fil', '.pcl', '.doc', '.fig', '.wks', '.snd', '.sng'}
 SYNTHETIC_FF1 = 'draw/typography-lab-grid.ff1'
 SYNTHETIC_MID = {
     f'midimapper/{case}-midimapper-6.38.mid'

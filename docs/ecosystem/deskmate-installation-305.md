@@ -1,5 +1,9 @@
 # Install DeskMate 3.05 on a DOS PC
 
+For the earlier generic release, see the [tested 3.03.01 installation
+guide](deskmate-installation-303.md) and the [native interface and format
+comparison](../research/deskmate-303-305-comparison.md).
+
 This guide follows the November 5, 2026 clean installation of generic DeskMate **03.05.00** on an emulated Tandy 1000 RSX. The installer ran from five 720 KiB images, wrote a new hard-disk installation, and restarted DOS. Calendar then opened and reproduced the expected test files. The steps below come from that run and its preserved screens and installed files. [Native installation report](../research/calendar-editor-observatory.md#media-and-disposable-installation)
 
 ## Requirements and preparation

@@ -17,6 +17,7 @@ local-results/
 *.iso
 *.zip
 *.7z
+*.cal
 *.cln
 *.adr
 *.fil
@@ -28,6 +29,7 @@ local-results/
 *.[sS][nN][gG]
 *.[wW][aA][vV]
 *.[mM][iI][dD]
+!tests/fixtures/application-generated/**/*.cal
 !tests/fixtures/application-generated/**/*.cln
 !tests/fixtures/application-generated/**/*.adr
 !tests/fixtures/application-generated/**/*.fil

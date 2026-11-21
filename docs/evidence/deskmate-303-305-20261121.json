@@ -1,0 +1,2810 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-21",
+  "campaign": "deskmate-303-native",
+  "base_commit": "1c140eac8ebea99402930ce14d1f4130d7d6714c",
+  "machine": {
+    "model": "Tandy 1000 RSX",
+    "emulator_version": "7.0",
+    "cpu": "i386SX",
+    "cpu_hz": 25000000,
+    "ram_kib": 4096,
+    "video": "internal Cirrus GD5402 VGA",
+    "audio": "internal",
+    "keyboard": "PS/2",
+    "mouse": "PS/2",
+    "drive_a": "3.5-inch 1.44 MB",
+    "drive_b": null,
+    "hard_disk_geometry_c_h_s": [
+      1024,
+      4,
+      26
+    ],
+    "dos": "Tandy MS-DOS 5.00",
+    "dynamic_recompilation": false,
+    "host_clock_sync": false,
+    "network_links_enabled": false,
+    "automation": "authenticated IPv4 loopback, visible, held, seed 1, nohook",
+    "comparison_guest_date": "2026-10-23",
+    "comparison_guest_time": "12:00:00",
+    "executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+    "source_revision": "855258da966f1594f568350be59e8e1eca082ed1",
+    "cmake_cache_sha256": "bdbc3adcd6f55928050039e008eebb2e0b789f7b52ef39377ee42186252602f5",
+    "rom_revision": "908394b690f7da28f47727d9876774fd672c4ed3",
+    "rsx_bios_sha256": "17984fe7c31ab6b51c96272ba8ee89580eb139aab01399a1b865f6743f3334f2",
+    "bios_post_strings": [
+      "Phoenix 80386 ROM BIOS PLUS Version 1.10.00",
+      "DeskTop VGA BIOS 340-005-11-Rev1.00 Version 1.00"
+    ]
+  },
+  "preserved_sources": {
+    "dos_disk": {
+      "bytes": 54525952,
+      "sha256": "6c146364c24000dbf46898eec1abd4940c3f8a3a666670bdda3aa30a01e681ec"
+    },
+    "config": {
+      "bytes": 789,
+      "sha256": "12bb7f7699f85c1eb094bd17da5994f5fc2a0c7bc74de27117b904ce5e5d1773"
+    },
+    "nvram": {
+      "bytes": 128,
+      "sha256": "a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2"
+    },
+    "deskmate_305_disk": {
+      "bytes": 54525952,
+      "sha256": "9afd080411c37a96cdce802cb129ffe7d6e1d84fb43314add7221dc71e141df0"
+    }
+  },
+  "media": {
+    "dm303dk1.zip": {
+      "archive_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk1.zip",
+      "archive_sha256": "a9897beaaddd29c47ec3ad4046d57ea2e28872399afea0731c12f2e8a259ebfe",
+      "archive_bytes": 411531,
+      "members": 42,
+      "filesystem": "FAT12",
+      "volume_label": "DESKMATE_1",
+      "image": {
+        "bytes": 737280,
+        "sha256": "6f6ec96cb231c9f94d5578c1db469772e3aa446e889fda7f32f343733802ae22"
+      },
+      "space_label_control": {
+        "bytes": 737280,
+        "sha256": "84ed1aa49c898a96a1e9fd8a9cbad85dc5179ef88b788ce371d5b3f127d51114"
+      }
+    },
+    "dm303dk2.zip": {
+      "archive_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk2.zip",
+      "archive_sha256": "edb617433344c50361c23c582bccefd63441fa1dd5205d64905981c6f995638b",
+      "archive_bytes": 419320,
+      "members": 30,
+      "filesystem": "FAT12",
+      "volume_label": "DESKMATE_2",
+      "image": {
+        "bytes": 737280,
+        "sha256": "fc382d320f5a50d7e64b0fb36f3812852e81823fb6d8ada0b7647aaae774ebdf"
+      },
+      "space_label_control": {
+        "bytes": 737280,
+        "sha256": "e65949f65704565902efaa41cbd2a1bb1c6f450e6eb072ad0d1e14ca0f58243f"
+      }
+    },
+    "dm303dk3.zip": {
+      "archive_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk3.zip",
+      "archive_sha256": "e4c9fbada6cbcd158df1c488afbcb79b7b3fae9b28c4dff13bb87108ade8a18f",
+      "archive_bytes": 325771,
+      "members": 32,
+      "filesystem": "FAT12",
+      "volume_label": "DESKMATE_3",
+      "image": {
+        "bytes": 737280,
+        "sha256": "48c48524b23c571cf9d18250889e32b8d0fdb613dc4289c7c638b460e1bb272e"
+      },
+      "space_label_control": {
+        "bytes": 737280,
+        "sha256": "ccb6e5f54cb28a16355c55caed7399c2ff577dd22b9a51e37bd392542d5487e3"
+      }
+    },
+    "dm303dk4.zip": {
+      "archive_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk4.zip",
+      "archive_sha256": "b164799dbf99511eda5e562ca3423622fa0452c591b6d548ea6783a58607055a",
+      "archive_bytes": 367667,
+      "members": 39,
+      "filesystem": "FAT12",
+      "volume_label": "DESKMATE_4",
+      "image": {
+        "bytes": 737280,
+        "sha256": "17cafd6656d443a0a6ce13dbfd1e2d3482d32df6f7a6168310d653a3965eede5"
+      },
+      "space_label_control": {
+        "bytes": 737280,
+        "sha256": "ddd8882c520885997e55f972d0fdf008f2391e4fadd482f09057eca3fc0efde4"
+      }
+    },
+    "dm302dk1.zip": {
+      "archive_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm302dk1.zip",
+      "archive_sha256": "ebf2b2a0c8e4caf1468c896f83beb4deea6780a67c0b5532104ffb4b1657639d",
+      "archive_bytes": 276975,
+      "members": 25,
+      "filesystem": "FAT12",
+      "volume_label": "DESKMATE_1",
+      "image": {
+        "bytes": 737280,
+        "sha256": "f4b07d745fda8c497f1be3b32db60d8cfdb3fe2b803b66fbd478a5862d8d48f8"
+      }
+    },
+    "dm302dk2.zip": {
+      "archive_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm302dk2.zip",
+      "archive_sha256": "47c4104ed68dcce464130f5cd200772fef0b7fc8d9f61899092b7fbe2fd6c008",
+      "archive_bytes": 355824,
+      "members": 17,
+      "filesystem": "FAT12",
+      "volume_label": "DESKMATE_2",
+      "image": {
+        "bytes": 737280,
+        "sha256": "02350fff7e46f42d95142d1d7673e133ea324ddb50445fb2589feceeb546def4"
+      }
+    },
+    "dm302dk3.zip": {
+      "archive_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm302dk3.zip",
+      "archive_sha256": "18d97c5842d15eac8a15cdd5db770493693a06c33f9315203003bd674c873f73",
+      "archive_bytes": 361263,
+      "members": 38,
+      "filesystem": "FAT12",
+      "volume_label": "DESKMATE_3",
+      "image": {
+        "bytes": 737280,
+        "sha256": "8fb7de780ec27efb9828a292724d75402437834a30671f2b211a0037aae0e9ce"
+      }
+    }
+  },
+  "installation_observations": [
+    {
+      "frame": "303-install-after-wait",
+      "action": "A: then VOL and INSTALL using DESKMATE 1",
+      "result": "DOS label recognized; installer asks to change to a drive containing DeskMate 1"
+    },
+    {
+      "frame": "303-install-label",
+      "action": "Retry from A: with DESKMATE_1 and the same file bytes",
+      "result": "DeskMate Version 03.03.01 banner"
+    },
+    {
+      "frame": "303-install-ready",
+      "action": "Wait for installer",
+      "result": "Accept default C:\\DESKMATE with Enter"
+    },
+    {
+      "frame": "303-install-disk2",
+      "action": "Mount Disk 2 in A: and press Enter",
+      "result": "Disk Needed after CALENDAR.TUT"
+    },
+    {
+      "frame": "303-install-disk3",
+      "action": "Mount Disk 3 in A: and press Enter",
+      "result": "Disk Needed after DICT.SPL"
+    },
+    {
+      "frame": "303-install-disk4",
+      "action": "Mount Disk 4 in A: and press Enter",
+      "result": "Disk Needed after DMVID.DOC"
+    },
+    {
+      "frame": "303-install-printer",
+      "action": "Wait for reset prompt, eject A:, and press Enter",
+      "result": "Updates AUTOEXEC.BAT; no interactive printer choices"
+    },
+    {
+      "frame": "303-after-reset",
+      "action": "Wait for DOS boot",
+      "result": "DOS prompt after installer soft reset"
+    },
+    {
+      "frame": "303-desktop",
+      "action": "Set guest date and time, CD to DESKMATE, and run DESK",
+      "result": "First Desktop capture"
+    }
+  ],
+  "clean_303_installed_files": {
+    "ADDRESS.HLP": {
+      "bytes": 36864,
+      "sha256": "2a7046e6cb7a84b9159cc90c3824670ebd864830f9ce1ec7d86091a4895e5376"
+    },
+    "ADDRESS.PDM": {
+      "bytes": 53923,
+      "sha256": "127bf102fdd2371c0a020beb99e1a59f1122d83b8c4e1d47f7dff2ecbd324ff1"
+    },
+    "ADDRESS.TUT": {
+      "bytes": 15867,
+      "sha256": "82fa13b9c450f5d6af90d5d0de4ff1859c78e80fe975f58572035abb5b8416e7"
+    },
+    "ALARM.RES": {
+      "bytes": 12119,
+      "sha256": "1854b184c311cb6451b7b7f2e2b5770ccfb522bd923780f5fe949ed5cac03cc2"
+    },
+    "ALRMINIT.RES": {
+      "bytes": 9607,
+      "sha256": "89e350d1b2ca208194fc1d6179593b2aa01c0da84931606b8069a03d37fd8ceb"
+    },
+    "AUTOLOAD.RES": {
+      "bytes": 3618,
+      "sha256": "9a1c6db2e465599c727feddd1a75b4bcec4f8b7dce2674ba0b4a3b4dae648f69"
+    },
+    "CALENDAR.HLP": {
+      "bytes": 22528,
+      "sha256": "e85ea453b802c3b43df7344befbc53d27b73e11dd9915e013fe2e8af63191174"
+    },
+    "CALENDAR.PDM": {
+      "bytes": 72211,
+      "sha256": "53f780566d0966317db0693e6e0932052aa637a1146fe4999aefc25b905ce8ee"
+    },
+    "CALENDAR.TUT": {
+      "bytes": 9661,
+      "sha256": "ac40798e91eab74414d7dfd2f45c669e5ce87d2f2ffc71e1e3ae163010bbc847"
+    },
+    "CARMAINT.FIL": {
+      "bytes": 14336,
+      "sha256": "4638cc92783065df83f496d077e1a8790c055511d805fbc920ba6cd7c5596e46"
+    },
+    "D87.RES": {
+      "bytes": 818,
+      "sha256": "bc63f16921cd71f45b0d93399c14217ca7860ecdc41a5ac2bf9cefa670083d03"
+    },
+    "DB01.PCL": {
+      "bytes": 2731,
+      "sha256": "a6a515df3eda637c97c996502ab2e4673528d460f83691774de303d5ea8e3cb0"
+    },
+    "DB02.PCL": {
+      "bytes": 2752,
+      "sha256": "4bf1f2d5f38d6519dde32b714f9fdce9d2a4668664564b0df51ef86e3817699a"
+    },
+    "DB03.PCL": {
+      "bytes": 3459,
+      "sha256": "dc039d951f0ed1636f22eeb32cd586a7e4630760bfce68561af40e53c26e1f39"
+    },
+    "DB04.PCL": {
+      "bytes": 3056,
+      "sha256": "3973ce12ca3a32ea49968ad100aa055acf5fc4a371cf4228e2ca542ebe4e2a11"
+    },
+    "DB05.PCL": {
+      "bytes": 19301,
+      "sha256": "d66fd3202cbbffd6c6d6ffaec49a0c0aec08e4a1294d58329de7d1dafc2f1c30"
+    },
+    "DB06.PCL": {
+      "bytes": 111,
+      "sha256": "89384436c8fea3c398bbd3bd6b65cee0cd9be56a089ec5ee62463a6b9dd9d53a"
+    },
+    "DB07.PCL": {
+      "bytes": 3656,
+      "sha256": "3dfbc02712f7a85c1d10c5319c855f963370a4921b87a066e8395fcbf9e3415f"
+    },
+    "DBBUILD.RES": {
+      "bytes": 11672,
+      "sha256": "c44ffb66d4b2c7e9cf11caf9c162fb1e794cd2bda410a43a0d4f5a720ef0385a"
+    },
+    "DBREAD.RES": {
+      "bytes": 19235,
+      "sha256": "008727eda24d3d698dd4095be94b5b384a63f477face8a53a353ad9dfa66dc30"
+    },
+    "DBUPDATE.RES": {
+      "bytes": 15532,
+      "sha256": "e9e7e3e3813d21e7b20bacda555a138f759f7a9be2a6a2a7decb33180c9eacaf"
+    },
+    "DEFAULT.CLP": {
+      "bytes": 3038,
+      "sha256": "5d0f7c1ed17f72c05f432ba632eaf36684d70ec9c4a3b19a79393f1b8d4aab71"
+    },
+    "DESK.EXE": {
+      "bytes": 16384,
+      "sha256": "702a5f6237695793a773a327b2b9bedc706cce3d16a52360aa90c4f13f67066a"
+    },
+    "DESKMATE.HLP": {
+      "bytes": 61440,
+      "sha256": "4add95c1c84451887df5148b6f743bb0f29414c857fc2679801fa765d21b1c9a"
+    },
+    "DESKTOP.HLP": {
+      "bytes": 39936,
+      "sha256": "b3bd42def842aa4073dad658aef80a010b591a86f9616e7d7413e38780f83c4e"
+    },
+    "DESKTOP.PDM": {
+      "bytes": 64395,
+      "sha256": "a16dc659edf20eb36a5d1ae3291e990280b82a1778a7d9118028c4cecf62d5f1"
+    },
+    "DESKTOP.TUT": {
+      "bytes": 11210,
+      "sha256": "8a2ca454d75f85c9d1b49379b41979196026f6e3a7256eff4bf90ac48cdf95c8"
+    },
+    "DICT.SPL": {
+      "bytes": 127169,
+      "sha256": "16b4515972bb1cdf3435261355cc2f523c2180bf7c7fdfbddb9c743d11aaaa28"
+    },
+    "DMACCESS.ACC": {
+      "bytes": 7251,
+      "sha256": "104febc165704de72515682e2efa03a02177a0befa619116b48e186ad8ddec79"
+    },
+    "DMALARM.ACC": {
+      "bytes": 14907,
+      "sha256": "b4df24c346aa09c8469385d80213fd799c4efd9e830760c61e91d4314ecdff21"
+    },
+    "DMCSR.CFG": {
+      "bytes": 63,
+      "sha256": "0d9355cd20785eaa92e564ed6a8be797ac62d749d212310e6be4f587b9cc8831"
+    },
+    "DMCSR.R89": {
+      "bytes": 79983,
+      "sha256": "b756c00bf3c9320819a8ae763bb6866cdaf4f2e902e1fd50aa0c17c2e44580a9"
+    },
+    "DMDB.R89": {
+      "bytes": 1117,
+      "sha256": "5051e8d298e9a282430fa2bb21897880cc891d1d983847b5d28894d05c33e6a5"
+    },
+    "DMFORM.RES": {
+      "bytes": 9872,
+      "sha256": "78720534aadafc406ad94078237a1af49926fb27092256e9534430a875663c3d"
+    },
+    "DMGUF.R89": {
+      "bytes": 14904,
+      "sha256": "0edc190deec585d21ea1c47487483786f154a80d2d321a0986405cbcb034dfd2"
+    },
+    "DMHELP.ACC": {
+      "bytes": 4494,
+      "sha256": "68c00bea3a527d1dfa7b34feb887c69b06739ab9b8982ca1a8d1433a9acfc9a5"
+    },
+    "DMHLPENG.RES": {
+      "bytes": 23882,
+      "sha256": "1147352259e3fcdcef4e8f9dbb1b927fc3387af9b27e64206d70b9061073ad94"
+    },
+    "DMINTRO.TUT": {
+      "bytes": 30968,
+      "sha256": "e67cf19a81e2243d70d3e9b02277d8bbb684121cb2324cfa72d3f960aa20e634"
+    },
+    "DMMDJOY.RES": {
+      "bytes": 1476,
+      "sha256": "7a00a499ac95b80216bab7b77382c208492b60e5d9f7d5f3a0a7d7ecbe169418"
+    },
+    "DMMDP.RES": {
+      "bytes": 1432,
+      "sha256": "7b532f8553b802580e4fe23c22c44940a43f5bb2a0532818f7b079b28e61219e"
+    },
+    "DMMDSERI.RES": {
+      "bytes": 1860,
+      "sha256": "a097233cf35f88c4808492471558d344e25d6c358380a3ad747622ba42ce2d61"
+    },
+    "DMNOTEPD.ACC": {
+      "bytes": 14029,
+      "sha256": "bb6340d3b67ccb9114c264e8f621577ffb090ff7762eaeb9eeb6975543df14fb"
+    },
+    "DMOLDAPP.MOD": {
+      "bytes": 7961,
+      "sha256": "7f3096eacdc5ddd5896e4a58f93091e4c8f46d3f12326c126dd4dd8e60c029c2"
+    },
+    "DMPD1.RES": {
+      "bytes": 15849,
+      "sha256": "56127c2c040ece219c5281424265c8feacc0e7287e2c6fdb08c541b539c499f6"
+    },
+    "DMPD2.RES": {
+      "bytes": 15849,
+      "sha256": "de912a1971f26921d1f264c3822b382391de1e2fb0c957dcb586b56e5d417ff1"
+    },
+    "DMPDASCI.RES": {
+      "bytes": 4169,
+      "sha256": "464a78bf1b33b8b6bee19cfc042980dd3241786489d2983595f4afee4b1ae700"
+    },
+    "DMPDIBMM.RES": {
+      "bytes": 15689,
+      "sha256": "858cabb6c6084994eebaa0bac7531ca31285793c4f213c8e9d1c5e3a2e7d8a3e"
+    },
+    "DMPDLASR.RES": {
+      "bytes": 16041,
+      "sha256": "f8bc1f87114b2fe49e1d7b0c024da67bdfd8255a45ed54cc8dfca2f754b62c63"
+    },
+    "DMPHONE.ACC": {
+      "bytes": 20137,
+      "sha256": "d6bab63dac7873602a8ebd206db919e8d882428e82e83e6150767a60863031cc"
+    },
+    "DMPLAY.RES": {
+      "bytes": 40584,
+      "sha256": "1a433e11f9dffc2410db1181109a1e666a25eee7ea2c0e67907f190fedf87a0b"
+    },
+    "DMSERV.ACC": {
+      "bytes": 23951,
+      "sha256": "339797af8c45318ab5af056e6a8561da4be451a00ed34e65d166ea222f32d659"
+    },
+    "DMSETUP.ACC": {
+      "bytes": 26651,
+      "sha256": "a365aea92fca4e3916d9ac44a4b7ab501861fce0684cea2dc25ebd48d659af68"
+    },
+    "DMSPELL.ACC": {
+      "bytes": 7268,
+      "sha256": "5378878f73b30a48b193dbea83fc4843ac734d6f2ea5c0ab4a332506dc6f8432"
+    },
+    "DMTODO.ACC": {
+      "bytes": 5832,
+      "sha256": "e46d07f06fab104a7eb822ccf2c75414969273fa9e22f26cad0d95142a6d3bb8"
+    },
+    "DMUNPACK.RES": {
+      "bytes": 3172,
+      "sha256": "3c527fd3a14a9df90546d83fcbc9ddf5b5f20931707b761353ab763e2c4da771"
+    },
+    "DMVID.DOC": {
+      "bytes": 1843,
+      "sha256": "dc29fcfffceb4db7be313896c08fed47217b157a7860480bbf68a30c95147474"
+    },
+    "DMVID.EXE": {
+      "bytes": 16787,
+      "sha256": "59ea49a886199d4865d7488c530923813914c3101e59b0545ccb52742347a6eb"
+    },
+    "DMVS1000.RES": {
+      "bytes": 20930,
+      "sha256": "f4305f7c2a40037d391c63c73192e87a29e7aeef24ac99dd24c058d5295502ca"
+    },
+    "DMVSCGA.RES": {
+      "bytes": 22674,
+      "sha256": "d379fafb2b26f408ed1fc0dec39bc124aa395b60d7295ce9b95b2a50b65a5272"
+    },
+    "DMVSEGA.RES": {
+      "bytes": 22882,
+      "sha256": "f66fb08f00e37f8f6d4f27df7e4cfde18856b31e9dd16da0bdf242a9bded6f07"
+    },
+    "DMVSHERC.RES": {
+      "bytes": 24626,
+      "sha256": "2b51fc1d7dbdcc372905964638336b962ef60b68dfb8498170a4eba110a617a4"
+    },
+    "DMVSMCGA.RES": {
+      "bytes": 21698,
+      "sha256": "f8d7f538a9f86af3d0e4575dab87be0f45a3eaf011ac1378cc4258707da550bf"
+    },
+    "DMVSTC16.RES": {
+      "bytes": 21618,
+      "sha256": "7c0e8275898b05ebd5efdfc0e818b1f3ee3bf15381816493bda6e0db29083436"
+    },
+    "DMVSVGA.RES": {
+      "bytes": 22802,
+      "sha256": "ac2750abae3bce7735131f928608d97bd1abe98308eed372ef1b1a21a568a4e2"
+    },
+    "DRAW.HLP": {
+      "bytes": 26624,
+      "sha256": "41e1a3168db6ba6a1141607df55712f0d1668549af344c671317d5e507a6dcbd"
+    },
+    "DRAW.PDM": {
+      "bytes": 57183,
+      "sha256": "2a9c9b46f996341fb0dce2dae351d3a660c23de08e2494d81f5e640c7993bf4a"
+    },
+    "DRAW.TUT": {
+      "bytes": 18421,
+      "sha256": "f70d7a3431c5b526c211a4d2fa0c154474f6cbf6d38ae8dfb20beeb10d9fa0a2"
+    },
+    "FILER.HLP": {
+      "bytes": 22528,
+      "sha256": "4fe55809e9dd15b29c6f131f7a75d1a253de0b936b54167f2b21bd7f5b8fb27c"
+    },
+    "FILER.PDM": {
+      "bytes": 39495,
+      "sha256": "aef8682eb18a829013a0fb7c8e4e42617c784d07e74a77d4f523d277d6e1c425"
+    },
+    "FILER.TUT": {
+      "bytes": 21948,
+      "sha256": "3c5667cad530888313c7f9041ebac6d89466080646b850c5e75911516929a4a3"
+    },
+    "FORMSET.HLP": {
+      "bytes": 30720,
+      "sha256": "f16c80c4005e24a54cd477c1dc2aebac7a960e1d3da65f2d9ba58b19bbb5afb7"
+    },
+    "FORMSET.PDM": {
+      "bytes": 59673,
+      "sha256": "302a0d3953d9982fe6d452d170596b2570f6a4055910ac63cc6ff16941751d9a"
+    },
+    "FORMSET.TUT": {
+      "bytes": 10079,
+      "sha256": "b670d07124afd31c93f98f6efc46601cfcc5dd185a0e4960cab2646b244ba75c"
+    },
+    "HANGMAN.HLP": {
+      "bytes": 12288,
+      "sha256": "4bdfef0774f08c9a11000694f159937a8596c477c4209298195ee6d201504807"
+    },
+    "HANGMAN.PDM": {
+      "bytes": 27001,
+      "sha256": "10fb1d849f60c38074d4e40f05df3211fa2fbc9619429c909cef55a262d31449"
+    },
+    "INVNTORY.FIL": {
+      "bytes": 12288,
+      "sha256": "62316203c555e42cddc47b118f4a34ef1c60362e684d2b90a978fb3675d9c6fe"
+    },
+    "LOAN.WKS": {
+      "bytes": 9621,
+      "sha256": "c0be31f936d0ae1b6fb571ba68abd4b0b47f91874d5fa29716571edd3e5a820a"
+    },
+    "MAILMRGE.PDM": {
+      "bytes": 20855,
+      "sha256": "3951edaf1faca8fe748f35b95a912dea2699bf2e2a291ae3225bc265218660c5"
+    },
+    "PC_DEMO.PDM": {
+      "bytes": 54031,
+      "sha256": "e94c6ef2e0e1182b0c46b172bf1fb80925d047d988ca780e7d6ef0c4b1b164b6"
+    },
+    "PC_LINK.HLP": {
+      "bytes": 11264,
+      "sha256": "6a77fe516b7a8b9e676d0a0a7825274c2fe794c53e59fffa1a4840d4b6e54375"
+    },
+    "PC_LINK.PDM": {
+      "bytes": 71429,
+      "sha256": "4a9df9b3b265a416d5353cb07b6c8241b9d2ab8f5fa73f5dc943cc3ca69020d9"
+    },
+    "PLAY.PDM": {
+      "bytes": 10691,
+      "sha256": "cb80474f1de0c8b0aa477817625960c8438d104e7ba29f1aaf485ce2a1cca130"
+    },
+    "PRGUF.RES": {
+      "bytes": 6496,
+      "sha256": "8a3266705265d78ad8ae37a144e788f56947f5b4b896d3c6df5dcd834f1bb7f9"
+    },
+    "PROTOCOL.RES": {
+      "bytes": 11590,
+      "sha256": "80d520d2ea57aee7a50cf29c43b8178e9e47d5d9f9691dca919bd11792a17f57"
+    },
+    "SPELL.RES": {
+      "bytes": 8496,
+      "sha256": "94073b1c39fb223162548a1318003245a079f84fab12edefdd7a7165ec7998a4"
+    },
+    "SPL.RES": {
+      "bytes": 27424,
+      "sha256": "9a8b5fe8c0e91f6b63aa3dc98ee9540795400c41d7f2b141781bc6aeff521128"
+    },
+    "TELECOM.HLP": {
+      "bytes": 27648,
+      "sha256": "425af4f7b16637cf22c5d034cf85ababfd1ba35c45f331cdd5acf21471392f9a"
+    },
+    "TELECOM.PDM": {
+      "bytes": 35695,
+      "sha256": "55c20aac9a286ae35f61c22b0f89dd998e6fbbae941467ec8d8688ce6a21848f"
+    },
+    "TEXT.HLP": {
+      "bytes": 47104,
+      "sha256": "1a044144a2441ca74f1f6d9746636612c2ace6af8fc73a52c38636f97b93d91e"
+    },
+    "TEXT.PDM": {
+      "bytes": 73465,
+      "sha256": "5307ae34d36545e7dd7753c99d2458264f0af492a7e3e7a8538c78d0bbd9d4e6"
+    },
+    "TEXT.TUT": {
+      "bytes": 11666,
+      "sha256": "ce0f030d1fecb147db8ef8a6c0e2759a4ca4b227730f8d620dad481a8965bbbc"
+    },
+    "TUTKBD.RES": {
+      "bytes": 1931,
+      "sha256": "dacc51d887eccd18012b0042bc5a86eec1e3a6f7d12fbf2fc269eea54e368438"
+    },
+    "TVM.WKS": {
+      "bytes": 1177,
+      "sha256": "ff2dccf104708133df0a59e9a7de24c902ec637832001e11551011b31fb751a7"
+    },
+    "WRKSHEET.HLP": {
+      "bytes": 36864,
+      "sha256": "96724fd4295c4d6da0ccf7f4157966dd4d3dcf6d553e13656e76b5c5ec52f4b1"
+    },
+    "WRKSHEET.PDM": {
+      "bytes": 59364,
+      "sha256": "e65f990eed54427d6c45d8563041ee138f49738e681c0c76a605b132c1a8af86"
+    },
+    "WRKSHEET.TUT": {
+      "bytes": 7855,
+      "sha256": "19173a390bed4b0281dbc9352ded52a88d5fc77425f28aa81d1df1e7a1b81388"
+    }
+  },
+  "clean_303_installation_note": "All 96 DESKMATE files matched same-name ZIP members; neither personal database nor DESKTOPD.CFG was installed. AUTOEXEC.BAT changed; CONFIG.SYS did not.",
+  "final_elapsed_emulated_ms": {
+    "03.03.01": 564260,
+    "03.05.00": 98996,
+    "03.02.00-first-launch": 272469,
+    "03.02.00-cold-verification": 35786
+  },
+  "extraction": "Copy disk while held and verify copied digest against source; extract in 7-Zip and independently traverse both matching FAT16 copies, directory entries, and cluster chains for published document files.",
+  "capture_method": "Native held 86Box framebuffer from socket, latest rendered guest frame",
+  "captures": {
+    "302-address-add-filled": {
+      "emulated_ms": 267473,
+      "frame": 18342,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "662cd40eec5bf5e6ab9221671b47b4adc550ac01564a99e84a3ca9b7a09b0c13",
+      "public_asset_id": "ui.installation-303.address-302",
+      "derivative_sha256": "5b01175ae3be0e38c99c3dc697f5adf069c040eceeb368ef45604af38d20b1cd",
+      "derivative": "RGB PNG re-encode at original pixel scale"
+    },
+    "302-address-closed": {
+      "emulated_ms": 270031,
+      "frame": 18495,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "986fb2368c8a79f5c654dc5d674e9d6d870f36298f7903e26dd35102dfa53ca6"
+    },
+    "302-address-confirm": {
+      "emulated_ms": 268227,
+      "frame": 18387,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "4537c5754696bb1f8bed90361cef836aef6b077e7004e85d41fb9d93d1677f24"
+    },
+    "302-address": {
+      "emulated_ms": 261859,
+      "frame": 18005,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "4f5ee15a18fa3987be682d83980ff809f66e3356e349c055d5d08b46f7bcd8fc"
+    },
+    "302-banner": {
+      "emulated_ms": 228529,
+      "frame": 16000,
+      "bios_video_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "5c4236123c474efccf764c62390a3ae7fedef677ca7523940b1078e8901efe16"
+    },
+    "302-cal-add-filled": {
+      "emulated_ms": 251997,
+      "frame": 17414,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "8c7d0adfd4fce2ba393ed1ce5f8043ebeafaee701afedf376bb5b0eead33a8cd"
+    },
+    "302-cal-closed": {
+      "emulated_ms": 255509,
+      "frame": 17624,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "986fb2368c8a79f5c654dc5d674e9d6d870f36298f7903e26dd35102dfa53ca6"
+    },
+    "302-cal-day": {
+      "emulated_ms": 253305,
+      "frame": 17492,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "397041e87d4592312f6ca67b2ea7ed0bf1e0ed2b246a16391a2a8e69a757e393"
+    },
+    "302-cal-menu": {
+      "emulated_ms": 248731,
+      "frame": 17218,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "bea8571067fada261593406830e2ed21617e98af7feb759650e44e8c68b0a5d4"
+    },
+    "302-cal-open": {
+      "emulated_ms": 241031,
+      "frame": 16756,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "b50d34eef0142e4f9e99c5db01723da2887ca9b54284b49a4979602796342f0c"
+    },
+    "302-calendar-month": {
+      "emulated_ms": 248427,
+      "frame": 17200,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "665f3199f087f7956760d89ce854b001fdb3d40f0376cf1c4a16dffcfb0335dd"
+    },
+    "302-cold-address-close": {
+      "emulated_ms": 35786,
+      "frame": 2269,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "5af00325ef33da74257247867a4e9f6e0d9ce8bf136afe141e2248fe5e981ca6"
+    },
+    "302-cold-address": {
+      "emulated_ms": 33882,
+      "frame": 2155,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "7a2de2da5b721565074f95bfad2c724bf7bf54be31eb18bec530ececed853262"
+    },
+    "302-cold-calendar-day": {
+      "emulated_ms": 26828,
+      "frame": 1732,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "70900d4cc81e9addd5e860ecf174b894e0462159a6db9be19c4c9e88e7a8f7bc"
+    },
+    "302-cold-calendar": {
+      "emulated_ms": 26174,
+      "frame": 1693,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "665f3199f087f7956760d89ce854b001fdb3d40f0376cf1c4a16dffcfb0335dd"
+    },
+    "302-cold-desktop": {
+      "emulated_ms": 19416,
+      "frame": 1287,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "986fb2368c8a79f5c654dc5d674e9d6d870f36298f7903e26dd35102dfa53ca6",
+      "public_asset_id": "ui.installation-303.desktop-302",
+      "derivative_sha256": "899da150ca703cbfe3284fd9b974652efebf8a4166f0d4a0c5f7215188eb432f",
+      "derivative": "RGB PNG re-encode at original pixel scale"
+    },
+    "302-copy-disk1": {
+      "emulated_ms": 75076,
+      "frame": 5244,
+      "bios_video_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "feb401dc133f4053b96e9593ff0540a963b3e41a6039ead5298c4e1f51cce7ce"
+    },
+    "302-copy-disk2": {
+      "emulated_ms": 143188,
+      "frame": 10018,
+      "bios_video_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "796b15fdc20e17886feecf3244e53708df6b7089bf575b796111d07e4d5458d6"
+    },
+    "302-copy-disk3": {
+      "emulated_ms": 211300,
+      "frame": 14793,
+      "bios_video_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "3da505dfacb75981373ebe1b2fa6a4f6dbc99a416f6be218d4dfcd297b364cf3"
+    },
+    "302-desktop-file-menu": {
+      "emulated_ms": 242143,
+      "frame": 16823,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "25b9ae8178ead3ff80bae56e9e07a9f1369b8868a7b34e8bbc03b7ed12734367"
+    },
+    "302-desktop": {
+      "emulated_ms": 235329,
+      "frame": 16415,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "986fb2368c8a79f5c654dc5d674e9d6d870f36298f7903e26dd35102dfa53ca6"
+    },
+    "302-exit-dialog": {
+      "emulated_ms": 270465,
+      "frame": 18521,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "a01b76914fa472a564c480eae02ee161512a80923d73b8a8aabed207cc3b919a"
+    },
+    "302-exit-dos": {
+      "emulated_ms": 272469,
+      "frame": 18661,
+      "bios_video_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "c02bb949e3fe8ba83901b6289e796c164b13b7e7261ba8398488491e34c9d0f2"
+    },
+    "302-run-dialog": {
+      "emulated_ms": 242831,
+      "frame": 16864,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.02.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "04180127f1650246b13b2ca822c4a3a85c4be3df952baf656c1270bbf7be7ce9"
+    },
+    "303-adr-a01-confirm": {
+      "emulated_ms": 472758,
+      "frame": 28847,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "557e2dc757cd756e499229f77fd762fee609e9633534df4f662b94dc19d1a2b8"
+    },
+    "303-adr-a01-form": {
+      "emulated_ms": 472104,
+      "frame": 28807,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "59e875833db643a2c791e8d0183f7716f54334e53d4c0ae64bf3aa32f7084b3c"
+    },
+    "303-adr-add": {
+      "emulated_ms": 465668,
+      "frame": 28422,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "446c4e87469d566d397ef775c21198264a5bf64e441a363e3fa36e4f4e4171ea"
+    },
+    "303-adr-added-closed": {
+      "emulated_ms": 474862,
+      "frame": 28973,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "7ac9455cf8920b5c390738866dc56a3c833a141f06384749ebeab59aa86002f9"
+    },
+    "303-adr-deleted-closed": {
+      "emulated_ms": 494946,
+      "frame": 30177,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "7ac9455cf8920b5c390738866dc56a3c833a141f06384749ebeab59aa86002f9"
+    },
+    "303-adr-deleted-view": {
+      "emulated_ms": 492942,
+      "frame": 30057,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "8c4288559b80ea924a9808dbeefd4c577aed32e3d4c1798edef9a7d68cc04d8d"
+    },
+    "303-adr-edit-start": {
+      "emulated_ms": 480960,
+      "frame": 29338,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "5d188aa5926e46cdc0633e5ba4b49f50fbf410af2f04e10e61ece9a4efb0fb38"
+    },
+    "303-adr-edited-closed": {
+      "emulated_ms": 485198,
+      "frame": 29592,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "7ac9455cf8920b5c390738866dc56a3c833a141f06384749ebeab59aa86002f9"
+    },
+    "303-adr-filled": {
+      "emulated_ms": 466204,
+      "frame": 28454,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "2ffb5ebbe72d9256381d653b9052c08d623074817885d2187065d7a8b84a9fef"
+    },
+    "303-adr-menu": {
+      "emulated_ms": 491246,
+      "frame": 29955,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "bfdb232296ee109d8399ba2848b452a7c9f93bac6cc3206f1fe9472da774fae4"
+    },
+    "303-adr-modified-confirm": {
+      "emulated_ms": 482994,
+      "frame": 29460,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "42db2606a2213f5ce6f6a6c6b2d2afb335b06a960db8f14db7bcf4cca4b1c8de"
+    },
+    "303-adr-modified-form": {
+      "emulated_ms": 482290,
+      "frame": 29418,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "c9a2b739131d4bfbe73793c8e210a4d9df8c144aaed05b108d6595f58e620dce",
+      "public_asset_id": "ui.installation-303.address-edit-303",
+      "derivative_sha256": "a40acc3bfabc9ae5a37bcc17cccc183855ff5a5e4a360a7434f1ad49e3d6e267",
+      "derivative": "RGB PNG re-encode at original pixel scale"
+    },
+    "303-adr-open": {
+      "emulated_ms": 464906,
+      "frame": 28376,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "8c4288559b80ea924a9808dbeefd4c577aed32e3d4c1798edef9a7d68cc04d8d"
+    },
+    "303-adr-remove-confirm": {
+      "emulated_ms": 492138,
+      "frame": 30008,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "19bbe0a83840f0618d953d0ad4e41c9dc8165808d59501d20733f1eafc423470"
+    },
+    "303-adr-reopen": {
+      "emulated_ms": 480556,
+      "frame": 29314,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "aee567e763d8459e35d4ea61881620919dc65e32840e29c879eb6442cca208cf"
+    },
+    "303-adr-save-late": {
+      "emulated_ms": 470128,
+      "frame": 28689,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "af3e9221513b8f859943eb32c3ca61bdcdb64ce5cb053dbaf089f4bfc117cbac"
+    },
+    "303-adr-save": {
+      "emulated_ms": 466628,
+      "frame": 28479,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "e465e56b4c86d0458672a57cada6f47f1a6e002a22e21ac6493b6b7fb9af7753"
+    },
+    "303-after-reset": {
+      "emulated_ms": 400148,
+      "frame": 24461,
+      "bios_video_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "cbe46e27917b73ce4442f4b27024f5d9a77ecbede7b7ff45ee22958d16e1026b"
+    },
+    "303-cal-add-closed": {
+      "emulated_ms": 436754,
+      "frame": 26688,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "da5b9b0fac4fecd70d71c449567240138503613463e46c62ea48006d8a31a4cd"
+    },
+    "303-cal-add-dialog": {
+      "emulated_ms": 433354,
+      "frame": 26484,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "ccdc9b9fa1830586bc6a1be402ddd58420d3bc7c16d740328fdaae628f45203c"
+    },
+    "303-cal-add-filled": {
+      "emulated_ms": 433842,
+      "frame": 26513,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "88b3632f0e45981b6d1dd55e67985da5d43afd5171fd9e8360645012c2c8bf68"
+    },
+    "303-cal-change-dialog": {
+      "emulated_ms": 443164,
+      "frame": 27072,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "85e1fc6f5e396abb6ea187cc46ac4cd453f5267ba054b7d8ef15b4adda85a3cf"
+    },
+    "303-cal-change-filled": {
+      "emulated_ms": 444262,
+      "frame": 27138,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "2664d6fa016d4cd751e0964b563bbca9e0da256b71ce6facb620ddb29c44f769",
+      "public_asset_id": "ui.installation-303.calendar-edit-303",
+      "derivative_sha256": "0ef9c06e57b4d949db41d604daf55311a0198da9f4897dc7b3883901db1902ef",
+      "derivative": "RGB PNG re-encode at original pixel scale"
+    },
+    "303-cal-change": {
+      "emulated_ms": 444050,
+      "frame": 27125,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "7be51ca3db2f3534557af3b73d6a8b85894cac2ae28b26547da77a156508d5ea"
+    },
+    "303-cal-day-menu": {
+      "emulated_ms": 443368,
+      "frame": 27085,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "9ed27afe1cfc321a1687f99dae0cf9bd75f35290f6d57134e05ab027d4f746ed"
+    },
+    "303-cal-day": {
+      "emulated_ms": 434750,
+      "frame": 26568,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "85e1fc6f5e396abb6ea187cc46ac4cd453f5267ba054b7d8ef15b4adda85a3cf"
+    },
+    "303-cal-edit-closed": {
+      "emulated_ms": 446220,
+      "frame": 27256,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "da5b9b0fac4fecd70d71c449567240138503613463e46c62ea48006d8a31a4cd"
+    },
+    "303-cal-event-menu": {
+      "emulated_ms": 432796,
+      "frame": 26451,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "640536118f65c755d73759f3ee644bfd92428c5df297b1e5c6eafbf32af822c0"
+    },
+    "303-cal-open": {
+      "emulated_ms": 432542,
+      "frame": 26436,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "262664036873ae9200d1e4fcc1f885e7f20142c38c78a856fb44dd28a4e694f7",
+      "public_asset_id": "ui.installation-303.calendar-month-303",
+      "derivative_sha256": "efe0846d2f73802f0ffe4b8e03d9b007bc5b60e190d704a32acc3891c7b6b479",
+      "derivative": "RGB PNG re-encode at original pixel scale"
+    },
+    "303-cal-remove-confirm": {
+      "emulated_ms": 454704,
+      "frame": 27764,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "cf817aae6e2383053c2c3ae88719c96f89d187b7cea84949b9cbc36d206b0ee8"
+    },
+    "303-cal-remove-dialog": {
+      "emulated_ms": 453316,
+      "frame": 27681,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "94919cc409d62fcbe592cf520ddfa5ab8aeb3d1aeb77278af47fa70f22230430"
+    },
+    "303-cal-remove-late": {
+      "emulated_ms": 454216,
+      "frame": 27735,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "815d228295c7e5c344a23342b20aa0d0025d6c7a235c5378438c24008186f22c"
+    },
+    "303-cal-removed-closed": {
+      "emulated_ms": 459212,
+      "frame": 28034,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "da5b9b0fac4fecd70d71c449567240138503613463e46c62ea48006d8a31a4cd"
+    },
+    "303-cal-removed-view": {
+      "emulated_ms": 457008,
+      "frame": 27902,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "1fe4b1d41eb8c8a1c5bdec385adb298dd4e4c82b534cc51e5e9187fe23131411"
+    },
+    "303-calendar-menu": {
+      "emulated_ms": 414358,
+      "frame": 25320,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "72605993d421aa3c97a4a2d9fa586cdc3e014f4f16cc9fb80baa8876f9d4914f"
+    },
+    "303-calendar-month": {
+      "emulated_ms": 414104,
+      "frame": 25305,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "da5b9b0fac4fecd70d71c449567240138503613463e46c62ea48006d8a31a4cd"
+    },
+    "303-calendar-native-default": {
+      "emulated_ms": 424876,
+      "frame": 25976,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "da5b9b0fac4fecd70d71c449567240138503613463e46c62ea48006d8a31a4cd"
+    },
+    "303-cross-adr-edit-confirm": {
+      "emulated_ms": 562256,
+      "frame": 34342,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "015731315dcda0402be6d348d3f4ea0f60222aedcca88d820b01df9c222fd6e9"
+    },
+    "303-cross-adr-edit": {
+      "emulated_ms": 561702,
+      "frame": 34309,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "3245a1e4a2d64168d1b168a104307525496376416819767f48dd0ce503893ec6"
+    },
+    "303-cross-adr-first": {
+      "emulated_ms": 543160,
+      "frame": 33197,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "5ff9a9e95c010471e8d4483a7fc05626ea6975e6aa40ac251b7aab51a55205ef"
+    },
+    "303-cross-adr-initial": {
+      "emulated_ms": 542402,
+      "frame": 33152,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "5ff9a9e95c010471e8d4483a7fc05626ea6975e6aa40ac251b7aab51a55205ef"
+    },
+    "303-cross-adr-second": {
+      "emulated_ms": 542756,
+      "frame": 33173,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "533d1aae6b73e2e3ac4c7b6c7a8e5ff6b6143f322c2497f8abe8727485995f98"
+    },
+    "303-cross-cal-day": {
+      "emulated_ms": 534604,
+      "frame": 32684,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "3da2654f1ddd67a867eff48106bda8cb8085216ecdb23046d53d0dc0e7ae367f"
+    },
+    "303-cross-cal-edit": {
+      "emulated_ms": 552400,
+      "frame": 33751,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "091ab85c541ff5ec40dc0850d47ff35283c539c5995a0ea9504c168d03d5eb0e"
+    },
+    "303-cross-cal-launch": {
+      "emulated_ms": 528248,
+      "frame": 32303,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "dfb3fdeb70d112b3949514756c984c030b8c17e6e69a186d840fb9c78e316980"
+    },
+    "303-cross-readonly-closed": {
+      "emulated_ms": 545364,
+      "frame": 33330,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "dfb3fdeb70d112b3949514756c984c030b8c17e6e69a186d840fb9c78e316980"
+    },
+    "303-cross-saved-closed": {
+      "emulated_ms": 564260,
+      "frame": 34462,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "dfb3fdeb70d112b3949514756c984c030b8c17e6e69a186d840fb9c78e316980"
+    },
+    "303-desktop-after-exit": {
+      "emulated_ms": 417220,
+      "frame": 25515,
+      "bios_video_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "ee5ec14821278f18551b18f5f40ab0d82f749b5a5b8ed08c433b97cdf301d8ad"
+    },
+    "303-desktop-exit-dialog": {
+      "emulated_ms": 414916,
+      "frame": 25354,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "4cba2a0dd09b5468319e2fb312d478446d19ae7f571c80142fe949cc439e5c38"
+    },
+    "303-desktop-file": {
+      "emulated_ms": 408094,
+      "frame": 24941,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "4cba2a0dd09b5468319e2fb312d478446d19ae7f571c80142fe949cc439e5c38"
+    },
+    "303-desktop-menu": {
+      "emulated_ms": 407102,
+      "frame": 24882,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "b2a528680c23264395d760047bf3c6e44576db751a57b83d00d38bd5d5bf881d"
+    },
+    "303-desktop-open-file-menu": {
+      "emulated_ms": 425080,
+      "frame": 25988,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "fd154d12d326b5eedc5c9e912c99b2d7111e5040a16dae91bf8c4d0226eb7190"
+    },
+    "303-desktop-run-dialog": {
+      "emulated_ms": 425488,
+      "frame": 26013,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "9c9d3b3464b7ff78cb8e87bb1995dd5ad237a7176a609837ffb8b04d6883fe68"
+    },
+    "303-desktop-run2": {
+      "emulated_ms": 425946,
+      "frame": 26040,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "c1f66438a9ba58f656f86f0b66433dda67e81edf253dbcc7d623cb0229fdc71f"
+    },
+    "303-desktop": {
+      "emulated_ms": 406848,
+      "frame": 24867,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "da5b9b0fac4fecd70d71c449567240138503613463e46c62ea48006d8a31a4cd",
+      "public_asset_id": "ui.installation-303.desktop-303",
+      "derivative_sha256": "0bc23e31cfcbffb1bec4f820f10064ff8e8ccc3f54e2ff92542f32e0028091d2",
+      "derivative": "RGB PNG re-encode at original pixel scale"
+    },
+    "303-install-after-wait": {
+      "emulated_ms": 23580,
+      "frame": 1635,
+      "bios_video_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "1979bc9708d549d27a4053aedac3e9457a0a6703dc681937b14aabbb3ad8b0d4"
+    },
+    "303-install-disk2": {
+      "emulated_ms": 132132,
+      "frame": 8268,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "b21b646bb31651f821a8e91a5b81e6a04bc050b0f1ff6d3e75b54db9b63c33cb",
+      "public_asset_id": "ui.installation-303.installer-disk-two",
+      "derivative_sha256": "ea189190d2c80b057c1e8a39625c0e7421148ee1ea25f9a4a104a9939762ce13",
+      "derivative": "RGB PNG re-encode at original pixel scale"
+    },
+    "303-install-disk3": {
+      "emulated_ms": 217136,
+      "frame": 13364,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "fbe761d56fed99b516fd327582d05f6b3c6961317a67e22db0a807d67fff2808"
+    },
+    "303-install-disk4": {
+      "emulated_ms": 287140,
+      "frame": 17561,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "439f499d68c831572ae6b9f41d1df6519f10899b5eb23556fd6530ef8b1870cf"
+    },
+    "303-install-label": {
+      "emulated_ms": 32128,
+      "frame": 2234,
+      "bios_video_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "637362b3064f77d9831b3794cbb581abeeb795d432e5cc7c18b3527f812f02df",
+      "public_asset_id": "ui.installation-303.installer-banner",
+      "derivative_sha256": "637148484d851800a66885f8c58a5aeaf761a2b29131e58bbc064eea2cd36dda",
+      "derivative": "RGB PNG re-encode at original pixel scale",
+      "crop_left_top_right_bottom": [
+        0,
+        0,
+        352,
+        65
+      ]
+    },
+    "303-install-next": {
+      "emulated_ms": 72132,
+      "frame": 4671,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "247414596923638e94ffe5c16451b855efd27d8764d65dd813ed516576694e59"
+    },
+    "303-install-printer": {
+      "emulated_ms": 387144,
+      "frame": 23557,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "85bddfb0e4542611694bbdc028cc298fa9b118dd9efaddc57c2a2759313d5893",
+      "public_asset_id": "ui.installation-303.installer-reset",
+      "derivative_sha256": "9c1bfda64201137e7d62155cdff0faee258eed756a84228f8b7731efcebea693",
+      "derivative": "RGB PNG re-encode at original pixel scale",
+      "crop_left_top_right_bottom": [
+        152,
+        55,
+        488,
+        326
+      ]
+    },
+    "303-install-ready": {
+      "emulated_ms": 47128,
+      "frame": 3172,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "5767177ed1454933cc24567ac605f30b4ea8f52a8af6203c3672a43c74c9bfa4",
+      "public_asset_id": "ui.installation-303.installer-destination",
+      "derivative_sha256": "aaecfe3386eb5480f7428dddc5acad442817d42d2f4e10e7260cf09614f43bc7",
+      "derivative": "RGB PNG re-encode at original pixel scale",
+      "crop_left_top_right_bottom": [
+        152,
+        35,
+        488,
+        175
+      ]
+    },
+    "303-install-start": {
+      "emulated_ms": 15080,
+      "frame": 1039,
+      "bios_video_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "9a304b94a6db253f647f780fed4301e5e4d5dcdf03593f3f9d99871c35ff6767"
+    },
+    "303-text-closed": {
+      "emulated_ms": 507962,
+      "frame": 30957,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "1f38e75eacf0b0373bb79b1e5d17bcf28e2460b5d67fd8406382573b5d8eec1c"
+    },
+    "303-text-edit": {
+      "emulated_ms": 502530,
+      "frame": 30631,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "06e5d60f89596e4d9e4269c169f9cf6760c7cac1c69fe4362d6b828645e500e5"
+    },
+    "303-text-file-menu": {
+      "emulated_ms": 500870,
+      "frame": 30532,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "af3382d2afca4c0671a0130235aa212e2928f13271cc89713a4d51e45d3b65c7"
+    },
+    "303-text-open-dialog": {
+      "emulated_ms": 505554,
+      "frame": 30813,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "7cb3e3bc3836681d55aabe0eb67aa7ebe794bcdca7790e15c289d82770d0d39f",
+      "public_asset_id": "ui.installation-303.text-open-303",
+      "derivative_sha256": "b761863a426cbac0b3b905a4536f485384d34c45b060cc944863280abef6ed1e",
+      "derivative": "RGB PNG re-encode at original pixel scale"
+    },
+    "303-text-save-as": {
+      "emulated_ms": 503634,
+      "frame": 30698,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "afe636525178b5e2c0e781aafc54f25536f3e2cf1b4ad0f7d77cdc97d445b215"
+    },
+    "303-text": {
+      "emulated_ms": 500616,
+      "frame": 30517,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.03.01",
+      "hard_reset_count": 1,
+      "soft_reset_count": 2,
+      "last_reset_emulated_ms": 387835,
+      "sha256": "c986ab79c4efec851fac8b0f56cbd688cc060270eef767dc6537e19992256a0e"
+    },
+    "305-adr-delete-confirm": {
+      "emulated_ms": 96488,
+      "frame": 6147,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "bd39d5af9b111b6168fe4bc857d8b27c8cbaa0c48f0c82ff72ab7abbf30b1ae0"
+    },
+    "305-adr-deleted-view": {
+      "emulated_ms": 97192,
+      "frame": 6190,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "4cbf06ed045b9a5467ef809ea51ddf41e9597a2668c45000b94f552deb85d14f"
+    },
+    "305-cal-display-menu": {
+      "emulated_ms": 39200,
+      "frame": 2586,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "343e9035fa8ce904911c75569be78ecaf4f0109beff855fe2427c536d2cb9603"
+    },
+    "305-cal-remove-confirm": {
+      "emulated_ms": 87420,
+      "frame": 5583,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "945f58b570270ab92a35574f8fd9534812e2c4faf6b41e2b604789e08513b745"
+    },
+    "305-cal-removed-view": {
+      "emulated_ms": 88324,
+      "frame": 5637,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "6b7f52bf22c9c2c66e2eaa5165819364f3fbe9e3060300693d3b9eaa68ade211"
+    },
+    "305-cross-adr-confirm": {
+      "emulated_ms": 66204,
+      "frame": 4271,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "e95332bb49fc527023a43bd0b87aacfa5c7995c94d3936bb17fd3540b765cb86"
+    },
+    "305-cross-adr-edit-filled": {
+      "emulated_ms": 65750,
+      "frame": 4243,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "474c5187c70c0ce8bacca43f97c8a3d191cd7d9abccb95205394c3d1c293ae0e",
+      "public_asset_id": "ui.installation-303.address-edit-305",
+      "derivative_sha256": "703af5403b73467916796e720adf6fa5f1381737a144b284a653859761a13538",
+      "derivative": "RGB PNG re-encode at original pixel scale"
+    },
+    "305-cross-adr": {
+      "emulated_ms": 47700,
+      "frame": 3118,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "7eaa920d9e9b16a3bf97858a70ff445e540e2905a956b4126dd758481d6e018d"
+    },
+    "305-cross-cal-change": {
+      "emulated_ms": 38492,
+      "frame": 2543,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "37432e191e6150b909cc01932305f12fb887e8284df17fbc926141be466dc4b5"
+    },
+    "305-cross-cal-edit-filled": {
+      "emulated_ms": 56156,
+      "frame": 3646,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "d53db2472e15b9929cb74fb4ec80a8abe4b87c7298a08535ce3d7b461c3e682f",
+      "public_asset_id": "ui.installation-303.calendar-edit-305",
+      "derivative_sha256": "0d204c6195c477d7133e14113a96dacb44bb0f6b4821bdf71739eddcc64716cf",
+      "derivative": "RGB PNG re-encode at original pixel scale"
+    },
+    "305-cross-cal-month": {
+      "emulated_ms": 38088,
+      "frame": 2519,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "85e1fc6f5e396abb6ea187cc46ac4cd453f5267ba054b7d8ef15b4adda85a3cf"
+    },
+    "305-cross-closed": {
+      "emulated_ms": 49704,
+      "frame": 3256,
+      "bios_video_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "ee5ec14821278f18551b18f5f40ab0d82f749b5a5b8ed08c433b97cdf301d8ad"
+    },
+    "305-delete-closed": {
+      "emulated_ms": 98996,
+      "frame": 6314,
+      "bios_video_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "c02bb949e3fe8ba83901b6289e796c164b13b7e7261ba8398488491e34c9d0f2"
+    },
+    "305-desktop-menu": {
+      "emulated_ms": 18984,
+      "frame": 1247,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "ba9820b5073312dc573261ed6c04a695e01cb4716eae8329ba60e7f24e912143"
+    },
+    "305-desktop": {
+      "emulated_ms": 18700,
+      "frame": 1230,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "460ccc54d6d259e7e657d8078b18251fe2e03aab696dce8c9d90e244fa985fef",
+      "public_asset_id": "ui.installation-303.desktop-305",
+      "derivative_sha256": "1bac15b798243c77c9dead0c4e45c21ab3f39de95030c397052c2fa17ddd406b",
+      "derivative": "RGB PNG re-encode at original pixel scale"
+    },
+    "305-text-closed": {
+      "emulated_ms": 81206,
+      "frame": 5207,
+      "bios_video_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "ee5ec14821278f18551b18f5f40ab0d82f749b5a5b8ed08c433b97cdf301d8ad"
+    },
+    "305-text-edit": {
+      "emulated_ms": 75774,
+      "frame": 4861,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "06e5d60f89596e4d9e4269c169f9cf6760c7cac1c69fe4362d6b828645e500e5"
+    },
+    "305-text-open-dialog": {
+      "emulated_ms": 78798,
+      "frame": 5042,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "7cb3e3bc3836681d55aabe0eb67aa7ebe794bcdca7790e15c289d82770d0d39f"
+    },
+    "305-text-save-as": {
+      "emulated_ms": 76878,
+      "frame": 4927,
+      "bios_video_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "release": "03.05.00",
+      "hard_reset_count": 1,
+      "soft_reset_count": 1,
+      "last_reset_emulated_ms": 613,
+      "sha256": "afe636525178b5e2c0e781aafc54f25536f3e2cf1b4ad0f7d77cdc97d445b215",
+      "public_asset_id": "ui.installation-303.text-save-305",
+      "derivative_sha256": "3a593a3c90cc7a429e7bd69104bea19954e65c214a7d96cc717f00cf35ed2e6e",
+      "derivative": "RGB PNG re-encode at original pixel scale"
+    }
+  },
+  "disk_checkpoints": {
+    "302-cal-added": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "fe73e8fcc54110a9ecb40965540a80516b938c60dd7f169f7d5b976c5e11dbf6"
+      },
+      "file_count": 179,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 80,
+          "sha256": "c75372306273d0cbab6ba2ddbb75acec2368eb3d430d98040d3a7af107a5ed89"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "4e1dfee9433de9423369581d3c0eb4c9dc1a77e13defb0fb7db856c3c816bb89"
+        }
+      }
+    },
+    "302-cal-before": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "f1f54c69c3998e1e77e0d220b72e706a44138ee83e9814eefd453658bc381a52"
+      },
+      "file_count": 179,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 80,
+          "sha256": "c75372306273d0cbab6ba2ddbb75acec2368eb3d430d98040d3a7af107a5ed89"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "2960b308b8a291965781cf7cfd76bf07a2c28cfeed5dc7238105eeea67cdc251"
+        }
+      }
+    },
+    "302-cold-final": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "6258f8385117bda19bba5570453f4c5f79506afaa8dadfacd4fba833201e20a5"
+      },
+      "file_count": 184,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 80,
+          "sha256": "c75372306273d0cbab6ba2ddbb75acec2368eb3d430d98040d3a7af107a5ed89"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "3e139c1afafcdbccf3b8d54f025aedc243f3330858dd23da847c35bbf5af0f7e"
+        },
+        "DESKMATE/PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "abfe2fc1510b33f130ab109ea7079e5eca44135d43c88a4762cba0c187ef25f5"
+        },
+        "PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "b359df764649a99b30dd75226e6dd5611af82bcc278f0bd28ad1c60523558f1b"
+        },
+        "PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "4e1dfee9433de9423369581d3c0eb4c9dc1a77e13defb0fb7db856c3c816bb89"
+        }
+      }
+    },
+    "302-final": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "da91d9362c4d00023d8def42d79b2c2df1814fd7b6d0ceb6601182be288ccda3"
+      },
+      "file_count": 180,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 80,
+          "sha256": "c75372306273d0cbab6ba2ddbb75acec2368eb3d430d98040d3a7af107a5ed89"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "b359df764649a99b30dd75226e6dd5611af82bcc278f0bd28ad1c60523558f1b"
+        },
+        "PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "4e1dfee9433de9423369581d3c0eb4c9dc1a77e13defb0fb7db856c3c816bb89"
+        }
+      }
+    },
+    "303-adr-added": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "5d14cb2865f46a6a2b3e2a17b3783d62d75e263eab7839daee733bc095bca559"
+      },
+      "file_count": 198,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 92,
+          "sha256": "df5884463032042720a8e74d194da8b15c304b348743e4669228037efc970fc3"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "bbdf7dbbd923ed58993c8c461c7245e882bdd82546d5b848b6f7ae091fc7c18c"
+        },
+        "DESKMATE/PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "45c3950173f81e67e8a03cd7dc0d23f83566dd8940cd82f2909877c22d1cf1ad"
+        }
+      }
+    },
+    "303-adr-before": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "9a825d5299cf6a3ca896a0dc7dfcbf868fb503da52f305d528dead42d56b34e6"
+      },
+      "file_count": 198,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 92,
+          "sha256": "df5884463032042720a8e74d194da8b15c304b348743e4669228037efc970fc3"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "a521ea8e75049c457de5396c39b6d12d9f0effdcb8f502df8389d46fef10d9bd"
+        },
+        "DESKMATE/PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "45c3950173f81e67e8a03cd7dc0d23f83566dd8940cd82f2909877c22d1cf1ad"
+        }
+      }
+    },
+    "303-adr-deleted": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "4627826770896ad90cbbf3932b5741d311d21cf46b0eb1248822e42758a6afc1"
+      },
+      "file_count": 198,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 92,
+          "sha256": "df5884463032042720a8e74d194da8b15c304b348743e4669228037efc970fc3"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "cb890e6d7ba96fafb5a5d3991e208f4de862bee485f6ce32696e989c97d3394c"
+        },
+        "DESKMATE/PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "45c3950173f81e67e8a03cd7dc0d23f83566dd8940cd82f2909877c22d1cf1ad"
+        }
+      }
+    },
+    "303-adr-edited": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "6bd7a952e811a22cc1a393ff2a5d4fbca19baa2f6feb964a148457d6d4bd621a"
+      },
+      "file_count": 198,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 92,
+          "sha256": "df5884463032042720a8e74d194da8b15c304b348743e4669228037efc970fc3"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "ae216968bce070f7a5d9619b844e20295428dac628984a05d22f203e032d76a6"
+        },
+        "DESKMATE/PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "45c3950173f81e67e8a03cd7dc0d23f83566dd8940cd82f2909877c22d1cf1ad"
+        }
+      }
+    },
+    "303-cal-added": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "46d63c6873753bc0cdc3a559807a1c2ab87e55df01be919fa2011c3d3fc1d9a5"
+      },
+      "file_count": 197,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 92,
+          "sha256": "df5884463032042720a8e74d194da8b15c304b348743e4669228037efc970fc3"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "3cf99d00a25f441e8142760822c149ded2d2bcb3a6dcd8976531960eee3236ad"
+        }
+      }
+    },
+    "303-cal-before": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "5736a99dbe2411098ad8bb3cd2ac13fbfc64dede9ae62acaccd988f2db53badf"
+      },
+      "file_count": 197,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 92,
+          "sha256": "df5884463032042720a8e74d194da8b15c304b348743e4669228037efc970fc3"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "4c064da64c4f850ec9d01ced61faf95ae786040d6310eecd88326a3ed4df1c0a"
+        }
+      }
+    },
+    "303-cal-edited": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "461effd9ac51fe7e813007ce88b65f0d86e7fe0fbce69746dd71e6b8ab8a05d1"
+      },
+      "file_count": 197,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 92,
+          "sha256": "df5884463032042720a8e74d194da8b15c304b348743e4669228037efc970fc3"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9"
+        }
+      }
+    },
+    "303-cal-removed": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "05981357e2a8a5258057d1ef27ce5da73b088903e3018b59cb03251695cad393"
+      },
+      "file_count": 197,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 92,
+          "sha256": "df5884463032042720a8e74d194da8b15c304b348743e4669228037efc970fc3"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "45c3950173f81e67e8a03cd7dc0d23f83566dd8940cd82f2909877c22d1cf1ad"
+        }
+      }
+    },
+    "303-clean": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "65df42b5e7969e3504b8d01ff9c6848453c58842c5ae8876c254edd05dc68a03"
+      },
+      "file_count": 195,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 92,
+          "sha256": "df5884463032042720a8e74d194da8b15c304b348743e4669228037efc970fc3"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        }
+      }
+    },
+    "303-cross-before": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "e6019fa7eef136e6c41a73a899055002c438718ee411dd4274e07e53e48f7941"
+      },
+      "file_count": 199,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 92,
+          "sha256": "df5884463032042720a8e74d194da8b15c304b348743e4669228037efc970fc3"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/MATCH.DOC": {
+          "bytes": 13,
+          "sha256": "5b891ce9954b0fb4b859921e8670d758a25572d4e153f0609ba055f8f347d582"
+        },
+        "DESKMATE/PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "c37c62bf2fb16963f910c4d4c80e395d3a42305b55e954435d30ca0f9d3cdf40"
+        },
+        "DESKMATE/PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "5a3ff71dbd9654cc98cbda22e5f42e651c7792419c0c856b4bf0cfc5fa3ab508"
+        }
+      }
+    },
+    "303-cross-readonly": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "ba40ee977e3fb35014e3712eebb140a0a06b8a3a11b58519f7b80942b239ca39"
+      },
+      "file_count": 199,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 92,
+          "sha256": "df5884463032042720a8e74d194da8b15c304b348743e4669228037efc970fc3"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/MATCH.DOC": {
+          "bytes": 13,
+          "sha256": "5b891ce9954b0fb4b859921e8670d758a25572d4e153f0609ba055f8f347d582"
+        },
+        "DESKMATE/PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "c37c62bf2fb16963f910c4d4c80e395d3a42305b55e954435d30ca0f9d3cdf40"
+        },
+        "DESKMATE/PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "3cf99d00a25f441e8142760822c149ded2d2bcb3a6dcd8976531960eee3236ad"
+        }
+      }
+    },
+    "303-cross-saved": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "719775ac6c3a486e1bffe4c89ce9efabd3417688c7487d6615822699fb0d7313"
+      },
+      "file_count": 199,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 92,
+          "sha256": "df5884463032042720a8e74d194da8b15c304b348743e4669228037efc970fc3"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/MATCH.DOC": {
+          "bytes": 13,
+          "sha256": "5b891ce9954b0fb4b859921e8670d758a25572d4e153f0609ba055f8f347d582"
+        },
+        "DESKMATE/PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "e2c13e7531267d2ed369e1542d98751d0137eb9726a3b61013d56d4e6ae60561"
+        },
+        "DESKMATE/PERSONAL.CAL": {
+          "bytes": 6144,
+          "sha256": "0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9"
+        }
+      }
+    },
+    "305-cross-before": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "af54d97f99edae22041d4ddc4a0ce9c2ef64d33bc8f3be515ed3f953acf289e4"
+      },
+      "file_count": 242,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 93,
+          "sha256": "81e3342527a29f11e043564a81af4a71709ced599d995f44632535ad295aa4b9"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "bbdf7dbbd923ed58993c8c461c7245e882bdd82546d5b848b6f7ae091fc7c18c"
+        },
+        "DESKMATE/PERSONAL.CLN": {
+          "bytes": 6144,
+          "sha256": "3cf99d00a25f441e8142760822c149ded2d2bcb3a6dcd8976531960eee3236ad"
+        }
+      }
+    },
+    "305-cross-cal-open": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "af54d97f99edae22041d4ddc4a0ce9c2ef64d33bc8f3be515ed3f953acf289e4"
+      },
+      "file_count": 242,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 93,
+          "sha256": "81e3342527a29f11e043564a81af4a71709ced599d995f44632535ad295aa4b9"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "bbdf7dbbd923ed58993c8c461c7245e882bdd82546d5b848b6f7ae091fc7c18c"
+        },
+        "DESKMATE/PERSONAL.CLN": {
+          "bytes": 6144,
+          "sha256": "3cf99d00a25f441e8142760822c149ded2d2bcb3a6dcd8976531960eee3236ad"
+        }
+      }
+    },
+    "305-cross-readonly": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "02ccc9d4dc66ad1643b4a3a034886c162e1816e63139035f796304034a12051c"
+      },
+      "file_count": 242,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 93,
+          "sha256": "81e3342527a29f11e043564a81af4a71709ced599d995f44632535ad295aa4b9"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "19215ea147c65b259eb963fd240e9931d96e77f92d1001f0f7edf89024076ac8"
+        },
+        "DESKMATE/PERSONAL.CLN": {
+          "bytes": 6144,
+          "sha256": "3cf99d00a25f441e8142760822c149ded2d2bcb3a6dcd8976531960eee3236ad"
+        }
+      }
+    },
+    "305-cross-saved": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "02b57c115206644f0aa33a7af2195c92edd16df31c38c44f3fec9d806fa40ef3"
+      },
+      "file_count": 242,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 93,
+          "sha256": "81e3342527a29f11e043564a81af4a71709ced599d995f44632535ad295aa4b9"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "ae216968bce070f7a5d9619b844e20295428dac628984a05d22f203e032d76a6"
+        },
+        "DESKMATE/PERSONAL.CLN": {
+          "bytes": 6144,
+          "sha256": "0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9"
+        }
+      }
+    },
+    "305-deleted": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "41744a74a0927028c09018632716b0cafd7d5cd073da9faf377f16cc72f54eef"
+      },
+      "file_count": 243,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 93,
+          "sha256": "81e3342527a29f11e043564a81af4a71709ced599d995f44632535ad295aa4b9"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/MATCH.DOC": {
+          "bytes": 13,
+          "sha256": "5b891ce9954b0fb4b859921e8670d758a25572d4e153f0609ba055f8f347d582"
+        },
+        "DESKMATE/PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "cb890e6d7ba96fafb5a5d3991e208f4de862bee485f6ce32696e989c97d3394c"
+        },
+        "DESKMATE/PERSONAL.CLN": {
+          "bytes": 6144,
+          "sha256": "45c3950173f81e67e8a03cd7dc0d23f83566dd8940cd82f2909877c22d1cf1ad"
+        }
+      }
+    },
+    "305-text-saved": {
+      "disk": {
+        "bytes": 54525952,
+        "sha256": "6f50345e89a84ded2c6aa33c44877afe29f4cb33dc1b9b3e633f6ed1793c93cb"
+      },
+      "file_count": 243,
+      "files": {
+        "AUTOEXEC.BAT": {
+          "bytes": 93,
+          "sha256": "81e3342527a29f11e043564a81af4a71709ced599d995f44632535ad295aa4b9"
+        },
+        "CONFIG.SYS": {
+          "bytes": 71,
+          "sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+        },
+        "DESKMATE/MATCH.DOC": {
+          "bytes": 13,
+          "sha256": "5b891ce9954b0fb4b859921e8670d758a25572d4e153f0609ba055f8f347d582"
+        },
+        "DESKMATE/PERSONAL.ADR": {
+          "bytes": 10240,
+          "sha256": "ae216968bce070f7a5d9619b844e20295428dac628984a05d22f203e032d76a6"
+        },
+        "DESKMATE/PERSONAL.CLN": {
+          "bytes": 6144,
+          "sha256": "0af0896163c24c992fa515ddca8c45a31496250d6ba84c9f08e28020a07fe0d9"
+        }
+      }
+    }
+  },
+  "launch_configuration_hashes": {
+    "03.03.01": [
+      "f7ce05fffe7dc34bbf509b196bc202d28bab3ea16c14dfd112bbc8b7a69a8f95"
+    ],
+    "03.05.00": [
+      "f7ce05fffe7dc34bbf509b196bc202d28bab3ea16c14dfd112bbc8b7a69a8f95"
+    ],
+    "03.02.00": [
+      "f7ce05fffe7dc34bbf509b196bc202d28bab3ea16c14dfd112bbc8b7a69a8f95",
+      "2a9e3d6dab8ea0192b9eccac22a37a22508c6a83637abc1fffd328002476477a"
+    ]
+  },
+  "media_verification": "After the runs, all seven mirrored ZIPs and mounted working image digests still matched the pre-run pins. Independent 7-Zip image extraction matched every original ZIP member byte-for-byte."
+}
