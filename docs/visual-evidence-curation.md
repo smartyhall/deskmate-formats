@@ -69,18 +69,21 @@ crops and annotations. Do not retouch originals or synthesize missing evidence.
 
 ## Publication boundary
 
-Raw framebuffer captures, private screenshots, private paths and unrelated
-or personal information remain private under AGENTS.md. The request to
-provide exemplars does not itself waive publication restrictions. Prepare
-private exemplars and public-safe captions, evidence IDs, and proposed
-documentation placements now. Publish actual images only where eligible
-under an existing narrow grant (e.g. qualified Draw comparison imagery) or
-a subsequent explicit authorization, after reviewing actual pixels,
-provenance, third-party rights and applicable audit rules. Do not broaden
-the binary audit or publish unreviewed historical assets. Independently
-authored illustrations may be published under existing rules when clearly
-labeled. Keep public catalog metadata sanitized; do not expose private
-locators, sensitive contents or raw logs.
+Raw framebuffers and the complete private evidence archive, host paths,
+unrelated data, credentials and personal records remain outside Git under
+AGENTS.md. Under the operator's 2026-11-21 standing documentary-image grant,
+ordinary software-interface screenshots made with synthetic or public sample
+content, independently authored illustrations, and suitable small public
+reference figures are eligible for selection and a **review PR**, without
+separate permission for every screenshot. Verify actual pixels and provenance,
+record source IDs and hashes, and distinguish original application screens
+from recreations. Keep background historical software, original installers,
+extracted proprietary assets, whole manual scans and substantial unrelated
+third-party artwork out of Git. Claim project licensing only for contributions
+the project actually controls; give software/publisher attribution where
+appropriate. Do not expose private locators or raw logs. Public assets must
+satisfy the manifest-verified `website/src/assets/reference/` exception in
+the repository audit, not a blanket binary-audit exemption.
 
 ## Outputs and acceptance
 
