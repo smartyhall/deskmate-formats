@@ -20,6 +20,15 @@ activity, **distinct from public redistribution**. See the operator's
 [experimental laboratory posture](docs/research/experimental-lab-operating-posture.md):
 favor recoverable progress over speculative confinement requirements.
 
+## Historical content and rights inquiries
+
+Our historical reference may reproduce limited third-party catalog excerpts,
+advertising, documentary screenshots, and other artifacts for research and
+commentary. Original rights remain with their owners; the project's code and
+documentation licenses do not relicense those works. Please see the
+[third-party content, fair-use, and rights-holder notice](LICENSING.md#historical-excerpts-fair-use-and-rights-holder-contact)
+for attribution or removal requests.
+
 ## Future reference knowledge base
 
 The [generator-neutral reference-site staging index](docs/site/README.md) maps
