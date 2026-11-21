@@ -50,11 +50,19 @@ def metadata_evidence(lines, number, expected_catalog):
     body = '\n'.join(lines)
     labels = re.findall(r'(?i)(?:fax\s*back|document)\s*(?:doc\.?\s*)?'
                         r'(?:#|no\.?|number)\s*[:#]?\s*([0-9]{3,8})\b', body)
-    catalogs = set(re.findall(r'\b[0-9]{1,3}\s*[-–]\s*[0-9]{3,4}\b', body))
+    catalogs = set(re.findall(r'\b[0-9]{1,3}\s*[-–]\s*[0-9]{3,4}[A-Za-z]?\b', body))
     catalogs = {re.sub(r'\s', '', value).replace('–', '-') for value in catalogs}
+
+    def catalog_key(value):
+        # Leading zeros are equivalent only when the revision suffix also agrees.
+        match = re.fullmatch(r'([0-9]{1,3})-([0-9]{3,4})([A-Za-z]?)', value)
+        if match is None:
+            return None
+        return (int(match[1]), int(match[2]), match[3].upper())
+
     close = {actual for actual in catalogs for expected in expected_catalog
-             if actual != expected and tuple(map(int, actual.split('-'))) ==
-             tuple(map(int, expected.split('-')))}
+             if actual != expected and catalog_key(actual) is not None
+             and catalog_key(actual) == catalog_key(expected)}
     return {
         'number_exact': number in labels,
         'number_zero_variant': any(n != number and int(n) == int(number) for n in labels),
@@ -72,7 +80,8 @@ def candidates(index, library, minimum):
             WHERE r.format = 'pdf' AND r.number >= ? AND EXISTS (
                 SELECT 1 FROM library.analysis AS a
                 WHERE a.kind = 'pdf' AND a.digest = r.sha256 AND a.status = 'unsupported'
-                    AND a.detail LIKE '%; ocr-triage')
+                    AND (a.detail LIKE '%; ocr-triage'
+                         OR a.detail = 'no-pdf-text-ocr-required'))
             ORDER BY r.number, r.url
         """
         for url, path, digest, number in source.execute(query, (minimum,)):
