@@ -1,6 +1,6 @@
 # DeskMate Evolution Atlas
 
-DeskMate changed from a screen of numbered or named tasks to a graphical
+DeskMate changed from text-mode task panels to a graphical
 environment of menus, file panels, and application shortcuts. Tandy also
 distributed machine-specific editions whose desktop, drivers, or startup
 programs depended on the computer's firmware. This atlas follows surviving
@@ -15,6 +15,8 @@ length, and provenance. The [installation manifest](deskmate-installation-media.
 retains image and member identities where measured. An entry can advance
 from documented to verified, inspected, launched, and reproduced. A
 successful launch on related hardware is evidence for that profile.
+The [capture receipt](../evidence/deskmate-evolution-20261121.json)
+records native dimensions, emulated times, and source-image hashes.
 
 The early Tandy 1000 association is dated to the **1984 product era**.
 The **1988** catalog and trade coverage document distinct later editions,
@@ -94,6 +96,12 @@ matching same-name files across the corresponding raw disks, as well
 as differing or absent files. Its sixth archive adds Thesaurus
 material. [3.05 media comparison](deskmate-installations.md#version-and-installation-media-comparison)
 
+Across each entire set, the nine-ZIP layout agrees with the raw
+five-disk set on 145 of its 146 unique filenames. The five-ZIP
+layout has a different Desktop program and omits PC-Link. Both
+alternate layouts preserve the core application binaries.
+[Member-by-member summary and scope](../research/deskmate-evolution-native-20261121.md#alternate-305-media-comparison)
+
 ## Machine-specific DeskMate 3
 
 The TL, TL/2, SL/2, 1100 FD, RL and RL-HD, RLX-HD B, and RSX media
@@ -102,6 +110,17 @@ EEPROM setup with a disk fallback on the RL, and a compressed
 two-disk procedure on the RLX-HD B. Surviving TL, TL/2, and SL/2
 program disks contain Music and Sound. The earlier RSX audio trial
 used selected OEM modules under generic 3.05. [Tandy Faxbacks 1367](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01367.txt), [1311](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01311.txt), and [1342](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01342.txt) · [RSX audio trial](../research/sound-native-20261118.md)
+
+The SL/2 booted its DOS floppy, and `SETUPSL2` saved the ROM
+startup selection. Two reboot controls then left a blank display.
+This edition remains an inspected distribution with an observed
+startup blocker. [Native SL/2 trial](../research/deskmate-evolution-native-20261121.md#tandy-1000-sl2-startup-blocker)
+
+The RSX OEM 03.04.04 floppy Desktop adds an Applications menu,
+large task tiles, and OEM shortcuts such as Letter Invaders and
+Automatic House. The hard-disk installer has copied the first two
+disks and requested Disk 3. This edition has not yet been launched
+from an installed hard disk. [Native RSX OEM startup and held checkpoint](../research/deskmate-evolution-native-20261121.md#tandy-1000-rsx-oem-030404)
 
 ## Native observation procedure
 
@@ -123,8 +142,21 @@ used selected OEM modules under generic 3.05. [Tandy Faxbacks 1367](http://ftp.o
 
 ## Continuation
 
-Use the matrix's evidence level and uncertainties to select the next
-trial. Keep the 3.02, 3.03.01, and 3.05 controls available for comparison.
-For Professional DeskMate, 3.01, and the RLX B floppy-only edition,
-seek identifiable installation media. A negative inventory result
-records the limits of the currently checked collection.
+1. Resume the held RSX OEM run at Disk 3. Record the remaining
+   disk prompts, setup choices, reboot, and first hard-disk
+   Desktop. Then qualify one OEM application such as Music or
+   Print Companion.
+2. Test the alternate five-ZIP 3.05 installer, its changed
+   Desktop, and its help files. The nine-ZIP layout is a subsequent
+   disk-order control. Keep the established 3.02, 3.03.01, and 3.05
+   installations for comparison.
+3. Reproduce SL/2 ROM **MS-DOS** startup on a fresh EEPROM
+   baseline, then qualify DeskMate startup. Preserve the successful
+   floppy-DOS profile for comparison.
+4. Locate exact profiles or qualified configurations for the TL,
+   TL/2, 1100 FD, RL/RL-HD, and RLX-HD B. The pinned 86Box machine
+   table lacks exact profiles for those targets. Confirm the original
+   1000, EX, TX, and 3000 on matching hardware when available.
+5. Seek identifiable media for Professional DeskMate, generic 3.01,
+   and the RLX B floppy-only edition. The current scope is the
+   verified collection and the references listed in the matrix.

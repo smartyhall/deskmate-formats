@@ -959,6 +959,54 @@
       "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
       "page_id": "applications.evolution-atlas",
       "section_heading": "Personal DeskMate"
+    },
+    {
+      "id": "ui.evolution.sl2-setup-options",
+      "path": "evolution-atlas/sl2-setup-options.png",
+      "sha256": "f6e0d5589b88477b2f79045caecaa111ddf830740140cbe2f4538c460321a104",
+      "source_sha256": "352624348f13076273fdcbc728ac2f463666fea8851da155aba03b53872e3727",
+      "size": 6170,
+      "width": 640,
+      "height": 225,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "deskmate-evolution-20261121-sl2-setup-options",
+      "caption": "The SL/2 setup utility exposes the primary startup device and initial program choices during the ROM-boot trial.",
+      "alt": "Blue EEPROM setup screen listing ROM or Disk and MS-DOS or DeskMate choices.",
+      "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
+      "page_id": "applications.evolution-atlas",
+      "section_heading": "Machine-specific DeskMate 3"
+    },
+    {
+      "id": "ui.evolution.rsx-oem-underscore-control",
+      "path": "evolution-atlas/rsx-oem-underscore-control.png",
+      "sha256": "20993775164e2c004703230fe1bc9b3257d5dcd5893750cb44e7296694ab897d",
+      "source_sha256": "0d4604945a9b7961ae35d5554bbeadb6a936dd6688b3628dfb70d12f1c6ee767",
+      "size": 10474,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "deskmate-evolution-20261121-rsx-oem-underscore-control",
+      "caption": "RSX OEM 03.04.04 reaches its floppy Desktop with the Applications menu and machine-specific shortcuts.",
+      "alt": "Teal Desktop with five large tiles for Teach Me, Home Organizer, Information Center, Print Companion, and Automatic House.",
+      "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
+      "page_id": "applications.evolution-atlas",
+      "section_heading": "Machine-specific DeskMate 3"
+    },
+    {
+      "id": "ui.evolution.rsx-oem-disk2-prompt",
+      "path": "evolution-atlas/rsx-oem-disk2-prompt.png",
+      "sha256": "46776e2fc5f27458705bbc5e4a53306f0466c408b056fa3c65d340a8397e7564",
+      "source_sha256": "508d08c11ec3b8268f0f0e9aca8273e912730d30d16dabc3628d4e2887d4d448",
+      "size": 6548,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "deskmate-evolution-20261121-rsx-oem-disk2-prompt",
+      "caption": "The RSX OEM installer requests Disk 2 after the first hard-disk copy stage.",
+      "alt": "Disk Needed dialog asking for DeskMate 2 over the installer artwork and Searching files status.",
+      "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
+      "page_id": "applications.evolution-atlas",
+      "section_heading": "Machine-specific DeskMate 3"
     }
   ]
 }

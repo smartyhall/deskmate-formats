@@ -23,8 +23,24 @@ GEOMETRIES = {
 
 def floppy(members, label, geometry='720k'):
     sectors, fat_sectors, track_sectors, cluster_sectors, root_entries, media = GEOMETRIES[geometry]
-    if len(label) != 11 or len(members) >= root_entries:
-        raise ValueError(f'expected an eleven-byte FAT label and at most {root_entries - 1} files')
+    directories = {(): []}
+    seen = set()
+    for member, data in members:
+        parts = tuple(member.filename.upper().split('/'))
+        if (len(parts) > 3 or any(not re.fullmatch(r'[-A-Z0-9_]{1,8}(?:\.[-A-Z0-9_]{1,3})?', p)
+                                 for p in parts) or parts in seen):
+            raise ValueError(f'expected a unique DOS 8.3 path with at most two directories: {member.filename}')
+        seen.add(parts)
+        for depth in range(1, len(parts)):
+            directory = parts[:depth]
+            if directory not in directories:
+                directories[directory] = []
+                directories[directory[:-1]].append((directory[-1], member.date_time, None))
+        directories[parts[:-1]].append((parts[-1], member.date_time, data))
+    if len(label) != 11 or len(directories[()]) >= root_entries:
+        raise ValueError(f'expected an eleven-byte FAT label and at most {root_entries - 1} root entries')
+    if seen.intersection(directories):
+        raise ValueError('file and directory names collide')
     fat_size = fat_sectors * SECTOR_SIZE
     cluster_size = cluster_sectors * SECTOR_SIZE
     root_offset = SECTOR_SIZE + 2 * fat_size
@@ -40,24 +56,14 @@ def floppy(members, label, geometry='720k'):
     fat = bytearray(fat_size)
     fat[:3] = bytes((media, 0xff, 0xff))
     cluster = 2
-    seen = set()
-    for index, (member, data) in enumerate(members, 1):
-        name = member.filename.upper()
-        if not re.fullmatch(r'[A-Z0-9_]{1,8}(?:\.[A-Z0-9_]{1,3})?', name) or name in seen:
-            raise ValueError(f'expected a unique flat DOS 8.3 filename: {name}')
-        seen.add(name)
-        stem, _, extension = name.partition('.')
-        count = (len(data) + cluster_size - 1) // cluster_size
+
+    def allocate(length):
+        nonlocal cluster
+        count = (length + cluster_size - 1) // cluster_size
         begin = data_offset + (cluster - 2) * cluster_size
         if begin + count * cluster_size > len(image):
             raise ValueError('disk capacity exceeded')
-        entry = root_offset + index * 32
-        image[entry:entry + 12] = (stem.ljust(8) + extension.ljust(3)).encode('ascii') + b'\x20'
-        year, month, day, hour, minute, second = member.date_time
-        dos_time = (hour << 11) | (minute << 5) | (second // 2)
-        dos_date = ((year - 1980) << 9) | (month << 5) | day
-        pack_into('<HHHI', image, entry + 22, dos_time, dos_date, cluster if count else 0, len(data))
-        image[begin:begin + len(data)] = data
+        first = cluster if count else 0
         for current in range(cluster, cluster + count):
             value = 0xfff if current == cluster + count - 1 else current + 1
             offset = current + current // 2
@@ -68,6 +74,33 @@ def floppy(members, label, geometry='720k'):
                 fat[offset] = value & 255
                 fat[offset + 1] |= value >> 8
         cluster += count
+        return first, begin
+
+    def directory_entry(offset, name, date_time, attr, first, length):
+        stem, _, extension = name.partition('.') if name not in ('.', '..') else (name, '', '')
+        image[offset:offset + 11] = (stem.ljust(8) + extension.ljust(3)).encode('ascii')
+        image[offset + 11] = attr
+        year, month, day, hour, minute, second = date_time
+        dos_time = (hour << 11) | (minute << 5) | (second // 2)
+        dos_date = ((year - 1980) << 9) | (month << 5) | day
+        pack_into('<HHHI', image, offset + 22, dos_time, dos_date, first, length)
+
+    def write_entries(path, offset, parent_cluster):
+        for index, (name, date_time, data) in enumerate(directories[path]):
+            entry_offset = offset + index * 32
+            if data is not None:
+                first, begin = allocate(len(data))
+                image[begin:begin + len(data)] = data
+                directory_entry(entry_offset, name, date_time, 0x20, first, len(data))
+                continue
+            child = (*path, name)
+            first, begin = allocate((len(directories[child]) + 2) * 32)
+            directory_entry(entry_offset, name, date_time, 0x10, first, 0)
+            directory_entry(begin, '.', date_time, 0x10, first, 0)
+            directory_entry(begin + 32, '..', date_time, 0x10, parent_cluster, 0)
+            write_entries(child, begin + 64, first)
+
+    write_entries((), root_offset + 32, 0)
     image[SECTOR_SIZE:SECTOR_SIZE + fat_size] = fat
     image[SECTOR_SIZE + fat_size:root_offset] = fat
     return image

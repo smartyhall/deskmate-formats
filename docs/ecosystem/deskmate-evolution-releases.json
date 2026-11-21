@@ -52,6 +52,14 @@
         "personal2-tx"
       ],
       "relationship": "34 common names and 31 exact member matches, including DESK.EXE and MAINMENU.PDM. DMCSR.MOD, ART.PNT, and XMAS.SNG differ; MENUDATA.TAN is HX-only, DMNOTEPD standalone-only."
+    },
+    {
+      "releases": [
+        "generic-305-nine",
+        "generic-305-five-zip",
+        "generic-305-five-raw"
+      ],
+      "relationship": "Pooled by exact uppercase filename, nine/raw have 145 byte matches of 146 common names; five/raw have 113 of 136; nine/five have 112 of 134. A byte match requires one equal instance across repetitions."
     }
   ],
   "releases": [
@@ -526,7 +534,41 @@
       "record": null,
       "uncertainties": "Qualify exact TL model and ROM; Faxback 1367",
       "dates": [],
-      "public_image_ids": []
+      "public_image_ids": [],
+      "inspected_media_files": [
+        {
+          "member": "TLDISK1.DSK",
+          "bytes": 737280,
+          "sha256": "e781310d33e62efb95e3088c940a2a7b7f54bbae2cf0a9559d21521a0de4dc2e"
+        },
+        {
+          "member": "TLDISK2.DSK",
+          "bytes": 737280,
+          "sha256": "76656661324fd5af66941f521d51efc97fecad5050dd3ad8706e23f464daca13"
+        },
+        {
+          "member": "TLDISK3.DSK",
+          "bytes": 737280,
+          "sha256": "f295bc5bf6527525edb3ac72f3267339fbe6342c23faacba83a323ea64af6d1c"
+        }
+      ],
+      "disc_program_modules": [
+        "ADDRESS.PDM",
+        "CALENDAR.PDM",
+        "DRAW.PDM",
+        "FILER.PDM",
+        "FORMSET.PDM",
+        "HANGMAN.PDM",
+        "MAILMRGE.PDM",
+        "MUSIC.PDM",
+        "PC_DEMO.PDM",
+        "PC_LINK.PDM",
+        "SOUND.PDM",
+        "TELECOM.PDM",
+        "TEXT.PDM",
+        "WRKSHEET.PDM"
+      ],
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
     },
     {
       "id": "generic-303",
@@ -617,7 +659,48 @@
       "record": null,
       "uncertainties": "Exact build and ROM dependencies open",
       "dates": [],
-      "public_image_ids": []
+      "public_image_ids": [],
+      "inspected_media_files": [
+        {
+          "member": "DISK1.DSK",
+          "bytes": 737280,
+          "sha256": "ed70381427557e9174df3c612921b55947289ccaf9eaf60ce23bc3492622206e"
+        },
+        {
+          "member": "DISK2.DSK",
+          "bytes": 737280,
+          "sha256": "104f0982e8fdcf34a37f888d9969b365775160293b6ca08d795b9627fb27b1b5"
+        },
+        {
+          "member": "DISK3.DSK",
+          "bytes": 737280,
+          "sha256": "7d298875b22d0c4cd50d4a05a61492a505e9545a84595295727a8b26200fcc65"
+        },
+        {
+          "member": "DISK4.DSK",
+          "bytes": 737280,
+          "sha256": "a3df72488b13f9bf7f59e3d95a00e5afdb596edfb8d5fca539262ae76e73dc4a"
+        }
+      ],
+      "disc_program_modules": [
+        "ADDRESS.PDM",
+        "CALENDAR.PDM",
+        "DRAW.PDM",
+        "FILER.PDM",
+        "FORMSET.PDM",
+        "HANGMAN.PDM",
+        "INSTALL.PDM",
+        "MAILMRGE.PDM",
+        "MUSIC.PDM",
+        "PC_DEMO.PDM",
+        "PC_LINK.PDM",
+        "PLAY.PDM",
+        "SOUND.PDM",
+        "TELECOM.PDM",
+        "TEXT.PDM",
+        "WRKSHEET.PDM"
+      ],
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
     },
     {
       "id": "sl2-oem",
@@ -646,10 +729,53 @@
         "Sound"
       ],
       "evidence": "inspected",
-      "record": null,
-      "uncertainties": "Exact launcher version and ROM invocation open",
+      "record": "../research/deskmate-evolution-native-20261121.md#tandy-1000-sl2-startup-blocker",
+      "uncertainties": "Exact DeskMate release remains open. Compare ROM MS-DOS mode and fresh EEPROM state before repeating ROM DeskMate.",
       "dates": [],
-      "public_image_ids": []
+      "public_image_ids": [
+        "ui.evolution.sl2-setup-options"
+      ],
+      "native_attempt": "bundled DOS booted; ROM DeskMate startup displayed a blank screen with and without program floppies",
+      "inspected_media_files": [
+        {
+          "member": "1000SL2D/DM1.IMG",
+          "bytes": 737280,
+          "sha256": "ad7dd60348c5f734a4eaaacbc2906eff0087e208e5e9e6e987b0626d39af50bc"
+        },
+        {
+          "member": "1000SL2D/DM2.IMG",
+          "bytes": 737280,
+          "sha256": "7d298875b22d0c4cd50d4a05a61492a505e9545a84595295727a8b26200fcc65"
+        },
+        {
+          "member": "1000SL2D/DM3.IMG",
+          "bytes": 737280,
+          "sha256": "a3df72488b13f9bf7f59e3d95a00e5afdb596edfb8d5fca539262ae76e73dc4a"
+        },
+        {
+          "member": "1000SL2D/DOS33.IMG",
+          "bytes": 737280,
+          "sha256": "a483df25609610be2dc4c4e129d9df0f55e60af08a1679630ddf310d009ff99a"
+        }
+      ],
+      "disc_program_modules": [
+        "ADDRESS.PDM",
+        "CALENDAR.PDM",
+        "DRAW.PDM",
+        "FILER.PDM",
+        "FORMSET.PDM",
+        "HANGMAN.PDM",
+        "INSTALL.PDM",
+        "MAILMRGE.PDM",
+        "MUSIC.PDM",
+        "PC_DEMO.PDM",
+        "PC_LINK.PDM",
+        "PLAY.PDM",
+        "SOUND.PDM",
+        "TELECOM.PDM",
+        "TEXT.PDM",
+        "WRKSHEET.PDM"
+      ]
     },
     {
       "id": "1100fd-oem",
@@ -674,13 +800,59 @@
       ],
       "installation_or_startup": "DOS disk, two labelled program disks, and separate EMS disk",
       "principal_applications": [
-        "Calendar"
+        "Calendar",
+        "Address Book",
+        "Draw",
+        "Filer",
+        "Form Setup",
+        "Hangman",
+        "Mail Merge",
+        "PC-Link",
+        "Telecom",
+        "Worksheet"
       ],
       "evidence": "inspected",
       "record": null,
       "uncertainties": "Exact launcher version, target machine and EMS dependencies open",
       "dates": [],
-      "public_image_ids": []
+      "public_image_ids": [],
+      "inspected_media_files": [
+        {
+          "member": "DOSGWB.DSK",
+          "bytes": 737280,
+          "sha256": "7fb5215db100a1209faedc5bf67553a829d5c6afefa8164a83ae166c5b496a24"
+        },
+        {
+          "member": "DESK1.DSK",
+          "bytes": 737280,
+          "sha256": "1cef7a514abe08ff4eb2e2397b0cb9492d7fe19b6cbc413c74e736a9925e2fe3"
+        },
+        {
+          "member": "DESK2.DSK",
+          "bytes": 737280,
+          "sha256": "48d0d424a60ca50932cd0208a291997e7e7eb9eb21cf6cb2ed81d22535e6cdf5"
+        },
+        {
+          "member": "EMSDRV.DSK",
+          "bytes": 737280,
+          "sha256": "988697271d78b7ec4b19053ed2be6f7423f92a60b33e75c7bc2d6602fd330398"
+        }
+      ],
+      "disc_program_modules": [
+        "ADDRESS.PDM",
+        "CALENDAR.PDM",
+        "DRAW.PDM",
+        "FILER.PDM",
+        "FORMSET.PDM",
+        "HANGMAN.PDM",
+        "MAILMRGE.PDM",
+        "PC_DEMO.PDM",
+        "PC_LINK.PDM",
+        "PLAY.PDM",
+        "TELECOM.PDM",
+        "WRKSHEET.PDM"
+      ],
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
     },
     {
       "id": "rl-304",
@@ -717,20 +889,87 @@
       ],
       "installation_or_startup": "DOS, two program disks, and three task disks; INSTALL.PDM survives",
       "principal_applications": [
-        "Text",
-        "Calendar",
+        "Address Book",
+        "Checks",
+        "Diary",
         "Draw",
-        "Worksheet",
-        "Filer",
-        "Telecom",
+        "Expenses",
+        "Grocery",
+        "Hangman",
+        "Information Center",
+        "Kitchen",
         "Music",
-        "Sound"
+        "NoteBook",
+        "PC-Link",
+        "Sound",
+        "Telecom",
+        "Text",
+        "Travel"
       ],
       "evidence": "inspected",
       "record": null,
       "uncertainties": "Qualify exact build, alternate backup and disk fallback; Faxback 1311",
       "dates": [],
-      "public_image_ids": []
+      "public_image_ids": [],
+      "inspected_media_files": [
+        {
+          "member": "MSDOS.DSK",
+          "bytes": 737280,
+          "sha256": "0e14e6136d13a4ca614093bf0d5dde54cf57848b807d34549f371f2574b7371b"
+        },
+        {
+          "member": "DM1.DSK",
+          "bytes": 737280,
+          "sha256": "5fcd12479365d99579881316f49fbd4950e41489c0e8834074c2f64e348bbf30"
+        },
+        {
+          "member": "DM2.DSK",
+          "bytes": 737280,
+          "sha256": "9a557108133e13f4a38cfd821c70fbd15e3b6e68396a9a7c8afe696012e31d63"
+        },
+        {
+          "member": "DM3.DSK",
+          "bytes": 737280,
+          "sha256": "f3cd7599550868ea98d01078de80ed7ea5fcadad4a67dcfb49a573a4db296551"
+        },
+        {
+          "member": "DM4.DSK",
+          "bytes": 737280,
+          "sha256": "9f5cb3345a731ddc9adaef122004b6ef73ad7f2eda94b6546aa87e64a683f1ae"
+        },
+        {
+          "member": "DM5.DSK",
+          "bytes": 737280,
+          "sha256": "6dd6c99fd3e48c97e0b1f13f06d7656f2b0fb971177db7aedd9cf8f790701761"
+        }
+      ],
+      "disc_program_modules": [
+        "ADDRESS.PDM",
+        "CHECKS.PDM",
+        "COLLECT.PDM",
+        "DIARY.PDM",
+        "DRAW.PDM",
+        "EXPENSES.PDM",
+        "GROCERY.PDM",
+        "HANGMAN.PDM",
+        "HOME.PDM",
+        "INFOCNTR.PDM",
+        "INSTALL.PDM",
+        "KITCHEN.PDM",
+        "MAILMRGE.PDM",
+        "MATHCARD.PDM",
+        "MUSIC.PDM",
+        "NOTEBOOK.PDM",
+        "PC_LINK.PDM",
+        "PLAY.PDM",
+        "RLSETUP.PDM",
+        "SOUND.PDM",
+        "TELECOM.PDM",
+        "TEXT.PDM",
+        "TOOLSLCT.PDM",
+        "TRAVEL.PDM"
+      ],
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
     },
     {
       "id": "rlx-hdb-30403",
@@ -754,21 +993,28 @@
         }
       ],
       "installation_or_startup": "Two compressed high-density disks",
-      "principal_applications": [
-        "Text",
-        "Calendar",
-        "Draw",
-        "Worksheet",
-        "Filer",
-        "Telecom",
-        "Music",
-        "Sound"
-      ],
+      "principal_applications": [],
       "evidence": "inspected",
       "record": null,
-      "uncertainties": "Qualify correct ROM, native decompressor, and disk target; Faxback 1342",
+      "uncertainties": "Qualify correct ROM, native decompressor, and disk target; Faxback 1342 The compressed set has client applications that remain to be identified by extraction or native install.",
       "dates": [],
-      "public_image_ids": []
+      "public_image_ids": [],
+      "inspected_media_files": [
+        {
+          "member": "DESK3431.IMG",
+          "bytes": 1474560,
+          "sha256": "04c5e5c9466d1fff27ed4f7909e22e9f00051cf91cbf8e35109525f6e392ed08"
+        },
+        {
+          "member": "DESK3432.IMG",
+          "bytes": 1474560,
+          "sha256": "83f45afdce5731f273f8554e068781c02f2fc57de238f768d8799f7a54f219ae"
+        }
+      ],
+      "disc_program_modules": [
+        "INSTALL.PDM"
+      ],
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
     },
     {
       "id": "rlx-hdb-tree",
@@ -794,7 +1040,8 @@
       "record": null,
       "uncertainties": "Exact installed lineage and truncated Cobb font; do not infer equality to compressed media",
       "dates": [],
-      "public_image_ids": []
+      "public_image_ids": [],
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
     },
     {
       "id": "rlx-b-floppy",
@@ -810,7 +1057,8 @@
       "record": null,
       "uncertainties": "Identify the complete five-disk set",
       "dates": [],
-      "public_image_ids": []
+      "public_image_ids": [],
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
     },
     {
       "id": "rsx-30404",
@@ -835,20 +1083,33 @@
       ],
       "installation_or_startup": "Nested Disk 1–6 and utilities, clean OEM install open",
       "principal_applications": [
-        "Text",
-        "Calendar",
-        "Draw",
-        "Worksheet",
-        "Filer",
-        "Telecom",
+        "Letter Invaders",
         "Music",
-        "Sound"
+        "Sound",
+        "Print Companion",
+        "Automatic House",
+        "Home Organizer",
+        "Information Center",
+        "Financial Applications",
+        "Draw",
+        "Text",
+        "Address Book",
+        "Telecom"
       ],
-      "evidence": "inspected",
-      "record": "../research/sound-native-20261118.md",
-      "uncertainties": "Selected OEM modules previously ran under generic 3.05, a separate hybrid",
-      "dates": [],
-      "public_image_ids": []
+      "evidence": "launched",
+      "record": "../research/deskmate-evolution-native-20261121.md#tandy-1000-rsx-oem-030404",
+      "uncertainties": "Floppy Desktop and hard-disk installer demonstrated; complete installation and OEM applications require further observation.",
+      "dates": [
+        {
+          "kind": "launcher-copyright-year",
+          "year": 1991,
+          "source": "../research/deskmate-evolution-native-20261121.md#tandy-1000-rsx-oem-030404"
+        }
+      ],
+      "public_image_ids": [
+        "ui.evolution.rsx-oem-underscore-control",
+        "ui.evolution.rsx-oem-disk2-prompt"
+      ]
     },
     {
       "id": "generic-305-nine",
@@ -926,8 +1187,8 @@
         "Hangman"
       ],
       "evidence": "inspected",
-      "record": null,
-      "uncertainties": "Qualify packaging order and selected modules against the raw set",
+      "record": "../research/deskmate-evolution-native-20261121.md#alternate-305-media-comparison",
+      "uncertainties": "145 of 146 unique names match the raw set. Native nine-disk order and label handling remain open.",
       "dates": [],
       "public_image_ids": []
     },
@@ -985,12 +1246,11 @@
         "Worksheet",
         "Filer",
         "Telecom",
-        "PC-Link",
-        "Thesaurus"
+        "Thesaurus (separate companion)"
       ],
       "evidence": "inspected",
-      "record": null,
-      "uncertainties": "Some same-name content differs from five raw images; completeness unverified",
+      "record": "../research/deskmate-evolution-native-20261121.md#alternate-305-media-comparison",
+      "uncertainties": "Different Desktop, help, and tutorial bytes and no PC-Link. Native installation and Thesaurus integration remain open.",
       "dates": [],
       "public_image_ids": []
     },

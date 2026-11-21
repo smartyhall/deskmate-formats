@@ -196,6 +196,48 @@
       "raw_sha256": "c8bc9cff4280ae153c296e7db608581757cc2f1e5ff17f1f17a6fb1411b6184f",
       "derivative_sha256": "abc24863ad46805e9fba4801e162d27f0dffc3225f63bd97becef8698ae1f4c2",
       "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.sl2-setup-options": {
+      "release": "DOS 3.30.22",
+      "machine": "tandy1000sl2",
+      "ms": 56352,
+      "frame": 3371,
+      "bios_mode": 3,
+      "dimensions": [
+        640,
+        225
+      ],
+      "raw_sha256": "352624348f13076273fdcbc728ac2f463666fea8851da155aba03b53872e3727",
+      "derivative_sha256": "f6e0d5589b88477b2f79045caecaa111ddf830740140cbe2f4538c460321a104",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.rsx-oem-underscore-control": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "ms": 36788,
+      "frame": 2434,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "0d4604945a9b7961ae35d5554bbeadb6a936dd6688b3628dfb70d12f1c6ee767",
+      "derivative_sha256": "20993775164e2c004703230fe1bc9b3257d5dcd5893750cb44e7296694ab897d",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.rsx-oem-disk2-prompt": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "ms": 216456,
+      "frame": 13206,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "508d08c11ec3b8268f0f0e9aca8273e912730d30d16dabc3628d4e2887d4d448",
+      "derivative_sha256": "46776e2fc5f27458705bbc5e4a53306f0466c408b056fa3c65d340a8397e7564",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
     }
   },
   "runs": {
@@ -254,6 +296,24 @@
       ],
       "text_work_disk_after_sha256": "4c2c3d9a6cb51a2efcf6ff05586382b0ecacd89781df7d56232bee86ec741fdf",
       "text_sha256": "89444e6419f4fc936ff2da8eed8fce570986b2800c8778499f901f77fec5e9e4"
+    },
+    "sl2-oem": {
+      "emulated_ms": 193192,
+      "profile": "Tandy 1000 SL/2",
+      "dos": "3.30.22",
+      "final_state": "blank mode-3 framebuffer after ROM startup with and without floppies",
+      "disposable_eeprom_sha256": "8f90fccac308e2496957df0423ec2233fea761c7f16808f62c7f22d88da8a0ee"
+    },
+    "rsx-30404": {
+      "profile": "Tandy 1000 RSX",
+      "dos": "Tandy MS-DOS 5.00",
+      "version_banner": "03.04.04",
+      "first_desktop_ms": 36788,
+      "first_copy_end_observed_ms": 216456,
+      "emulated_ms": 536460,
+      "state": "Held at Disk Needed for DeskMate 3; Disk 2 still mounted; no further action submitted",
+      "partial_disk_sha256": "9b4eaa045d826d6d68026ffcfe7d38820a48dfe34afd963a96c0a45c41b2ceba",
+      "checkpoint_frame_sha256": "14977a33eccd343a8fa237d2689b113d6dcf9f92b500b5e878d1b80b9dfe066e"
     }
   }
 }

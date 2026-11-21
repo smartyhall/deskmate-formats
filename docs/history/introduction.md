@@ -62,6 +62,10 @@ Preserving the environment is also about preserving the experience. Screenshots 
 
 ## Where to go next
 
+The [DeskMate Evolution Atlas](../ecosystem/deskmate-evolution-atlas.md)
+shows native interfaces across the original DeskMate, DeskMate II,
+Personal DeskMate, and DeskMate 3 families.
+
 If you are exploring DeskMate for the first time, start with the [illustrated application inventory](../inventory.md) and the [wider software ecosystem](../ecosystem/README.md). If you have an old document to identify or recover, visit the [Preservation Workbench](../preservation-workbench.md) and the [manufacturer-format crosswalk](../reference/tandy-format-crosswalk.md). If you want to understand how a particular claim was established, follow the linked experimental reports and source history.
 
 The distinction between **what DeskMate once did**, **what the historical documentation says**, and **what we can independently verify and recover today** runs through the entire reference. It is how this site can be both an introduction to an overlooked computing environment and a dependable starting point for preservation work.

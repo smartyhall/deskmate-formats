@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "deskmate-evolution-atlas",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 35,
+    "token_records": 6273,
+    "sessions": 32
+  },
+  "checkpoint": "oem-in-progress",
+  "collected_at": "2026-11-21T21:27:36.750705+00:00",
+  "commit": "dcc9f76193db68df11c6d323b5a691ab67457002",
+  "observation": {
+    "session": "b5d6a602a713745b16e4a3d3",
+    "measured_at": "2026-11-21T21:27:27.254000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 141244898,
+      "cached_input": 140160896,
+      "output": 147982,
+      "reasoning_output": 41979,
+      "total": 141392880
+    },
+    "reported_last": {
+      "input": 423999,
+      "cached_input": 422784,
+      "output": 306,
+      "reasoning_output": 225,
+      "total": 424305
+    },
+    "windows": {
+      "300": {
+        "used_percent": 72.0,
+        "reset_epoch": 1795312114,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 45.0,
+        "reset_epoch": 1795836613,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  }
+}

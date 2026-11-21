@@ -284,3 +284,115 @@ envelope precedes a 13-byte body identical to the 3.00 ASCII save.
 This establishes the default mode and bytes for this synthetic case.
 Cross-release read and write compatibility and operation on a TX
 proper remain open.
+
+## Tandy 1000 SL/2 startup blocker
+
+On the emulated SL/2, boot unmodified `DOS33.IMG` in A: with
+`DM1.IMG` in B:. The verified source is `system/1000SL2D.zip`.
+The 720 KiB DOS image SHA-256 is
+`a483df25609610be2dc4c4e129d9df0f55e60af08a1679630ddf310d009ff99a`.
+The 8086 profile ran at 8 MHz with 640 KiB, internal video,
+and two 720 KiB drives. POST reported BIOS 01.04.04, and DOS
+3.30.22 reached its date prompt by 45,000 ms. The two ROM
+halves match SHA-256
+`7fe228566de37a2f06ca6703a9f1280fd75db2f2d0e0e635b7c3b1e214680866`
+and
+`160116f3ad6788af7faa7a5f12de636de58ea18e2021ddba242ac1e801a927af`.
+
+After setting the date and time, run `SETUPSL2`. The program
+reported changed drive types, then warned about an invalid EEPROM
+record. Its menu showed DISK as the primary startup device and
+DESKMATE as the initial program. From Video Display, three Down
+presses reached Primary Start-up Device. Left selected ROM, and
+F1 wrote the disposable profile's EEPROM. The utility reported
+completion. This follows the documented ROM and initial-program
+choices. [Tandy Faxback 1283](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01283.txt)
+
+After switching A: to DeskMate Disk 1 and B: to Disk 2, a hard reset
+left the screen blank for the full 85,000 ms of observation.
+A second hard reset with both floppies ejected also stayed blank
+for 45,000 ms. Socket quit ended the run at 193,192 ms. The modified
+disposable EEPROM was preserved. The test established the supplied
+DOS boot, setup menus, and failure of this ROM startup attempt.
+Version identification and application launch remain open. A fresh
+control should compare ROM startup in **MS-DOS** mode before retrying
+ROM DeskMate.
+
+## Tandy 1000 RSX OEM 03.04.04
+
+Use a pristine RSX DOS 5.00 clone and verify `system/rsxdisks.zip`
+against the media manifest. Extract the six `DISK*.ZIP` members
+separately. Follow the archive notes' 1.44 MB geometry and keep
+all member bytes and directory names. The atlas FAT12 writer uses
+`'1440k'` and eleven-byte labels `DESKMATE_1 ` through
+`DESKMATE_6 `. Disk 4 contains nested Print Companion files
+under `DOCUMENT`, and Disk 5 contains `HOMEAUTO`. `UTILS.ZIP`
+is a separate utility set. Independent FAT12 extraction of all six
+reconstructed disks matched all 509 ZIP member byte strings.
+[RSX archive identity](../ecosystem/deskmate-installation-media.json)
+
+| Disk | Files | SHA-256 of working image |
+| --- | ---: | --- |
+| 1 | 28 | `7bb8e4a7e8d66e1271d2639e59414dea2cce1d82c8fdfabd04cba05764bee940` |
+| 2 | 62 | `d6af4f46430245b3b98fe740d45b083363464af368e96a07c54b676c52198e15` |
+| 3 | 57 | `9d8c8c2f66bbc6d177799c8a4b987aaa6037bb37d9c5f8d86f818006f0da37a7` |
+| 4 | 236 | `be132ea042027ff03d9d888d8162c0bd3a145d49ab7b864cb4ead2a7fdd57b9d` |
+| 5 | 56 | `c717d1ce81b326240f5b21fbe4d8a5a884847a56351d3ebf13588b0d76b2534c` |
+| 6 | 70 | `6afd2695ccb76f64a246aa1fce2647b4def65dbfa02477303b474ad971cd3b42` |
+
+Boot DOS, mount Disk 1 in A:, use `A:`, and confirm the FAT
+label with `VOL`. The tested `DESK INSTALL` command showed the
+**03.04.04** banner at 21,784 ms. It requested Disk 1 while that
+disk was mounted. Enter accepted it and reached the floppy
+Desktop at 36,788 ms. The interface has an Applications menu,
+Teach Me, Home Organizer, Information Center, Print Companion,
+and Automatic House, plus AOL and Letter Invaders shortcuts.
+The experiment identifies the applications from the menus and
+media. It does not establish network or accessory operation.
+
+Open File with F2, press Down twice to reach Run, and submit
+`INSTALL.PDM` with no data filename. This opened the hard-disk
+installer at 47,452 ms. The installer selected `C:\DESKMATE`
+as its default destination. The first copy stage reached the
+DeskMate 2 disk prompt at 216,456 ms.
+
+Disk 2 was mounted in A: and accepted. Its copy was still progressing
+at 448,460 ms, with `RECORD.COL` visible. The installer requested
+**DeskMate 3** at the 536,460 ms checkpoint. The emulator remains
+held at that prompt with Disk 2 still mounted. The partial
+hard-disk copy, current configuration, screenshots, and command
+journal are archived privately. The partial disk has SHA-256
+`9b4eaa045d826d6d68026ffcfe7d38820a48dfe34afd963a96c0a45c41b2ceba`.
+This digest anchors the partial installation. Continuing that
+exact run requires the held process. Verify its time and prompt,
+mount the verified Disk 3 image, and confirm once. Disks 3–6,
+post-install configuration, the installer exit, and first
+hard-disk launch remain open.
+
+## Alternate 3.05 media comparison
+
+Rehashed each numbered ZIP and each original 720 KiB raw disk.
+Extracted actual member bytes and grouped them by uppercase filename
+across each entire set. A match requires at least one identical
+byte instance under that filename. Only `DESKTOPD.CFG` has
+different copies under the same name within each set. Disk order
+is a separate test. [Verified raw media](../ecosystem/deskmate-installation-305.md#identify-the-five-disk-set) · [ZIP originals](../ecosystem/deskmate-installation-media.json)
+
+| Pair | Common names | Byte match anywhere in set | No matching bytes | Names exclusive to first / second |
+| --- | ---: | ---: | ---: | ---: |
+| Nine ZIP / five raw | 146 | 145 | 1 | 0 / 2 |
+| Five ZIP / five raw | 136 | 113 | 23 | 0 / 12 |
+| Nine ZIP / five ZIP | 134 | 112 | 22 | 12 / 2 |
+
+The nine-ZIP and raw sets differ on `DESKMATE.LBL`; the raw set
+also has `INSTALL.HLP` and `USERDICT.SPL`. In the five-ZIP
+set, the desktop program, desktop configuration, and numerous
+help and tutorial files have different bytes. PC-Link's program,
+help, protocol resource, and nine `.PCL` files are missing
+from that layout. The launcher, installer, Calendar, Address
+Book, Text, Draw, Filer, Worksheet, and principal runtime
+binaries match across the three layouts. The separate sixth
+five-ZIP companion contains Thesaurus files. These are static
+findings. A five-ZIP native install would test changes to the
+Desktop, program collection, and help. A nine-ZIP run would
+mostly test its alternate disk layout.
