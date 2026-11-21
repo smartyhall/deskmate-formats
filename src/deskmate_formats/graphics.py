@@ -90,6 +90,7 @@ class ExternalFontRun:
     descriptor: bytes
     text_bytes: bytes
     padding: bytes
+    style_word: int = 0
 
     @property
     def point_size_word(self):
@@ -157,14 +158,22 @@ def _font_run(raw, length):
     if length < 102 or raw[98:100] != b'\0\0':
         return None
     name, terminator, padding = raw[26:56].partition(b'\0')
+    style_word = 0
+    if any(padding):
+        # Native variants store a style word at 54, after the family terminator.
+        if len(padding) < 2 or any(padding[:-2]):
+            return None
+        style_word, = unpack_from('<H', raw, 54)
+        if style_word not in (4, 6, 12, 128):
+            return None
     count, = unpack_from('<H', raw, 96)
     end = 100 + count
-    if (not terminator or not name or any(padding) or any(not 32 <= code <= 126 for code in name)
+    if (not terminator or not name or any(not 32 <= code <= 126 for code in name)
             or not end <= length <= end + 2 or (length == end + 2 and raw[end:length] != b'\0\0')
             or b'\0' in raw[100:end]):
         return None
     return ExternalFontRun(name.decode('ascii'), raw[20:26], raw[56:96],
-                           raw[100:end], raw[end:length])
+                           raw[100:end], raw[end:length], style_word)
 
 
 def external_font_run(element):
@@ -348,6 +357,8 @@ def outline_layout(element, faces, byte_budget):
     run = external_font_run(element)
     if run is None:
         return (), 0, 'invalid_external_font_descriptor'
+    if run.style_word:
+        return (), 0, 'unsupported_external_font_style_word'
     face = faces.get(run.name.casefold())
     if face is None:
         return (), 0, 'external_font_reference'
