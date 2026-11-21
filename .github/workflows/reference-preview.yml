@@ -39,6 +39,13 @@ jobs:
         env:
           SITE_BASE_PATH: /deskmate-formats/
         run: npm run build
+      - name: Verify upstream theme is packaged with the preview
+        run: |
+          test -s website/_site/assets/vendor/bootstra386/css/bootstrap.min.css
+          test -s website/_site/assets/vendor/bootstra386/js/bootstrap.bundle.min.js
+          test -s website/_site/assets/vendor/bootstra386/js/bootstrap-386.js
+          test -s website/_site/assets/vendor/bootstra386/fonts/Px437_IBM_EGA8.otf
+          test -s website/_site/assets/vendor/bootstra386/ATTRIBUTION.txt
       - name: Upload preview without public deployment
         uses: actions/upload-artifact@v4
         with:
