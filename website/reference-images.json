@@ -320,6 +320,181 @@
       "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Power Up Software Corporation and Tandy Corporation. Original vendor rights are retained.",
       "page_id": "applications.ecosystem",
       "section_heading": "Express Publisher 1.00 native interface"
+    },
+    {
+      "id": "ui.installation-305.version",
+      "path": "installation-305/version.png",
+      "sha256": "440645970cc58762e67da3e64397bf9e2bad481775c56f7190f7850ce1c44d38",
+      "source_sha256": "814a1f5b91d462a96e88b31ffb0e80b34380cd03bb252122c0036c64e75abe64",
+      "size": 1143,
+      "width": 460,
+      "height": 85,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "calendar-editor-20261105.install-a",
+      "caption": "DeskMate 3.05 installer startup banner reports Version 03.05.00. Native DOS text capture, cropped.",
+      "alt": "White Tandy copyright and version text on a black DOS screen.",
+      "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+      "page_id": "applications.installation-305",
+      "section_heading": "Start the installer",
+      "capture_version": "03.05.00",
+      "capture_emulated_ms": 17896,
+      "capture_frame": 1236,
+      "source_report": "docs/research/calendar-editor-observatory.md",
+      "transformation": {
+        "crop_xyxy": [
+          0,
+          0,
+          460,
+          85
+        ],
+        "scale": 1,
+        "encoding": "metadata-free RGB PNG"
+      }
+    },
+    {
+      "id": "ui.installation-305.destination",
+      "path": "installation-305/destination.png",
+      "sha256": "aee7206670ed227860e8b0299f69e46bb34af1837714caa9e05388d2b9d5510b",
+      "source_sha256": "6cc5a129cc946c7af206ace6f9c07900c0eebbbd22303bfa8e24c5d6c1833079",
+      "size": 1873,
+      "width": 327,
+      "height": 130,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "calendar-editor-20261105.install-dialog",
+      "caption": "DeskMate 3.05 Installation Directory dialog with the default C:\\DESKMATE path. Native capture, cropped.",
+      "alt": "Installation Directory dialog with the default pathname selected.",
+      "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+      "page_id": "applications.installation-305",
+      "section_heading": "Set the destination and change disks",
+      "capture_version": "03.05.00",
+      "capture_emulated_ms": 43896,
+      "capture_frame": 2886,
+      "source_report": "docs/research/calendar-editor-observatory.md",
+      "transformation": {
+        "crop_xyxy": [
+          157,
+          42,
+          484,
+          172
+        ],
+        "scale": 1,
+        "encoding": "metadata-free RGB PNG"
+      }
+    },
+    {
+      "id": "ui.installation-305.disk-two",
+      "path": "installation-305/disk-two.png",
+      "sha256": "a4e203e2fad8c33e33a3db295c4182fec4729746c9d312b9b9d7da17cf344d89",
+      "source_sha256": "32f46261dba21e533ddd6e4ad44903acc2d7d51715ec5729fb29c4ecef5c6141",
+      "size": 2406,
+      "width": 328,
+      "height": 159,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "calendar-editor-20261105.install-copy-one-more",
+      "caption": "DeskMate 3.05 Disk Needed prompt requests DeskMate 2 and shows Enter to continue. Native capture, cropped.",
+      "alt": "Disk Needed alert asks for DeskMate 2, with OK and Cancel buttons.",
+      "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+      "page_id": "applications.installation-305",
+      "section_heading": "Set the destination and change disks",
+      "capture_version": "03.05.00",
+      "capture_emulated_ms": 115900,
+      "capture_frame": 7202,
+      "source_report": "docs/research/calendar-editor-observatory.md",
+      "transformation": {
+        "crop_xyxy": [
+          156,
+          162,
+          484,
+          321
+        ],
+        "scale": 1,
+        "encoding": "metadata-free RGB PNG"
+      }
+    },
+    {
+      "id": "ui.installation-305.printer",
+      "path": "installation-305/printer.png",
+      "sha256": "e8a78872e514d0e8cdc66fa9e4f05b27981ddb5194bef61d495386387c6864d2",
+      "source_sha256": "2d400b5cb1ff9a1a58eb8ef68f5369f6d4818fe8eeaff36d22905dcd96273628",
+      "size": 2608,
+      "width": 395,
+      "height": 217,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "calendar-editor-20261105.install-printer-settle",
+      "caption": "DeskMate 3.05 IBM Graphic print settings with 10 CPI selected. Native capture, cropped.",
+      "alt": "Printer dialog with radio buttons for 10 CPI, 12 CPI, and Condensed.",
+      "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+      "page_id": "applications.installation-305",
+      "section_heading": "Choose the printer and finish",
+      "capture_version": "03.05.00",
+      "capture_emulated_ms": 367920,
+      "capture_frame": 22312,
+      "source_report": "docs/research/calendar-editor-observatory.md",
+      "transformation": {
+        "crop_xyxy": [
+          123,
+          137,
+          518,
+          354
+        ],
+        "scale": 1,
+        "encoding": "metadata-free RGB PNG"
+      }
+    },
+    {
+      "id": "ui.installation-305.reset",
+      "path": "installation-305/reset.png",
+      "sha256": "e0cd5cd0fa48007b9c56118f66e469cf4a3f531ed35fb0e44892f3e14cccdf98",
+      "source_sha256": "f999e81ae335aaf815f8c02b805fc85be7cea43b25ace594be79606a01ebc825",
+      "size": 2633,
+      "width": 328,
+      "height": 260,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "calendar-editor-20261105.install-finish",
+      "caption": "DeskMate 3.05 updates AUTOEXEC.BAT and prompts for floppy removal before resetting. Native capture, cropped.",
+      "alt": "Installer reports updating AUTOEXEC.BAT and asks to remove the diskette from A.",
+      "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+      "page_id": "applications.installation-305",
+      "section_heading": "Choose the printer and finish",
+      "capture_version": "03.05.00",
+      "capture_emulated_ms": 462928,
+      "capture_frame": 28008,
+      "source_report": "docs/research/calendar-editor-observatory.md",
+      "transformation": {
+        "crop_xyxy": [
+          156,
+          61,
+          484,
+          321
+        ],
+        "scale": 1,
+        "encoding": "metadata-free RGB PNG"
+      }
+    },
+    {
+      "id": "ui.installation-305.calendar",
+      "path": "installation-305/calendar.png",
+      "sha256": "60189a184605891941f07920ad3beab1a0cc21e1d1ea899b2ea5afd973a56545",
+      "source_sha256": "643853e75fc9abace975fe43b304770d2a03d9b43a4be514c5100b2990119def",
+      "size": 7541,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "calendar-editor-20261105.E00-calendar",
+      "caption": "The first documented application launch from this DeskMate 3.05 installation shows the shipped Calendar data before synthetic events were added. Native VGA capture.",
+      "alt": "October 2026 month grid with October 23 selected and small diamond markers on October 12 and 31.",
+      "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+      "page_id": "applications.installation-305",
+      "section_heading": "Launch and verify",
+      "capture_version": "03.05.00",
+      "capture_emulated_ms": 490204,
+      "capture_frame": 29854,
+      "source_report": "docs/research/calendar-editor-observatory.md",
+      "transformation": {
+        "crop_xyxy": null,
+        "scale": 1,
+        "encoding": "metadata-free RGB PNG"
+      }
     }
   ]
 }

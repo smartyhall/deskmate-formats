@@ -19,6 +19,11 @@ test("source-map entries resolve to existing, uniquely identified Markdown", () 
   assert.equal(sections.reduce((total, group) => total + group.pages.length, 0), pages.length);
 });
 
+test("installation references remain mapped with distinct IDs", () => {
+  assert.ok(pages.some((entry) => entry.id === "applications.installations"));
+  assert.ok(pages.some((entry) => entry.id === "applications.installation-305"));
+});
+
 test("both GitHub subdirectory and self-hosted root paths work", () => {
   const previous = process.env.SITE_BASE_PATH;
   try {

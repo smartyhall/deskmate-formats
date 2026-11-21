@@ -1,0 +1,3363 @@
+{
+  "schema_version": 1,
+  "archives": [
+    {
+      "path": "tandy1000/deskmate/1000RLX_HD-B.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/1000RLX_HD-B.zip",
+      "bytes": 2431617,
+      "sha256": "c19e395880113fed55ad50e8a8d1e05b6cdf87ca883f700b0d28dd062882463f",
+      "file_count": 255,
+      "unpacked_bytes": 4728051,
+      "selected_members": [
+        {
+          "path": "DESKMATE/MUSIC.PDM",
+          "bytes": 63371,
+          "sha256": "f54651f6597c89efb5810352d69afdd2887a21217c8d519f3c39d83bf0966993"
+        },
+        {
+          "path": "DESKMATE/ROBOT.IMG",
+          "bytes": 11995,
+          "sha256": "9aab14864f16f1ca7e57d098d57c656d92a01ef1831737ae3b2bed9cbccb8143",
+          "format": "application graphic"
+        },
+        {
+          "path": "DESKMATE/SOUND.PDM",
+          "bytes": 65049,
+          "sha256": "ea5c305a76ae52143f907ed040c05c2c5ea47f6bca45dda3271e410a23af67a2"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/3kdm2dk1.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/3kdm2dk1.zip",
+      "bytes": 134190,
+      "sha256": "43ee33d44a2edc816e844759b7e2ef21842ac497725632d72cd608bed80b2e2a",
+      "file_count": 27,
+      "unpacked_bytes": 327646,
+      "selected_members": [
+        {
+          "path": "DESK.EXE",
+          "bytes": 27320,
+          "sha256": "c3c8ae6409707ad78503b22ce4a9d9f35aa998cb96efa5a600fd061b2180e09f",
+          "markers": [
+            "Version 01.00.00"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/3kdm2dk2.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/3kdm2dk2.zip",
+      "bytes": 8141,
+      "sha256": "698e2a42ac13f61d0cad56989aadb211c12fcfa7004a03582ed7b21f6d2294cb",
+      "file_count": 9,
+      "unpacked_bytes": 16686,
+      "selected_members": []
+    },
+    {
+      "path": "tandy1000/deskmate/diskin.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/diskin.zip",
+      "bytes": 23110,
+      "sha256": "055873146229ff5a06a515a1c09795a76fa8125155175d00b1b96fa516d523ff",
+      "file_count": 4,
+      "unpacked_bytes": 38299,
+      "selected_members": [
+        {
+          "path": "INSTALL.PDM",
+          "bytes": 15988,
+          "sha256": "5924856c96ff6a793e60cc06290d3506f359b16b566738587bbc8e94efca8191"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm300dk1.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm300dk1.zip",
+      "bytes": 208744,
+      "sha256": "75e8eb1fab7ada4d4e73dfead5a5b7e70c4a378e8f360c4f1f85de64fa820fdf",
+      "file_count": 17,
+      "unpacked_bytes": 345229,
+      "selected_members": [
+        {
+          "path": "DESK.EXE",
+          "bytes": 15826,
+          "sha256": "27df5c7e26312e88f7a7075613a93a871ac71f72ad0a9ccf4ca69e0b508e9a2e",
+          "markers": [
+            "Version: 03.00.00"
+          ]
+        },
+        {
+          "path": "DESKTOP.PDM",
+          "bytes": 64847,
+          "sha256": "b3021773cb0726689cc7d465f5689f9267963275f4725e3416b3eb9664c9e810"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm300dk2.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm300dk2.zip",
+      "bytes": 164281,
+      "sha256": "dedcb4bb0dba2281f886dbbb4f98b421da13a1fd0fd4987d8b435b6292be8a50",
+      "file_count": 7,
+      "unpacked_bytes": 289426,
+      "selected_members": [
+        {
+          "path": "CALENDAR.PDM",
+          "bytes": 72699,
+          "sha256": "092db1f622a05809f2e47d34f2bc3cad3a5f18d0464759eadc70e42c83b630e7"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm300dk3.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm300dk3.zip",
+      "bytes": 191473,
+      "sha256": "23ac6d45afaa23d8acb4b8e05691c45115ac534c969cdd154a4cfae7a0b82304",
+      "file_count": 27,
+      "unpacked_bytes": 332019,
+      "selected_members": []
+    },
+    {
+      "path": "tandy1000/deskmate/dm300dk4.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm300dk4.zip",
+      "bytes": 163135,
+      "sha256": "e55de40c38406c2e4e54e5882bfbec0d6e69749ca36a52e1736772cab3b94a12",
+      "file_count": 14,
+      "unpacked_bytes": 306900,
+      "selected_members": [
+        {
+          "path": "DMVID.DOC",
+          "bytes": 639,
+          "sha256": "2abca10e2ebf8520d7e4f2cfa4592dc2692a349b329838c1a9c0b7814039a330"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm300dk5.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm300dk5.zip",
+      "bytes": 238424,
+      "sha256": "9d84551c100b4c2653656ccfe2040713a3f073d6d80020352db9fdbe1b623571",
+      "file_count": 15,
+      "unpacked_bytes": 352412,
+      "selected_members": []
+    },
+    {
+      "path": "tandy1000/deskmate/dm302dk1.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm302dk1.zip",
+      "bytes": 276975,
+      "sha256": "ebf2b2a0c8e4caf1468c896f83beb4deea6780a67c0b5532104ffb4b1657639d",
+      "file_count": 25,
+      "unpacked_bytes": 440121,
+      "selected_members": [
+        {
+          "path": "DESKTOP.PDM",
+          "bytes": 64955,
+          "sha256": "eafc46da3cec5407242f0a1c5e3588f09f94c799993cdbb485a690f09736c50b"
+        },
+        {
+          "path": "DESK.EXE",
+          "bytes": 15908,
+          "sha256": "ceafb18e3949f4b3f44a2ab2565e9450ff3ff025a3cfd8055eaf908834dfa61b",
+          "markers": [
+            "DESKMATE$880901$",
+            "Version: 03.02.00"
+          ]
+        },
+        {
+          "path": "DMVID.DOC",
+          "bytes": 644,
+          "sha256": "000e0a23b05185096953725a64f6d6e3636011af9fe5f24701968441eb29e9fe"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm302dk2.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm302dk2.zip",
+      "bytes": 355824,
+      "sha256": "47c4104ed68dcce464130f5cd200772fef0b7fc8d9f61899092b7fbe2fd6c008",
+      "file_count": 17,
+      "unpacked_bytes": 571855,
+      "selected_members": [
+        {
+          "path": "CALENDAR.PDM",
+          "bytes": 72763,
+          "sha256": "ff31a516a673ce8696a670501f5f30c8c555e98d06c425a3bffa6036981f8efd"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm302dk3.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm302dk3.zip",
+      "bytes": 361263,
+      "sha256": "18d97c5842d15eac8a15cdd5db770493693a06c33f9315203003bd674c873f73",
+      "file_count": 38,
+      "unpacked_bytes": 653751,
+      "selected_members": []
+    },
+    {
+      "path": "tandy1000/deskmate/dm302drv.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm302drv.zip",
+      "bytes": 145947,
+      "sha256": "b430deec16e3b4d5a3d14e8ff0d3668e578a1c5af45278e884add6b24bd63fa0",
+      "file_count": 16,
+      "unpacked_bytes": 229363,
+      "selected_members": [
+        {
+          "path": "DMVID.DOC",
+          "bytes": 644,
+          "sha256": "000e0a23b05185096953725a64f6d6e3636011af9fe5f24701968441eb29e9fe"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm303dk1.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk1.zip",
+      "bytes": 411531,
+      "sha256": "a9897beaaddd29c47ec3ad4046d57ea2e28872399afea0731c12f2e8a259ebfe",
+      "file_count": 42,
+      "unpacked_bytes": 692688,
+      "selected_members": [
+        {
+          "path": "DESK.EXE",
+          "bytes": 16384,
+          "sha256": "702a5f6237695793a773a327b2b9bedc706cce3d16a52360aa90c4f13f67066a",
+          "markers": [
+            "DESKMATE$03.01 890725$",
+            "Version: 03.03.01"
+          ]
+        },
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 1439,
+          "sha256": "a27f75228713f048c6350706bb7f3a55d239c2711efd1622e15d4e957fea7910",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5",
+            "DESKMATE 6",
+            "DESKMATE 7"
+          ]
+        },
+        {
+          "path": "DMCSR.R89",
+          "bytes": 79983,
+          "sha256": "b756c00bf3c9320819a8ae763bb6866cdaf4f2e902e1fd50aa0c17c2e44580a9"
+        },
+        {
+          "path": "INSTALL.EXE",
+          "bytes": 806,
+          "sha256": "378b1593e3d4600f945e536a78c4932f3d9bae99584aac011822cb8bd2faf8ce"
+        },
+        {
+          "path": "INSTALL.PDM",
+          "bytes": 19293,
+          "sha256": "a536822272fe46c4b1218509c405d91885c0ff5ed24721ef46811318039d806e"
+        },
+        {
+          "path": "PERSONAL.CAL",
+          "bytes": 6144,
+          "sha256": "c556b7f57102fc5432ce926317c8c0aa95cf8992d7fb64a72e2f270e4c517890"
+        },
+        {
+          "path": "CALENDAR.PDM",
+          "bytes": 72211,
+          "sha256": "53f780566d0966317db0693e6e0932052aa637a1146fe4999aefc25b905ce8ee"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm303dk2.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk2.zip",
+      "bytes": 419320,
+      "sha256": "edb617433344c50361c23c582bccefd63441fa1dd5205d64905981c6f995638b",
+      "file_count": 30,
+      "unpacked_bytes": 701243,
+      "selected_members": [
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 1439,
+          "sha256": "a27f75228713f048c6350706bb7f3a55d239c2711efd1622e15d4e957fea7910",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5",
+            "DESKMATE 6",
+            "DESKMATE 7"
+          ]
+        },
+        {
+          "path": "DESKTOP.PDM",
+          "bytes": 64395,
+          "sha256": "a16dc659edf20eb36a5d1ae3291e990280b82a1778a7d9118028c4cecf62d5f1"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm303dk3.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk3.zip",
+      "bytes": 325771,
+      "sha256": "e4c9fbada6cbcd158df1c488afbcb79b7b3fae9b28c4dff13bb87108ade8a18f",
+      "file_count": 32,
+      "unpacked_bytes": 621632,
+      "selected_members": [
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 1439,
+          "sha256": "a27f75228713f048c6350706bb7f3a55d239c2711efd1622e15d4e957fea7910",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5",
+            "DESKMATE 6",
+            "DESKMATE 7"
+          ]
+        },
+        {
+          "path": "DMVID.DOC",
+          "bytes": 1843,
+          "sha256": "dc29fcfffceb4db7be313896c08fed47217b157a7860480bbf68a30c95147474"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm303dk4.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk4.zip",
+      "bytes": 367667,
+      "sha256": "b164799dbf99511eda5e562ca3423622fa0452c591b6d548ea6783a58607055a",
+      "file_count": 39,
+      "unpacked_bytes": 698192,
+      "selected_members": [
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 1439,
+          "sha256": "a27f75228713f048c6350706bb7f3a55d239c2711efd1622e15d4e957fea7910",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5",
+            "DESKMATE 6",
+            "DESKMATE 7"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm305dk1.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk1.zip",
+      "bytes": 227987,
+      "sha256": "5fdd7fe79032860274bd0e679b94ce14eb175ea6dde9296d9cf105cbe1186bec",
+      "file_count": 20,
+      "unpacked_bytes": 349836,
+      "selected_members": [
+        {
+          "path": "INSTALL.EXE",
+          "bytes": 828,
+          "sha256": "ed2e53160e918154edc5dade627d7844882d6db91254c14c4a42b190d9a20a2b"
+        },
+        {
+          "path": "INSTALL.PDM",
+          "bytes": 27235,
+          "sha256": "3b6e8c5c5bb17df419668e8dc523ea07b714fe07fe03e3d4081c9905026c95cc"
+        },
+        {
+          "path": "DESK.EXE",
+          "bytes": 19047,
+          "sha256": "0f2a40243c997276904d2555a117c60eedf0016dde073285e8d63c8345a2eba3",
+          "markers": [
+            "DESKMATE$05.00 900919$",
+            "Version: 03.05.00"
+          ]
+        },
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 2281,
+          "sha256": "8b2603a82ce0116f1d5d5bd257704810ff64273fe75b71c72cbdfec347b24872",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5",
+            "DESKMATE 6",
+            "DESKMATE 7",
+            "DESKMATE 8",
+            "DESKMATE 9"
+          ]
+        },
+        {
+          "path": "DMCSR.R89",
+          "bytes": 80911,
+          "sha256": "085edb2f2c67ae323343d9efedd7c731778f5fbb8dc59ed8bd6560006b45da75"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm305dk2.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk2.zip",
+      "bytes": 194687,
+      "sha256": "188e8bd58eb9b46b3707014d0e955fb9f2d9f2d49169520606a01714a409a8fa",
+      "file_count": 16,
+      "unpacked_bytes": 344208,
+      "selected_members": [
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 2281,
+          "sha256": "8b2603a82ce0116f1d5d5bd257704810ff64273fe75b71c72cbdfec347b24872",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5",
+            "DESKMATE 6",
+            "DESKMATE 7",
+            "DESKMATE 8",
+            "DESKMATE 9"
+          ]
+        },
+        {
+          "path": "DESKTOP.PDM",
+          "bytes": 72681,
+          "sha256": "85e56146a4da122c6ac646ca76895dcd7375454d8d9e2067b5f25f160daa8c5d"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm305dk3.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk3.zip",
+      "bytes": 171991,
+      "sha256": "53b2a8bfd45b5c16d4103a65109317288aefbef02d4133da717c9c013b8bfeed",
+      "file_count": 21,
+      "unpacked_bytes": 328899,
+      "selected_members": [
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 2281,
+          "sha256": "8b2603a82ce0116f1d5d5bd257704810ff64273fe75b71c72cbdfec347b24872",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5",
+            "DESKMATE 6",
+            "DESKMATE 7",
+            "DESKMATE 8",
+            "DESKMATE 9"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm305dk4.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk4.zip",
+      "bytes": 182736,
+      "sha256": "07fd75ecc80499c17260dd9e2c8889e13a889efc4c73ad686853396c39ff6066",
+      "file_count": 16,
+      "unpacked_bytes": 330108,
+      "selected_members": [
+        {
+          "path": "CALENDAR.PDM",
+          "bytes": 72593,
+          "sha256": "819df5658b663aa69b15584abf805062679e97f587f3404738f6e82876e4bd23"
+        },
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 2281,
+          "sha256": "8b2603a82ce0116f1d5d5bd257704810ff64273fe75b71c72cbdfec347b24872",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5",
+            "DESKMATE 6",
+            "DESKMATE 7",
+            "DESKMATE 8",
+            "DESKMATE 9"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm305dk5.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk5.zip",
+      "bytes": 164428,
+      "sha256": "8d5b2843e8b9de9d69ed6d1f2fb08ade76527bea3f5f5cf5a219c44774ec677c",
+      "file_count": 17,
+      "unpacked_bytes": 298238,
+      "selected_members": [
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 2281,
+          "sha256": "8b2603a82ce0116f1d5d5bd257704810ff64273fe75b71c72cbdfec347b24872",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5",
+            "DESKMATE 6",
+            "DESKMATE 7",
+            "DESKMATE 8",
+            "DESKMATE 9"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm305dk6.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk6.zip",
+      "bytes": 188548,
+      "sha256": "d6395d8bc3d21ed1bf66d49f53161287af89d9b338487004898a778ed5118d3b",
+      "file_count": 24,
+      "unpacked_bytes": 335537,
+      "selected_members": [
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 2281,
+          "sha256": "8b2603a82ce0116f1d5d5bd257704810ff64273fe75b71c72cbdfec347b24872",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5",
+            "DESKMATE 6",
+            "DESKMATE 7",
+            "DESKMATE 8",
+            "DESKMATE 9"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm305dk7.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk7.zip",
+      "bytes": 202514,
+      "sha256": "b7d34274cb95797691f997daed53721c57b8d7c1c31e98d93febaaf27d3c3d02",
+      "file_count": 16,
+      "unpacked_bytes": 307081,
+      "selected_members": [
+        {
+          "path": "DMVID.DOC",
+          "bytes": 1843,
+          "sha256": "dc29fcfffceb4db7be313896c08fed47217b157a7860480bbf68a30c95147474"
+        },
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 2281,
+          "sha256": "8b2603a82ce0116f1d5d5bd257704810ff64273fe75b71c72cbdfec347b24872",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5",
+            "DESKMATE 6",
+            "DESKMATE 7",
+            "DESKMATE 8",
+            "DESKMATE 9"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm305dk8.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk8.zip",
+      "bytes": 158232,
+      "sha256": "d32d6c3fe6692112c8bd3f7c689649cf20222de6de8ae94ec28ee7e7c7c5e3e4",
+      "file_count": 23,
+      "unpacked_bytes": 272452,
+      "selected_members": [
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 2281,
+          "sha256": "8b2603a82ce0116f1d5d5bd257704810ff64273fe75b71c72cbdfec347b24872",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5",
+            "DESKMATE 6",
+            "DESKMATE 7",
+            "DESKMATE 8",
+            "DESKMATE 9"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm305dk9.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk9.zip",
+      "bytes": 86916,
+      "sha256": "52befdd828e7065fc2e1fde60c010693d946ca5e4c477703f9c43564086cd883",
+      "file_count": 10,
+      "unpacked_bytes": 160149,
+      "selected_members": []
+    },
+    {
+      "path": "tandy1000/deskmate/dm305drv.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305drv.zip",
+      "bytes": 250936,
+      "sha256": "d73a4b5f3f67a01a111e86d0929b0559d0e24afdb811c182e6ee597eb38d59d0",
+      "file_count": 34,
+      "unpacked_bytes": 386837,
+      "selected_members": []
+    },
+    {
+      "path": "tandy1000/deskmate/dm369dks1.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm369dks1.zip",
+      "bytes": 402274,
+      "sha256": "142e44bd220e5f2ae63b5cadb914396b7a56b8c7bf1bb35ed85fe4866f0f6622",
+      "file_count": 37,
+      "unpacked_bytes": 679808,
+      "selected_members": [
+        {
+          "path": "CALENDAR.PDM",
+          "bytes": 72593,
+          "sha256": "819df5658b663aa69b15584abf805062679e97f587f3404738f6e82876e4bd23"
+        },
+        {
+          "path": "DESK.EXE",
+          "bytes": 19047,
+          "sha256": "0f2a40243c997276904d2555a117c60eedf0016dde073285e8d63c8345a2eba3",
+          "markers": [
+            "DESKMATE$05.00 900919$",
+            "Version: 03.05.00"
+          ]
+        },
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 2087,
+          "sha256": "cf4be6cde37d193cedab9e24998a0ad8f0d66bdeb30f983c486e365e075227d8",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5"
+          ]
+        },
+        {
+          "path": "DMCSR.R89",
+          "bytes": 80911,
+          "sha256": "085edb2f2c67ae323343d9efedd7c731778f5fbb8dc59ed8bd6560006b45da75"
+        },
+        {
+          "path": "DMVID.DOC",
+          "bytes": 1843,
+          "sha256": "dc29fcfffceb4db7be313896c08fed47217b157a7860480bbf68a30c95147474"
+        },
+        {
+          "path": "INSTALL.EXE",
+          "bytes": 828,
+          "sha256": "ed2e53160e918154edc5dade627d7844882d6db91254c14c4a42b190d9a20a2b"
+        },
+        {
+          "path": "INSTALL.PDM",
+          "bytes": 27235,
+          "sha256": "3b6e8c5c5bb17df419668e8dc523ea07b714fe07fe03e3d4081c9905026c95cc"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm369dks2.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm369dks2.zip",
+      "bytes": 405492,
+      "sha256": "815954bea80b0685a0ff2fcf2c4de558c016e525d1284f513ce4cf636651c140",
+      "file_count": 24,
+      "unpacked_bytes": 675013,
+      "selected_members": [
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 2087,
+          "sha256": "cf4be6cde37d193cedab9e24998a0ad8f0d66bdeb30f983c486e365e075227d8",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5"
+          ]
+        },
+        {
+          "path": "DESKTOP.PDM",
+          "bytes": 72617,
+          "sha256": "c739a8359a7626454e63c08a41639e6d4ed80d4bada4ec76acb459769e3080f5"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm369dks3.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm369dks3.zip",
+      "bytes": 342089,
+      "sha256": "fa64d470630c4f13d830a72cab971be29fb77f8bae2444dbca97133a457d9c3c",
+      "file_count": 33,
+      "unpacked_bytes": 646936,
+      "selected_members": [
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 2087,
+          "sha256": "cf4be6cde37d193cedab9e24998a0ad8f0d66bdeb30f983c486e365e075227d8",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm369dks4.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm369dks4.zip",
+      "bytes": 178166,
+      "sha256": "173e68395fd23380e3340d841002f966352e4855ec9fc9abf85fbd56b1a60e16",
+      "file_count": 21,
+      "unpacked_bytes": 336174,
+      "selected_members": [
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 2087,
+          "sha256": "cf4be6cde37d193cedab9e24998a0ad8f0d66bdeb30f983c486e365e075227d8",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm369dks5.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm369dks5.zip",
+      "bytes": 347417,
+      "sha256": "a5e4e2b246952d51a26a885c71f5116bf6532d4d886a591159fd9473a510416a",
+      "file_count": 47,
+      "unpacked_bytes": 608493,
+      "selected_members": [
+        {
+          "path": "DESKMATE.LBL",
+          "bytes": 2087,
+          "sha256": "cf4be6cde37d193cedab9e24998a0ad8f0d66bdeb30f983c486e365e075227d8",
+          "disk_names": [
+            "DESKMATE 1",
+            "DESKMATE 2",
+            "DESKMATE 3",
+            "DESKMATE 4",
+            "DESKMATE 5"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dm369dks6.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm369dks6.zip",
+      "bytes": 300354,
+      "sha256": "c8241c43ce908c544504f7396f06ca9003d4095710a73cdb606ea347fe0bad65",
+      "file_count": 4,
+      "unpacked_bytes": 356324,
+      "selected_members": [
+        {
+          "path": "README.DOC",
+          "bytes": 4922,
+          "sha256": "401beeee6ab7a2f24394613a59e60c9d69b1c6370ab1a901db361b6414b69f06"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/dos5desk.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dos5desk.zip",
+      "bytes": 8924,
+      "sha256": "878e11caf0f6a7a9ee705d85cd04d644bcb23132750c6d2badcfca3445d40a7c",
+      "file_count": 4,
+      "unpacked_bytes": 16411,
+      "selected_members": [
+        {
+          "path": "README.COM",
+          "bytes": 7759,
+          "sha256": "f706375fd7c925b554cf3d4dbb6408f8ebcdcc27f7b00896895d8ffb6f9952e8"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/drivers.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/drivers.zip",
+      "bytes": 161919,
+      "sha256": "536b1be0dfde95a57c64dc5c76e932bad740ec22bf71955a83ee11de7a5928b0",
+      "file_count": 17,
+      "unpacked_bytes": 258302,
+      "selected_members": []
+    },
+    {
+      "path": "tandy1000/deskmate/f2ddos.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/f2ddos.zip",
+      "bytes": 255409,
+      "sha256": "e887b2c49775775b6585b04cc59197da632d44fbe0015fd41c263708f70ddb25",
+      "file_count": 24,
+      "unpacked_bytes": 404584,
+      "selected_members": [
+        {
+          "path": "DMCSR.R89",
+          "bytes": 80097,
+          "sha256": "8139d20e151647cae75fdcd3476c497deb87cd1f2f3be38492311147961100f8"
+        },
+        {
+          "path": "DMVID.DOC",
+          "bytes": 1843,
+          "sha256": "dc29fcfffceb4db7be313896c08fed47217b157a7860480bbf68a30c95147474"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/macros.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/macros.zip",
+      "bytes": 207197,
+      "sha256": "c48145e80e8a3188d6aa1709c1c18d139de0da0c62e67ece4f24f16f6775f34b",
+      "file_count": 21,
+      "unpacked_bytes": 350711,
+      "selected_members": [
+        {
+          "path": "INSTALL.EXE",
+          "bytes": 15974,
+          "sha256": "ba1ebbbdbf74383e9883ee966308e4037ce139d5bb948f60507eba936adfd1bd",
+          "markers": [
+            "DESKMATE$03.01 891207$",
+            "Version: 03.03.01"
+          ]
+        },
+        {
+          "path": "INSTALL.PDM",
+          "bytes": 28139,
+          "sha256": "d3a41d29a800b84cd50fe1c0903bd70b3415e2e06246968e524d8e6d8905188c"
+        },
+        {
+          "path": "README.DOC",
+          "bytes": 7792,
+          "sha256": "c552c07a03012ec376d3a18c3945f60199e694d4dc7d61262da243728ea08135"
+        },
+        {
+          "path": "DMCSR.R89",
+          "bytes": 80097,
+          "sha256": "8139d20e151647cae75fdcd3476c497deb87cd1f2f3be38492311147961100f8"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/deskmate/pdm2.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/pdm2.zip",
+      "bytes": 397389,
+      "sha256": "74c86fd7173fbd32ac7b5d7727a59e547e67ffa8257e72138ce4e30921c36833",
+      "file_count": 35,
+      "unpacked_bytes": 693415,
+      "selected_members": [
+        {
+          "path": "CALENDAR.PDM",
+          "bytes": 51236,
+          "sha256": "689577ce84f677b62f3d58a94a67654516635c5a0d44fac8e8099e4e8084a552"
+        },
+        {
+          "path": "DESK.EXE",
+          "bytes": 7685,
+          "sha256": "1bfa0cf19c46f5e99a6fd6d689c3daff483c2787bd8038d74c583244d5a6f3f6",
+          "markers": [
+            "Version: 01.00.00"
+          ]
+        },
+        {
+          "path": "DMCSR.MOD",
+          "bytes": 57203,
+          "sha256": "fa17df00816a302fcc12bfdedbb9a2b48a80de3db2935c0c1836b4492e8d56aa"
+        },
+        {
+          "path": "MUSIC.PDM",
+          "bytes": 75648,
+          "sha256": "78a33027a271cdcf16d6c6f43220a0b31fdb83875c40e8b6b9491d77052896db"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/1000SL2D.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/1000SL2D.zip",
+      "bytes": 3969557,
+      "sha256": "516cb60ddad983cb1dd9d6ae1b496cdcd19b747d08c7566f52aa43a1e97c17ed",
+      "file_count": 6,
+      "unpacked_bytes": 5487227,
+      "selected_members": [
+        {
+          "path": "1000SL2D/DM1.IMG",
+          "bytes": 737280,
+          "sha256": "ad7dd60348c5f734a4eaaacbc2906eff0087e208e5e9e6e987b0626d39af50bc",
+          "format": "raw FAT",
+          "fat_label": "DESKMATE_1",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "INSTALL.PDM",
+              "bytes": 16745,
+              "sha256": "ab486e6b98af0d79fcd044f1774ea1d759d0efdafea5c344c45e4f6296dd1abb"
+            },
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 1344,
+              "sha256": "d63ad8aa87c34b648e6da847d82409750c090ab828f3a43ecba8daab3cbc568d"
+            }
+          ]
+        },
+        {
+          "path": "1000SL2D/DM2.IMG",
+          "bytes": 737280,
+          "sha256": "7d298875b22d0c4cd50d4a05a61492a505e9545a84595295727a8b26200fcc65",
+          "format": "raw FAT",
+          "fat_label": "DESKMATE_2",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "CALENDAR.PDM",
+              "bytes": 72211,
+              "sha256": "53f780566d0966317db0693e6e0932052aa637a1146fe4999aefc25b905ce8ee"
+            },
+            {
+              "path": "PERSONAL.CAL",
+              "bytes": 6144,
+              "sha256": "c556b7f57102fc5432ce926317c8c0aa95cf8992d7fb64a72e2f270e4c517890"
+            },
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 1344,
+              "sha256": "d63ad8aa87c34b648e6da847d82409750c090ab828f3a43ecba8daab3cbc568d"
+            }
+          ]
+        },
+        {
+          "path": "1000SL2D/DM3.IMG",
+          "bytes": 737280,
+          "sha256": "a3df72488b13f9bf7f59e3d95a00e5afdb596edfb8d5fca539262ae76e73dc4a",
+          "format": "raw FAT",
+          "fat_label": "DESKMATE_3",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "MUSIC.PDM",
+              "bytes": 63107,
+              "sha256": "18da974be05b4daf09aeaf74a73d602de118bc8e04a9fb88cc0fe9acf403bf45"
+            },
+            {
+              "path": "SOUND.PDM",
+              "bytes": 76779,
+              "sha256": "b6197dd65bb7c51fdb2a11a4e9c97c352be5763ab1d1926716e54ecdd44cdd25"
+            },
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 1344,
+              "sha256": "d63ad8aa87c34b648e6da847d82409750c090ab828f3a43ecba8daab3cbc568d"
+            }
+          ]
+        },
+        {
+          "path": "1000SL2D/DOS33.IMG",
+          "bytes": 737280,
+          "sha256": "a483df25609610be2dc4c4e129d9df0f55e60af08a1679630ddf310d009ff99a",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 21269,
+              "sha256": "2a292f48b6343e401c8c84b83b457a7555244acd370ff8febddec02a913dbbd3",
+              "markers": [
+                "Version 3.30.22"
+              ]
+            }
+          ]
+        },
+        {
+          "path": "1000SL2D/README.TXT",
+          "bytes": 397,
+          "sha256": "91eb6802b78df92ad77c7d6011051897eb50b91cd9d0b298af10b3856b5b5b07"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d1000.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000.zip",
+      "bytes": 297464,
+      "sha256": "4c4a7ae8d76c994d9ec978ddb35ebdb5c7ce14c0d7b77a96ed861672ef74387b",
+      "file_count": 3,
+      "unpacked_bytes": 737436,
+      "selected_members": [
+        {
+          "path": "MSDOS.DSK",
+          "bytes": 368640,
+          "sha256": "14287d75a5581270af4e055a2697f07e6ab845f2c2097b516086398c7205e7fd",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IO.SYS",
+              "bytes": 5717,
+              "sha256": "27429815a747d56ec620a63bbc9e52ed48ef63950da18e11e12ae4540e56c29b"
+            },
+            {
+              "path": "README.DOC",
+              "bytes": 9192,
+              "sha256": "b89113466dc58e5934bdfe71b88fb86a7bf53d47298bdf84feee7b463eb80e5b"
+            }
+          ]
+        },
+        {
+          "path": "DESKMATE.DSK",
+          "bytes": 368640,
+          "sha256": "801f65a5f50abe9cd4b26faccbf82d60739285788e0389a035c1adcba60ff2be",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESK.EXE",
+              "bytes": 26065,
+              "sha256": "e12f5dce41f024b3c770416fa5d599273b295fc883e0bed1a031734a232e6667",
+              "markers": [
+                "Version 01.01.00"
+              ]
+            },
+            {
+              "path": "README.DOC",
+              "bytes": 2136,
+              "sha256": "f102ba3c908e42e83a1d6ec8a850153635def7857fc56a4649036a2740f67fa9"
+            }
+          ]
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 156,
+          "sha256": "227c6771f66187813d9bb18728f5e6ba71ef99f99e8d489eb64e341bb0fba8b5"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d1000ex.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000ex.zip",
+      "bytes": 499069,
+      "sha256": "1ee318543b32c4bcffbb3466f890d2c4e6ec0bba6161df35a74273e19a393a51",
+      "file_count": 4,
+      "unpacked_bytes": 1106139,
+      "selected_members": [
+        {
+          "path": "MSDOS.DSK",
+          "bytes": 368640,
+          "sha256": "b1ec150fea5d6caf2d2aa72a392b13a3332534ce974514808d274b2623e52bca",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IO.SYS",
+              "bytes": 5765,
+              "sha256": "f62aa76523455ad36ba12a9fab29359680b1d7c186e3f775d409b2dc6b1e53f3"
+            }
+          ]
+        },
+        {
+          "path": "PDDISK1.DSK",
+          "bytes": 368640,
+          "sha256": "d13f0c1b9b80986f35650cda9d6ecde576dc85e28be15f6f0cc375005a72b45d",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESK.EXE",
+              "bytes": 7002,
+              "sha256": "00f685982f6fd37c0b2d10907a12c3f764a588cab171fe82abeb1019535191b6",
+              "markers": [
+                "Version: 01.01.00"
+              ]
+            },
+            {
+              "path": "INSTALL.EXE",
+              "bytes": 6112,
+              "sha256": "aa6d53a577eefa74c212f543208a09e1601e34cbf91f936b582e1d4f3170bc9c"
+            }
+          ]
+        },
+        {
+          "path": "PDDISK2.DSK",
+          "bytes": 368640,
+          "sha256": "57e5061a84b31006f5be69fac76aafc88c82163d6adf29bfabe7541fc9293567",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": []
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 219,
+          "sha256": "d9d2028553b0ab801c8cef846c4ba49a5083af800638ba2fcf637dbe7ef2d5d9"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d1000hx.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000hx.zip",
+      "bytes": 206254,
+      "sha256": "70d09ffe398fab3f2e9ee2944efb9ac07f32e676987dc4661dcbcb18b14ae461",
+      "file_count": 2,
+      "unpacked_bytes": 356812,
+      "selected_members": [
+        {
+          "path": "HXORIG.IMD",
+          "bytes": 356720,
+          "sha256": "755a728add7cb68131c648eefe38aeaa4acd8abb961b76a67f98ef30e56bb3e1",
+          "format": "ImageDisk"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d1000rl.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000rl.zip",
+      "bytes": 2043853,
+      "sha256": "4f3eb5325298046ec3c7d3667fdd622f39bf49225fb9dc63028c545f845937bb",
+      "file_count": 7,
+      "unpacked_bytes": 4424243,
+      "selected_members": [
+        {
+          "path": "MSDOS.DSK",
+          "bytes": 737280,
+          "sha256": "0e14e6136d13a4ca614093bf0d5dde54cf57848b807d34549f371f2574b7371b",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 21221,
+              "sha256": "fe8e5087cb835569b43a4b39aafb3e43ea626ec2f43c2de8f25dfb45fbcbd5e1",
+              "markers": [
+                "Version 3.30.22"
+              ]
+            },
+            {
+              "path": "INSTALL.PDM",
+              "bytes": 20597,
+              "sha256": "ee1a7e057d019f61e60fb4f9af2d526a95765c3d4328b83315cb5ec3d7011134"
+            }
+          ]
+        },
+        {
+          "path": "DM1.DSK",
+          "bytes": 737280,
+          "sha256": "5fcd12479365d99579881316f49fbd4950e41489c0e8834074c2f64e348bbf30",
+          "format": "raw FAT",
+          "fat_label": "DESKMATE_1",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 2173,
+              "sha256": "dcdd317fcdbc864784b97df7edd9b17e0783bfe23c6ab91d8c49a05539f974c0"
+            },
+            {
+              "path": "INSTALL.PDM",
+              "bytes": 27109,
+              "sha256": "8e6b50556e744c3e4cf7d8fc6817bf689dc10d370effa70b1cd811fa096eb32a"
+            }
+          ]
+        },
+        {
+          "path": "DM2.DSK",
+          "bytes": 737280,
+          "sha256": "9a557108133e13f4a38cfd821c70fbd15e3b6e68396a9a7c8afe696012e31d63",
+          "format": "raw FAT",
+          "fat_label": "DESKMATE_2",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 2173,
+              "sha256": "dcdd317fcdbc864784b97df7edd9b17e0783bfe23c6ab91d8c49a05539f974c0"
+            },
+            {
+              "path": "MUSIC.PDM",
+              "bytes": 63141,
+              "sha256": "f37751358519b290a51e805426d13ea378eb3b97f839e15bdf3dc42916b3cfc0"
+            },
+            {
+              "path": "SOUND.PDM",
+              "bytes": 76827,
+              "sha256": "9651b3bc800adca1eb5248dabb2dfac7e338714d1aa4a10d440b7f2f9556b0fb"
+            }
+          ]
+        },
+        {
+          "path": "DM3.DSK",
+          "bytes": 737280,
+          "sha256": "f3cd7599550868ea98d01078de80ed7ea5fcadad4a67dcfb49a573a4db296551",
+          "format": "raw FAT",
+          "fat_label": "KITCHEN",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 2173,
+              "sha256": "dcdd317fcdbc864784b97df7edd9b17e0783bfe23c6ab91d8c49a05539f974c0"
+            }
+          ]
+        },
+        {
+          "path": "DM4.DSK",
+          "bytes": 737280,
+          "sha256": "9f5cb3345a731ddc9adaef122004b6ef73ad7f2eda94b6546aa87e64a683f1ae",
+          "format": "raw FAT",
+          "fat_label": "FINANCE",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 2173,
+              "sha256": "dcdd317fcdbc864784b97df7edd9b17e0783bfe23c6ab91d8c49a05539f974c0"
+            }
+          ]
+        },
+        {
+          "path": "DM5.DSK",
+          "bytes": 737280,
+          "sha256": "6dd6c99fd3e48c97e0b1f13f06d7656f2b0fb971177db7aedd9cf8f790701761",
+          "format": "raw FAT",
+          "fat_label": "PERSONAL",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 2173,
+              "sha256": "dcdd317fcdbc864784b97df7edd9b17e0783bfe23c6ab91d8c49a05539f974c0"
+            }
+          ]
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 563,
+          "sha256": "c1a376e526d1f9ca26089ac0ac3598063d3326d7e73556565c57375790b5dc9f"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d1000rl_alternates.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000rl_alternates.zip",
+      "bytes": 2121627,
+      "sha256": "48546ded27b7f7ad039cf9e3410d57b38ee5c6a023b0ce2337ab70695f193f5f",
+      "file_count": 7,
+      "unpacked_bytes": 5160960,
+      "selected_members": [
+        {
+          "path": "1000rl_smartdrive.IMA",
+          "bytes": 737280,
+          "sha256": "77110d0decfa837ee9a04340435f15279c658d2dc8111f66e4250957f530430b",
+          "format": "raw FAT",
+          "fat_label": "BACKUP",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 21221,
+              "sha256": "fe8e5087cb835569b43a4b39aafb3e43ea626ec2f43c2de8f25dfb45fbcbd5e1",
+              "markers": [
+                "Version 3.30.22"
+              ]
+            }
+          ]
+        },
+        {
+          "path": "1000rl_deskmate1.IMA",
+          "bytes": 737280,
+          "sha256": "5fcd12479365d99579881316f49fbd4950e41489c0e8834074c2f64e348bbf30",
+          "format": "raw FAT",
+          "fat_label": "DESKMATE_1",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 2173,
+              "sha256": "dcdd317fcdbc864784b97df7edd9b17e0783bfe23c6ab91d8c49a05539f974c0"
+            },
+            {
+              "path": "INSTALL.PDM",
+              "bytes": 27109,
+              "sha256": "8e6b50556e744c3e4cf7d8fc6817bf689dc10d370effa70b1cd811fa096eb32a"
+            }
+          ]
+        },
+        {
+          "path": "1000rl_deskmate2.IMA",
+          "bytes": 737280,
+          "sha256": "9a557108133e13f4a38cfd821c70fbd15e3b6e68396a9a7c8afe696012e31d63",
+          "format": "raw FAT",
+          "fat_label": "DESKMATE_2",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 2173,
+              "sha256": "dcdd317fcdbc864784b97df7edd9b17e0783bfe23c6ab91d8c49a05539f974c0"
+            },
+            {
+              "path": "MUSIC.PDM",
+              "bytes": 63141,
+              "sha256": "f37751358519b290a51e805426d13ea378eb3b97f839e15bdf3dc42916b3cfc0"
+            },
+            {
+              "path": "SOUND.PDM",
+              "bytes": 76827,
+              "sha256": "9651b3bc800adca1eb5248dabb2dfac7e338714d1aa4a10d440b7f2f9556b0fb"
+            }
+          ]
+        },
+        {
+          "path": "1000rl_deskmate3.IMA",
+          "bytes": 737280,
+          "sha256": "882cc666a0d8a1563518d15ace555c712cff4931081190095b7d9a700ef8bfbb",
+          "format": "raw FAT",
+          "fat_label": "KITCHEN",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 2173,
+              "sha256": "dcdd317fcdbc864784b97df7edd9b17e0783bfe23c6ab91d8c49a05539f974c0"
+            }
+          ]
+        },
+        {
+          "path": "1000rl_deskmate4.IMA",
+          "bytes": 737280,
+          "sha256": "9f5cb3345a731ddc9adaef122004b6ef73ad7f2eda94b6546aa87e64a683f1ae",
+          "format": "raw FAT",
+          "fat_label": "FINANCE",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 2173,
+              "sha256": "dcdd317fcdbc864784b97df7edd9b17e0783bfe23c6ab91d8c49a05539f974c0"
+            }
+          ]
+        },
+        {
+          "path": "1000rl_deskmate5.IMA",
+          "bytes": 737280,
+          "sha256": "68af56854880eade563b245580bb21c6ae48b6f3d44b7136ef8624463539d801",
+          "format": "raw FAT",
+          "fat_label": "PERSONAL",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 2173,
+              "sha256": "dcdd317fcdbc864784b97df7edd9b17e0783bfe23c6ab91d8c49a05539f974c0"
+            }
+          ]
+        },
+        {
+          "path": "1000rl_dos_basic.IMA",
+          "bytes": 737280,
+          "sha256": "7ce2115fb0468fdbc2247a3f3928e508ca7be2b50ca8a09511acf34ad87e7ea2",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 21221,
+              "sha256": "fe8e5087cb835569b43a4b39aafb3e43ea626ec2f43c2de8f25dfb45fbcbd5e1",
+              "markers": [
+                "Version 3.30.22"
+              ]
+            },
+            {
+              "path": "INSTALL.PDM",
+              "bytes": 20597,
+              "sha256": "ee1a7e057d019f61e60fb4f9af2d526a95765c3d4328b83315cb5ec3d7011134"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d1000rlx.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000rlx.zip",
+      "bytes": 366493,
+      "sha256": "9eeba8ca29b63cb98df58f204efb51141ae20800a497a0a2a6e1fb2024476f4c",
+      "file_count": 2,
+      "unpacked_bytes": 1474885,
+      "selected_members": [
+        {
+          "path": "DOSBASIC.DSK",
+          "bytes": 1474560,
+          "sha256": "c4d882bce04e32d28b076c3061c59f6b6f132ebe83129b9228a932868e2e6229",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 22294,
+              "sha256": "1d4fe85a419d60a8b40645676d2b032fd6ee4fdd11af4f0f486771a1ae2b4eef",
+              "markers": [
+                "Version 3.30.23"
+              ]
+            },
+            {
+              "path": "INSTALL.PDM",
+              "bytes": 20291,
+              "sha256": "97062a73e3f19760c17865712a1f0734b0eae74017f635999c924b2eb0f34f39"
+            },
+            {
+              "path": "SETUPRLX.EXE",
+              "bytes": 26043,
+              "sha256": "0743f14156731629234adaf457b24c4b1eec03e8317d8b6a13b9377eb52b8d99"
+            },
+            {
+              "path": "SETUP.BAT",
+              "bytes": 21,
+              "sha256": "4ba44d9caf45a025cc97e17fe0c591360552545fe2c73ed50feda789910db350"
+            }
+          ]
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 325,
+          "sha256": "829828d3cbdb5616a1c96db7acbcf648b4e61e50270011dfdd20737b7b8c9feb"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d1000sl.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000sl.zip",
+      "bytes": 346087,
+      "sha256": "bfd5dd059b60dd809c536a468c007c90d70a579db92eab01ee4c17cb9f6eed14",
+      "file_count": 3,
+      "unpacked_bytes": 737667,
+      "selected_members": [
+        {
+          "path": "DISK1.DSK",
+          "bytes": 368640,
+          "sha256": "77590c7e0d654c12c4983f112a8d395cf949b1e1eaa00eac59d0c2945e7964a1",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 21253,
+              "sha256": "7ba235a9e35d5258816b73d6fee834bf19ee2551365bd899e61b70dec2ec4a33",
+              "markers": [
+                "Version 03.30.20",
+                "Version 3.30"
+              ]
+            }
+          ]
+        },
+        {
+          "path": "DISK2.DSK",
+          "bytes": 368640,
+          "sha256": "4babcb501c21a839e443386f28f558126d9f2bcb026a6181b4a79fb49c524653",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": []
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 387,
+          "sha256": "8e7e8d263e12e6e6763bfb0a50ece348dbaed0aa7d7f43a3fd24a3c8dc8c5fdb"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d1000sx.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000sx.zip",
+      "bytes": 440262,
+      "sha256": "a4c294232aa1a0b6272441a08617f753eefe3ad0b248b4dbc0f82f2eee2fcd44",
+      "file_count": 5,
+      "unpacked_bytes": 1474926,
+      "selected_members": [
+        {
+          "path": "DISK3.DSK",
+          "bytes": 368640,
+          "sha256": "1ee432d7b0a3dcf72bef91036a131676203cb8a1949bb11f378b820242b65f1b",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESK.EXE",
+              "bytes": 27192,
+              "sha256": "d0a00742f352538ad0de880d28c03bbd3c00f008a80a08a83657c4364662201d",
+              "markers": [
+                "Version 01.00.00"
+              ]
+            }
+          ]
+        },
+        {
+          "path": "DISK2.DSK",
+          "bytes": 368640,
+          "sha256": "9780a47fcf87d6d565560b617e8b76231a7fcf3740f6a9a6bd63ca0bf72c73c5",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": []
+        },
+        {
+          "path": "DISK1.DSK",
+          "bytes": 368640,
+          "sha256": "c21cdefbdce8f1ae8a1edddcba594429b320d57fb5cb3a75af969461022c1dd3",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 16605,
+              "sha256": "717cdbb2827fc01d5e6b3fcc1a50b9567f6bd02737b8831e9064ce1655c497c0",
+              "markers": [
+                "Version 3.20",
+                "version 03.20.02"
+              ]
+            }
+          ]
+        },
+        {
+          "path": "DISK4.DSK",
+          "bytes": 368640,
+          "sha256": "bfb0e63613918d7654a326e1bbaedd318fa87f677eb10090ba28b03af8dfa297",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": []
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 366,
+          "sha256": "9c51b75428700036beb1a6832a83b6f49af6f46d1a2be792d3c80f0aeb203d42"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d1000tl.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000tl.zip",
+      "bytes": 1076751,
+      "sha256": "3fb467c7c76ee1baf6a3abb5b89b364adcc309336388bb6d68ad416c50404beb",
+      "file_count": 4,
+      "unpacked_bytes": 2212240,
+      "selected_members": [
+        {
+          "path": "TLDISK1.DSK",
+          "bytes": 737280,
+          "sha256": "e781310d33e62efb95e3088c940a2a7b7f54bbae2cf0a9559d21521a0de4dc2e",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 21253,
+              "sha256": "7ba235a9e35d5258816b73d6fee834bf19ee2551365bd899e61b70dec2ec4a33",
+              "markers": [
+                "Version 03.30.20",
+                "Version 3.30"
+              ]
+            }
+          ]
+        },
+        {
+          "path": "TLDISK2.DSK",
+          "bytes": 737280,
+          "sha256": "76656661324fd5af66941f521d51efc97fecad5050dd3ad8706e23f464daca13",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "CALENDAR.PDM",
+              "bytes": 72763,
+              "sha256": "ff31a516a673ce8696a670501f5f30c8c555e98d06c425a3bffa6036981f8efd"
+            },
+            {
+              "path": "PERSONAL.CAL",
+              "bytes": 6144,
+              "sha256": "ca6a082abb3a014fc40e302ab297fce00d33ffcbfa78edef7d9a2a460737c269"
+            }
+          ]
+        },
+        {
+          "path": "TLDISK3.DSK",
+          "bytes": 737280,
+          "sha256": "f295bc5bf6527525edb3ac72f3267339fbe6342c23faacba83a323ea64af6d1c",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "SOUND.PDM",
+              "bytes": 45571,
+              "sha256": "78afe5f6a4644f2bb2fc7e18025524c0ea3c8e1e7949e2e9bc71d9379532fb11"
+            },
+            {
+              "path": "MUSIC.PDM",
+              "bytes": 83258,
+              "sha256": "d2e3c33ea3904b36c089e07b2d22ec8f0022eb8cee3acd5efa8d591eff236169"
+            }
+          ]
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 400,
+          "sha256": "96cc82309429f3cce1d339277f2a104dc82b8068ae9cd2934e92be6307b13252"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d1000tl2.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000tl2.zip",
+      "bytes": 1425759,
+      "sha256": "085c7e7d505387a68e9c1efaa32dc72236636a58cb712197114aa4f182810b51",
+      "file_count": 5,
+      "unpacked_bytes": 2949592,
+      "selected_members": [
+        {
+          "path": "DISK1.DSK",
+          "bytes": 737280,
+          "sha256": "ed70381427557e9174df3c612921b55947289ccaf9eaf60ce23bc3492622206e",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 21269,
+              "sha256": "2a292f48b6343e401c8c84b83b457a7555244acd370ff8febddec02a913dbbd3",
+              "markers": [
+                "Version 3.30.22"
+              ]
+            }
+          ]
+        },
+        {
+          "path": "DISK2.DSK",
+          "bytes": 737280,
+          "sha256": "104f0982e8fdcf34a37f888d9969b365775160293b6ca08d795b9627fb27b1b5",
+          "format": "raw FAT",
+          "fat_label": "DESKMATE_1",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "INSTALL.PDM",
+              "bytes": 16745,
+              "sha256": "ab486e6b98af0d79fcd044f1774ea1d759d0efdafea5c344c45e4f6296dd1abb"
+            },
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 1344,
+              "sha256": "d63ad8aa87c34b648e6da847d82409750c090ab828f3a43ecba8daab3cbc568d"
+            }
+          ]
+        },
+        {
+          "path": "DISK3.DSK",
+          "bytes": 737280,
+          "sha256": "7d298875b22d0c4cd50d4a05a61492a505e9545a84595295727a8b26200fcc65",
+          "format": "raw FAT",
+          "fat_label": "DESKMATE_2",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "CALENDAR.PDM",
+              "bytes": 72211,
+              "sha256": "53f780566d0966317db0693e6e0932052aa637a1146fe4999aefc25b905ce8ee"
+            },
+            {
+              "path": "PERSONAL.CAL",
+              "bytes": 6144,
+              "sha256": "c556b7f57102fc5432ce926317c8c0aa95cf8992d7fb64a72e2f270e4c517890"
+            },
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 1344,
+              "sha256": "d63ad8aa87c34b648e6da847d82409750c090ab828f3a43ecba8daab3cbc568d"
+            }
+          ]
+        },
+        {
+          "path": "DISK4.DSK",
+          "bytes": 737280,
+          "sha256": "a3df72488b13f9bf7f59e3d95a00e5afdb596edfb8d5fca539262ae76e73dc4a",
+          "format": "raw FAT",
+          "fat_label": "DESKMATE_3",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "MUSIC.PDM",
+              "bytes": 63107,
+              "sha256": "18da974be05b4daf09aeaf74a73d602de118bc8e04a9fb88cc0fe9acf403bf45"
+            },
+            {
+              "path": "SOUND.PDM",
+              "bytes": 76779,
+              "sha256": "b6197dd65bb7c51fdb2a11a4e9c97c352be5763ab1d1926716e54ecdd44cdd25"
+            },
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 1344,
+              "sha256": "d63ad8aa87c34b648e6da847d82409750c090ab828f3a43ecba8daab3cbc568d"
+            }
+          ]
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 472,
+          "sha256": "e3f64efb536cd34104f841be1e580f813b1d22ad8d9c248c99de963aa87c9869"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d1000tx.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000tx.zip",
+      "bytes": 333412,
+      "sha256": "53c12a51d5be9478f384860b8289bea254c8dabb064db9936a0252835bb39a32",
+      "file_count": 2,
+      "unpacked_bytes": 737492,
+      "selected_members": [
+        {
+          "path": "MSDOS.DSK",
+          "bytes": 737280,
+          "sha256": "10a09a833f6c90e28e3376bcf2872f78ffe16d29ece1a71c9e55e2b1beeb5408",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 14733,
+              "sha256": "3bcc9d95259461caa23defdfa99e532a98b923d0c958a22d46c59495ce11bfce",
+              "markers": [
+                "Version 3.20",
+                "version 03.20.21"
+              ]
+            }
+          ]
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 212,
+          "sha256": "0b84280b8433280519391e1b4561f2e1304b3ab018b30f5e88aa9d70ecb9a5d9"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d1100fd.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1100fd.zip",
+      "bytes": 1300833,
+      "sha256": "48afe66d4de8510949d245bac5fbe51ca59f9a536ec97abeb883bd832ee784c6",
+      "file_count": 5,
+      "unpacked_bytes": 2949342,
+      "selected_members": [
+        {
+          "path": "DOSGWB.DSK",
+          "bytes": 737280,
+          "sha256": "7fb5215db100a1209faedc5bf67553a829d5c6afefa8164a83ae166c5b496a24",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 21269,
+              "sha256": "6324a3b2bd7e599db92ff47e579ab15821a48dc473498ce69f47cb16d722350f",
+              "markers": [
+                "Version 3.30.40"
+              ]
+            },
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 1052,
+              "sha256": "94d64e54197d25994e3cc996cb31608c42f211c8aab9b10326af57625124057b"
+            }
+          ]
+        },
+        {
+          "path": "DESK1.DSK",
+          "bytes": 737280,
+          "sha256": "1cef7a514abe08ff4eb2e2397b0cb9492d7fe19b6cbc413c74e736a9925e2fe3",
+          "format": "raw FAT",
+          "fat_label": "DESKMATE_1",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 1052,
+              "sha256": "94d64e54197d25994e3cc996cb31608c42f211c8aab9b10326af57625124057b"
+            }
+          ]
+        },
+        {
+          "path": "DESK2.DSK",
+          "bytes": 737280,
+          "sha256": "48d0d424a60ca50932cd0208a291997e7e7eb9eb21cf6cb2ed81d22535e6cdf5",
+          "format": "raw FAT",
+          "fat_label": "DESKMATE_2",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "CALENDAR.PDM",
+              "bytes": 72211,
+              "sha256": "53f780566d0966317db0693e6e0932052aa637a1146fe4999aefc25b905ce8ee"
+            },
+            {
+              "path": "PERSONAL.CAL",
+              "bytes": 6144,
+              "sha256": "9fc202fd05012cfdb7e43e480cfd6cc43158880dbb7e8f40a550c0949c4b42e5"
+            },
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 1052,
+              "sha256": "94d64e54197d25994e3cc996cb31608c42f211c8aab9b10326af57625124057b"
+            }
+          ]
+        },
+        {
+          "path": "EMSDRV.DSK",
+          "bytes": 737280,
+          "sha256": "988697271d78b7ec4b19053ed2be6f7423f92a60b33e75c7bc2d6602fd330398",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": []
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 222,
+          "sha256": "1fbf75ab222cb4da0b9952b3a09cc1709f873bcb7ee22f8a2158f45c272264ab"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d2500nl.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d2500nl.zip",
+      "bytes": 363756,
+      "sha256": "b9115f514f29a694904660d1766c1d4ee98c86530155ddf2c3fbe07bf3f93f77",
+      "file_count": 2,
+      "unpacked_bytes": 737401,
+      "selected_members": [
+        {
+          "path": "MSDOS.DSK",
+          "bytes": 737280,
+          "sha256": "a262ea1d4bd02eb5f3941f4498b240bf7d4c3ba854ee799c3b1fdd8989bcd50d",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 22294,
+              "sha256": "26b520bd349b691869b69ac67e7771e9e0afe5de00e5eb0281ffb93dc1e2937e",
+              "markers": [
+                "Version 3.30.10"
+              ]
+            }
+          ]
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 121,
+          "sha256": "5e1236aa3ec1eaf3e310b9f994ef63add2359daa0dc43084a2de804c624f33de"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d3000.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d3000.zip",
+      "bytes": 335713,
+      "sha256": "1257c16bdd7dd0fddf549833e97cd92c588df64539643fbb44e96114cbcf4b0e",
+      "file_count": 4,
+      "unpacked_bytes": 1106172,
+      "selected_members": [
+        {
+          "path": "MSDOS1.DSK",
+          "bytes": 368640,
+          "sha256": "a6e2593763ee8cb751c7397ac2481a79c852aa9486d834c2d8d6d77321e63c98",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 16557,
+              "sha256": "ff2161c3b3409d6e765885629233b96633a4e4324324e49b6ff066a76a324a0c",
+              "markers": [
+                "Version 3.20",
+                "version 03.20.01"
+              ]
+            }
+          ]
+        },
+        {
+          "path": "MSDOS2.DSK",
+          "bytes": 368640,
+          "sha256": "3979779b184c3be774f0ce63eaf6e3259812154964160763314fc3ade3dc7501",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": []
+        },
+        {
+          "path": "UTILITYS.DSK",
+          "bytes": 368640,
+          "sha256": "9b94d3e7cd938b98b541b3ca338f912cca6b5de5df2fd40dfb1f82676025adf9",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IO.SYS",
+              "bytes": 3244,
+              "sha256": "a22da9edd7f21e600973881fee0f9a0bd5e3a0edb67f4cd265e62fb8f926fa7e"
+            }
+          ]
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 252,
+          "sha256": "5f361ae03ef0e2cfc8ee7a1a2dc9c0619d366f605f2957d76b1c3c58081cd358"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d3000nl.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d3000nl.zip",
+      "bytes": 388317,
+      "sha256": "cc06dd7a961b20da89c9a99f8d0e431d93ac3fc78a513203aea95485323c10f8",
+      "file_count": 3,
+      "unpacked_bytes": 1474956,
+      "selected_members": [
+        {
+          "path": "MSDOS.DSK",
+          "bytes": 737280,
+          "sha256": "1cdf0616e992898c7fa1b0b826e42e74dcaa6038f08c12858bf6857bbba45c1b",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 22213,
+              "sha256": "54c4349276bf714f90dfe81fe7b47b5a262a1843126fe9ef24d6020fff729301",
+              "markers": [
+                "Version 03.30.00",
+                "Version 3.30"
+              ]
+            }
+          ]
+        },
+        {
+          "path": "UTILITYS.DSK",
+          "bytes": 737280,
+          "sha256": "30250f07d9b6c9d72680ccf7a2b3395d685b575f35ba1218ad8232e6c1028e74",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IO.SYS",
+              "bytes": 3724,
+              "sha256": "484cda8e582367b21cdf00311370e41134a6a87ffc872e8bba00c85253cfb1a4"
+            }
+          ]
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 396,
+          "sha256": "da0c1ed1ec5cfcdd7c01f36debc7536a3d0ac5b5e104bd1dd8dd12d17775e43e"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/d3k4k.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d3k4k.zip",
+      "bytes": 368749,
+      "sha256": "d88278900338ebf3a6a8cc64eca8be9e173e6302d9a1e7ee5fa63fec6fd98bb5",
+      "file_count": 3,
+      "unpacked_bytes": 737507,
+      "selected_members": [
+        {
+          "path": "STARTUP.DSK",
+          "bytes": 368640,
+          "sha256": "397b162a6ab3275cb5aa41d995497a638338538add2b031fcd0b7978dadddf8d",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 22213,
+              "sha256": "54c4349276bf714f90dfe81fe7b47b5a262a1843126fe9ef24d6020fff729301",
+              "markers": [
+                "Version 03.30.00",
+                "Version 3.30"
+              ]
+            }
+          ]
+        },
+        {
+          "path": "OPERTING.DSK",
+          "bytes": 368640,
+          "sha256": "d0220eef3cc70f0a24d4f637782e50578b660f055ce075b8547ecfeede4f4314",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": []
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 227,
+          "sha256": "9f4cc17f95e75bfc500f1883379783f754e4ef36d8e23ef7ee97846ff65d5948"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/dskrlxhd.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/dskrlxhd.zip",
+      "bytes": 2800989,
+      "sha256": "2861c3686583aab79f6cf1c5415585e215ecd92fa6af9b9add8f119c2af64334",
+      "file_count": 3,
+      "unpacked_bytes": 2949166,
+      "selected_members": [
+        {
+          "path": "notes.txt",
+          "bytes": 46,
+          "sha256": "3b0f2a8d41ea7a3ab2e906f22d50f0d1b3dea0ca07b1e59e638dcccfd3b96f70"
+        },
+        {
+          "path": "DESK3431.IMG",
+          "bytes": 1474560,
+          "sha256": "04c5e5c9466d1fff27ed4f7909e22e9f00051cf91cbf8e35109525f6e392ed08",
+          "format": "raw FAT",
+          "fat_label": "DESKMATE_1",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 165,
+              "sha256": "e9f6444608f7bbed882566ab252bb348530f1b61dd7739a0abd86ca973043f6a"
+            },
+            {
+              "path": "INSTALL.PDM",
+              "bytes": 15817,
+              "sha256": "0f36dcfdbab380024e2a2e3b76e08a40830203134322636bf14200f9d2152d62"
+            }
+          ]
+        },
+        {
+          "path": "DESK3432.IMG",
+          "bytes": 1474560,
+          "sha256": "83f45afdce5731f273f8554e068781c02f2fc57de238f768d8799f7a54f219ae",
+          "format": "raw FAT",
+          "fat_label": "DESKMATE_2",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 165,
+              "sha256": "e9f6444608f7bbed882566ab252bb348530f1b61dd7739a0abd86ca973043f6a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/e1000rlx.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/e1000rlx.zip",
+      "bytes": 1476437,
+      "sha256": "a7e27499dea4a900b003d6b388f9b91851ef29be892ff60a4c192e971fd91f34",
+      "file_count": 3,
+      "unpacked_bytes": 2949441,
+      "selected_members": [
+        {
+          "path": "MSDOS2.DSK",
+          "bytes": 1474560,
+          "sha256": "c187413ce6d40c715e49b94001f976d1bb35f7fd6a96aa06745dd620aad2f393",
+          "format": "raw FAT",
+          "fat_label": null,
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "README.TXT",
+              "bytes": 13739,
+              "sha256": "9cc7cc3685618f00e6da4b65355b2083b5a1b782987c079ee42f9a155d1336dd"
+            },
+            {
+              "path": "SETUPRLX.EXE",
+              "bytes": 21979,
+              "sha256": "ab017a1b1dfd3d44366f03c8816e6636ed058b087f53f0e69f8217e69085269c"
+            }
+          ]
+        },
+        {
+          "path": "MSDOS1.DSK",
+          "bytes": 1474560,
+          "sha256": "ad566ffef55afab65e73b7bfd4edd94ff22c062bfdfab92bd70bb0c2884594fe",
+          "format": "raw FAT",
+          "fat_label": "DISK      1",
+          "filesystem": "FAT12",
+          "selected_files": [
+            {
+              "path": "IBMBIO.COM",
+              "bytes": 33510,
+              "sha256": "64a5639a46e764f8f1d34db117d35644318812fa795def82e9a98d08821571a6",
+              "markers": [
+                "Version 5.00",
+                "Version 5.00.00"
+              ]
+            },
+            {
+              "path": "SETUP.EXE",
+              "bytes": 73412,
+              "sha256": "854f33f64f4795b6ea812865a8ecb69ea6905d96ec71998493c7441c45106338",
+              "markers": [
+                "Version 5.00"
+              ]
+            },
+            {
+              "path": "README.1ST",
+              "bytes": 452,
+              "sha256": "a86f0e00869a8a0c21f5c8d4e839f13fc3f6800a25ab6e9c703b75a410eb895c"
+            },
+            {
+              "path": "INSTALL.PDM",
+              "bytes": 11607,
+              "sha256": "0d4236065003b64e2011cea1e25ce25b79f66c643681d5fc336db9e721ed18e2"
+            }
+          ]
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 321,
+          "sha256": "45bd2b7d1f7bffd8629e6f6d4de348b5b1018dc199caca81dd2679882cbe4a0d"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/hxdisks.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/hxdisks.zip",
+      "bytes": 569395,
+      "sha256": "d646aa05344c81284960a5ffc0c52f5f1520fa61411a0d4d124f4130f074c843",
+      "file_count": 3,
+      "unpacked_bytes": 573081,
+      "selected_members": [
+        {
+          "path": "readme.txt",
+          "bytes": 262,
+          "sha256": "2e53b43720a698f94fb762e9dd948ae8fc70b12056ef68a80fffeb751048d521"
+        },
+        {
+          "path": "personal.zip",
+          "bytes": 377747,
+          "sha256": "d6285613d8adaa1e60c2e9503163b8963d312fd20fce82bb72c51eec841bced4",
+          "file_count": 35,
+          "unpacked_bytes": 660758,
+          "members": [
+            {
+              "path": "CALENDAR.PDM",
+              "bytes": 51236,
+              "sha256": "689577ce84f677b62f3d58a94a67654516635c5a0d44fac8e8099e4e8084a552"
+            },
+            {
+              "path": "DESK.EXE",
+              "bytes": 7685,
+              "sha256": "1bfa0cf19c46f5e99a6fd6d689c3daff483c2787bd8038d74c583244d5a6f3f6",
+              "markers": [
+                "Version: 01.00.00"
+              ]
+            },
+            {
+              "path": "DMCSR.MOD",
+              "bytes": 28595,
+              "sha256": "22ec241bc4174b73377a99ac2812a7a0f6571db8d19941836f6a25a34c4b61f4"
+            },
+            {
+              "path": "MUSIC.PDM",
+              "bytes": 75648,
+              "sha256": "78a33027a271cdcf16d6c6f43220a0b31fdb83875c40e8b6b9491d77052896db"
+            }
+          ]
+        },
+        {
+          "path": "msdos.zip",
+          "bytes": 195072,
+          "sha256": "63987652f6469f2fda52d95dc14e8d08eb9c6aeced867c346fdcfd1fe57d8549",
+          "file_count": 41,
+          "unpacked_bytes": 340528,
+          "members": []
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/11fddisk.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/11fddisk.zip",
+      "bytes": 1352160,
+      "sha256": "7887b68dbec3dbad83c3d47138ffbc06f25656e2a2f1332f2d51b6d4cb9017aa",
+      "file_count": 5,
+      "unpacked_bytes": 2277392,
+      "selected_members": [
+        {
+          "path": "README.TXT",
+          "bytes": 338,
+          "sha256": "dbb9ee04990d17e1b5f7e19c30d50b196a2ad9a4ab37f8fe4225859d80f1b38d"
+        },
+        {
+          "path": "DESK1.TD0",
+          "bytes": 634374,
+          "sha256": "2a0e287baccac0d8531e395675cbeb0c17db65702bb3e08b78918da100e78eb2",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "DESK2.TD0",
+          "bytes": 635284,
+          "sha256": "4b72c83990bac651aed0ab2bb520b26e6dc5bc28b73152e85ebfdaf79d51b25d",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "DOSGWB.TD0",
+          "bytes": 643474,
+          "sha256": "1b598143f1d15d7fbfc2e460bedfa6c7dd94da44e717b1ebac38e2c72f4dcf8d",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "EMSDRV.TD0",
+          "bytes": 363922,
+          "sha256": "5eada1ac4135d422a33cb48a95e361928c8ab5e881b0cef71015cb642cd3bd7f",
+          "format": "TeleDisk"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/1kdisks.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/1kdisks.zip",
+      "bytes": 305939,
+      "sha256": "129576b5d508bdfb59e97c36cc50f27c12b85e58a51d257d04a5a20b435d208d",
+      "file_count": 3,
+      "unpacked_bytes": 527634,
+      "selected_members": [
+        {
+          "path": "DESKMATE.TD0",
+          "bytes": 250262,
+          "sha256": "410b2e7cc158610645610c6ae358398397316c2c4f650623c2d94f4748f28e55",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "MSDOS.TD0",
+          "bytes": 277100,
+          "sha256": "609d332ef7d447c42aa626c6c4a004e978e465625a8b1e909a3058b8a74d1a43",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 272,
+          "sha256": "ccf74c669f0a4b48862a6c468377fa931e6e6a587b23159d36f1b9d49751cd79"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/25nldos.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/25nldos.zip",
+      "bytes": 377209,
+      "sha256": "b1919f4dd6151c8692c75e39d744d8a9f0a2d200cd9ab82724679e24d7509bcb",
+      "file_count": 2,
+      "unpacked_bytes": 636868,
+      "selected_members": [
+        {
+          "path": "MSDOS.TD0",
+          "bytes": 636632,
+          "sha256": "28daeef4c06ce4ecb34027e9a71192a12b42370e39c07e0467664b45cdef0306",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 236,
+          "sha256": "96486c5b18cdf9f586a8b74e9098dbc127b845d65c3b24798b524d34f6d0a18b"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/3k4kdos.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/3k4kdos.zip",
+      "bytes": 380775,
+      "sha256": "f57118e3d78fc0b95da06d3e08658ba51fe1ed5a580579d540229207808ff764",
+      "file_count": 3,
+      "unpacked_bytes": 614606,
+      "selected_members": [
+        {
+          "path": "OPERTING.TD0",
+          "bytes": 315312,
+          "sha256": "3324528b978206140aa160311ff7dbe8faef415909418639a3d49eebf7214d48",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 342,
+          "sha256": "2706c0e733012166c5bdfdb4d03ee776ccda7b74e1e5dac0e7b78d0dc99581d1"
+        },
+        {
+          "path": "STARTUP.TD0",
+          "bytes": 298952,
+          "sha256": "f9dc75ef8b5b92fc84867f2948f2133d1ee3c50a51ccae5499dfd73a886693fe",
+          "format": "TeleDisk"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/3kdisks.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/3kdisks.zip",
+      "bytes": 344842,
+      "sha256": "406045274c09f2188cac10a1c6156d62c3a319b51a97bb3d52838876d112436e",
+      "file_count": 4,
+      "unpacked_bytes": 558242,
+      "selected_members": [
+        {
+          "path": "README.TXT",
+          "bytes": 368,
+          "sha256": "9d067d649890bb29f3249570b2c905a4be2649aac8e97cedd39ffaf5fd64a38b"
+        },
+        {
+          "path": "MSDOS1.TD0",
+          "bytes": 298263,
+          "sha256": "5250acb5fb3a8eb230a019532c33f033e1faf584695c21f9158dcc129e41267f",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "MSDOS2.TD0",
+          "bytes": 213424,
+          "sha256": "007d1e8785fd14d8b15ff1a83b4488670cd0b451ed9eb4ee386f2f146e657426",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "UTILITYS.TD0",
+          "bytes": 46187,
+          "sha256": "3434439a46b46bd965ec3c37ee4f38a3bdd125caff99cfab2cbc67e9d6535066",
+          "format": "TeleDisk"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/3knldisk.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/3knldisk.zip",
+      "bytes": 390262,
+      "sha256": "562b6b6cd3e34a951488d05222e4bf7e3a2ed85edb880a170640b1be7de40567",
+      "file_count": 3,
+      "unpacked_bytes": 680131,
+      "selected_members": [
+        {
+          "path": "MSDOS.TD0",
+          "bytes": 591786,
+          "sha256": "1c9eb051090a32dbd83876779f44fec13fbb390884f20e975ad51aacae3573b2",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 513,
+          "sha256": "5832b1a32a6d0949480cc03e2089e10dac7c65397000cd5b5a59bcfb157ccbed"
+        },
+        {
+          "path": "UTILITYS.TD0",
+          "bytes": 87832,
+          "sha256": "c0d3aad86dab0ad4bd47c33caca565c361ef2bdf3658cdd83b09519245e091c1",
+          "format": "TeleDisk"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/exdisks.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/exdisks.zip",
+      "bytes": 517137,
+      "sha256": "4e5ac918f367e5fcfea8b311b8858587beb0ac6b83d8753c008ce1363b15f801",
+      "file_count": 4,
+      "unpacked_bytes": 908591,
+      "selected_members": [
+        {
+          "path": "PDDISK1.TD0",
+          "bytes": 288296,
+          "sha256": "560cd30e9cc91e4ca3778f4321a22ebeef2184f7b51e1fca07d96c0087c8f5d0",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "MSDOS.TD0",
+          "bytes": 288882,
+          "sha256": "eec00ce55d219ec7f66b9d551fe9831872540c313c18d572273fcbc19af9e20f",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "PDDISK2.TD0",
+          "bytes": 331078,
+          "sha256": "81ab5a5e8d17ceef42435eae7bf0b03c8f94bdc86f79d1687789a322eddfe14a",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 335,
+          "sha256": "32c5438c539a3cd6ce71d30c584055fe14ab6e818fc7ab624a5c4be47e53c590"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/hxdisks.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/hxdisks.zip",
+      "bytes": 569395,
+      "sha256": "d646aa05344c81284960a5ffc0c52f5f1520fa61411a0d4d124f4130f074c843",
+      "file_count": 3,
+      "unpacked_bytes": 573081,
+      "selected_members": [
+        {
+          "path": "readme.txt",
+          "bytes": 262,
+          "sha256": "2e53b43720a698f94fb762e9dd948ae8fc70b12056ef68a80fffeb751048d521"
+        },
+        {
+          "path": "personal.zip",
+          "bytes": 377747,
+          "sha256": "d6285613d8adaa1e60c2e9503163b8963d312fd20fce82bb72c51eec841bced4",
+          "file_count": 35,
+          "unpacked_bytes": 660758,
+          "members": [
+            {
+              "path": "CALENDAR.PDM",
+              "bytes": 51236,
+              "sha256": "689577ce84f677b62f3d58a94a67654516635c5a0d44fac8e8099e4e8084a552"
+            },
+            {
+              "path": "DESK.EXE",
+              "bytes": 7685,
+              "sha256": "1bfa0cf19c46f5e99a6fd6d689c3daff483c2787bd8038d74c583244d5a6f3f6",
+              "markers": [
+                "Version: 01.00.00"
+              ]
+            },
+            {
+              "path": "DMCSR.MOD",
+              "bytes": 28595,
+              "sha256": "22ec241bc4174b73377a99ac2812a7a0f6571db8d19941836f6a25a34c4b61f4"
+            },
+            {
+              "path": "MUSIC.PDM",
+              "bytes": 75648,
+              "sha256": "78a33027a271cdcf16d6c6f43220a0b31fdb83875c40e8b6b9491d77052896db"
+            }
+          ]
+        },
+        {
+          "path": "msdos.zip",
+          "bytes": 195072,
+          "sha256": "63987652f6469f2fda52d95dc14e8d08eb9c6aeced867c346fdcfd1fe57d8549",
+          "file_count": 41,
+          "unpacked_bytes": 340528,
+          "members": []
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/rldisks.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/rldisks.zip",
+      "bytes": 2121084,
+      "sha256": "263592c15322c432aa03d23fa0f0a46e75b91c17c43cada08661416af94a0c8d",
+      "file_count": 7,
+      "unpacked_bytes": 3553923,
+      "selected_members": [
+        {
+          "path": "MSDOS.TD0",
+          "bytes": 552373,
+          "sha256": "18b17a820bbcc013fb738f024f338fd64a80ec6851bd9caadb603d0de61e57d0",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "DM1.TD0",
+          "bytes": 621166,
+          "sha256": "e0684ad37aac84d8d43b7dc8446d07b3e7f0464fe23d882607770c014d0794e9",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "DM2.TD0",
+          "bytes": 627928,
+          "sha256": "e0d891913b4ec3f5724ca4534cde9cd4e48c06079d102c4a23d4eb38786e1b3f",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "DM3.TD0",
+          "bytes": 587470,
+          "sha256": "93a0148ee71ff86c7effe5aea55bc89bac4282646b13a666bd37257ef8349261",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "DM4.TD0",
+          "bytes": 571572,
+          "sha256": "924ae0e052c4691a85a424bd38a07ce0672ca16e000e7af8a78dd17be3456c8f",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "DM5.TD0",
+          "bytes": 592734,
+          "sha256": "793a1888365eefc6a5032de681de7398c8d8d91168fcb521fa631adc2284a22a",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 680,
+          "sha256": "5d7f3061383aa3883eb64242b71a2e85d502bfbb3fdb1a22b6ab128b9eb9a9e0"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/rldos.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/rldos.zip",
+      "bytes": 309649,
+      "sha256": "0287f6606c462bc303f59da2153c260e6d2d2f381d399359cd8c74f6b198161a",
+      "file_count": 2,
+      "unpacked_bytes": 484535,
+      "selected_members": [
+        {
+          "path": "MSDOS.TD0",
+          "bytes": 484288,
+          "sha256": "4ac599a161fd4d8db3221a40777d3d4485e22750e8bcc48863dcc60c14bf30da",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 247,
+          "sha256": "43193faf688230455eabd594ee2722ff57607ca8d41eabe443130747c7d48bcc"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/rlxados.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/rlxados.zip",
+      "bytes": 384473,
+      "sha256": "b1e7224ecc3b2bd1097e0314bdb01814da3448bb358431bb6069393b2c2d2986",
+      "file_count": 2,
+      "unpacked_bytes": 636926,
+      "selected_members": [
+        {
+          "path": "DOSBASIC.TD0",
+          "bytes": 636476,
+          "sha256": "2b3a2c6263c7530309bed5a1cfd87a0c655b7a434c5e174f8da877ce6753be82",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 450,
+          "sha256": "5a701badb06accd70c2935ddec581a80a6d97b2afb278ca6b9c517a984e36e95"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/rlxbdos.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/rlxbdos.zip",
+      "bytes": 1516289,
+      "sha256": "253f178f1ef98952cabfc637f44fd70f228eae9d5fbfe4a9bc08b7573dc38198",
+      "file_count": 3,
+      "unpacked_bytes": 2738347,
+      "selected_members": [
+        {
+          "path": "MSDOS1.TD0",
+          "bytes": 1335458,
+          "sha256": "d5a81e750b6133a3ebe3de317d1db453407439d4ff8b1daada2fd12eb7f8d52f",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "MSDOS2.TD0",
+          "bytes": 1402452,
+          "sha256": "8da73628d50e9fd61553f6d77d6f60b0e20c7574578329eed2b083968c6bc28c",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 437,
+          "sha256": "9e7e845698723599ea1adadb3e58892e7467adfa6535507db1fe07f5b2b9db57"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/rsxdisks.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/rsxdisks.zip",
+      "bytes": 4083315,
+      "sha256": "e8289597e3d246727ff977f151ee986dd59d50ace72bdfdd2a65614b88588a5c",
+      "file_count": 8,
+      "unpacked_bytes": 4110340,
+      "selected_members": [
+        {
+          "path": "DISK3.ZIP",
+          "bytes": 706234,
+          "sha256": "ec682134979ac3bd93c5ac76c6a8091c1cffe754b11738cbb535fc212bca6f27",
+          "file_count": 57,
+          "unpacked_bytes": 1396153,
+          "members": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 3308,
+              "sha256": "db7e0153a8c629adbc6cf13e4b4fea02d15eb107b9df04f51b12ed4a5a67ee7a",
+              "disk_names": [
+                "DESKMATE 1",
+                "DESKMATE 2",
+                "DESKMATE 3",
+                "DESKMATE 4",
+                "DESKMATE 5",
+                "DESKMATE 6"
+              ]
+            },
+            {
+              "path": "DESKTOP.PDM",
+              "bytes": 86745,
+              "sha256": "1be5fc4ee2e9c061a19411836944a3d611f3bd17e6b61adcf3e9487678862464"
+            },
+            {
+              "path": "ROBOT.IMG",
+              "bytes": 11995,
+              "sha256": "9aab14864f16f1ca7e57d098d57c656d92a01ef1831737ae3b2bed9cbccb8143",
+              "format": "application graphic"
+            }
+          ]
+        },
+        {
+          "path": "DISK2.ZIP",
+          "bytes": 598425,
+          "sha256": "e725bc3c1e393e83dbc7a9b1866d4d79c78e761910d04f33ae33262ee38250b8",
+          "file_count": 62,
+          "unpacked_bytes": 1176644,
+          "members": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 3308,
+              "sha256": "db7e0153a8c629adbc6cf13e4b4fea02d15eb107b9df04f51b12ed4a5a67ee7a",
+              "disk_names": [
+                "DESKMATE 1",
+                "DESKMATE 2",
+                "DESKMATE 3",
+                "DESKMATE 4",
+                "DESKMATE 5",
+                "DESKMATE 6"
+              ]
+            },
+            {
+              "path": "MUSIC.PDM",
+              "bytes": 63371,
+              "sha256": "f54651f6597c89efb5810352d69afdd2887a21217c8d519f3c39d83bf0966993"
+            },
+            {
+              "path": "ROBOT.IMG",
+              "bytes": 11995,
+              "sha256": "9aab14864f16f1ca7e57d098d57c656d92a01ef1831737ae3b2bed9cbccb8143",
+              "format": "application graphic"
+            },
+            {
+              "path": "SOUND.PDM",
+              "bytes": 65049,
+              "sha256": "ea5c305a76ae52143f907ed040c05c2c5ea47f6bca45dda3271e410a23af67a2"
+            }
+          ]
+        },
+        {
+          "path": "DISK1.ZIP",
+          "bytes": 397943,
+          "sha256": "3eef5fcad1fb81db73e9614ea48abbea88244aff59d80739da3d936043dff304",
+          "file_count": 28,
+          "unpacked_bytes": 689168,
+          "members": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 3308,
+              "sha256": "db7e0153a8c629adbc6cf13e4b4fea02d15eb107b9df04f51b12ed4a5a67ee7a",
+              "disk_names": [
+                "DESKMATE 1",
+                "DESKMATE 2",
+                "DESKMATE 3",
+                "DESKMATE 4",
+                "DESKMATE 5",
+                "DESKMATE 6"
+              ]
+            },
+            {
+              "path": "DESK.EXE",
+              "bytes": 20722,
+              "sha256": "1c822291c83ffffafff61e264c0efa63cb57043d9bf46552db3a0fd1a14fcd38",
+              "markers": [
+                "DESKMATE$04.03 910516$",
+                "Version: 03.04.04"
+              ]
+            },
+            {
+              "path": "DESKTOP.PDM",
+              "bytes": 86745,
+              "sha256": "1be5fc4ee2e9c061a19411836944a3d611f3bd17e6b61adcf3e9487678862464"
+            },
+            {
+              "path": "DMCSR.R89",
+              "bytes": 81219,
+              "sha256": "12eb14a3a9fe5e4468b900dcd4fbe43fb567cc2004b459645e100fc0216ac986"
+            },
+            {
+              "path": "INSTALL.PDM",
+              "bytes": 31735,
+              "sha256": "d15d3433eeda37cae561dc47c59e3b46cce3529d2d78b5e802ede1a2735f8685"
+            },
+            {
+              "path": "ROBOT.IMG",
+              "bytes": 11995,
+              "sha256": "9aab14864f16f1ca7e57d098d57c656d92a01ef1831737ae3b2bed9cbccb8143",
+              "format": "application graphic"
+            }
+          ]
+        },
+        {
+          "path": "DISK4.ZIP",
+          "bytes": 744993,
+          "sha256": "574a3ab6dc82b0c124808adc0265196fa9462916882dc9936cc675518bfd07c2",
+          "file_count": 236,
+          "unpacked_bytes": 1357958,
+          "members": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 3308,
+              "sha256": "db7e0153a8c629adbc6cf13e4b4fea02d15eb107b9df04f51b12ed4a5a67ee7a",
+              "disk_names": [
+                "DESKMATE 1",
+                "DESKMATE 2",
+                "DESKMATE 3",
+                "DESKMATE 4",
+                "DESKMATE 5",
+                "DESKMATE 6"
+              ]
+            },
+            {
+              "path": "ROBOT.IMG",
+              "bytes": 11995,
+              "sha256": "9aab14864f16f1ca7e57d098d57c656d92a01ef1831737ae3b2bed9cbccb8143",
+              "format": "application graphic"
+            }
+          ]
+        },
+        {
+          "path": "DISK5.ZIP",
+          "bytes": 673257,
+          "sha256": "c41961d0e751449365f2ab65db9b8add3ff3faa4623161425a21cf81cf2dabcb",
+          "file_count": 56,
+          "unpacked_bytes": 1284046,
+          "members": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 3308,
+              "sha256": "db7e0153a8c629adbc6cf13e4b4fea02d15eb107b9df04f51b12ed4a5a67ee7a",
+              "disk_names": [
+                "DESKMATE 1",
+                "DESKMATE 2",
+                "DESKMATE 3",
+                "DESKMATE 4",
+                "DESKMATE 5",
+                "DESKMATE 6"
+              ]
+            },
+            {
+              "path": "ROBOT.IMG",
+              "bytes": 11995,
+              "sha256": "9aab14864f16f1ca7e57d098d57c656d92a01ef1831737ae3b2bed9cbccb8143",
+              "format": "application graphic"
+            }
+          ]
+        },
+        {
+          "path": "DISK6.ZIP",
+          "bytes": 728076,
+          "sha256": "9bfac29193600ecd32d84f9f2f8edbb36cd13e8015bf60339acf6c893778f8db",
+          "file_count": 70,
+          "unpacked_bytes": 1346143,
+          "members": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 3308,
+              "sha256": "db7e0153a8c629adbc6cf13e4b4fea02d15eb107b9df04f51b12ed4a5a67ee7a",
+              "disk_names": [
+                "DESKMATE 1",
+                "DESKMATE 2",
+                "DESKMATE 3",
+                "DESKMATE 4",
+                "DESKMATE 5",
+                "DESKMATE 6"
+              ]
+            },
+            {
+              "path": "ROBOT.IMG",
+              "bytes": 11995,
+              "sha256": "9aab14864f16f1ca7e57d098d57c656d92a01ef1831737ae3b2bed9cbccb8143",
+              "format": "application graphic"
+            }
+          ]
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 768,
+          "sha256": "ba2a4a15d86938eb4ab6ca9d03e7ec1200a87594dbdd8fcfc4bc0566bf084629"
+        },
+        {
+          "path": "UTILS.ZIP",
+          "bytes": 260644,
+          "sha256": "6da9d22466b3b3a4f6bd3b83607ce1e8b9b5fd2eeaae52fc4f7f2b29ad4c5090",
+          "file_count": 18,
+          "unpacked_bytes": 531529,
+          "members": [
+            {
+              "path": "AUTOEXEC.DSK",
+              "bytes": 117,
+              "sha256": "37983be3279c6af40938550e7395be60f04414e208d9a477b024109d8448002c",
+              "format": "DOS startup template"
+            },
+            {
+              "path": "CONFIG.DSK",
+              "bytes": 82,
+              "sha256": "d8c373c63dfa795247102907bc27587c88aacdaca89af2bcbe23f64a2d823c96",
+              "format": "DOS startup template"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/sldos.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/sldos.zip",
+      "bytes": 356853,
+      "sha256": "93975781c21c221cea87c307be35846dfd40e9d240df42f17c077208b85dd6c0",
+      "file_count": 3,
+      "unpacked_bytes": 569385,
+      "selected_members": [
+        {
+          "path": "DISK2.TD0",
+          "bytes": 272492,
+          "sha256": "084c73b96856f9a505a26273dbbef7f2aa702b82de4084365ec233889eead214",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 387,
+          "sha256": "8e7e8d263e12e6e6763bfb0a50ece348dbaed0aa7d7f43a3fd24a3c8dc8c5fdb"
+        },
+        {
+          "path": "DISK1.TD0",
+          "bytes": 296506,
+          "sha256": "c04f0f503b57cb32653dbe3a16fc357770bff435f9a2035287025cbb4565d5a4",
+          "format": "TeleDisk"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/sxdisk2.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/sxdisk2.zip",
+      "bytes": 345595,
+      "sha256": "98c1c12328b10be3fbd29a10a0ff9460271d93e7777bbfc92e0d58ac3031e940",
+      "file_count": 4,
+      "unpacked_bytes": 599933,
+      "selected_members": [
+        {
+          "path": "DISK1.TD0",
+          "bytes": 301584,
+          "sha256": "6c8e2254453ae80ddb759cace6e7c5e7b4e28bcff674d2d6daa15803dcf83171",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "DISK2.TD0",
+          "bytes": 272966,
+          "sha256": "f1e606f49511263baf88fcdd853b34177dcf224ed8e282aa31c77c1b94a30532",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "DISK3.TD0",
+          "bytes": 24948,
+          "sha256": "41f279a4a534594cbbe0ad5afae4e9098df2886106e5a167bb62875601be1270",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 435,
+          "sha256": "11fc600b28407b52233ea79f968a6c1573128b0cf3d9666cb2c3751f82de28bd"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/sxdisk3.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/sxdisk3.zip",
+      "bytes": 454150,
+      "sha256": "2169caa47dea3f3e886c61d6d8707ce9139569b798105787115eebaa462d45ec",
+      "file_count": 5,
+      "unpacked_bytes": 780242,
+      "selected_members": [
+        {
+          "path": "DISK1.TD0",
+          "bytes": 301584,
+          "sha256": "6c8e2254453ae80ddb759cace6e7c5e7b4e28bcff674d2d6daa15803dcf83171",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "DISK3.TD0",
+          "bytes": 272966,
+          "sha256": "f1e606f49511263baf88fcdd853b34177dcf224ed8e282aa31c77c1b94a30532",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "DISK4.TD0",
+          "bytes": 24948,
+          "sha256": "41f279a4a534594cbbe0ad5afae4e9098df2886106e5a167bb62875601be1270",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "readme.txt",
+          "bytes": 482,
+          "sha256": "103c01a83ea718f4eee60fb900627564dd6b11c9b9b8600baf83490afa1c5b68"
+        },
+        {
+          "path": "DISK2.TD0",
+          "bytes": 180262,
+          "sha256": "5887ccf62e16ebafc14980c3f4467da985a048c9d877e0381379f08167a79bde",
+          "format": "TeleDisk"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/teled212.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/teled212.zip",
+      "bytes": 93873,
+      "sha256": "8c5951bae3be86e5446c0cf232e7417da6445be5cdb6612932f2cd161656241f",
+      "file_count": 7,
+      "unpacked_bytes": 201202,
+      "selected_members": []
+    },
+    {
+      "path": "tandy1000/system/old/tl2disks.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/tl2disks.zip",
+      "bytes": 1482026,
+      "sha256": "3b01510e86dc32beb32509fbf7c903d4540d611d9f98ed2e8ce185864448236c",
+      "file_count": 5,
+      "unpacked_bytes": 2444824,
+      "selected_members": [
+        {
+          "path": "README.TXT",
+          "bytes": 588,
+          "sha256": "3fb91139205217184c8248246aab4bbdf506df95d260e36d2887a8e783b4aa83"
+        },
+        {
+          "path": "DISK2.TD0",
+          "bytes": 629784,
+          "sha256": "207faab2f5ecfef7df0dac5e88f4f689896fc26752e693307422744c200309b1",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "DISK3.TD0",
+          "bytes": 608540,
+          "sha256": "dcccd405d5da665f438aade85f99e3961f847b4cec51f35a514e52edb1e52459",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "DISK4.TD0",
+          "bytes": 659702,
+          "sha256": "7d1814315082ff49d1b5d70e0aaf96862fc80a4581f42de0dfaf9bdef80e5770",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "DISK1.TD0",
+          "bytes": 546210,
+          "sha256": "2df2efb7b56a151893132ae35d4478b642c814fe7e32d4dea04008b4144d8deb",
+          "format": "TeleDisk"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/tldisk2.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/tldisk2.zip",
+      "bytes": 1119422,
+      "sha256": "0aed6e23c51f84cba75a87d894b726ae1dbf03606ddb3c88f45bbee250e77d4e",
+      "file_count": 4,
+      "unpacked_bytes": 1871510,
+      "selected_members": [
+        {
+          "path": "TLDISK2.TD0",
+          "bytes": 650138,
+          "sha256": "f633cb49fadc468d6b60c1b40325a28618e09b1d95b8515e3fcb9dc4ca1af798",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "TLDISK1.TD0",
+          "bytes": 543794,
+          "sha256": "5fb72149d106b5c923220b0d7522a547aab06be369a7a8796cafed5b0f09d3c5",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "TLDISK3.TD0",
+          "bytes": 677062,
+          "sha256": "22d4651d9ca35c5e4a9ccca8bb5ed37d9d22aa736f4f3f93ad11df2091f85ef3",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 516,
+          "sha256": "47b3dbe16b4f7808eac387b209c69b9d79570c5d58fc6dd2a9fe609e51265e13"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/old/txdos.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/txdos.zip",
+      "bytes": 342997,
+      "sha256": "1c72012f7820ffecfc03081acc2287111af71783ea683765b0ccba167f1d7f99",
+      "file_count": 2,
+      "unpacked_bytes": 542235,
+      "selected_members": [
+        {
+          "path": "MSDOS.TD0",
+          "bytes": 541906,
+          "sha256": "9ba86e7a5ad32d5097b0087a1167969847e05e8f073e67a1529ac24f5e1ca8fb",
+          "format": "TeleDisk"
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 329,
+          "sha256": "a44c4355748fd878389a0e617da38af381e98998891f371af626f1f96d0ed683"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/rsxdisks.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/rsxdisks.zip",
+      "bytes": 4083315,
+      "sha256": "e8289597e3d246727ff977f151ee986dd59d50ace72bdfdd2a65614b88588a5c",
+      "file_count": 8,
+      "unpacked_bytes": 4110340,
+      "selected_members": [
+        {
+          "path": "DISK3.ZIP",
+          "bytes": 706234,
+          "sha256": "ec682134979ac3bd93c5ac76c6a8091c1cffe754b11738cbb535fc212bca6f27",
+          "file_count": 57,
+          "unpacked_bytes": 1396153,
+          "members": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 3308,
+              "sha256": "db7e0153a8c629adbc6cf13e4b4fea02d15eb107b9df04f51b12ed4a5a67ee7a",
+              "disk_names": [
+                "DESKMATE 1",
+                "DESKMATE 2",
+                "DESKMATE 3",
+                "DESKMATE 4",
+                "DESKMATE 5",
+                "DESKMATE 6"
+              ]
+            },
+            {
+              "path": "DESKTOP.PDM",
+              "bytes": 86745,
+              "sha256": "1be5fc4ee2e9c061a19411836944a3d611f3bd17e6b61adcf3e9487678862464"
+            },
+            {
+              "path": "ROBOT.IMG",
+              "bytes": 11995,
+              "sha256": "9aab14864f16f1ca7e57d098d57c656d92a01ef1831737ae3b2bed9cbccb8143",
+              "format": "application graphic"
+            }
+          ]
+        },
+        {
+          "path": "DISK2.ZIP",
+          "bytes": 598425,
+          "sha256": "e725bc3c1e393e83dbc7a9b1866d4d79c78e761910d04f33ae33262ee38250b8",
+          "file_count": 62,
+          "unpacked_bytes": 1176644,
+          "members": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 3308,
+              "sha256": "db7e0153a8c629adbc6cf13e4b4fea02d15eb107b9df04f51b12ed4a5a67ee7a",
+              "disk_names": [
+                "DESKMATE 1",
+                "DESKMATE 2",
+                "DESKMATE 3",
+                "DESKMATE 4",
+                "DESKMATE 5",
+                "DESKMATE 6"
+              ]
+            },
+            {
+              "path": "MUSIC.PDM",
+              "bytes": 63371,
+              "sha256": "f54651f6597c89efb5810352d69afdd2887a21217c8d519f3c39d83bf0966993"
+            },
+            {
+              "path": "ROBOT.IMG",
+              "bytes": 11995,
+              "sha256": "9aab14864f16f1ca7e57d098d57c656d92a01ef1831737ae3b2bed9cbccb8143",
+              "format": "application graphic"
+            },
+            {
+              "path": "SOUND.PDM",
+              "bytes": 65049,
+              "sha256": "ea5c305a76ae52143f907ed040c05c2c5ea47f6bca45dda3271e410a23af67a2"
+            }
+          ]
+        },
+        {
+          "path": "DISK1.ZIP",
+          "bytes": 397943,
+          "sha256": "3eef5fcad1fb81db73e9614ea48abbea88244aff59d80739da3d936043dff304",
+          "file_count": 28,
+          "unpacked_bytes": 689168,
+          "members": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 3308,
+              "sha256": "db7e0153a8c629adbc6cf13e4b4fea02d15eb107b9df04f51b12ed4a5a67ee7a",
+              "disk_names": [
+                "DESKMATE 1",
+                "DESKMATE 2",
+                "DESKMATE 3",
+                "DESKMATE 4",
+                "DESKMATE 5",
+                "DESKMATE 6"
+              ]
+            },
+            {
+              "path": "DESK.EXE",
+              "bytes": 20722,
+              "sha256": "1c822291c83ffffafff61e264c0efa63cb57043d9bf46552db3a0fd1a14fcd38",
+              "markers": [
+                "DESKMATE$04.03 910516$",
+                "Version: 03.04.04"
+              ]
+            },
+            {
+              "path": "DESKTOP.PDM",
+              "bytes": 86745,
+              "sha256": "1be5fc4ee2e9c061a19411836944a3d611f3bd17e6b61adcf3e9487678862464"
+            },
+            {
+              "path": "DMCSR.R89",
+              "bytes": 81219,
+              "sha256": "12eb14a3a9fe5e4468b900dcd4fbe43fb567cc2004b459645e100fc0216ac986"
+            },
+            {
+              "path": "INSTALL.PDM",
+              "bytes": 31735,
+              "sha256": "d15d3433eeda37cae561dc47c59e3b46cce3529d2d78b5e802ede1a2735f8685"
+            },
+            {
+              "path": "ROBOT.IMG",
+              "bytes": 11995,
+              "sha256": "9aab14864f16f1ca7e57d098d57c656d92a01ef1831737ae3b2bed9cbccb8143",
+              "format": "application graphic"
+            }
+          ]
+        },
+        {
+          "path": "DISK4.ZIP",
+          "bytes": 744993,
+          "sha256": "574a3ab6dc82b0c124808adc0265196fa9462916882dc9936cc675518bfd07c2",
+          "file_count": 236,
+          "unpacked_bytes": 1357958,
+          "members": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 3308,
+              "sha256": "db7e0153a8c629adbc6cf13e4b4fea02d15eb107b9df04f51b12ed4a5a67ee7a",
+              "disk_names": [
+                "DESKMATE 1",
+                "DESKMATE 2",
+                "DESKMATE 3",
+                "DESKMATE 4",
+                "DESKMATE 5",
+                "DESKMATE 6"
+              ]
+            },
+            {
+              "path": "ROBOT.IMG",
+              "bytes": 11995,
+              "sha256": "9aab14864f16f1ca7e57d098d57c656d92a01ef1831737ae3b2bed9cbccb8143",
+              "format": "application graphic"
+            }
+          ]
+        },
+        {
+          "path": "DISK5.ZIP",
+          "bytes": 673257,
+          "sha256": "c41961d0e751449365f2ab65db9b8add3ff3faa4623161425a21cf81cf2dabcb",
+          "file_count": 56,
+          "unpacked_bytes": 1284046,
+          "members": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 3308,
+              "sha256": "db7e0153a8c629adbc6cf13e4b4fea02d15eb107b9df04f51b12ed4a5a67ee7a",
+              "disk_names": [
+                "DESKMATE 1",
+                "DESKMATE 2",
+                "DESKMATE 3",
+                "DESKMATE 4",
+                "DESKMATE 5",
+                "DESKMATE 6"
+              ]
+            },
+            {
+              "path": "ROBOT.IMG",
+              "bytes": 11995,
+              "sha256": "9aab14864f16f1ca7e57d098d57c656d92a01ef1831737ae3b2bed9cbccb8143",
+              "format": "application graphic"
+            }
+          ]
+        },
+        {
+          "path": "DISK6.ZIP",
+          "bytes": 728076,
+          "sha256": "9bfac29193600ecd32d84f9f2f8edbb36cd13e8015bf60339acf6c893778f8db",
+          "file_count": 70,
+          "unpacked_bytes": 1346143,
+          "members": [
+            {
+              "path": "DESKMATE.LBL",
+              "bytes": 3308,
+              "sha256": "db7e0153a8c629adbc6cf13e4b4fea02d15eb107b9df04f51b12ed4a5a67ee7a",
+              "disk_names": [
+                "DESKMATE 1",
+                "DESKMATE 2",
+                "DESKMATE 3",
+                "DESKMATE 4",
+                "DESKMATE 5",
+                "DESKMATE 6"
+              ]
+            },
+            {
+              "path": "ROBOT.IMG",
+              "bytes": 11995,
+              "sha256": "9aab14864f16f1ca7e57d098d57c656d92a01ef1831737ae3b2bed9cbccb8143",
+              "format": "application graphic"
+            }
+          ]
+        },
+        {
+          "path": "README.TXT",
+          "bytes": 768,
+          "sha256": "ba2a4a15d86938eb4ab6ca9d03e7ec1200a87594dbdd8fcfc4bc0566bf084629"
+        },
+        {
+          "path": "UTILS.ZIP",
+          "bytes": 260644,
+          "sha256": "6da9d22466b3b3a4f6bd3b83607ce1e8b9b5fd2eeaae52fc4f7f2b29ad4c5090",
+          "file_count": 18,
+          "unpacked_bytes": 531529,
+          "members": [
+            {
+              "path": "AUTOEXEC.DSK",
+              "bytes": 117,
+              "sha256": "37983be3279c6af40938550e7395be60f04414e208d9a477b024109d8448002c",
+              "format": "DOS startup template"
+            },
+            {
+              "path": "CONFIG.DSK",
+              "bytes": 82,
+              "sha256": "d8c373c63dfa795247102907bc27587c88aacdaca89af2bcbe23f64a2d823c96",
+              "format": "DOS startup template"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/system/tdos33.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/tdos33.zip",
+      "bytes": 346856,
+      "sha256": "bea336c9346a5c1550b18687cf32ecd1ba81589901f38aa283133d19258e95b2",
+      "file_count": 2,
+      "unpacked_bytes": 346860,
+      "selected_members": [
+        {
+          "path": "readme.txt",
+          "bytes": 306,
+          "sha256": "fc79b1632df8dd948a1d00b72f60c6afd3f5daab7c3605421787a341a17b2865"
+        },
+        {
+          "path": "Tandy MS-DOS 3.3.imz",
+          "bytes": 346554,
+          "sha256": "1740f77c64c919e7128b269f48d5cec7d9f845a5936969c637ab301aaa46dcfe",
+          "format": "compressed WinImage"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/wares/DeskMate-Development-System-3.03/Runtime-Disk-1.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Development-System-3.03/Runtime-Disk-1.zip",
+      "bytes": 220537,
+      "sha256": "5d298e01419d00abaf5956d53cfb4ce229022c709c60263054dd2ab8296d1cfd",
+      "file_count": 25,
+      "unpacked_bytes": 374992,
+      "selected_members": [
+        {
+          "path": "DMCSR.R89",
+          "bytes": 80097,
+          "sha256": "8139d20e151647cae75fdcd3476c497deb87cd1f2f3be38492311147961100f8"
+        },
+        {
+          "path": "IBMBIO.COM",
+          "bytes": 21253,
+          "sha256": "7ba235a9e35d5258816b73d6fee834bf19ee2551365bd899e61b70dec2ec4a33",
+          "markers": [
+            "Version 03.30.20",
+            "Version 3.30"
+          ]
+        },
+        {
+          "path": "README.DOC",
+          "bytes": 5499,
+          "sha256": "e17180c86092f5c71a40f61873feab78b3b5120f0da7f97c29744cb843bc2a27"
+        }
+      ]
+    },
+    {
+      "path": "tandy1000/wares/DeskMate-Development-System-3.03/Runtime-Disk-2.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Development-System-3.03/Runtime-Disk-2.zip",
+      "bytes": 237097,
+      "sha256": "86de9a4b1972bf8e685186e7aff4bf77e6bf679913c5a05d9efc4f1df30f2f3d",
+      "file_count": 16,
+      "unpacked_bytes": 353157,
+      "selected_members": []
+    },
+    {
+      "path": "tandy1000/wares/DeskMate-Development-System-3.03/Runtime-Disk-3.zip",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Development-System-3.03/Runtime-Disk-3.zip",
+      "bytes": 55362,
+      "sha256": "96efe3c722658b8ae0d24d3a019d5251ccaa106dee99d424205bf0a9fda4d335",
+      "file_count": 11,
+      "unpacked_bytes": 112489,
+      "selected_members": [
+        {
+          "path": "DMVID.DOC",
+          "bytes": 1843,
+          "sha256": "dc29fcfffceb4db7be313896c08fed47217b157a7860480bbf68a30c95147474"
+        }
+      ]
+    }
+  ],
+  "scope": "TVDog mirror verified November 20, 2026. Source paths and hashes were rechecked against the transfer inventory. Selected member hashes are from offline reads. This manifest records inspected distributions, supplemental material, and certain DOS-only and archive-tool exclusions. A null raw FAT label means no label was reported."
+}

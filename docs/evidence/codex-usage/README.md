@@ -1,5 +1,10 @@
 # Codex research usage ledger
 
+The [DeskMate installation reference](../../ecosystem/deskmate-installations.md)
+records [startup](20261121-installation-startup.json),
+[inventory review](20261121-installation-inventory.json), and
+[completion](20261121-installation-completion.json).
+
 The TVDog campaign recorded [startup](20261119-tvdog-startup.json),
 [mirror verification](20261119-tvdog-mirror.json),
 [retry changes](20261119-tvdog-retry.json),

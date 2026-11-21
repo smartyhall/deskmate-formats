@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "deskmate-installation-reference",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 34,
+    "token_records": 5637,
+    "sessions": 31
+  },
+  "checkpoint": "inventory-reviewed",
+  "collected_at": "2026-11-21T15:44:19.049437+00:00",
+  "commit": "b742074383a6f388e20547b764faa6139c02a0fa",
+  "observation": {
+    "session": "3339e7f7ce08ecb8d6d263a6",
+    "measured_at": "2026-11-21T15:43:51.634000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 4757278,
+      "cached_input": 4605824,
+      "output": 25818,
+      "reasoning_output": 1572,
+      "total": 4783096
+    },
+    "reported_last": {
+      "input": 159600,
+      "cached_input": 157952,
+      "output": 230,
+      "reasoning_output": 24,
+      "total": 159830
+    },
+    "windows": {
+      "300": {
+        "used_percent": 11.0,
+        "reset_epoch": 1795289894,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 19.0,
+        "reset_epoch": 1795836613,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  }
+}
