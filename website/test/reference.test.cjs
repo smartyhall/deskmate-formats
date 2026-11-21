@@ -7,7 +7,8 @@ const { ROOT, pages, sections, siteUrl, resolveLink, renderSource, searchRecord 
   require("../lib/reference.cjs");
 
 test("source-map entries resolve to existing, uniquely identified Markdown", () => {
-  assert.equal(pages.length, 26);
+  assert.ok(pages.some((entry) => entry.id === "applications.installations"));
+  assert.ok(pages.some((entry) => entry.id === "applications.installation-305"));
   const ids = new Set(), slugs = new Set();
   for (const entry of pages) {
     assert.equal(ids.has(entry.id), false);

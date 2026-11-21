@@ -13,6 +13,10 @@ research leads. A catalog listing, a downloadable archive, an acquired
 disk, a verified installation and a decoded native format are distinct
 facts.
 
+The [DeskMate installation index](deskmate-installations.md) compares
+preserved system distributions by version. The [illustrated 3.05 guide](deskmate-installation-305.md)
+documents the clean installation on the RSX laboratory profile.
+
 The recovered 1988 Express Order Software Buyer's Guide identifies eleven
 additional products. The catalog records the interface as advertised where
 the guide displays the DeskMate logo, with exact runtime and native file

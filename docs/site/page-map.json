@@ -208,6 +208,22 @@
       "section": "planning",
       "role": "site-plan",
       "source": "docs/preservation-roadmap.md"
+    },
+    {
+      "id": "applications.installations",
+      "slug": "installation",
+      "title": "DeskMate installation media by release",
+      "section": "applications",
+      "role": "current-guide",
+      "source": "docs/ecosystem/deskmate-installations.md"
+    },
+    {
+      "id": "applications.installation-305",
+      "slug": "installation/deskmate-305",
+      "title": "Install DeskMate 3.05 on a DOS PC",
+      "section": "applications",
+      "role": "current-guide",
+      "source": "docs/ecosystem/deskmate-installation-305.md"
     }
   ]
 }
