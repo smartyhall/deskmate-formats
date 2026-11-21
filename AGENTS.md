@@ -63,6 +63,28 @@ Challenge scope drift: evidence, consequence, rollback, minimum control.
   but do not presume routine UI screenshots are categorically forbidden.
   ChatGPT can independently review and merge eligible, passing PRs under the
   existing housekeeping grant; producing Codex workers still cannot merge.
+- Representative visual evidence in Codex pull requests (operator, 2026-11-21):
+  Every research PR should include a small, **representative set of exemplar
+  images whenever the work has meaningful visual states or outputs**. Choose
+  images proportional to the work: cover the principal applications, workflows,
+  before/after states, or findings, rather than dumping every capture or
+  selecting only the most attractive screen. Prefer direct evidence over
+  decorative images, and use existing verified captures before considering
+  any new experiment. In the PR description, embed eligible images or link
+  to stable committed exemplars, each with a concise caption identifying
+  the application, version, experiment/state, and what it demonstrates.
+  A contact sheet is useful for broad coverage, but should not replace
+  full-resolution exemplars when detail matters. Keep source provenance,
+  integrity references, and native-versus-synthetic status traceable.
+  Publish eligible samples under the standing documentary-image rules;
+  do not upload private raw evidence, credentials, commercial binaries,
+  or unsuitable third-party content simply to satisfy this guideline.
+  If the research is entirely nonvisual or has no suitable publishable
+  image, say **"visual exemplars: not applicable"** in the PR and explain
+  briefly; do not fabricate images, launch an unapproved emulator, or
+  make unrelated visual changes. For public-site publication, also follow
+  [visual asset guidance](docs/site/visual-assets.md).
+
 - When a user requests publication of an eligible synthetic-data sample or
   native-acceptance candidate, commit and push the **actual independently checked
   binary bytes**, not just a private archive, SHA-256 digest or semantic JSON.
@@ -106,6 +128,23 @@ Challenge scope drift: evidence, consequence, rollback, minimum control.
   its own PRs; ChatGPT may independently merge ready PRs under the operator's
   2026-11-08 post-run housekeeping grant. Do not infer approval for unrelated
   repository mutations, unattended dispatch, emulator control or paid calls.
+
+## Editorial evidence and style — operator decision 2026-11-21
+
+For historical and technical reference prose, cite sourceable facts close to
+their first mention rather than relying only on an end bibliography. Clearly
+distinguish vendor claims, contemporary independent accounts, and this
+project's native observations. Cite our own experiment reports, receipts, or
+fixtures as primary evidence when applicable, and limit each claim to the
+versions and behaviors actually documented.
+
+Use the **Oxford (serial) comma** in public-facing reference-site prose:
+articles, historical introductions, editorial explanations, navigation text,
+captions, and alternative text. This is a reader-facing house style, not a
+requirement for Codex's internal research reports, experiment logs, source
+notes, or technical developer documentation; those may use the style most
+appropriate to their content. Do not rewrite original research evidence or
+verbatim historical quotations merely to enforce house style.
 
 ## Codex usage receipts — operator decision 2026-11-18
 

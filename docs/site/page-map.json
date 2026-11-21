@@ -2,6 +2,14 @@
   "schema_version": 1,
   "pages": [
     {
+      "id": "history.introduction",
+      "slug": "start",
+      "title": "Discover DeskMate",
+      "section": "introduction",
+      "role": "current-guide",
+      "source": "docs/history/introduction.md"
+    },
+    {
       "id": "site.overview",
       "slug": "planning/overview",
       "title": "Reference-site preparation",
