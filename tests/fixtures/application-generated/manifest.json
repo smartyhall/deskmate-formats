@@ -4711,6 +4711,18 @@
       "expected_content": "TEST USER A, work phone 202-555-0142, and the measured 3.02 DATA schema.",
       "synthetic_data": true,
       "native_saved": true
+    },
+    {
+      "path": "text/300-native-atlas.doc",
+      "size": 13,
+      "sha256": "5b891ce9954b0fb4b859921e8670d758a25572d4e153f0609ba055f8f347d582",
+      "application": "Tandy DeskMate Text",
+      "version": "03.00.00",
+      "experiment": "2026-11-21 Evolution Atlas RSX DOS 5.00 native save",
+      "origin": "Typed ALPHA, Enter, BETA, then File, Save as, ATLAS. 7-Zip extraction and independent FAT16 traversal agreed.",
+      "expected_content": "ALPHA and BETA with CRLF, one editor-written trailing space, and DOS EOF. Exact match to the later native Text control.",
+      "synthetic_data": true,
+      "native_saved": true
     }
   ]
 }

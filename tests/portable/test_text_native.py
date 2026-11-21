@@ -10,6 +10,7 @@ FIXTURES = Path(__file__).resolve().parents[1] / 'fixtures/application-generated
 class TextNativeTest(unittest.TestCase):
     def test_plain_and_formatted_corpus(self):
         expected = {
+            '300-native-atlas.doc': 'ALPHA\nBETA',
             't00.doc': '',
             't01.doc': 'A',
             't02.doc': 'AB',

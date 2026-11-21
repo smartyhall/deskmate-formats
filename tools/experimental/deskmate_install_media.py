@@ -13,6 +13,7 @@ INVENTORY = Path(__file__).resolve().parents[2] / 'docs/ecosystem/deskmate-insta
 ROOT_OFFSET = 3584
 DATA_OFFSET = 7168
 CLUSTER_SIZE = 1024
+DISK_COUNTS = {'300': 5, '302': 3, '303': 4}
 
 
 def floppy(members, label):
@@ -61,8 +62,9 @@ def floppy(members, label):
 
 
 def build(version, originals, output, separator):
-    records = {record['path']: record for record in json.loads(INVENTORY.read_text())['archives']}
-    for number in range(1, {'302': 3, '303': 4}[version] + 1):
+    manifest = json.loads(INVENTORY.read_text(encoding='utf-8'))
+    records = {record['path']: record for record in manifest['archives']}
+    for number in range(1, DISK_COUNTS[version] + 1):
         archive_name = f'dm{version}dk{number}.zip'
         relative = f'tandy1000/deskmate/{archive_name}'
         archive = originals / relative
@@ -82,7 +84,7 @@ def build(version, originals, output, separator):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('version', choices=('302', '303'))
+    parser.add_argument('version', choices=DISK_COUNTS)
     parser.add_argument('originals', type=Path, help='private TVDog mirror originals directory')
     parser.add_argument('output', type=Path, help='existing private output directory')
     parser.add_argument('--space-label', action='store_true', help='reconstruct the rejected 3.03 label control')

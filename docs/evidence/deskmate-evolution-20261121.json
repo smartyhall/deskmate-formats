@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "captures": {
+    "ui.evolution.300-desktop": {
+      "release": "03.00.00",
+      "machine": "tandy1000rsx",
+      "ms": 225418,
+      "frame": 15721,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "2cf3875c0655e2d9c6c0f034627ee96f6efddc87b337fed763fe222ca374e68e",
+      "derivative_sha256": "0a66d4887960375127719c970b1a6aa696dcebd9958a4cba02da8a1a70444cfb",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.300-calendar": {
+      "release": "03.00.00",
+      "machine": "tandy1000rsx",
+      "ms": 231666,
+      "frame": 16095,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "665f3199f087f7956760d89ce854b001fdb3d40f0376cf1c4a16dffcfb0335dd",
+      "derivative_sha256": "2e6b52b164a62290cc9049ce92fbbf235b49053dbef2e27beea54f06cfcd1efc",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.300-text-save-dialog": {
+      "release": "03.00.00",
+      "machine": "tandy1000rsx",
+      "ms": 243720,
+      "frame": 16818,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "a0de07127d189ff56b1b5ce79cfc75f6e0b538d17b640c5ec45ec20a81456b8b",
+      "derivative_sha256": "5a933ebaad711880b1be53e023ddb03c1ba57a071e4946f5aad190810a11dfc6",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    },
+    "ui.evolution.orig-menu": {
+      "release": "01.01.00",
+      "machine": "tandy1000sx",
+      "ms": 71714,
+      "frame": 4294,
+      "bios_mode": 3,
+      "dimensions": [
+        640,
+        225
+      ],
+      "raw_sha256": "6ad349f201114a58d8564e2e5a40b4612db7b831dcf88e2f8edf141e5ab9682a",
+      "derivative_sha256": "900e3391f73f9c026afd91ab98c486a535808796b307e4e370699ba62d1bbcf8",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions"
+    }
+  },
+  "runs": {
+    "generic-300": {
+      "emulated_ms": 249076,
+      "profile": "Tandy 1000 RSX",
+      "disk_sha256": "676fa9f8a6d9a1974967979d1000db78edd8216c6aa078cce4ff0c6a9ee042dd",
+      "text_sha256": "5b891ce9954b0fb4b859921e8670d758a25572d4e153f0609ba055f8f347d582"
+    },
+    "original-1000": {
+      "emulated_ms": 72872,
+      "profile": "Tandy 1000 SX compatibility profile",
+      "dos": "02.11.22",
+      "version_banner": "01.01.00"
+    }
+  }
+}

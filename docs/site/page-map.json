@@ -226,6 +226,14 @@
       "source": "docs/ecosystem/deskmate-installations.md"
     },
     {
+      "id": "applications.evolution-atlas",
+      "slug": "installation/evolution-atlas",
+      "title": "DeskMate Evolution Atlas",
+      "section": "applications",
+      "role": "current-guide",
+      "source": "docs/ecosystem/deskmate-evolution-atlas.md"
+    },
+    {
       "id": "applications.installation-303",
       "slug": "installation/deskmate-303",
       "title": "Install DeskMate 3.03.01 on a DOS PC",
