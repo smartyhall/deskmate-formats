@@ -2,6 +2,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const MarkdownIt = require("markdown-it");
+const { readFigures, injectFigures } = require("./figures.cjs");
 const ROOT = path.resolve(__dirname, "../..");
 const pages = Object.freeze(JSON.parse(
   fs.readFileSync(path.join(ROOT, "docs/site/page-map.json"), "utf8")
@@ -24,6 +25,8 @@ const sections = Object.freeze(
 const md = new MarkdownIt({ html: false, linkify: true, typographer: false });
 // Avoid treating bare Markdown filenames such as AGENTS.md as Internet domains.
 md.linkify.set({ fuzzyLink: false });
+// Render only figure blocks generated from the vetted site image manifest.
+md.renderer.rules.reference_figure_block = (tokens, idx) => tokens[idx].content + "\n";
 
 function siteUrl(pathname) {
   if (typeof pathname !== "string" || !pathname.startsWith("/") ||
@@ -111,6 +114,7 @@ function renderSource(entry) {
     }
   }
   walk(tokens);
+  injectFigures(tokens, entry.id, readFigures(), siteUrl);
   return md.renderer.render(tokens, md.options, {});
 }
 function searchRecord(entry) {
