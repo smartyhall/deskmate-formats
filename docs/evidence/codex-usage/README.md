@@ -175,3 +175,7 @@ records [startup](20261119-typography-startup.json),
 
 The [typography completion receipt](20261119-typography-completion.json)
 records the final research checkpoint.
+
+MidiMapper receipts cover [startup](20261120-midimapper-startup.json),
+[verified acquisition](20261120-midimapper-acquisition.json), and
+[native playback and export completion](20261120-midimapper-completion.json).
