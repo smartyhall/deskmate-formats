@@ -20,6 +20,14 @@ def read(name):
     return (FIXTURES / (name + '.fig')).read_bytes()
 
 
+class WorkbenchBundleTests(unittest.TestCase):
+    def test_standalone_bundle_embeds_current_fig_reader(self):
+        workbench = CODEC.parent
+        source = CODEC.read_text(encoding='utf-8')
+        standalone = (workbench / 'workbench.html').read_text(encoding='utf-8')
+        self.assertIn('<script>' + source + '</script>', standalone)
+
+
 class WriterTest(unittest.TestCase):
     def test_native_style_word_is_retained_without_qualifying_an_edit(self):
         raw = read('cobb-style-flag4-tool-generated')
