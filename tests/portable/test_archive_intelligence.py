@@ -162,8 +162,8 @@ class ArchiveIntelligenceTests(unittest.TestCase):
             return SimpleNamespace(status="unsupported", detail="7zip-unavailable",
                                    members=[], documents=[])
 
-        with patch.object(index, "identify", side_effect=identify), (
-                patch.object(index, "extract", side_effect=unavailable) as initial):
+        with (patch.object(index, "identify", side_effect=identify),
+              patch.object(index, "extract", side_effect=unavailable) as initial):
             self.ingest()
             self.assertEqual(initial.call_count, 2)
 
@@ -171,8 +171,8 @@ class ArchiveIntelligenceTests(unittest.TestCase):
             self.assertIn(kind, {"iso9660", "udf"})
             return SimpleNamespace(status="ok", detail=None, members=[], documents=[])
 
-        with patch.object(index, "identify", side_effect=identify), (
-                patch.object(index, "extract", side_effect=upgraded) as new):
+        with (patch.object(index, "identify", side_effect=identify),
+              patch.object(index, "extract", side_effect=upgraded) as new):
             result, = self.ingest("--update-tools", "--seven-zip",
                                   str(self.home / "seven-zip.exe"))
         self.assertEqual(new.call_count, 2)
