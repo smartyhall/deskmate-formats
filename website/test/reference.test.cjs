@@ -96,3 +96,10 @@ test("combined archival report retains a single top-level heading", () => {
   assert.equal((html.match(/<h1\\b/g) || []).length, 1);
   assert.match(html, /<h2[^>]*id="phase-iii-a-bounded-multi-record-generation-and-deskmate-validation"/);
 });
+
+test("site layout preserves independently scrollable technical tables on phones", () => {
+  const css = fs.readFileSync(path.join(ROOT, "website/src/assets/site-layout.css"), "utf8");
+  assert.match(css, /\\.document\\s*\\{[^}]*overflow-x:\\s*clip/);
+  assert.match(css, /\\.document pre\\s*\\{[^}]*overflow-x:\\s*auto/);
+  assert.match(css, /\\.document table\\s*\\{[^}]*overflow-x:\\s*auto/);
+});
