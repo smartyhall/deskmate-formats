@@ -1,4 +1,4 @@
-# DeskMate reference — Eleventy preview
+# DeskMate reference — Eleventy website
 
 This is a **reviewable, locally buildable** technical-reference site. It does
 not deploy publicly or redistribute historical media and private screenshots.
@@ -12,30 +12,34 @@ Install Node.js 22 or newer, enter the website directory, then run:
     npm run build
     npm run dev
 
-The static output is in website/_site. For a GitHub Pages project-path build:
+The static output is in `website/_site`. The public GitHub Pages site uses
+[deskmate.retroconnect.org](https://deskmate.retroconnect.org/), a **root-mounted**
+custom domain, so the production and preview builds use:
 
-    SITE_BASE_PATH=/deskmate-formats/ npm run build
+    SITE_BASE_PATH=/ npm run build
 
 On PowerShell:
 
-    $env:SITE_BASE_PATH = '/deskmate-formats/'
+    $env:SITE_BASE_PATH = '/'
     npm run build
 
-Unset SITE_BASE_PATH to build for a root-mounted self-hosted domain.
+For a standalone local build, the default base path is also `/`. A project-path
+build for an alternate Pages address can still be made explicitly using
+`SITE_BASE_PATH=/deskmate-formats/`, but is **not** the production configuration.
 
-The GitHub Actions **Reference site preview** workflow creates a downloadable
-artifact, but does not enable public deployment. It also checks local links,
-fragments, and the required upstream theme files.
+The GitHub Actions **Reference site preview** workflow produces a downloadable
+root-path artifact and validates local links, fragments, and upstream theme files
+without publishing. The **Publish DeskMate reference** workflow only runs via
+`workflow_dispatch`, and deploys the generated site to GitHub Pages using the
+repository's **Settings → Pages → Custom domain** configuration. Pushing or
+merging a PR never publishes automatically.
 
-Once the review artifact has been approved, merge the site PR, enable GitHub
-Pages with **GitHub Actions** as the build/deployment source, and manually
-run **Publish DeskMate reference** from the Actions tab. The publishing
-workflow has only a `workflow_dispatch` trigger; merging or pushing will
-never publish automatically. The initial project-path URL will be
-`https://smartyhall.github.io/deskmate-formats/` if the default GitHub Pages
-project URL remains in use. This is a planned address, **not** a claim that
-the site is already online. For an independent domain, revise the base path,
-hosting settings, and redirects before deploying there.
+GitHub Pages custom domain: `deskmate.retroconnect.org`.
+The `deskmate` DNS CNAME points to `smartyhall.github.io` (no path segment).
+Domain ownership, DNS validation, and HTTPS enforcement are managed in the GitHub
+Pages settings, not through the Eleventy templates or the publishing workflow.
+With the custom-domain setting configured in GitHub's UI, an additional
+repository `CNAME` file is not necessary for the Actions-based build.
 
 ## Source and publication policy
 
@@ -78,11 +82,11 @@ On systems where `python3` is not the command name, invoke
 `scripts/vendor_bootstra.py` with your Python 3 interpreter before the
 Eleventy build.
 
-## Before enabling publication
+## Publication checklist
 
-Review the static output for source eligibility, claims and private
-information. Verify links, headings, accessibility, mobile layout and
-search. Decide on a domain, URL permanence, asset-licensing notices and
-an actual hosting deployment target. The future portal may add structured
-release records, data-driven catalogs and approved screenshot atlases; the
-working reference should not wait for those features.
+Review the final preview artifact for source eligibility and private information,
+links, headings, accessibility, mobile layout, and search. Merge the reviewed
+change, then run **Publish DeskMate reference** manually from the Actions tab.
+Verify the resulting custom-domain URL, CSS and search, and enforce HTTPS after
+GitHub provisions the certificate. The future portal may add structured release
+records, data-driven catalogs and approved screenshot atlases.
