@@ -102,3 +102,8 @@ changing an optional extractor path requires `ingest --update-tools` once.
 That invalidates the kinds affected by the changed tool and retains the
 other cached analyses. Changed extraction bounds require a new index.
 `stats` reports active analyses reached by indexed occurrences.
+
+Add `--nomarch PATH` to decode ARC methods 8 and 9 with a nomarch build
+that writes binary stdout. The indexer supplies one bounded ARC member
+at a time and checks the output length and ARC CRC. See the
+[qualification and residual inventory](../../docs/research/tvdog-arc-20261120.md).

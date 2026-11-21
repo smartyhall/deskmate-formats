@@ -6,6 +6,7 @@ from io import BytesIO, StringIO
 import json
 from pathlib import Path
 import sqlite3
+from struct import pack
 import sys
 from tempfile import TemporaryDirectory
 import unittest
@@ -14,6 +15,7 @@ from zipfile import ZipFile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools" / "archive"))
 import archive_intelligence as index  # noqa: E402
+from intelligence_extract import _arc_crc, extract  # noqa: E402
 
 
 def zipped(*members):
@@ -57,6 +59,31 @@ class ArchiveIntelligenceTests(unittest.TestCase):
         self.manifest.write_text("\n".join(map(json.dumps, self.rows)), encoding="utf-8")
         return self.command("ingest", str(self.root), "--manifest", str(self.manifest),
                             *arguments, status=status)
+
+    def test_arc_decoder_addresses_one_member_and_verifies_bytes(self):
+        expected = b"ARC\n"
+        packed = b"synthetic"
+        header = pack('<13sIHHHI', b'NOTE.TXT', len(packed), 0, 0, _arc_crc(expected), len(expected))
+        raw = b'\x1a\x08' + header + packed + b'\x1a\0'
+        path = self.root / 'source.arc'
+        path.write_bytes(raw)
+        self.assertEqual(extract(path, path.name, 'arc').members[0].status,
+                         'unsupported-arc-method-8')
+
+        def decode(args, cap, timeout):
+            self.assertEqual(args[1], '-p')
+            self.assertEqual(Path(args[2]).read_bytes(), raw)
+            self.assertEqual(cap, len(expected))
+            self.assertGreater(timeout, 0)
+            return 0, expected
+
+        with patch('intelligence_extract._capture', side_effect=decode):
+            result = extract(path, path.name, 'arc', nomarch=self.home/'nomarch')
+            self.assertEqual(result.members[0].data, expected)
+        with patch('intelligence_extract._capture', return_value=(0, b'bad!')):
+            result = extract(path, path.name, 'arc', nomarch=self.home/'nomarch')
+            self.assertEqual(result.members[0].status, 'read-error')
+        self.assertEqual(path.read_bytes(), raw)
 
     def test_resume_duplicates_nested_requeue_and_search(self):
         text = b"Fixture Title\r\nRockwell outlined \x82 specimen\r\n"

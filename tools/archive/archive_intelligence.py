@@ -151,7 +151,7 @@ def open_index(path, *, write=False):
 
 class Indexer:
     def __init__(self, database, store, stop, *, limits, depth, nodes, expanded,
-                 seven_zip, pdftotext, lhasa, pdf_python):
+                 seven_zip, pdftotext, lhasa, pdf_python, nomarch=None):
         self.db = database
         self.store = store
         self.stop = stop
@@ -160,7 +160,7 @@ class Indexer:
         self.nodes = nodes
         self.expanded = expanded
         self.options = {"seven_zip": seven_zip, "pdftotext": pdftotext,
-                        "lhasa": lhasa, "pdf_python": pdf_python}
+                        "lhasa": lhasa, "pdf_python": pdf_python, "nomarch": nomarch}
 
     def check_stop(self):
         if self.stop.exists():
@@ -310,7 +310,7 @@ def configure(db, profile, store, update_tools):
                 tool_kinds = {
                     "seven_zip": {"zip", "arj", "cab", "lzh", "7z", "rar", "mz",
                                   "iso9660", "udf"},
-                    "lhasa": {"lzh"}, "pdftotext": {"pdf"}, "pdf_python": {"pdf"},
+                    "lhasa": {"lzh"}, "pdftotext": {"pdf"}, "pdf_python": {"pdf"}, "nomarch": {"arc"},
                 }
                 for setting in set(previous) | set(profile):
                     if previous.get(setting) != profile.get(setting):
@@ -344,6 +344,8 @@ def ingest(args):
     options = {"limits": limit, "depth": args.depth, "nodes": args.nodes, "expanded": args.expanded,
                "seven_zip": args.seven_zip, "pdftotext": args.pdftotext,
                "lhasa": args.lhasa, "pdf_python": args.pdf_python}
+    if args.nomarch is not None:
+        options["nomarch"] = args.nomarch
     profile = {key: str(value.resolve()) if isinstance(value, Path) else value
                for key, value in options.items()}
     profile["limits"] = asdict(limit)
@@ -501,6 +503,7 @@ def main(argv=None):
     run.add_argument("--stop", type=Path)
     run.add_argument("--seven-zip", type=Path)
     run.add_argument("--lhasa", type=Path)
+    run.add_argument("--nomarch", type=Path, help="Optional ARC methods 8/9 decoder with binary stdout")
     pdf = run.add_mutually_exclusive_group()
     pdf.add_argument("--pdftotext", type=Path)
     pdf.add_argument("--pdf-python", type=Path, help="Python interpreter with optional pypdf installed")
