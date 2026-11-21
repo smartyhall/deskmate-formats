@@ -15,6 +15,7 @@ to OpenAI, Codex or any other party.
 | Application-generated synthetic-data fixtures | `GPL-3.0-or-later OR CC-BY-4.0`, to the extent rights exist in contributed test content | tests/fixtures/application-generated/; no ownership claim over native structural facts |
 | Manifest-verified musical comparisons | `GPL-3.0-or-later OR CC-BY-4.0` for the project's original composition and performance contributions | examples/music-listening/v1/ WAVs; underlying Tandy instrument material retains its separate rights |
 | Manifest-verified Draw comparisons | `GPL-3.0-or-later OR CC-BY-4.0` for the original synthetic drawings and derived comparisons | Manifest-listed drawing-area PNGs and independent SVGs in examples/draw-comparison/v1/ |
+| Curated reference-site illustrations | Project-authored image/caption/edit contributions are licensed as indicated by each REUSE sidecar; no grant of rights in underlying vendor UI or third-party art | Manifest-listed PNGs in website/src/assets/reference/ |
 | Standard license texts | Original notices/permissions, unmodified | LICENSE and LICENSES/*.txt |
 
 Each independently authored file has an adjacent REUSE-compatible `.license`
@@ -95,6 +96,35 @@ license covers the original drawings and derived comparison contributions.
 It conveys no rights to the font resource, application, or UI. The original
 font files and full captures remain private. See the
 [Draw comparison library](examples/draw-comparison/README.md).
+
+### Documentary DeskMate screenshots and reference illustrations
+
+Operator decision, 2026-11-21: representative captures of DeskMate and
+associated applications running with synthetic/public sample data are authorized
+for the reference site's illustrative, historical and technical commentary.
+The same applies to independently authored synthetic art and suitable small
+figures originally prepared for public distribution. Ordinary UI screenshots
+do not require a new per-file operator permission; they do require inspection,
+provenance, factual caption/alt text, appropriate publisher attribution and a
+reviewable PR.
+
+An image's original authored portions and editorial processing may be offered
+under the license stated in its REUSE sidecar, **only to the extent of rights the
+project actually owns**. Displaying Tandy or another publisher's software
+interface does not make its underlying copyrighted expression, branding,
+commercial assets or screenshots automatically GPL/CC-licensed. Clearly mark
+third-party origin and do not use the screenshot exception to distribute
+software packages, extracted assets, complete manuals, bulk scan libraries,
+private records, credentials or unrelated third-party art.
+
+The published collection is explicitly enumerated in
+[`website/reference-images.json`](website/reference-images.json).
+Only eligible PNGs under `website/src/assets/reference/` with the matching
+manifest, exact hashes, limited dimensions, clear source identity, rights note
+and accurate REUSE sidecar are accepted by the publication audit. Raw capture
+archives remain private. Where an image is substantially a third-party work
+rather than a small documentary UI excerpt, review its permission or other
+rights basis separately before posting.
 
 The [typography comparison](examples/typography-comparison/v1/README.md)
 covers independently authored specimens rendered with project and

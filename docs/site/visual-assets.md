@@ -1,9 +1,12 @@
 # Visual atlas and publication workflow
 
-This document translates the private inventory policy into future
-reference-site tasks. It does **not** authorize new screenshot publication.
-See [visual evidence curation](../visual-evidence-curation.md) and the
-[first inventory report](../research/visual-evidence-first-pass-20261120.md).
+This document translates the private evidence inventory into reference-site
+illustrations. The operator's 2026-11-21 standing approval permits **ordinary
+documentary UI screenshots using synthetic or public sample content** and the
+project's own illustrations to enter a reviewed site PR without separately
+authorizing every image. This does not grant rights in software binaries or
+third-party artwork. See [visual evidence curation](../visual-evidence-curation.md)
+and the [first inventory report](../research/visual-evidence-first-pass-20261120.md).
 
 ## Inventory already established
 
@@ -17,9 +20,11 @@ counts; do not substitute this historical snapshot for a fresh inventory.
 The public research report includes short opaque occurrence-ID prefixes for
 reviewed examples of: Draw File and Zoom menus; Draw Save and font dialogs;
 Calendar day navigation; Worksheet selected cells and disabled menus; and
-Express Publisher's monochrome Save As view. These prefixes are not raw
-capture paths or public image licenses. Keep full occurrences, private
-locators, framebuffers and contact sheets external to Git.
+Express Publisher's monochrome Save As view. These prefixes are not raw capture paths or vendor licenses. Keep full
+occurrences and private locators in the private evidence collection; publish
+only selected, inspected, well-captioned documentation images with the site
+manifest. Contact sheets may be shared as review aids without automatically
+becoming public website assets.
 
 ## Atlas coverage to measure
 
@@ -59,9 +64,15 @@ The **public** record, once cleared, should contain:
 - Immutable evidence reference and review decision, **without private paths,
   credentials, personal data or full raw captures**.
 
-No public binary entry should be created before the rights and pixel-content
-review. Redactions or annotations create a derivative and must not replace
-the underlying private original. A near-duplicate hash is only a triage lead.
+Routine synthetic-content interface captures and independently authored
+illustrations may be included directly in an image PR under the standing
+operator authorization, after inspecting pixels and checking provenance.
+Do not require another ad hoc operator permission for each normal screenshot.
+Use `website/reference-images.json` and put final PNG derivatives under
+`website/src/assets/reference/`; the repository audit checks the declared
+hash, size, dimensions, metadata-free PNG structure and sidecar.
+Redactions or annotations create a derivative and must not replace
+the private original. A near-duplicate hash is only a triage lead.
 
 ## A useful DeskMate-derived design system
 
@@ -80,12 +91,16 @@ confuse its DOS look with authentic DeskMate GUI behavior.
 
 1. Original capture identified, byte-preserved and independently inspected.
 2. Provenance and native/synthetic status established; no inferred UI states.
-3. Permission or applicable existing **specific** publication grant documented.
+3. Standing documentary-image authorization or a more specific third-party
+   permission/rationale recorded; distinguish project rights from vendor art.
 4. Private paths, names, incidental sensitive content and third-party
    restrictions reviewed.
 5. Derivative generated reproducibly, linked to original and hashed.
 6. Caption, alt text, viewport scaling and contextual claim reviewed.
-7. A human approves the exact bytes for Git/publication audit.
-8. Proposed image included only in an appropriately licensed, reviewable PR.
+7. Include the actual suitable PNG and correct manifest/sidecar in a reviewable
+   PR; normal synthetic-content UI screenshots need no additional per-file
+   approval outside the established independent PR review.
+8. Avoid a full manual scan, redistributable software/media archive, unrelated
+   copyrighted art or any personal/credential-bearing screen content.
 
 The inventory and the publication collection are intentionally separate.

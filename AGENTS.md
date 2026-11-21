@@ -34,13 +34,35 @@ Challenge scope drift: evidence, consequence, rollback, minimum control.
   synthetic test records, may be published to this repository without asking
   separately for each file. Check every candidate's actual bytes and provenance
   first. This grant does NOT cover real personal data, commercial software or
-  media, credentials, private screenshots/memory, unreviewed third-party
-  content, or other restricted/confidential inputs. Use a review PR.
+  media, credentials, unreviewed/private screenshot evidence or memory,
+  unreviewed third-party content, or restricted/confidential inputs. Use a review PR.
   On 2026-11-08, the operator separately authorized ChatGPT as an independent
   reviewer to merge completed Codex PRs after scope review and passing checks
   during routine post-run housekeeping. This does NOT authorize Codex workers
   to merge their own PRs, bypass tests, operate a VM, spend model quota or
   publish private/commercial inputs.
+- Standing documentary-image publication permission (operator, 2026-11-21):
+  The operator authorizes **ordinary representative screenshots of DeskMate
+  and its ecosystem running with synthetic/public sample data**, the project's
+  own synthetic illustrations, and appropriately attributed, limited images
+  prepared for public documentation to be curated and published in the
+  reference site. Codex may select, review and commit eligible examples in a
+  review PR without separate operator authorization for every screenshot.
+  A contextual screenshot is not a license to redistribute commercial software,
+  installed media, extracted proprietary assets, complete manuals or archives.
+  Inspect actual pixels for personal data, serials/credentials, unrelated
+  third-party art and accidental private host content. Distinguish native
+  captures, independent renders and editorial composites; maintain provenance
+  and meaningful captions/alt text. Publish eligible derivatives under
+  `website/src/assets/reference/` with manifest entries in
+  `website/reference-images.json`, hashes and accurate REUSE sidecars;
+  preserve immutable raw evidence and private locators outside Git.
+  Attribution and project licenses cover only rights the project holds, not
+  Tandy, Radio Shack or third-party interface artwork. Unusual third-party
+  works or unverified redistribution terms still deserve a focused review,
+  but do not presume routine UI screenshots are categorically forbidden.
+  ChatGPT can independently review and merge eligible, passing PRs under the
+  existing housekeeping grant; producing Codex workers still cannot merge.
 - When a user requests publication of an eligible synthetic-data sample or
   native-acceptance candidate, commit and push the **actual independently checked
   binary bytes**, not just a private archive, SHA-256 digest or semantic JSON.
