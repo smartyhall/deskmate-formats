@@ -1,0 +1,26 @@
+/*
+ * DeskMate reference site layout only; BOOTSTRA.386's styling is unmodified.
+ * SPDX-FileCopyrightText: Copyright (c) 2026 Michael A. Hall
+ * SPDX-License-Identifier: Apache-2.0
+ */
+.document { max-width: 95ch; }
+.document pre { overflow-x: auto; }
+.document table { display: block; max-width: 100%; overflow-x: auto; }
+.document img { max-width: 100%; height: auto; }
+#reference-sections { overflow-wrap: anywhere; }
+#reference-sections summary { cursor: pointer; }
+#reference-sections ul { padding-inline-start: 1.5rem; }
+#reference-sections li { margin-block: .25rem; }
+.source-note { margin-top: 2rem; }
+#reference-search { display: flex; flex-wrap: wrap; align-items: end; gap: .5rem; margin-block: 1rem; }
+#reference-search label { flex-basis: 100%; }
+#search-query { flex: 1 1 16rem; }
+#search-results li { margin-block: 1rem; }
+#search-results p { overflow-wrap: anywhere; }
+.landing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 1rem; }
+.landing-card { border: 1px solid currentColor; padding: 1rem; }
+.landing-card ul { padding-inline-start: 1.5rem; }
+@media print {
+  nav, #reference-sections, footer { display: none !important; }
+  main { width: 100%; }
+}
