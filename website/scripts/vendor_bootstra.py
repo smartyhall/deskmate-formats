@@ -36,7 +36,7 @@ def get(url: str) -> bytes:
 def select(members: list[str], suffix: str) -> str:
     matches = [m for m in members if m.endswith("/" + suffix) or m == suffix]
     if len(matches) != 1:
-        raise ValueError(f"Expected exactly one upstream {suffix}, got {matches!r}")
+        raise ValueError(f"Expected exactly one upstream {suffix}, got {matches!r}. Archive entries: {members[:80]!r}")
     return matches[0]
 
 
