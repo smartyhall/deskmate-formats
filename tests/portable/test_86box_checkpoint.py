@@ -45,6 +45,30 @@ class CheckpointTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 checkpoint.restore(*args)
 
+    def test_restore_after_former_machine_has_been_removed(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            original = root / 'former-machine'
+            original.mkdir()
+            disk = original / 'disk.img'
+            disk.write_bytes(b'preserved disk')
+            (original / '86box.cfg').write_text(
+                f'[Hard disks]\\nhdd_01_fn = {disk}\\n', encoding='utf-8')
+            sealed = root / 'checkpoint'
+            checkpoint.save(original, sealed, ['86box.cfg', 'disk.img'])
+            original.rename(root / 'removed-machine')
+            self.assertFalse(original.exists())
+            with socket.socket() as sock:
+                sock.bind(('127.0.0.1', 0))
+                port = sock.getsockname()[1]
+            restored = root / 'restored'
+            receipt = checkpoint.restore(sealed / 'machine',
+                sealed / 'machine-files.csv', restored, original, port)
+            self.assertEqual(receipt['state'], 'restored-unbooted')
+            self.assertEqual((restored / 'disk.img').read_bytes(), b'preserved disk')
+            self.assertEqual(checkpoint.config(restored / '86box.cfg')
+                             ['Hard disks']['hdd_01_fn'], 'disk.img')
+
     def test_rejects_inventory_escapes(self):
         with tempfile.TemporaryDirectory() as temporary:
             for name in ('../outside', 'directory/../../outside', 'D:/outside', 'drive:stream'):
