@@ -279,3 +279,138 @@ different arrangements, so raw HDS from an observed converter run is
 the differential comparison input. The author discussion and the
 Tandy1000 archive remain leads for distinct releases and more
 contemporary Music documentation.
+
+## Tandy1000 Yahoo! Groups — community archive lead
+
+The operator identified this Wayback snapshot (2006-08-15 14:01:02 UTC):
+
+https://web.archive.org/web/20060815140102/http://groups.yahoo.com/group/Tandy1000/
+
+Replay retrieval in ChatGPT failed; message and attachment coverage
+remain unverified. This is separate from the authorized TVDog mirror.
+Prioritize existing downloadable public archive packages over replay-page
+crawling. Investigate:
+
+- Archive Team collection: https://archive.org/details/archiveteam_yahoogroups
+- Group metadata: https://archive.org/details/Yahoo_Groups_Metadata
+- Search: https://archive.org/search?query=subject%3A%22yahoo%20groups%22%20Tandy1000
+- Retrieval guide: https://datahorde.org/how-to-recover-your-yahoo-groups-from-the-internet-archive/
+
+Verify the exact group name in metadata (master_T.csv), then look for
+group-specific WARC or other public export packages. Do not download
+unrelated multi-group batches indiscriminately. If no package is found,
+make a bounded Wayback CDX inventory of the original group's public URLs
+and capture dates, including message, topic, file and link paths and
+the later /neo/groups/Tandy1000/ URL family. Respect archive service
+policies and rate limits; do not infer missing captures or bypass access
+restrictions. No bulk Wayback crawling is authorized by the TVDog mirror
+decision. Preserve original packages and provenance privately when
+separately approved, decode WARC/JSON or message exports offline, and
+deduplicate by message identity and hashes while retaining capture
+provenance. Distinguish user-reported technical claims from verified
+native behavior. Search relevant messages for DeskMate SDK, formats,
+fonts, Atech/Rockwell, Express Publisher, utilities, printer drivers,
+Tandy hardware, and links to otherwise missing software. Public
+repository output should be curated technical summaries and source
+references, not raw messages, member details or attachments.
+
+## DM_Music and MidiMapper — independent SNG interpretation
+
+Operator-supplied author page:
+https://web.archive.org/web/20120204044413/http://members.fortunecity.com/whb11/Midi/MyMidiPlayer.htm
+
+Replay retrieval here failed; recover the page and linked README(s) in the
+lab if accessible. Independently located primary discussion:
+https://groups.google.com/g/comp.sys.tandy/c/fq1OO44yLtI
+
+On 2006-12-14 WB announced the Windows 32-bit SNG-to-HDS text converter,
+co-developed with TVDog. The 2007-02-05 post describes conversion of
+instrument dynamics in converter version 1.4 or later, and a default
+of mf in DeskMate versus p in the author's player. The 2007-03-08 post
+calls DM_Music version 1.05 and reports manual adjustments to distributed
+MIDI examples. Preserve the version spelling discrepancy; do not assume
+1.05 sorts before or after 1.4 without the actual release files/readme.
+The 2014-06-14 post gives the moved author site and converted MIDI page;
+the 2015-08-19 post names MidiMapper 6.49. A 2017-12-20 reply reports
+failure to find backed-up applications, not proof they are unavailable.
+
+Acquisition leads (not verified live downloads):
+- http://whb.comli.com/Midi/MyMidiPlayer.htm#DM_Music
+- http://whb.comli.com/Midi/MyPDM2toMidi.htm
+- http://my.voyager.net/~wb/misc/MidiMapper.zip (player/docs, not proven converter)
+- TVDog mirror private inventory and Tandy1000 Yahoo Groups file archives.
+- Bounded Wayback CDX lookup for the original and moved page directories,
+  then exact linked executable/ZIP and readme URLs; avoid indiscriminate crawl.
+
+The same thread contains first-person posts from DeskMate Music project
+manager Kevin Michael Vail (2006-12-15), describing sampled-note
+interpolation, the shared mouse/audio converter, and RTC-assisted buffer
+servicing; and Frank Durda IV (2006-12-19), describing earlier PSSJ recording
+limitations, the TL/3-era hardware revision and SND header changes to
+identify recording hardware. Treat these as historical hypotheses for
+native timing/recording experiments, not offsets or exact algorithms.
+Preserve links and dates, not wholesale copies of the posts.
+
+After acquiring and hashing an exact converter release and docs privately,
+run it in a disposable isolated Windows guest (no network; not the core
+research VM). Use fresh original synthetic controls and private historical
+SNGs with unresolved semantics. Compare untouched HDS output against the
+independent parser event stream and original DeskMate native evidence.
+Vary one field at a time: initial/changed dynamics for each voice, instrument
+slots and names, tempo, meter/key, accidentals, ties/rests/dots, repeat
+boundaries and crossings, missing slots and unsupported records. Include
+same-note timing and duration controls, and test absent versus explicit
+metadata. Record byte offsets, exact input hash, converter version/hash,
+raw HDS hash, normalized differences, warnings and omissions. Compare
+HDS before MIDI, and distinguish converter behavior from player defaults,
+manual edits, articulation and MIDI channel mapping. A plausible HDS result
+is an independent hypothesis, not proof of original DeskMate semantics;
+confirm discrepancies with native UI/save/playback and static evidence.
+Keep third-party binaries and historical arrangements private; publish
+only original synthetic eligible data, independent findings and provenance.
+This is a bounded follow-up to sampled Music/SNG research, not a reason
+to abandon the next typography/Express Publisher campaign.
+
+### Operator clarification and supplied MidiMapper archive
+
+The operator identified **DM_Music.zip** as the expected separate
+converter package in TVDog. Locate it case-insensitively in the local
+mirror's manifest, directory listings and nested archives before making
+further requests. Pin the observed exact original URL and hash; do not
+guess a direct link. MidiMapper.zip is the companion player, not a
+substitute for DM_Music. The author independently distinguishes these
+programs in the December 2006 Usenet discussion.
+
+The operator supplied MidiMapper.zip (440,568 bytes; SHA-256
+323a06e1ae757de09ac25721d94a29ac7bbb1d4038d91cd74cdcdaee2dad798b).
+Its four ZIP entries are MidiMapper.CAB, pad_file.xml, setup.exe and
+SETUP.LST. The manifest identifies MidiMapper.exe 6.25.0.0, dated
+2007-03-24, while the included PAD XML declares 6.12 (2007-01-28).
+Preserve both metadata observations; verify actual PE resources in the lab.
+The PAD identifies W. H. Baldwin / Horizon Software and freeware status,
+not a source-code license. The CAB was independently read in memory
+using libarchive without executing or installing any component; 46
+members include 33 HDS files, MidiMapper.exe, a MIDI OCX, setup support
+and Midi_ReadMe.htm. No DM_Music executable is listed. CAB SHA-256:
+85ca490767cc0882d0aaa7a37e6f1b4debcecb73c195dfa6c5f3d68741324b4e.
+The extracted readme was 31,955 bytes (manifest advertises 35,166;
+reverify extraction and possible version mismatch), SHA-256
+10fda8778e0b89459541faf0eb1eb434337f4f592c1d9fa2255fe17342a71835.
+
+Readme sections describe [Song] and [Notes], PolyDur=True, PolyPhony,
+slash-separated voices with different durations, dotted durations,
+per-voice dynamics (pp through ff), velocity scaling, raw MIDI events,
+and annotations for key, meter, bars and score markers. Some annotations
+are ignored by the player. Treat these as documented HDS semantics,
+not established SNG field meanings. The bundled Canon, Sonatina and
+Bach arrangement candidates may correlate with the native SNG corpus;
+manual edits and new voices/instrument assignments are possible. Compare
+new converter output before using bundled HDS as historical controls.
+
+Use privately archived bytes and readme for the offline investigation.
+The uploaded file is not automatically available on the Windows VM;
+acquire the exact package through an operator-provided local copy or
+verified original archive URL. No installer execution, server download,
+or transfer to the VM was performed in this ChatGPT turn. Do not
+publish third-party binaries, historical arrangements, full readme or
+contact information in Git.

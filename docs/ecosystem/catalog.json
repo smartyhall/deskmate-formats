@@ -54,7 +54,7 @@
       "verification": "known archive lead; current page retrieval timed out"
     },
     "express-publisher-archive": {
-      "title": "Express Publisher for DeskMate \u2014 Oldskool archive directory",
+      "title": "Express Publisher for DeskMate — Oldskool archive directory",
       "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Express-Publisher-for-DeskMate/",
       "verification": "Four TVDog ZIPs verified locally. All 14 embedded LHA packages extracted and inventoried."
     },
@@ -69,7 +69,7 @@
       "verification": "Operator supplied index and pasted entries on 2026-11-19; listing inspected, underlying downloads not yet verified. Priorities in acquisitions.md."
     },
     "tvdog-root": {
-      "title": "TVDog archive at Oldskool \u2014 complete public subtree",
+      "title": "TVDog archive at Oldskool — complete public subtree",
       "url": "http://ftp.oldskool.org/pub/tvdog/",
       "verification": "Local mirror enumerated and independently checked. See tvdog-mirror-verification.md for exact acquisition status."
     },
@@ -142,6 +142,36 @@
       "title": "Tandy Express Order Software Buyer's Guide (1988)",
       "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/expsoft.zip",
       "verification": "84-page expsoft.pdf recovered and DeskMate pages visually checked. See demonstrator-purchase-facts.json for digest, pages, exact offers and limits."
+    },
+    "yahoo-tandy1000": {
+      "title": "Tandy1000 Yahoo! Groups — Wayback Machine capture",
+      "url": "https://web.archive.org/web/20060815140102/http://groups.yahoo.com/group/Tandy1000/",
+      "verification": "Operator supplied capture dated 2006-08-15; replay retrieval failed here. Message, file and attachment coverage not verified."
+    },
+    "yahoo-groups-archiveteam": {
+      "title": "Archive Team Yahoo! Groups preservation collection",
+      "url": "https://archive.org/details/archiveteam_yahoogroups",
+      "verification": "General archive collection lead, not proof that Tandy1000 is included."
+    },
+    "wb-sng-converter": {
+      "title": "WB and TVDog DM_Music SNG-to-HDS converter — archived author page",
+      "url": "https://web.archive.org/web/20120204044413/http://members.fortunecity.com/whb11/Midi/MyMidiPlayer.htm",
+      "verification": "Operator supplied snapshot; replay failed in ChatGPT. Author's Usenet announcement independently located; executable not acquired."
+    },
+    "wb-sng-usenet": {
+      "title": "New program available to convert and play Deskmate Music .SNG files",
+      "url": "https://groups.google.com/g/comp.sys.tandy/c/fq1OO44yLtI",
+      "verification": "Discussion inspected, beginning 2006-12-14; converter and original developers' first-person accounts, technical claims require independent verification."
+    },
+    "wb-midimapper-upload": {
+      "title": "W. H. Baldwin MidiMapper — operator-supplied freeware installer",
+      "url": "http://my.voyager.net/~wb/misc/MidiMapper.zip",
+      "verification": "Operator-provided ZIP inspected locally; 440568 bytes, SHA-256 323a06e1ae757de09ac25721d94a29ac7bbb1d4038d91cd74cdcdaee2dad798b. Installer manifest declares MidiMapper.exe 6.25.0.0; older PAD declares 6.12. Not DM_Music; source URL and direct acquisition not reverified."
+    },
+    "wb-dm-music-tvdog": {
+      "title": "DM_Music.zip — TVDog archive acquisition lead",
+      "url": "http://ftp.oldskool.org/pub/tvdog/",
+      "verification": "Operator identified expected archive filename; search local mirror case-insensitively. Exact source path, version and contents not yet verified."
     }
   },
   "entries": [
