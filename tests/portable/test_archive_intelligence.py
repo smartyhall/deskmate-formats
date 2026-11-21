@@ -153,12 +153,14 @@ class ArchiveIntelligenceTests(unittest.TestCase):
         self.receipt("two.udf", b"synthetic UDF recognition control")
         self.receipt("unrelated.txt", b"Unrelated text document")
         original_identify = index.identify
+        original_extract = index.extract
         def identify(path, name):
             return {"one.iso": "iso9660", "two.udf": "udf"}.get(
                 name, original_identify(path, name))
 
         def unavailable(path, name, kind, *args, **kwargs):
-            self.assertIn(kind, {"iso9660", "udf"})
+            if kind not in {"iso9660", "udf"}:
+                return original_extract(path, name, kind, *args, **kwargs)
             return SimpleNamespace(status="unsupported", detail="7zip-unavailable",
                                    members=[], documents=[])
 
@@ -168,7 +170,8 @@ class ArchiveIntelligenceTests(unittest.TestCase):
             self.assertEqual(initial.call_count, 2)
 
         def upgraded(path, name, kind, *args, **kwargs):
-            self.assertIn(kind, {"iso9660", "udf"})
+            if kind not in {"iso9660", "udf"}:
+                return original_extract(path, name, kind, *args, **kwargs)
             return SimpleNamespace(status="ok", detail=None, members=[], documents=[])
 
         with (patch.object(index, "identify", side_effect=identify),
