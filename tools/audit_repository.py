@@ -111,14 +111,14 @@ def site_image_manifest():
         if not isinstance(entry, dict):
             raise ValueError('invalid site image entry')
         name = entry.get('path')
-        if (not isinstance(name, str) or not re.fullmatch(r'[a-z0-9][a-z0-9_./-]*\\.png', name)
+        if (not isinstance(name, str) or not re.fullmatch(r'[a-z0-9][a-z0-9_./-]*\.png', name)
                 or '..' in PurePosixPath(name).parts or str(PurePosixPath(name)) != name
                 or len(name) > 160):
             raise ValueError('unsafe site image path')
         rel = (SITE_IMAGE_DIR / name).as_posix()
         identifier = entry.get('id')
         if (rel in entries or not isinstance(identifier, str)
-                or not re.fullmatch(r'ui\\.[a-z0-9]+(?:[.-][a-z0-9]+)*', identifier)
+                or not re.fullmatch(r'ui\.[a-z0-9]+(?:[.-][a-z0-9]+)*', identifier)
                 or identifier in ids):
             raise ValueError('duplicate or invalid site image identifier')
         ids.add(identifier)
@@ -147,7 +147,7 @@ def check_site_image(rel, data, entry):
     """Validate documented PNG bytes; reject arbitrary binary and embedded metadata."""
     if len(data) != entry['size'] or hashlib.sha256(data).hexdigest() != entry['sha256']:
         raise ValueError('site image digest or size mismatch: ' + rel)
-    if not data.startswith(b'\\x89PNG\\r\\n\\x1a\\n'):
+    if not data.startswith(b'\x89PNG\r\n\x1a\n'):
         raise ValueError('site image is not a PNG: ' + rel)
     allowed = {b'IHDR', b'PLTE', b'tRNS', b'IDAT', b'IEND', b'gAMA', b'sRGB', b'pHYs'}
     offset, first, last, has_data = 8, True, False, False
