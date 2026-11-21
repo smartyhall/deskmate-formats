@@ -22,6 +22,8 @@ const sections = Object.freeze(
   }))
 );
 const md = new MarkdownIt({ html: false, linkify: true, typographer: false });
+// Avoid treating bare Markdown filenames such as AGENTS.md as Internet domains.
+md.linkify.set({ fuzzyLink: false });
 
 function siteUrl(pathname) {
   if (typeof pathname !== "string" || !pathname.startsWith("/") ||
@@ -70,10 +72,23 @@ function renderSource(entry) {
   const raw = fs.readFileSync(sourcePath(entry), "utf8");
   const tokens = md.parse(raw, {});
   const headingIds = new Map();
+  let foundPageTitle = false;
   function walk(items) {
     for (let i = 0; i < items.length; i++) {
       const token = items[i];
       if (token.type === "heading_open" && items[i + 1]) {
+        // Some archived laboratory reports contain multiple Markdown H1s.
+        // Keep their wording/anchors, but expose a single page H1 to readers.
+        if (token.tag === "h1") {
+          if (foundPageTitle) {
+            token.tag = "h2";
+            const closing = items[i + 2];
+            if (closing?.type === "heading_close" && closing.tag === "h1")
+              closing.tag = "h2";
+          } else {
+            foundPageTitle = true;
+          }
+        }
         const heading = items[i + 1].content;
         const base = heading.toLowerCase().replace(/[^a-z0-9 -]/g, "")
           .trim().replace(/\s+/g, "-") || "section";
