@@ -1,5 +1,21 @@
 # DeskMate format inventory
 
+## Desktop and launcher
+
+DeskMate integrates a desktop for launching applications, navigating files,
+and organizing quick-load entries. The following native framebuffer captures
+illustrate the desktop and the commands available from its Desktop menu;
+they document one DeskMate 3.05 installation, not every product version.
+
+## Common controls and alerts
+
+The environment uses modal alerts, focus outlines, keyboard shortcuts and
+context-sensitive Help across applications. The examples below show a missing
+file alert and Text's built-in Help interface; they are documentary snapshots,
+not a claim that every dialog behaves identically.
+
+## Application and format coverage
+
 The [Tandy Appendix A format crosswalk](reference/tandy-format-crosswalk.md) contains manufacturer-documented common headers and application-specific technical references for Address Book, Calendar, Draw, Filer, Text and Worksheet. These are **documentation-derived leads**, not new native-verified capabilities; the inventory table below continues to distinguish research already integrated into the repository from open PR work.
 
 | Application/family | Evidence status | Implemented capabilities |
