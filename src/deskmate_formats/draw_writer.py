@@ -84,7 +84,7 @@ def _packed(source):
 
 def _editable_outline(element):
     run = graphics.external_font_run(element) if element.kind == 'Uf' else None
-    return (run is not None and run.attributes == b'\x01\xff\0\0\0\0'
+    return (run is not None and not run.style_word and run.attributes == b'\x01\xff\0\0\0\0'
             and run.descriptor[4:28] == b'\0\0\0\0\x0c\0\xff' + bytes(17)
             and run.descriptor[34:36] == b'\x01\0'
             and run.point_size_word and run.width_percent_word)
@@ -318,7 +318,7 @@ def permute_outline_label(source, tag, ascii_label):
     offset = next((entry.offset for entry in form.entries if entry.tag == tag and type(tag) is int), None)
     item = next((element for element in form.elements if element.offset == offset), None)
     ref = graphics.external_font_run(item) if item else None
-    if (ref is None or ref.name not in ('Cobb', 'Dixon', 'Marin')
+    if (ref is None or ref.style_word or ref.name not in ('Cobb', 'Dixon', 'Marin')
             or len(item.raw) != 2 * unpack_from('<H', item.raw, 18)[0]
             or any(not 32 <= code <= 126 for code in ref.text_bytes)):
         raise graphics.GraphicsFormatError('text edit requires a resolved top-level ASCII outline-font run')

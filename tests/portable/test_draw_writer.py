@@ -20,7 +20,31 @@ def read(name):
     return (FIXTURES / (name + '.fig')).read_bytes()
 
 
+class WorkbenchBundleTests(unittest.TestCase):
+    def test_standalone_bundle_embeds_current_fig_reader(self):
+        workbench = CODEC.parent
+        source = CODEC.read_text(encoding='utf-8')
+        standalone = (workbench / 'workbench.html').read_text(encoding='utf-8')
+        self.assertIn('<script>' + source + '</script>', standalone)
+
+
 class WriterTest(unittest.TestCase):
+    def test_native_style_word_is_retained_without_qualifying_an_edit(self):
+        raw = read('cobb-style-flag4-tool-generated')
+        original = read('d23')
+        self.assertEqual(raw, original[:104] + bytes((4, 0)) + original[106:])
+        drawing = draw.parse_bytes(raw)
+        item, = drawing.form.draw_order()
+        font = graphics.external_font_run(item)
+        self.assertEqual((font.name, font.text_bytes, font.style_word), ('Cobb', b'VECTOR 42', 4))
+        preview = graphics.preview_svg(drawing.form, drawing.palette)
+        self.assertEqual([event.reason for event in preview.omissions], ['unsupported_external_font_style_word'])
+        with self.assertRaisesRegex(graphics.GraphicsFormatError, 'resolved top-level'):
+            draw_writer.permute_outline_label(raw, drawing.form.entries[0].tag, b'42 VECTOR')
+        malformed = raw[:104] + bytes((5, 0)) + raw[106:]
+        other, = draw.parse_bytes(malformed).form.draw_order()
+        self.assertIsNone(graphics.external_font_run(other))
+
     def test_construct_single_line_from_profile(self):
         expected = read('d01')
         item, = draw.parse_bytes(expected).form.draw_order()
@@ -150,6 +174,26 @@ class BrowserCodecTest(unittest.TestCase):
             capture_output=True, text=True, check=True, timeout=45,
         )
         return json.loads(response.stdout)
+
+    def test_native_style_word_matches_python_read_only_behavior(self):
+        result = self.browser(
+            '''
+            const fs = require('node:fs');
+            const codec = require(process.argv[1]);
+            const input = JSON.parse(fs.readFileSync(0, 'utf8'));
+            const model = codec.read(Buffer.from(input.flag, 'base64'));
+            const entry = model.entries[0], part = model.elements.get(entry.offset);
+            console.log(JSON.stringify({
+              family: part.fontName, style: part.fontStyleWord,
+              editable: Boolean(codec.editableOutline(part)),
+              permutable: Boolean(codec.canPermute(model, entry.tag)),
+              unchanged: Buffer.from(model.copy()).toString('base64') === input.flag,
+            }));
+            ''',
+            {'flag': read('cobb-style-flag4-tool-generated')},
+        )
+        self.assertEqual(result, {'family': 'Cobb', 'style': 4, 'editable': False,
+                                  'permutable': False, 'unchanged': True})
 
     def test_outline_authoring_parity(self):
         from deskmate_formats.ff1 import serialize_resource

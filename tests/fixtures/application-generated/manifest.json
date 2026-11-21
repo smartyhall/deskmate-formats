@@ -4559,6 +4559,22 @@
       "native_saved": true,
       "source_path": "dm-music/major-scale-dm-music-1.04.hds",
       "source_sha256": "64731a55b2a583045eaccddb066b2194e941912445c589dd93b9f826a41e52e1"
+    },
+    {
+      "path": "draw/cobb-style-flag4-tool-generated.fig",
+      "size": 229,
+      "sha256": "734ec95a3a1ef01c8603b9516c03c0f5edfb9c287df6aebd282eb678f6b746eb",
+      "application": "Tandy DeskMate Draw",
+      "version": "03.05.00 installation",
+      "experiment": "2026-11-20 native Uf style-word differential",
+      "origin": "Tool-generated synthetic control from the original application-written d23.fig. Opened and rendered in native Draw. The source word was changed independently and the candidate was not application-authored.",
+      "expected_content": "The original Cobb VECTOR 42 label with one little-endian word of 4 at Uf record offset 54. Native rendering changes 908 viewport pixels.",
+      "generation_method": "python -c \"from pathlib import Path; b=Path('tests/fixtures/application-generated/draw/d23.fig').read_bytes(); Path('FLAG4.FIG').write_bytes(b[:104]+bytes((4,0))+b[106:])\"",
+      "source_path": "draw/d23.fig",
+      "source_sha256": "3a65ae65872af24f5a50291503158bb2b983c3b403aad1838387c043ab893613",
+      "evidence_class": "Tool-generated, native open and rendering observed; style semantics and save compatibility unverified.",
+      "synthetic_data": true,
+      "native_saved": false
     }
   ]
 }

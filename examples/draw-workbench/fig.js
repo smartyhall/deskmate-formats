@@ -76,7 +76,7 @@ const DrawFig = (() => {
       }
       const children = group.get(offset) ?? [];
       const points = [];
-      let text = null, fontName = null;
+      let text = null, fontName = null, fontStyleWord = 0;
       if (Object.hasOwn(sizes, kind)) require(length >= sizes[kind], `Truncated ${kind} record`);
       else if (kind === 'OO') require(length >= 20 + 2 * children.length, 'Overlapping group records');
       else if (kind === 'T') {
@@ -96,17 +96,21 @@ const DrawFig = (() => {
           const area = data.slice(start + 26, start + 56);
           const boundary = area.indexOf(0);
           const name = area.slice(0, boundary);
+          const styleWord = boundary > 0 && boundary < 28 ? u16(start + 54) : 0;
+          const paddingEnd = styleWord ? 28 : area.length;
           if (u16(start + 98) === 0 && end <= start + size && start + size <= end + 2
               && (start + size !== end + 2 || (data[end] === 0 && data[end + 1] === 0))
-              && boundary > 0 && area.slice(boundary).every(value => value === 0)
+              && boundary > 0 && area.slice(boundary + 1, paddingEnd).every(value => value === 0)
+              && [0, 4, 6, 12, 128].includes(styleWord)
               && name.every(value => 32 <= value && value <= 126)
               && !data.slice(start + 100, end).includes(0)) {
             text = data.slice(start + 100, end);
             fontName = String.fromCharCode(...name);
+            fontStyleWord = styleWord;
           }
         }
       }
-      elements.set(offset, { offset, kind, modifier, coords, bounds, children, points, text, fontName,
+      elements.set(offset, { offset, kind, modifier, coords, bounds, children, points, text, fontName, fontStyleWord,
         raw: chunk(data, start, LIST + next) });
     }
     const model = {
@@ -347,7 +351,9 @@ const DrawFig = (() => {
         const fill = paint(1, '#333333');
         const face = faces.get(part.fontName?.toLowerCase());
         let reason = part.fontName ? `Supply local ${part.fontName} FF1` : 'Invalid external font descriptor';
-        if (face) {
+        if (part.fontStyleWord) {
+          reason = 'Unsupported external font style word';
+        } else if (face) {
           try {
             const { paths, cost } = pathOutlines(part, face, outlineBudget);
             outlineBudget -= cost;
@@ -490,7 +496,7 @@ const DrawFig = (() => {
 
   function editableOutline(part) {
     const { raw } = part;
-    return part.kind === 'Uf' && part.fontName && raw[20] === 1 && raw[21] === 255
+    return part.kind === 'Uf' && part.fontName && !part.fontStyleWord && raw[20] === 1 && raw[21] === 255
       && raw.slice(22, 26).every(v => v === 0)
       && (raw[56] || raw[57]) && (raw[58] || raw[59])
       && raw.slice(60, 68).every((v, i) => v === ([0, 0, 0, 0, 12, 0, 255, 0][i]))
@@ -671,7 +677,7 @@ const DrawFig = (() => {
   function canPermute(model, tag) {
     const entry = model.entries.find(e => e.tag === tag);
     const part = entry && model.elements.get(entry.offset);
-    return part && ['Cobb', 'Dixon', 'Marin'].includes(part.fontName)
+    return part && !part.fontStyleWord && ['Cobb', 'Dixon', 'Marin'].includes(part.fontName)
       && part.raw.length === 2 * (part.raw[18] + 256 * part.raw[19])
       && part.text.every(code => code >= 32 && code <= 126);
   }
