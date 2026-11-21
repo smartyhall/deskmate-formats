@@ -146,6 +146,42 @@ class ArchiveIntelligenceTests(unittest.TestCase):
         matches = self.command("search", "sample")
         self.assertEqual([m["rel"] for m in matches], ["first.txt", "second.txt"])
 
+    def test_seven_zip_upgrade_requeues_iso_and_udf(self):
+        from types import SimpleNamespace
+
+        self.receipt("one.iso", b"synthetic ISO recognition control")
+        self.receipt("two.udf", b"synthetic UDF recognition control")
+        self.receipt("unrelated.txt", b"Unrelated text document")
+        original_identify = index.identify
+        original_extract = index.extract
+        def identify(path, name):
+            return {"one.iso": "iso9660", "two.udf": "udf"}.get(
+                name, original_identify(path, name))
+
+        def unavailable(path, name, kind, *args, **kwargs):
+            if kind not in {"iso9660", "udf"}:
+                return original_extract(path, name, kind, *args, **kwargs)
+            return SimpleNamespace(status="unsupported", detail="7zip-unavailable",
+                                   members=[], documents=[])
+
+        with (patch.object(index, "identify", side_effect=identify),
+              patch.object(index, "extract", side_effect=unavailable) as initial):
+            self.ingest()
+            self.assertEqual(sum(c.args[2] in {'iso9660', 'udf'} for c in initial.call_args_list), 2)
+
+        def upgraded(path, name, kind, *args, **kwargs):
+            if kind not in {"iso9660", "udf"}:
+                return original_extract(path, name, kind, *args, **kwargs)
+            return SimpleNamespace(status="ok", detail=None, members=[], documents=[])
+
+        with (patch.object(index, "identify", side_effect=identify),
+              patch.object(index, "extract", side_effect=upgraded) as new):
+            result, = self.ingest("--update-tools", "--seven-zip",
+                                  str(self.home / "seven-zip.exe"))
+        self.assertEqual(sum(c.args[2] in {'iso9660', 'udf'} for c in new.call_args_list), 2)
+        self.assertEqual(result["this_run"], {"indexed": 2})
+        self.assertEqual(len(self.command("search", "unrelated")), 1)
+
     def test_capability_upgrade_reindexes_only_affected_sources(self):
         self.receipt("note.txt", b"Qualified title")
         self.receipt("manual.pdf", b"%PDF-fake")

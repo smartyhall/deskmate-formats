@@ -35,9 +35,10 @@ NATIVE_SIGNATURES = {
     b'MSCF': 'cab', b'PK\x03\x04': 'zip', b'PK\x05\x06': 'zip',
     b'\x89PNG': 'png', b'GIF8': 'gif', b'{\\rt': 'rtf',
 }
-LEGACY_KINDS = {'arj': 'Arj', 'cab': 'Cab', 'lzh': 'Lzh', '7z': '7z', 'rar': 'Rar', 'mz': None}
+LEGACY_KINDS = {'arj': 'Arj', 'cab': 'Cab', 'lzh': 'Lzh', '7z': '7z', 'rar': 'Rar', 'iso9660': 'Iso', 'udf': 'Udf', 'mz': None}
+OPTICAL_KINDS = frozenset({'iso9660', 'udf', 'cd-raw', 'optical-image'})
 SEVEN_OPTIONS = ('-sccUTF-8', '-spd', '-bsp0', '-p-')
-CONTAINER_KINDS = frozenset({'zip', 'tar', 'gz', 'tgz', 'fat', 'disk-image', 'arc', *LEGACY_KINDS})
+CONTAINER_KINDS = frozenset({'zip', 'tar', 'gz', 'tgz', 'fat', 'disk-image', 'arc', *OPTICAL_KINDS, *LEGACY_KINDS})
 TEXT_KINDS = frozenset({'text', 'html', 'pdf', 'native-doc', 'doc', 'rtf'})
 TEXT_CONTROL = re.compile(rb'[\x00-\x07\x0e-\x19\x1b-\x1f]')
 
@@ -85,6 +86,53 @@ def _looks_text(data):
     return len(TEXT_CONTROL.findall(data)) * 50 <= len(data)
 
 
+def optical_descriptor(path):
+    """Inspect bounded volume-recognition sectors and the primary ISO descriptor."""
+    size = path.stat().st_size
+    if size < 17 * 2048:
+        return None
+    with path.open('rb') as stream:
+        # Cooked logical blocks and raw Mode 1 / Mode 2 Form 1 data tracks.
+        for stride, offset in ((2048, 0), (2352, 16), (2352, 24)):
+            if size % stride or size < 17 * stride:
+                continue
+            if offset:
+                stream.seek(16 * stride)
+                header = stream.read(24)
+                if (header[:12] != b'\0' + b'\xff' * 10 + b'\0'
+                        or header[15] != (1 if offset == 16 else 2)
+                        or (offset == 24 and (header[16:20] != header[20:24] or header[18] & 0x20))):
+                    continue
+            udf = False
+            for sector in range(16, min(48, size // stride)):
+                stream.seek(sector * stride + offset)
+                data = stream.read(2048)
+                identifier = data[1:6]
+                if identifier in (b'NSR02', b'NSR03') and data[0] == 0 and data[6] == 1:
+                    udf = True
+                if identifier != b'CD001' or data[6] != 1:
+                    continue
+                if data[0] == 255:
+                    break
+                if data[0] != 1:
+                    continue
+                blocks = int.from_bytes(data[80:84], 'little')
+                if (blocks != int.from_bytes(data[84:88], 'big')
+                        or not 17 < blocks <= size // stride
+                        or data[128:132] != b'\0\x08\x08\0'):
+                    continue
+                fields = {'system': (8, 40), 'volume': (40, 72), 'publisher': (318, 446),
+                          'preparer': (446, 574), 'application': (574, 702),
+                          'created': (813, 829)}
+                return {'kind': 'cd-raw' if offset else 'iso9660', 'sector_bytes': stride,
+                        'data_offset': offset, 'volume_blocks': blocks, 'metadata': {
+                            name: data[start:end].decode('ascii', 'replace').strip(' \0')
+                            for name, (start, end) in fields.items()}}
+            if not offset and udf:
+                return {'kind': 'udf', 'sector_bytes': stride, 'data_offset': offset}
+    return None
+
+
 def identify(path: Path, name: str) -> str:
     """Classify a file by header/geometry and then by filename or textual bytes."""
     label = PurePosixPath(name.replace('\\', '/')).name.casefold()
@@ -117,6 +165,10 @@ def identify(path: Path, name: str) -> str:
         return 'tar'
     if data.startswith(bytes.fromhex('d0cf11e0a1b11ae1')):
         return 'compound-document'
+    if descriptor := optical_descriptor(path):
+        return descriptor['kind']
+    if extension in ('iso', 'nrg', 'mdf', 'ccd', 'cue'):
+        return 'optical-image'
     if _fat_layout(data, size) is not None:
         return 'fat'
     if any(_partitions(data, size)):
@@ -591,22 +643,26 @@ def _legacy_entries(listing):
             fields[key] = value
         name = fields.get('Path', '')
         size = fields.get('Size', '')
-        if not valid or not name or not re.fullmatch(r'[0-9]{1,18}', size):
+        attrs = fields.get('Attributes', '')
+        directory = fields.get('Folder') == '+' or attrs.startswith('D')
+        if not valid or not name or (not re.fullmatch(r'[0-9]{1,18}', size)
+                                    and not (directory and size == '')):
             records.append((name, None, 'unparseable-tool-entry'))
             continue
         status = None
-        attrs = fields.get('Attributes', '')
+        mode = fields.get('Mode', '')
         if (not safe_member(name) or name.startswith(('-', '@')) or
                 any(ch in name for ch in ('\r', '\n'))):
             status = 'unsafe-path'
-        elif (any(key in fields for key in ('Symbolic Link', 'Hard Link', 'Alternate Stream')) or
-              re.search(r'(?:^|\s)[lbcps][rwxStTs-]{9}(?:\s|$)', attrs)):
+        elif (any(fields.get(key) not in (None, '', '-') for key in
+                   ('Symbolic Link', 'Hard Link', 'Alternate Stream')) or
+              re.search(r'(?:^|\s)[lbcps][rwxStTs-]{9}(?:\s|$)', f'{attrs} {mode}')):
             status = 'non-regular'
-        elif fields.get('Folder') == '+' or attrs.startswith('D'):
+        elif directory:
             status = 'directory'
         elif fields.get('Encrypted') == '+':
             status = 'encrypted'
-        records.append((name, int(size), status))
+        records.append((name, int(size) if size else 0, status))
     return archive_type[-1] if archive_type else None, records
 
 
@@ -781,7 +837,10 @@ def extract(path: Path, name: str, kind: str, limits: Limits = Limits(), *,
             seven_zip: Path | None = None, pdftotext: Path | None = None,
             lhasa: Path | None = None, pdf_python: Path | None = None) -> Extraction:
     """Read one identified file. The caller owns recursion, persistence and hashing."""
-    if path.stat().st_size > limits.input_bytes:
+    # The optical helpers seek into an image; extraction and listing retain their
+    # ordinary output limits. Permit one single-layer DVD-sized input.
+    input_cap = max(limits.input_bytes, 5 * 1024**3) if kind in OPTICAL_KINDS else limits.input_bytes
+    if path.stat().st_size > input_cap:
         return Extraction(status='limited', detail='input-byte-limit')
     try:
         if kind == 'zip':
@@ -797,10 +856,15 @@ def extract(path: Path, name: str, kind: str, limits: Limits = Limits(), *,
         if kind == 'lzh' and lhasa is not None:
             if lhasa_result := _lhasa(path, lhasa, limits):
                 return lhasa_result
+        if kind in ('optical-image', 'cd-raw'):
+            return Extraction(status='unsupported', detail='no-qualified-optical-decoder')
         if kind in LEGACY_KINDS:
             if seven_zip is None:
                 return Extraction(status='unsupported', detail='7zip-unavailable')
-            return _legacy(path, kind, seven_zip, limits)
+            result = _legacy(path, kind, seven_zip, limits)
+            if kind in ('iso9660', 'udf') and not result.members and result.status == 'ok':
+                return Extraction(status='failed', detail='empty-optical-listing')
+            return result
         if kind == 'pdf':
             if pdftotext is not None:
                 return _pdf(path, pdftotext, limits)
