@@ -7,8 +7,7 @@ const { ROOT, pages, sections, siteUrl, resolveLink, renderSource, searchRecord 
   require("../lib/reference.cjs");
 
 test("source-map entries resolve to existing, uniquely identified Markdown", () => {
-  assert.ok(pages.some((entry) => entry.id === "applications.installations"));
-  assert.ok(pages.some((entry) => entry.id === "applications.installation-305"));
+  assert.ok(pages.length >= 27);
   const ids = new Set(), slugs = new Set();
   for (const entry of pages) {
     assert.equal(ids.has(entry.id), false);
@@ -18,6 +17,11 @@ test("source-map entries resolve to existing, uniquely identified Markdown", () 
     assert.equal(fs.existsSync(path.join(ROOT, entry.source)), true);
   }
   assert.equal(sections.reduce((total, group) => total + group.pages.length, 0), pages.length);
+});
+
+test("installation references remain mapped with distinct IDs", () => {
+  assert.ok(pages.some((entry) => entry.id === "applications.installations"));
+  assert.ok(pages.some((entry) => entry.id === "applications.installation-305"));
 });
 
 test("both GitHub subdirectory and self-hosted root paths work", () => {
