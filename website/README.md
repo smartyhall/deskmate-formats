@@ -97,6 +97,22 @@ On systems where `python3` is not the command name, invoke
 `scripts/vendor_bootstra.py` with your Python 3 interpreter before the
 Eleventy build.
 
+## Editorial style for the public website
+
+Use the **Oxford (serial) comma** in public-facing articles, historical
+introductions, explanatory website copy, navigation labels, figure captions,
+and alternative text. This is a consistency and clarity convention for the
+reader-facing reference, not a requirement to restyle technical source reports.
+Codex-generated research reports, experiment notes, and developer-facing
+technical documentation may use whichever style fits the material; do not
+rewrite quoted historical passages or underlying evidence for punctuation.
+
+For factual statements in public-facing prose, cite sourceable claims close
+to their first mention. Distinguish manufacturer claims, contemporary
+independent reports, and our own measured behavior. Cite project reports or
+evidence receipts when those are the source, and qualify version-specific
+findings.
+
 ## Publication checklist
 
 Review the preview artifact for source eligibility, links, headings,
