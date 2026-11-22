@@ -118,6 +118,19 @@ comparison screens have F7 Desktop and no F8 Applications menu.
 These comparisons use the existing native default desktop captures.
 [3.00](deskmate-evolution-native-20261121.md#generic-030000-on-the-rsx) · [3.02](deskmate-303-305-comparison.md#deskmate-302-stretch-experiment) · [3.03.01 and 3.05](deskmate-303-305-comparison.md#desktop-menus-and-dialogs)
 
+The installed RSX `DESK.EXE`, `DESKTOP.PDM`, `TEXT.PDM`,
+`ADDRESS.PDM`, and `DRAW.PDM` differ bytewise from their namesakes
+in all four generic control installations. `DMDB.R89` exactly
+matches the 1,109-byte 3.05 file with SHA-256
+`799444bb8c04632d261f61498ba269f9352e5528718f2e0a89512bf6ef7b808f`.
+The four controls have a separate `CALENDAR.PDM`, which is absent
+from this RSX installation. The RSX Information Center supplies
+its own calendar and agenda interface. `DMHOME.RES`, `HOME.PDM`,
+`FLORPLAN.PDM`, and `INFOCNTR.PDM` are present here and absent
+from those four installed control directories. These comparisons
+are filename and content checks, with each native launch retaining
+its own runtime. [Generic versions and records](../ecosystem/deskmate-installations.md)
+
 ## Application media inventory
 
 The independent FAT12 extraction locates Information Center on Disk 3
@@ -175,3 +188,54 @@ sender, November 4, 2026, at 9:41 pm, and Remove, Prev, Next,
 and Cancel controls. The first and reopened trials used the same
 writable guest disk. The application was relaunched within the
 same DOS boot.
+After stopping and copying the modified disk, a separate cold boot
+opened the `PAT` pin again and reproduced the same message and time.
+With that pin selected, F1 showed contextual help indicating that
+Up and Down select recipients and Space opens their messages.
+
+### Native database evidence
+
+The application disk was stopped after a normal exit to DOS.
+The independent FAT16 walker and 7-Zip 26.05 extracted identical
+`INFOCNTR.DB` files. The application left the file at 6,144 bytes.
+Changed bytes occur on 1 KiB pages 1, 4, and 5, counted from zero.
+The directory's `INFO` descriptor grows from one row to three and
+still points to data page 4 and index page 5. Record IDs `0x11`
+and `0x12` are at offsets `0x1017` and `0x1046`. Both begin
+with an `M` record type. Their separator-delimited fields include
+`2026308`, the guest date expressed as year and day of year,
+followed by message, recipient, sender, and display time.
+The stock emergency-label row has no phone number.
+
+The byte-exact fixture includes that blank emergency-number label,
+the schema, and the two synthetic records. It is a native database
+update to a stock blank template. The existing general database
+reader stops on the trailing directory sequence at `0x044A`.
+The observed rows and offsets are direct byte findings.
+[Native fixture](../../tests/fixtures/application-generated/information-center/rsx-native-two-messages.db) · [Fixture manifest](../../tests/fixtures/application-generated/manifest.json)
+
+The parallel `HOMEAUTO.DB` extraction grew from 8,192 to 9,216
+bytes. Its `FILES` table has one row, where the source had zero.
+`AUTOMATION` expands from 14 to 22 rows, and the data chain now
+links page 6 to page 8. The extracted file contains the synthetic
+`ATLAS LAB` room, `NORMAL` schedule, and `LAB WAKE` routine
+alongside the supplied floor-plan sample. The tested image and
+this mixed database stay in the private lab. The output DB hash
+is `7f5f96ec9d320a9c86efb55b46c3c36450e36aa89c790a7a13816cb09558f6ae`.
+[Automatic House workflow](deskmate-automatic-house-x10.md#building-a-room-and-a-schedule)
+
+## Other RSX applications
+
+| Desktop item | Installed modules or data | Observed behavior |
+| --- | --- | --- |
+| Home Organizer | `TOOLSLCT.PDM`, `HOME.PDM`, `COLLECT.PDM`, and companion database and Help files | Opened a three-column selector for Personal, Kitchen, and Financial tasks at 521,400 ms. Enter on Collections opened an Open A Collection dialog with existing examples, New, and Update. Escape returned to Home Organizer. |
+| Print Companion | `GREETER.PDM`, `PERSONAL.PDM`, `NOTICES.PDM`, `GRAFXMGR.PDM`, `CARDS.PDM`, and Name Tags components on Disk 4 | Opened its illustrated five-part navigator at 554,998 ms. Enter on Personal Letters opened a dated letter form with File, Edit, Graphics, and Options. Escape returned to Print Companion. Printing and the four other branches remain untested. |
+| Teach Me | `PLAY.PDM`, `DMINTRO.TUT`, and application-specific tutorial files | Listed thirteen installed lessons, including Automatic House: Getting Started and Information Center: Daily Events. The UI explains Up, Down, Enter, and Space for finding and starting lessons. |
+| Letter Invaders | `INVADE.PDM` references `LI.PDM`. Disk 1 also contains `LI.HLP` and `LI.WRD`. | The title animation led to Registration. About names `LI.PDM` version **1.0** from Kriya Systems. The date title read Nov 4, 2026, while Verify Date initially displayed 11/04/12. Play offered two keyboard levels and one or two players, then showed typing and score instructions. No round was played. |
+| AOL | Desktop configuration references `KERNEL.EXE`. The program is absent from the six floppies' installed tree. | The shortcut opened Disk Needed for volume **AOL** at 663,951 ms. Escape cancelled. The mirror's later DOS AOL 1.6 archive has no `KERNEL.EXE`, so this trial leaves the exact companion disk unidentified. |
+
+The counts and times in the table identify the saved observations.
+Only Letter Invaders among these shortcuts had its independent About
+version captured in this sweep. The selected applications ran with
+their installed OEM runtime. The raw captures and application disk
+remain in the private evidence set. [Published screenshots](../evidence/deskmate-rsx-oem-20261122.json)

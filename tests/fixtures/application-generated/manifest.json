@@ -4735,6 +4735,20 @@
       "expected_content": "Non-ASCII header followed by ALPHA, CRLF, BETA, trailing space, and DOS EOF.",
       "synthetic_data": true,
       "native_saved": true
+    },
+    {
+      "path": "information-center/rsx-native-two-messages.db",
+      "size": 6144,
+      "sha256": "252d9012735b1f616a9ee2a90362518932ce1f332855636a0447cfa031a9d300",
+      "application": "Tandy DeskMate Information Center",
+      "version": "Information Center 3.61 on Tandy 1000 RSX OEM DeskMate 03.04.04",
+      "experiment": "November 22, 2026 RSX OEM installation and application recovery",
+      "origin": "Information Center wrote its internal INFOCNTR.DB when OK was clicked in Leave a Message. The first synthetic pilot has truncated and misplaced fields. The second message was composed with Tab navigation, saved, and reopened. FAT16 traversal and 7-Zip extraction agreed byte-for-byte.",
+      "expected_content": "The stock blank emergency-number label Police, Fire and two synthetic text messages. Pilot: To PATLEE, From ATLAS LA, body space followed by MESSAGE. Repeat: To PAT, From LEE, body ATLAS LAB MESSAGE. Both dated 2026-11-04.",
+      "source_sha256": "5630520cd4ac67e13d1ac689bd009d5b32c26225ee83634a7d57d73c3228dab7",
+      "evidence_class": "Application-generated change to stock empty database",
+      "synthetic_data": true,
+      "native_saved": true
     }
   ]
 }

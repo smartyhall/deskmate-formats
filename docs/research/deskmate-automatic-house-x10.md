@@ -63,6 +63,22 @@ application also offered to add a corresponding Off event. Declining
 left the single On event in the NORMAL schedule.
 [Room and Scheduler evidence](../evidence/deskmate-rsx-oem-20261122.json)
 
+## Building a routine
+
+Routine → New starts a name and description. After entering
+`LAB WAKE` and `Synthetic room test`, Escape opened Build Routine
+and asked whether to select devices now. Yes opened the Floor Plan
+room view. Clicking the lamp and Ctrl-clicking the fan selected
+both devices. Returning with the Routine Mkr button opened a
+separate action dialog for each device. Dimming was available for
+the Lamp Dimmer and disabled for the appliance module. Accepting
+On for both produced two On rows in the saved routine.
+On a cold boot of a copy of the completed experiment disk,
+Routine Maker reopened `LAB WAKE` with the two On actions.
+Scheduler reopened NORMAL with its 6:06 am lamp event and
+listed `LAB WAKE` under Routines Containing Device for the lamp.
+[Independent database extraction](deskmate-rsx-oem-recovery-20261122.md#native-database-evidence)
+
 ## Period software and hardware identification
 
 - Radio Shack's [1992 catalog](https://www.worldradiohistory.com/Archive-Catalogs/Radio-Shack/Radio-Shack-1992.pdf) advertises a **Plug 'n Power Computer Interface** supplied with **DeskMate Automatic House software**, catalog **61-2617**, requiring DeskMate 3.x. Its description specifies a computer serial cable, a 9 V backup battery, 128 scheduled events, control addressing up to 256 modules, and the ability to disconnect the PC after programming. This is period advertising, not a verified measurement of the RSX OEM package.
@@ -94,8 +110,8 @@ The [X10 FAQ's CP290 programming section](https://groups.google.com/g/comp.home.
 The trial connected emulated COM1 and COM2 to the 86Box automation
 backend on a disposable RSX clone. Floor Plan → File → Set up interface
 box offered COM1–COM4, IRQ2–IRQ5, and a base house code. The defaults were
-COM2, IRQ3, and house C, with COM1 marked as a modem. The app left setup
-at 2,400 baud until **Test Interface → Yes**. The emulated UART then
+COM2, IRQ3, and house C, with COM1 marked as a modem. The UART retained
+its 2,400-baud boot setting until **Test Interface → Yes**. It then
 reported **600 baud, 8 data bits, no parity, and one stop bit**. Each
 port had previously emitted one `00` at 582 ms during boot. The
 subsequent command frames appeared only on COM2.

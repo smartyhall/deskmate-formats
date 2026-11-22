@@ -1151,6 +1151,54 @@
       "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
       "page_id": "applications.automatic-house-x10",
       "section_heading": "Observed CP290 serial exchange"
+    },
+    {
+      "id": "ui.evolution.rsx-oem-routine-saved",
+      "path": "evolution-atlas/rsx-oem-routine-saved.png",
+      "sha256": "6d06c7f8207e97990ef93b3eaa0130d00e3dc248b0718594bc72b9bc8295c013",
+      "source_sha256": "a499e91a022683badc98fbccecca334ae9f46e24ffda0b5c7d1f5f1ff5659951",
+      "size": 8070,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "deskmate-rsx-oem-20261122-routine-saved",
+      "caption": "Routine Maker in RSX OEM Automatic House saves LAB WAKE with On actions for the synthetic table lamp and fan.",
+      "alt": "The LAB WAKE routine displays a description and two device rows, each with an ON action.",
+      "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
+      "page_id": "applications.automatic-house-x10",
+      "section_heading": "Building a routine"
+    },
+    {
+      "id": "ui.evolution.rsx-oem-home-organizer-first-screen",
+      "path": "evolution-atlas/rsx-oem-home-organizer-first-screen.png",
+      "sha256": "cb7b3e54e25a7e3545643821c761ba0d086c37de18086cde914f77fbe24fbc11",
+      "source_sha256": "b6d0e7bcbea4b468c8e6350a36c65ea72326abb5b2e3a162a5eae6ce9a834706",
+      "size": 14325,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "deskmate-rsx-oem-20261122-home-organizer-first-screen",
+      "caption": "Home Organizer on RSX OEM DeskMate 03.04.04 groups installed applications under Personal, Kitchen, and Financial.",
+      "alt": "Three illustrated columns list household applications such as Collections, CookBook, and Checkbook Register.",
+      "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
+      "page_id": "applications.evolution-atlas",
+      "section_heading": "RSX household applications"
+    },
+    {
+      "id": "ui.evolution.rsx-oem-print-companion-first-screen",
+      "path": "evolution-atlas/rsx-oem-print-companion-first-screen.png",
+      "sha256": "4a8ad9bf79d5f94e4a47fcaca38815d2f718fdc801541acaceef50e23dd6dbe4",
+      "source_sha256": "d594bd747aa6cf371cf3dae208cc2279d03b9bfd45db5b361213f567191db2b6",
+      "size": 9776,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "deskmate-rsx-oem-20261122-print-companion-first-screen",
+      "caption": "Print Companion on RSX OEM DeskMate 03.04.04 opens a five-part stationery and graphics navigator.",
+      "alt": "Illustrated controls for Personal Letters, Notices, Graphics Manager, Greeting Cards, and Name Tags.",
+      "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
+      "page_id": "applications.evolution-atlas",
+      "section_heading": "RSX household applications"
     }
   ]
 }

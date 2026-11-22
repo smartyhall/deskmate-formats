@@ -135,6 +135,51 @@
       "raw_sha256": "4ee5273eb39e84e35675088ad8ee5f46a0a31ecc47798389f864b61fcabdc69d",
       "derivative_sha256": "3b029e89a593a552d5a6d9cfc313f22e6e52feb3dd5d0846cd43b8c68b31de4f",
       "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.rsx-oem-routine-saved": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 473910,
+      "frame": 28754,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "a499e91a022683badc98fbccecca334ae9f46e24ffda0b5c7d1f5f1ff5659951",
+      "derivative_sha256": "6d06c7f8207e97990ef93b3eaa0130d00e3dc248b0718594bc72b9bc8295c013",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.rsx-oem-home-organizer-first-screen": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 521400,
+      "frame": 31601,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "b6d0e7bcbea4b468c8e6350a36c65ea72326abb5b2e3a162a5eae6ce9a834706",
+      "derivative_sha256": "cb7b3e54e25a7e3545643821c761ba0d086c37de18086cde914f77fbe24fbc11",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.rsx-oem-print-companion-first-screen": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 554998,
+      "frame": 33615,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "d594bd747aa6cf371cf3dae208cc2279d03b9bfd45db5b361213f567191db2b6",
+      "derivative_sha256": "4a8ad9bf79d5f94e4a47fcaca38815d2f718fdc801541acaceef50e23dd6dbe4",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
     }
   },
   "serial": {

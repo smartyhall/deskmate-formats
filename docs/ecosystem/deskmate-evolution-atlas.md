@@ -129,6 +129,13 @@ with an agenda, telephone shortcuts, a notepad, and messages. Both
 were launched from the installed RSX desktop.
 [Automatic House and CP290](../research/deskmate-automatic-house-x10.md) · [Information Center](../research/deskmate-rsx-oem-recovery-20261122.md#information-center)
 
+### RSX household applications
+
+Home Organizer groups household and finance programs by task. Print
+Companion opens its own navigator for stationery and graphics, and
+Teach Me lists lessons that can start from the installed desktop.
+[Native application survey](../research/deskmate-rsx-oem-recovery-20261122.md#other-rsx-applications)
+
 ## Native observation procedure
 
 1. Match the archive size and hash, identify boot and program media,
@@ -149,21 +156,17 @@ were launched from the installed RSX desktop.
 
 ## Continuation
 
-1. Resume the held RSX OEM run at Disk 3. Record the remaining
-   disk prompts, setup choices, reboot, and first hard-disk
-   Desktop. Then qualify one OEM application such as Music or
-   Print Companion.
-2. Test the alternate five-ZIP 3.05 installer, its changed
+1. Test the alternate five-ZIP 3.05 installer, its changed
    Desktop, and its help files. The nine-ZIP layout is a subsequent
    disk-order control. Keep the established 3.02, 3.03.01, and 3.05
    installations for comparison.
-3. Reproduce SL/2 ROM **MS-DOS** startup on a fresh EEPROM
+2. Reproduce SL/2 ROM **MS-DOS** startup on a fresh EEPROM
    baseline, then qualify DeskMate startup. Preserve the successful
    floppy-DOS profile for comparison.
-4. Locate exact profiles or qualified configurations for the TL,
+3. Locate exact profiles or qualified configurations for the TL,
    TL/2, 1100 FD, RL/RL-HD, and RLX-HD B. The pinned 86Box machine
    table lacks exact profiles for those targets. Confirm the original
    1000, EX, TX, and 3000 on matching hardware when available.
-5. Seek identifiable media for Professional DeskMate, generic 3.01,
+4. Seek identifiable media for Professional DeskMate, generic 3.01,
    and the RLX B floppy-only edition. The current scope is the
    verified collection and the references listed in the matrix.
