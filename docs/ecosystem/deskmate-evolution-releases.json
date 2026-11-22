@@ -1,0 +1,1293 @@
+{
+  "schema_version": 1,
+  "scope": "Distinct distributions and acquisition variants in verified project media, plus documentary leads.",
+  "evidence_levels": [
+    "reference",
+    "verified",
+    "inspected",
+    "launched",
+    "reproduced"
+  ],
+  "media_manifest": "deskmate-installation-media.json",
+  "classifications": {
+    "reference": "Documented without verified working media",
+    "verified": "Original archive size and hash checked",
+    "inspected": "Selected actual payloads examined",
+    "launched": "Native program reached on recorded hardware profile",
+    "reproduced": "Documented native installation and first use completed"
+  },
+  "shared_identities": [
+    {
+      "releases": [
+        "personal-hx",
+        "rsx-30404"
+      ],
+      "relationship": "The primary and system/old duplicate ZIP within each release have matching SHA-256. The HX IMD is a separate representation."
+    },
+    {
+      "releases": [
+        "generic-305-nine",
+        "generic-305-five-zip",
+        "generic-305-five-raw"
+      ],
+      "relationship": "Matching launcher SHA-256 across the three layouts. The raw and five-ZIP compare has 132 same-name byte matches and other differences."
+    },
+    {
+      "releases": [
+        "ii-3000",
+        "ii-1000sx"
+      ],
+      "relationship": "The same version banner appears across separate 3000 and SX media; neither identical edition nor equal media is inferred."
+    },
+    {
+      "releases": [
+        "ii-3000",
+        "ii-1000sx"
+      ],
+      "relationship": "In the program archive and SX Disk 3, 15 same-name files match and 10 differ. All nine TW*.EXE application and auxiliary executables match. DESK.EXE, DMPLUS.COM, ALARM.ARM, and seven help files differ."
+    },
+    {
+      "releases": [
+        "personal-hx",
+        "personal2-tx"
+      ],
+      "relationship": "34 common names and 31 exact member matches, including DESK.EXE and MAINMENU.PDM. DMCSR.MOD, ART.PNT, and XMAS.SNG differ; MENUDATA.TAN is HX-only, DMNOTEPD standalone-only."
+    },
+    {
+      "releases": [
+        "generic-305-nine",
+        "generic-305-five-zip",
+        "generic-305-five-raw"
+      ],
+      "relationship": "Pooled by exact uppercase filename, nine/raw have 145 byte matches of 146 common names; five/raw have 113 of 136; nine/five have 112 of 134. A byte match requires one equal instance across repetitions."
+    }
+  ],
+  "releases": [
+    {
+      "id": "original-1000",
+      "family": "DeskMate",
+      "edition": "Original Tandy 1000",
+      "version": "01.01.00",
+      "target_hardware": "Tandy 1000",
+      "dos_and_runtime": "Bundled Tandy DOS 02.11.22",
+      "distribution_media": [
+        {
+          "path": "tandy1000/system/d1000.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000.zip",
+          "bytes": 297464,
+          "sha256": "4c4a7ae8d76c994d9ec978ddb35ebdb5c7ce14c0d7b77a96ed861672ef74387b"
+        },
+        {
+          "path": "tandy1000/system/old/1kdisks.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/1kdisks.zip",
+          "bytes": 305939,
+          "sha256": "129576b5d508bdfb59e97c36cc50f27c12b85e58a51d257d04a5a20b435d208d"
+        }
+      ],
+      "installation_or_startup": "Boot DOS floppy, launch disk-loaded DeskMate",
+      "principal_applications": [
+        "Text",
+        "Filer",
+        "Calendar",
+        "Worksheet",
+        "Telecom",
+        "Mail"
+      ],
+      "evidence": "launched",
+      "record": "../research/deskmate-evolution-native-20261121.md#original-010100-on-a-1000-sx-compatibility-profile",
+      "uncertainties": "Bundled DOS and Desktop tested on the Tandy 1000 SX compatibility profile. Exact original 1000 hardware remains open.",
+      "dates": [
+        {
+          "kind": "product-era",
+          "year": 1984,
+          "source": "../history/introduction.md"
+        }
+      ],
+      "public_image_ids": [
+        "ui.evolution.orig-menu"
+      ]
+    },
+    {
+      "id": "ii-3000",
+      "family": "DeskMate II",
+      "edition": "Tandy 3000 file sets",
+      "version": "01.00.00",
+      "target_hardware": "Tandy 3000; standard PCs described by TVDog",
+      "dos_and_runtime": "Desktop and Calendar launched on a Tandy RSX/DOS 5.00 compatibility profile.",
+      "distribution_media": [
+        {
+          "path": "tandy1000/deskmate/3kdm2dk1.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/3kdm2dk1.zip",
+          "bytes": 134190,
+          "sha256": "43ee33d44a2edc816e844759b7e2ef21842ac497725632d72cd608bed80b2e2a"
+        },
+        {
+          "path": "tandy1000/deskmate/3kdm2dk2.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/3kdm2dk2.zip",
+          "bytes": 8141,
+          "sha256": "698e2a42ac13f61d0cad56989aadb211c12fcfa7004a03582ed7b21f6d2294cb"
+        },
+        {
+          "path": "tandy1000/system/d3000.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d3000.zip",
+          "bytes": 335713,
+          "sha256": "1257c16bdd7dd0fddf549833e97cd92c588df64539643fbb44e96114cbcf4b0e"
+        },
+        {
+          "path": "tandy1000/system/old/3kdisks.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/3kdisks.zip",
+          "bytes": 344842,
+          "sha256": "406045274c09f2188cac10a1c6156d62c3a319b51a97bb3d52838876d112436e"
+        }
+      ],
+      "installation_or_startup": "Disk-loaded separate program and sample sets. Tandy DOS material is separately identified.",
+      "principal_applications": [
+        "Text",
+        "Filer",
+        "Calendar",
+        "Worksheet",
+        "Telecom",
+        "Mail"
+      ],
+      "evidence": "launched",
+      "record": "../research/deskmate-evolution-native-20261121.md#deskmate-ii-tandy-3000-file-sets-on-an-rsx-compatibility-profile",
+      "uncertainties": "Original Tandy 3000 hardware, exact DOS requirements, and whole-suite compatibility remain open.",
+      "dates": [],
+      "public_image_ids": [
+        "ui.evolution.ii3000-menu",
+        "ui.evolution.ii3000-calendar-atlas"
+      ]
+    },
+    {
+      "id": "ii-1000sx",
+      "family": "DeskMate II",
+      "edition": "Tandy 1000 SX",
+      "version": "01.00.00",
+      "target_hardware": "Tandy 1000 SX",
+      "dos_and_runtime": "Native SX startup with Tandy DOS 03.20.02.",
+      "distribution_media": [
+        {
+          "path": "tandy1000/system/d1000sx.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000sx.zip",
+          "bytes": 440262,
+          "sha256": "a4c294232aa1a0b6272441a08617f753eefe3ad0b248b4dbc0f82f2eee2fcd44"
+        },
+        {
+          "path": "tandy1000/system/old/sxdisk2.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/sxdisk2.zip",
+          "bytes": 345595,
+          "sha256": "98c1c12328b10be3fbd29a10a0ff9460271d93e7777bbfc92e0d58ac3031e940"
+        },
+        {
+          "path": "tandy1000/system/old/sxdisk3.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/sxdisk3.zip",
+          "bytes": 454150,
+          "sha256": "2169caa47dea3f3e886c61d6d8707ce9139569b798105787115eebaa462d45ec"
+        }
+      ],
+      "installation_or_startup": "Boot DOS Disk 1, disk-loaded launcher on Disk 3",
+      "principal_applications": [
+        "Text",
+        "Filer",
+        "Calendar",
+        "Worksheet",
+        "Telecom",
+        "Mail"
+      ],
+      "evidence": "launched",
+      "record": "../research/deskmate-evolution-native-20261121.md#deskmate-ii-010000-on-the-tandy-1000-sx",
+      "uncertainties": "Sample applications, application exit, and alternate TeleDisk sector equivalence remain open.",
+      "dates": [],
+      "public_image_ids": [
+        "ui.evolution.sx-menu"
+      ]
+    },
+    {
+      "id": "personal-ex",
+      "family": "Personal DeskMate",
+      "edition": "Tandy 1000 EX",
+      "version": "01.01.00",
+      "target_hardware": "Tandy 1000 EX",
+      "dos_and_runtime": "Bundled DOS 02.11.24",
+      "distribution_media": [
+        {
+          "path": "tandy1000/system/d1000ex.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000ex.zip",
+          "bytes": 499069,
+          "sha256": "1ee318543b32c4bcffbb3466f890d2c4e6ec0bba6161df35a74273e19a393a51"
+        },
+        {
+          "path": "tandy1000/system/old/exdisks.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/exdisks.zip",
+          "bytes": 517137,
+          "sha256": "4e5ac918f367e5fcfea8b311b8858587beb0ac6b83d8753c008ce1363b15f801"
+        }
+      ],
+      "installation_or_startup": "DOS boot floppy plus two program floppies, with INSTALL.EXE on the first",
+      "principal_applications": [
+        "Calendar",
+        "Text",
+        "Paint",
+        "Telecom",
+        "Filer",
+        "Worksheet"
+      ],
+      "evidence": "launched",
+      "record": "../research/deskmate-evolution-native-20261121.md#personal-deskmate-ex-010100-on-a-1000-sx-compatibility-profile",
+      "uncertainties": "Native floppy startup tested on a 1000 SX compatibility profile. Exact EX hardware, INSTALL.EXE, and Disk 2 workflows remain open.",
+      "dates": [
+        {
+          "kind": "launcher-copyright-year",
+          "year": 1986,
+          "source": "../research/deskmate-evolution-native-20261121.md#personal-deskmate-ex-010100-on-a-1000-sx-compatibility-profile"
+        }
+      ],
+      "public_image_ids": [
+        "ui.evolution.ex-desktop-late",
+        "ui.evolution.ex-file-menu"
+      ]
+    },
+    {
+      "id": "personal-hx",
+      "family": "Personal DeskMate",
+      "edition": "Tandy 1000 HX",
+      "version": "01.00.00",
+      "target_hardware": "Tandy 1000 HX",
+      "dos_and_runtime": "HX ROM boot and DOS utility disk",
+      "distribution_media": [
+        {
+          "path": "tandy1000/system/hxdisks.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/hxdisks.zip",
+          "bytes": 569395,
+          "sha256": "d646aa05344c81284960a5ffc0c52f5f1520fa61411a0d4d124f4130f074c843"
+        },
+        {
+          "path": "tandy1000/system/old/hxdisks.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/hxdisks.zip",
+          "bytes": 569395,
+          "sha256": "d646aa05344c81284960a5ffc0c52f5f1520fa61411a0d4d124f4130f074c843"
+        },
+        {
+          "path": "tandy1000/system/d1000hx.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000hx.zip",
+          "bytes": 206254,
+          "sha256": "70d09ffe398fab3f2e9ee2944efb9ac07f32e676987dc4661dcbcb18b14ae461"
+        }
+      ],
+      "installation_or_startup": "HX ROM DOS/startup menu and disk-loaded archival DeskMate 2 launcher, desktop, and applications. Tandy documents original ROM-resident components separately.",
+      "principal_applications": [
+        "Text",
+        "Worksheet",
+        "Calendar",
+        "Filer",
+        "Paint",
+        "Music",
+        "Telecom"
+      ],
+      "evidence": "launched",
+      "record": "../research/deskmate-evolution-native-20261121.md#personal-deskmate-hx-media-and-rom-startup",
+      "uncertainties": "The HX archive starts on a native HX profile. Exact ROM service dependency and the separate HXORIG.IMD utility disk remain open.",
+      "dates": [],
+      "public_image_ids": [
+        "ui.evolution.hx-rom-initial",
+        "ui.evolution.hx-personal-first",
+        "ui.evolution.hx-calendar"
+      ]
+    },
+    {
+      "id": "personal2-tx",
+      "family": "Personal DeskMate 2",
+      "edition": "PDM2.ZIP recipe",
+      "version": "01.00.00",
+      "target_hardware": "Tandy 1000 family, associated with TX",
+      "dos_and_runtime": "Tandy video and 256 KiB per TVDog; recipe uses DOS 3.2",
+      "distribution_media": [
+        {
+          "path": "tandy1000/deskmate/pdm2.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/pdm2.zip",
+          "bytes": 397389,
+          "sha256": "74c86fd7173fbd32ac7b5d7727a59e547e67ffa8257e72138ce4e30921c36833"
+        },
+        {
+          "path": "tandy1000/system/d1000tx.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000tx.zip",
+          "bytes": 333412,
+          "sha256": "53c12a51d5be9478f384860b8289bea254c8dabb064db9936a0252835bb39a32"
+        },
+        {
+          "path": "tandy1000/system/old/txdos.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/txdos.zip",
+          "bytes": 342997,
+          "sha256": "1c72012f7820ffecfc03081acc2287111af71783ea683765b0ccba167f1d7f99"
+        }
+      ],
+      "installation_or_startup": "Disk-loaded, third-party four- or five-floppy reconstruction",
+      "principal_applications": [
+        "Text",
+        "Worksheet",
+        "Calendar",
+        "Filer",
+        "Paint",
+        "Music",
+        "Telecom"
+      ],
+      "evidence": "launched",
+      "record": "../research/deskmate-evolution-native-20261121.md#standalone-personal-deskmate-2-on-the-tandy-1000-sx",
+      "uncertainties": "Reconstructed five-floppy startup and Text save validated on the Tandy 1000 SX. TX hardware and remaining applications are open.",
+      "dates": [
+        {
+          "kind": "launcher-copyright-year",
+          "year": 1987,
+          "source": "../research/deskmate-evolution-native-20261121.md#standalone-personal-deskmate-2-on-the-tandy-1000-sx"
+        }
+      ],
+      "public_image_ids": [
+        "ui.evolution.pdm2-desktop",
+        "ui.evolution.pdm2-text-saved"
+      ]
+    },
+    {
+      "id": "professional-3000hl",
+      "family": "Professional DeskMate",
+      "edition": "Tandy 3000 HL bundle",
+      "version": null,
+      "target_hardware": "Tandy 3000 HL",
+      "dos_and_runtime": "Network-oriented product documented in contemporary sources",
+      "distribution_media": [],
+      "installation_or_startup": "No inspected product media",
+      "principal_applications": [],
+      "evidence": "reference",
+      "record": null,
+      "uncertainties": "Find an independently identified bundle and program disk",
+      "dates": [
+        {
+          "kind": "catalog-publication-year",
+          "year": 1988,
+          "source": "https://www.worldradiohistory.com/Archive-Catalogs/Radio-Shack/Radio-Shack-1988.pdf"
+        }
+      ],
+      "public_image_ids": []
+    },
+    {
+      "id": "generic-300",
+      "family": "DeskMate 3",
+      "edition": "Generic five ZIPs",
+      "version": "03.00.00",
+      "target_hardware": "Generic PC",
+      "dos_and_runtime": "Tested RSX and Tandy DOS 5.00. TVDog describes 360 KiB or larger media and DMCONFIG.",
+      "distribution_media": [
+        {
+          "path": "tandy1000/deskmate/dm300dk1.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm300dk1.zip",
+          "bytes": 208744,
+          "sha256": "75e8eb1fab7ada4d4e73dfead5a5b7e70c4a378e8f360c4f1f85de64fa820fdf"
+        },
+        {
+          "path": "tandy1000/deskmate/dm300dk2.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm300dk2.zip",
+          "bytes": 164281,
+          "sha256": "dedcb4bb0dba2281f886dbbb4f98b421da13a1fd0fd4987d8b435b6292be8a50"
+        },
+        {
+          "path": "tandy1000/deskmate/dm300dk3.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm300dk3.zip",
+          "bytes": 191473,
+          "sha256": "23ac6d45afaa23d8acb4b8e05691c45115ac534c969cdd154a4cfae7a0b82304"
+        },
+        {
+          "path": "tandy1000/deskmate/dm300dk4.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm300dk4.zip",
+          "bytes": 163135,
+          "sha256": "e55de40c38406c2e4e54e5882bfbec0d6e69749ca36a52e1736772cab3b94a12"
+        },
+        {
+          "path": "tandy1000/deskmate/dm300dk5.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm300dk5.zip",
+          "bytes": 238424,
+          "sha256": "9d84551c100b4c2653656ccfe2040713a3f073d6d80020352db9fdbe1b623571"
+        }
+      ],
+      "installation_or_startup": "Disk startup or manual DOS copy",
+      "principal_applications": [
+        "Calendar",
+        "Address Book",
+        "Text",
+        "Draw",
+        "Worksheet",
+        "Filer",
+        "Telecom",
+        "PC-Link",
+        "Phone Book",
+        "Hangman"
+      ],
+      "evidence": "reproduced",
+      "record": "../research/deskmate-evolution-native-20261121.md#generic-030000-on-the-rsx",
+      "uncertainties": "Original installer media layout and hardware minimum unverified",
+      "dates": [],
+      "public_image_ids": [
+        "ui.evolution.300-desktop",
+        "ui.evolution.300-calendar",
+        "ui.evolution.300-text-save-dialog"
+      ]
+    },
+    {
+      "id": "generic-301",
+      "family": "DeskMate 3",
+      "edition": "Community-reported 3.01",
+      "version": "3.01 (community listing)",
+      "target_hardware": "PC family, exact hardware unknown",
+      "dos_and_runtime": "Unknown",
+      "distribution_media": [],
+      "installation_or_startup": "Community listing names SWITCH.EXE, installation unknown",
+      "principal_applications": [],
+      "evidence": "reference",
+      "record": null,
+      "uncertainties": "Find a complete, independently identified set",
+      "dates": [
+        {
+          "kind": "archival-list-publication-year",
+          "year": 1994,
+          "source": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm_progs.txt"
+        }
+      ],
+      "public_image_ids": []
+    },
+    {
+      "id": "generic-302",
+      "family": "DeskMate 3",
+      "edition": "Generic three ZIPs",
+      "version": "03.02.00",
+      "target_hardware": "Generic PC",
+      "dos_and_runtime": "Tested RSX and Tandy DOS 5.00",
+      "distribution_media": [
+        {
+          "path": "tandy1000/deskmate/dm302dk1.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm302dk1.zip",
+          "bytes": 276975,
+          "sha256": "ebf2b2a0c8e4caf1468c896f83beb4deea6780a67c0b5532104ffb4b1657639d"
+        },
+        {
+          "path": "tandy1000/deskmate/dm302dk2.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm302dk2.zip",
+          "bytes": 355824,
+          "sha256": "47c4104ed68dcce464130f5cd200772fef0b7fc8d9f61899092b7fbe2fd6c008"
+        },
+        {
+          "path": "tandy1000/deskmate/dm302dk3.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm302dk3.zip",
+          "bytes": 361263,
+          "sha256": "18d97c5842d15eac8a15cdd5db770493693a06c33f9315203003bd674c873f73"
+        }
+      ],
+      "installation_or_startup": "Manual DOS copy and DMCONFIG",
+      "principal_applications": [
+        "Calendar",
+        "Address Book",
+        "Text",
+        "Draw",
+        "Worksheet",
+        "Filer",
+        "Telecom",
+        "PC-Link"
+      ],
+      "evidence": "reproduced",
+      "record": "../research/deskmate-303-305-comparison.md#deskmate-302-stretch-experiment",
+      "uncertainties": "Alternate DESKTOPD.CFG choice and interoperability beyond the tested samples are open",
+      "dates": [],
+      "public_image_ids": [
+        "ui.installation-303.desktop-302"
+      ]
+    },
+    {
+      "id": "tl-302",
+      "family": "DeskMate 3",
+      "edition": "Tandy 1000 TL",
+      "version": "3.02 (bundle notes)",
+      "target_hardware": "Tandy 1000 TL",
+      "dos_and_runtime": "DOS 3.30.20 and DeskMate ROM components",
+      "distribution_media": [
+        {
+          "path": "tandy1000/system/d1000tl.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000tl.zip",
+          "bytes": 1076751,
+          "sha256": "3fb467c7c76ee1baf6a3abb5b89b364adcc309336388bb6d68ad416c50404beb"
+        },
+        {
+          "path": "tandy1000/system/old/tldisk2.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/tldisk2.zip",
+          "bytes": 1119422,
+          "sha256": "0aed6e23c51f84cba75a87d894b726ae1dbf03606ddb3c88f45bbee250e77d4e"
+        }
+      ],
+      "installation_or_startup": "DOS boot disk plus ROM desktop/drivers and disk applications",
+      "principal_applications": [
+        "Text",
+        "Calendar",
+        "Draw",
+        "Worksheet",
+        "Filer",
+        "Telecom",
+        "Music",
+        "Sound"
+      ],
+      "evidence": "inspected",
+      "record": null,
+      "uncertainties": "Qualify exact TL model and ROM; Faxback 1367",
+      "dates": [],
+      "public_image_ids": [],
+      "inspected_media_files": [
+        {
+          "member": "TLDISK1.DSK",
+          "bytes": 737280,
+          "sha256": "e781310d33e62efb95e3088c940a2a7b7f54bbae2cf0a9559d21521a0de4dc2e"
+        },
+        {
+          "member": "TLDISK2.DSK",
+          "bytes": 737280,
+          "sha256": "76656661324fd5af66941f521d51efc97fecad5050dd3ad8706e23f464daca13"
+        },
+        {
+          "member": "TLDISK3.DSK",
+          "bytes": 737280,
+          "sha256": "f295bc5bf6527525edb3ac72f3267339fbe6342c23faacba83a323ea64af6d1c"
+        }
+      ],
+      "disc_program_modules": [
+        "ADDRESS.PDM",
+        "CALENDAR.PDM",
+        "DRAW.PDM",
+        "FILER.PDM",
+        "FORMSET.PDM",
+        "HANGMAN.PDM",
+        "MAILMRGE.PDM",
+        "MUSIC.PDM",
+        "PC_DEMO.PDM",
+        "PC_LINK.PDM",
+        "SOUND.PDM",
+        "TELECOM.PDM",
+        "TEXT.PDM",
+        "WRKSHEET.PDM"
+      ],
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
+    },
+    {
+      "id": "generic-303",
+      "family": "DeskMate 3",
+      "edition": "Generic four ZIPs",
+      "version": "03.03.01",
+      "target_hardware": "Generic PC",
+      "dos_and_runtime": "Tested RSX and Tandy DOS 5.00",
+      "distribution_media": [
+        {
+          "path": "tandy1000/deskmate/dm303dk1.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk1.zip",
+          "bytes": 411531,
+          "sha256": "a9897beaaddd29c47ec3ad4046d57ea2e28872399afea0731c12f2e8a259ebfe"
+        },
+        {
+          "path": "tandy1000/deskmate/dm303dk2.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk2.zip",
+          "bytes": 419320,
+          "sha256": "edb617433344c50361c23c582bccefd63441fa1dd5205d64905981c6f995638b"
+        },
+        {
+          "path": "tandy1000/deskmate/dm303dk3.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk3.zip",
+          "bytes": 325771,
+          "sha256": "e4c9fbada6cbcd158df1c488afbcb79b7b3fae9b28c4dff13bb87108ade8a18f"
+        },
+        {
+          "path": "tandy1000/deskmate/dm303dk4.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm303dk4.zip",
+          "bytes": 367667,
+          "sha256": "b164799dbf99511eda5e562ca3423622fa0452c591b6d548ea6783a58607055a"
+        }
+      ],
+      "installation_or_startup": "INSTALL on A: with numbered FAT labels, then reboot",
+      "principal_applications": [
+        "Calendar",
+        "Address Book",
+        "Text",
+        "Draw",
+        "Worksheet",
+        "Filer",
+        "Telecom",
+        "PC-Link",
+        "Hangman"
+      ],
+      "evidence": "reproduced",
+      "record": "deskmate-installation-303.md",
+      "uncertainties": "Other DOS and peripheral profiles untested",
+      "dates": [],
+      "public_image_ids": [
+        "ui.installation-303.desktop-303"
+      ]
+    },
+    {
+      "id": "tl2-303",
+      "family": "DeskMate 3",
+      "edition": "Tandy 1000 TL/2",
+      "version": "3.03 (bundle notes)",
+      "target_hardware": "Tandy 1000 TL/2",
+      "dos_and_runtime": "Bundled DOS 3.30.22",
+      "distribution_media": [
+        {
+          "path": "tandy1000/system/d1000tl2.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000tl2.zip",
+          "bytes": 1425759,
+          "sha256": "085c7e7d505387a68e9c1efaa32dc72236636a58cb712197114aa4f182810b51"
+        },
+        {
+          "path": "tandy1000/system/old/tl2disks.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/tl2disks.zip",
+          "bytes": 1482026,
+          "sha256": "3b01510e86dc32beb32509fbf7c903d4540d611d9f98ed2e8ce185864448236c"
+        }
+      ],
+      "installation_or_startup": "DOS floppy and three labelled disks with INSTALL.PDM",
+      "principal_applications": [
+        "Text",
+        "Calendar",
+        "Draw",
+        "Worksheet",
+        "Filer",
+        "Telecom",
+        "Music",
+        "Sound"
+      ],
+      "evidence": "inspected",
+      "record": null,
+      "uncertainties": "Exact build and ROM dependencies open",
+      "dates": [],
+      "public_image_ids": [],
+      "inspected_media_files": [
+        {
+          "member": "DISK1.DSK",
+          "bytes": 737280,
+          "sha256": "ed70381427557e9174df3c612921b55947289ccaf9eaf60ce23bc3492622206e"
+        },
+        {
+          "member": "DISK2.DSK",
+          "bytes": 737280,
+          "sha256": "104f0982e8fdcf34a37f888d9969b365775160293b6ca08d795b9627fb27b1b5"
+        },
+        {
+          "member": "DISK3.DSK",
+          "bytes": 737280,
+          "sha256": "7d298875b22d0c4cd50d4a05a61492a505e9545a84595295727a8b26200fcc65"
+        },
+        {
+          "member": "DISK4.DSK",
+          "bytes": 737280,
+          "sha256": "a3df72488b13f9bf7f59e3d95a00e5afdb596edfb8d5fca539262ae76e73dc4a"
+        }
+      ],
+      "disc_program_modules": [
+        "ADDRESS.PDM",
+        "CALENDAR.PDM",
+        "DRAW.PDM",
+        "FILER.PDM",
+        "FORMSET.PDM",
+        "HANGMAN.PDM",
+        "INSTALL.PDM",
+        "MAILMRGE.PDM",
+        "MUSIC.PDM",
+        "PC_DEMO.PDM",
+        "PC_LINK.PDM",
+        "PLAY.PDM",
+        "SOUND.PDM",
+        "TELECOM.PDM",
+        "TEXT.PDM",
+        "WRKSHEET.PDM"
+      ],
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
+    },
+    {
+      "id": "sl2-oem",
+      "family": "DeskMate 3",
+      "edition": "Tandy 1000 SL/2",
+      "version": null,
+      "target_hardware": "Tandy 1000 SL/2",
+      "dos_and_runtime": "Bundled DOS 3.30.22",
+      "distribution_media": [
+        {
+          "path": "tandy1000/system/1000SL2D.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/1000SL2D.zip",
+          "bytes": 3969557,
+          "sha256": "516cb60ddad983cb1dd9d6ae1b496cdcd19b747d08c7566f52aa43a1e97c17ed"
+        }
+      ],
+      "installation_or_startup": "DOS floppy and three labelled disks; INSTALL.PDM, desktop startup requires ROM qualification",
+      "principal_applications": [
+        "Text",
+        "Calendar",
+        "Draw",
+        "Worksheet",
+        "Filer",
+        "Telecom",
+        "Music",
+        "Sound"
+      ],
+      "evidence": "inspected",
+      "record": "../research/deskmate-evolution-native-20261121.md#tandy-1000-sl2-startup-blocker",
+      "uncertainties": "Exact DeskMate release remains open. Compare ROM MS-DOS mode and fresh EEPROM state before repeating ROM DeskMate.",
+      "dates": [],
+      "public_image_ids": [
+        "ui.evolution.sl2-setup-options"
+      ],
+      "native_attempt": "bundled DOS booted; ROM DeskMate startup displayed a blank screen with and without program floppies",
+      "inspected_media_files": [
+        {
+          "member": "1000SL2D/DM1.IMG",
+          "bytes": 737280,
+          "sha256": "ad7dd60348c5f734a4eaaacbc2906eff0087e208e5e9e6e987b0626d39af50bc"
+        },
+        {
+          "member": "1000SL2D/DM2.IMG",
+          "bytes": 737280,
+          "sha256": "7d298875b22d0c4cd50d4a05a61492a505e9545a84595295727a8b26200fcc65"
+        },
+        {
+          "member": "1000SL2D/DM3.IMG",
+          "bytes": 737280,
+          "sha256": "a3df72488b13f9bf7f59e3d95a00e5afdb596edfb8d5fca539262ae76e73dc4a"
+        },
+        {
+          "member": "1000SL2D/DOS33.IMG",
+          "bytes": 737280,
+          "sha256": "a483df25609610be2dc4c4e129d9df0f55e60af08a1679630ddf310d009ff99a"
+        }
+      ],
+      "disc_program_modules": [
+        "ADDRESS.PDM",
+        "CALENDAR.PDM",
+        "DRAW.PDM",
+        "FILER.PDM",
+        "FORMSET.PDM",
+        "HANGMAN.PDM",
+        "INSTALL.PDM",
+        "MAILMRGE.PDM",
+        "MUSIC.PDM",
+        "PC_DEMO.PDM",
+        "PC_LINK.PDM",
+        "PLAY.PDM",
+        "SOUND.PDM",
+        "TELECOM.PDM",
+        "TEXT.PDM",
+        "WRKSHEET.PDM"
+      ]
+    },
+    {
+      "id": "1100fd-oem",
+      "family": "DeskMate 3",
+      "edition": "Tandy 1100 FD",
+      "version": null,
+      "target_hardware": "Tandy 1100 FD",
+      "dos_and_runtime": "DOS 3.30.40; EMS driver disk survives",
+      "distribution_media": [
+        {
+          "path": "tandy1000/system/d1100fd.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1100fd.zip",
+          "bytes": 1300833,
+          "sha256": "48afe66d4de8510949d245bac5fbe51ca59f9a536ec97abeb883bd832ee784c6"
+        },
+        {
+          "path": "tandy1000/system/old/11fddisk.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/11fddisk.zip",
+          "bytes": 1352160,
+          "sha256": "7887b68dbec3dbad83c3d47138ffbc06f25656e2a2f1332f2d51b6d4cb9017aa"
+        }
+      ],
+      "installation_or_startup": "DOS disk, two labelled program disks, and separate EMS disk",
+      "principal_applications": [
+        "Calendar",
+        "Address Book",
+        "Draw",
+        "Filer",
+        "Form Setup",
+        "Hangman",
+        "Mail Merge",
+        "PC-Link",
+        "Telecom",
+        "Worksheet"
+      ],
+      "evidence": "inspected",
+      "record": null,
+      "uncertainties": "Exact launcher version, target machine and EMS dependencies open",
+      "dates": [],
+      "public_image_ids": [],
+      "inspected_media_files": [
+        {
+          "member": "DOSGWB.DSK",
+          "bytes": 737280,
+          "sha256": "7fb5215db100a1209faedc5bf67553a829d5c6afefa8164a83ae166c5b496a24"
+        },
+        {
+          "member": "DESK1.DSK",
+          "bytes": 737280,
+          "sha256": "1cef7a514abe08ff4eb2e2397b0cb9492d7fe19b6cbc413c74e736a9925e2fe3"
+        },
+        {
+          "member": "DESK2.DSK",
+          "bytes": 737280,
+          "sha256": "48d0d424a60ca50932cd0208a291997e7e7eb9eb21cf6cb2ed81d22535e6cdf5"
+        },
+        {
+          "member": "EMSDRV.DSK",
+          "bytes": 737280,
+          "sha256": "988697271d78b7ec4b19053ed2be6f7423f92a60b33e75c7bc2d6602fd330398"
+        }
+      ],
+      "disc_program_modules": [
+        "ADDRESS.PDM",
+        "CALENDAR.PDM",
+        "DRAW.PDM",
+        "FILER.PDM",
+        "FORMSET.PDM",
+        "HANGMAN.PDM",
+        "MAILMRGE.PDM",
+        "PC_DEMO.PDM",
+        "PC_LINK.PDM",
+        "PLAY.PDM",
+        "TELECOM.PDM",
+        "WRKSHEET.PDM"
+      ],
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
+    },
+    {
+      "id": "rl-304",
+      "family": "DeskMate 3",
+      "edition": "Tandy 1000 RL / RL-HD",
+      "version": "3.04 (distribution)",
+      "target_hardware": "Tandy 1000 RL / RL-HD",
+      "dos_and_runtime": "DOS 3.30.22; EEPROM-backed desktop documented",
+      "distribution_media": [
+        {
+          "path": "tandy1000/system/d1000rl.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000rl.zip",
+          "bytes": 2043853,
+          "sha256": "4f3eb5325298046ec3c7d3667fdd622f39bf49225fb9dc63028c545f845937bb"
+        },
+        {
+          "path": "tandy1000/system/d1000rl_alternates.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/d1000rl_alternates.zip",
+          "bytes": 2121627,
+          "sha256": "48546ded27b7f7ad039cf9e3410d57b38ee5c6a023b0ce2337ab70695f193f5f"
+        },
+        {
+          "path": "tandy1000/system/old/rldisks.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/rldisks.zip",
+          "bytes": 2121084,
+          "sha256": "263592c15322c432aa03d23fa0f0a46e75b91c17c43cada08661416af94a0c8d"
+        },
+        {
+          "path": "tandy1000/system/old/rldos.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/rldos.zip",
+          "bytes": 309649,
+          "sha256": "0287f6606c462bc303f59da2153c260e6d2d2f381d399359cd8c74f6b198161a"
+        }
+      ],
+      "installation_or_startup": "DOS, two program disks, and three task disks; INSTALL.PDM survives",
+      "principal_applications": [
+        "Address Book",
+        "Checks",
+        "Diary",
+        "Draw",
+        "Expenses",
+        "Grocery",
+        "Hangman",
+        "Information Center",
+        "Kitchen",
+        "Music",
+        "NoteBook",
+        "PC-Link",
+        "Sound",
+        "Telecom",
+        "Text",
+        "Travel"
+      ],
+      "evidence": "inspected",
+      "record": null,
+      "uncertainties": "Qualify exact build, alternate backup and disk fallback; Faxback 1311",
+      "dates": [],
+      "public_image_ids": [],
+      "inspected_media_files": [
+        {
+          "member": "MSDOS.DSK",
+          "bytes": 737280,
+          "sha256": "0e14e6136d13a4ca614093bf0d5dde54cf57848b807d34549f371f2574b7371b"
+        },
+        {
+          "member": "DM1.DSK",
+          "bytes": 737280,
+          "sha256": "5fcd12479365d99579881316f49fbd4950e41489c0e8834074c2f64e348bbf30"
+        },
+        {
+          "member": "DM2.DSK",
+          "bytes": 737280,
+          "sha256": "9a557108133e13f4a38cfd821c70fbd15e3b6e68396a9a7c8afe696012e31d63"
+        },
+        {
+          "member": "DM3.DSK",
+          "bytes": 737280,
+          "sha256": "f3cd7599550868ea98d01078de80ed7ea5fcadad4a67dcfb49a573a4db296551"
+        },
+        {
+          "member": "DM4.DSK",
+          "bytes": 737280,
+          "sha256": "9f5cb3345a731ddc9adaef122004b6ef73ad7f2eda94b6546aa87e64a683f1ae"
+        },
+        {
+          "member": "DM5.DSK",
+          "bytes": 737280,
+          "sha256": "6dd6c99fd3e48c97e0b1f13f06d7656f2b0fb971177db7aedd9cf8f790701761"
+        }
+      ],
+      "disc_program_modules": [
+        "ADDRESS.PDM",
+        "CHECKS.PDM",
+        "COLLECT.PDM",
+        "DIARY.PDM",
+        "DRAW.PDM",
+        "EXPENSES.PDM",
+        "GROCERY.PDM",
+        "HANGMAN.PDM",
+        "HOME.PDM",
+        "INFOCNTR.PDM",
+        "INSTALL.PDM",
+        "KITCHEN.PDM",
+        "MAILMRGE.PDM",
+        "MATHCARD.PDM",
+        "MUSIC.PDM",
+        "NOTEBOOK.PDM",
+        "PC_LINK.PDM",
+        "PLAY.PDM",
+        "RLSETUP.PDM",
+        "SOUND.PDM",
+        "TELECOM.PDM",
+        "TEXT.PDM",
+        "TOOLSLCT.PDM",
+        "TRAVEL.PDM"
+      ],
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
+    },
+    {
+      "id": "rlx-hdb-30403",
+      "family": "DeskMate 3",
+      "edition": "Tandy 1000 RLX-HD B compressed set",
+      "version": "03.04.03 (bundle notes)",
+      "target_hardware": "Tandy 1000 RLX-HD B",
+      "dos_and_runtime": "DOS 5 from separate media; OEM profile",
+      "distribution_media": [
+        {
+          "path": "tandy1000/system/dskrlxhd.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/dskrlxhd.zip",
+          "bytes": 2800989,
+          "sha256": "2861c3686583aab79f6cf1c5415585e215ecd92fa6af9b9add8f119c2af64334"
+        },
+        {
+          "path": "tandy1000/system/e1000rlx.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/e1000rlx.zip",
+          "bytes": 1476437,
+          "sha256": "a7e27499dea4a900b003d6b388f9b91851ef29be892ff60a4c192e971fd91f34"
+        }
+      ],
+      "installation_or_startup": "Two compressed high-density disks",
+      "principal_applications": [],
+      "evidence": "inspected",
+      "record": null,
+      "uncertainties": "Qualify correct ROM, native decompressor, and disk target; Faxback 1342 The compressed set has client applications that remain to be identified by extraction or native install.",
+      "dates": [],
+      "public_image_ids": [],
+      "inspected_media_files": [
+        {
+          "member": "DESK3431.IMG",
+          "bytes": 1474560,
+          "sha256": "04c5e5c9466d1fff27ed4f7909e22e9f00051cf91cbf8e35109525f6e392ed08"
+        },
+        {
+          "member": "DESK3432.IMG",
+          "bytes": 1474560,
+          "sha256": "83f45afdce5731f273f8554e068781c02f2fc57de238f768d8799f7a54f219ae"
+        }
+      ],
+      "disc_program_modules": [
+        "INSTALL.PDM"
+      ],
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
+    },
+    {
+      "id": "rlx-hdb-tree",
+      "family": "DeskMate 3",
+      "edition": "RLX-HD B populated tree",
+      "version": null,
+      "target_hardware": "Tandy 1000 RLX-HD B",
+      "dos_and_runtime": "DOS 5 family",
+      "distribution_media": [
+        {
+          "path": "tandy1000/deskmate/1000RLX_HD-B.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/1000RLX_HD-B.zip",
+          "bytes": 2431617,
+          "sha256": "c19e395880113fed55ad50e8a8d1e05b6cdf87ca883f700b0d28dd062882463f"
+        }
+      ],
+      "installation_or_startup": "Populated tree, acquisition form differs from the compressed install disks",
+      "principal_applications": [
+        "Music",
+        "Sound"
+      ],
+      "evidence": "inspected",
+      "record": null,
+      "uncertainties": "Exact installed lineage and truncated Cobb font; do not infer equality to compressed media",
+      "dates": [],
+      "public_image_ids": [],
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
+    },
+    {
+      "id": "rlx-b-floppy",
+      "family": "DeskMate 3",
+      "edition": "Tandy 1000 RLX B floppy-only set",
+      "version": null,
+      "target_hardware": "Tandy 1000 RLX B",
+      "dos_and_runtime": "OEM profile per Faxback 1342",
+      "distribution_media": [],
+      "installation_or_startup": "Vendor describes five uncompressed disks",
+      "principal_applications": [],
+      "evidence": "reference",
+      "record": null,
+      "uncertainties": "Identify the complete five-disk set",
+      "dates": [],
+      "public_image_ids": [],
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
+    },
+    {
+      "id": "rsx-30404",
+      "family": "DeskMate 3",
+      "edition": "Tandy 1000 RSX",
+      "version": "03.04.04",
+      "target_hardware": "Tandy 1000 RSX",
+      "dos_and_runtime": "Separate DOS; 1.44 MB media per archive",
+      "distribution_media": [
+        {
+          "path": "tandy1000/system/rsxdisks.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/rsxdisks.zip",
+          "bytes": 4083315,
+          "sha256": "e8289597e3d246727ff977f151ee986dd59d50ace72bdfdd2a65614b88588a5c"
+        },
+        {
+          "path": "tandy1000/system/old/rsxdisks.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/old/rsxdisks.zip",
+          "bytes": 4083315,
+          "sha256": "e8289597e3d246727ff977f151ee986dd59d50ace72bdfdd2a65614b88588a5c"
+        }
+      ],
+      "installation_or_startup": "Nested Disk 1–6 and utilities, clean OEM install open",
+      "principal_applications": [
+        "Letter Invaders",
+        "Music",
+        "Sound",
+        "Print Companion",
+        "Automatic House",
+        "Home Organizer",
+        "Information Center",
+        "Financial Applications",
+        "Draw",
+        "Text",
+        "Address Book",
+        "Telecom"
+      ],
+      "evidence": "launched",
+      "record": "../research/deskmate-evolution-native-20261121.md#tandy-1000-rsx-oem-030404",
+      "uncertainties": "Floppy Desktop and hard-disk installer demonstrated; complete installation and OEM applications require further observation.",
+      "dates": [
+        {
+          "kind": "launcher-copyright-year",
+          "year": 1991,
+          "source": "../research/deskmate-evolution-native-20261121.md#tandy-1000-rsx-oem-030404"
+        }
+      ],
+      "public_image_ids": [
+        "ui.evolution.rsx-oem-underscore-control",
+        "ui.evolution.rsx-oem-disk2-prompt"
+      ]
+    },
+    {
+      "id": "generic-305-nine",
+      "family": "DeskMate 3",
+      "edition": "Generic nine ZIPs",
+      "version": "03.05.00",
+      "target_hardware": "Generic PC",
+      "dos_and_runtime": "TVDog specifies 360 KiB or larger disks",
+      "distribution_media": [
+        {
+          "path": "tandy1000/deskmate/dm305dk1.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk1.zip",
+          "bytes": 227987,
+          "sha256": "5fdd7fe79032860274bd0e679b94ce14eb175ea6dde9296d9cf105cbe1186bec"
+        },
+        {
+          "path": "tandy1000/deskmate/dm305dk2.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk2.zip",
+          "bytes": 194687,
+          "sha256": "188e8bd58eb9b46b3707014d0e955fb9f2d9f2d49169520606a01714a409a8fa"
+        },
+        {
+          "path": "tandy1000/deskmate/dm305dk3.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk3.zip",
+          "bytes": 171991,
+          "sha256": "53b2a8bfd45b5c16d4103a65109317288aefbef02d4133da717c9c013b8bfeed"
+        },
+        {
+          "path": "tandy1000/deskmate/dm305dk4.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk4.zip",
+          "bytes": 182736,
+          "sha256": "07fd75ecc80499c17260dd9e2c8889e13a889efc4c73ad686853396c39ff6066"
+        },
+        {
+          "path": "tandy1000/deskmate/dm305dk5.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk5.zip",
+          "bytes": 164428,
+          "sha256": "8d5b2843e8b9de9d69ed6d1f2fb08ade76527bea3f5f5cf5a219c44774ec677c"
+        },
+        {
+          "path": "tandy1000/deskmate/dm305dk6.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk6.zip",
+          "bytes": 188548,
+          "sha256": "d6395d8bc3d21ed1bf66d49f53161287af89d9b338487004898a778ed5118d3b"
+        },
+        {
+          "path": "tandy1000/deskmate/dm305dk7.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk7.zip",
+          "bytes": 202514,
+          "sha256": "b7d34274cb95797691f997daed53721c57b8d7c1c31e98d93febaaf27d3c3d02"
+        },
+        {
+          "path": "tandy1000/deskmate/dm305dk8.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk8.zip",
+          "bytes": 158232,
+          "sha256": "d32d6c3fe6692112c8bd3f7c689649cf20222de6de8ae94ec28ee7e7c7c5e3e4"
+        },
+        {
+          "path": "tandy1000/deskmate/dm305dk9.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm305dk9.zip",
+          "bytes": 86916,
+          "sha256": "52befdd828e7065fc2e1fde60c010693d946ca5e4c477703f9c43564086cd883"
+        }
+      ],
+      "installation_or_startup": "Numbered floppy installer",
+      "principal_applications": [
+        "Calendar",
+        "Address Book",
+        "Text",
+        "Draw",
+        "Worksheet",
+        "Filer",
+        "Telecom",
+        "PC-Link",
+        "Hangman"
+      ],
+      "evidence": "inspected",
+      "record": "../research/deskmate-evolution-native-20261121.md#alternate-305-media-comparison",
+      "uncertainties": "145 of 146 unique names match the raw set. Native nine-disk order and label handling remain open.",
+      "dates": [],
+      "public_image_ids": []
+    },
+    {
+      "id": "generic-305-five-zip",
+      "family": "DeskMate 3",
+      "edition": "Alternate generic five ZIPs",
+      "version": "03.05.00",
+      "target_hardware": "Generic PC",
+      "dos_and_runtime": "Target minimum unverified",
+      "distribution_media": [
+        {
+          "path": "tandy1000/deskmate/dm369dks1.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm369dks1.zip",
+          "bytes": 402274,
+          "sha256": "142e44bd220e5f2ae63b5cadb914396b7a56b8c7bf1bb35ed85fe4866f0f6622"
+        },
+        {
+          "path": "tandy1000/deskmate/dm369dks2.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm369dks2.zip",
+          "bytes": 405492,
+          "sha256": "815954bea80b0685a0ff2fcf2c4de558c016e525d1284f513ce4cf636651c140"
+        },
+        {
+          "path": "tandy1000/deskmate/dm369dks3.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm369dks3.zip",
+          "bytes": 342089,
+          "sha256": "fa64d470630c4f13d830a72cab971be29fb77f8bae2444dbca97133a457d9c3c"
+        },
+        {
+          "path": "tandy1000/deskmate/dm369dks4.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm369dks4.zip",
+          "bytes": 178166,
+          "sha256": "173e68395fd23380e3340d841002f966352e4855ec9fc9abf85fbd56b1a60e16"
+        },
+        {
+          "path": "tandy1000/deskmate/dm369dks5.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm369dks5.zip",
+          "bytes": 347417,
+          "sha256": "a5e4e2b246952d51a26a885c71f5116bf6532d4d886a591159fd9473a510416a"
+        },
+        {
+          "path": "tandy1000/deskmate/dm369dks6.zip",
+          "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm369dks6.zip",
+          "bytes": 300354,
+          "sha256": "c8241c43ce908c544504f7396f06ca9003d4095710a73cdb606ea347fe0bad65"
+        }
+      ],
+      "installation_or_startup": "Five-disk installation list with separate Thesaurus archive",
+      "principal_applications": [
+        "Calendar",
+        "Address Book",
+        "Text",
+        "Draw",
+        "Worksheet",
+        "Filer",
+        "Telecom",
+        "Thesaurus (separate companion)"
+      ],
+      "evidence": "inspected",
+      "record": "../research/deskmate-evolution-native-20261121.md#alternate-305-media-comparison",
+      "uncertainties": "Different Desktop, help, and tutorial bytes and no PC-Link. Native installation and Thesaurus integration remain open.",
+      "dates": [],
+      "public_image_ids": []
+    },
+    {
+      "id": "generic-305-five-raw",
+      "family": "DeskMate 3",
+      "edition": "Standalone five raw disks",
+      "version": "03.05.00",
+      "target_hardware": "Generic PC",
+      "dos_and_runtime": "Tested RSX and Tandy DOS 5.00",
+      "distribution_media": [
+        {
+          "path": "Standalone five-disk 7-Zip archive",
+          "url": "https://winworldpc.com/download/c2bbc2ad-0279-c2ae-c281-11c3a4c2ac5a",
+          "bytes": 1075628,
+          "sha256": "bb1a74f787cfbdbda813e34a6a912a8533e0f9449ef0edbcb65353bedc9e323c"
+        }
+      ],
+      "installation_or_startup": "Five-disk installer, printer options, and reset",
+      "principal_applications": [
+        "Calendar",
+        "Address Book",
+        "Text",
+        "Draw",
+        "Worksheet",
+        "Filer",
+        "Telecom",
+        "PC-Link",
+        "Hangman"
+      ],
+      "evidence": "reproduced",
+      "record": "deskmate-installation-305.md",
+      "uncertainties": "Other DOS and media layouts untested",
+      "dates": [],
+      "public_image_ids": [
+        "ui.installation-303.desktop-305"
+      ]
+    }
+  ]
+}

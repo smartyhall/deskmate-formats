@@ -226,6 +226,22 @@
       "source": "docs/ecosystem/deskmate-installations.md"
     },
     {
+      "id": "applications.evolution-atlas",
+      "slug": "installation/evolution-atlas",
+      "title": "DeskMate Evolution Atlas",
+      "section": "applications",
+      "role": "current-guide",
+      "source": "docs/ecosystem/deskmate-evolution-atlas.md"
+    },
+    {
+      "id": "applications.automatic-house-x10",
+      "slug": "applications/automatic-house-x10",
+      "title": "Automatic House, Plug n Power, and CP290: research lead",
+      "section": "applications",
+      "role": "dated-research",
+      "source": "docs/research/deskmate-automatic-house-x10.md"
+    },
+    {
       "id": "applications.installation-303",
       "slug": "installation/deskmate-303",
       "title": "Install DeskMate 3.03.01 on a DOS PC",

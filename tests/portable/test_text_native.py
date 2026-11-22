@@ -10,6 +10,7 @@ FIXTURES = Path(__file__).resolve().parents[1] / 'fixtures/application-generated
 class TextNativeTest(unittest.TestCase):
     def test_plain_and_formatted_corpus(self):
         expected = {
+            '300-native-atlas.doc': 'ALPHA\nBETA',
             't00.doc': '',
             't01.doc': 'A',
             't02.doc': 'AB',
@@ -38,6 +39,12 @@ class TextNativeTest(unittest.TestCase):
             f'l{n:02}-0123456789abcdefghijklmnopqrstuvwxyz0123456789\n' for n in range(1, 49)
         )
         self.assertEqual(text.extract_file(path), expected)
+
+    def test_personal_deskmate_2_native_save_envelope(self):
+        early = (FIXTURES / 'pdm2-native-hist.doc').read_bytes()
+        self.assertEqual(len(early), 35)
+        self.assertEqual(early[:5], b'\x01DOC\x00')
+        self.assertEqual(early[22:], (FIXTURES / '300-native-atlas.doc').read_bytes())
 
     def test_margin_records_preserve_opaque_payload_and_offsets(self):
         first = bytes.fromhex('03 09 00 00 04')
