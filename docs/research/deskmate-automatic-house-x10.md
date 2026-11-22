@@ -16,6 +16,15 @@ The operator remembers seeing the **Information Center** and **Automatic House**
 
 ## Candidate serial protocol, not yet traced from DeskMate
 
+Radio Shack's own cross-reference lists **CP290** alongside **61-2617**.
+Its separate feature sheet lists the bundled Automatic House software and
+describes programming a timer that continues to operate when disconnected.
+The TVDog mirror copies used here hash to
+`6273cb434bc165cb9a390f8994bb429668689669562fbe3525ad223ddb82e0be`
+and `21f35e97eceebf0dd44fafe9858433c80219e66c8e3447d27172d221873f0632`,
+respectively. These manufacturer records identify the controller sold
+under that catalog number. [Radio Shack Faxback 8892](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/08892.txt) · [Radio Shack Faxback 8905](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/08905.txt)
+
 The [X10 FAQ's CP290 programming section](https://groups.google.com/g/comp.home.automation/c/8lj9WL27e9E) cites the *CP290 Home Control Interface Programming Guide for Advanced Programmers* and records:
 
 - Simplified RS-232, **600 baud, 8 data bits, no parity, one stop bit (8N1)**; a suggested 1 ms inter-byte delay.
@@ -24,6 +33,22 @@ The [X10 FAQ's CP290 programming section](https://groups.google.com/g/comp.home.
 - Distinguish CP290 serial commands, CP290 local scheduling, and X10 power-line signaling. The last stage must not be inferred from host-side serial bytes alone.
 
 **Critical unknown:** The actual Automatic House release being recovered may use CP290 commands, a driver layer, or a different I/O interface. Confirm via the running application or qualified binary analysis rather than treating CP290 compatibility as already measured.
+
+## OEM file comparison
+
+The private TVDog mirror search examined 895 ZIP member listings and
+6,479 loose text and index files. It identified shared Automatic House
+components in the [verified 1000 RLX-HD B file set](../ecosystem/deskmate-evolution-releases.json)
+(`1000RLX_HD-B.zip`, SHA-256
+`c19e395880113fed55ad50e8a8d1e05b6cdf87ca883f700b0d28dd062882463f`).
+The RLX and RSX versions of `HOMEAUTO.PDM`, `FLORPLAN.PDM`,
+`ROUTINE.PDM`, `SCHEDULE.PDM`, and the three feature Help files
+match byte for byte. `HOMEAUTO.DB`, `HOMEAUTO.TUT`, and
+`HOMGREET.PDM` differ. This comparison explains why matching
+application modules can coexist with different greetings and sample data.
+The search covered ZIP filenames and loose text, so other packaging
+or unidentified media might still contain the retail software.
+[RSX file identities](deskmate-rsx-oem-recovery-20261122.md#application-media-inventory)
 
 ## Deferred native research: bounded experimental sequence
 

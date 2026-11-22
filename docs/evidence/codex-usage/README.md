@@ -208,3 +208,8 @@ The Evolution Atlas survey recorded [startup](20261121-evolution-startup.json),
 [OEM progress](20261121-evolution-oem-usage.json), and
 [held Disk 3 stop](20261121-evolution-completion.json).
 [Survey and native records](../../ecosystem/deskmate-evolution-atlas.md)
+
+The November 22 RSX OEM recovery recorded
+[startup](20261122-rsx-oem-startup.json) and
+[the transition to Disk 4](20261122-rsx-oem-disk4.json).
+[Recovery record](../../research/deskmate-rsx-oem-recovery-20261122.md)
