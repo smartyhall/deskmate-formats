@@ -1098,7 +1098,7 @@
       ],
       "evidence": "reproduced",
       "record": "../research/deskmate-rsx-oem-recovery-20261122.md",
-      "uncertainties": "The installed Desktop and its menu are verified. Individual OEM application behavior and CP290 compatibility require separate observations.",
+      "uncertainties": "Automatic House 01.08 and Information Center 3.61 launched from the installed Desktop. CP290 interchange and remaining OEM shortcuts require separate observations.",
       "dates": [
         {
           "kind": "launcher-copyright-year",
@@ -1109,7 +1109,9 @@
       "public_image_ids": [
         "ui.evolution.rsx-oem-underscore-control",
         "ui.evolution.rsx-oem-disk2-prompt",
-        "ui.evolution.rsx-oem-first-hard-disk-desktop"
+        "ui.evolution.rsx-oem-first-hard-disk-desktop",
+        "ui.evolution.rsx-oem-automatic-house-entry",
+        "ui.evolution.rsx-oem-info-message-corrected"
       ]
     },
     {

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "rsx-oem-recovery",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 35,
+    "token_records": 6567,
+    "sessions": 32
+  },
+  "checkpoint": "first-native-application-launches",
+  "collected_at": "2026-11-22T20:19:03.747172+00:00",
+  "commit": "46003569eff279e8ddc09275d990863899737108",
+  "observation": {
+    "session": "8a7aaf1a4a2c574fbceded59",
+    "measured_at": "2026-11-22T20:18:58.094000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 179025707,
+      "cached_input": 177180416,
+      "output": 196119,
+      "reasoning_output": 52247,
+      "total": 179221826
+    },
+    "reported_last": {
+      "input": 144836,
+      "cached_input": 144000,
+      "output": 72,
+      "reasoning_output": 0,
+      "total": 144908
+    },
+    "windows": {
+      "300": {
+        "used_percent": 32.0,
+        "reset_epoch": 1795394893,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 51.0,
+        "reset_epoch": 1795836613,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  }
+}

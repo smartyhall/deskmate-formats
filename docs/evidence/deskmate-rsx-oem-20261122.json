@@ -30,6 +30,81 @@
       "raw_sha256": "178a4536e69dd595514f3ba2f177ead769bf9f3ff601ce3ec0c44045c6d2fa3e",
       "derivative_sha256": "54863988dbb1e1193c56b7cb53ffad7ddc828e786caa98d66335148b2d624923",
       "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.rsx-oem-automatic-house-entry": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 57980,
+      "frame": 3817,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "3191c9f128283ad6dacee27b5bb6637737a04b59b3ace7b5ab2e8b07d0270a29",
+      "derivative_sha256": "0432fe5c2b469f5351927769ddb28aa3129dba34be8f4b89ea4426b874e47c25",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.rsx-oem-scheduler-no-devices-accepted": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 116332,
+      "frame": 7316,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "2dea5bd595229857aed626d693079699ca002a1e4a01bb5d3874e353e48f196d",
+      "derivative_sha256": "600e90e1f94a47482be736121c147b844810793371597669d1eae2e04ad6cce4",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.rsx-oem-automatic-house-routine": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 78074,
+      "frame": 5022,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "9a1a67d6d40edf5e70c9c0736c5e88cf9d10a4de99f28d285a0de8cb78daae93",
+      "derivative_sha256": "1a9a78ee51b238f18d5967c76063e1632b4b297c791a99bd3aca74993773f523",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.rsx-oem-scheduler-first-screen": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 109828,
+      "frame": 6926,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "653eb6ec799fd5a6d363db395a39c3fa9d727a559ebedab62fee0170a18d5d14",
+      "derivative_sha256": "181197f23f6d9566979635b460a8be3d114a3fc0da290a2d01083bce3314f8fb",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.rsx-oem-info-message-corrected": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 189208,
+      "frame": 11685,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "9b77b8f15a980e22d91a6d7ebbd0ccc618aecb2b3910087de6b78ef3ba2b6cbb",
+      "derivative_sha256": "d479a64c34d4b307117bde9412f523cc5048b3c1d063aea050fdd89fdadea4d5",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
     }
   }
 }

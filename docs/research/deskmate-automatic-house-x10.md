@@ -1,10 +1,46 @@
-# Automatic House, Plug 'n Power, and the CP290: research lead
+# Automatic House, Plug 'n Power, and the CP290
 
-**Status (2026-11-21):** Historically supported hardware/software identification and protocol lead; **no native Automatic House session or serial trace has yet been reproduced**. This is a deferred research handoff, not an interoperability claim.
+**Status (2026-11-22).** Automatic House 01.08 and its three feature programs
+launched from the reconstructed RSX hard-disk installation. Radio Shack's
+own cross-reference identifies 61-2617 as the CP290. The runtime
+observations below establish which interfaces are present in the OEM
+bundle. [RSX installation and control](deskmate-rsx-oem-recovery-20261122.md)
 
 ## Why this lead matters
 
-The operator remembers seeing the **Information Center** and **Automatic House** icons on retail Tandy demonstration machines, with a particular sense of excitement about home automation. The display may have run an automated demonstration; the operator does not claim to remember an interactive session or a particular machine model. This is **recollection, not historical proof**. The Evolution Atlas independently captured an **Automatic House** desktop shortcut in the RSX OEM DeskMate 03.04.04 floppy startup. Whether that icon launches a complete installed application, a stub, or a demonstration remains untested. [Native RSX trial](deskmate-evolution-native-20261121.md#tandy-1000-rsx-oem-030404) · [Evolution Atlas](../ecosystem/deskmate-evolution-atlas.md#machine-specific-deskmate-3)
+The operator remembers seeing **Information Center** and **Automatic House**
+on retail Tandy demonstration machines. The display may have been automated,
+and the machine model is uncertain. The Evolution Atlas independently
+captured the shortcut on the RSX 03.04.04 floppy desktop. The later
+hard-disk run opens the three-part Automatic House navigator from that
+shortcut. [Native floppy trial](deskmate-evolution-native-20261121.md#tandy-1000-rsx-oem-030404) · [Evolution Atlas](../ecosystem/deskmate-evolution-atlas.md#machine-specific-deskmate-3)
+
+## Automatic House on the RSX
+
+From Teach Me on the installed desktop, four Right presses and Enter
+opened the Automatic House navigator. Three illustrated controls select
+Floor Plan, Routine Maker, or Scheduler. The File → About dialog reports
+`HOMEAUTO.PDM` version **01.08**, `DESK.EXE` resource version **69.5**,
+`DMCSR.RES` **3.125**, `DMDB.RES` **5.0**, and `DMDBRD.RES` **2.11**.
+The DeskMate launcher independently reports **03.04.04**.
+[OEM media and module identities](deskmate-rsx-oem-recovery-20261122.md#application-media-inventory) · [Native image provenance](../evidence/deskmate-rsx-oem-20261122.json)
+
+## Floor Plan, Routine Maker, and Scheduler
+
+The selected Floor Plan opens a supplied first-floor layout with a yard,
+kitchen, bedrooms, and living space. The Room menu offers Add, Remove,
+Rename, View room, and Move to top. Escape returns to the navigator.
+From Floor Plan on the navigator, Right and Enter open Routine Maker.
+It shows a Routines list, a name, a description, and a device/action
+table. The Routine menu offers New and Run. Copy, Delete, and Print
+were unavailable in the empty state.
+
+Clicking Scheduler from the Routine Maker footer opens
+**Scheduler — NORMAL** with File, Event, and Options. On this first
+run, **No X-10 Devices** asked the user to enter schedule-capable
+devices in Floor Plan. Acknowledging the message opened Floor Plan.
+This establishes an application dependency that the desktop tiles
+alone could not show. [Native image provenance](../evidence/deskmate-rsx-oem-20261122.json)
 
 ## Period software and hardware identification
 

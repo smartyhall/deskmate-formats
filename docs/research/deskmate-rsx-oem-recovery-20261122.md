@@ -139,3 +139,39 @@ parts load through the greeting program. [Six verified working media](deskmate-e
 | 5 | `FLORPLAN.PDM` | 110,591 | `61fb65023db51b3d87ade002716148a41d64fd550fc4efab0c0ef4a5c621b535` |
 | 5 | `ROUTINE.PDM` | 24,251 | `4b8e0c5eacaaa02ee56cae9623f273a7d9222acd0dffab5e1742b7bbdf1dec7d` |
 | 5 | `SCHEDULE.PDM` | 69,929 | `bb232ca4f7a7c79374a7a34dd7fd9f4bcffdde17a4d514f6e65538fbb490eae3` |
+
+## Installed application controls
+
+The application trial used an independent copy of the sealed installed disk,
+config, and NVRAM. The copy attached COM1 and COM2 to the emulator's built-in
+automation backend, with no host serial device or physical controller.
+It cold-booted with A: empty and ran `DESK` from C:, using the newly installed
+DOS PATH and DMCONFIG. The desktop title became `C:\`, and the Text,
+Programs, and Kubes file panels were empty for that current directory.
+The OEM tiles still launched their programs. This is a practical difference
+from running `DESK` after changing to `C:\DESKMATE`.
+[Serial controls and captures](deskmate-automatic-house-x10.md)
+
+## Information Center
+
+Two Right presses from Teach Me and Enter opened Information Center.
+At 149,436 ms the dashboard showed a month calendar, the selected
+day's agenda, Important Numbers with Phone List and Call shortcuts,
+a yellow notepad, and a messages panel. In the stock state the agenda
+and notepad were empty, and the messages panel reported no messages.
+F2 → About identifies `INFOCNTR.PDM` as version **3.61** with the same
+visible runtime-resource versions as Automatic House.
+[Native screenshot provenance](../evidence/deskmate-rsx-oem-20261122.json)
+
+The messages panel's **Add** button opens **Leave a Message** with
+To, From, and Text or Voice. A fast pointer-driven pilot entered
+text into the wrong fields and created a `PATLEE` recipient.
+The repeat used Tab from To to From, then two Tabs to the text
+body. It entered the synthetic message `ATLAS LAB MESSAGE` to
+`PAT` from `LEE` and clicked OK. After Escape back to the desktop
+and a fresh launch of Information Center, the `PAT` pin reopened
+the message in **Retrieve Message**. It showed the exact body,
+sender, November 4, 2026, at 9:41 pm, and Remove, Prev, Next,
+and Cancel controls. The first and reopened trials used the same
+writable guest disk. The application was relaunched within the
+same DOS boot.

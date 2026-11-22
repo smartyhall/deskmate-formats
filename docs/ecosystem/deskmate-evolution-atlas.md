@@ -123,11 +123,11 @@ printer driver, updated DOS startup, and reset. The hard-disk
 launch reproduced the OEM Desktop under Tandy MS-DOS 5.00.
 [Reproduced RSX installation and comparison](../research/deskmate-rsx-oem-recovery-20261122.md)
 
-Automatic House is also a documented X10/Plug 'n Power companion application,
-but this OEM shortcut has **not yet been launched or serial-traced**. The
-[Automatic House / CP290 research lead](../research/deskmate-automatic-house-x10.md)
-collects historical sources, distinct hardware generations, and a deferred
-native-emulation plan.
+Automatic House 01.08 opens a navigator for Floor Plan, Routine Maker,
+and Scheduler. Information Center 3.61 opens a household dashboard
+with an agenda, telephone shortcuts, a notepad, and messages. Both
+were launched from the installed RSX desktop.
+[Automatic House and CP290](../research/deskmate-automatic-house-x10.md) · [Information Center](../research/deskmate-rsx-oem-recovery-20261122.md#information-center)
 
 ## Native observation procedure
 
