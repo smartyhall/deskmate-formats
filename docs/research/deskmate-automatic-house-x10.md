@@ -2,9 +2,10 @@
 
 **Status (2026-11-22).** Automatic House 01.08 and its three feature programs
 launched from the reconstructed RSX hard-disk installation. Radio Shack's
-own cross-reference identifies 61-2617 as the CP290. The runtime
-observations below establish which interfaces are present in the OEM
-bundle. [RSX installation and control](deskmate-rsx-oem-recovery-20261122.md)
+own cross-reference identifies 61-2617 as the CP290. The OEM software
+sent CP290 commands at 600 baud, and Scheduler exchanged a synthetic
+lamp event with an offline virtual controller.
+[RSX installation and control](deskmate-rsx-oem-recovery-20261122.md)
 
 ## Why this lead matters
 
@@ -42,6 +43,26 @@ devices in Floor Plan. Acknowledging the message opened Floor Plan.
 This establishes an application dependency that the desktop tiles
 alone could not show. [Native image provenance](../evidence/deskmate-rsx-oem-20261122.json)
 
+## Building a room and a schedule
+
+From Floor Plan, Ctrl+A opened Add Room. Entering `ATLAS LAB` created
+a room with resize handles on the first-floor sample. Room → View room
+opened a detailed room view with a floor-plan thumbnail. Device → Light
+offered ten illustrated lamp types. The default table lamp used a Lamp
+Dimmer module at C1. Device → Appliance offered a fan and several
+other appliance types. The selected fan used a 2-Prong Appliance Module
+at C2. OK added each device to the room.
+
+After adding the devices, the Scheduler footer button opened the device
+list and events view. Select the lamp and choose Event → Add. Event Day
+offers Everyday, Weekdays, Weekends, and Specific days. Event Time
+offers a wall-clock time, sunrise, sunset, and an optional security mode.
+Event Action offers on, off, and dim for the lamp. The experiment
+selected Everyday, 6:06 am, and On, with security mode clear. The
+application also offered to add a corresponding Off event. Declining
+left the single On event in the NORMAL schedule.
+[Room and Scheduler evidence](../evidence/deskmate-rsx-oem-20261122.json)
+
 ## Period software and hardware identification
 
 - Radio Shack's [1992 catalog](https://www.worldradiohistory.com/Archive-Catalogs/Radio-Shack/Radio-Shack-1992.pdf) advertises a **Plug 'n Power Computer Interface** supplied with **DeskMate Automatic House software**, catalog **61-2617**, requiring DeskMate 3.x. Its description specifies a computer serial cable, a 9 V backup battery, 128 scheduled events, control addressing up to 256 modules, and the ability to disconnect the PC after programming. This is period advertising, not a verified measurement of the RSX OEM package.
@@ -50,7 +71,7 @@ alone could not show. [Native image provenance](../evidence/deskmate-rsx-oem-202
 - A period [April 1995 comp.home.automation X10 FAQ](https://groups.google.com/g/comp.home.automation/c/8lj9WL27e9E) explicitly cross-references **X10 CP290** with **Radio Shack 61-2617**, and describes the CP290 computer, Macintosh, Apple II, and Commodore 64/128 software/cable packages. This strongly supports the same controller **family/model identification**; it does **not** establish that all cable assemblies, software versions, ROMs, circuit boards, and branded packages are identical.
 - X10 engineer Dave Rye's [1999 retrospective interview](https://hometoys.com/dave-rye-x10/) explains a progression from a planned **Mattel Aquarius** interface, through the **Radio Shack Color Computer** interface, to the **CP290**. See also [Matthew Reed's hardware history](https://www.trs-80.org/plug-n-power.html). Distinguish the earlier TRS-80 cassette-port controller **26-1182** (Model I/III/CoCo, host-controlled), the later CoCo serial-controller **26-3142** (standalone scheduling), and the CP290/61-2617. **Shared design lineage is not proof of interchangeable hardware or protocols.**
 
-## Candidate serial protocol, not yet traced from DeskMate
+## CP290 protocol documentation
 
 Radio Shack's own cross-reference lists **CP290** alongside **61-2617**.
 Its separate feature sheet lists the bundled Automatic House software and
@@ -68,7 +89,43 @@ The [X10 FAQ's CP290 programming section](https://groups.google.com/g/comp.home.
 - Eight host command codes (0–7), framed by 16 bytes of `FF` synchronization, followed by command bytes and checksum where required. Responses use six `FF` sync bytes, status, optional data, and a checksum. **Implement the complete command-specific rules from the original guide before claiming compatibility.**
 - Distinguish CP290 serial commands, CP290 local scheduling, and X10 power-line signaling. The last stage must not be inferred from host-side serial bytes alone.
 
-**Critical unknown:** The actual Automatic House release being recovered may use CP290 commands, a driver layer, or a different I/O interface. Confirm via the running application or qualified binary analysis rather than treating CP290 compatibility as already measured.
+## Observed CP290 serial exchange
+
+The trial connected emulated COM1 and COM2 to the 86Box automation
+backend on a disposable RSX clone. Floor Plan → File → Set up interface
+box offered COM1–COM4, IRQ2–IRQ5, and a base house code. The defaults were
+COM2, IRQ3, and house C, with COM1 marked as a modem. The app left setup
+at 2,400 baud until **Test Interface → Yes**. The emulated UART then
+reported **600 baud, 8 data bits, no parity, and one stop bit**. Each
+port had previously emitted one `00` at 582 ms during boot. The
+subsequent command frames appeared only on COM2.
+[86Box UART capture](../evidence/deskmate-rsx-oem-20261122.json)
+
+Each measured command below begins with sixteen `FF` bytes, followed
+by the listed hex bytes. The interpretations follow the documented
+CP290 command formats. [Period CP290 protocol reference](https://groups.google.com/g/comp.home.automation/c/KpeaxXhXZKM)
+
+| Guest action | Frame body | Observed result |
+| --- | --- | --- |
+| Test Interface for house C | `00 20` | The app waited over nine emulated seconds without a reply. Six `FF` bytes and status `01` returned it to Floor Plan. |
+| Table lamp properties → Turn On | `01 02 20 00 80 A2` | Direct On for C1. The checksum is the sum of `02 20 00 80`. After a status packet and completion packet from the virtual endpoint, the app returned to the device dialog. |
+| Scheduler → File → Transfer | `04`, then `05` | The app read the virtual clock and base house code, then requested the timer inventory. |
+| Transfer with empty timer inventory | `03 00 00 08 7F 06 06 80 00 20 02 35` | The app wrote the recurring C1 On event at 6:06 am to the first slot. The checksum `35` is the low byte of the sum from `08` through `02`. |
+| Transfer with the same timer stored | `04`, then `05` | The app reported **No Events Transferred** and said the interface already had the correct schedule. It sent no further timer write in the observed transfer. |
+
+The [offline CP290 model](../../tools/experimental/cp290_replay.py)
+replays set-house and direct on/off frames, maintains simulated unit
+state, and implements the fixed clock and single timer slot used in
+the live Scheduler test. The first run presented an empty timer
+inventory. After accepting the write, the model returned the stored
+event on the second Transfer. The model's CLI takes complete host
+frames as hex arguments and emits decoded operations and generated
+replies. The live test used the same Python class and passed its
+replies exclusively through the authenticated emulated COM2 endpoint.
+The documented direct completion packet was injected through the
+same endpoint during the earlier manual trial. Physical signaling,
+additional slots, scheduled time progression, and dimming remain
+untested. [Exact bytes and time boundaries](../evidence/deskmate-rsx-oem-20261122.json)
 
 ## OEM file comparison
 
@@ -93,17 +150,12 @@ The search covered ZIP filenames and loose text, so other packaging
 or unidentified media might still contain the retail software.
 [RSX file identities](deskmate-rsx-oem-recovery-20261122.md#application-media-inventory)
 
-## Deferred native research: bounded experimental sequence
+## Next experiments
 
-1. **Identify the program.** From the pristine RSX OEM 03.04.04 Desktop, select Automatic House. Record the precise display state, required disk, executable/module filename, version/copyright, dialogs, and whether this is a working app or demo. Do the same for **Information Center** as a separate icon/application; do not assume it is part of Automatic House. Take contextual native screenshots with ordinary provenance and privacy review.
-2. **Locate independent media.** Search the verified TVDog mirror and historical catalogs for `Automatic House`, `Automatic House Companion`, `61-2617`, `CP290`, and related `HOUSE` modules or bundled software. Record hashes, archive paths, commercial licensing status, and software-specific cables; do not publish commercial program bytes.
-3. **Inspect without attached hardware.** Exercise Floor Plan, Routine Maker, Schedule Manager, and any demo or sample modes using synthetic household/device names. Capture document/save formats if available. Observe what the program does without a serial interface attached. Record error handling and whether the app can still work offline.
-4. **Trace the UART.** Attach a disposable emulated COM port/null-modem or monitored serial backend if supported by the qualified 86Box configuration. Capture raw bidirectional serial traffic, port settings, write timing, checksum, command/reply framing, and the corresponding on-screen action. Avoid private/real home device identifiers.
-5. **Build an offline CP290 mock only if the trace matches.** First test known protocol transactions in an isolated simulator, including acknowledgements, time/date, direct control, schedules, error cases, and resets. Compare with published CP290 documentation and, if available, genuine hardware. Maintain separate compatibility claims for original DeskMate and other host packages (e.g., Commodore).
-6. **Optional demonstration:** Only after validating the simulator, explore a strictly opt-in bridge to a real CP290, other X10 interface, or Home Assistant. A simulated lamp/floor plan is the default; do not send commands to physical household devices without explicit authorization and safeguards.
-
-## Evidence and stopping criteria
-
-A native run, screenshots, and serial capture are needed before declaring **DeskMate ↔ CP290 wire compatibility**. Keep hardware-model family, historical retail SKU, application software, serial protocol, power-line protocol, and modern bridge implementation as **separate** claims. Preserve captures and commercial material in the private lab; publish only eligible documentary images, synthetic files, and research notes via a reviewed PR.
-
-**Next handoff:** Resume the RSX OEM installation held at Disk 3 ([Atlas continuation](../ecosystem/deskmate-evolution-atlas.md#continuation)), then examine the icon's launch behavior before attempting protocol emulation.
+Define a second timer and observe its actual address before expanding the
+one-slot model. Check the failure path with a bounded no-reply wait
+and distinguish timeouts from a bad checksum or status. Compare the
+OEM tutorial and greeting with a verified retail copy when one is
+available. The RSX experiment establishes the application workflow and
+host-side protocol for the measured commands. Hardware signaling and
+retail equivalence remain separate questions.

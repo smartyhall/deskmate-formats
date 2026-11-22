@@ -1119,6 +1119,38 @@
       "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
       "page_id": "applications.evolution-atlas",
       "section_heading": "Machine-specific DeskMate 3"
+    },
+    {
+      "id": "ui.evolution.rsx-oem-house-room-lamp-and-fan",
+      "path": "evolution-atlas/rsx-oem-house-room-lamp-and-fan.png",
+      "sha256": "3005ab2b7076de76640a349f75a82a7265d201d4cffa51f8c2d363f8d6c69416",
+      "source_sha256": "a13838c7a8917c7371e7cf4d883a3504e0f1cccc72488da9fd468aee49668bf3",
+      "size": 6247,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "deskmate-rsx-oem-20261122-house-room-lamp-and-fan",
+      "caption": "RSX OEM Automatic House Floor Plan shows a synthetic ATLAS LAB room with a table lamp at C1 and a fan at C2.",
+      "alt": "A gray room has a blue table lamp and a pedestal fan, with a small floor-plan map on the left.",
+      "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
+      "page_id": "applications.automatic-house-x10",
+      "section_heading": "Building a room and a schedule"
+    },
+    {
+      "id": "ui.evolution.rsx-oem-scheduler-mock-repeat",
+      "path": "evolution-atlas/rsx-oem-scheduler-mock-repeat.png",
+      "sha256": "3b029e89a593a552d5a6d9cfc313f22e6e52feb3dd5d0846cd43b8c68b31de4f",
+      "source_sha256": "4ee5273eb39e84e35675088ad8ee5f46a0a31ecc47798389f864b61fcabdc69d",
+      "size": 10608,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "deskmate-rsx-oem-20261122-scheduler-mock-repeat",
+      "caption": "Scheduler reads its saved event back from the offline CP290 model and determines it already has the correct schedule.",
+      "alt": "No Events Transferred dialog over the everyday 6:06 am lamp-on event in Scheduler.",
+      "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
+      "page_id": "applications.automatic-house-x10",
+      "section_heading": "Observed CP290 serial exchange"
     }
   ]
 }

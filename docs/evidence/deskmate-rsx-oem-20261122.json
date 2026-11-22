@@ -105,6 +105,175 @@
       "raw_sha256": "9b77b8f15a980e22d91a6d7ebbd0ccc618aecb2b3910087de6b78ef3ba2b6cbb",
       "derivative_sha256": "d479a64c34d4b307117bde9412f523cc5048b3c1d063aea050fdd89fdadea4d5",
       "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.rsx-oem-house-room-lamp-and-fan": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 327141,
+      "frame": 19954,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "a13838c7a8917c7371e7cf4d883a3504e0f1cccc72488da9fd468aee49668bf3",
+      "derivative_sha256": "3005ab2b7076de76640a349f75a82a7265d201d4cffa51f8c2d363f8d6c69416",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.rsx-oem-scheduler-mock-repeat": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 411247,
+      "frame": 24997,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "4ee5273eb39e84e35675088ad8ee5f46a0a31ecc47798389f864b61fcabdc69d",
+      "derivative_sha256": "3b029e89a593a552d5a6d9cfc313f22e6e52feb3dd5d0846cd43b8c68b31de4f",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
     }
+  },
+  "serial": {
+    "release": "03.04.04",
+    "application": "Automatic House 01.08",
+    "machine": "tandy1000rsx",
+    "automation_ports": [
+      1,
+      2
+    ],
+    "selected_port": 2,
+    "irq": 3,
+    "active_uart": {
+      "baud": 600,
+      "data_bits": 8,
+      "parity": "none",
+      "stop_bits": 1
+    },
+    "idle_boot_control": {
+      "last_byte_ms": 582,
+      "tx_hex_by_port": {
+        "1": "00",
+        "2": "00"
+      }
+    },
+    "house_setup": {
+      "observed_ms": 265932,
+      "start": 1,
+      "end_exclusive": 19,
+      "last_byte_ms": 264883,
+      "host_tx": "ffffffffffffffffffffffffffffffff0020",
+      "virtual_reply": [
+        {
+          "queued_ms": 273932,
+          "hex": "ffffffffffff01"
+        }
+      ]
+    },
+    "direct_lamp_on": {
+      "observed_ms": 304487,
+      "start": 19,
+      "end_exclusive": 41,
+      "last_byte_ms": 304352,
+      "host_tx": "ffffffffffffffffffffffffffffffff0102200080a2",
+      "virtual_reply": [
+        {
+          "queued_ms": 304487,
+          "hex": "ffffffffffff01"
+        },
+        {
+          "queued_ms": 304737,
+          "hex": "ffffffffffff0122008020c2"
+        }
+      ]
+    },
+    "virtual_timer_round_trips": [
+      {
+        "start_ms": 383431,
+        "end_ms": 396289,
+        "exchanges": [
+          {
+            "observed_ms": 387939,
+            "host_tx": "ffffffffffffffffffffffffffffffff04",
+            "operation": {
+              "operation": "get-clock"
+            },
+            "virtual_replies": [
+              {
+                "queued_ms": 387939,
+                "hex": "ffffffffffff012c15042065"
+              }
+            ]
+          },
+          {
+            "observed_ms": 388539,
+            "host_tx": "ffffffffffffffffffffffffffffffff05",
+            "operation": {
+              "operation": "get-timers"
+            },
+            "virtual_replies": [
+              {
+                "queued_ms": 388539,
+                "hex": "ffffffffffff01ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00"
+              }
+            ]
+          },
+          {
+            "observed_ms": 391489,
+            "host_tx": "ffffffffffffffffffffffffffffffff030000087f06068000200235",
+            "operation": {
+              "operation": "write-timer",
+              "slot": 0,
+              "payload": "087f060680002002"
+            },
+            "virtual_replies": [
+              {
+                "queued_ms": 391489,
+                "hex": "ffffffffffff01"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "start_ms": 396289,
+        "end_ms": 411247,
+        "exchanges": [
+          {
+            "observed_ms": 400747,
+            "host_tx": "ffffffffffffffffffffffffffffffff04",
+            "operation": {
+              "operation": "get-clock"
+            },
+            "virtual_replies": [
+              {
+                "queued_ms": 400747,
+                "hex": "ffffffffffff012c15042065"
+              }
+            ]
+          },
+          {
+            "observed_ms": 401347,
+            "host_tx": "ffffffffffffffffffffffffffffffff05",
+            "operation": {
+              "operation": "get-timers"
+            },
+            "virtual_replies": [
+              {
+                "queued_ms": 401347,
+                "hex": "ffffffffffff01087f060680002002ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff35"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "stored_timer_payload": "087f060680002002",
+    "observed_readback_dialog": "No Events Transferred",
+    "configuration_sha256": "306633540faa5b5d425ce1721b9d34a1dc82a1d2fd6f4433b48113bec703459a",
+    "method": "Held authenticated socket UART reads and virtual-only replies, with BIOS mode 0x12 native framebuffer controls"
   }
 }
