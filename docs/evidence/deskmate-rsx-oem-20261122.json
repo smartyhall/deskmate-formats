@@ -180,6 +180,21 @@
       "raw_sha256": "d594bd747aa6cf371cf3dae208cc2279d03b9bfd45db5b361213f567191db2b6",
       "derivative_sha256": "4a8ad9bf79d5f94e4a47fcaca38815d2f718fdc801541acaceef50e23dd6dbe4",
       "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.rsx-oem-automatic-house-tutorial-second-page": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 195786,
+      "frame": 12079,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "6dd8c458534ce55c26fbaa6a7f82ca0088f65aa1545f1274865839229a3bba81",
+      "derivative_sha256": "4882814e98e9d8867acebede3d82031725926c217e3563441985c6617952da35",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
     }
   },
   "serial": {

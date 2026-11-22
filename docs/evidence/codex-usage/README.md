@@ -214,6 +214,7 @@ The November 22 RSX OEM recovery recorded
 [the transition to Disk 4](20261122-rsx-oem-disk4.json),
 [the Disk 6 reset and hard-disk boot](20261122-rsx-oem-installed.json),
 [the first application launches](20261122-rsx-oem-applications.json),
-[the CP290 timer round trip](20261122-rsx-oem-serial.json), and
-[the application data and OEM sweep](20261122-rsx-oem-fixtures.json).
+[the CP290 timer round trip](20261122-rsx-oem-serial.json),
+[the application data and OEM sweep](20261122-rsx-oem-fixtures.json), and
+[safe stop and validation](20261122-rsx-oem-completion.json).
 [Recovery record](../../research/deskmate-rsx-oem-recovery-20261122.md)

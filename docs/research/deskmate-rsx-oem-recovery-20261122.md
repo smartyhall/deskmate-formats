@@ -239,3 +239,43 @@ Only Letter Invaders among these shortcuts had its independent About
 version captured in this sweep. The selected applications ran with
 their installed OEM runtime. The raw captures and application disk
 remain in the private evidence set. [Published screenshots](../evidence/deskmate-rsx-oem-20261122.json)
+
+## Continuation
+
+The sealed clean installation and the stopped working disk with
+the synthetic applications are separate. The latter has SHA-256
+`4fab9bdf395825ca58204b61efea95addc564424c9aa0fb32ba202652f1be0de`.
+Verification booted a copy of it with no floppies mounted. Use
+a fresh copy of the clean disk for tests of any additional OEM
+software, or a fresh copy of the modified disk for message or
+schedule experiments.
+
+The final verification session exited Teach Me and DeskMate, reached
+the `C:\>` DOS prompt at 273,456 emulated ms with A: empty, and
+stopped through the socket. Its separately archived disk hashes to
+`39f96f64f2be24a4fef4a67edf3851d17ee21816c78682d1120e51150d76ee5e`.
+
+The remaining questions include Information Center's voice
+message and reminder formats, additional Automatic House timer
+slots and no-reply behavior, and the identity of the separate
+AOL disk. The broader survey's next experiment is an alternate
+five-ZIP 3.05 native trial focused on its differing desktop and
+Help, followed by the SL/2 ROM MS-DOS control on a clean EEPROM
+copy. Those installations are separate from the completed RSX
+campaign. [Atlas continuation](../ecosystem/deskmate-evolution-atlas.md#continuation)
+
+## Validation
+
+- A fresh virtual environment with the locally built wheel passed
+  726 portable tests with two skips. The first run used the host's
+  existing package and failed two CLI imports and an ownership
+  acknowledgement test. All three passed in the fresh environment.
+- The follow-up checks passed all three CP290 replay tests and all
+  26 repository audit tests, including the exact-path database
+  exception. The wheel and sdist excluded the native database.
+- The Windows deployment suite passed 31 tests with two skips.
+  Ruff, REUSE, and the staged repository publication audit passed.
+- All 18 website tests passed. Eleventy generated 35 HTML pages
+  and the link checker reported zero errors at the root and at
+  `/deskmate-formats/`.
+  [Campaign usage receipts](../evidence/codex-usage/README.md)

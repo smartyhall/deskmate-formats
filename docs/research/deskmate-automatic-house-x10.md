@@ -79,6 +79,18 @@ Scheduler reopened NORMAL with its 6:06 am lamp event and
 listed `LAB WAKE` under Routines Containing Device for the lamp.
 [Independent database extraction](deskmate-rsx-oem-recovery-20261122.md#native-database-evidence)
 
+## Teach Me
+
+Teach Me → Automatic House: Getting Started opens a robot tutor
+over the OEM desktop. Press C at the introductory panel to display
+the lesson menu. The topics cover a tour, home automation basics,
+creating a floor plan, adding devices, scheduling, and making
+routines. The screen instructs users to double-click a topic.
+Double-clicking Home Automation Basics opened an animated panel
+over the Automatic House navigator. This lesson is a separate
+entry point from the interactive desktop tile.
+[Tutorial capture provenance](../evidence/deskmate-rsx-oem-20261122.json)
+
 ## Period software and hardware identification
 
 - Radio Shack's [1992 catalog](https://www.worldradiohistory.com/Archive-Catalogs/Radio-Shack/Radio-Shack-1992.pdf) advertises a **Plug 'n Power Computer Interface** supplied with **DeskMate Automatic House software**, catalog **61-2617**, requiring DeskMate 3.x. Its description specifies a computer serial cable, a 9 V backup battery, 128 scheduled events, control addressing up to 256 modules, and the ability to disconnect the PC after programming. This is period advertising, not a verified measurement of the RSX OEM package.

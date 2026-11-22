@@ -1199,6 +1199,22 @@
       "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
       "page_id": "applications.evolution-atlas",
       "section_heading": "RSX household applications"
+    },
+    {
+      "id": "ui.evolution.rsx-oem-automatic-house-tutorial-second-page",
+      "path": "evolution-atlas/rsx-oem-automatic-house-tutorial-second-page.png",
+      "sha256": "4882814e98e9d8867acebede3d82031725926c217e3563441985c6617952da35",
+      "source_sha256": "6dd8c458534ce55c26fbaa6a7f82ca0088f65aa1545f1274865839229a3bba81",
+      "size": 12889,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "deskmate-rsx-oem-20261122-automatic-house-tutorial-second-page",
+      "caption": "The RSX OEM Teach Me lesson opens an interactive Automatic House topic menu over the desktop.",
+      "alt": "A robot points to a lesson menu with topics for floor plans, devices, schedules, and routines.",
+      "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
+      "page_id": "applications.automatic-house-x10",
+      "section_heading": "Teach Me"
     }
   ]
 }
