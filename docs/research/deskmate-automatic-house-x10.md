@@ -46,6 +46,13 @@ The RLX and RSX versions of `HOMEAUTO.PDM`, `FLORPLAN.PDM`,
 match byte for byte. `HOMEAUTO.DB`, `HOMEAUTO.TUT`, and
 `HOMGREET.PDM` differ. This comparison explains why matching
 application modules can coexist with different greetings and sample data.
+Tandy's RLX/B feature sheet identifies Automatic House as an included
+X10 interface. The sheet describes the bundle as DeskMate 3.5 in one
+paragraph and reports 3.04.03 for the distributions in another. The
+two labels are preserved as written. The local Faxback copy hashes to
+`9d1a309089bcd7a32bda72d172b65e141cd778b41f77de40611d10cca09e2156`.
+[Tandy Faxback 1342](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01342.txt)
+
 The search covered ZIP filenames and loose text, so other packaging
 or unidentified media might still contain the retail software.
 [RSX file identities](deskmate-rsx-oem-recovery-20261122.md#application-media-inventory)

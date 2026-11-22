@@ -1023,6 +1023,22 @@
       "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
       "page_id": "applications.evolution-atlas",
       "section_heading": "Machine-specific DeskMate 3"
+    },
+    {
+      "id": "ui.evolution.rsx-oem-first-hard-disk-desktop",
+      "path": "evolution-atlas/rsx-oem-first-hard-disk-desktop.png",
+      "sha256": "54863988dbb1e1193c56b7cb53ffad7ddc828e786caa98d66335148b2d624923",
+      "source_sha256": "178a4536e69dd595514f3ba2f177ead769bf9f3ff601ce3ec0c44045c6d2fa3e",
+      "size": 11241,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "deskmate-rsx-oem-20261122-first-hard-disk-desktop",
+      "caption": "DeskMate 03.04.04 starts from the installed RSX hard disk with five OEM task tiles, an Applications menu, and shortcuts to AOL and Letter Invaders.",
+      "alt": "Teal DeskMate desktop at C:\\DESKMATE, with tiles for Teach Me, Home Organizer, Information Center, Print Companion, and Automatic House.",
+      "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
+      "page_id": "applications.evolution-atlas",
+      "section_heading": "Machine-specific DeskMate 3"
     }
   ]
 }

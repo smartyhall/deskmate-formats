@@ -116,11 +116,12 @@ startup selection. Two reboot controls then left a blank display.
 This edition remains an inspected distribution with an observed
 startup blocker. [Native SL/2 trial](../research/deskmate-evolution-native-20261121.md#tandy-1000-sl2-startup-blocker)
 
-The RSX OEM 03.04.04 floppy Desktop adds an Applications menu,
-large task tiles, and OEM shortcuts such as Letter Invaders and
-Automatic House. The hard-disk installer has copied the first two
-disks and requested Disk 3. This edition has not yet been launched
-from an installed hard disk. [Native RSX OEM startup and held checkpoint](../research/deskmate-evolution-native-20261121.md#tandy-1000-rsx-oem-030404)
+The RSX OEM 03.04.04 Desktop adds an Applications menu, five
+illustrated task tiles, and shortcuts to AOL and Letter Invaders.
+The recovered installer copied all six floppies, configured the
+printer driver, updated DOS startup, and reset. The hard-disk
+launch reproduced the OEM Desktop under Tandy MS-DOS 5.00.
+[Reproduced RSX installation and comparison](../research/deskmate-rsx-oem-recovery-20261122.md)
 
 Automatic House is also a documented X10/Plug 'n Power companion application,
 but this OEM shortcut has **not yet been launched or serial-traced**. The

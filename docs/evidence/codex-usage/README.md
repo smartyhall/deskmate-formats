@@ -210,6 +210,7 @@ The Evolution Atlas survey recorded [startup](20261121-evolution-startup.json),
 [Survey and native records](../../ecosystem/deskmate-evolution-atlas.md)
 
 The November 22 RSX OEM recovery recorded
-[startup](20261122-rsx-oem-startup.json) and
-[the transition to Disk 4](20261122-rsx-oem-disk4.json).
+[startup](20261122-rsx-oem-startup.json),
+[the transition to Disk 4](20261122-rsx-oem-disk4.json), and
+[the Disk 6 reset and hard-disk boot](20261122-rsx-oem-installed.json).
 [Recovery record](../../research/deskmate-rsx-oem-recovery-20261122.md)

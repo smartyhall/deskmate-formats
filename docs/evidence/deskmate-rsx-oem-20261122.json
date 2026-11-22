@@ -15,6 +15,21 @@
       "raw_sha256": "51394bf1f7afb1b37ebc14a472a6ffa174b95a0cd1e0d8f9fa24b82aa66485e4",
       "derivative_sha256": "ecb539b9ab7027276bcd00df2d617350b148f157f8e229ceb1ab1765945d3371",
       "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.rsx-oem-first-hard-disk-desktop": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 1997985,
+      "frame": 120386,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "178a4536e69dd595514f3ba2f177ead769bf9f3ff601ce3ec0c44045c6d2fa3e",
+      "derivative_sha256": "54863988dbb1e1193c56b7cb53ffad7ddc828e786caa98d66335148b2d624923",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
     }
   }
 }
