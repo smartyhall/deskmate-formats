@@ -87,6 +87,14 @@ class GraphicsPreservationTest(unittest.TestCase):
         paths = sorted((FIXTURES / 'text').glob('*'))
         for path in (path for path in paths if path.suffix in ('.doc', '.txt')):
             with self.subTest(path=path.name):
+                if path.name == 'pdm2-native-hist.doc':
+                    # An authentic Personal DeskMate 2 Non-ASCII envelope;
+                    # it is not a DeskMate 3 Text stream. Preserve the
+                    # native specimen while explicitly recording that this
+                    # reader cannot yet parse its earlier container.
+                    with self.assertRaisesRegex(PreservationError, 'unsupported byte or control'):
+                        bundle.prepare(path, application='text')
+                    continue
                 result = bundle.prepare(path, application='text')
                 document = text.parse_file(path)
                 content = json.loads(result.files['content.json'])
