@@ -4,7 +4,7 @@
 
 The reviewed [DeskMate Evolution Atlas](docs/ecosystem/deskmate-evolution-atlas.md)
 (PR [#161](https://github.com/smartyhall/deskmate-formats/pull/161))
-records 23 verified distributions, archive variants, and documentary leads,
+catalogs 23 distributions, archive variants, and documentary leads,
 11 backed by native desktop or application observations. It separates
 original DeskMate and DeskMate II, Personal DeskMate, generic DeskMate 3.x,
 and machine-specific OEM distributions; the [release matrix](docs/ecosystem/deskmate-evolution-releases.json)
