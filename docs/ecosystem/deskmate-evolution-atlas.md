@@ -122,6 +122,12 @@ Automatic House. The hard-disk installer has copied the first two
 disks and requested Disk 3. This edition has not yet been launched
 from an installed hard disk. [Native RSX OEM startup and held checkpoint](../research/deskmate-evolution-native-20261121.md#tandy-1000-rsx-oem-030404)
 
+Automatic House is also a documented X10/Plug 'n Power companion application,
+but this OEM shortcut has **not yet been launched or serial-traced**. The
+[Automatic House / CP290 research lead](../research/deskmate-automatic-house-x10.md)
+collects historical sources, distinct hardware generations, and a deferred
+native-emulation plan.
+
 ## Native observation procedure
 
 1. Match the archive size and hash, identify boot and program media,
