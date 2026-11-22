@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "captures": {
+    "ui.evolution.rsx-oem-disk5-prompt": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 1006468,
+      "frame": 60570,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "51394bf1f7afb1b37ebc14a472a6ffa174b95a0cd1e0d8f9fa24b82aa66485e4",
+      "derivative_sha256": "ecb539b9ab7027276bcd00df2d617350b148f157f8e229ceb1ab1765945d3371",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    }
+  }
+}

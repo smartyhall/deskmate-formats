@@ -1007,6 +1007,22 @@
       "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
       "page_id": "applications.evolution-atlas",
       "section_heading": "Machine-specific DeskMate 3"
+    },
+    {
+      "id": "ui.evolution.rsx-oem-disk5-prompt",
+      "path": "evolution-atlas/rsx-oem-disk5-prompt.png",
+      "sha256": "ecb539b9ab7027276bcd00df2d617350b148f157f8e229ceb1ab1765945d3371",
+      "source_sha256": "51394bf1f7afb1b37ebc14a472a6ffa174b95a0cd1e0d8f9fa24b82aa66485e4",
+      "size": 6636,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "deskmate-rsx-oem-20261122-disk5-prompt",
+      "caption": "The RSX OEM DeskMate 03.04.04 hard-disk installer requests Disk 5, the volume with the Automatic House programs.",
+      "alt": "Disk Needed dialog asks for DeskMate 5 over drawings of a diskette and a Tandy computer.",
+      "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
+      "page_id": "applications.evolution-atlas",
+      "section_heading": "Machine-specific DeskMate 3"
     }
   ]
 }
