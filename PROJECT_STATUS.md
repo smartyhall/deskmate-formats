@@ -1,5 +1,47 @@
 # Project status — DeskMate formats
 
+## Historical release survey and RSX home automation — 2026-11-22
+
+The reviewed [DeskMate Evolution Atlas](docs/ecosystem/deskmate-evolution-atlas.md)
+(PR [#161](https://github.com/smartyhall/deskmate-formats/pull/161))
+records 23 verified distributions, archive variants, and documentary leads,
+11 backed by native desktop or application observations. It separates
+original DeskMate and DeskMate II, Personal DeskMate, generic DeskMate 3.x,
+and machine-specific OEM distributions; the [release matrix](docs/ecosystem/deskmate-evolution-releases.json)
+distinguishes documentary evidence from verified media and successful launches.
+
+The RSX OEM 03.04.04 campaign (merged PR [#162](https://github.com/smartyhall/deskmate-formats/pull/162))
+completed the six-disk native hard-disk installation and tested the
+distinctive household applications. [Automatic House 01.08](docs/research/deskmate-automatic-house-x10.md)
+created a synthetic floor plan, two-device routine, and daily schedule,
+then reopened them after a cold boot. DeskMate sent measured **CP290**
+serial frames at 600 baud, 8N1 to an **offline simulated controller**:
+direct lamp action, timer transfer, and schedule readback were observed.
+This is *not* evidence of physical X10 signaling or general CP290
+compatibility. [Information Center 3.61](docs/research/deskmate-rsx-oem-recovery-20261122.md#information-center)
+saved and reopened synthetic messages; a byte-verified 6,144-byte native
+database specimen and representative framebuffer captures are published.
+
+**Current site:** The BOOTSTRA.386-inspired Eleventy reference is built
+from [docs/site/page-map.json](docs/site/page-map.json) and deployed
+at [deskmate.retroconnect.org](https://deskmate.retroconnect.org/).
+The RSX application research and atlas are now linked from the site.
+The prior generic 3.02, 3.03.01, and 3.05 comparisons remain available.
+
+**Open historical work:** [installation roadmap #153](https://github.com/smartyhall/deskmate-formats/issues/153)
+continues beyond the completed releases. Next experiment: qualify the
+alternate five-ZIP DeskMate 3.05 desktop/Help, then re-test the Tandy
+SL/2 ROM **MS-DOS** control using a fresh EEPROM profile before any
+further DeskMate startup diagnosis. The CP290 model intentionally covers
+only observed commands; multi-event scheduling, dimming, time progression,
+and physical-hardware validation remain separate future work.
+[Chronology PR #155](https://github.com/smartyhall/deskmate-formats/pull/155)
+is still an **editorial draft** pending verified period-image preparation,
+source checking, and reconciliation with the now-completed release atlas.
+The [Faxback publication project #154](https://github.com/smartyhall/deskmate-formats/issues/154)
+remains staged and requires the prescribed per-document review; do not
+confuse archive-mirror completeness with publication completion.
+
 ## TVDog archive intelligence — 2026-11-19
 
 The first [mirror verification](docs/ecosystem/tvdog-mirror-verification.md)
