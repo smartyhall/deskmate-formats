@@ -35,6 +35,26 @@ class FixtureAuditTest(unittest.TestCase):
         with patch.object(audit_repository, 'ROOT', self.root):
             return audit_repository.audit()
 
+    def test_only_the_manifested_information_center_database_is_allowed(self):
+        name = audit_repository.SYNTHETIC_DB
+        fixture = Path(__file__).resolve().parents[2] / audit_repository.FIXTURE_DIR / name
+        data = fixture.read_bytes()
+        self.assertEqual(len(data), 6144)
+        self.assertIn(b'ATLAS LAB MESSAGE\x01PAT\x01LEE', data)
+        target = self.base / name
+        target.parent.mkdir()
+        target.write_bytes(data)
+        self.manifest([self.entry(name, data)])
+        self.assertEqual(self.audit()['application_generated_fixtures_checked'], 1)
+
+        different = 'information-center/other.db'
+        self.manifest([self.entry(different, data)])
+        with self.assertRaisesRegex(ValueError, 'unexpected fixture extension'):
+            self.audit()
+        self.manifest([])
+        with self.assertRaisesRegex(ValueError, 'excluded evidence/software type'):
+            self.audit()
+
     @staticmethod
     def example_site_png():
         def chunk(kind, payload):

@@ -1081,7 +1081,7 @@
           "sha256": "e8289597e3d246727ff977f151ee986dd59d50ace72bdfdd2a65614b88588a5c"
         }
       ],
-      "installation_or_startup": "Nested Disk 1–6 and utilities, clean OEM install open",
+      "installation_or_startup": "Native INSTALL.PDM copied six DeskMate floppies to C:\\DESKMATE and updated AUTOEXEC.BAT. OEM Desktop launched after reset to the DOS 5.00 hard disk.",
       "principal_applications": [
         "Letter Invaders",
         "Music",
@@ -1096,9 +1096,9 @@
         "Address Book",
         "Telecom"
       ],
-      "evidence": "launched",
-      "record": "../research/deskmate-evolution-native-20261121.md#tandy-1000-rsx-oem-030404",
-      "uncertainties": "Floppy Desktop and hard-disk installer demonstrated; complete installation and OEM applications require further observation.",
+      "evidence": "reproduced",
+      "record": "../research/deskmate-rsx-oem-recovery-20261122.md",
+      "uncertainties": "Automatic House 01.08 exchanged CP290 frames with an offline controller, and Information Center 3.61 saved and reopened a message. The AOL shortcut awaits its separately labeled companion disk. Physical CP290 operation is unverified.",
       "dates": [
         {
           "kind": "launcher-copyright-year",
@@ -1108,7 +1108,12 @@
       ],
       "public_image_ids": [
         "ui.evolution.rsx-oem-underscore-control",
-        "ui.evolution.rsx-oem-disk2-prompt"
+        "ui.evolution.rsx-oem-disk2-prompt",
+        "ui.evolution.rsx-oem-first-hard-disk-desktop",
+        "ui.evolution.rsx-oem-automatic-house-entry",
+        "ui.evolution.rsx-oem-info-message-corrected",
+        "ui.evolution.rsx-oem-home-organizer-first-screen",
+        "ui.evolution.rsx-oem-print-companion-first-screen"
       ]
     },
     {
