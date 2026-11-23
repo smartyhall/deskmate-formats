@@ -1,5 +1,57 @@
 # Project status — DeskMate formats
 
+## Corkboard and Home Organizer storage — 2026-11-23
+
+[Native Corkboard trials](docs/research/deskmate-corkboard-20261123.md)
+on the RSX, SL/2, and generic 3.05 identify `DMNOTEPD.ACC` as the F10
+accessory and `DMCORKBD` as its persistent text buffer. RSX Information
+Center 3.61 reads and writes the same buffer from its dashboard. Clear
+can leave the prior text recoverable. The separate Financial Notebook
+and Collections applications use the common 1 KiB database framing also
+seen in Information Center's message database and Filer. The campaign
+adds measured read-only inspection, native synthetic fixtures, and
+release-by-release evidence.
+
+## Post-merge handoff and current investigation order — 2026-11-22
+
+[PR #164](https://github.com/smartyhall/deskmate-formats/pull/164)
+merged after its pull-request test matrix passed. The alternate DeskMate 03.05.00,
+SL/2 ROM startup, and related RL/RLX controls are now documented in
+[the experiment report](docs/research/deskmate-305-variants-sl2-20261122.md)
+with release identities, native captures, and preserved private checkpoints.
+The SL/2 needed factory EEPROM initialization before its ROM DOS and ROM
+DeskMate startup could be reproduced; exact-machine RL/RLX follow-ups remain open.
+
+**Next bounded native campaign:** [Corkboard #165](https://github.com/smartyhall/deskmate-formats/issues/165)
+should locate any genuine Corkboard module and saved specimen in the preserved
+DOS releases, then compare its storage with the now-observed Information
+Center 3.61 and Filer databases. Do not treat `NOTEBOOK.PDM` as Corkboard
+without independent identity evidence, and do not assume format compatibility.
+
+**Queued communications investigations:** [DOS Telecom #167](https://github.com/smartyhall/deskmate-formats/issues/167)
+is a controlled two-86Box, virtual-modem and native transfer-protocol study.
+[PC-Link #166](https://github.com/smartyhall/deskmate-formats/issues/166)
+is a separate, later service-protocol/revival study; compatibility with
+Commodore QuantumLink is a hypothesis, not an established feature.
+Keep experiments local, synthetic, and version-specific.
+
+**CI efficiency:** [Windows profiling #147](https://github.com/smartyhall/deskmate-formats/issues/147)
+now has per-test evidence from the recent PR #164 runs. The same 731-test
+portable suite took approximately 78–84 seconds on Ubuntu and 395–531 seconds
+on Windows, principally in supervisor/process tests. Instrument this
+separately from application archaeology; preserve all safety and
+fail-closed assertions.
+
+**Research sequence:** Prioritize the DOS DeskMate family, its release
+lineage, runtime, and native formats. Cross-system investigation of
+Color Computer DeskMate and comparisons with OS-9 or GEOS are deferred until
+the DOS evidence is better established. The historical
+[chronology PR #155](https://github.com/smartyhall/deskmate-formats/pull/155)
+remains intentionally **draft/unpublished**, with period-image preparation and
+source reconciliation still required. The last
+[Codex usage completion receipt](docs/evidence/codex-usage/20261122-305-sl2-completion.json)
+is a historical checkpoint, not a live account quota reading.
+
 ## Alternate 3.05 and SL/2 ROM recovery — 2026-11-22
 
 The [follow-up campaign](docs/research/deskmate-305-variants-sl2-20261122.md)

@@ -285,3 +285,27 @@ for future native sessions and the DeskMate design system. Keep raw captures
 and private locators private; publish actual exemplars only under applicable
 reviewed publication grants. Do not start new native sessions or expand
 authorization merely to fill gaps.
+
+## Laboratory storage inventory and hygiene — operator direction 2026-11-23
+
+Follow the [standing laboratory storage inventory workstream](docs/lab-storage-housekeeping.md)
+for bounded spare-capacity work after primary authorized Codex tasks are
+complete. The immediate dedicated Windows 10 storage/Win 98 VM lineage audit is
+[issue #169](https://github.com/smartyhall/deskmate-formats/issues/169), to
+run after the current Corkboard investigation rather than interrupting it.
+Inventory project-owned images, archives, snapshots and evidence; distinguish
+originals, sealed baselines, research checkpoints, active or dependent media,
+rebuildable derivatives and unknowns. Measure *allocated* versus logical space,
+map image-parent and experiment dependencies, and maintain a resumable private
+catalog with exact provenance. Start with lightweight read-only metadata,
+using targeted, throttled hashing only where useful. Protect the TVDog mirror
+and live experiments from I/O contention.
+
+**Inventory and cleanup proposals are authorized; destructive cleanup is not.**
+Do not delete, move, compact, merge, unlink, deduplicate writable images,
+change snapshots or resize disks/partitions without a separate exact-path
+operator-approved plan and rollback. Matching bytes, old timestamps and
+apparently redundant Win 98 VMs are not proof of disposability. Preserve
+commercial inputs and private paths outside Git; publish only reviewed,
+sanitized summaries, eligible tooling and synthetic tests. Filler work must
+not dispatch extra turns, launch emulators or displace higher-priority research.

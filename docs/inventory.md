@@ -23,6 +23,8 @@ The [Tandy Appendix A format crosswalk](reference/tandy-format-crosswalk.md) con
 | Calendar 3.05 PERSONAL.CLN | E00–E19, Phase III-A and SDK-derived ordinary time/date profile | Measured read/index/append, bounded additional-page reading, 29-event/14-day offline sample; no multipage writer |
 | Address Book 3.05 PERSONAL.ADR | [Phase I](research/addressbook-phase1.md) and [Phase II](research/addressbook-phase2.md) native field differentials; [codec report](research/addressbook-codec.md) | Ten-page reader and one-contact writer (four exact native whole-file SHA matches); no multicontact insertion |
 | Filer 3.05 | [Native records](research/filer-native-20261117.md) and [controlled forms](research/graphics-native-20261117.md) | Bounded schema, index and DATA inspection. Decodes card and report GRAPHICS chunks. |
+| Corkboard | [Native writes on the RSX, SL/2, and generic 3.05](research/deskmate-corkboard-20261123.md#corkboard-storage) | Read-only inspection of the ASCII-and-CR `DMCORKBD` buffer, including residual bytes after Clear. |
+| Information Center 3.61, Financial Notebook, and Collections | [RSX Home Organizer records and storage comparisons](research/deskmate-corkboard-20261123.md#shared-database-framing) | Shared page, schema, row, and index inspection. The Information Center database has a separate directory profile. |
 | Text 3.05 | [Native text corpus](research/text-native-20261117.md) and [clipboard-pasted pictures](research/graphics-native-20261117.md) | Plain and default-header formatted text extraction. Bounded picture envelope inspection preserves binary payloads. |
 | Worksheet 3.05 installation | [Native WKS controls and all five categories](research/worksheet-native-20261117.md) | Bounded read-only TOPLIST, cell, string-pool and cached-value inspection |
 | Draw 3.05 installation | [Native FIG files and comparative controls](research/graphics-native-20261117.md) | Bounded `14 FIG` reader and SVG geometry preview for supported primitives. |
@@ -42,3 +44,12 @@ Related `.FIL` metadata, records and index structures have been observed in
 Calendar, Address Book and Filer samples, but their complete storage semantics
 and allocation policies are not interchangeable by assumption. See the
 [dated project status](../PROJECT_STATUS.md).
+
+## Corkboard and Home Organizer
+
+The RSX Desktop lists Corkboard in its F10 Accessories menu. Its
+`DMCORKBD` file also backs Information Center's yellow notepad.
+Information Center's message records are stored in `INFOCNTR.DB`.
+Home Organizer's Financial Notebook tracks stocks, loans, and
+investments in `NOTEBOOK.DB`. Collections creates a separate `.COL`
+database for each collection. [Native workflows and byte comparisons](research/deskmate-corkboard-20261123.md)

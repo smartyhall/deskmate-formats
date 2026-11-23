@@ -4,6 +4,7 @@ import struct
 import unittest
 
 from deskmate_formats.database import DatabaseError, inspect_help_directory, parse_bytes, parse_help_bytes
+from deskmate_formats.database import parse_information_center_bytes
 from database_synthetic import SELF, addressbook, framed
 from synthetic import allocation, build
 
@@ -54,6 +55,69 @@ def help_database(tail, *, chained=False):
 
 
 class DatabaseTests(unittest.TestCase):
+    def test_native_home_organizer_rows_and_deletion(self):
+        fixtures = Path(__file__).parents[1] / 'fixtures/application-generated'
+        cases = (
+            ('notebook/rsx-two-loans.db', 'notebook/rsx-edited-loan.db', 'DATA',
+             (0x12, 0x11, 0x10), (0x11, 0x10), 0x11, 12, b'HETIC LOAN NOTE CHECKED'),
+            ('collections/rsx-two-items.col', 'collections/rsx-edited-item.col', 'COLLECTION',
+             (0x11, 0x10, 0x12, 0x14, 0x13), (0x11, 0x10, 0x12, 0x13), 0x13, 8,
+             b'ORIGINAL SYNTHETIC ENTRY VERIFIED'),
+        )
+        for initial, edited, name, before_ids, after_ids, edited_id, field, expected in cases:
+            with self.subTest(table=name):
+                before = parse_bytes((fixtures / initial).read_bytes()).table(name)
+                after = parse_bytes((fixtures / edited).read_bytes(), allow_retired=True).table(name)
+                self.assertEqual(tuple(row.record_id for row in before.rows), before_ids)
+                self.assertEqual(tuple(row.record_id for row in after.rows), after_ids)
+                self.assertEqual(after.retired_rows, ())
+                self.assertEqual((after.data_pages, after.index_page), ((4,), 5))
+                self.assertEqual(next(row.fields[field] for row in after.rows
+                                      if row.record_id == edited_id), expected)
+
+    def test_native_information_center_uses_explicit_directory_profile(self):
+        fixture = Path(__file__).parents[1] / 'fixtures/application-generated/information-center'
+        raw = (fixture / 'rsx-native-two-messages.db').read_bytes()
+        with self.assertRaisesRegex(DatabaseError, 'nonzero tail'):
+            parse_bytes(raw)
+
+        parsed = parse_information_center_bytes(raw)
+        self.assertEqual(parsed.data, raw)
+        info = parsed.table('INFO')
+        self.assertEqual(info.data_pages, (4,))
+        self.assertEqual(info.index_page, 5)
+        self.assertEqual([row.record_id for row in info.rows], [0x11, 0x12, 0x10])
+        self.assertEqual(info.rows[1].fields,
+                         (b'M', b'2026308', b'ATLAS LAB MESSAGE', b'PAT', b'LEE', b' 9:41 pm'))
+
+        for mutation in (
+            raw[:0x44B] + b'\x01' + raw[0x44C:],
+            raw[:0x44D] + b'\xff' + raw[0x44E:],
+            raw.replace(b'T\x01INFO\x01', b'T\x01DATA\x01', 1),
+        ):
+            with self.assertRaisesRegex(DatabaseError, 'unknown Information Center directory'):
+                parse_information_center_bytes(mutation)
+        with self.assertRaisesRegex(DatabaseError, 'unknown Information Center INFO schema'):
+            parse_information_center_bytes(raw.replace(b'Phone\x01INFO', b'Other\x01INFO', 1))
+        invalid_index = bytearray(raw)
+        invalid_index[0x1428] = 0
+        with self.assertRaises(DatabaseError):
+            parse_information_center_bytes(invalid_index)
+
+    def test_native_information_center_removal_compacts_and_changes_surviving_id(self):
+        fixture = Path(__file__).parents[1] / 'fixtures/application-generated/information-center'
+        before = parse_information_center_bytes(
+            (fixture / 'rsx-native-two-messages.db').read_bytes()).table('INFO')
+        after = parse_information_center_bytes(
+            (fixture / 'rsx-native-removed-pilot.db').read_bytes(), allow_retired=True).table('INFO')
+        survivor = after.rows[0]
+        self.assertEqual(survivor.fields, before.rows[1].fields)
+        self.assertEqual((survivor.record_id, survivor.offset), (0x11, 0x1017))
+        self.assertEqual((before.rows[1].record_id, before.rows[1].offset), (0x12, 0x1046))
+        self.assertEqual((after.rows[1].offset, after.rows[1].raw),
+                         (before.rows[2].offset, before.rows[2].raw))
+        self.assertEqual(after.retired_rows, ())
+
     def test_both_header_profiles_and_schema_order(self):
         for data, counts in ((build('two'), [13, 3]), (addressbook(), [27, 0, 1, 1])):
             db = parse_bytes(data)

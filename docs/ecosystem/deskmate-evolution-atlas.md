@@ -194,6 +194,17 @@ Companion opens its own navigator for stationery and graphics, and
 Teach Me lists lessons that can start from the installed desktop.
 [Native application survey](../research/deskmate-rsx-oem-recovery-20261122.md#other-rsx-applications)
 
+## Corkboard and Note Pad
+
+The Corkboard survey identifies the **Note Pad** accessory in the
+preserved Personal DeskMate HX and Personal DeskMate 2 media. The
+same module filename, `DMNOTEPD.ACC`, identifies **Corkboard** in
+generic 3.00 and later sampled DeskMate 3 distributions. Personal
+DeskMate 2, SL/2 ROM DeskMate, and RSX DeskMate saved byte-identical
+files for a matched two-line note. RSX Information Center exposed that file through its
+dashboard notepad, while the separately bundled Financial Notebook
+tracked loan cards in its own database. [Edition matrix and native trials](../research/deskmate-corkboard-20261123.md)
+
 ## Native observation procedure
 
 1. Match the archive size and hash, identify boot and program media,

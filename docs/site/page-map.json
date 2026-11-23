@@ -162,6 +162,14 @@
       "source": "docs/research/filer-native-20261117.md"
     },
     {
+      "id": "research.corkboard",
+      "slug": "research/corkboard",
+      "title": "Corkboard and Home Organizer storage",
+      "section": "research",
+      "role": "dated-research",
+      "source": "docs/research/deskmate-corkboard-20261123.md"
+    },
+    {
       "id": "research.text",
       "slug": "research/text",
       "title": "Text native experiments",
