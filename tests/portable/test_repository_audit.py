@@ -74,6 +74,24 @@ class FixtureAuditTest(unittest.TestCase):
                     self.audit()
                 target.unlink()
 
+    def test_aol_note_preserves_native_dos_line_endings(self):
+        name = 'aol/rsxnote.txt'
+        fixture = Path(__file__).resolve().parents[2] / audit_repository.FIXTURE_DIR / name
+        data = fixture.read_bytes()
+        self.assertEqual(data, b'RSX AOL OFFLINE SAMPLE\r\nSECOND LINE')
+        target = self.base / name
+        target.parent.mkdir()
+        target.write_bytes(data)
+        self.manifest([self.entry(name, data)])
+        self.assertEqual(self.audit()['application_generated_fixtures_checked'], 1)
+
+        target.write_bytes(data.replace(b'\r\n', b'\n'))
+        with self.assertRaisesRegex(ValueError, 'fixture digest or size mismatch'):
+            self.audit()
+        self.manifest([self.entry('aol/other.txt', data)])
+        with self.assertRaisesRegex(ValueError, 'unexpected fixture extension'):
+            self.audit()
+
     @staticmethod
     def example_site_png():
         def chunk(kind, payload):

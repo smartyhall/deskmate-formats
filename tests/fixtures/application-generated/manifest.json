@@ -4894,6 +4894,20 @@
       "expected_content": "The word center followed by one editor-written space, with two format controls, no pictures, and a native formatted header.",
       "synthetic_data": true,
       "native_saved": true
+    },
+    {
+      "path": "aol/rsxnote.txt",
+      "size": 35,
+      "sha256": "213531956fea305a2096eca792c46b73871bcdf0061eb3d03283fdc7a058e87b",
+      "application": "America Online",
+      "version": "1.3 for DOS, Tandy OEM",
+      "experiment": "2026-11-23 native RSX AOL offline text save and reopen",
+      "origin": "Native File New and Save from standalone AOL, then File Open from a fresh AOL process launched by the original DeskMate shortcut.",
+      "generation_method": "Cancel registration, Ctrl+N, type the two lines, Ctrl+S as RSXNOTE.TXT in C:/AOL, then exit and reopen.",
+      "expected_content": "35 ASCII bytes. RSX AOL OFFLINE SAMPLE, DOS CRLF, then SECOND LINE without a terminal newline.",
+      "evidence_class": "Native save and reopen, synthetic content",
+      "synthetic_data": true,
+      "native_saved": true
     }
   ]
 }

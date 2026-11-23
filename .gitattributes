@@ -22,6 +22,7 @@ tests/fixtures/application-generated/corkboard/**/DMCORKBD binary
 tests/fixtures/application-generated/filer/*.fil -text
 tests/fixtures/application-generated/text/*.doc binary
 tests/fixtures/application-generated/text/*.txt binary
+tests/fixtures/application-generated/aol/*.txt binary
 tests/fixtures/application-generated/draw/*.fig binary
 tests/fixtures/application-generated/draw/typography-lab-grid.ff1 binary
 examples/draw-comparison/v1/**/*.png binary

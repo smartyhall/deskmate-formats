@@ -1176,7 +1176,7 @@
       ],
       "evidence": "reproduced",
       "record": "../research/deskmate-rsx-oem-recovery-20261122.md",
-      "uncertainties": "Automatic House 01.08 exchanged CP290 frames with an offline controller, and Information Center 3.61 saved and reopened a message. The AOL shortcut awaits its separately labeled companion disk. Physical CP290 operation is unverified.",
+      "uncertainties": "Automatic House 01.08 exchanged CP290 frames with an offline controller, and Information Center 3.61 saved and reopened a message. A separate trial launched the installed Tandy OEM AOL 1.3 client from the original shortcut. Physical CP290 operation and completion of the AOL hardware wizard are unverified.",
       "dates": [
         {
           "kind": "launcher-copyright-year",
