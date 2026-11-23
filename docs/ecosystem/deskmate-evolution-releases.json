@@ -357,8 +357,8 @@
       "installation_or_startup": "No inspected product media",
       "principal_applications": [],
       "evidence": "reference",
-      "record": null,
-      "uncertainties": "Find an independently identified bundle and program disk",
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#documentary-media-leads",
+      "uncertainties": "Seek standalone Radio Shack product 25-1178 or an identified 3000 HL program disk.",
       "dates": [
         {
           "kind": "catalog-publication-year",
@@ -433,17 +433,22 @@
     {
       "id": "generic-301",
       "family": "DeskMate 3",
-      "edition": "Community-reported 3.01",
-      "version": "3.01 (community listing)",
-      "target_hardware": "PC family, exact hardware unknown",
+      "edition": "Standalone 3.01 described in a contemporary review",
+      "version": "3.01 (contemporary review and community listing)",
+      "target_hardware": "Reported in use on a Tandy 1400 LT; exact hardware requirements unknown",
       "dos_and_runtime": "Unknown",
       "distribution_media": [],
-      "installation_or_startup": "Community listing names SWITCH.EXE, installation unknown",
+      "installation_or_startup": "A November 1990 review describes four 3.5-inch disks and a two-drive floppy startup. The later community listing names SWITCH.EXE.",
       "principal_applications": [],
       "evidence": "reference",
-      "record": null,
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#documentary-media-leads",
       "uncertainties": "Find a complete, independently identified set",
       "dates": [
+        {
+          "kind": "review-publication-year",
+          "year": 1990,
+          "source": "https://ftp.whtech.com/club100/doc/p100-9011.pdf"
+        },
         {
           "kind": "archival-list-publication-year",
           "year": 1994,
@@ -531,7 +536,7 @@
         "Sound"
       ],
       "evidence": "inspected",
-      "record": null,
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#oem-compatibility-follow-up",
       "uncertainties": "Qualify exact TL model and ROM; Faxback 1367",
       "dates": [],
       "public_image_ids": [],
@@ -656,7 +661,7 @@
         "Sound"
       ],
       "evidence": "inspected",
-      "record": null,
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#oem-compatibility-follow-up",
       "uncertainties": "Exact build and ROM dependencies open",
       "dates": [],
       "public_image_ids": [],
@@ -815,7 +820,7 @@
         "Worksheet"
       ],
       "evidence": "inspected",
-      "record": null,
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#oem-compatibility-follow-up",
       "uncertainties": "Exact launcher version, target machine and EMS dependencies open",
       "dates": [],
       "public_image_ids": [],
@@ -910,10 +915,12 @@
         "Travel"
       ],
       "evidence": "inspected",
-      "record": null,
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#rl-cookbook-on-the-sl2-runtime",
       "uncertainties": "Qualify exact build, alternate backup and disk fallback; Faxback 1311",
       "dates": [],
-      "public_image_ids": [],
+      "public_image_ids": [
+        "ui.evolution.rl-kitchen-on-sl2"
+      ],
       "inspected_media_files": [
         {
           "member": "MSDOS.DSK",
@@ -972,7 +979,8 @@
         "TOOLSLCT.PDM",
         "TRAVEL.PDM"
       ],
-      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified.",
+      "native_attempt": "KITCHEN.PDM reached CookBook on the SL/2 ROM runtime with the RL Program Disk 1 and Kitchen disk. Exact RL desktop and RL-HD installation remain open."
     },
     {
       "id": "rlx-hdb-30403",
@@ -1057,8 +1065,8 @@
       "installation_or_startup": "Vendor describes five uncompressed disks",
       "principal_applications": [],
       "evidence": "reference",
-      "record": null,
-      "uncertainties": "Identify the complete five-disk set",
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#documentary-media-leads",
+      "uncertainties": "Identify all five uncompressed DeskMate disks for the 25-1452B floppy model.",
       "dates": [],
       "public_image_ids": [],
       "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."

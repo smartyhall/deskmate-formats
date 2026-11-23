@@ -156,6 +156,14 @@ Calendar asked for a disk in A:. MAME identifies the three exact
 program disks as 03.03.01, based on matching SHA-1 identities.
 [Native launch record](../research/deskmate-305-variants-sl2-20261122.md#rom-deskmate-with-and-without-program-media)
 
+### RL CookBook on the SL/2 runtime
+
+The Tandy 1000 RL's Kitchen disk opened CookBook under the
+SL/2 ROM DeskMate runtime after the RL's first program disk was
+inserted. Recipe categories, the servings control, and grocery-list
+navigation were visible. This is a related-machine launch of one
+RL application. [Compatibility trial](../research/deskmate-305-variants-sl2-20261122.md#rl-cookbook-on-the-sl2-runtime)
+
 The RSX OEM 03.04.04 Desktop adds an Applications menu, five
 illustrated task tiles, and shortcuts to AOL and Letter Invaders.
 The recovered installer copied all six floppies, configured the

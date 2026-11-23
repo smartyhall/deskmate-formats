@@ -120,6 +120,21 @@
       "raw_sha256": "08335af5108f732fd3a110d5d065d834ce04aefb0be0b4b033344a3165f21c94",
       "derivative_sha256": "78cac27f11ef4175a524666f1e7fe5259c79425acbed1da02ae577d2a19c2e8a",
       "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.rl-kitchen-on-sl2": {
+      "release": null,
+      "machine": "tandy1000sl2",
+      "emulator_version": "7.0",
+      "ms": 102808,
+      "frame": 6155,
+      "bios_mode": 3,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "1ac47c91627ae3d6297c35df8ecbac0fcf4c900671b84a1bbc75043428ce8820",
+      "derivative_sha256": "56a8bc29485316f0054ba4e6c02dbb91bb04a8da457f07827f58f4c23076fa2c",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
     }
   }
 }

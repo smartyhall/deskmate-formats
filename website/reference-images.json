@@ -1343,6 +1343,22 @@
       "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
       "page_id": "applications.evolution-atlas",
       "section_heading": "SL/2 program disks"
+    },
+    {
+      "id": "ui.evolution.rl-kitchen-on-sl2",
+      "path": "evolution-atlas/rl-kitchen-on-sl2.png",
+      "sha256": "56a8bc29485316f0054ba4e6c02dbb91bb04a8da457f07827f58f4c23076fa2c",
+      "source_sha256": "1ac47c91627ae3d6297c35df8ecbac0fcf4c900671b84a1bbc75043428ce8820",
+      "size": 8396,
+      "width": 640,
+      "height": 200,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "atlas-305-sl2-rl-kitchen-on-sl2-102808",
+      "caption": "The Tandy 1000 RL CookBook opens on the SL/2 ROM runtime with the RL program disks.",
+      "alt": "CookBook recipe categories and sample entries next to an illustrated chef, with Add to Grocery and View Recipe buttons.",
+      "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+      "page_id": "applications.evolution-atlas",
+      "section_heading": "RL CookBook on the SL/2 runtime"
     }
   ]
 }
