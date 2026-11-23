@@ -1006,8 +1006,8 @@
       "installation_or_startup": "Two compressed high-density disks",
       "principal_applications": [],
       "evidence": "inspected",
-      "record": null,
-      "uncertainties": "Qualify correct ROM, native decompressor, and disk target; Faxback 1342 The compressed set has client applications that remain to be identified by extraction or native install.",
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#rlx-hd-b-dos-and-compressed-media-on-the-rsx",
+      "uncertainties": "Qualify the B-revision ROM runtime, native decompressor, and RLX-HD B disk controller.",
       "dates": [],
       "public_image_ids": [],
       "inspected_media_files": [
@@ -1025,7 +1025,8 @@
       "disc_program_modules": [
         "INSTALL.PDM"
       ],
-      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified.",
+      "native_attempt": "RLX B DOS 5.00 floppy booted on the related RSX. Both compressed DeskMate disks were readable, and DESK was unavailable in the test environment."
     },
     {
       "id": "rlx-hdb-tree",
@@ -1048,7 +1049,7 @@
         "Sound"
       ],
       "evidence": "inspected",
-      "record": null,
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#rlx-hd-b-dos-and-compressed-media-on-the-rsx",
       "uncertainties": "Exact installed lineage and truncated Cobb font; do not infer equality to compressed media",
       "dates": [],
       "public_image_ids": [],

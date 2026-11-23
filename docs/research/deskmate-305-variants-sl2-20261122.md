@@ -1,10 +1,24 @@
 # Alternate DeskMate 3.05 and SL/2 ROM startup
 
-November 22, 2026. Campaign based on `109c6e6ee5e4a2670b897456102622920ceaf984`, including the completed [Evolution Atlas](../ecosystem/deskmate-evolution-atlas.md) and [RSX OEM recovery](deskmate-rsx-oem-recovery-20261122.md). No emulator process was running at inventory. The previous RSX, Automatic House, and SL/2 experiment directories were kept as historical controls. All guest mutations in this follow-up use separate writable profiles and authenticated loopback automation in visible, held operation with seed 1.
+November 22, 2026. Campaign based on `109c6e6ee5e4a2670b897456102622920ceaf984`,
+including the completed [Evolution Atlas](../ecosystem/deskmate-evolution-atlas.md) and
+[RSX OEM recovery](deskmate-rsx-oem-recovery-20261122.md). No emulator process was
+running at inventory. The previous RSX, Automatic House, and SL/2 experiment directories
+were kept as historical controls. All guest mutations in this follow-up use separate
+writable profiles and authenticated loopback automation in visible, held operation with
+seed 1.
 
 ## Alternate 3.05 installation media
 
-This is the five-numbered-ZIP distribution at TVDog plus its separate sixth Thesaurus archive. All six original sizes and SHA-256 identities match the [archive index](../ecosystem/deskmate-installation-media.json). Read each numbered archive independently, preserve its member paths, bytes, timestamps, and order, and pass its regular members to `floppy(members, label, '720k')` in [the existing FAT12 builder](../../tools/experimental/deskmate_install_media.py). The working labels are `DESKMATE_1` through `DESKMATE_5` and `THESAURUS`, space-padded to 11 bytes. 7-Zip 26.05 independently extracted every reconstructed image. Every extracted path and payload agreed with its source ZIP.
+This is the five-numbered-ZIP distribution at TVDog plus its separate sixth Thesaurus
+archive. All six original sizes and SHA-256 identities match the [archive
+index](../ecosystem/deskmate-installation-media.json). Read each numbered archive
+independently, preserve its member paths, bytes, timestamps, and order, and pass its
+regular members to `floppy(members, label, '720k')` in [the existing FAT12
+builder](../../tools/experimental/deskmate_install_media.py). The working labels are
+`DESKMATE_1` through `DESKMATE_5` and `THESAURUS`, space-padded to 11 bytes. 7-Zip 26.05
+independently extracted every reconstructed image. Every extracted path and payload
+agreed with its source ZIP.
 
 | Archive | ZIP bytes | ZIP SHA-256 | Working image SHA-256 (737,280 bytes each) |
 | --- | ---: | --- | --- |
@@ -15,12 +29,27 @@ This is the five-numbered-ZIP distribution at TVDog plus its separate sixth Thes
 | `dm369dks5.zip` | 347417 | `a5e4e2b246952d51a26a885c71f5116bf6532d4d886a591159fd9473a510416a` | `3e3798fffc77215824857722c62529317bdcd4ffec06c22e98ddba350e94d615` |
 | `dm369dks6.zip` | 300354 | `c8241c43ce908c544504f7396f06ca9003d4095710a73cdb606ea347fe0bad65` | `e63a8695c9df5c417e3661a2be181339426a17bd27634fd5ffce24a4345f915d` |
 
-The installation uses a Tandy 1000 RSX, i386SX at 25 MHz, 4 MiB RAM, internal VGA, a PS/2 mouse, one 1.44 MB floppy drive, and a clone of the Tandy MS-DOS 5.00 FAT16 baseline (54,525,952 bytes, SHA-256 `6c146364c24000dbf46898eec1abd4940c3f8a3a666670bdda3aa30a01e681ec`). The raw-media comparison uses the separate clean E00 installed disk, SHA-256 `9afd080411c37a96cdce802cb129ffe7d6e1d84fb43314add7221dc71e141df0`, with the same hardware and video configuration. Build SHA-256 `e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d` matches the 86Box 7.0 lab build at source `855258da966f1594f568350be59e8e1eca082ed1` and ROM pin `908394b690f7da28f47727d9876774fd672c4ed3`. [RSX BIOS and machine controls](deskmate-303-305-comparison.md#installation-and-controls)
+The installation uses a Tandy 1000 RSX, i386SX at 25 MHz, 4 MiB RAM, internal VGA, a
+PS/2 mouse, one 1.44 MB floppy drive, and a clone of the Tandy MS-DOS 5.00 FAT16
+baseline (54,525,952 bytes, SHA-256
+`6c146364c24000dbf46898eec1abd4940c3f8a3a666670bdda3aa30a01e681ec`). The raw-media
+comparison uses the separate clean E00 installed disk, SHA-256
+`9afd080411c37a96cdce802cb129ffe7d6e1d84fb43314add7221dc71e141df0`, with the same
+hardware and video configuration. Build SHA-256
+`e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d` matches the 86Box 7.0
+lab build at source `855258da966f1594f568350be59e8e1eca082ed1` and ROM pin
+`908394b690f7da28f47727d9876774fd672c4ed3`. [RSX BIOS and machine
+controls](deskmate-303-305-comparison.md#installation-and-controls)
 
 
 ### Native installer
 
-Boot to the clean C: prompt, mount the first alternate image in A:, change to `A:`, and run `INSTALL`. The launcher reported **03.05.00** at 32,210 emulated ms. The installer opened in VGA BIOS mode `0x12` (640 Ã— 480). Accept the default **C:\DESKMATE** directory, wait for each numbered prompt, then swap A: and press Enter once. The underscore FAT labels passed the installerâ€™s checks. The human-readable requests displayed spaces.
+Boot to the clean C: prompt, mount the first alternate image in A:, change to `A:`, and
+run `INSTALL`. The launcher reported **03.05.00** at 32,210 emulated ms. The installer
+opened in VGA BIOS mode `0x12` (640 Ã— 480). Accept the default **C:\DESKMATE**
+directory, wait for each numbered prompt, then swap A: and press Enter once. The
+underscore FAT labels passed the installerâ€™s checks. The human-readable requests
+displayed spaces.
 
 | Observed state | Cumulative emulated ms |
 | --- | ---: |
@@ -33,13 +62,32 @@ Boot to the clean C: prompt, mount the first alternate image in A:, change to `A
 | IBM Graphic, 10 CPI | 657,034 |
 | Install Printer, All or One | 663,038 |
 
-IBM Graphic on LPT1 was preselected. No printer and line feed filter were clear. Enter accepted the default printer and 10 CPI. Select **All** in the driver copy dialog. These are sampling times and bound the observations, rather than identifying when each prompt first appeared.
+IBM Graphic on LPT1 was preselected. No printer and line feed filter were clear. Enter
+accepted the default printer and 10 CPI. Select **All** in the driver copy dialog. These
+are sampling times and bound the observations, rather than identifying when each prompt
+first appeared.
 
-At 748,042 ms the installer was updating `AUTOEXEC.BAT`. Its reset prompt was visible at 754,042 ms. Eject Disk 5 and confirm. The emulator recorded a soft reset and returned to C: by 778,046 ms, with no floppies mounted. DOS `VER` reported 5.00. The startup batch file ran `SET DMCONFIG=C:\DESKMATE`. Set the DOS date to October 23, 2026, and time to 12:00:00, then run `CD \DESKMATE` and `DESK`. The installed alternate Desktop was visible by 794,022 ms in mode `0x12`. No installation error appeared at the sampled checkpoints.
+At 748,042 ms the installer was updating `AUTOEXEC.BAT`. Its reset prompt was visible at
+754,042 ms. Eject Disk 5 and confirm. The emulator recorded a soft reset and returned to
+C: by 778,046 ms, with no floppies mounted. DOS `VER` reported 5.00. The startup batch
+file ran `SET DMCONFIG=C:\DESKMATE`. Set the DOS date to October 23, 2026, and time to
+12:00:00, then run `CD \DESKMATE` and `DESK`. The installed alternate Desktop was
+visible by 794,022 ms in mode `0x12`. No installation error appeared at the sampled
+checkpoints.
 
 ### Desktop program and configuration
 
-On the matched Tandy RSX profiles at 640 × 480, both Desktops use a teal workspace, the same Text and Programs panels, Teach Me, a month calendar, and four shortcut positions. Address, Quick Load, and Calendar occupy the same positions. Hangman takes the fourth position in the alternate set; PC-Link occupies it in the raw-media control. File and Desktop menu command lists agreed at the sampled states. Open File → About by pressing F2, Up, and Enter. At 810,012 ms the alternate About dialog identified `DESKTOP.PDM` **3.69**. At 45,102 ms the raw control identified it as **3.68**. Both displayed `DESK.EXE` resource version 68.19, `DMCSR.RES` 3.111, `DMGUF.RES` 2.15, and `DMMDS.RES` 2.10. The launcher bytes match the raw 03.05.00 distribution. The alternate archive's stem is consistent with the Desktop module version; the packaging history is unknown. [Paired framebuffer receipts](../evidence/deskmate-305-sl2-20261122.json)
+On the matched Tandy RSX profiles at 640 × 480, both Desktops use a teal workspace, the
+same Text and Programs panels, Teach Me, a month calendar, and four shortcut positions.
+Address, Quick Load, and Calendar occupy the same positions. Hangman takes the fourth
+position in the alternate set. PC-Link occupies it in the raw-media control. File and
+Desktop menu command lists agreed at the sampled states. Open File → About by pressing
+F2, Up, and Enter. At 810,012 ms the alternate About dialog identified `DESKTOP.PDM`
+**3.69**. At 45,102 ms the raw control identified it as **3.68**. Both displayed
+`DESK.EXE` resource version 68.19, `DMCSR.RES` 3.111, `DMGUF.RES` 2.15, and `DMMDS.RES`
+2.10. The launcher bytes match the raw 03.05.00 distribution. The alternate archive's
+stem is consistent with the Desktop module version. The packaging history is unknown.
+[Paired framebuffer receipts](../evidence/deskmate-305-sl2-20261122.json)
 
 | Installed file | Alternate bytes and SHA-256 | Raw control bytes and SHA-256 |
 | --- | --- | --- |
@@ -49,31 +97,101 @@ On the matched Tandy RSX profiles at 640 × 480, both Desktops use a teal worksp
 | `TEXT.PDM` | 75,185 / `44cc8632a2c655659bfe524b83e49bc27f85bd0107a5444590b1446398cc5ea7` | Same |
 | `PC_LINK.PDM` | Absent | 72,087 / `3334347668812343e5deef2b6058b4e75f9dd6fe257868f994fee9215f49adbf` |
 
-7-Zip extracted 131 installed DeskMate files after the alternate Desktop, Help, Teach Me, and unsaved Text trials. The preserved E00 control has 143. The 12 raw-only files comprise the PC-Link application, its Help and protocol resource, and nine `.PCL` files. The 21 differing common files are the Desktop executable, its shipped configuration, and Help or tutorial resources. The alternate and control each retained its media's shipped `DESKTOP.CFG` bytes. Both configurations contain a Hangman entry, while only the control's contains `PC_LINK.PDM`. The matched installer choices yielded byte-identical `DMCSR.CFG`, `DMPD.CFG`, `CONFIG.SYS`, and `AUTOEXEC.BAT`. This ties the application availability to the media and the visible shortcut to the shipped configuration. The comparison is between complete installations.
+7-Zip extracted 131 installed DeskMate files after the alternate Desktop, Help, Teach
+Me, and unsaved Text trials. The preserved E00 control has 143. The 12 raw-only files
+comprise the PC-Link application, its Help and protocol resource, and nine `.PCL` files.
+The 21 differing common files are the Desktop executable, its shipped configuration, and
+Help or tutorial resources. The alternate and control each retained its media's shipped
+`DESKTOP.CFG` bytes. Both configurations contain a Hangman entry, while only the
+control's contains `PC_LINK.PDM`. The matched installer choices yielded byte-identical
+`DMCSR.CFG`, `DMPD.CFG`, `CONFIG.SYS`, and `AUTOEXEC.BAT`. This ties the application
+availability to the media and the visible shortcut to the shipped configuration. The
+comparison is between complete installations.
 
-The stopped, pre-Thesaurus alternate disk is 54,525,952 bytes with SHA-256 `7e5b7078cca53b511366432ec502a828be681c1b5dc2cfb7761d6c6e009d2eb7`. The accompanying configuration and NVRAM hash to `35e7595a860f47e38301f602dbc6056c924c97d95bdf2a9271bc29ce88278e0f` and `a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2`. The DOS startup hashes match the raw control. [Raw-media install](../ecosystem/deskmate-installation-305.md#verify-the-installed-configuration)
+The stopped, pre-Thesaurus alternate disk is 54,525,952 bytes with SHA-256
+`7e5b7078cca53b511366432ec502a828be681c1b5dc2cfb7761d6c6e009d2eb7`. The accompanying
+configuration and NVRAM hash to
+`35e7595a860f47e38301f602dbc6056c924c97d95bdf2a9271bc29ce88278e0f` and
+`a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2`. The DOS startup
+hashes match the raw control. [Raw-media
+install](../ecosystem/deskmate-installation-305.md#verify-the-installed-configuration)
 
 ### Help and Teach Me
 
-On the alternate Desktop, F1 opened six question tiles. Tab moved among topics, Enter opened a yellow text pane for the selected topic, Escape returned to the tiles, and F1 advanced to six questions that covered files, directories, desktop views, disk formatting, backups, and common problems. The raw control also displayed the yellow context-help pane when invoked on the Text panel. Help depends on the focus and call path.
+On the alternate Desktop, F1 opened six question tiles. Tab moved among topics, Enter
+opened a yellow text pane for the selected topic, Escape returned to the tiles, and F1
+advanced to six questions that covered files, directories, desktop views, disk
+formatting, backups, and common problems. The raw control also displayed the yellow
+context-help pane when invoked on the Text panel. Help depends on the focus and call
+path.
 
-The existing Help database reader validates the changed fields without interpreting their coding. For example, `DESKTOP.HLP` has 167 active Rules rows on each variant (14 common record IDs with changed field bytes) and 150 versus 148 Text rows (52 changed shared IDs). `DESKMATE.HLP` has 229 versus 208 active Rules rows and 199 versus 191 Text rows. The row counts and changed bytes are evidence of different resources. They cannot supply a verbatim wording or unique topic count. [Help database reader and limits](deskmate-help-database-20261120.md)
+The existing Help database reader validates the changed fields without interpreting
+their coding. For example, `DESKTOP.HLP` has 167 active Rules rows on each variant (14
+common record IDs with changed field bytes) and 150 versus 148 Text rows (52 changed
+shared IDs). `DESKMATE.HLP` has 229 versus 208 active Rules rows and 199 versus 191 Text
+rows. The row counts and changed bytes are evidence of different resources. They cannot
+supply a verbatim wording or unique topic count. [Help database reader and
+limits](deskmate-help-database-20261120.md)
 
-Teach Me listed the same nine lessons on both installations. Enter began **DeskMate: An Introduction**. At 9,500 emulated ms after selecting it, both displayed the first instruction box with the same visible text and **C = continue**. The sample desktop behind it differed. The alternate tutorial showed a Telecom file panel at upper right, while the raw version showed a Hangman button there and retained PC-Link below. The observed first page is a staged lesson state and differs from the ordinary installed Desktop. The two `DMINTRO.TUT` files are 31,874 and 31,725 bytes and have different hashes. `DMPLAY.RES` is byte-identical. Escape displayed the quit-lesson prompt, and Enter returned to Teach Me.
+Teach Me listed the same nine lessons on both installations. Enter began **DeskMate: An
+Introduction**. At 9,500 emulated ms after selecting it, both displayed the first
+instruction box with the same visible text and **C = continue**. The sample desktop
+behind it differed. The alternate tutorial showed a Telecom file panel at upper right,
+while the raw version showed a Hangman button there and retained PC-Link below. The
+observed first page is a staged lesson state and differs from the ordinary installed
+Desktop. The two `DMINTRO.TUT` files are 31,874 and 31,725 bytes and have different
+hashes. `DMPLAY.RES` is byte-identical. Escape displayed the quit-lesson prompt, and
+Enter returned to Teach Me.
 
 ### File operations and Thesaurus
 
-File → Run opened the same Program and Data file fields in both releases. With the data field blank, the alternate ran Text and the raw control ran `PC_LINK.PDM` to its offline welcome screen. Escape cancelled registration, and a second Escape returned to Desktop. The links stayed disconnected and no registration or network action was attempted. File → Copy opened the same two pathname fields and the same visible F1 instructions in both installs. The 326 × 165 dialog body and the 318 × 164 Help pane matched by RGB pixels in the selected crops. Desktop → Display had the same placement controls. Its list of available menus differed, including Hangman in the raw control's visible list and Telecom in the alternate's list. The difference follows the installed desktop configuration. The trial cancelled both Display dialogs.
+File → Run opened the same Program and Data file fields in both layouts. With the data
+field blank, the alternate ran Text and the raw control ran `PC_LINK.PDM` to its offline
+welcome screen. Escape cancelled registration, and a second Escape returned to Desktop.
+The links stayed disconnected and no registration or network action was attempted. File
+→ Copy opened the same two pathname fields and the same visible F1 instructions in both
+installs. The 326 × 165 dialog body and the 318 × 164 Help pane matched by RGB pixels in
+the selected crops. Desktop → Display had the same placement controls. Its list of
+available menus differed, including Hangman in the raw control's visible list and
+Telecom in the alternate's list. The difference follows the installed desktop
+configuration. The trial cancelled both Display dialogs.
 
-The clean alternate installation included a 1,704-byte `DMTHES.RES` stub. In Text, Edit → Thesaurus on the synthetic word `quick` prompted the user to obtain the program. For the hard-disk trial, mount Disk 6 and copy `DMTHES.RES`, `THES.RES`, and `DICT.SYN` from A: into `C:\DESKMATE`, replacing the stub. A batch typed more quickly than DOS returned to its prompt and left the second command incomplete. Ctrl+C cleared it. Issuing each binary copy from a confirmed DOS prompt succeeded. Eject A: and run `DESK TEXT` from the installation directory. The same Edit command opened grouped synonyms. At 185,478 emulated ms of the comparison session, the selected noun was **center**. Enter substituted it. The bundled README separately describes launching Text from companion media on floppy-only systems. Those floppy-only procedures were outside this test.
+The clean alternate installation included a 1,704-byte `DMTHES.RES` stub. In Text, Edit
+→ Thesaurus on the synthetic word `quick` prompted the user to obtain the program. For
+the hard-disk trial, mount Disk 6 and copy `DMTHES.RES`, `THES.RES`, and `DICT.SYN` from
+A: into `C:\DESKMATE`, replacing the stub. A batch typed more quickly than DOS returned
+to its prompt and left the second command incomplete. Ctrl+C cleared it. Issuing each
+binary copy from a confirmed DOS prompt succeeded. Eject A: and run `DESK TEXT` from the
+installation directory. The same Edit command opened grouped synonyms. At 185,478
+emulated ms of the comparison session, the selected noun was **center**. Enter
+substituted it. The bundled README separately describes launching Text from companion
+media on floppy-only systems. Those floppy-only procedures were outside this test.
 
-Select all in Text, apply Bold, and save as `THESDEMO.DOC`. DeskMate shows the document as Non-ASCII. Use Desktop File → Copy to create `THESCOPY.DOC` in the same directory. Both appeared in the Text panel by 220,226 ms. Native save and native copy produced byte-identical files, 32 bytes, SHA-256 `f815a81e10ba5470e0cf3a7fd7017bbb50e16da63fd45c72b73fd4135bd9b467`. An independent FAT16 reader and 7-Zip agreed on their bytes and on all three companion resources. The Text parser recovered `center ` with two format controls and zero pictures. The verified fixture is [305-alternate-thesaurus.doc](../../tests/fixtures/application-generated/text/305-alternate-thesaurus.doc).
+Select all in Text, apply Bold, and save as `THESDEMO.DOC`. DeskMate shows the document
+as Non-ASCII. Use Desktop File → Copy to create `THESCOPY.DOC` in the same directory.
+Both appeared in the Text panel by 220,226 ms. Native save and native copy produced
+byte-identical files, 32 bytes, SHA-256
+`f815a81e10ba5470e0cf3a7fd7017bbb50e16da63fd45c72b73fd4135bd9b467`. An independent FAT16
+reader and 7-Zip agreed on their bytes and on all three companion resources. The Text
+parser recovered `center ` with two format controls and zero pictures. The verified
+fixture is
+[305-alternate-thesaurus.doc](../../tests/fixtures/application-generated/text/305-alternate-thesaurus.doc).
 
-The stopped add-on trial's disk hashes to `092cba3494c85c39b211416614b8e7d7f6e135feb3bc3bd450a4d9b4d934640d`. The earlier stopped disk remains the baseline for trials without the companion. The two profiles have no media mounted after shutdown.
+The stopped add-on trial's disk hashes to
+`092cba3494c85c39b211416614b8e7d7f6e135feb3bc3bd450a4d9b4d934640d`. The earlier stopped
+disk remains the baseline for trials without the companion. The two profiles have no
+media mounted after shutdown.
 
 ## SL/2 ROM startup on a factory-initialized EEPROM
 
-The same pinned 86Box build ran the exact `tandy1000sl2` profile, with an 8086 at 8 MHz, 640 KiB configured RAM, internal Tandy video, XT keyboard, no mouse, no hard disk, and two 720 KiB drives. Host clock sync and network links were off. BIOS displayed **01.04.04**. The previous configuration template was taken from the private pre-setup capture, whose NVR directory had no persistent EEPROM. Its configuration SHA-256 is `3caebcb8c0049a5ac745024ba498ffdb647f2ff4ab2da2bd3c96be3fd2c7de71`. Source `src/machine/m_tandy1k.c` at the pinned 86Box revision initializes a missing SL/2 EEPROM to 128 zero bytes.
+The same pinned 86Box build ran the exact `tandy1000sl2` profile, with an 8086 at 8 MHz,
+640 KiB configured RAM, internal Tandy video, XT keyboard, no mouse, no hard disk, and
+two 720 KiB drives. Host clock sync and network links were off. BIOS displayed
+**01.04.04**. The previous configuration template was taken from the private pre-setup
+capture, whose NVR directory had no persistent EEPROM. Its configuration SHA-256 is
+`3caebcb8c0049a5ac745024ba498ffdb647f2ff4ab2da2bd3c96be3fd2c7de71`. Source
+`src/machine/m_tandy1k.c` at the pinned 86Box revision initializes a missing SL/2 EEPROM
+to 128 zero bytes.
 
 | ROM or input | Bytes | SHA-256 |
 | --- | ---: | --- |
@@ -85,17 +203,53 @@ The same pinned 86Box build ran the exact `tandy1000sl2` profile, with an 8086 a
 | `DM2.IMG` | 737,280 | `7d298875b22d0c4cd50d4a05a61492a505e9545a84595295727a8b26200fcc65` |
 | `DM3.IMG` | 737,280 | `a3df72488b13f9bf7f59e3d95a00e5afdb596edfb8d5fca539262ae76e73dc4a` |
 
-All four working images were extracted byte-for-byte from the reverified ZIP. Their SHA-1 values independently match the MAME 0.282 software entries for `msdos33sl2` and `deskmate3`. The MAME list identifies the DeskMate program disks as **03.03.01** and says they require the SL/2 ROM. The two firmware halves also match its SL/2 driver by SHA-1. The catalog version is a documentary identification of the exact disks. Startup and the sampled ROM Desktop File menu supplied no visible DeskMate suite version or About command. [MAME software list](https://github.com/mamedev/mame/blob/mame0282/hash/t1000.xml#L55-L115) · [MAME SL/2 ROM definitions](https://github.com/mamedev/mame/blob/mame0282/src/mame/pc/tandy1t.cpp#L891-L905)
+All four working images were extracted byte-for-byte from the reverified ZIP. Their
+SHA-1 values independently match the MAME 0.282 software entries for `msdos33sl2` and
+`deskmate3`. The MAME list identifies the DeskMate program disks as **03.03.01** and
+says they require the SL/2 ROM. The two firmware halves also match its SL/2 driver by
+SHA-1. The catalog version is a documentary identification of the exact disks. Startup
+and the sampled ROM Desktop File menu supplied no visible DeskMate suite version or
+About command. [MAME software
+list](https://github.com/mamedev/mame/blob/mame0282/hash/t1000.xml#L55-L115) · [MAME
+SL/2 ROM
+definitions](https://github.com/mamedev/mame/blob/mame0282/src/mame/pc/tandy1t.cpp#L891-L905)
 
 ### Initialize the EEPROM and change one setting
 
-1. With no saved EEPROM, mount `DOS33.IMG` in A: at held startup. The floppy reached the DOS 3.30.22 date prompt by 45,000 ms in BIOS mode `0x03` (640 × 225). Press Enter at the date and time prompts and run `SETUPSL2`. It reported the two detected 3½-inch drives and an invalid EEPROM. The resulting initial menu showed DISK, DESKMATE, two buffers, and eight open files.
-2. Press **F10**. This copy of the utility wrote the factory settings immediately and returned to DOS with “Original factory settings installed.” Run it again, accept the drive-type notice, and verify ROM, DESKMATE, ten buffers, and ten open files. Video was Color, speed Fast, drive designation Top, and both startup-file checks, date and time prompting, and memory diagnostics were set to No.
-3. Select the Initial Start-up Program line with four Down arrows from Video Display. Left selects **MS-DOS**. Press F1, wait for **EEPROM updated**, then eject the floppy and quit. Preserve the resulting 128-byte EEPROM, SHA-256 `bc4b67bbc50a50f07b4de4031e80b71e1b7f865b2a939d1e740c3cc2fcff301b`, before cold-starting.
-4. Cold-boot with both drives empty. ROM DOS reported **3.30.22** and reached `A>` by 10,000 ms in mode `0x03`. `VER` returned 3.30. `DIR C:\` showed the read-only ROM drive and its seven files, including a 9,904-byte `DESK.COM`. That is direct evidence for ROM DOS independent of DeskMate.
-5. From working ROM DOS, mount `DOS33.IMG` in A:, run `SETUPSL2` again, and verify ROM and MS-DOS with the other settings intact. Right on the Initial Start-up Program line selects **DESKMATE**. Press F1, wait for **EEPROM updated**, eject, and quit. The resulting seed SHA-256 is `046e81e0948627f831179457fa51c9508f16589c4ac886d222f4fd39b3d25e2f`. The two new NVRAM files differ only at byte `0x08`. Cold-boot disposable copies of this seed for the two program-media conditions.
+1. With no saved EEPROM, mount `DOS33.IMG` in A: at held startup. The floppy reached the
+   DOS 3.30.22 date prompt by 45,000 ms in BIOS mode `0x03` (640 × 225). Press Enter at
+   the date and time prompts and run `SETUPSL2`. It reported the two detected 3½-inch
+   drives and an invalid EEPROM. The resulting initial menu showed DISK, DESKMATE, two
+   buffers, and eight open files.
+2. Press **F10**. This copy of the utility wrote the factory settings immediately and
+   returned to DOS with “Original factory settings installed.” Run it again, accept the
+   drive-type notice, and verify ROM, DESKMATE, ten buffers, and ten open files. Video
+   was Color, speed Fast, drive designation Top, and both startup-file checks, date and
+   time prompting, and memory diagnostics were set to No.
+3. Select the Initial Start-up Program line with four Down arrows from Video Display.
+   Left selects **MS-DOS**. Press F1, wait for **EEPROM updated**, then eject the floppy
+   and quit. Preserve the resulting 128-byte EEPROM, SHA-256
+   `bc4b67bbc50a50f07b4de4031e80b71e1b7f865b2a939d1e740c3cc2fcff301b`, before
+   cold-starting.
+4. Cold-boot with both drives empty. ROM DOS reported **3.30.22** and reached `A>` by
+   10,000 ms in mode `0x03`. `VER` returned 3.30. `DIR C:\` showed the read-only ROM
+   drive and its seven files, including a 9,904-byte `DESK.COM`. That is direct evidence
+   for ROM DOS independent of DeskMate.
+5. From working ROM DOS, mount `DOS33.IMG` in A:, run `SETUPSL2` again, and verify ROM
+   and MS-DOS with the other settings intact. Right on the Initial Start-up Program line
+   selects **DESKMATE**. Press F1, wait for **EEPROM updated**, eject, and quit. The
+   resulting seed SHA-256 is
+   `046e81e0948627f831179457fa51c9508f16589c4ac886d222f4fd39b3d25e2f`. The two new NVRAM
+   files differ only at byte `0x08`. Cold-boot disposable copies of this seed for the
+   two program-media conditions.
 
-The Tandy manual documents the two startup selections, the distinction between ROM and floppy drives, and the F1 and F10 keys. The exact behavior of F10 and the chosen setup defaults above are native observations of the supplied utility. [Tandy SL/2 manual, changing drives](https://www.manualslib.com/manual/4261292/Tandy-1000-Sl-2.html?page=27) · [Setup instructions](https://www.manualslib.com/manual/4261292/Tandy-1000-Sl-2.html?page=40) · [Tandy Faxback 1283](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01283.txt)
+The Tandy manual documents the two startup selections, the distinction between ROM and
+floppy drives, and the F1 and F10 keys. The exact behavior of F10 and the chosen setup
+defaults above are native observations of the supplied utility. [Tandy SL/2 manual,
+changing drives](https://www.manualslib.com/manual/4261292/Tandy-1000-Sl-2.html?page=27)
+· [Setup
+instructions](https://www.manualslib.com/manual/4261292/Tandy-1000-Sl-2.html?page=40) ·
+[Tandy Faxback 1283](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01283.txt)
 
 ### ROM DeskMate with and without program media
 
@@ -104,27 +258,80 @@ The Tandy manual documents the two startup selections, the distinction between R
 | Both drives empty | Desktop rendered by 10,000 ms and remained visible at 35,000 ms. Text, Programs, and Autoconfig were empty. File → Run on `CALENDAR.PDM` opened Disk Needed for A: at 44,706 ms. |
 | `DM1.IMG` in A:, `DM2.IMG` in B: | ROM DOS executed `C:DESK` by 2,500 ms. A busy icon was visible at 6,000 ms. By 14,000 ms the Desktop listed Address, Hangman, Install, and Mail Merge as the first four Programs. A Hangman shortcut occupied the former Autoconfig panel position. |
 
-Both DeskMate boots rendered a 640 × 200 framebuffer on the internal video. The socket reported BIOS mode `0x03` during these frames. The early Desktop has a blue-purple workspace, a text-only Teach Me panel, and top-row Address, Calendar, and PC-Link shortcuts. It uses File, Directory, Disk, View, Sort by, and Desktop menus. The two media conditions demonstrate that the ROM can launch the shell without floppies. The program disks supply applications, associated resources, and a disk-specific desktop configuration. [Native image receipts](../evidence/deskmate-305-sl2-20261122.json)
+Both DeskMate boots rendered a 640 × 200 framebuffer on the internal video. The socket
+reported BIOS mode `0x03` during these frames. The early Desktop has a blue-purple
+workspace, a text-only Teach Me panel, and top-row Address, Calendar, and PC-Link
+shortcuts. It uses File, Directory, Disk, View, Sort by, and Desktop menus. The two
+media conditions demonstrate that the ROM can launch the shell without floppies. The
+program disks supply applications, associated resources, and a disk-specific desktop
+configuration. [Native image receipts](../evidence/deskmate-305-sl2-20261122.json)
 
 ### Application launches and reset control
 
-From the populated Desktop, select File → Run with F2 and Down twice. Type a program name or drive-qualified path and leave Data file blank. The SL/2 Run File dialog offers **Normal** and **Fast** CPU speed controls, in addition to the program and data fields shared with 3.05. Address Book from A: opened an empty index (zero entries) at 27,894 ms. Switch to `B:\CALENDAR.PDM` with Disk 2 in B: to reach the January 1980 month view at 54,444 ms. Both applications returned to Desktop after Escape and loading time.
+From the populated Desktop, select File → Run with F2 and Down twice. Type a program
+name or drive-qualified path and leave Data file blank. The SL/2 Run File dialog offers
+**Normal** and **Fast** CPU speed controls, in addition to the program and data fields
+shared with 3.05. Address Book from A: opened an empty index (zero entries) at 27,894
+ms. Switch to `B:\CALENDAR.PDM` with Disk 2 in B: to reach the January 1980 month view
+at 54,444 ms. Both applications returned to Desktop after Escape and loading time.
 
-Replace Disk 2 in B: with Disk 3 and run `B:\MUSIC.PDM`. The busy state was visible at 77,576 and 92,576 ms, and the untitled score was visible at 110,576 ms. Escape began another busy transition. Input during that transition did not establish a Sound launch. After remounting Disk 2 in B:, an explicit socket hard reset at 163,708 ms returned to the populated ROM Desktop by 180,708 ms, 17,000 emulated ms later. From that freshly observed Desktop, swap B: to Disk 3 and run `B:\SOUND.PDM`. The blank Sound editor was visible at 231,136 ms. The test exercised the editors' launch path and left their untitled data unsaved. Recording and playback were outside the trial, and the emulator profile had no active sound device.
+Replace Disk 2 in B: with Disk 3 and run `B:\MUSIC.PDM`. The busy state was visible at
+77,576 and 92,576 ms, and the untitled score was visible at 110,576 ms. Escape began
+another busy transition. Input during that transition did not establish a Sound launch.
+After remounting Disk 2 in B:, an explicit socket hard reset at 163,708 ms returned to
+the populated ROM Desktop by 180,708 ms, 17,000 emulated ms later. From that freshly
+observed Desktop, swap B: to Disk 3 and run `B:\SOUND.PDM`. The blank Sound editor was
+visible at 231,136 ms. The test exercised the editors' launch path and left their
+untitled data unsaved. Recording and playback were outside the trial, and the emulator
+profile had no active sound device.
 
-The original set also includes Draw, Filer, Form Setup, Hangman, Mail Merge, PC-Link, Telecom, Text, Worksheet, and an installer module. This inventory comes from the program disk bytes. Drive A held Disk 1 throughout these application tests. Disk 2 supplied Calendar and Disk 3 supplied Music and Sound. [Original disk inventory](../ecosystem/deskmate-installation-media.json) · [Native capture evidence](../evidence/deskmate-305-sl2-20261122.json)
+The original set also includes Draw, Filer, Form Setup, Hangman, Mail Merge, PC-Link,
+Telecom, Text, Worksheet, and an installer module. This inventory comes from the program
+disk bytes. Drive A held Disk 1 throughout these application tests. Disk 2 supplied
+Calendar and Disk 3 supplied Music and Sound. [Original disk
+inventory](../ecosystem/deskmate-installation-media.json) · [Native capture
+evidence](../evidence/deskmate-305-sl2-20261122.json)
 
 ### Earlier EEPROM control
 
-The archived EEPROM from the prior blank-screen experiment has SHA-256 `8f90fccac308e2496957df0423ec2233fea761c7f16808f62c7f22d88da8a0ee`. Its 128 bytes differ from the working DeskMate seed at 65 positions. It contains only four nonzero bytes. Copy it into a disposable profile with the same configuration as the working cold-boot experiment. With separately extracted, SHA-256-matching Disk 1 and Disk 2 in A: and B: at held startup, the cold boot stayed blank in mode `0x03` at both 14,000 and 40,000 ms. The factory-initialized control had displayed the Desktop by the identical 14,000 ms sample. The CPU was executing at different offsets across the blank observations.
+The archived EEPROM from the prior blank-screen experiment has SHA-256
+`8f90fccac308e2496957df0423ec2233fea761c7f16808f62c7f22d88da8a0ee`. Its 128 bytes differ
+from the working DeskMate seed at 65 positions. It contains only four nonzero bytes.
+Copy it into a disposable profile with the same configuration as the working cold-boot
+experiment. With separately extracted, SHA-256-matching Disk 1 and Disk 2 in A: and B:
+at held startup, the cold boot stayed blank in mode `0x03` at both 14,000 and 40,000 ms.
+The factory-initialized control had displayed the Desktop by the identical 14,000 ms
+sample. The CPU was executing at different offsets across the blank observations.
 
-In another old-seed boot, the documented Ctrl+Alt+Shift+V monitor toggle switched the reported mode from `0x03` to `0x07` (640 × 225) and the framebuffer remained blank at 45,016 ms. This particular run used the post-application floppy copies. The matching-media cold-boot control used pristine floppies. Together with the successful hard reset on the factory seed, the cold-boot comparison isolates the EEPROM image as the relevant changed input. It establishes a recovery procedure and a reproducible failure case. Which altered fields are necessary for recovery remains open. [Earlier negative trial](deskmate-evolution-native-20261121.md#tandy-1000-sl2-startup-blocker) · [Tandy monitor-toggle instructions](https://www.manualslib.com/manual/4261292/Tandy-1000-Sl-2.html?page=40)
+In another old-seed boot, the documented Ctrl+Alt+Shift+V monitor toggle switched the
+reported mode from `0x03` to `0x07` (640 × 225) and the framebuffer remained blank at
+45,016 ms. This particular run used the post-application floppy copies. The
+matching-media cold-boot control used pristine floppies. Together with the successful
+hard reset on the factory seed, the cold-boot comparison isolates the EEPROM image as
+the relevant changed input. It establishes a recovery procedure and a reproducible
+failure case. Which altered fields are necessary for recovery remains open. [Earlier
+negative trial](deskmate-evolution-native-20261121.md#tandy-1000-sl2-startup-blocker) ·
+[Tandy monitor-toggle
+instructions](https://www.manualslib.com/manual/4261292/Tandy-1000-Sl-2.html?page=40)
 
-The active application-run copies of Disk 1 and Disk 2 changed only four bytes each, all in the FAT12 last-write timestamps for `PERSONAL.ADR` and `PERSONAL.CAL`, respectively. 7-Zip extraction confirmed identical file bytes and directory membership. The resulting full-image SHA-256 values are `b1f6332edb1bf0f9e7f98b5ceb05f6e3c0e8f6ba0fbbe008c7b3116f56294486` and `e4b54e3d997601a81e1daa26ba50ea9ec05e3b6e63a9c2b7f5e0a0e77faa328e`. DOS33 and Disk 3 rehashed unchanged. Keep the originals and freshly extracted boot controls for reproduction.
+The active application-run copies of Disk 1 and Disk 2 changed only four bytes each, all
+in the FAT12 last-write timestamps for `PERSONAL.ADR` and `PERSONAL.CAL`, respectively.
+7-Zip extraction confirmed identical file bytes and directory membership. The resulting
+full-image SHA-256 values are
+`b1f6332edb1bf0f9e7f98b5ceb05f6e3c0e8f6ba0fbbe008c7b3116f56294486` and
+`e4b54e3d997601a81e1daa26ba50ea9ec05e3b6e63a9c2b7f5e0a0e77faa328e`. DOS33 and Disk 3
+rehashed unchanged. Keep the originals and freshly extracted boot controls for
+reproduction.
 
 ## OEM compatibility follow-up
 
-The installed 86Box machine table at `855258da966f1594f568350be59e8e1eca082ed1` exposes Tandy 1000 SX, HX, SL/2, and RSX profiles. The pinned executable and SL/2 ROMs were rehashed for this campaign. The table does not provide exact TL, TL/2, 1100 FD, RL/RL-HD, or RLX-HD B profiles. The inspected TL, TL/2, 1100 FD, and RL program disks contain native modules and resources but lack the self-contained DeskMate launcher and runtime found on the generic installation sets. A related-machine program launch is evidence for a particular module and runtime combination.
+The installed 86Box machine table at `855258da966f1594f568350be59e8e1eca082ed1` exposes
+Tandy 1000 SX, HX, SL/2, and RSX profiles. The pinned executable and SL/2 ROMs were
+rehashed for this campaign. The table does not provide exact TL, TL/2, 1100 FD,
+RL/RL-HD, or RLX-HD B profiles. The inspected TL, TL/2, 1100 FD, and RL program disks
+contain native modules and resources but lack the self-contained DeskMate launcher and
+runtime found on the generic installation sets. A related-machine program launch is
+evidence for a particular module and runtime combination.
 
 | Target | Verified holdings and qualification needed |
 | --- | --- |
@@ -134,20 +341,117 @@ The installed 86Box machine table at `855258da966f1594f568350be59e8e1eca082ed1` 
 | 1000 RL and RL-HD | Verified `system/d1000rl.zip` and distinct archives. The documented ROM and EEPROM desktop behavior needs an RL-specific profile. MAME identifies the banked `8079073.u23` and character ROM for the RL. The RL-HD storage behavior also needs qualification. [Tandy Faxback 1311](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01311.txt) · [MAME RL ROM map](https://github.com/mamedev/mame/blob/mame0282/src/mame/pc/tandy1t.cpp#L880-L889) |
 | RLX-HD B | Verified `system/e1000rlx.zip`, the two compressed DeskMate disks in `system/dskrlxhd.zip`, and the separately populated archive. Exact reproduction needs the B-revision ROM and a profile with VGA, the 1.44 MB floppy drive, and the HD model's hard-drive controller. Tandy describes DOS 5.0 in ROM and a separate hard-disk-only compressed DeskMate installer. [Tandy Faxback 1342](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01342.txt) |
 
-The MAME entries above are source and ROM-identification leads. No MAME run was made in this campaign.
+The MAME entries above are source and ROM-identification leads. No MAME run was made in
+this campaign.
 
 ### Documentary media leads
 
-- **Professional DeskMate.** Radio Shack's 1988 catalog lists standalone product **25-1178** for Tandy 1000 and 3000 machines. A May 1988 Radio Shack newspaper advertisement separately lists it in a complete 3000 HL package. Search for the standalone catalog number or an independently identified bundle. No program disk was verified. [Radio Shack 1988 catalog](https://www.worldradiohistory.com/Archive-Catalogs/Radio-Shack/Radio-Shack-1988.pdf) · [Radio Shack advertisement, May 31, 1988](https://newspapers.swco.ttu.edu/bitstreams/1b33273c-e6e7-45d7-b478-23020731b67a/download)
-- **Generic 3.01.** George Sherman reported using a 3.01 set on the Tandy 1400 LT in the November 1990 issue of *Portable 100*, pages 14–15. He received four 3½-inch disks and described starting with disks in both drives in his floppy-only configuration. That contemporary observation gives a media count and use case before the 1994 community listing. No program disk was verified. [Portable 100, November 1990](https://ftp.whtech.com/club100/doc/p100-9011.pdf) · [TVDog community listing](http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm_progs.txt)
-- **RLX B floppy-only.** Tandy identifies **25-1452B** as the floppy model and describes five uncompressed high-density DeskMate disks. The two compressed HD disks and two DOS disks are separately identified holdings. A complete uncompressed program set remains unverified. [Tandy Faxback 1342](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01342.txt)
+- **Professional DeskMate.** Radio Shack's 1988 catalog lists standalone product
+  **25-1178** for Tandy 1000 and 3000 machines. A May 1988 Radio Shack newspaper
+  advertisement separately lists it in a complete 3000 HL package. Search for the
+  standalone catalog number or an independently identified bundle. No program disk was
+  verified. [Radio Shack 1988
+  catalog](https://www.worldradiohistory.com/Archive-Catalogs/Radio-Shack/Radio-Shack-1988.pdf)
+  · [Radio Shack advertisement, May 31,
+  1988](https://newspapers.swco.ttu.edu/bitstreams/1b33273c-e6e7-45d7-b478-23020731b67a/download)
+  - **Generic 3.01.** George Sherman reported using a 3.01 set on the Tandy 1400 LT in
+  the November 1990 issue of *Portable 100*, pages 14–15. He received four 3½-inch disks
+  and described starting with disks in both drives in his floppy-only configuration.
+  That contemporary observation gives a media count and use case before the 1994
+  community listing. No program disk was verified. [Portable 100, November
+  1990](https://ftp.whtech.com/club100/doc/p100-9011.pdf) · [TVDog community
+  listing](http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm_progs.txt) - **RLX B
+  floppy-only.** Tandy identifies **25-1452B** as the floppy model and describes five
+  uncompressed high-density DeskMate disks. The two compressed HD disks and two DOS
+  disks are separately identified holdings. A complete uncompressed program set remains
+  unverified. [Tandy Faxback
+  1342](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01342.txt)
 
 ### RL CookBook on the SL/2 runtime
 
-This is a related-machine application test using the working SL/2 ROM DeskMate seed and the same Tandy 8086/internal-video profile. The RL supplies the application and media. The SL/2 supplies the desktop and runtime. [Tandy 1991 catalog, DeskMate Home Organizer](https://www.worldradiohistory.com/Archive-Catalogs/Radio-Shack/Radio-Shack-1991.pdf)
+This is a related-machine application test using the working SL/2 ROM DeskMate seed and
+the same Tandy 8086/internal-video profile. The RL supplies the application and media.
+The SL/2 supplies the desktop and runtime. [Tandy 1991 catalog, DeskMate Home
+Organizer](https://www.worldradiohistory.com/Archive-Catalogs/Radio-Shack/Radio-Shack-1991.pdf)
 
-The reverified `system/d1000rl.zip` is 2,043,853 bytes with SHA-256 `4f3eb5325298046ec3c7d3667fdd622f39bf49225fb9dc63028c545f845937bb`. Extract its `DM1.DSK` (Program Disk 1, SHA-256 `5fcd12479365d99579881316f49fbd4950e41489c0e8834074c2f64e348bbf30`) and `DM3.DSK` (Kitchen, SHA-256 `f3cd7599550868ea98d01078de80ed7ea5fcadad4a67dcfb49a573a4db296551`) as separate 737,280-byte working copies. `KITCHEN.PDM` on Disk 3 is 49,633 bytes with SHA-256 `fb75e6a2dad4d76dc568cec21f85a1dd7492f6808f4c9cfe68d582ecbef1dd79`.
+The reverified `system/d1000rl.zip` is 2,043,853 bytes with SHA-256
+`4f3eb5325298046ec3c7d3667fdd622f39bf49225fb9dc63028c545f845937bb`. Extract its
+`DM1.DSK` (Program Disk 1, SHA-256
+`5fcd12479365d99579881316f49fbd4950e41489c0e8834074c2f64e348bbf30`) and `DM3.DSK`
+(Kitchen, SHA-256 `f3cd7599550868ea98d01078de80ed7ea5fcadad4a67dcfb49a573a4db296551`) as
+separate 737,280-byte working copies. `KITCHEN.PDM` on Disk 3 is 49,633 bytes with
+SHA-256 `fb75e6a2dad4d76dc568cec21f85a1dd7492f6808f4c9cfe68d582ecbef1dd79`.
 
-Cold-boot empty and observe the SL/2 desktop at 12,000 ms. Mount the Kitchen disk in B: and enter `B:\KITCHEN.PDM` in File → Run. The DeskMate loader asked for a disk in A: by 37,804 ms and remained at that prompt at 59,804 ms. Mount the RL's first program disk in A: and accept once. At 102,808 ms, CookBook showed recipe categories, the bundled recipe list, servings, time, and the Add to Grocery and View Recipe controls. The native framebuffer was 640 × 200, with the socket reporting mode `0x03`. Recipe → Change number of servings opened its dialog at 106,480 ms. Escape cancelled the dialog and the run ended at 107,284 ms. The trial did not determine which files satisfied the loader after inserting Disk 1.
+Cold-boot empty and observe the SL/2 desktop at 12,000 ms. Mount the Kitchen disk in B:
+and enter `B:\KITCHEN.PDM` in File → Run. The DeskMate loader asked for a disk in A: by
+37,804 ms and remained at that prompt at 59,804 ms. Mount the RL's first program disk in
+A: and accept once. At 102,808 ms, CookBook showed recipe categories, the bundled recipe
+list, servings, time, and the Add to Grocery and View Recipe controls. The native
+framebuffer was 640 × 200, with the socket reporting mode `0x03`. Recipe → Change number
+of servings opened its dialog at 106,480 ms. Escape cancelled the dialog and the run
+ended at 107,284 ms. The trial did not determine which files satisfied the loader after
+inserting Disk 1.
 
-Disk 1 rehashed unchanged. Disk 3 changed 94 image bytes and stopped with SHA-256 `162dee22e538d22b0425ad4b2705b80a7f2bd1f221751179062ef00f4ac4ff3d`. Independent extraction found the same directory membership and one changed file payload, `KITCHEN.DB`, despite cancelling the servings dialog. The observation does not isolate which application action changed it. The bundled database and modified disk remain in private custody. [CookBook framebuffer receipt](../evidence/deskmate-305-sl2-20261122.json)
+Disk 1 rehashed unchanged. Disk 3 changed 94 image bytes and stopped with SHA-256
+`162dee22e538d22b0425ad4b2705b80a7f2bd1f221751179062ef00f4ac4ff3d`. Independent
+extraction found the same directory membership and one changed file payload,
+`KITCHEN.DB`, despite cancelling the servings dialog. The observation does not isolate
+which application action changed it. The bundled database and modified disk remain in
+private custody. [CookBook framebuffer
+receipt](../evidence/deskmate-305-sl2-20261122.json)
+
+### RLX-HD B DOS and compressed media on the RSX
+
+The related-machine control used the same pinned 86Box build and RSX hardware as the
+3.05 experiment. The RSX has a 25 MHz i386SX, internal VGA, and a 1.44 MB drive A: with
+no B:. Its own BIOS reported Phoenix 1.10.00 and DeskTop VGA 1.00. The 54,525,952-byte
+writable hard disk was a pristine Tandy DOS 5.00 clone. The original `Copy-Item`
+preserved the sealed baseline's read-only attribute. The launcher refused that clone
+before starting an emulator. Clearing the attribute on the three disposable clone files
+allowed the run.
+
+| Archive and member | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `system/e1000rlx.zip` | 1,476,437 | `a7e27499dea4a900b003d6b388f9b91851ef29be892ff60a4c192e971fd91f34` |
+| `MSDOS1.DSK` | 1,474,560 | `ad566ffef55afab65e73b7bfd4edd94ff22c062bfdfab92bd70bb0c2884594fe` |
+| `MSDOS2.DSK` | 1,474,560 | `c187413ce6d40c715e49b94001f976d1bb35f7fd6a96aa06745dd620aad2f393` |
+| `system/dskrlxhd.zip` | 2,800,989 | `2861c3686583aab79f6cf1c5415585e215ecd92fa6af9b9add8f119c2af64334` |
+| `DESK3431.IMG` | 1,474,560 | `04c5e5c9466d1fff27ed4f7909e22e9f00051cf91cbf8e35109525f6e392ed08` |
+| `DESK3432.IMG` | 1,474,560 | `83f45afdce5731f273f8554e068781c02f2fc57de238f768d8799f7a54f219ae` |
+
+Mount the RLX B DOS Disk 1 before stepping the held RSX. It booted to A: by 28,000
+emulated ms in mode `0x03` at 720 × 400. `VER` reported MS-DOS 5.00. Mount DOS Disk 2
+and run `DIR SETUPRLX.EXE`; DOS found the 21,979-byte utility by 39,514 ms. Swap to
+compressed DeskMate Disk 1 and run `DIR *.DPK`. The label was `DESKMATE_1` and DOS
+listed packages 1–3. Enter `DESK` from A: to test whether the compressed disk can start
+directly in this environment. DOS reported **Bad command or file name** by 55,028 ms.
+Compressed Disk 2 was readable as `DESKMATE_2` with packages 4 and 5 by 65,372 ms. Eject
+and quit. All four working images and the hard disk rehashed unchanged.
+
+Static inspection confirmed that the DOS startup disk's `INSTALL.PDM` (11,607 bytes)
+differs from the compressed DeskMate Disk 1 installer (15,817 bytes). Their respective
+hashes are `0d4236065003b64e2011cea1e25ce25b79f66c643681d5fc336db9e721ed18e2` and
+`0f36dcfdbab380024e2a2e3b76e08a40830203134322636bf14200f9d2152d62`. The separately
+inspected `1000RLX_HD-B.zip` populated tree (SHA-256
+`c19e395880113fed55ad50e8a8d1e05b6cdf87ca883f700b0d28dd062882463f`) also has no
+standalone Desktop launcher or principal runtime. The experiment establishes RSX
+compatibility for the RLX B DOS boot disk and readable installer media. Exact RLX-HD B
+ROM startup and execution of the compressed installer are still open. [Tandy's
+distinction between the compressed and floppy
+editions](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01342.txt)
+
+## Preservation and restart
+
+The lab retains the pre- and post-Thesaurus alternate hard disks, the matched raw
+control, the working and failed SL/2 EEPROM paths, separately extracted pristine boot
+controls, the RL sample disk after opening CookBook, and the RSX RLX-media trial. The
+lab handoff identifies the private paths, final guest observations, and the next profile
+and media for each experiment. All campaign processes stopped through the authenticated
+socket. No experiment requires reattaching to a held guest.
+
+The strongest next controls are a nine-ZIP 3.05 install under the matched RSX settings,
+the SL/2 native installer or audio qualification on a new clone, and an exact RL or
+RLX-HD B profile with the required ROM and drive hardware. The Professional DeskMate,
+generic 3.01, and floppy-only RLX B source notes give acquisition leads without a
+verified archive or media image. [Central usage
+ledger](../evidence/codex-usage/README.md)

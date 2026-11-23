@@ -1,5 +1,20 @@
 # Project status — DeskMate formats
 
+## Alternate 3.05 and SL/2 ROM recovery — 2026-11-22
+
+The [follow-up campaign](docs/research/deskmate-305-variants-sl2-20261122.md)
+reproduced the alternate DeskMate 03.05.00 install on the RSX. Its
+Desktop 3.69 replaces the raw-media Desktop 3.68's PC-Link shortcut
+with Hangman, and the separate Thesaurus works in Text. A controlled
+EEPROM comparison recovered both ROM DOS and the SL/2 ROM DeskMate
+desktop. Address Book, Calendar, Music, and Sound opened under that
+runtime. Related-machine trials opened the RL CookBook on the SL/2
+and booted RLX B DOS media on the RSX.
+
+Exact TL, TL/2, 1100 FD, RL/RL-HD, and RLX-HD B profiles remain open
+in the pinned lab build. See the [updated release matrix](docs/ecosystem/deskmate-evolution-releases.json)
+for qualified media and acquisition leads.
+
 ## Historical release survey and RSX home automation — 2026-11-22
 
 The reviewed [DeskMate Evolution Atlas](docs/ecosystem/deskmate-evolution-atlas.md)
@@ -29,10 +44,7 @@ The RSX application research and atlas are now linked from the site.
 The prior generic 3.02, 3.03.01, and 3.05 comparisons remain available.
 
 **Open historical work:** [installation roadmap #153](https://github.com/smartyhall/deskmate-formats/issues/153)
-continues beyond the completed releases. Next experiment: qualify the
-alternate five-ZIP DeskMate 3.05 desktop/Help, then re-test the Tandy
-SL/2 ROM **MS-DOS** control using a fresh EEPROM profile before any
-further DeskMate startup diagnosis. The CP290 model intentionally covers
+continues beyond the completed releases. The CP290 model covers
 only observed commands; multi-event scheduling, dimming, time progression,
 and physical-hardware validation remain separate future work.
 [Chronology PR #155](https://github.com/smartyhall/deskmate-formats/pull/155)

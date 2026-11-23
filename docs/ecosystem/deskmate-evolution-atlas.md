@@ -17,13 +17,15 @@ from documented to verified, inspected, launched, and reproduced. A
 successful launch on related hardware is evidence for that profile.
 The [capture receipt](../evidence/deskmate-evolution-20261121.json)
 records native dimensions, emulated times, and source-image hashes.
+[Follow-up captures](../evidence/deskmate-305-sl2-20261122.json) cover the
+paired 3.05 desktops, the SL/2 ROM desktop, and the RL CookBook trial.
 
 The early Tandy 1000 association is dated to the **1984 product era**.
 The **1988** catalog and trade coverage document distinct later editions,
-including Professional DeskMate. The **1994** community listing is the
-date of that listing, and supports the DeskMate 3.01 lead. These dates
-describe different events. The release matrix leaves exact release
-dates open where the sources do. [Tandy 1000 context](../history/introduction.md#from-the-first-tandy-1000-to-deskmate-3) · [1988 Radio Shack catalog](https://www.worldradiohistory.com/Archive-Catalogs/Radio-Shack/Radio-Shack-1988.pdf) · [1988 *PC World* coverage](https://vintageapple.org/pcworld/pdf/PC_World_8805_May_1988.pdf) · [1994 program list](http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm_progs.txt)
+including Professional DeskMate. A **1990** review describes using
+DeskMate 3.01 from a four-disk set. A **1994** community listing supplies
+additional program information. These dates describe different events. The release matrix leaves exact release
+dates open where the sources do. [Tandy 1000 context](../history/introduction.md#from-the-first-tandy-1000-to-deskmate-3) · [1988 Radio Shack catalog](https://www.worldradiohistory.com/Archive-Catalogs/Radio-Shack/Radio-Shack-1988.pdf) · [1988 *PC World* coverage](https://vintageapple.org/pcworld/pdf/PC_World_8805_May_1988.pdf) · [1990 *Portable 100* review](https://ftp.whtech.com/club100/doc/p100-9011.pdf) · [1994 program list](http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm_progs.txt)
 
 ## Original DeskMate and DeskMate II
 
@@ -163,6 +165,14 @@ SL/2 ROM DeskMate runtime after the RL's first program disk was
 inserted. Recipe categories, the servings control, and grocery-list
 navigation were visible. This is a related-machine launch of one
 RL application. [Compatibility trial](../research/deskmate-305-variants-sl2-20261122.md#rl-cookbook-on-the-sl2-runtime)
+
+### RLX-HD B media on a related machine
+
+The RLX B DOS disk booted MS-DOS 5.00 on the RSX, and both compressed
+DeskMate disks were readable there. The compressed disks require an installer environment with the
+necessary launcher. Exact RLX-HD B DeskMate startup remains open. [Related-machine DOS and disk trial](../research/deskmate-305-variants-sl2-20261122.md#rlx-hd-b-dos-and-compressed-media-on-the-rsx)
+
+### RSX OEM desktop
 
 The RSX OEM 03.04.04 Desktop adds an Applications menu, five
 illustrated task tiles, and shortcuts to AOL and Letter Invaders.

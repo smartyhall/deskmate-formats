@@ -104,7 +104,8 @@
       ],
       "raw_sha256": "f3e6f4fd0df4ede5ebb2c045660a7973d86ae1fb1cdc289f4ade68d6ae322f19",
       "derivative_sha256": "8b97fad86b3cdfbe1e32c96ba3752cc53939a406c5bae4c905e0bfb6dcc9e479",
-      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels",
+      "source_media_release": "03.03.01, MAME software-list attribution by exact disk hashes"
     },
     "ui.evolution.sl2-rom-music": {
       "release": null,
@@ -119,7 +120,8 @@
       ],
       "raw_sha256": "08335af5108f732fd3a110d5d065d834ce04aefb0be0b4b033344a3165f21c94",
       "derivative_sha256": "78cac27f11ef4175a524666f1e7fe5259c79425acbed1da02ae577d2a19c2e8a",
-      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels",
+      "source_media_release": "03.03.01, MAME software-list attribution by exact disk hashes"
     },
     "ui.evolution.rl-kitchen-on-sl2": {
       "release": null,
@@ -134,7 +136,8 @@
       ],
       "raw_sha256": "1ac47c91627ae3d6297c35df8ecbac0fcf4c900671b84a1bbc75043428ce8820",
       "derivative_sha256": "56a8bc29485316f0054ba4e6c02dbb91bb04a8da457f07827f58f4c23076fa2c",
-      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels",
+      "source_media_release": "3.04 RL distribution, run under SL/2 ROM runtime"
     }
   }
 }
