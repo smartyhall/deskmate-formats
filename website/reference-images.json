@@ -1373,8 +1373,8 @@
       "caption": "The earlier Note Pad in Personal DeskMate 2 01.00.00 saved the matched Corkboard text as DMNOTEPD.",
       "alt": "Two synthetic lines in the Personal DeskMate 2 Note Pad dialog, with notebook binding marks and Clear, Print, and Quit controls.",
       "rights_note": "Synthetic test content. Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
-      "page_id": "applications.inventory",
-      "section_heading": "Corkboard and Home Organizer"
+      "page_id": "applications.note-pad-corkboard",
+      "section_heading": "Three ways to leave a note"
     },
     {
       "id": "ui.corkboard-study.corkboard",
@@ -1389,8 +1389,8 @@
       "caption": "Corkboard in RSX DeskMate 03.04.04 after a cold boot, showing the two synthetic lines saved by the F10 accessory.",
       "alt": "Corkboard dialog with the saved two-line synthetic note and Clear, Print, and Cancel controls.",
       "rights_note": "Synthetic test content. Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
-      "page_id": "applications.inventory",
-      "section_heading": "Corkboard and Home Organizer"
+      "page_id": "applications.note-pad-corkboard",
+      "section_heading": "Three ways to leave a note"
     },
     {
       "id": "ui.corkboard-study.information-center",
@@ -1405,8 +1405,8 @@
       "caption": "Information Center 3.61 displays the same two Corkboard lines on the yellow dashboard notepad.",
       "alt": "Household dashboard showing a calendar, a phone panel, a yellow notepad containing the saved note, and an empty messages area.",
       "rights_note": "Synthetic test content. Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
-      "page_id": "applications.inventory",
-      "section_heading": "Corkboard and Home Organizer"
+      "page_id": "applications.note-pad-corkboard",
+      "section_heading": "Three ways to leave a note"
     },
     {
       "id": "ui.corkboard-study.financial-notebook",
@@ -1421,8 +1421,8 @@
       "caption": "Financial Notebook in RSX DeskMate 03.04.04 after a cold boot. The Loans list sorts ALPHA before ZETA, which was entered first.",
       "alt": "Financial Notebook with two synthetic loan cards in alphabetic order and the ALPHA loan form selected.",
       "rights_note": "Synthetic test content. Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
-      "page_id": "applications.inventory",
-      "section_heading": "Corkboard and Home Organizer"
+      "page_id": "applications.note-pad-corkboard",
+      "section_heading": "Other native states"
     },
     {
       "id": "ui.corkboard-study.collections",
@@ -1437,8 +1437,8 @@
       "caption": "Collections in RSX DeskMate 03.04.04 after deleting the ALPHA card and extending the ZETA note.",
       "alt": "Labcoll with one synthetic ZETA card, four label fields, a $42.00 amount, and the edited note.",
       "rights_note": "Synthetic test content. Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
-      "page_id": "applications.inventory",
-      "section_heading": "Corkboard and Home Organizer"
+      "page_id": "applications.note-pad-corkboard",
+      "section_heading": "Other native states"
     },
     {
       "id": "ui.corkboard-study.sl2-corkboard",
@@ -1453,8 +1453,8 @@
       "caption": "Corkboard on the 1000 SL/2 ROM Desktop with the 03.03.01 program disks. The same two synthetic lines produced a file identical to the RSX save.",
       "alt": "A two-line Corkboard note over the blue-purple SL/2 DeskMate Desktop in 640 by 200 pixels.",
       "rights_note": "Synthetic test content. Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
-      "page_id": "applications.inventory",
-      "section_heading": "Corkboard and Home Organizer"
+      "page_id": "applications.note-pad-corkboard",
+      "section_heading": "Other native states"
     }
   ]
 }

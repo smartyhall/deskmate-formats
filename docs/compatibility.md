@@ -17,6 +17,12 @@ and hash and preserves the original document. The RSX raster and
 offline FIG editor have their own measured profiles. See
 [Draw II evidence](research/draw-ii-20261119.md).
 
+## Note Pad/Corkboard and RSX household data
+
+The read-only `corkboard.parse_bytes()` inspects the measured **2,864-byte** ASCII/CR/NUL file and preserves both header words and residual bytes. It does not write, erase, or infer an unknown header word. The matched two-line file was byte-identical for Personal DeskMate 2 **01.00.00** (`DMNOTEPD`), RSX OEM DeskMate **03.04.04** (`DMCORKBD`), and the tested SL/2 ROM Desktop with **03.03.01** program disks. Generic **03.05.00** produced a separate longer specimen with the same fixed layout. This is bounded edition evidence, not general cross-version support. [Format reference](reference/deskmate-corkboard-format.md)
+
+The RSX Information Center **3.61** dashboard and Corkboard share `DMCORKBD`, but its pinned messages live in a distinct `INFOCNTR.DB` DMDB-style database. The measured Information Center, Financial Notebook `NOTEBOOK.DB`, Collections `.COL`, and Filer files have common low-level indexed framing and distinct schemas. The Information Center parser uses an application-specific profile; the generic reader does not automatically accept its nonzero directory tail. Static DMDB call sites do **not** prove runtime dispatch or identical deletion, sorting, or allocation semantics. [Native experiments](research/deskmate-corkboard-20261123.md)
+
 ## Multimedia profiles
 
 The generic 03.05.00 distribution studied here lacks the audio applications.

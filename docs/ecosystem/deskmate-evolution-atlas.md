@@ -196,6 +196,8 @@ Teach Me lists lessons that can start from the installed desktop.
 
 ## Corkboard and Note Pad
 
+[Illustrated three-interface comparison](../history/note-pad-corkboard.md) · [Read-only Corkboard format reference](../reference/deskmate-corkboard-format.md).
+
 The Corkboard survey identifies the **Note Pad** accessory in the
 preserved Personal DeskMate HX and Personal DeskMate 2 media. The
 same module filename, `DMNOTEPD.ACC`, identifies **Corkboard** in
