@@ -163,7 +163,15 @@
       }
     },
     "ibm_completed_observed_ms": 293082,
-    "laserjet_completed_observed_ms": 517867
+    "laserjet_completed_observed_ms": 517867,
+    "DMPD.CFG_before": {
+      "size": 20,
+      "sha256": "66ee4581e9b9ca5879a99979388a38046a9bc8af889ea9415c28c89d9d7adacf"
+    },
+    "DMPD.CFG_after": {
+      "size": 40,
+      "sha256": "3b8822a56a6fc4cd0239b585f75a0978867c5f559bb6f823289c220f43d6a990"
+    }
   },
   "specimens": {
     "W0414155.CRD": {
@@ -190,6 +198,11 @@
       "guest_path": "DESKMATE/DOCUMENT/ILLSTRTN/LABLINE.FIG",
       "size": 195,
       "sha256": "f1c441afd8ed2f7f25eba9f0a1c0e9debb450ef5f601c5bf7528f91bce0000b4"
+    },
+    "W0415039.NOT": {
+      "guest_path": "DESKMATE/DOCUMENT/NOTICES/W0415039.NOT",
+      "size": 239,
+      "sha256": "d3d6b3699865e34c4553e1ecd95c2e215ad9a6b774566fa511ff71440900ebc2"
     }
   },
   "frames": {
@@ -271,8 +284,10 @@
       "sha256": "98b28515a3809653569afdf113d275919817f382d28f968abb7f8e462afa1a58"
     },
     "cold-tags-reopened": {
+      "size": 11978,
+      "sha256": "371ae4564699c60be62ee6cbbb5a1a57653613431822c23a8885ebfac4629893",
       "emulated_ms": 70112,
-      "sha256": "371ae4564699c60be62ee6cbbb5a1a57653613431822c23a8885ebfac4629893"
+      "bios_mode": 18
     },
     "cold-notice-reopened": {
       "emulated_ms": 94915,
@@ -285,6 +300,22 @@
     "notice-preview": {
       "emulated_ms": 114642,
       "sha256": "fabcb0da8068a04676504d57e88c81a0a84ea63684ff8e05b6667a3fdae97a61"
+    },
+    "notice-line-saved": {
+      "size": 13226,
+      "sha256": "3868df717529c0e015dfa0d229bbc44985374e810e00922e67a90b4d7323070a",
+      "emulated_ms": 155734,
+      "bios_mode": 18
     }
-  }
+  },
+  "cold_started_from": {
+    "size": 54525952,
+    "sha256": "0299ac2e1b549a56eb59209d4c03da757ff150f9c84e45fb8596e5394516ff95"
+  },
+  "cold_stopped_image": {
+    "size": 54525952,
+    "sha256": "6882b97c2d35255c426f3c21d578e283d2b38912cd3d0383271f65ec3c47d15c"
+  },
+  "cold_stopped_at_emulated_ms": 173450,
+  "cold_capture_file_size": 0
 }

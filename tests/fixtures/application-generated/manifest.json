@@ -4996,6 +4996,20 @@
       "source_sha256": "cff5e791e306daacfc872eb224b265873fad71aa43d593379bed42cdbb0c107d",
       "evidence_class": "Native printer stream captured at emulated parallel device",
       "synthetic_data": true
+    },
+    {
+      "path": "print-companion/W0415039.NOT",
+      "size": 239,
+      "sha256": "d3d6b3699865e34c4553e1ecd95c2e215ad9a6b774566fa511ff71440900ebc2",
+      "application": "Notices",
+      "version": "RSX OEM DeskMate 03.04.04 installation",
+      "experiment": "2026-11-23 Print Companion illustration insertion control",
+      "origin": "Native Save As after selecting LABLINE.FIG from Illustrations. Both FAT16 readers agreed.",
+      "expected_content": "MOON LINE NOTICE with the original two lines and an embedded line illustration form.",
+      "source_path": "print-companion/LABLINE.FIG",
+      "source_sha256": "f1c441afd8ed2f7f25eba9f0a1c0e9debb450ef5f601c5bf7528f91bce0000b4",
+      "native_saved": true,
+      "synthetic_data": true
     }
   ]
 }

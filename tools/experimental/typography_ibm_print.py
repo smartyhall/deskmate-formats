@@ -80,6 +80,8 @@ if __name__ == '__main__':
         data = stream.read(MAX_BYTES + 1)
     pixels, bands = decode(data)
     if args.pdf is not None:
+        if args.pdf.resolve() == args.source.resolve():
+            parser.error('PDF destination must differ from the source stream')
         if not data.startswith(CARD_PROLOGUE):
             parser.error('PDF geometry is qualified only for the Letter card profile')
         render_letter_pdf(pixels, args.pdf)

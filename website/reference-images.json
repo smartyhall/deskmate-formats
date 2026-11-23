@@ -1759,6 +1759,38 @@
       "rights_note": "Original synthetic card and independent reconstruction of its device-dot positions.",
       "page_id": "research.print-companion",
       "section_heading": "PDF reconstructed from the IBM stream"
+    },
+    {
+      "id": "ui.print-companion.notice-line-saved",
+      "path": "print-companion/notice-line-saved.png",
+      "size": 13226,
+      "sha256": "3868df717529c0e015dfa0d229bbc44985374e810e00922e67a90b4d7323070a",
+      "source_sha256": "3868df717529c0e015dfa0d229bbc44985374e810e00922e67a90b4d7323070a",
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "rsx-print-companion-20261123.notice-line-saved",
+      "caption": "Notices on RSX DeskMate 03.04.04 after inserting LABLINE.FIG and using Save As.",
+      "alt": "A diagonal line floats to the left of MOON LAB, with OPEN TODAY below it.",
+      "rights_note": "Documentary capture under the operator's 2026-11-21 approval. Original software interface: Tandy Corporation. Vendor rights are retained.",
+      "page_id": "research.print-companion",
+      "section_heading": "Native application survey"
+    },
+    {
+      "id": "ui.print-companion.cold-tags-reopened",
+      "path": "print-companion/cold-tags-reopened.png",
+      "size": 11978,
+      "sha256": "371ae4564699c60be62ee6cbbb5a1a57653613431822c23a8885ebfac4629893",
+      "source_sha256": "371ae4564699c60be62ee6cbbb5a1a57653613431822c23a8885ebfac4629893",
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "rsx-print-companion-20261123.cold-tags-reopened",
+      "caption": "Name Tags on RSX DeskMate 03.04.04 after selecting the saved definition on a cold boot.",
+      "alt": "The footer still names MOON LAB TAG, while the bordered tag body is blank.",
+      "rights_note": "Documentary capture under the operator's 2026-11-21 approval. Original software interface: Tandy Corporation. Vendor rights are retained.",
+      "page_id": "research.print-companion",
+      "section_heading": "Native application survey"
     }
   ]
 }

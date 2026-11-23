@@ -44,6 +44,12 @@ formats and margins were read from the dialogs. No physical paper was fed.
 
 ### Document storage
 
+On the second run, Notices reopened the original text, offered the
+synthetic LABLINE.FIG in its Illustrations picker, and reflowed the text
+around the line. Save As **MOON LINE NOTICE** embedded a display-list form
+that the existing shared graphics reader accepted. The second run ended
+at 173,450 emulated ms after returning to DOS. Its LPT file remained empty.
+
 See the [format notes](../reference/deskmate-print-companion-formats.md)
 and [binary fixture manifest](../../tests/fixtures/application-generated/manifest.json)
 for exact identities and evidence limits.
@@ -80,9 +86,8 @@ Advanced Settings. [OEM install and IBM setting](deskmate-rsx-oem-recovery-20261
    Advance approximately 35,000 emulated ms from power-on, then run
    `CD \DESKMATE` and `DESK` over the [authenticated socket](86box-client.md).
 4. Create and save **LAB MOON** as described above. In F2 → Print, choose
-   the active printer and one copy. Confirm once. The lab file was empty
-   before the first job and stabilized at 1,347 bytes after a 40,000 ms
-   observation. The File radio button is a separate guest destination
+   the active printer and one copy. Confirm once. The lab used a fresh sink file. The first job
+   produced 1,347 bytes in a 40,000 ms observation. The File radio button is a separate guest destination
    and was unused for this LPT test.
 5. Reopen **LAB MOON**, choose HP LaserJet through Setup, keep the same
    LPT1 port and disabled filter, and reopen and print the saved card

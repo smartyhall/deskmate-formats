@@ -44,6 +44,7 @@ SYNTHETIC_NOTE_STORAGE = {
 SYNTHETIC_PRINT_COMPANION = {
     'print-companion/W0414155.CRD',
     'print-companion/W0414325.NOT',
+    'print-companion/W0415039.NOT',
     'print-companion/W0414444.PER',
     'print-companion/W0414359.NTG',
     'print-companion/card-ibm-graphic.prn',
