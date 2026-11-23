@@ -5,40 +5,40 @@
   "source": "codex_rollout",
   "coverage": {
     "sessions_matched_files": 40,
-    "token_records": 8048,
+    "token_records": 8067,
     "sessions": 37
   },
   "checkpoint": "completion",
-  "collected_at": "2026-11-23T23:07:42.369296+00:00",
-  "commit": "8e04ba21f2a70f9b9383c990c29a3ffede0952f8",
+  "collected_at": "2026-11-23T23:10:23.628438+00:00",
+  "commit": "21fd2fa435f3d6eeaa2a2f945539e88b57c4d1db",
   "observation": {
     "session": "0f33c5407c433d794f8b89ac",
-    "measured_at": "2026-11-23T23:07:25.800000+00:00",
+    "measured_at": "2026-11-23T23:10:12.133000+00:00",
     "kind": "token_count",
     "model": "gpt-6.2-sol",
     "effort": "medium",
     "cumulative": {
-      "input": 25459769,
-      "cached_input": 25169536,
-      "output": 41025,
-      "reasoning_output": 6555,
-      "total": 25500794
+      "input": 29351340,
+      "cached_input": 29046400,
+      "output": 45737,
+      "reasoning_output": 8871,
+      "total": 29397077
     },
     "reported_last": {
-      "input": 198434,
-      "cached_input": 197632,
-      "output": 209,
-      "reasoning_output": 186,
-      "total": 198643
+      "input": 209232,
+      "cached_input": 207872,
+      "output": 445,
+      "reasoning_output": 399,
+      "total": 209677
     },
     "windows": {
       "300": {
-        "used_percent": 27.0,
+        "used_percent": 34.0,
         "reset_epoch": 1795491501,
         "status": "observed"
       },
       "10080": {
-        "used_percent": 95.0,
+        "used_percent": 96.0,
         "reset_epoch": 1795836613,
         "status": "observed"
       }
