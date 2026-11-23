@@ -18,6 +18,14 @@ disk sizes. The volume and partition results agree with the 256 GiB size
 reported by `Get-Disk`. No capacity changes or intentional reclamation
 occurred during this campaign.
 
+**Operator clarification (November 23):** This Windows 10 guest runs on the
+Dell server's VMware ESXi instance, not a Mac-local hypervisor. The operator
+expanded its virtual disk from approximately 128 GiB to 256 GiB after observing
+only about 6 GB free. The figures above are **post-expansion** measurements,
+not space recovered by the audit or evidence that the original capacity was
+comfortable. Free space on the ESXi datastore and the VMDK's actual host-side
+allocation were not measured in this guest-only audit.
+
 The catalog covers 20 scope shards across project directories, source
 worktrees, ROM and emulator resources, and provisioned support tools. It
 recorded 385,573 file entries, 955 image-like entries, and 17 scope boundaries
@@ -90,8 +98,15 @@ round-trip extraction.
 
 Across the reviewed 86Box configs, 159 stored media references yielded five
 unresolved literal paths. Those were relative CD paths in copied checkpoint
-trees. Preserve and rebase them against the verified original media on
-restore. No emulator process was observed during checks, and Windows
+trees. They are **unresolved as literal stored paths**, not confirmed missing
+CD images or evidence that a currently running emulator has a broken mount.
+A copied configuration might require path resolution relative to its original
+working directory; that behavior has not been independently verified for these
+five entries. Before restoring any affected checkpoint, compare its original
+configuration and working directory with the copy, resolve the referenced
+media against the preserved source, and review the private exact-path inventory.
+Do not rewrite or relink historical checkpoints merely to clear this audit
+finding. No emulator process was observed during checks, and Windows
 Restart Manager returned zero visible applications for each of the 12
 Win98 hard-disk paths. The VM had one reported VMware SAS disk and a loaded
 VMware optical drive. The guest could not identify the optical backing file
@@ -119,4 +134,10 @@ candidate's exact paths and prerequisites.
 For ongoing housekeeping, refresh the affected shard when an experiment
 creates or seals a clone and put a retention review date beside its
 provenance. Revisit candidates during already-authorized spare capacity.
+Periodically record **two separate headroom measures**: free space inside the
+Windows guest and free capacity on the Dell ESXi datastore, if host-side
+read-only telemetry is available. The guest inventory tool cannot measure
+ESXi datastore headroom or provide continuous monitoring on its own. Treat
+future low-space observations as a reason for renewed review, **not** as
+permission to perform reclamation without a new exact-path operator approval.
 [Inventory tool and provenance fields](lab-storage-inventory.md)
