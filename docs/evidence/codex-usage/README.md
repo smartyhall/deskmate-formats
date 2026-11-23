@@ -230,6 +230,8 @@ The alternate 3.05 and SL/2 OEM campaign recorded
 
 The November 23 Corkboard and Home Organizer campaign recorded
 [startup](20261123-corkboard-startup.json),
-[first native database and note evidence](20261123-corkboard-native.json), and
-[database and release comparisons](20261123-corkboard-comparative.json).
+[first native database and note evidence](20261123-corkboard-native.json),
+[database and release comparisons](20261123-corkboard-comparative.json),
+[message removal](20261123-corkboard-message-removal.json), and
+[completion](20261123-corkboard-completion.json).
 [Campaign report](../../research/deskmate-corkboard-20261123.md)

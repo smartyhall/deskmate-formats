@@ -287,6 +287,9 @@ step request. Later starts used the same visible launcher with a 60-second
 readiness window. All input and captures used the socket. The private
 archive retains the configuration backups, stopped images, socket
 journals, and raw framebuffer captures.
+Across the ten stopped emulator sessions, the cumulative elapsed guest
+time was 1,034,532 ms. Each SL/2 or Personal DeskMate two-disk run
+counts once, even though its disk differential has two entries.
 
 Next, isolate middle-record deletions in Financial Notebook and
 Collections, then refill the files through page growth and measure ID reuse.
