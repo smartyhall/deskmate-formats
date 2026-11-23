@@ -29,14 +29,17 @@ documentation licenses do not relicense those works. Please see the
 [third-party content, fair-use, and rights-holder notice](LICENSING.md#historical-excerpts-fair-use-and-rights-holder-contact)
 for attribution or removal requests.
 
-## Future reference knowledge base
+## Live DeskMate reference site
 
-The [generator-neutral reference-site staging index](docs/site/README.md) maps
-existing documentation to stable page identities and records the core-format,
-application-comparison and visual-evidence work needed before publication.
-This does not launch a site or change implementation ownership. The eventual
-initial presentation is based on BOOTSTRA.386; the planned DeskMate-derived
-theme remains a later design milestone.
+The [public DeskMate reference](https://deskmate.retroconnect.org/) is an
+operational **Eleventy** static website, built from the
+[reviewed page map](docs/site/page-map.json) and existing Markdown sources.
+It uses the unmodified **BOOTSTRA.386** presentation with project-specific
+layout, a verified documentary screenshot manifest, browser search, and
+automated GitHub Pages publication. This is a growing evidence-based reference,
+**not yet a comprehensive or complete DeskMate archive**.
+[Site operations](website/README.md) · [Editorial and format workplan](docs/site/README.md)
+· [Illustrated Note Pad/Corkboard lineage](docs/history/note-pad-corkboard.md)
 
 ## Project status
 
@@ -46,6 +49,8 @@ theme remains a later design milestone.
 | **Calendar storage research** | **Ongoing** | E15–E19 document page growth, retained deletion data, and append behavior; no general allocator or deleted-record recovery implementation |
 | **DeskMate screen-state research** | **Exploratory** | Partial Calendar schedule text recovered from read-only emulator RAM captures; not a general screen reader or automation interface |
 | **Address Book 3.05** (`PERSONAL.ADR`) | **Conservative codec** | Schema-aware reader and experimental empty-to-one writer; all four A01–A04 native hashes reproduced offline; multicontact insertion remains unsupported |
+| **Note Pad/Corkboard** | **Read-only measured format** | Fixed 2,864-byte ASCII/CR/NUL buffer, two header words, and preserved residual text; matched Personal DeskMate 2, RSX, and SL/2 native note bytes. [Format reference](docs/reference/deskmate-corkboard-format.md) |
+| **RSX household databases** | **Bounded read-only inspection** | Information Center 3.61 messages, Financial Notebook, and Collections use measured DMDB-style framing and separate schemas; the dashboard shares Corkboard text, not its message database. [Native report](docs/research/deskmate-corkboard-20261123.md) |
 | **Cross-application database architecture** | **Offline structural and call evidence** | Named DMDB binding/call thunks in all three applications and a conditional DESK INT E0 dispatch path; actual runtime vector, callback selection and record-operation dispatch remain unresolved |
 | **Filer 3.05** | **Native records and forms** | Bounded DMDB inspection and reconstruction of GRAPHICS card and report payloads |
 | **Draw and Text** | **Native graphics transfer confirmed** | Read the measured FIG container and embedded DOC pictures. Preview supported graphics-form geometry as SVG. |

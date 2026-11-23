@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "lab-storage-20261123",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 38,
+    "token_records": 7597,
+    "sessions": 35
+  },
+  "checkpoint": "completion",
+  "collected_at": "2026-11-23T07:27:43.348541+00:00",
+  "commit": "c724381e4da79300b25922f1b10b9fb00317b3cc",
+  "observation": {
+    "session": "d9c78ca39d578f8edef5be61",
+    "measured_at": "2026-11-23T07:27:21.970000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 5032152,
+      "cached_input": 4905984,
+      "output": 31235,
+      "reasoning_output": 6652,
+      "total": 5063387
+    },
+    "reported_last": {
+      "input": 126017,
+      "cached_input": 124800,
+      "output": 241,
+      "reasoning_output": 77,
+      "total": 126258
+    },
+    "windows": {
+      "300": {
+        "used_percent": 57.0,
+        "reset_epoch": 1795432755,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 84.0,
+        "reset_epoch": 1795836613,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  }
+}

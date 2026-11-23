@@ -74,6 +74,14 @@
       "source": "docs/research/database-components.md"
     },
     {
+      "id": "formats.corkboard",
+      "slug": "formats/corkboard",
+      "title": "Note Pad and Corkboard file format",
+      "section": "formats",
+      "role": "current-guide",
+      "source": "docs/reference/deskmate-corkboard-format.md"
+    },
+    {
       "id": "formats.calendar",
       "slug": "formats/calendar",
       "title": "DeskMate Calendar laboratory specification",
@@ -136,6 +144,14 @@
       "section": "formats",
       "role": "dated-research",
       "source": "docs/research/music-native-20261118.md"
+    },
+    {
+      "id": "applications.note-pad-corkboard",
+      "slug": "applications/note-pad-corkboard",
+      "title": "Note Pad, Corkboard, and Information Center",
+      "section": "applications",
+      "role": "current-guide",
+      "source": "docs/history/note-pad-corkboard.md"
     },
     {
       "id": "applications.inventory",
