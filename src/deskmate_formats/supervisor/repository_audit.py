@@ -41,6 +41,15 @@ SYNTHETIC_NOTE_STORAGE = {
     'collections/rsx-two-items.col',
     'collections/rsx-edited-item.col',
 }
+SYNTHETIC_PRINT_COMPANION = {
+    'print-companion/W0414155.CRD',
+    'print-companion/W0414325.NOT',
+    'print-companion/W0415039.NOT',
+    'print-companion/W0414444.PER',
+    'print-companion/W0414359.NTG',
+    'print-companion/card-ibm-graphic.prn',
+    'print-companion/card-hp-laserjet.prn',
+}
 SYNTHETIC_FF1 = 'draw/typography-lab-grid.ff1'
 SYNTHETIC_MID = {
     f'midimapper/{case}-midimapper-6.38.mid'
@@ -97,7 +106,7 @@ TELEMETRY_FIXTURES = {
 BAD_EXT = {'.exe', '.com', '.dll', '.img', '.ima', '.iso', '.zip', '.7z',
            '.png', '.pdf', '.pdm', '.res', '.r89', '.hlp',
            '.tut', '.nvr', '.rom', '.vhd', '.vhdx', '.hdi', '.raw', '.token', '.wav', '.mid',
-           '.ff1', '.otf', '.ttf', '.prn', '.hds', '.db', '.col'} | DATA_EXT
+           '.ff1', '.otf', '.ttf', '.prn', '.hds', '.db', '.col', '.crd', '.not', '.per', '.ntg'} | DATA_EXT
 PATTERNS = {
     'host Windows user path': r'(?i)[a-z]:[\\/]Users[\\/]',
     'host POSIX user path': r'/(?:home|Users)/[^/\s]+',
@@ -224,7 +233,7 @@ def fixture_manifest():
             raise ValueError('unsafe fixture path: ' + name)
         if (rel.suffix.lower() not in DATA_EXT and not native_text_export(FIXTURE_DIR / rel)
                 and name not in (SYNTHETIC_DB, SYNTHETIC_FF1)
-                and name not in SYNTHETIC_NOTE_STORAGE
+                and name not in SYNTHETIC_NOTE_STORAGE and name not in SYNTHETIC_PRINT_COMPANION
                 and name not in SYNTHETIC_MID and name not in SYNTHETIC_HDS):
             raise ValueError('unexpected fixture extension: ' + name)
         if (FIXTURE_DIR / name).as_posix() in index or not re.fullmatch(r'[0-9a-f]{64}', str(item.get('sha256', ''))):
