@@ -235,3 +235,9 @@ The November 23 Corkboard and Home Organizer campaign recorded
 [message removal](20261123-corkboard-message-removal.json), and
 [completion](20261123-corkboard-completion.json).
 [Campaign report](../../research/deskmate-corkboard-20261123.md)
+
+The November 23 laboratory storage audit recorded
+[startup](20261123-lab-storage-startup.json),
+[inventory and tooling](20261123-lab-storage-inventory.json), and
+[completion](20261123-lab-storage-completion.json).
+[Campaign report](../../research/lab-storage-audit-20261123.md)
