@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "corkboard-20261123",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 37,
+    "token_records": 7363,
+    "sessions": 34
+  },
+  "checkpoint": "corkboard-native",
+  "collected_at": "2026-11-23T06:29:23.325616+00:00",
+  "commit": "c1e858b0dba1f0982cd5fb79e6274aedfa93fb0a",
+  "observation": {
+    "session": "44d2a771b06b8f736ce281f9",
+    "measured_at": "2026-11-23T06:29:22.657000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 4789982,
+      "cached_input": 4679808,
+      "output": 10461,
+      "reasoning_output": 539,
+      "total": 4800443
+    },
+    "reported_last": {
+      "input": 116225,
+      "cached_input": 115712,
+      "output": 389,
+      "reasoning_output": 50,
+      "total": 116614
+    },
+    "windows": {
+      "300": {
+        "used_percent": 7.0,
+        "reset_epoch": 1795432755,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 77.0,
+        "reset_epoch": 1795836613,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  }
+}

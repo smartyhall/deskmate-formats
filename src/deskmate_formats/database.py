@@ -316,7 +316,30 @@ def inspect_help_directory(source):
 
 def parse_help_bytes(source, *, allow_retired=False, max_pages=MAX_PAGES):
     """Read framed Help tables when covered by the common row and index reader."""
-    return _parse_snapshot(_snapshot(source, max_pages), allow_retired, False, help_profile=True)
+    return _parse_snapshot(_snapshot(source, max_pages), allow_retired, False,
+                           directory_check=_help_directory, allow_chained_indexes=True,
+                           id_limit=0x200)
+
+
+def parse_information_center_bytes(source, *, allow_retired=False, max_pages=MAX_PAGES):
+    """Read the measured RSX Information Center 3.61 INFOCNTR.DB profile."""
+    db = _parse_snapshot(_snapshot(source, max_pages), allow_retired, False,
+                         directory_check=_information_center_directory)
+    schema = tuple((col.name, col.width, col.kind) for col in db.table('INFO').columns)
+    require(schema == (('Type', 1, 'K'), ('Date', 7, 'D'), ('Text', 952, 'K'),
+                       ('Phone', 20, 'K'), ('Name', 20, 'K'), ('Time', 8, 'K')),
+            'unsupported_schema', 'unknown Information Center INFO schema')
+    return db
+
+
+def _information_center_directory(data, tables, marker):
+    roles = tuple((table.name, table.data_page, table.index_page, table.column_count)
+                  for table in tables)
+    require(data[:4] == b'\x03\x00\x00\x00' and marker == 0x44A
+            and data[marker + 1:2 * PAGE_SIZE].rstrip(b'\0') == b'\x02\x03'
+            and roles == (('DBCOLS', 2, 3, 6), ('INFO', 4, 5, 6))
+            and tuple(table.tokens[8:] for table in tables) == ((b'2', b'3'), (b'1', b'2', b'6')),
+            'unsupported_layout', 'unknown Information Center directory profile', marker)
 
 
 _HELP_TAILS = (b'6\x017\x01\x02\x03', b'\x02\x037\x011\x01\x02\x03',
@@ -356,11 +379,12 @@ def _check_header_links(data):
             'invalid_chain', 'unsupported header/directory chains or extent marker', 0x20)
 
 
-def _parse_snapshot(data, allow_retired, allow_legacy_filer_schema, *, help_profile=False):
+def _parse_snapshot(data, allow_retired, allow_legacy_filer_schema, *, directory_check=None,
+                    allow_chained_indexes=False, id_limit=0x80):
     from dataclasses import replace
     tables, marker = _directory(data)
-    if help_profile:
-        _help_directory(data, tables, marker)
+    if directory_check is not None:
+        directory_check(data, tables, marker)
     else:
         require(not any(data[marker + 1:2 * PAGE_SIZE]),
                 'unsupported_layout', 'missing directory marker or nonzero tail', marker)
@@ -370,12 +394,11 @@ def _parse_snapshot(data, allow_retired, allow_legacy_filer_schema, *, help_prof
     for table in tables:
         require(table.index_page not in reserved, 'invalid_index', 'shared index page')
         chain = _chain(data, table.index_page)
-        require(help_profile or len(chain) == 1,
+        require(allow_chained_indexes or len(chain) == 1,
                 'unsupported_layout', 'multiple index pages unsupported', table.index_page * PAGE_SIZE)
         require(reserved.isdisjoint(chain), 'invalid_index', 'shared index page')
         index_chains[table.name] = chain
         reserved.update(chain)
-    id_limit = 0x200 if help_profile else 0x80
     page_owners = set()
     parsed = []
     for table in tables:

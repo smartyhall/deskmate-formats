@@ -249,6 +249,12 @@
     },
     {
       "id": "personal-hx",
+      "note_accessory": {
+        "name": "Note Pad",
+        "module": "DMNOTEPD.ACC",
+        "evidence": "module strings",
+        "research": "docs/research/deskmate-corkboard-20261123.md"
+      },
       "family": "Personal DeskMate",
       "edition": "Tandy 1000 HX",
       "version": "01.00.00",
@@ -296,6 +302,12 @@
     },
     {
       "id": "personal2-tx",
+      "note_accessory": {
+        "name": "Note Pad",
+        "module": "DMNOTEPD.ACC",
+        "evidence": "native F1 launch and DMNOTEPD write",
+        "research": "docs/research/deskmate-corkboard-20261123.md"
+      },
       "family": "Personal DeskMate 2",
       "edition": "PDM2.ZIP recipe",
       "version": "01.00.00",
@@ -370,6 +382,12 @@
     },
     {
       "id": "generic-300",
+      "note_accessory": {
+        "name": "Corkboard",
+        "module": "DMNOTEPD.ACC",
+        "evidence": "installed module strings",
+        "research": "docs/research/deskmate-corkboard-20261123.md"
+      },
       "family": "DeskMate 3",
       "edition": "Generic five ZIPs",
       "version": "03.00.00",
@@ -459,6 +477,12 @@
     },
     {
       "id": "generic-302",
+      "note_accessory": {
+        "name": "Corkboard",
+        "module": "DMNOTEPD.ACC",
+        "evidence": "program media and module strings",
+        "research": "docs/research/deskmate-corkboard-20261123.md"
+      },
       "family": "DeskMate 3",
       "edition": "Generic three ZIPs",
       "version": "03.02.00",
@@ -505,6 +529,12 @@
     },
     {
       "id": "tl-302",
+      "note_accessory": {
+        "name": "Corkboard",
+        "module": "DMNOTEPD.ACC",
+        "evidence": "program media and module strings",
+        "research": "docs/research/deskmate-corkboard-20261123.md"
+      },
       "family": "DeskMate 3",
       "edition": "Tandy 1000 TL",
       "version": "3.02 (bundle notes)",
@@ -577,6 +607,12 @@
     },
     {
       "id": "generic-303",
+      "note_accessory": {
+        "name": "Corkboard",
+        "module": "DMNOTEPD.ACC",
+        "evidence": "installed module strings",
+        "research": "docs/research/deskmate-corkboard-20261123.md"
+      },
       "family": "DeskMate 3",
       "edition": "Generic four ZIPs",
       "version": "03.03.01",
@@ -630,6 +666,12 @@
     },
     {
       "id": "tl2-303",
+      "note_accessory": {
+        "name": "Corkboard",
+        "module": "DMNOTEPD.ACC",
+        "evidence": "program media and module strings",
+        "research": "docs/research/deskmate-corkboard-20261123.md"
+      },
       "family": "DeskMate 3",
       "edition": "Tandy 1000 TL/2",
       "version": "3.03 (bundle notes)",
@@ -709,6 +751,12 @@
     },
     {
       "id": "sl2-oem",
+      "note_accessory": {
+        "name": "Corkboard",
+        "module": "DMNOTEPD.ACC",
+        "evidence": "native F10 launch and DMCORKBD write",
+        "research": "docs/research/deskmate-corkboard-20261123.md"
+      },
       "family": "DeskMate 3",
       "edition": "Tandy 1000 SL/2",
       "version": "03.03.01 (MAME software-list identification of the program disks)",
@@ -787,6 +835,12 @@
     },
     {
       "id": "1100fd-oem",
+      "note_accessory": {
+        "name": "Corkboard",
+        "module": "DMNOTEPD.ACC",
+        "evidence": "program media and module strings",
+        "research": "docs/research/deskmate-corkboard-20261123.md"
+      },
       "family": "DeskMate 3",
       "edition": "Tandy 1100 FD",
       "version": null,
@@ -864,6 +918,12 @@
     },
     {
       "id": "rl-304",
+      "note_accessory": {
+        "name": "Corkboard",
+        "module": "DMNOTEPD.ACC",
+        "evidence": "program media and module strings",
+        "research": "docs/research/deskmate-corkboard-20261123.md"
+      },
       "family": "DeskMate 3",
       "edition": "Tandy 1000 RL / RL-HD",
       "version": "3.04 (distribution)",
@@ -1074,6 +1134,12 @@
     },
     {
       "id": "rsx-30404",
+      "note_accessory": {
+        "name": "Corkboard",
+        "module": "DMNOTEPD.ACC",
+        "evidence": "native F10 launch and shared DMCORKBD write with Information Center",
+        "research": "docs/research/deskmate-corkboard-20261123.md"
+      },
       "family": "DeskMate 3",
       "edition": "Tandy 1000 RSX",
       "version": "03.04.04",
@@ -1130,6 +1196,12 @@
     },
     {
       "id": "generic-305-nine",
+      "note_accessory": {
+        "name": "Corkboard",
+        "module": "DMNOTEPD.ACC",
+        "evidence": "installed module strings and stock DMCORKBD",
+        "research": "docs/research/deskmate-corkboard-20261123.md"
+      },
       "family": "DeskMate 3",
       "edition": "Generic nine ZIPs",
       "version": "03.05.00",
@@ -1211,6 +1283,12 @@
     },
     {
       "id": "generic-305-five-zip",
+      "note_accessory": {
+        "name": "Corkboard",
+        "module": "DMNOTEPD.ACC",
+        "evidence": "native F10 launch and DMCORKBD creation",
+        "research": "docs/research/deskmate-corkboard-20261123.md"
+      },
       "family": "DeskMate 3",
       "edition": "Alternate generic five ZIPs",
       "version": "03.05.00",
@@ -1279,6 +1357,12 @@
     },
     {
       "id": "generic-305-five-raw",
+      "note_accessory": {
+        "name": "Corkboard",
+        "module": "DMNOTEPD.ACC",
+        "evidence": "program media, module strings, and stock DMCORKBD",
+        "research": "docs/research/deskmate-corkboard-20261123.md"
+      },
       "family": "DeskMate 3",
       "edition": "Standalone five raw disks",
       "version": "03.05.00",
