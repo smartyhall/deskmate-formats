@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "rsx-aol13-20261123",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 39,
+    "token_records": 7620,
+    "sessions": 36
+  },
+  "checkpoint": "startup",
+  "collected_at": "2026-11-23T08:01:14.514676+00:00",
+  "commit": null,
+  "observation": {
+    "session": "5c11f2b0999125c999679453",
+    "measured_at": "2026-11-23T08:01:05.874000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 99289,
+      "cached_input": 71552,
+      "output": 661,
+      "reasoning_output": 0,
+      "total": 99950
+    },
+    "reported_last": {
+      "input": 42619,
+      "cached_input": 33408,
+      "output": 258,
+      "reasoning_output": 0,
+      "total": 42877
+    },
+    "windows": {
+      "300": {
+        "used_percent": 63.0,
+        "reset_epoch": 1795432755,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 85.0,
+        "reset_epoch": 1795836613,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  }
+}
