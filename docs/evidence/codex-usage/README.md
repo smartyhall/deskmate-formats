@@ -1,5 +1,10 @@
 # Codex research usage ledger
 
+The [TVDog descriptive index review](../../ecosystem/tvdog-directory-index-review.md)
+recorded [startup](20261123-tvdog-directory-index-startup.json),
+[reconciliation](20261123-tvdog-directory-index-reconciled.json), and
+[completion](20261123-tvdog-directory-index-completion.json).
+
 The [RSX AOL 1.3 campaign](../../research/rsx-aol13-20261123.md) recorded
 [startup](20261123-rsx-aol13-startup.json),
 [installation](20261123-rsx-aol13-installed.json), and

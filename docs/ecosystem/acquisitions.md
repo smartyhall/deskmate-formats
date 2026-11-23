@@ -185,6 +185,11 @@ media or extracted proprietary font resources belong in Git.
 
 ## Broader commercial software inventory
 
+The [descriptive index review](tvdog-directory-index-review.md)
+reconciles the completed preserved tree with the searchable archive. It
+identifies additional application, companion, and utility packages and
+records the claims still awaiting version or hardware checks.
+
 The operator also identified the parent archive directory as containing
 numerous DeskMate software packages:
 

@@ -6,12 +6,16 @@ files actually left on a DeskMate system, not only those created by the
 bundled applications. The core formats and current Draw/font research
 remain the immediate priorities.
 
-[Machine-readable catalog](catalog.json) records 42 products and toolkits.
+[Machine-readable catalog](catalog.json) records 60 products and toolkits.
 The [TVDog reference library](tvdog-reference.md) links recovered media and
 documents to exact source identities, a release coverage matrix and
 research leads. A catalog listing, a downloadable archive, an acquired
 disk, a verified installation and a decoded native format are distinct
 facts.
+
+The [TVDog descriptive index review](tvdog-directory-index-review.md) maps
+archive filenames to 18 newly cataloged products and utilities, and
+updates the media evidence for five existing companions.
 
 The [DeskMate installation index](deskmate-installations.md) compares
 preserved system distributions by version. The [illustrated 3.05 guide](deskmate-installation-305.md)
@@ -77,8 +81,8 @@ The first acquisition priorities are Express Publisher, Q&A Write and
 its DMQNAFNT.TXT font-import note, and First Publisher (operator
 archive already supplied). Also investigate Lotus Spreadsheet, FilePro,
 Home Organizer, Business Graphs, Macros, HomeWord II and Quicken.
-Locate the original DM_PROGS.TXT list by Kenneth Udut, DESKMOR.TXT
-developer announcement and other original catalog/listing documents.
+Use Kenneth Udut's recovered DM_PROGS.TXT list, Tandy's DESKMOR.TXT
+developer announcement, and other period catalogs for additional leads.
 Search beyond Radio Shack: original publishers, trade publications,
 shareware archives, user groups and preservation collections. Track
 negative findings and missing media, without inventing download links

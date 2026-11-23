@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "tvdog-directory-index",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 41,
+    "token_records": 8125,
+    "sessions": 38
+  },
+  "checkpoint": "completion",
+  "collected_at": "2026-11-23T23:29:17.559805+00:00",
+  "commit": null,
+  "observation": {
+    "session": "21dd3325f170cbfe81563251",
+    "measured_at": "2026-11-23T23:29:17.426000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 5014420,
+      "cached_input": 4838272,
+      "output": 22228,
+      "reasoning_output": 2445,
+      "total": 5036648
+    },
+    "reported_last": {
+      "input": 127590,
+      "cached_input": 126848,
+      "output": 537,
+      "reasoning_output": 86,
+      "total": 128127
+    },
+    "windows": {
+      "300": {
+        "used_percent": 44.0,
+        "reset_epoch": 1795491501,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 98.0,
+        "reset_epoch": 1795836613,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  }
+}
