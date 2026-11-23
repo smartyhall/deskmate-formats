@@ -218,6 +218,25 @@ and packed page links stayed constant. These results cover one last-ID
 deletion followed by one edit per app. They do not isolate deletion from
 the subsequent edit or establish middle-row reclamation and ID reuse.
 
+### Information Center middle-row removal
+
+Start from the stopped RSX verification disk used in the November 22
+campaign. Its `INFOCNTR.DB` matches the published two-message fixture
+byte for byte. Boot a disposable copy, launch Information Center, and
+click the `PATLEE` pin (the first synthetic pilot). In Retrieve Message,
+click **Remove**. At 78,040 ms the dashboard showed only the `PAT` pin.
+Exit to DOS and quit (90,152 ms). The full tree comparison found changes
+only to `INFOCNTR.DB` and `DESKTOP.CFG`. `DMCORKBD` was unchanged.
+
+The `INFO` live count fell from three to two, and its next-ID-like
+token fell from 19 to 18 (decimal). The intact `PAT` message moved
+from offset `0x1046` and ID `0x12` to offset `0x1017` and ID `0x11`,
+which had held the removed pilot. The original `P` row stayed at
+`0x1000`. Pages 1, 4, and 5 changed, and the strict profile still
+parses the file. No retired rows appear in the validated data chain.
+This is one case of compaction with ID reassignment, independent of
+any subsequent edit. [Native post-removal specimen](../../tests/fixtures/application-generated/information-center/rsx-native-removed-pilot.db)
+
 ## Static DMDB comparison
 
 The RSX Information Center, Financial Notebook, and Collections binaries
@@ -269,9 +288,9 @@ readiness window. All input and captures used the socket. The private
 archive retains the configuration backups, stopped images, socket
 journals, and raw framebuffer captures.
 
-Next, isolate a middle-record deletion before editing another card,
-then refill the file through page growth and measure ID reuse. Probe
-Information Center message removal and reminders independently of its
+Next, isolate middle-record deletions in Financial Notebook and
+Collections, then refill the files through page growth and measure ID reuse.
+Probe Information Center reminders and voice messages independently of its
 notepad. Compare Corkboard's second header word, CP437 behavior, and
 capacity with pinned inputs. A live DMDB export trace could establish
 which storage routines the individual applications actually call.

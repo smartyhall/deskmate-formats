@@ -11,6 +11,7 @@
     "rsx_stock_disk_sha256": "3085c68955b7fcad648995a40ff30f8f3a799e943710bd43cc0326c69a107fc1",
     "rsx_stock_cfg_sha256": "ccdfb129802cdee9467c1316ca1cbedeb30a83192d0ffdec7a57fad64d55b8b9",
     "alt305_stock_disk_sha256": "7e5b7078cca53b511366432ec502a828be681c1b5dc2cfb7761d6c6e009d2eb7",
+    "rsx_message_before_disk_sha256": "39f96f64f2be24a4fef4a67edf3851d17ee21816c78682d1120e51150d76ee5e",
     "sl2_eeprom_sha256": "046e81e0948627f831179457fa51c9508f16589c4ac886d222f4fd39b3d25e2f"
   },
   "scope": {
@@ -955,6 +956,89 @@
           ],
           "changed_pages_1k": [
             0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rsx-message-remove",
+      "before": "rsx-message-before",
+      "elapsed_emulated_ms": 90152,
+      "disk_sha256": "6ad0c7551adfdb10287ea3df32ca41380c54a4becb0dd3a0d42d6ebbf6c44f9c",
+      "before_count": 513,
+      "after_count": 513,
+      "changes": [
+        {
+          "path": "DESKMATE/DESKTOP.CFG",
+          "before": {
+            "size": 1659,
+            "sha256": "ac47eb5538bcd6d2f898be4310d831a116f4f20a8201cc88ca68277e70679302"
+          },
+          "after": {
+            "size": 1659,
+            "sha256": "bc0df43109b09c22e53a956c6d38fc9fb82156718e9e109443ca592caefc2659"
+          },
+          "changed_pages_1k": [
+            0,
+            1
+          ]
+        },
+        {
+          "path": "DESKMATE/INFOCNTR.DB",
+          "before": {
+            "size": 6144,
+            "sha256": "252d9012735b1f616a9ee2a90362518932ce1f332855636a0447cfa031a9d300"
+          },
+          "after": {
+            "size": 6144,
+            "sha256": "bdb9a5b09a20a7d1f967a54f5f712b1306fa041f7f3e6c4904170b3b6cca0d3e"
+          },
+          "changed_spans": [
+            [
+              1077,
+              1078
+            ],
+            [
+              1087,
+              1088
+            ],
+            [
+              4131,
+              4135
+            ],
+            [
+              4136,
+              4150
+            ],
+            [
+              4151,
+              4153
+            ],
+            [
+              4154,
+              4215
+            ],
+            [
+              5168,
+              5169
+            ],
+            [
+              5170,
+              5171
+            ],
+            [
+              5172,
+              5173
+            ],
+            [
+              5176,
+              5177
+            ]
+          ],
+          "changed_pages_1k": [
+            1,
+            4,
+            5
           ]
         }
       ]

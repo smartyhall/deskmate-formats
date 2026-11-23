@@ -4751,6 +4751,21 @@
       "native_saved": true
     },
     {
+      "path": "information-center/rsx-native-removed-pilot.db",
+      "size": 6144,
+      "sha256": "bdb9a5b09a20a7d1f967a54f5f712b1306fa041f7f3e6c4904170b3b6cca0d3e",
+      "application": "Tandy DeskMate Information Center",
+      "version": "Information Center 3.61 on Tandy 1000 RSX OEM DeskMate 03.04.04",
+      "experiment": "November 23, 2026 Information Center middle-row removal",
+      "origin": "Selected the PATLEE recipient in the known two-message control, chose Remove, verified the remaining PAT pin, and exited to DOS. Direct FAT16 traversal and 7-Zip agreed.",
+      "expected_content": "The unchanged stock Police, Fire row and the surviving synthetic message ATLAS LAB MESSAGE to PAT from LEE, moved from ID 0x12 to 0x11.",
+      "source_sha256": "252d9012735b1f616a9ee2a90362518932ce1f332855636a0447cfa031a9d300",
+      "evidence_class": "Application-generated update to the native two-message control",
+      "evidence_report": "docs/research/deskmate-corkboard-20261123.md",
+      "synthetic_data": true,
+      "native_saved": true
+    },
+    {
       "path": "corkboard/rsx-two-lines/DMCORKBD",
       "size": 2864,
       "sha256": "b23d72eeffc9734efdf3e192f424f319f07872e869c8a85dafa6675e2ede7121",

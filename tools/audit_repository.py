@@ -37,6 +37,7 @@ SYNTHETIC_NOTE_STORAGE = {
     'corkboard/305-alternate/DMCORKBD',
     'notebook/rsx-two-loans.db',
     'notebook/rsx-edited-loan.db',
+    'information-center/rsx-native-removed-pilot.db',
     'collections/rsx-two-items.col',
     'collections/rsx-edited-item.col',
 }

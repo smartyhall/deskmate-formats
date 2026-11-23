@@ -104,6 +104,20 @@ class DatabaseTests(unittest.TestCase):
         with self.assertRaises(DatabaseError):
             parse_information_center_bytes(invalid_index)
 
+    def test_native_information_center_removal_compacts_and_changes_surviving_id(self):
+        fixture = Path(__file__).parents[1] / 'fixtures/application-generated/information-center'
+        before = parse_information_center_bytes(
+            (fixture / 'rsx-native-two-messages.db').read_bytes()).table('INFO')
+        after = parse_information_center_bytes(
+            (fixture / 'rsx-native-removed-pilot.db').read_bytes(), allow_retired=True).table('INFO')
+        survivor = after.rows[0]
+        self.assertEqual(survivor.fields, before.rows[1].fields)
+        self.assertEqual((survivor.record_id, survivor.offset), (0x11, 0x1017))
+        self.assertEqual((before.rows[1].record_id, before.rows[1].offset), (0x12, 0x1046))
+        self.assertEqual((after.rows[1].offset, after.rows[1].raw),
+                         (before.rows[2].offset, before.rows[2].raw))
+        self.assertEqual(after.retired_rows, ())
+
     def test_both_header_profiles_and_schema_order(self):
         for data, counts in ((build('two'), [13, 3]), (addressbook(), [27, 0, 1, 1])):
             db = parse_bytes(data)
