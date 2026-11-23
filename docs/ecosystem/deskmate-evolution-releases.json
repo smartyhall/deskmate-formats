@@ -706,9 +706,9 @@
       "id": "sl2-oem",
       "family": "DeskMate 3",
       "edition": "Tandy 1000 SL/2",
-      "version": null,
+      "version": "03.03.01 (MAME software-list identification of the program disks)",
       "target_hardware": "Tandy 1000 SL/2",
-      "dos_and_runtime": "Bundled DOS 3.30.22",
+      "dos_and_runtime": "Bundled floppy and ROM DOS 3.30.22. DeskMate shell starts from SL/2 ROM.",
       "distribution_media": [
         {
           "path": "tandy1000/system/1000SL2D.zip",
@@ -717,7 +717,7 @@
           "sha256": "516cb60ddad983cb1dd9d6ae1b496cdcd19b747d08c7566f52aa43a1e97c17ed"
         }
       ],
-      "installation_or_startup": "DOS floppy and three labelled disks; INSTALL.PDM, desktop startup requires ROM qualification",
+      "installation_or_startup": "Native floppy DOS, ROM DOS, and ROM Desktop boots on the exact SL/2 profile with factory-initialized EEPROM",
       "principal_applications": [
         "Text",
         "Calendar",
@@ -728,14 +728,17 @@
         "Music",
         "Sound"
       ],
-      "evidence": "inspected",
-      "record": "../research/deskmate-evolution-native-20261121.md#tandy-1000-sl2-startup-blocker",
-      "uncertainties": "Exact DeskMate release remains open. Compare ROM MS-DOS mode and fresh EEPROM state before repeating ROM DeskMate.",
+      "evidence": "launched",
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#sl2-rom-startup-on-a-factory-initialized-eeprom",
+      "uncertainties": "Suite version attributed to the exact media by SHA-1 match. Native installer and audio output remain untested.",
       "dates": [],
       "public_image_ids": [
-        "ui.evolution.sl2-setup-options"
+        "ui.evolution.sl2-setup-options",
+        "ui.evolution.sl2-rom-desktop-empty",
+        "ui.evolution.sl2-rom-desktop-program-disks",
+        "ui.evolution.sl2-rom-music"
       ],
-      "native_attempt": "bundled DOS booted; ROM DeskMate startup displayed a blank screen with and without program floppies",
+      "native_attempt": "The repaired configuration boots the ROM Desktop with and without disks. Address Book, Calendar, Music, and Sound opened from the three program disks.",
       "inspected_media_files": [
         {
           "member": "1000SL2D/DM1.IMG",

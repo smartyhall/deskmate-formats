@@ -1295,6 +1295,54 @@
       "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
       "page_id": "applications.evolution-atlas",
       "section_heading": "Thesaurus in Text"
+    },
+    {
+      "id": "ui.evolution.sl2-rom-desktop-empty",
+      "path": "evolution-atlas/sl2-rom-desktop-empty.png",
+      "sha256": "51b53e01a89e8d6f3072a1c5e4f7ecfb18793d3b32bc902c4b1683a9670f7365",
+      "source_sha256": "b2ff69e7e29ec5bd666e4ce968333ff82d8eaae337f168ecb316e5553493189c",
+      "size": 5250,
+      "width": 640,
+      "height": 200,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "atlas-305-sl2-sl2-rom-desktop-empty-35000",
+      "caption": "The SL/2 starts its ROM Desktop with both drives empty. Programs and Autoconfig have no entries.",
+      "alt": "Blue-purple SL/2 desktop with three shortcuts, an empty Programs panel, and the Welcome to DeskMate panel.",
+      "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+      "page_id": "applications.evolution-atlas",
+      "section_heading": "SL/2 ROM desktop"
+    },
+    {
+      "id": "ui.evolution.sl2-rom-desktop-program-disks",
+      "path": "evolution-atlas/sl2-rom-desktop-program-disks.png",
+      "sha256": "8b97fad86b3cdfbe1e32c96ba3752cc53939a406c5bae4c905e0bfb6dcc9e479",
+      "source_sha256": "f3e6f4fd0df4ede5ebb2c045660a7973d86ae1fb1cdc289f4ade68d6ae322f19",
+      "size": 5647,
+      "width": 640,
+      "height": 200,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "atlas-305-sl2-sl2-rom-desktop-program-disks-14000",
+      "caption": "With the first two DeskMate program disks mounted, the SL/2 Desktop shows programs and adds a Hangman shortcut.",
+      "alt": "SL/2 Desktop with Address, Hangman, Install, and Mail Merge in Programs, and a separate Hangman shortcut.",
+      "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+      "page_id": "applications.evolution-atlas",
+      "section_heading": "SL/2 ROM desktop"
+    },
+    {
+      "id": "ui.evolution.sl2-rom-music",
+      "path": "evolution-atlas/sl2-rom-music.png",
+      "sha256": "78cac27f11ef4175a524666f1e7fe5259c79425acbed1da02ae577d2a19c2e8a",
+      "source_sha256": "08335af5108f732fd3a110d5d065d834ce04aefb0be0b4b033344a3165f21c94",
+      "size": 5796,
+      "width": 640,
+      "height": 200,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "atlas-305-sl2-sl2-rom-music-110576",
+      "caption": "Music from the SL/2's third program disk opened an untitled score on the ROM Desktop runtime.",
+      "alt": "Music editor with an empty score, note-duration keys, and Clarinet, Piano, and Bells instrument lines.",
+      "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+      "page_id": "applications.evolution-atlas",
+      "section_heading": "SL/2 program disks"
     }
   ]
 }

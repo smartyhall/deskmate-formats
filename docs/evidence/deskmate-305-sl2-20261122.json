@@ -75,6 +75,51 @@
       "raw_sha256": "cd56194fad19a819d6a5d5098535c2b2e3d7e5d6e7192de70648f1d297f6a97b",
       "derivative_sha256": "efbe9f33e520d2f699625ee1a780ed198c200f76763a0a176fccb3b963b56db4",
       "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.sl2-rom-desktop-empty": {
+      "release": null,
+      "machine": "tandy1000sl2",
+      "emulator_version": "7.0",
+      "ms": 35000,
+      "frame": 2092,
+      "bios_mode": 3,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "b2ff69e7e29ec5bd666e4ce968333ff82d8eaae337f168ecb316e5553493189c",
+      "derivative_sha256": "51b53e01a89e8d6f3072a1c5e4f7ecfb18793d3b32bc902c4b1683a9670f7365",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.sl2-rom-desktop-program-disks": {
+      "release": null,
+      "machine": "tandy1000sl2",
+      "emulator_version": "7.0",
+      "ms": 14000,
+      "frame": 833,
+      "bios_mode": 3,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "f3e6f4fd0df4ede5ebb2c045660a7973d86ae1fb1cdc289f4ade68d6ae322f19",
+      "derivative_sha256": "8b97fad86b3cdfbe1e32c96ba3752cc53939a406c5bae4c905e0bfb6dcc9e479",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.sl2-rom-music": {
+      "release": null,
+      "machine": "tandy1000sl2",
+      "emulator_version": "7.0",
+      "ms": 110576,
+      "frame": 6620,
+      "bios_mode": 3,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "08335af5108f732fd3a110d5d065d834ce04aefb0be0b4b033344a3165f21c94",
+      "derivative_sha256": "78cac27f11ef4175a524666f1e7fe5259c79425acbed1da02ae577d2a19c2e8a",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
     }
   }
 }

@@ -138,10 +138,23 @@ two-disk procedure on the RLX-HD B. Surviving TL, TL/2, and SL/2
 program disks contain Music and Sound. The earlier RSX audio trial
 used selected OEM modules under generic 3.05. [Tandy Faxbacks 1367](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01367.txt), [1311](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01311.txt), and [1342](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01342.txt) · [RSX audio trial](../research/sound-native-20261118.md)
 
-The SL/2 booted its DOS floppy, and `SETUPSL2` saved the ROM
-startup selection. Two reboot controls then left a blank display.
-This edition remains an inspected distribution with an observed
-startup blocker. [Native SL/2 trial](../research/deskmate-evolution-native-20261121.md#tandy-1000-sl2-startup-blocker)
+### SL/2 ROM desktop
+
+Restoring the factory EEPROM settings in `SETUPSL2` made ROM
+startup reproducible in the pinned SL/2 profile. With the startup
+program set to MS-DOS, the computer reached a DOS 3.30.22 prompt
+with empty floppy drives. With DeskMate selected, the ROM brought
+up a blue-purple desktop with a text-only Teach Me panel. The
+program disks populated the Programs panel and added a Hangman
+shortcut. [Factory initialization and boot controls](../research/deskmate-305-variants-sl2-20261122.md#sl2-rom-startup-on-a-factory-initialized-eeprom)
+
+### SL/2 program disks
+
+Address Book, Calendar, Music, and Sound opened from the original SL/2
+program disk images under the ROM runtime. An empty-drive launch of
+Calendar asked for a disk in A:. MAME identifies the three exact
+program disks as 03.03.01, based on matching SHA-1 identities.
+[Native launch record](../research/deskmate-305-variants-sl2-20261122.md#rom-deskmate-with-and-without-program-media)
 
 The RSX OEM 03.04.04 Desktop adds an Applications menu, five
 illustrated task tiles, and shortcuts to AOL and Letter Invaders.
@@ -186,9 +199,8 @@ Teach Me lists lessons that can start from the installed desktop.
 1. Test the nine-ZIP 3.05 layout as a disk-order control. Compare more
    Help topics and later tutorial pages with the matched installed
    five-ZIP and five-image controls.
-2. Reproduce SL/2 ROM **MS-DOS** startup on a fresh EEPROM
-   baseline, then qualify DeskMate startup. Preserve the successful
-   floppy-DOS profile for comparison.
+2. Expand the SL/2 application and audio-device tests using the
+   preserved factory-initialized EEPROM seed and original program media.
 3. Locate exact profiles or qualified configurations for the TL,
    TL/2, 1100 FD, RL/RL-HD, and RLX-HD B. The pinned 86Box machine
    table lacks exact profiles for those targets. Confirm the original
