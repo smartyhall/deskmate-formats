@@ -49,7 +49,7 @@ mapped source by review and retain the historical evidence as a dated record.
 
 The site uses **Eleventy 3**, a root-mounted GitHub Pages custom domain, and
 the **unmodified [BOOTSTRA.386](https://github.com/kristopolous/BOOTSTRA.386)**
-theme with separate site-layout CSS. [Website build and publishing instructions](../../website/README.md)
+theme with separate site-layout CSS. [Website build and publishing instructions](https://github.com/smartyhall/deskmate-formats/blob/main/website/README.md)
 describe the Node.js build, approved image manifest, source-map renderer,
 preview/link checks, and deployment workflows. A later DeskMate-derived theme
 remains a separate research/design milestone; keep the current semantic HTML,
@@ -77,6 +77,6 @@ From the repository root:
 The checker uses only the Python standard library. Portable tests cover the
 page-map contract, duplicate routes, missing files and path containment.
 To validate and build the **actual** site, follow the
-[Eleventy website instructions](../../website/README.md): run `npm test`,
+[Eleventy website instructions](https://github.com/smartyhall/deskmate-formats/blob/main/website/README.md): run `npm test`,
 `npm run build`, and the generated-site link audit. GitHub Actions also
 checks the approved image manifest and publication boundary.
