@@ -204,7 +204,8 @@ def source_files():
 
 
 def native_text_export(path):
-    return path.parent == FIXTURE_DIR / 'text' and path.suffix.lower() == '.txt'
+    return (path == FIXTURE_DIR / 'aol/rsxnote.txt'
+            or (path.parent == FIXTURE_DIR / 'text' and path.suffix.lower() == '.txt'))
 
 
 def fixture_manifest():
