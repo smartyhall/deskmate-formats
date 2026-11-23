@@ -26,6 +26,12 @@ and [database implementation report](research/database-campaign.md).
 | Interchange | Calendar/Address Book semantic JSON with explicit loss accounting; no CalDAV/CardDAV transport |
 | Verification | Portable adversarial tests, historical native fixtures and four whole-file Address Book hash oracles; newer generated files still need native application acceptance |
 
+## Corkboard text versus indexed application databases
+
+The measured **2,864-byte** Note Pad/Corkboard file is not a DMDB table. It has two little-endian header words and a **2,860-byte CR-delimited, NUL-terminated text buffer**. The first word tracked the insertion position in observed saves; the second remained zero and is not yet interpreted. The read-only `corkboard.parse_bytes()` preserves residual bytes after Clear. [Maintained layout reference](reference/deskmate-corkboard-format.md)
+
+On RSX OEM DeskMate **03.04.04**, Information Center **3.61** shows and edits the same `DMCORKBD` text as Corkboard, but stores pinned messages separately in `INFOCNTR.DB`. Financial Notebook `NOTEBOOK.DB`, Collections `.COL`, Information Center messages, and Filer `.FIL` have measured common DMDB-style directory/DBCOLS/index/row framing, with different application schemas and record behavior. Static code-backed DMDB service-name references and INT E0/far-indirect call sequences support a common **interface** hypothesis; actual runtime binding, dispatch for individual operations, and universal allocator behavior have **not** been traced. [Native cross-application findings](research/deskmate-corkboard-20261123.md#shared-database-framing) · [Static interface evidence](research/deskmate-corkboard-20261123.md#static-dmdb-comparison)
+
 The shared on-disk structures and three applications' DMDB call thunks are
 observed evidence, **not** proof of identical allocation, deletion, sorting or
 universal serialization behavior. Further common utilities should follow
