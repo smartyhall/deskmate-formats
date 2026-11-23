@@ -290,9 +290,15 @@ authorization merely to fill gaps.
 
 Follow the [standing laboratory storage inventory workstream](docs/lab-storage-housekeeping.md)
 for bounded spare-capacity work after primary authorized Codex tasks are
-complete. The immediate dedicated Windows 10 storage/Win 98 VM lineage audit is
-[issue #169](https://github.com/smartyhall/deskmate-formats/issues/169), to
-run after the current Corkboard investigation rather than interrupting it.
+complete. The first dedicated Windows 10 storage/Win 98 VM lineage audit,
+[issue #169](https://github.com/smartyhall/deskmate-formats/issues/169),
+completed its read-only investigation in [PR #172](https://github.com/smartyhall/deskmate-formats/pull/172).
+Retain it as a first-pass baseline and refresh relevant observations only as
+part of already-authorized campaigns; defer reclamation unless disk capacity
+again becomes a practical constraint or the operator requests it. The Windows
+10 guest runs under VMware ESXi on the Dell server. Measure guest volume
+headroom separately from ESXi datastore headroom when access is available;
+never interpret guest free space as host-side datastore capacity.
 Inventory project-owned images, archives, snapshots and evidence; distinguish
 originals, sealed baselines, research checkpoints, active or dependent media,
 rebuildable derivatives and unknowns. Measure *allocated* versus logical space,
