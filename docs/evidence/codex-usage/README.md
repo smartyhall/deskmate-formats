@@ -227,3 +227,9 @@ The alternate 3.05 and SL/2 OEM campaign recorded
 [RL CookBook compatibility](20261122-305-sl2-rl.json), and
 [completion](20261122-305-sl2-completion.json).
 [Campaign report](../../research/deskmate-305-variants-sl2-20261122.md)
+
+The November 23 laboratory storage audit recorded
+[startup](20261123-lab-storage-startup.json),
+[inventory and tooling](20261123-lab-storage-inventory.json), and
+[completion](20261123-lab-storage-completion.json).
+[Campaign report](../../research/lab-storage-audit-20261123.md)
