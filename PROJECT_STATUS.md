@@ -1,5 +1,15 @@
 # Project status — DeskMate formats
 
+## Tandy OEM America Online 1.3 — 2026-11-23
+
+The [RSX AOL campaign](docs/research/rsx-aol13-20261123.md) ran the
+original installer under Tandy MS-DOS 5.00 and reproduced launch from
+both DOS and the stock DeskMate 03.04.04 shortcut. A one-line GEOS
+configuration change bypassed unfinished hardware setup for offline
+testing. A synthetic note saved from the DOS launch reopened after
+launch from DeskMate. The original `TANDYAOL` media and commercial
+installation remain in the lab.
+
 ## Corkboard and Home Organizer storage — 2026-11-23
 
 [Native Corkboard trials](docs/research/deskmate-corkboard-20261123.md)

@@ -194,6 +194,20 @@ Companion opens its own navigator for stationery and graphics, and
 Teach Me lists lessons that can start from the installed desktop.
 [Native application survey](../research/deskmate-rsx-oem-recovery-20261122.md#other-rsx-applications)
 
+### America Online on the RSX
+
+The Tandy OEM America Online 1.3 installer copied the client to
+`C:\AOL` under Tandy MS-DOS 5.00. The original DeskMate 03.04.04
+AOL shortcut found the installed GEOS kernel with drive A: empty.
+With that kernel renamed, the same shortcut requested a disk
+labeled AOL. The installer floppy is labeled TANDYAOL and holds
+the kernel inside its compressed archive.
+
+The offline trial bypassed the unfinished GEOS hardware wizard,
+cancelled registration, and saved a two-line note from a DOS launch.
+The note reopened in a new AOL session launched from the DeskMate
+shortcut. [Installation, controls, and capture provenance](../research/rsx-aol13-20261123.md)
+
 ## Corkboard and Note Pad
 
 [Illustrated three-interface comparison](../history/note-pad-corkboard.md) · [Read-only Corkboard format reference](../reference/deskmate-corkboard-format.md).

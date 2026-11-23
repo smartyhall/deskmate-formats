@@ -16,6 +16,7 @@ global-exclude *.cal *.cln *.adr *.fil *.pcl *.doc *.fig *.wks *.snd *.sng *.wav
 global-exclude *.ff1 *.otf *.ttf *.prn
 recursive-exclude examples/draw-comparison *.svg
 exclude tests/fixtures/application-generated/text/*.txt
+exclude tests/fixtures/application-generated/aol/*.txt
 global-exclude task-queue.sqlite3 task-queue.sqlite3-journal task-queue.sqlite3-wal task-queue.sqlite3-shm
 global-exclude *.hds
 global-exclude *.db

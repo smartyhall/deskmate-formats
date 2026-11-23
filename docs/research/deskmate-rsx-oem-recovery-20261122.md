@@ -258,7 +258,9 @@ stopped through the socket. Its separately archived disk hashes to
 The remaining questions include Information Center's voice
 message and reminder formats, additional Automatic House timer
 slots and no-reply behavior, and the identity of the separate
-AOL disk. The broader survey's next experiment is an alternate
+AOL disk. A later [Tandy OEM AOL 1.3 trial](rsx-aol13-20261123.md)
+reproduced the hard-disk installation and launch from the original
+shortcut. The broader survey's next experiment is an alternate
 five-ZIP 3.05 native trial focused on its differing desktop and
 Help, followed by the SL/2 ROM MS-DOS control on a clean EEPROM
 copy. Those installations are separate from the completed RSX

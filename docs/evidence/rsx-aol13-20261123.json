@@ -1,0 +1,1105 @@
+{
+  "schema_version": 1,
+  "media": {
+    "image": {
+      "name": "disk01.img",
+      "filesystem": "FAT12",
+      "label": "TANDYAOL",
+      "size": 1474560,
+      "sha256": "41a14d087306f3359679352b2d161638f1243480a3896cbdb35482168ce4acc7"
+    },
+    "files": {
+      "AOL1.BIN": {
+        "size": 847724,
+        "sha256": "1d7f575549082e61dd520e4fe2795e15756b9eda0b712fb31e716f67bf4ba0b9"
+      },
+      "INSTALL.EXE": {
+        "size": 40703,
+        "sha256": "c75b237ad691cf0f52d27cad64998d1bb9e52b9dd737a5b21c39006b072d6cfe"
+      },
+      "INSTALL.INI": {
+        "size": 2133,
+        "sha256": "aa0050e34d4d5b9b80a7aac8b2a20a7f6f5a27c0c2e3a506a517b95049b9008d"
+      },
+      "VERSION.ID": {
+        "size": 24,
+        "sha256": "ad962d0602975729f9a60ff83694f65e9dc85bce5560b04009199a6d5db76bf2"
+      }
+    },
+    "archive": {
+      "stub_bytes": 12784,
+      "methods_by_zip_number": {
+        "0": 3,
+        "6": 80
+      },
+      "entries": {
+        "AOL.ICO": {
+          "crc32": "273a84ca",
+          "size": 766,
+          "sha256": "b3fb6644b8307a2df2e9baed826ad79bcbaff8b7aad43d42cf0280009497b1ee"
+        },
+        "AOL.PIF": {
+          "crc32": "ba380573",
+          "size": 545,
+          "sha256": "0f1b72c51e8e5b81bffb5c75c36ca122dd35b195dff96f1c071ed6933b275467"
+        },
+        "FONT/BERKELEY.FNT": {
+          "crc32": "7482d345",
+          "size": 26427,
+          "sha256": "74ca1b779e6375459c34e625ed8516a305528c9f84a42df8cde99b683f76eca2"
+        },
+        "FONT/BISON.FNT": {
+          "crc32": "c5c425d1",
+          "size": 16099,
+          "sha256": "295b7eb1f4340fefd7ddc522e2b57b1e478ef63de47592bf9bc222872d28e0d3"
+        },
+        "FONT/PR_10CPI.FNT": {
+          "crc32": "5f927ff7",
+          "size": 4405,
+          "sha256": "622aa7f238b4cf09ad95a395de5a7cf752229a536f7534319fbc7fd601841ca7"
+        },
+        "FONT/UNIVERSI.FNT": {
+          "crc32": "ef63e242",
+          "size": 28242,
+          "sha256": "a6d7a1b02481fb48ac06ab90296cc8107b87908ce3d28fcd8017cc856680767b"
+        },
+        "GEOS.BAT": {
+          "crc32": "3f3aefad",
+          "size": 19,
+          "sha256": "81846c82e367918e026b5162c13208663ad04dcbcf8b08422dd1b72e58eab25f"
+        },
+        "GEOS.INI": {
+          "crc32": "0f27d73f",
+          "size": 603,
+          "sha256": "9fd680e4996b38ddfea791f4a4ee5f57d5e79e3fa99745437c61083b1c39a25e"
+        },
+        "GEOS.STR": {
+          "crc32": "e74cd190",
+          "size": 1313,
+          "sha256": "6239c8355b9e6b22ff684eb8975156c954fff9219feb26054b0762d1d2c4b612"
+        },
+        "KERNEL.EXE": {
+          "crc32": "90105276",
+          "size": 72720,
+          "sha256": "4f5c35cb363357d8676b676e7dc016fd13031d479fad5233aebfe2a2d151e0b6"
+        },
+        "MAKEBOOT.BAT": {
+          "crc32": "88390d73",
+          "size": 3391,
+          "sha256": "a503e582cb41375ea5af6ffedbbe71393e437e609c1834d450e856ed569b44a8"
+        },
+        "QEXTRACT.EXE": {
+          "crc32": "adff0190",
+          "size": 43237,
+          "sha256": "4cae75bc6b6b018ec204cf8043804d41d479e85813aa0d9299aafa79247d8419"
+        },
+        "SETUP.EXE": {
+          "crc32": "9242b9e3",
+          "size": 24479,
+          "sha256": "1590abd2421abe0d970a0c008739d28c5cf65cc80fd91435f6471264833e7a36"
+        },
+        "SYSAPPL/SETUP.GEO": {
+          "crc32": "ecfcd371",
+          "size": 33608,
+          "sha256": "5795b9338403da4ea4186f6acab740f3abe9bd75206628c6b0876c25782a1b60"
+        },
+        "SYSTEM/ATT6300.GEO": {
+          "crc32": "85a4c853",
+          "size": 14734,
+          "sha256": "9e3420df864b270a0ab93b6ff83fe86d50ef2467e50fde098f42ebff1876233c"
+        },
+        "SYSTEM/CANON48.GEO": {
+          "crc32": "f60c4bed",
+          "size": 4138,
+          "sha256": "aa4fbcabf5e33c49741d4cc6a763379818bf5e60bb54d150bc20b65fa153d89a"
+        },
+        "SYSTEM/CGA.GEO": {
+          "crc32": "4e5d9254",
+          "size": 15614,
+          "sha256": "1bfa941b7ab2a979665c8610bb670dcf6b3f5303ab6d725d1b0196bb94c38205"
+        },
+        "SYSTEM/CITOH9.GEO": {
+          "crc32": "228ba40a",
+          "size": 4006,
+          "sha256": "39039f03847d2c99f0dec121ed3eb750ade9ed451fceecf2f7845965ba9942ae"
+        },
+        "SYSTEM/DBASE.GEO": {
+          "crc32": "99572515",
+          "size": 2930,
+          "sha256": "afbbd0be18ec2ea429df25b76c56a465d827bd3dffef43b42339831a4145a711"
+        },
+        "SYSTEM/DESKJET.GEO": {
+          "crc32": "6d2d538f",
+          "size": 3180,
+          "sha256": "122ecc25754519373d7174449b644a9f35d1b47063461d1101756cd3c573fffe"
+        },
+        "SYSTEM/DISK.GEO": {
+          "crc32": "d278883f",
+          "size": 910,
+          "sha256": "511962b3ff763fd925665693ae3e496460177839b420ae76275239a52d3f917a"
+        },
+        "SYSTEM/DOS2.GEO": {
+          "crc32": "b18fa160",
+          "size": 3356,
+          "sha256": "ad24e01a2051fda5d1ea931321f116c700c52258feb5cbf5fbb70b1047569452"
+        },
+        "SYSTEM/DOS3.GEO": {
+          "crc32": "9f509105",
+          "size": 3996,
+          "sha256": "1b474bc18ae314a7c67523b31e86b7e7c0d1f3ab98c0fc8b84a8eb54b82311d9"
+        },
+        "SYSTEM/DOS4.GEO": {
+          "crc32": "4e601b89",
+          "size": 3712,
+          "sha256": "ecfd661611e4bb81381259a4b8658e3fd0f31874df589300480eb71413462adf"
+        },
+        "SYSTEM/DOS5.GEO": {
+          "crc32": "2314dab9",
+          "size": 6312,
+          "sha256": "3cc978f604d9f1b1b9db549d09c3a710469527729862b32f4f7ad4ef7d271ed4"
+        },
+        "SYSTEM/DRDOS.GEO": {
+          "crc32": "ad36822d",
+          "size": 3400,
+          "sha256": "f17643faec976d6ddf064e1f0031ca03be19e787a0377c1e511d5e4201092dc5"
+        },
+        "SYSTEM/EGA.GEO": {
+          "crc32": "7dcf54c6",
+          "size": 17142,
+          "sha256": "8ef74376641064356fbbfadf372e36977b8dcc00b3f29994b0ccc507086283d8"
+        },
+        "SYSTEM/EMM.GEO": {
+          "crc32": "bd04cc68",
+          "size": 2084,
+          "sha256": "b5e56571b7dced510a9401a384f7a7bb649142db1f5848b179e2b69df069bfbf"
+        },
+        "SYSTEM/EPMX9.GEO": {
+          "crc32": "50940d4f",
+          "size": 3864,
+          "sha256": "1573862758e642f0d26815105daf6824762a14148101edad8e7a6c99a494b3f9"
+        },
+        "SYSTEM/EPRX9.GEO": {
+          "crc32": "5d93e47a",
+          "size": 4088,
+          "sha256": "5270d67d8a0696b63f0813cfba9a9645e14a919add1f9aedef8e7fae8f50c7b1"
+        },
+        "SYSTEM/EPSHI24.GEO": {
+          "crc32": "d84a5762",
+          "size": 5134,
+          "sha256": "822b8d0b93fa31ad082cb85e9c6a69d5479ec43cb41440aac682e2a691365feb"
+        },
+        "SYSTEM/EPSON24.GEO": {
+          "crc32": "89d42a66",
+          "size": 7392,
+          "sha256": "f6f9c7a9d5785ab6599a16f86fbc504b78da22586a6703b74e8a1cc4de3aa9df"
+        },
+        "SYSTEM/EPSON9.GEO": {
+          "crc32": "f8bae995",
+          "size": 11042,
+          "sha256": "10dde9883aeca03225fed7f489a9787bc5336594aba4be1262acd1a1b39f9839"
+        },
+        "SYSTEM/EXTMEM.GEO": {
+          "crc32": "6316b5f7",
+          "size": 1512,
+          "sha256": "12be60508ea70b801dd3ce643b0fd59c50ebd3a908d0a96b5cebf1d94326435c"
+        },
+        "SYSTEM/GENMOUSE.GEO": {
+          "crc32": "6840a742",
+          "size": 1404,
+          "sha256": "5f65b63bccaa78d66f243f3528430765f918bc8f7a2fe5cc2663fff2722ca161"
+        },
+        "SYSTEM/HGC.GEO": {
+          "crc32": "127e38b6",
+          "size": 15330,
+          "sha256": "64130c250d4b6db78d155c7cb1c708bfa4bd79ae058dcb24f2a6978213d79349"
+        },
+        "SYSTEM/IM.GEO": {
+          "crc32": "c1bb581a",
+          "size": 4700,
+          "sha256": "2c6659d292622ff08344c66045269437b75b600eb8ef7dc0db0776bbc1ba747f"
+        },
+        "SYSTEM/KBD.GEO": {
+          "crc32": "40baf76c",
+          "size": 4388,
+          "sha256": "1c4c0dd72352d14719e9c2109928c37777d3dbabfc0783a70afc8d3fc9b0bdd1"
+        },
+        "SYSTEM/KBDN_CF.GEO": {
+          "crc32": "82cb9c55",
+          "size": 4388,
+          "sha256": "1b0d4300db48254beae4bec0432f382f8a0c1c37af3bdddc47d2670218819f5c"
+        },
+        "SYSTEM/KLIB.GEO": {
+          "crc32": "5c63d896",
+          "size": 55382,
+          "sha256": "684c26dc818ecd9cc4e50e15525ba53e6630cc6441eb293711dc4a9a879359bd"
+        },
+        "SYSTEM/LASERJET.GEO": {
+          "crc32": "336ea9b2",
+          "size": 3824,
+          "sha256": "ae65a8d93ef62459d682c36f012982ed2d1ba9b844173acf094e89f1bf060f31"
+        },
+        "SYSTEM/LASERPLS.GEO": {
+          "crc32": "49d2fecc",
+          "size": 4064,
+          "sha256": "6d83204954a84f18183c008d834cb109a45ca591b3107463b7ba4e441a79b98a"
+        },
+        "SYSTEM/LBP.GEO": {
+          "crc32": "af652baf",
+          "size": 3764,
+          "sha256": "541ff44ddb8b16c2a850926a627874b81e6c2544f0b59fc6a51ca758d2e092b2"
+        },
+        "SYSTEM/LOCAL.GEO": {
+          "crc32": "980f5a01",
+          "size": 10854,
+          "sha256": "cfa4e32ba5218dc1292faa2596a210671e5e9fa68eec224ee44ac45be428c3ab"
+        },
+        "SYSTEM/LOGIBUS.GEO": {
+          "crc32": "1a233a71",
+          "size": 1604,
+          "sha256": "859a6567f856ce275d12cc57b21059a2ae1a6acd84699d9d6796f272d4ab336d"
+        },
+        "SYSTEM/LOGISER.GEO": {
+          "crc32": "8ad8a22a",
+          "size": 1786,
+          "sha256": "613520b2b8aa93f4b3dd3939db8c7b88ff43ebc4c46605ea5b1b6383162223da"
+        },
+        "SYSTEM/MCGA.GEO": {
+          "crc32": "c281292e",
+          "size": 14430,
+          "sha256": "1a81912f38ad4fa9c8a79e6cfd392e6c060e566763ed12d3a2d424d9de71294e"
+        },
+        "SYSTEM/MEGA.GEO": {
+          "crc32": "fe5805fa",
+          "size": 18366,
+          "sha256": "895b62fcdb09b54d4ad11e5eaa8c4dd7c663cad434d1ff5f1b85dd58cd5a1bfc"
+        },
+        "SYSTEM/MOTIF.GEO": {
+          "crc32": "acf87fad",
+          "size": 128662,
+          "sha256": "1b251f39179d16c0122843530e865e7db72fc95c6c73afd6bfa3fee2ecb57471"
+        },
+        "SYSTEM/MSBUS.GEO": {
+          "crc32": "aeaf2747",
+          "size": 1404,
+          "sha256": "f8991ad4a8e12692445bcf9d5faaabc2266f297cac90e28c804bc75d59e8d0fe"
+        },
+        "SYSTEM/MSSER.GEO": {
+          "crc32": "82214ddb",
+          "size": 2790,
+          "sha256": "f1d9fbba90dbc87a12d9be1ca06eed5fc116a4dffec5d11ca5a9cfa8955cd035"
+        },
+        "SYSTEM/MSYS.GEO": {
+          "crc32": "af11bcc2",
+          "size": 2674,
+          "sha256": "8c92e92bab5afff5e3418e14b6f3d86c775813cab550c6b4148e013239e05a20"
+        },
+        "SYSTEM/NEC24.GEO": {
+          "crc32": "40634590",
+          "size": 4136,
+          "sha256": "587d1614b3bf309f9c202ae081bc553199512caf4699547b723b42ee51404126"
+        },
+        "SYSTEM/OKI9.GEO": {
+          "crc32": "10626dd8",
+          "size": 3420,
+          "sha256": "8afc7f3673c7ff483f0c2df7ac93408b3376f1156bcea4a00ab253c09db433c6"
+        },
+        "SYSTEM/PARALLEL.GEO": {
+          "crc32": "40fd40f2",
+          "size": 3718,
+          "sha256": "e2571d55c37cb4f850fd3e03b880bbe2e757f16869fbf9ea38b675381af19f78"
+        },
+        "SYSTEM/PROP9.GEO": {
+          "crc32": "3306ccec",
+          "size": 10186,
+          "sha256": "adf7b98db246460826d1bc16549de044905e8d660a40955551f4cb0af3e2f537"
+        },
+        "SYSTEM/PROPX24.GEO": {
+          "crc32": "09ef22f8",
+          "size": 5180,
+          "sha256": "7e42d4f26eab51925e7aaa719e02af97f91715955c4da5432d210d403a3cd3bc"
+        },
+        "SYSTEM/PS.GEO": {
+          "crc32": "0d976e9c",
+          "size": 27672,
+          "sha256": "4651d6dc9751c5ca3b155eb656836c481d0e1d194a3d6e4e5bc611d8a79c2573"
+        },
+        "SYSTEM/PS2.GEO": {
+          "crc32": "748c8518",
+          "size": 1466,
+          "sha256": "1ea0dbaa99c795af4033df9d9099f8f71d8b439bb557e48a5eb2da4f36e88b02"
+        },
+        "SYSTEM/PSCRIPT.GEO": {
+          "crc32": "5b3a7459",
+          "size": 11874,
+          "sha256": "820ba10a56e1c1365cdccd305eb2bc8f30c1cb14e9164c4a5f1d5b83fe9d9cd4"
+        },
+        "SYSTEM/QFORMS/FINDIT.EXE": {
+          "crc32": "d201500b",
+          "size": 3859,
+          "sha256": "04c73abd8e1a9d0e073ac1347a90609ea42d95b2fb61823493b106e9ca62d2e4"
+        },
+        "SYSTEM/QFORMS/PCAOCPIC.VM": {
+          "crc32": "145947c7",
+          "size": 25960,
+          "sha256": "4cacf74a678da8fd33c4d276fdba65af695e02de472ee26c04fc099fead0086b"
+        },
+        "SYSTEM/QFORMS/PCAODB.VM": {
+          "crc32": "4b1b6cb3",
+          "size": 32104,
+          "sha256": "dfe48ead0c0f49473797b7fbe2c5b826963e3efb22ad538b25848840324852a3"
+        },
+        "SYSTEM/QFORMS/PCAOHELP.VM": {
+          "crc32": "a979baf0",
+          "size": 74868,
+          "sha256": "85ab38ec65ebed05148bd8b4bb3efe75cdcb39f361bd3c44e3adcc829ac7b9dc"
+        },
+        "SYSTEM/QFORMS/PCAOVPIC.VM": {
+          "crc32": "e7281396",
+          "size": 134040,
+          "sha256": "89b1f3f87ec0aca50d248748914b018b39bdcbe8ad9238bb13d5c588cb562264"
+        },
+        "SYSTEM/QFORMS/PCGAME.EXE": {
+          "crc32": "f0be5b84",
+          "size": 4058,
+          "sha256": "9323e40ddcc90cb8ba020a26ea76389dfebb8bde4094e8ea578c25d49d1f75bb"
+        },
+        "SYSTEM/QFORMS/SETAOLOC.SET": {
+          "crc32": "0ce2bc2b",
+          "size": 10,
+          "sha256": "441120f222fcd0d93b8b4cea583d39d3924389cb56530659521c00165855364d"
+        },
+        "SYSTEM/QUIETJET.GEO": {
+          "crc32": "f56d79db",
+          "size": 2946,
+          "sha256": "aff311d02cdafe357264498c818e98a72c03fabd76741247594dab87736d3ce8"
+        },
+        "SYSTEM/SERIAL.GEO": {
+          "crc32": "6283194c",
+          "size": 4240,
+          "sha256": "46f163e0ea135ebf2805e1a7cf769d77c17d1e7a16c9a5150a5b2428e00e53e1"
+        },
+        "SYSTEM/SOUND.GEO": {
+          "crc32": "49a68b2b",
+          "size": 1212,
+          "sha256": "6c4edc8d550a7b35e7829b0b04e6383d0b08c1d895e92c8c01120b1dc722dcb6"
+        },
+        "SYSTEM/SPOOL.GEO": {
+          "crc32": "6b15ada0",
+          "size": 43288,
+          "sha256": "fdd9327c1f5288fc1d4d0ad52af002769fbfe1b39be2259d26b46d93e728a03b"
+        },
+        "SYSTEM/STAR9.GEO": {
+          "crc32": "747871ad",
+          "size": 3960,
+          "sha256": "7498eadd377797ff69e129b58eb7d2700edac5536807edef7eadc4cd82724d42"
+        },
+        "SYSTEM/STREAM.GEO": {
+          "crc32": "c417990c",
+          "size": 2410,
+          "sha256": "84b6231dcfb12a4e2a3937c1a2d2258afe236a4fc88b582cc1702a2246edb6bf"
+        },
+        "SYSTEM/SVGA8004.GEO": {
+          "crc32": "cbceee83",
+          "size": 18934,
+          "sha256": "eda4f19766efc1a92777feebd5ddad60444880e1c06284fd71f21bad53ea4d07"
+        },
+        "SYSTEM/SWAP.GEO": {
+          "crc32": "bcc5179d",
+          "size": 1052,
+          "sha256": "04111251c4ad4eb35a2072df98333bb7d9dc2c01dec9fe194cccc482fda67335"
+        },
+        "SYSTEM/T1000.GEO": {
+          "crc32": "cb432040",
+          "size": 4388,
+          "sha256": "87a3ddb1158c8d2b2059683ed7b122af0b96ebad64ca0237bb35aa650118c09c"
+        },
+        "SYSTEM/TOSH24.GEO": {
+          "crc32": "e78e0f48",
+          "size": 3916,
+          "sha256": "e3f48486404505cfe378b42157836e3d22bf5ec4c27f80682acadb56bd669126"
+        },
+        "SYSTEM/UI.GEO": {
+          "crc32": "94b6aebe",
+          "size": 87612,
+          "sha256": "42568c96c7426dedfb0613375e56b3fb0526834033289e648863ce0a72723d7c"
+        },
+        "SYSTEM/VGA.GEO": {
+          "crc32": "fa3d4dae",
+          "size": 17062,
+          "sha256": "aff5147ea000dbbeb5bcc183c13b8f6760c54173fc88beaa48a4e4a8ca45ce66"
+        },
+        "SYSTEM/VIDMEM.GEO": {
+          "crc32": "c859a10f",
+          "size": 11550,
+          "sha256": "e2124b823efa58a13a5e84aebaeffdcd86392bfaf6b651cff4bc2179f59baed1"
+        },
+        "SYSTEM/XMS.GEO": {
+          "crc32": "4115725c",
+          "size": 1476,
+          "sha256": "7cc48ea36711881f520e796dc55e2f3530ca9bb00cf48fc6379c1a8119c0570f"
+        },
+        "WORLD/PCAO.GEO": {
+          "crc32": "665e31b6",
+          "size": 101496,
+          "sha256": "5f2c8fe8534faeff9313f193a2dc74a0550320c7905e619b039a3ea01e738732"
+        },
+        "WORLD/PREFMGR.GEO": {
+          "crc32": "fe0ad8c4",
+          "size": 78988,
+          "sha256": "2afa0ee6df8cddcbcd26079a9009adc85fe67714ea8d0bf9ccb1271c9410b7c5"
+        }
+      }
+    }
+  },
+  "post_install": {
+    "stage": "Native installer finished and GEOS hardware setup reached COM selection",
+    "disk": {
+      "size": 54525952,
+      "sha256": "bb8b76756c4196771b8faa21028c4fbeeb03e1277bc4ce9ae5e9d6f37379be44"
+    },
+    "files_relative_to_c_aol": {
+      "AOL.BAT": {
+        "size": 32,
+        "sha256": "b0f5126f50f8787c0be8e4c6946567935555fc163e53dbdd7a45e7565eff799d"
+      },
+      "AOL.ICO": {
+        "size": 766,
+        "sha256": "b3fb6644b8307a2df2e9baed826ad79bcbaff8b7aad43d42cf0280009497b1ee"
+      },
+      "AOL.PIF": {
+        "size": 545,
+        "sha256": "0f1b72c51e8e5b81bffb5c75c36ca122dd35b195dff96f1c071ed6933b275467"
+      },
+      "FONT/BERKELEY.FNT": {
+        "size": 26427,
+        "sha256": "74ca1b779e6375459c34e625ed8516a305528c9f84a42df8cde99b683f76eca2"
+      },
+      "FONT/BISON.FNT": {
+        "size": 16099,
+        "sha256": "295b7eb1f4340fefd7ddc522e2b57b1e478ef63de47592bf9bc222872d28e0d3"
+      },
+      "FONT/FONTBUF": {
+        "size": 468,
+        "sha256": "2d6fce357a1f600783f8cd6653080ca98916f8b436196265953110244e7c1838"
+      },
+      "FONT/PR_10CPI.FNT": {
+        "size": 4405,
+        "sha256": "622aa7f238b4cf09ad95a395de5a7cf752229a536f7534319fbc7fd601841ca7"
+      },
+      "FONT/UNIVERSI.FNT": {
+        "size": 28242,
+        "sha256": "a6d7a1b02481fb48ac06ab90296cc8107b87908ce3d28fcd8017cc856680767b"
+      },
+      "GEOS.BAT": {
+        "size": 19,
+        "sha256": "81846c82e367918e026b5162c13208663ad04dcbcf8b08422dd1b72e58eab25f"
+      },
+      "GEOS.INI": {
+        "size": 681,
+        "sha256": "6569d9f0a3e9f3d79b76f1185810feec319bbfa7d07b293291fbe774460fab4a"
+      },
+      "GEOS.STR": {
+        "size": 1313,
+        "sha256": "6239c8355b9e6b22ff684eb8975156c954fff9219feb26054b0762d1d2c4b612"
+      },
+      "GEOS_ACT.IVE": {
+        "size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "KERNEL.EXE": {
+        "size": 72720,
+        "sha256": "4f5c35cb363357d8676b676e7dc016fd13031d479fad5233aebfe2a2d151e0b6"
+      },
+      "MAKEBOOT.BAT": {
+        "size": 3391,
+        "sha256": "a503e582cb41375ea5af6ffedbbe71393e437e609c1834d450e856ed569b44a8"
+      },
+      "QEXTRACT.EXE": {
+        "size": 43237,
+        "sha256": "4cae75bc6b6b018ec204cf8043804d41d479e85813aa0d9299aafa79247d8419"
+      },
+      "SETUP.EXE": {
+        "size": 24479,
+        "sha256": "1590abd2421abe0d970a0c008739d28c5cf65cc80fd91435f6471264833e7a36"
+      },
+      "SYSAPPL/SETUP.GEO": {
+        "size": 33608,
+        "sha256": "5795b9338403da4ea4186f6acab740f3abe9bd75206628c6b0876c25782a1b60"
+      },
+      "SYSTEM/ATT6300.GEO": {
+        "size": 14734,
+        "sha256": "9e3420df864b270a0ab93b6ff83fe86d50ef2467e50fde098f42ebff1876233c"
+      },
+      "SYSTEM/CANON48.GEO": {
+        "size": 4138,
+        "sha256": "aa4fbcabf5e33c49741d4cc6a763379818bf5e60bb54d150bc20b65fa153d89a"
+      },
+      "SYSTEM/CGA.GEO": {
+        "size": 15614,
+        "sha256": "1bfa941b7ab2a979665c8610bb670dcf6b3f5303ab6d725d1b0196bb94c38205"
+      },
+      "SYSTEM/CITOH9.GEO": {
+        "size": 4006,
+        "sha256": "39039f03847d2c99f0dec121ed3eb750ade9ed451fceecf2f7845965ba9942ae"
+      },
+      "SYSTEM/CLIPBOAR.000": {
+        "size": 208,
+        "sha256": "da52ae590639e7f63554b5c23cf03722c5f934cb892e341f66c32eeef9f7e11d"
+      },
+      "SYSTEM/DBASE.GEO": {
+        "size": 2930,
+        "sha256": "afbbd0be18ec2ea429df25b76c56a465d827bd3dffef43b42339831a4145a711"
+      },
+      "SYSTEM/DESKJET.GEO": {
+        "size": 3180,
+        "sha256": "122ecc25754519373d7174449b644a9f35d1b47063461d1101756cd3c573fffe"
+      },
+      "SYSTEM/DISK.GEO": {
+        "size": 910,
+        "sha256": "511962b3ff763fd925665693ae3e496460177839b420ae76275239a52d3f917a"
+      },
+      "SYSTEM/DOS2.GEO": {
+        "size": 3356,
+        "sha256": "ad24e01a2051fda5d1ea931321f116c700c52258feb5cbf5fbb70b1047569452"
+      },
+      "SYSTEM/DOS3.GEO": {
+        "size": 3996,
+        "sha256": "1b474bc18ae314a7c67523b31e86b7e7c0d1f3ab98c0fc8b84a8eb54b82311d9"
+      },
+      "SYSTEM/DOS4.GEO": {
+        "size": 3712,
+        "sha256": "ecfd661611e4bb81381259a4b8658e3fd0f31874df589300480eb71413462adf"
+      },
+      "SYSTEM/DOS5.GEO": {
+        "size": 6312,
+        "sha256": "3cc978f604d9f1b1b9db549d09c3a710469527729862b32f4f7ad4ef7d271ed4"
+      },
+      "SYSTEM/DRDOS.GEO": {
+        "size": 3400,
+        "sha256": "f17643faec976d6ddf064e1f0031ca03be19e787a0377c1e511d5e4201092dc5"
+      },
+      "SYSTEM/EGA.GEO": {
+        "size": 17142,
+        "sha256": "8ef74376641064356fbbfadf372e36977b8dcc00b3f29994b0ccc507086283d8"
+      },
+      "SYSTEM/EMM.GEO": {
+        "size": 2084,
+        "sha256": "b5e56571b7dced510a9401a384f7a7bb649142db1f5848b179e2b69df069bfbf"
+      },
+      "SYSTEM/EPMX9.GEO": {
+        "size": 3864,
+        "sha256": "1573862758e642f0d26815105daf6824762a14148101edad8e7a6c99a494b3f9"
+      },
+      "SYSTEM/EPRX9.GEO": {
+        "size": 4088,
+        "sha256": "5270d67d8a0696b63f0813cfba9a9645e14a919add1f9aedef8e7fae8f50c7b1"
+      },
+      "SYSTEM/EPSHI24.GEO": {
+        "size": 5134,
+        "sha256": "822b8d0b93fa31ad082cb85e9c6a69d5479ec43cb41440aac682e2a691365feb"
+      },
+      "SYSTEM/EPSON24.GEO": {
+        "size": 7392,
+        "sha256": "f6f9c7a9d5785ab6599a16f86fbc504b78da22586a6703b74e8a1cc4de3aa9df"
+      },
+      "SYSTEM/EPSON9.GEO": {
+        "size": 11042,
+        "sha256": "10dde9883aeca03225fed7f489a9787bc5336594aba4be1262acd1a1b39f9839"
+      },
+      "SYSTEM/EXTMEM.GEO": {
+        "size": 1512,
+        "sha256": "12be60508ea70b801dd3ce643b0fd59c50ebd3a908d0a96b5cebf1d94326435c"
+      },
+      "SYSTEM/GENMOUSE.GEO": {
+        "size": 1404,
+        "sha256": "5f65b63bccaa78d66f243f3528430765f918bc8f7a2fe5cc2663fff2722ca161"
+      },
+      "SYSTEM/GEOS.LOG": {
+        "size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "SYSTEM/HGC.GEO": {
+        "size": 15330,
+        "sha256": "64130c250d4b6db78d155c7cb1c708bfa4bd79ae058dcb24f2a6978213d79349"
+      },
+      "SYSTEM/IM.GEO": {
+        "size": 4700,
+        "sha256": "2c6659d292622ff08344c66045269437b75b600eb8ef7dc0db0776bbc1ba747f"
+      },
+      "SYSTEM/KBD.GEO": {
+        "size": 4388,
+        "sha256": "1c4c0dd72352d14719e9c2109928c37777d3dbabfc0783a70afc8d3fc9b0bdd1"
+      },
+      "SYSTEM/KBDN_CF.GEO": {
+        "size": 4388,
+        "sha256": "1b0d4300db48254beae4bec0432f382f8a0c1c37af3bdddc47d2670218819f5c"
+      },
+      "SYSTEM/KLIB.GEO": {
+        "size": 55382,
+        "sha256": "684c26dc818ecd9cc4e50e15525ba53e6630cc6441eb293711dc4a9a879359bd"
+      },
+      "SYSTEM/LASERJET.GEO": {
+        "size": 3824,
+        "sha256": "ae65a8d93ef62459d682c36f012982ed2d1ba9b844173acf094e89f1bf060f31"
+      },
+      "SYSTEM/LASERPLS.GEO": {
+        "size": 4064,
+        "sha256": "6d83204954a84f18183c008d834cb109a45ca591b3107463b7ba4e441a79b98a"
+      },
+      "SYSTEM/LBP.GEO": {
+        "size": 3764,
+        "sha256": "541ff44ddb8b16c2a850926a627874b81e6c2544f0b59fc6a51ca758d2e092b2"
+      },
+      "SYSTEM/LOCAL.GEO": {
+        "size": 10854,
+        "sha256": "cfa4e32ba5218dc1292faa2596a210671e5e9fa68eec224ee44ac45be428c3ab"
+      },
+      "SYSTEM/LOGIBUS.GEO": {
+        "size": 1604,
+        "sha256": "859a6567f856ce275d12cc57b21059a2ae1a6acd84699d9d6796f272d4ab336d"
+      },
+      "SYSTEM/LOGISER.GEO": {
+        "size": 1786,
+        "sha256": "613520b2b8aa93f4b3dd3939db8c7b88ff43ebc4c46605ea5b1b6383162223da"
+      },
+      "SYSTEM/MCGA.GEO": {
+        "size": 14430,
+        "sha256": "1a81912f38ad4fa9c8a79e6cfd392e6c060e566763ed12d3a2d424d9de71294e"
+      },
+      "SYSTEM/MEGA.GEO": {
+        "size": 18366,
+        "sha256": "895b62fcdb09b54d4ad11e5eaa8c4dd7c663cad434d1ff5f1b85dd58cd5a1bfc"
+      },
+      "SYSTEM/MOTIF.GEO": {
+        "size": 128662,
+        "sha256": "1b251f39179d16c0122843530e865e7db72fc95c6c73afd6bfa3fee2ecb57471"
+      },
+      "SYSTEM/MSBUS.GEO": {
+        "size": 1404,
+        "sha256": "f8991ad4a8e12692445bcf9d5faaabc2266f297cac90e28c804bc75d59e8d0fe"
+      },
+      "SYSTEM/MSSER.GEO": {
+        "size": 2790,
+        "sha256": "f1d9fbba90dbc87a12d9be1ca06eed5fc116a4dffec5d11ca5a9cfa8955cd035"
+      },
+      "SYSTEM/MSYS.GEO": {
+        "size": 2674,
+        "sha256": "8c92e92bab5afff5e3418e14b6f3d86c775813cab550c6b4148e013239e05a20"
+      },
+      "SYSTEM/NEC24.GEO": {
+        "size": 4136,
+        "sha256": "587d1614b3bf309f9c202ae081bc553199512caf4699547b723b42ee51404126"
+      },
+      "SYSTEM/OKI9.GEO": {
+        "size": 3420,
+        "sha256": "8afc7f3673c7ff483f0c2df7ac93408b3376f1156bcea4a00ab253c09db433c6"
+      },
+      "SYSTEM/PARALLEL.GEO": {
+        "size": 3718,
+        "sha256": "e2571d55c37cb4f850fd3e03b880bbe2e757f16869fbf9ea38b675381af19f78"
+      },
+      "SYSTEM/PROP9.GEO": {
+        "size": 10186,
+        "sha256": "adf7b98db246460826d1bc16549de044905e8d660a40955551f4cb0af3e2f537"
+      },
+      "SYSTEM/PROPX24.GEO": {
+        "size": 5180,
+        "sha256": "7e42d4f26eab51925e7aaa719e02af97f91715955c4da5432d210d403a3cd3bc"
+      },
+      "SYSTEM/PS.GEO": {
+        "size": 27672,
+        "sha256": "4651d6dc9751c5ca3b155eb656836c481d0e1d194a3d6e4e5bc611d8a79c2573"
+      },
+      "SYSTEM/PS2.GEO": {
+        "size": 1466,
+        "sha256": "1ea0dbaa99c795af4033df9d9099f8f71d8b439bb557e48a5eb2da4f36e88b02"
+      },
+      "SYSTEM/PSCRIPT.GEO": {
+        "size": 11874,
+        "sha256": "820ba10a56e1c1365cdccd305eb2bc8f30c1cb14e9164c4a5f1d5b83fe9d9cd4"
+      },
+      "SYSTEM/QFORMS/FINDIT.EXE": {
+        "size": 3859,
+        "sha256": "04c73abd8e1a9d0e073ac1347a90609ea42d95b2fb61823493b106e9ca62d2e4"
+      },
+      "SYSTEM/QFORMS/PCAOCPIC.VM": {
+        "size": 25960,
+        "sha256": "4cacf74a678da8fd33c4d276fdba65af695e02de472ee26c04fc099fead0086b"
+      },
+      "SYSTEM/QFORMS/PCAODB.VM": {
+        "size": 32104,
+        "sha256": "dfe48ead0c0f49473797b7fbe2c5b826963e3efb22ad538b25848840324852a3"
+      },
+      "SYSTEM/QFORMS/PCAOHELP.VM": {
+        "size": 74868,
+        "sha256": "85ab38ec65ebed05148bd8b4bb3efe75cdcb39f361bd3c44e3adcc829ac7b9dc"
+      },
+      "SYSTEM/QFORMS/PCAOVPIC.VM": {
+        "size": 134040,
+        "sha256": "89b1f3f87ec0aca50d248748914b018b39bdcbe8ad9238bb13d5c588cb562264"
+      },
+      "SYSTEM/QFORMS/PCGAME.EXE": {
+        "size": 4058,
+        "sha256": "9323e40ddcc90cb8ba020a26ea76389dfebb8bde4094e8ea578c25d49d1f75bb"
+      },
+      "SYSTEM/QFORMS/SETAOLOC.SET": {
+        "size": 10,
+        "sha256": "441120f222fcd0d93b8b4cea583d39d3924389cb56530659521c00165855364d"
+      },
+      "SYSTEM/QUIETJET.GEO": {
+        "size": 2946,
+        "sha256": "aff311d02cdafe357264498c818e98a72c03fabd76741247594dab87736d3ce8"
+      },
+      "SYSTEM/SERIAL.GEO": {
+        "size": 4240,
+        "sha256": "46f163e0ea135ebf2805e1a7cf769d77c17d1e7a16c9a5150a5b2428e00e53e1"
+      },
+      "SYSTEM/SOUND.GEO": {
+        "size": 1212,
+        "sha256": "6c4edc8d550a7b35e7829b0b04e6383d0b08c1d895e92c8c01120b1dc722dcb6"
+      },
+      "SYSTEM/SPOOL.GEO": {
+        "size": 43288,
+        "sha256": "fdd9327c1f5288fc1d4d0ad52af002769fbfe1b39be2259d26b46d93e728a03b"
+      },
+      "SYSTEM/STAR9.GEO": {
+        "size": 3960,
+        "sha256": "7498eadd377797ff69e129b58eb7d2700edac5536807edef7eadc4cd82724d42"
+      },
+      "SYSTEM/STREAM.GEO": {
+        "size": 2410,
+        "sha256": "84b6231dcfb12a4e2a3937c1a2d2258afe236a4fc88b582cc1702a2246edb6bf"
+      },
+      "SYSTEM/SVGA8004.GEO": {
+        "size": 18934,
+        "sha256": "eda4f19766efc1a92777feebd5ddad60444880e1c06284fd71f21bad53ea4d07"
+      },
+      "SYSTEM/SWAP": {
+        "size": 1,
+        "sha256": "7d8c5da7fd418379048e430b33dc8ffcda739e44326b8a5d647dc0ad81ed2157"
+      },
+      "SYSTEM/SWAP.GEO": {
+        "size": 1052,
+        "sha256": "04111251c4ad4eb35a2072df98333bb7d9dc2c01dec9fe194cccc482fda67335"
+      },
+      "SYSTEM/T1000.GEO": {
+        "size": 4388,
+        "sha256": "87a3ddb1158c8d2b2059683ed7b122af0b96ebad64ca0237bb35aa650118c09c"
+      },
+      "SYSTEM/TOKEN.DB": {
+        "size": 1056,
+        "sha256": "37182679a4c56a95688cfb4dfdb7bb39ba702b095ff8709c59a3bcf48dd49d7b"
+      },
+      "SYSTEM/TOSH24.GEO": {
+        "size": 3916,
+        "sha256": "e3f48486404505cfe378b42157836e3d22bf5ec4c27f80682acadb56bd669126"
+      },
+      "SYSTEM/UI.GEO": {
+        "size": 87612,
+        "sha256": "42568c96c7426dedfb0613375e56b3fb0526834033289e648863ce0a72723d7c"
+      },
+      "SYSTEM/VGA.GEO": {
+        "size": 17062,
+        "sha256": "aff5147ea000dbbeb5bcc183c13b8f6760c54173fc88beaa48a4e4a8ca45ce66"
+      },
+      "SYSTEM/VIDMEM.GEO": {
+        "size": 11550,
+        "sha256": "e2124b823efa58a13a5e84aebaeffdcd86392bfaf6b651cff4bc2179f59baed1"
+      },
+      "SYSTEM/XMS.GEO": {
+        "size": 1476,
+        "sha256": "7cc48ea36711881f520e796dc55e2f3530ca9bb00cf48fc6379c1a8119c0570f"
+      },
+      "WORLD/PCAO.GEO": {
+        "size": 101496,
+        "sha256": "5f2c8fe8534faeff9313f193a2dc74a0550320c7905e619b039a3ea01e738732"
+      },
+      "WORLD/PREFMGR.GEO": {
+        "size": 78988,
+        "sha256": "2afa0ee6df8cddcbcd26079a9009adc85fe67714ea8d0bf9ccb1271c9410b7c5"
+      }
+    },
+    "difference_from_payload": {
+      "new": [
+        "AOL.BAT",
+        "FONT/FONTBUF",
+        "GEOS_ACT.IVE",
+        "SYSTEM/CLIPBOAR.000",
+        "SYSTEM/GEOS.LOG",
+        "SYSTEM/SWAP",
+        "SYSTEM/TOKEN.DB"
+      ],
+      "removed": [],
+      "modified": [
+        "GEOS.INI"
+      ]
+    },
+    "system_file_delta": {
+      "new": [
+        "AUTOEXEC.OLD",
+        "CONFIG.OLD"
+      ],
+      "removed": [],
+      "modified": [
+        "AUTOEXEC.BAT",
+        "CONFIG.SYS"
+      ]
+    }
+  },
+  "offline_controls": {
+    "stage": "DOS save, Desktop shortcut reopen, and isolated alternate kernel control",
+    "disk": {
+      "size": 54525952,
+      "sha256": "c3373094b64d3e9f8f5a9899e85a43321989d9fbdd968b81576386145b98ada7"
+    },
+    "difference_from_post_install": {
+      "new": [
+        "GEOS.NAT",
+        "KERNEL.SAV",
+        "RSXNOTE.TXT"
+      ],
+      "removed": [
+        "GEOS_ACT.IVE",
+        "KERNEL.EXE",
+        "SYSTEM/SWAP"
+      ],
+      "modified": [
+        "FONT/FONTBUF",
+        "GEOS.INI",
+        "SYSTEM/CLIPBOAR.000",
+        "SYSTEM/QFORMS/PCAODB.VM",
+        "SYSTEM/QFORMS/PCAOVPIC.VM",
+        "SYSTEM/TOKEN.DB"
+      ]
+    },
+    "changed_or_new_aol_file_identities": {
+      "FONT/FONTBUF": {
+        "size": 468,
+        "sha256": "a1fbe1e3d4c717b716636b33628f5f631960a9fd96d90f02b3eface72748def8"
+      },
+      "GEOS.INI": {
+        "size": 730,
+        "sha256": "6994d130af0670dd495eceff3316412814d417230d7c9c050ba307448da64f8a"
+      },
+      "GEOS.NAT": {
+        "size": 681,
+        "sha256": "6569d9f0a3e9f3d79b76f1185810feec319bbfa7d07b293291fbe774460fab4a"
+      },
+      "KERNEL.SAV": {
+        "size": 72720,
+        "sha256": "4f5c35cb363357d8676b676e7dc016fd13031d479fad5233aebfe2a2d151e0b6"
+      },
+      "RSXNOTE.TXT": {
+        "size": 35,
+        "sha256": "213531956fea305a2096eca792c46b73871bcdf0061eb3d03283fdc7a058e87b"
+      },
+      "SYSTEM/CLIPBOAR.000": {
+        "size": 304,
+        "sha256": "3a0cfb294087466093cc89bede9651af0ddfcee5457add49d5ae71938b739cef"
+      },
+      "SYSTEM/QFORMS/PCAODB.VM": {
+        "size": 32160,
+        "sha256": "48c3b930aa4c6ad8fddc0cbbe8fedf8442f22572eff6b6a9fd0a8dc6692e7f36"
+      },
+      "SYSTEM/QFORMS/PCAOVPIC.VM": {
+        "size": 134064,
+        "sha256": "13be95e33779f501048ef7551e838d91e60f6994da6f666ccb0280f8032354d4"
+      },
+      "SYSTEM/TOKEN.DB": {
+        "size": 1056,
+        "sha256": "7bd2728aa7197d46eaf6857f2576fa7ec3a1f3319b307fcfec043b5473b33581"
+      }
+    }
+  },
+  "shortcut_probe": {
+    "placement": "C:/AOL/KERNEL.EXE",
+    "disk": {
+      "size": 54525952,
+      "sha256": "01c47be7ea7c97beed7ab4a807943a88c2fd1ece10563a428404c6aa1edf6d64"
+    },
+    "probe": {
+      "size": 4144,
+      "sha256": "837c9691d56fca3c002cb63c0a2760e278764b22a69118ebf57f5c208947ffcc"
+    },
+    "receipt": {
+      "size": 196,
+      "sha256": "55e12e1cacc5c9e50b6596c60f60764d185cc22ddb5f470b395f63aa3186f0f3"
+    },
+    "default_drive": "C:",
+    "dos_current_directory": "C:/DESKMATE",
+    "psp_tail_bytes": 0,
+    "returned_to_desktop_observed_ms": 69556
+  },
+  "restored_offline": {
+    "disk": {
+      "size": 54525952,
+      "sha256": "86ebd863c0e295afe606f5f7ed3e97062b773ff6ac04415ff5b7cea87d5f4da1"
+    },
+    "difference_from_offline_controls": {
+      "new": [
+        "KERNEL.EXE"
+      ],
+      "removed": [
+        "KERNEL.SAV"
+      ],
+      "modified": [
+        "SYSTEM/QFORMS/PCAODB.VM"
+      ]
+    },
+    "restored_kernel": {
+      "size": 72720,
+      "sha256": "4f5c35cb363357d8676b676e7dc016fd13031d479fad5233aebfe2a2d151e0b6"
+    },
+    "address_book_vm": {
+      "path": "AOL/SYSTEM/QFORMS/PCAODB.VM",
+      "before": {
+        "size": 32160,
+        "sha256": "48c3b930aa4c6ad8fddc0cbbe8fedf8442f22572eff6b6a9fd0a8dc6692e7f36"
+      },
+      "after": {
+        "size": 34544,
+        "sha256": "43d839c51e7b33ef1dbab8fcd6f7505fc58061aad6e58bbd5f5f9a4af80e1274"
+      },
+      "ascii_offsets_zero_based": {
+        "RSX Lab Group": 34259,
+        "RSXLabTest": 6782
+      }
+    },
+    "normal_dos_exit_ms": 103652,
+    "independent_fat_walk_compared": [
+      "AOL/RSXNOTE.TXT",
+      "AOL/KERNEL.EXE",
+      "AOL/SYSTEM/QFORMS/PCAODB.VM"
+    ]
+  },
+  "captures": {
+    "ui.evolution.rsx-aol13-installer-path": {
+      "release": "Tandy OEM America Online 1.3",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "session": "session-1",
+      "ms": 56530,
+      "frame": 3944,
+      "bios_mode": 3,
+      "dimensions": [
+        720,
+        400
+      ],
+      "raw_sha256": "3b1c5f36805dc1ee293ce7b99e53489beee1a7cede60622b81c1c29088be9932",
+      "derivative_sha256": "f223cc6357e49f42446a57fe39cc78d4eea0229725eae72b22d5ac2d7125861e",
+      "method": "Held native framebuffer, metadata-free RGB PNG re-encode with identical RGB pixels"
+    },
+    "ui.evolution.rsx-aol13-initial-geos": {
+      "release": "Tandy OEM America Online 1.3",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "session": "session-1",
+      "ms": 147854,
+      "frame": 10319,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "02b003cf68e66bde3922a027a0c46ac4d7c267cd0f12b4c0710b015a964aa567",
+      "derivative_sha256": "74d917f3648ff05a665d64c23063114ec0bbf87f98b6d710481e14a483f10a5d",
+      "method": "Held native framebuffer, metadata-free RGB PNG re-encode with identical RGB pixels"
+    },
+    "ui.evolution.rsx-aol13-missing-kernel-empty": {
+      "release": "DeskMate 03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "session": "session-2",
+      "ms": 233731,
+      "frame": 14663,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "857a6a1d45530b481a8c3813846f0d23b8f956b743264df80a934c5de4b4a3b2",
+      "derivative_sha256": "69c6da1f7dacf9c3769416bdc18d8c4ed19b8bb05dad8a0b54b6b38a7f9ac788",
+      "method": "Held native framebuffer, metadata-free RGB PNG re-encode with identical RGB pixels"
+    },
+    "ui.evolution.rsx-aol13-desktop-tab": {
+      "release": "DeskMate 03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "session": "session-2",
+      "ms": 180354,
+      "frame": 11381,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "a66935e308977358b24ac19365c9fd025ae8ca7266f6cd2d8128b2f466c0c64a",
+      "derivative_sha256": "895e22a15aedcd98dd77087b627cfa73347ad223224bdebbd945bd1df4c044d6",
+      "method": "Held native framebuffer, metadata-free RGB PNG re-encode with identical RGB pixels"
+    },
+    "ui.evolution.rsx-aol13-shortcut-welcome": {
+      "release": "Tandy OEM America Online 1.3",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "session": "session-2",
+      "ms": 189603,
+      "frame": 11947,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "f474baee7a8301a580cb9d5740c554f05e8d52599e995d11c5b524a132a7d58b",
+      "derivative_sha256": "c017a121d070312cf6796a65fe8c13d15ac8830a29a705a7cb4abe2aeb5955b4",
+      "method": "Held native framebuffer, metadata-free RGB PNG re-encode with identical RGB pixels"
+    },
+    "ui.evolution.rsx-aol13-shortcut-note-reopened": {
+      "release": "Tandy OEM America Online 1.3",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "session": "session-2",
+      "ms": 199206,
+      "frame": 12523,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "2d19232cc044b97b478479afc7c17e9c11c6a3ea1d90372bafe67e7f88d71ff2",
+      "derivative_sha256": "c0fe464b1f99cd2db85fe0f518f059f01273516caaa712fdba51f5cf96b42ef5",
+      "method": "Held native framebuffer, metadata-free RGB PNG re-encode with identical RGB pixels"
+    },
+    "ui.evolution.rsx-aol13-aol-mail": {
+      "release": "Tandy OEM America Online 1.3",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "session": "session-2",
+      "ms": 146064,
+      "frame": 9301,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "7a105c97f6c2c42635c74f8fc92777ac9532b44fd48a4025e74b511158ebcd52",
+      "derivative_sha256": "82d7f25a3a0c4e6e57e382d52aa128a6ec713a47423ba327cff5ffe307726eb1",
+      "method": "Held native framebuffer, metadata-free RGB PNG re-encode with identical RGB pixels"
+    },
+    "ui.evolution.rsx-aol13-shortcut-address-reopened": {
+      "release": "Tandy OEM America Online 1.3",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "session": "session-6",
+      "ms": 98715,
+      "frame": 6382,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "3e57a645b81c23378349c1b883c6857b38e7e1745f44f29b63cf7e72d5bc1bf8",
+      "derivative_sha256": "ce6dab6a52d428c687cd9e7a27e2b5b8e13ff0efbf21fa0a52bf657ea4488581",
+      "method": "Held native framebuffer, metadata-free RGB PNG re-encode with identical RGB pixels"
+    }
+  }
+}

@@ -1,5 +1,11 @@
 # Codex research usage ledger
 
+The [RSX AOL 1.3 campaign](../../research/rsx-aol13-20261123.md) recorded
+[startup](20261123-rsx-aol13-startup.json),
+[installation](20261123-rsx-aol13-installed.json), and
+[offline validation](20261123-rsx-aol13-offline.json), followed by
+[completion](20261123-rsx-aol13-completion.json).
+
 The [DeskMate installation reference](../../ecosystem/deskmate-installations.md)
 records [startup](20261121-installation-startup.json),
 [inventory review](20261121-installation-inventory.json), and
