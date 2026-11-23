@@ -1203,7 +1203,7 @@
       "edition": "Alternate generic five ZIPs",
       "version": "03.05.00",
       "target_hardware": "Generic PC",
-      "dos_and_runtime": "Target minimum unverified",
+      "dos_and_runtime": "Tested Tandy 1000 RSX with Tandy MS-DOS 5.00 and internal VGA",
       "distribution_media": [
         {
           "path": "tandy1000/deskmate/dm369dks1.zip",
@@ -1242,7 +1242,7 @@
           "sha256": "c8241c43ce908c544504f7396f06ca9003d4095710a73cdb606ea347fe0bad65"
         }
       ],
-      "installation_or_startup": "Five-disk installation list with separate Thesaurus archive",
+      "installation_or_startup": "Native installer completed with five reconstructed 720 KiB disks, separate Thesaurus companion",
       "principal_applications": [
         "Calendar",
         "Address Book",
@@ -1253,11 +1253,17 @@
         "Telecom",
         "Thesaurus (separate companion)"
       ],
-      "evidence": "inspected",
-      "record": "../research/deskmate-evolution-native-20261121.md#alternate-305-media-comparison",
-      "uncertainties": "Different Desktop, help, and tutorial bytes and no PC-Link. Native installation and Thesaurus integration remain open.",
+      "evidence": "reproduced",
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#alternate-305-installation-media",
+      "uncertainties": "Wider hardware and DOS compatibility remain open.",
       "dates": [],
-      "public_image_ids": []
+      "public_image_ids": [
+        "ui.evolution.305-alt-desktop",
+        "ui.evolution.305-alt-about",
+        "ui.evolution.305-alt-thesaurus"
+      ],
+      "desktop_module_version": "3.69",
+      "native_attempt": "Five-disk installation and hard-disk launch completed. Separate Thesaurus worked in Text after copying its three resources."
     },
     {
       "id": "generic-305-five-raw",
@@ -1291,8 +1297,11 @@
       "uncertainties": "Other DOS and media layouts untested",
       "dates": [],
       "public_image_ids": [
-        "ui.installation-303.desktop-305"
-      ]
+        "ui.installation-303.desktop-305",
+        "ui.evolution.305-raw-desktop",
+        "ui.evolution.305-raw-about"
+      ],
+      "desktop_module_version": "3.68"
     }
   ]
 }

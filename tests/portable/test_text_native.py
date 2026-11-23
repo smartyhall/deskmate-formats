@@ -46,6 +46,15 @@ class TextNativeTest(unittest.TestCase):
         self.assertEqual(early[:5], b'\x01DOC\x00')
         self.assertEqual(early[22:], (FIXTURES / '300-native-atlas.doc').read_bytes())
 
+    def test_alternate_305_thesaurus_substitution(self):
+        doc = text.parse_file(FIXTURES / '305-alternate-thesaurus.doc', include_controls=True)
+        self.assertEqual(doc.text, 'center ')
+        self.assertEqual(doc.pictures, ())
+        self.assertEqual(doc.controls, (
+            text.TextControl(22, 0, b'\x13'),
+            text.TextControl(30, 7, b'\x12'),
+        ))
+
     def test_margin_records_preserve_opaque_payload_and_offsets(self):
         first = bytes.fromhex('03 09 00 00 04')
         second = bytes.fromhex('03 04 1A 03 04')

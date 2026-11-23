@@ -102,6 +102,33 @@ layout has a different Desktop program and omits PC-Link. Both
 alternate layouts preserve the core application binaries.
 [Member-by-member summary and scope](../research/deskmate-evolution-native-20261121.md#alternate-305-media-comparison)
 
+### Comparing the two 3.05 desktops
+
+Both installations use a teal desktop with the Text and Programs
+panels, the illustrated Teach Me icon, four shortcut buttons, and a
+calendar. The alternate five-ZIP installation puts **Hangman** in
+the lower-right shortcut where the five raw disks put **PC-Link**.
+The installed alternate files omit the PC-Link program and supporting
+resources. Both distributions include Hangman and Telecom.
+[Matched RSX comparison](../research/deskmate-305-variants-sl2-20261122.md#desktop-program-and-configuration)
+
+### About dialog
+
+Both installations identify the suite as **03.05.00**. The Desktop's
+File → About dialog identifies its own module as **3.69** on the
+alternate installation and **3.68** on the raw-media control. This
+documents two Desktop builds within the same reported suite release.
+[Module identities and native captures](../research/deskmate-305-variants-sl2-20261122.md#desktop-program-and-configuration)
+
+### Thesaurus in Text
+
+The alternate distribution's separate Thesaurus archive supplied the
+synonym data for Text. With its three resources installed on the hard
+disk, the Edit menu looked up a test word and substituted a selected
+synonym. Teach Me listed the same nine lessons on both layouts, though
+the first introduction screen showed a different sample workspace.
+[Thesaurus procedure and lesson comparison](../research/deskmate-305-variants-sl2-20261122.md#file-operations-and-thesaurus)
+
 ## Machine-specific DeskMate 3
 
 The TL, TL/2, SL/2, 1100 FD, RL and RL-HD, RLX-HD B, and RSX media
@@ -156,10 +183,9 @@ Teach Me lists lessons that can start from the installed desktop.
 
 ## Continuation
 
-1. Test the alternate five-ZIP 3.05 installer, its changed
-   Desktop, and its help files. The nine-ZIP layout is a subsequent
-   disk-order control. Keep the established 3.02, 3.03.01, and 3.05
-   installations for comparison.
+1. Test the nine-ZIP 3.05 layout as a disk-order control. Compare more
+   Help topics and later tutorial pages with the matched installed
+   five-ZIP and five-image controls.
 2. Reproduce SL/2 ROM **MS-DOS** startup on a fresh EEPROM
    baseline, then qualify DeskMate startup. Preserve the successful
    floppy-DOS profile for comparison.
