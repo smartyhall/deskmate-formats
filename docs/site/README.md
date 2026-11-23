@@ -1,7 +1,10 @@
-# Reference-site preparation (generator-independent)
+# Reference-site source map and editorial planning
 
-This directory prepares a future **DeskMate and Tandy reference knowledge base**
-without publishing a website or relocating the authoritative research files.
+The [DeskMate reference website](https://deskmate.retroconnect.org/) is now
+**operational**, using Eleventy, the reviewed page map, and approved native
+screenshots. This directory remains the generator-independent source map and
+editorial workplan, not the generated site root. The reference is growing and
+is **not** a finished comprehensive archive.
 See the [long-term preservation roadmap](../preservation-roadmap.md) for the
 agreed repository boundaries. The present repository remains the incubator for
 core format readers, writers, fixtures, research and workbenches.
@@ -27,7 +30,7 @@ is a dated snapshot. The [compatibility matrix](../compatibility.md) describes
 currently supported implementation boundaries. These three source roles must
 not be silently conflated by a site builder.
 
-## Planned reference navigation
+## Reference navigation and ongoing coverage
 
 1. System architecture and common services.
 2. Built-in applications and their native file formats.
@@ -42,21 +45,16 @@ page map deliberately references existing Markdown rather than copying it into
 a second source tree. When a maintained specification is authored, replace the
 mapped source by review and retain the historical evidence as a dated record.
 
-## Presentation and delivery are later decisions
+## Current presentation and delivery
 
-The **initial theme will be based on
-[BOOTSTRA.386](https://github.com/kristopolous/BOOTSTRA.386)**; a later,
-separately authored theme should use measured DeskMate UI conventions for
-DeskMate/Tandy material. This is a presentation decision, not a dependency of
-the documentation or metadata. The generator, deployment target and repository
-split are not selected. In particular, this directory is **not** a generated
-site root and no build or publishing workflow is enabled.
-
-Before choosing a BOOTSTRA.386 release, assess its Bootstrap compatibility,
-upstream attribution, redistribution terms, keyboard access, reduced-motion,
-contrast and no-JavaScript behavior; do not adopt a visual effect that hides
-the page when scripting is unavailable. Preserve semantic HTML and readable
-fallbacks when introducing the theme.
+The site uses **Eleventy 3**, a root-mounted GitHub Pages custom domain, and
+the **unmodified [BOOTSTRA.386](https://github.com/kristopolous/BOOTSTRA.386)**
+theme with separate site-layout CSS. [Website build and publishing instructions](../../website/README.md)
+describe the Node.js build, approved image manifest, source-map renderer,
+preview/link checks, and deployment workflows. A later DeskMate-derived theme
+remains a separate research/design milestone; keep the current semantic HTML,
+keyboard access, no-JavaScript navigation, contrast, and reduced-motion needs
+under review. The page map remains generator-neutral for future migration.
 
 ## Current safety boundary
 
@@ -78,4 +76,7 @@ From the repository root:
 
 The checker uses only the Python standard library. Portable tests cover the
 page-map contract, duplicate routes, missing files and path containment.
-This step prepares navigation and source ownership; it does not render a site.
+To validate and build the **actual** site, follow the
+[Eleventy website instructions](../../website/README.md): run `npm test`,
+`npm run build`, and the generated-site link audit. GitHub Actions also
+checks the approved image manifest and publication boundary.
