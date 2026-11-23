@@ -55,6 +55,26 @@ def help_database(tail, *, chained=False):
 
 
 class DatabaseTests(unittest.TestCase):
+    def test_native_home_organizer_rows_and_deletion(self):
+        fixtures = Path(__file__).parents[1] / 'fixtures/application-generated'
+        cases = (
+            ('notebook/rsx-two-loans.db', 'notebook/rsx-edited-loan.db', 'DATA',
+             (0x12, 0x11, 0x10), (0x11, 0x10), 0x11, 12, b'HETIC LOAN NOTE CHECKED'),
+            ('collections/rsx-two-items.col', 'collections/rsx-edited-item.col', 'COLLECTION',
+             (0x11, 0x10, 0x12, 0x14, 0x13), (0x11, 0x10, 0x12, 0x13), 0x13, 8,
+             b'ORIGINAL SYNTHETIC ENTRY VERIFIED'),
+        )
+        for initial, edited, name, before_ids, after_ids, edited_id, field, expected in cases:
+            with self.subTest(table=name):
+                before = parse_bytes((fixtures / initial).read_bytes()).table(name)
+                after = parse_bytes((fixtures / edited).read_bytes(), allow_retired=True).table(name)
+                self.assertEqual(tuple(row.record_id for row in before.rows), before_ids)
+                self.assertEqual(tuple(row.record_id for row in after.rows), after_ids)
+                self.assertEqual(after.retired_rows, ())
+                self.assertEqual((after.data_pages, after.index_page), ((4,), 5))
+                self.assertEqual(next(row.fields[field] for row in after.rows
+                                      if row.record_id == edited_id), expected)
+
     def test_native_information_center_uses_explicit_directory_profile(self):
         fixture = Path(__file__).parents[1] / 'fixtures/application-generated/information-center'
         raw = (fixture / 'rsx-native-two-messages.db').read_bytes()

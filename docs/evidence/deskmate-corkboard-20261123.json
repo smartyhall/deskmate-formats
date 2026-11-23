@@ -1,0 +1,1149 @@
+{
+  "schema_version": 1,
+  "issue": 165,
+  "base_commit": "c1e858b0dba1f0982cd5fb79e6274aedfa93fb0a",
+  "sources": {
+    "emulator_source_commit": "855258da966f1594f568350be59e8e1eca082ed1",
+    "emulator_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+    "rom_revision": "908394b690f7da28f47727d9876774fd672c4ed3",
+    "automation_seed": 20261123,
+    "display": "visible",
+    "rsx_stock_disk_sha256": "3085c68955b7fcad648995a40ff30f8f3a799e943710bd43cc0326c69a107fc1",
+    "rsx_stock_cfg_sha256": "ccdfb129802cdee9467c1316ca1cbedeb30a83192d0ffdec7a57fad64d55b8b9",
+    "alt305_stock_disk_sha256": "7e5b7078cca53b511366432ec502a828be681c1b5dc2cfb7761d6c6e009d2eb7",
+    "sl2_eeprom_sha256": "046e81e0948627f831179457fa51c9508f16589c4ac886d222f4fd39b3d25e2f"
+  },
+  "scope": {
+    "offsets": "zero-based inclusive start, exclusive end",
+    "files": "complete content inventory of extracted file entries, excluding directories and FAT metadata",
+    "static_strings": "case-insensitive literal scan of selected extracted files. Media and paths are relative to each reviewed corpus. Packed payloads and ROM sections are outside static scope."
+  },
+  "survey": {
+    "1100fd-oem": {
+      "files_scanned": 133,
+      "named_files": [
+        {
+          "path": "DESK1/DMNOTEPD.ACC",
+          "bytes": 14029,
+          "sha256": "bb6340d3b67ccb9114c264e8f621577ffb090ff7762eaeb9eeb6975543df14fb"
+        }
+      ],
+      "selected_string_hits": [
+        {
+          "path": "DESK1/DMNOTEPD.ACC",
+          "terms": [
+            "CORKBOARD",
+            "DMCORKBD"
+          ]
+        }
+      ]
+    },
+    "personal-ex": {
+      "files_scanned": 69,
+      "named_files": [],
+      "selected_string_hits": []
+    },
+    "generic-300": {
+      "files_scanned": 176,
+      "named_files": [
+        {
+          "path": "DESKMATE/DMNOTEPD.ACC",
+          "bytes": 14321,
+          "sha256": "169401b7021e0f1760197732d4ddfebfa4efbd31123ecb2106ef35fa889f6ad7"
+        }
+      ],
+      "selected_string_hits": [
+        {
+          "path": "DESKMATE/DESKTOP.PDM",
+          "terms": [
+            "CORKBOARD"
+          ]
+        },
+        {
+          "path": "DESKMATE/DMNOTEPD.ACC",
+          "terms": [
+            "CORKBOARD",
+            "DMCORKBD"
+          ]
+        }
+      ]
+    },
+    "generic-302": {
+      "files_scanned": 80,
+      "named_files": [
+        {
+          "path": "dm302dk2/DMNOTEPD.ACC",
+          "bytes": 14321,
+          "sha256": "169401b7021e0f1760197732d4ddfebfa4efbd31123ecb2106ef35fa889f6ad7"
+        }
+      ],
+      "selected_string_hits": [
+        {
+          "path": "dm302dk1/DESKTOP.PDM",
+          "terms": [
+            "CORKBOARD"
+          ]
+        },
+        {
+          "path": "dm302dk2/DMNOTEPD.ACC",
+          "terms": [
+            "CORKBOARD",
+            "DMCORKBD"
+          ]
+        }
+      ]
+    },
+    "generic-303": {
+      "files_scanned": 193,
+      "named_files": [
+        {
+          "path": "DESKMATE/DMNOTEPD.ACC",
+          "bytes": 14029,
+          "sha256": "bb6340d3b67ccb9114c264e8f621577ffb090ff7762eaeb9eeb6975543df14fb"
+        }
+      ],
+      "selected_string_hits": [
+        {
+          "path": "DESKMATE/DESKTOP.PDM",
+          "terms": [
+            "CORKBOARD"
+          ]
+        },
+        {
+          "path": "DESKMATE/DMNOTEPD.ACC",
+          "terms": [
+            "CORKBOARD",
+            "DMCORKBD"
+          ]
+        }
+      ]
+    },
+    "generic-305-five-raw": {
+      "files_scanned": 175,
+      "named_files": [
+        {
+          "path": "DISK3/DMCORKBD",
+          "bytes": 2864,
+          "sha256": "35ea3bc020cf509336e438b06974ec7aea3736f4d0fd3db23a741fa98bd3bb30"
+        },
+        {
+          "path": "DISK3/DMNOTEPD.ACC",
+          "bytes": 14295,
+          "sha256": "74fc7073cb1680fa40a0dbc18c57a263ab1933202a8601f74d191e3606f854d7"
+        }
+      ],
+      "selected_string_hits": [
+        {
+          "path": "DISK2/DESKTOP.CFG",
+          "terms": [
+            "CORKBOARD"
+          ]
+        },
+        {
+          "path": "DISK2/DESKTOP.PDM",
+          "terms": [
+            "CORKBOARD",
+            "INFOCNTR.PDM"
+          ]
+        },
+        {
+          "path": "DISK3/DMNOTEPD.ACC",
+          "terms": [
+            "CORKBOARD",
+            "DMCORKBD"
+          ]
+        }
+      ]
+    },
+    "generic-305-five-zip": {
+      "files_scanned": 228,
+      "named_files": [
+        {
+          "path": "DESKMATE/DMCORKBD",
+          "bytes": 2864,
+          "sha256": "35ea3bc020cf509336e438b06974ec7aea3736f4d0fd3db23a741fa98bd3bb30"
+        },
+        {
+          "path": "DESKMATE/DMNOTEPD.ACC",
+          "bytes": 14295,
+          "sha256": "74fc7073cb1680fa40a0dbc18c57a263ab1933202a8601f74d191e3606f854d7"
+        }
+      ],
+      "selected_string_hits": [
+        {
+          "path": "DESKMATE/DESKTOP.CFG",
+          "terms": [
+            "CORKBOARD"
+          ]
+        },
+        {
+          "path": "DESKMATE/DESKTOP.PDM",
+          "terms": [
+            "CORKBOARD",
+            "INFOCNTR.PDM"
+          ]
+        },
+        {
+          "path": "DESKMATE/DMNOTEPD.ACC",
+          "terms": [
+            "CORKBOARD",
+            "DMCORKBD"
+          ]
+        }
+      ]
+    },
+    "generic-305-nine": {
+      "files_scanned": 240,
+      "named_files": [
+        {
+          "path": "DESKMATE/DMCORKBD",
+          "bytes": 2864,
+          "sha256": "35ea3bc020cf509336e438b06974ec7aea3736f4d0fd3db23a741fa98bd3bb30"
+        },
+        {
+          "path": "DESKMATE/DMNOTEPD.ACC",
+          "bytes": 14295,
+          "sha256": "74fc7073cb1680fa40a0dbc18c57a263ab1933202a8601f74d191e3606f854d7"
+        }
+      ],
+      "selected_string_hits": [
+        {
+          "path": "DESKMATE/DESKTOP.CFG",
+          "terms": [
+            "CORKBOARD"
+          ]
+        },
+        {
+          "path": "DESKMATE/DESKTOP.PDM",
+          "terms": [
+            "CORKBOARD",
+            "INFOCNTR.PDM"
+          ]
+        },
+        {
+          "path": "DESKMATE/DMNOTEPD.ACC",
+          "terms": [
+            "CORKBOARD",
+            "DMCORKBD"
+          ]
+        }
+      ]
+    },
+    "personal-hx": {
+      "files_scanned": 76,
+      "named_files": [
+        {
+          "path": "personal/DMNOTEPD.ACC",
+          "bytes": 13886,
+          "sha256": "0a7e1212331a879c1f8582b36a920ed1ec5d083d227d328580cc07c0affe585c"
+        }
+      ],
+      "selected_string_hits": [
+        {
+          "path": "personal/DMNOTEPD.ACC",
+          "terms": [
+            "NOTE PAD",
+            "DMNOTEPD"
+          ]
+        }
+      ]
+    },
+    "ii-3000": {
+      "files_scanned": 36,
+      "named_files": [],
+      "selected_string_hits": []
+    },
+    "original-1000": {
+      "files_scanned": 67,
+      "named_files": [],
+      "selected_string_hits": []
+    },
+    "personal2-tx": {
+      "files_scanned": 106,
+      "named_files": [
+        {
+          "path": "PDM2-1/DMNOTEPD.ACC",
+          "bytes": 13886,
+          "sha256": "0a7e1212331a879c1f8582b36a920ed1ec5d083d227d328580cc07c0affe585c"
+        }
+      ],
+      "selected_string_hits": [
+        {
+          "path": "PDM2-1/DMNOTEPD.ACC",
+          "terms": [
+            "NOTE PAD",
+            "DMNOTEPD"
+          ]
+        }
+      ]
+    },
+    "rl-304": {
+      "files_scanned": 216,
+      "named_files": [
+        {
+          "path": "DM3/DMCORKBD",
+          "bytes": 2864,
+          "sha256": "35ea3bc020cf509336e438b06974ec7aea3736f4d0fd3db23a741fa98bd3bb30"
+        },
+        {
+          "path": "DM3/DMNOTEPD.ACC",
+          "bytes": 14295,
+          "sha256": "93a5e11ac4b0bd16de50134d0a0165dfe591969bf456fe1b01c8aca6818d3eee"
+        },
+        {
+          "path": "DM3/INFOCNTR.DB",
+          "bytes": 6144,
+          "sha256": "5630520cd4ac67e13d1ac689bd009d5b32c26225ee83634a7d57d73c3228dab7"
+        },
+        {
+          "path": "DM3/INFOCNTR.PDM",
+          "bytes": 50219,
+          "sha256": "8aa47adfc613a446761f0e216fa0bb3257a3a1f4baa507bfc284cbf65913ac58"
+        },
+        {
+          "path": "DM4/NOTEBOOK.DB",
+          "bytes": 6144,
+          "sha256": "3c466380edc13663f61c45b119a8ad4458564f2ff7c9bf29a40c241c680f99fd"
+        },
+        {
+          "path": "DM4/NOTEBOOK.PDM",
+          "bytes": 23117,
+          "sha256": "dd9413591e1a3d948c17e1449712c4083f829b8cdbb92c96fe10ef8a64051493"
+        },
+        {
+          "path": "DM5/COLLECT.PDM",
+          "bytes": 33967,
+          "sha256": "53d56a3dd3d231390a4d78013b335c0b11e38f1d1d107e95dba685728349ac20"
+        }
+      ],
+      "selected_string_hits": [
+        {
+          "path": "DM3/DMNOTEPD.ACC",
+          "terms": [
+            "CORKBOARD",
+            "DMCORKBD"
+          ]
+        },
+        {
+          "path": "DM3/INFOCNTR.PDM",
+          "terms": [
+            "CORKBOARD",
+            "DMCORKBD",
+            "INFOCNTR.PDM"
+          ]
+        },
+        {
+          "path": "DM4/NOTEBOOK.HLP",
+          "terms": [
+            "CORKBOARD",
+            "FINANCIAL NOTEBOOK"
+          ]
+        }
+      ]
+    },
+    "rlx-hdb-30403": {
+      "files_scanned": 10,
+      "named_files": [],
+      "selected_string_hits": []
+    },
+    "rsx-30404": {
+      "files_scanned": 510,
+      "named_files": [
+        {
+          "path": "DESKMATE/COLLECT.PDM",
+          "bytes": 39441,
+          "sha256": "38f16c677f7540097bca18d65fa192312db739c912a08f2774a84a0241302bab"
+        },
+        {
+          "path": "DESKMATE/DMCORKBD",
+          "bytes": 2864,
+          "sha256": "35ea3bc020cf509336e438b06974ec7aea3736f4d0fd3db23a741fa98bd3bb30"
+        },
+        {
+          "path": "DESKMATE/DMNOTEPD.ACC",
+          "bytes": 14295,
+          "sha256": "4699501328b10cb4e0805b4f95a3ed7614ef62a72d45dc90ac998b93dd9a1ce5"
+        },
+        {
+          "path": "DESKMATE/INFOCNTR.DB",
+          "bytes": 6144,
+          "sha256": "5630520cd4ac67e13d1ac689bd009d5b32c26225ee83634a7d57d73c3228dab7"
+        },
+        {
+          "path": "DESKMATE/INFOCNTR.PDM",
+          "bytes": 80181,
+          "sha256": "204da3c6e7e8f55df95f62243e930d04bcb7faadde40b486760486987edd9e79"
+        },
+        {
+          "path": "DESKMATE/NOTEBOOK.DB",
+          "bytes": 6144,
+          "sha256": "3c466380edc13663f61c45b119a8ad4458564f2ff7c9bf29a40c241c680f99fd"
+        },
+        {
+          "path": "DESKMATE/NOTEBOOK.PDM",
+          "bytes": 25389,
+          "sha256": "222e5492e0c4013116d30ecce03a710aa31139597b58458b4960e571c5e11828"
+        }
+      ],
+      "selected_string_hits": [
+        {
+          "path": "DESKMATE/DESKTOP.CFG",
+          "terms": [
+            "CORKBOARD",
+            "INFOCNTR.PDM"
+          ]
+        },
+        {
+          "path": "DESKMATE/DESKTOP.PDM",
+          "terms": [
+            "CORKBOARD",
+            "INFOCNTR.PDM"
+          ]
+        },
+        {
+          "path": "DESKMATE/DMNOTEPD.ACC",
+          "terms": [
+            "CORKBOARD",
+            "DMCORKBD"
+          ]
+        },
+        {
+          "path": "DESKMATE/INFOCNTR.PDM",
+          "terms": [
+            "CORKBOARD",
+            "DMCORKBD",
+            "INFOCNTR.PDM"
+          ]
+        },
+        {
+          "path": "DESKMATE/NOTEBOOK.HLP",
+          "terms": [
+            "CORKBOARD",
+            "FINANCIAL NOTEBOOK"
+          ]
+        },
+        {
+          "path": "DESKTOP.CFG",
+          "terms": [
+            "CORKBOARD",
+            "INFOCNTR.PDM"
+          ]
+        }
+      ]
+    },
+    "sl2-oem": {
+      "files_scanned": 156,
+      "named_files": [
+        {
+          "path": "DM1/DMNOTEPD.ACC",
+          "bytes": 14029,
+          "sha256": "bb6340d3b67ccb9114c264e8f621577ffb090ff7762eaeb9eeb6975543df14fb"
+        }
+      ],
+      "selected_string_hits": [
+        {
+          "path": "DM1/DMNOTEPD.ACC",
+          "terms": [
+            "CORKBOARD",
+            "DMCORKBD"
+          ]
+        }
+      ]
+    },
+    "ii-1000sx": {
+      "files_scanned": 96,
+      "named_files": [],
+      "selected_string_hits": []
+    },
+    "tl-302": {
+      "files_scanned": 133,
+      "named_files": [
+        {
+          "path": "TLDISK3/DMNOTEPD.ACC",
+          "bytes": 14321,
+          "sha256": "169401b7021e0f1760197732d4ddfebfa4efbd31123ecb2106ef35fa889f6ad7"
+        }
+      ],
+      "selected_string_hits": [
+        {
+          "path": "TLDISK2/DESKTOP.CFG",
+          "terms": [
+            "CORKBOARD"
+          ]
+        },
+        {
+          "path": "TLDISK3/DMNOTEPD.ACC",
+          "terms": [
+            "CORKBOARD",
+            "DMCORKBD"
+          ]
+        }
+      ]
+    },
+    "tl2-303": {
+      "files_scanned": 157,
+      "named_files": [
+        {
+          "path": "DISK2/DMNOTEPD.ACC",
+          "bytes": 14029,
+          "sha256": "bb6340d3b67ccb9114c264e8f621577ffb090ff7762eaeb9eeb6975543df14fb"
+        }
+      ],
+      "selected_string_hits": [
+        {
+          "path": "DISK2/DMNOTEPD.ACC",
+          "terms": [
+            "CORKBOARD",
+            "DMCORKBD"
+          ]
+        }
+      ]
+    }
+  },
+  "snapshots": [
+    {
+      "id": "rsx-first",
+      "before": "rsx-stock",
+      "elapsed_emulated_ms": 91310,
+      "disk_sha256": "c9914b404a9446d3e943928decd8743c50831e0f1c836d1b4c938b7a5b6d9378",
+      "before_count": 513,
+      "after_count": 513,
+      "changes": [
+        {
+          "path": "DESKMATE/DESKTOP.CFG",
+          "before": {
+            "size": 1575,
+            "sha256": "6c3937f9cfd6a79cc3d6e4526fa0bdd3c84f2b8cbb79623c44e9bbe966c13abd"
+          },
+          "after": {
+            "size": 1713,
+            "sha256": "db496d914698d6ace085f06b1fca63b4e04e5100bbcd240c1465e162ff49955c"
+          },
+          "changed_pages_1k": [
+            0,
+            1
+          ]
+        },
+        {
+          "path": "DESKMATE/DMCORKBD",
+          "before": {
+            "size": 2864,
+            "sha256": "35ea3bc020cf509336e438b06974ec7aea3736f4d0fd3db23a741fa98bd3bb30"
+          },
+          "after": {
+            "size": 2864,
+            "sha256": "b23d72eeffc9734efdf3e192f424f319f07872e869c8a85dafa6675e2ede7121"
+          },
+          "changed_spans": [
+            [
+              0,
+              1
+            ],
+            [
+              4,
+              45
+            ]
+          ],
+          "changed_pages_1k": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rsx-edit",
+      "before": "rsx-first",
+      "elapsed_emulated_ms": 78791,
+      "disk_sha256": "b9b79d1eee5700a55f761f710bfaaefbf9bff97c75788c04d182b05bddac158f",
+      "before_count": 513,
+      "after_count": 513,
+      "changes": [
+        {
+          "path": "DESKMATE/DESKTOP.CFG",
+          "before": {
+            "size": 1713,
+            "sha256": "db496d914698d6ace085f06b1fca63b4e04e5100bbcd240c1465e162ff49955c"
+          },
+          "after": {
+            "size": 1713,
+            "sha256": "3ce6c3db0acb0a9accb88ffa98dd7c266b8e7f9d2066952d7f73c72e815cb229"
+          },
+          "changed_pages_1k": [
+            0
+          ]
+        },
+        {
+          "path": "DESKMATE/DMCORKBD",
+          "before": {
+            "size": 2864,
+            "sha256": "b23d72eeffc9734efdf3e192f424f319f07872e869c8a85dafa6675e2ede7121"
+          },
+          "after": {
+            "size": 2864,
+            "sha256": "929744deb5f5e8bbe1ab85712a8f4cf15b69e9fdaab87bc09d5a7e472ebb9b32"
+          },
+          "changed_spans": [
+            [
+              0,
+              1
+            ],
+            [
+              23,
+              24
+            ]
+          ],
+          "changed_pages_1k": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rsx-notebook",
+      "before": "rsx-edit",
+      "elapsed_emulated_ms": 107957,
+      "disk_sha256": "8079211626e79fdb0bae4f4d60af15c63df49a1517ac9fe1f7030c4ffcf9ec40",
+      "before_count": 513,
+      "after_count": 513,
+      "changes": [
+        {
+          "path": "DESKMATE/DESKTOP.CFG",
+          "before": {
+            "size": 1713,
+            "sha256": "3ce6c3db0acb0a9accb88ffa98dd7c266b8e7f9d2066952d7f73c72e815cb229"
+          },
+          "after": {
+            "size": 1713,
+            "sha256": "f01514a5e757940d97792c667aff633d841073c9140db77f7235df78440f09da"
+          },
+          "changed_pages_1k": [
+            0
+          ]
+        },
+        {
+          "path": "DESKMATE/NOTEBOOK.DB",
+          "before": {
+            "size": 6144,
+            "sha256": "3c466380edc13663f61c45b119a8ad4458564f2ff7c9bf29a40c241c680f99fd"
+          },
+          "after": {
+            "size": 6144,
+            "sha256": "0cbe213e7f6661232db252350a5ecd8bb86f1cb4c0e1eb08e0c831a1aaf4448e"
+          },
+          "changed_spans": [
+            [
+              1077,
+              1078
+            ],
+            [
+              1087,
+              1088
+            ],
+            [
+              4096,
+              4222
+            ],
+            [
+              5160,
+              5161
+            ],
+            [
+              5162,
+              5163
+            ],
+            [
+              5164,
+              5165
+            ],
+            [
+              5166,
+              5167
+            ],
+            [
+              5168,
+              5169
+            ],
+            [
+              5170,
+              5171
+            ],
+            [
+              5172,
+              5173
+            ],
+            [
+              5176,
+              5177
+            ]
+          ],
+          "changed_pages_1k": [
+            1,
+            4,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rsx-collection",
+      "before": "rsx-notebook",
+      "elapsed_emulated_ms": 130884,
+      "disk_sha256": "937c4f34d7f6beaff2d029fc2f712ebbd3e1cb2aee676396829eef9d9825740f",
+      "before_count": 513,
+      "after_count": 514,
+      "changes": [
+        {
+          "path": "DESKMATE/LABCOLL.COL",
+          "before": null,
+          "after": {
+            "size": 6144,
+            "sha256": "73d5f6cd42df9814298d50a91c79782dbabe08d2e71059e7ae80b9d9bf1c6ffc"
+          },
+          "changed_spans": [
+            [
+              0,
+              6144
+            ]
+          ],
+          "changed_pages_1k": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rsx-revisions",
+      "before": "rsx-collection",
+      "elapsed_emulated_ms": 128194,
+      "disk_sha256": "678de25072dd939c615290ae237cb8380ebf02af7cef22c93994f52fd2daf360",
+      "before_count": 514,
+      "after_count": 514,
+      "changes": [
+        {
+          "path": "DESKMATE/LABCOLL.COL",
+          "before": {
+            "size": 6144,
+            "sha256": "73d5f6cd42df9814298d50a91c79782dbabe08d2e71059e7ae80b9d9bf1c6ffc"
+          },
+          "after": {
+            "size": 6144,
+            "sha256": "6fcf8fe1f5b927454c0b32f3dfcb09121a61da241890fd69892786653e0ae0b4"
+          },
+          "changed_spans": [
+            [
+              1083,
+              1084
+            ],
+            [
+              1093,
+              1094
+            ],
+            [
+              4182,
+              4183
+            ],
+            [
+              4247,
+              4256
+            ],
+            [
+              4257,
+              4288
+            ],
+            [
+              5180,
+              5181
+            ],
+            [
+              5182,
+              5183
+            ],
+            [
+              5184,
+              5185
+            ],
+            [
+              5186,
+              5187
+            ],
+            [
+              5188,
+              5189
+            ]
+          ],
+          "changed_pages_1k": [
+            1,
+            4,
+            5
+          ]
+        },
+        {
+          "path": "DESKMATE/NOTEBOOK.DB",
+          "before": {
+            "size": 6144,
+            "sha256": "0cbe213e7f6661232db252350a5ecd8bb86f1cb4c0e1eb08e0c831a1aaf4448e"
+          },
+          "after": {
+            "size": 6144,
+            "sha256": "102da568503f29ee6552c8d514146a3a2a8701f209393e814ff03a0397bf1d2c"
+          },
+          "changed_spans": [
+            [
+              1077,
+              1078
+            ],
+            [
+              1087,
+              1088
+            ],
+            [
+              4117,
+              4118
+            ],
+            [
+              4176,
+              4184
+            ],
+            [
+              4185,
+              4222
+            ],
+            [
+              5162,
+              5163
+            ],
+            [
+              5164,
+              5165
+            ],
+            [
+              5168,
+              5169
+            ],
+            [
+              5170,
+              5171
+            ],
+            [
+              5172,
+              5173
+            ],
+            [
+              5176,
+              5177
+            ]
+          ],
+          "changed_pages_1k": [
+            1,
+            4,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rsx-clear",
+      "before": "rsx-revisions",
+      "elapsed_emulated_ms": 70488,
+      "disk_sha256": "6e1977e5ac801bb97386ba8d1a85d030c84af26f9dee010e67a0a2625f7cbd6c",
+      "before_count": 514,
+      "after_count": 514,
+      "changes": [
+        {
+          "path": "DESKMATE/DESKTOP.CFG",
+          "before": {
+            "size": 1713,
+            "sha256": "f01514a5e757940d97792c667aff633d841073c9140db77f7235df78440f09da"
+          },
+          "after": {
+            "size": 1672,
+            "sha256": "d8bfd09e1b625b70a9da41168b42add018e5d2a7684a7ec9be441eb2e7ccaac1"
+          },
+          "changed_pages_1k": [
+            0,
+            1
+          ]
+        },
+        {
+          "path": "DESKMATE/DMCORKBD",
+          "before": {
+            "size": 2864,
+            "sha256": "929744deb5f5e8bbe1ab85712a8f4cf15b69e9fdaab87bc09d5a7e472ebb9b32"
+          },
+          "after": {
+            "size": 2864,
+            "sha256": "29a778218dd7f582271ae3d419cad5f411c6a5b06f998523223bd4503348517a"
+          },
+          "changed_spans": [
+            [
+              4,
+              5
+            ]
+          ],
+          "changed_pages_1k": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "alt305",
+      "before": "alt305-stock",
+      "elapsed_emulated_ms": 107172,
+      "disk_sha256": "065ab5a3d898ca8f05bf6e928a4484faccbbc567e225fbe76ce827a455ca601f",
+      "before_count": 230,
+      "after_count": 231,
+      "changes": [
+        {
+          "path": "DESKMATE/CORKBAK",
+          "before": null,
+          "after": {
+            "size": 2864,
+            "sha256": "35ea3bc020cf509336e438b06974ec7aea3736f4d0fd3db23a741fa98bd3bb30"
+          },
+          "changed_spans": [
+            [
+              0,
+              2864
+            ]
+          ],
+          "changed_pages_1k": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "path": "DESKMATE/DESKTOP.CFG",
+          "before": {
+            "size": 1015,
+            "sha256": "647570e042ab4c6bf62b1a6a83aa72cc2beb84da137742e8798858acdfc346e4"
+          },
+          "after": {
+            "size": 1169,
+            "sha256": "c152fdf755fb42b378ac66424765163ded9a11435c7c0035486ad6e1300271d1"
+          },
+          "changed_pages_1k": [
+            0,
+            1
+          ]
+        },
+        {
+          "path": "DESKMATE/DMCORKBD",
+          "before": {
+            "size": 2864,
+            "sha256": "35ea3bc020cf509336e438b06974ec7aea3736f4d0fd3db23a741fa98bd3bb30"
+          },
+          "after": {
+            "size": 2864,
+            "sha256": "e3df48411cb7cd6e1e3c92d81d8b326d904adea9687e7c470b97ab4e5bf96c33"
+          },
+          "changed_spans": [
+            [
+              0,
+              2
+            ],
+            [
+              4,
+              381
+            ]
+          ],
+          "changed_pages_1k": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sl2-disk1",
+      "elapsed_emulated_ms": 57378,
+      "before_disk_sha256": "ad7dd60348c5f734a4eaaacbc2906eff0087e208e5e9e6e987b0626d39af50bc",
+      "disk_sha256": "c0e289ade556b792895dc147de120695042a8cd806d053cf9c70ba1fb6480645",
+      "before_count": 32,
+      "after_count": 33,
+      "changes": [
+        {
+          "path": "DMCORKBD",
+          "before": null,
+          "after": {
+            "size": 2864,
+            "sha256": "b23d72eeffc9734efdf3e192f424f319f07872e869c8a85dafa6675e2ede7121"
+          },
+          "changed_spans": [
+            [
+              0,
+              2864
+            ]
+          ],
+          "changed_pages_1k": [
+            0,
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sl2-disk2",
+      "elapsed_emulated_ms": 57378,
+      "before_disk_sha256": "7d298875b22d0c4cd50d4a05a61492a505e9545a84595295727a8b26200fcc65",
+      "disk_sha256": "7d298875b22d0c4cd50d4a05a61492a505e9545a84595295727a8b26200fcc65",
+      "before_count": 30,
+      "after_count": 30,
+      "changes": []
+    },
+    {
+      "id": "pdm2-dos.dsk",
+      "elapsed_emulated_ms": 172206,
+      "before_disk_sha256": "c21cdefbdce8f1ae8a1edddcba594429b320d57fb5cb3a75af969461022c1dd3",
+      "disk_sha256": "6cf040a3207cc66cb0bdf1568a62155ce85b47cd24e9535121ce4c4cb74edd91",
+      "before_count": 37,
+      "after_count": 39,
+      "changes": [
+        {
+          "path": "DMNOTEPD",
+          "before": null,
+          "after": {
+            "size": 2864,
+            "sha256": "b23d72eeffc9734efdf3e192f424f319f07872e869c8a85dafa6675e2ede7121"
+          },
+          "changed_spans": [
+            [
+              0,
+              2864
+            ]
+          ],
+          "changed_pages_1k": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "path": "MENUDATA.TAN",
+          "before": null,
+          "after": {
+            "size": 1713,
+            "sha256": "c9568e099c7d67e161bbcf5f53ddfcc526ae2ae74f83aa951e9b0d5f82677b0f"
+          },
+          "changed_spans": [
+            [
+              0,
+              1713
+            ]
+          ],
+          "changed_pages_1k": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pdm2-pdm2-1.dsk",
+      "elapsed_emulated_ms": 172206,
+      "before_disk_sha256": "48b932d2a0285452bc98cf628e62383e5393488e112cd11e5649a4d431da6985",
+      "disk_sha256": "48b932d2a0285452bc98cf628e62383e5393488e112cd11e5649a4d431da6985",
+      "before_count": 19,
+      "after_count": 19,
+      "changes": []
+    }
+  ],
+  "captures": {
+    "ui.corkboard-study.personal-note-pad": {
+      "release": "Personal DeskMate 2 01.00.00",
+      "machine": "tandy1000sx",
+      "emulator_version": "7.0",
+      "ms": 139208,
+      "frame": 8337,
+      "bios_mode": 10,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "af4bc76af3c88f410a432f8ed83d8c757cd4857418ef721bdba619bbc8025f9e",
+      "derivative_sha256": "c5892c86f6a2753911b6a21f78b59e7553339fcce8107a21c6bf6e706d15e8ac",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels."
+    },
+    "ui.corkboard-study.corkboard": {
+      "release": "03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 55826,
+      "frame": 3800,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "fb534b8b500a8b808f0ac85c16a80e79cca909c0519019789a2e16d50434a44a",
+      "derivative_sha256": "1e0bd33db1e58de73a2c40f1de26d53ab24ff23395aec647c538c5437dfa4d5a",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels."
+    },
+    "ui.corkboard-study.information-center": {
+      "release": "Information Center 3.61 on 03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 84390,
+      "frame": 5513,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "c3597dfd3d85661152c461bdbdd2d6d4fbed52c6993139fc1f585f5b419eb953",
+      "derivative_sha256": "5db9c9e24cf3e711e096b5cfd945c8d8e1fc4911095bcbeefb90cef85376950e",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels."
+    },
+    "ui.corkboard-study.financial-notebook": {
+      "release": "RSX 03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 71014,
+      "frame": 4712,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "d773c8b4fa5ec24d35bd0bb6c4783f3f6dd6715f9cf740e11c74f577f6395bc4",
+      "derivative_sha256": "417e282117bb9926cb54a89045415a0a1895d3f25ba32788855f31b17da27b04",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels."
+    },
+    "ui.corkboard-study.collections": {
+      "release": "RSX 03.04.04",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 111878,
+      "frame": 7162,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "8716d789cb28c6dbc494af29ae1cd102575025e0b79ccef9640967367681e2e4",
+      "derivative_sha256": "9c8f10d1d829e33fd646e264d462f2f046fe4eca58422b8feffa7c3887a2c79e",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels."
+    },
+    "ui.corkboard-study.sl2-corkboard": {
+      "release": "SL/2 ROM DeskMate with 03.03.01 program disks",
+      "machine": "tandy1000sl2",
+      "emulator_version": "7.0",
+      "ms": 42866,
+      "frame": 2563,
+      "bios_mode": 3,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "c5e1acc28c53250e0fdc9d73ee6b4edcd4715c8b2e29450716c142bee4f51c40",
+      "derivative_sha256": "7047e611dba637178eef781c7b84ca0599cbb2ffb1d1c3dd5740cae24b6a0789",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels."
+    }
+  }
+}

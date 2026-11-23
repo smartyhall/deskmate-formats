@@ -1,5 +1,17 @@
 # Project status — DeskMate formats
 
+## Corkboard and Home Organizer storage — 2026-11-23
+
+[Native Corkboard trials](docs/research/deskmate-corkboard-20261123.md)
+on the RSX, SL/2, and generic 3.05 identify `DMNOTEPD.ACC` as the F10
+accessory and `DMCORKBD` as its persistent text buffer. RSX Information
+Center 3.61 reads and writes the same buffer from its dashboard. Clear
+can leave the prior text recoverable. The separate Financial Notebook
+and Collections applications use the common 1 KiB database framing also
+seen in Information Center's message database and Filer. The campaign
+adds measured read-only inspection, native synthetic fixtures, and
+release-by-release evidence.
+
 ## Alternate 3.05 and SL/2 ROM recovery — 2026-11-22
 
 The [follow-up campaign](docs/research/deskmate-305-variants-sl2-20261122.md)

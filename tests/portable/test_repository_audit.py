@@ -55,6 +55,25 @@ class FixtureAuditTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'excluded evidence/software type'):
             self.audit()
 
+    def test_note_storage_exceptions_are_path_and_digest_specific(self):
+        for name in ('corkboard/rsx-two-lines/DMCORKBD', 'notebook/rsx-two-loans.db',
+                     'collections/rsx-two-items.col'):
+            with self.subTest(name=name):
+                fixture = Path(__file__).resolve().parents[2] / audit_repository.FIXTURE_DIR / name
+                data = fixture.read_bytes()
+                target = self.base / name
+                target.parent.mkdir(parents=True)
+                target.write_bytes(data)
+                self.manifest([self.entry(name, data)])
+                self.assertEqual(self.audit()['application_generated_fixtures_checked'], 1)
+                target.write_bytes(data[:-1] + b'x')
+                with self.assertRaisesRegex(ValueError, 'fixture digest or size mismatch'):
+                    self.audit()
+                self.manifest([self.entry('unreviewed/' + target.name, data)])
+                with self.assertRaisesRegex(ValueError, 'unexpected fixture extension'):
+                    self.audit()
+                target.unlink()
+
     @staticmethod
     def example_site_png():
         def chunk(kind, payload):

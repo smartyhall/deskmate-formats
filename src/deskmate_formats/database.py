@@ -317,7 +317,8 @@ def inspect_help_directory(source):
 def parse_help_bytes(source, *, allow_retired=False, max_pages=MAX_PAGES):
     """Read framed Help tables when covered by the common row and index reader."""
     return _parse_snapshot(_snapshot(source, max_pages), allow_retired, False,
-                           directory_check=_help_directory)
+                           directory_check=_help_directory, allow_chained_indexes=True,
+                           id_limit=0x200)
 
 
 def parse_information_center_bytes(source, *, allow_retired=False, max_pages=MAX_PAGES):
@@ -378,10 +379,10 @@ def _check_header_links(data):
             'invalid_chain', 'unsupported header/directory chains or extent marker', 0x20)
 
 
-def _parse_snapshot(data, allow_retired, allow_legacy_filer_schema, *, directory_check=None):
+def _parse_snapshot(data, allow_retired, allow_legacy_filer_schema, *, directory_check=None,
+                    allow_chained_indexes=False, id_limit=0x80):
     from dataclasses import replace
     tables, marker = _directory(data)
-    help_profile = directory_check is _help_directory
     if directory_check is not None:
         directory_check(data, tables, marker)
     else:
@@ -393,12 +394,11 @@ def _parse_snapshot(data, allow_retired, allow_legacy_filer_schema, *, directory
     for table in tables:
         require(table.index_page not in reserved, 'invalid_index', 'shared index page')
         chain = _chain(data, table.index_page)
-        require(help_profile or len(chain) == 1,
+        require(allow_chained_indexes or len(chain) == 1,
                 'unsupported_layout', 'multiple index pages unsupported', table.index_page * PAGE_SIZE)
         require(reserved.isdisjoint(chain), 'invalid_index', 'shared index page')
         index_chains[table.name] = chain
         reserved.update(chain)
-    id_limit = 0x200 if help_profile else 0x80
     page_owners = set()
     parsed = []
     for table in tables:
