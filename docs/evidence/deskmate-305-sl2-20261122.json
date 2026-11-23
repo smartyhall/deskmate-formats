@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "captures": {
+    "ui.evolution.305-alt-desktop": {
+      "release": "03.05.00",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 794022,
+      "frame": 48290,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "b0125d33a01ff9268e343af33e69dd39c6f34fe20f99c50924d8995f64c83857",
+      "derivative_sha256": "bc3312c47462a1ad8a9ee99093e425999dff3f48d3dd1ebe636f2b1da81c9ab5",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.305-raw-desktop": {
+      "release": "03.05.00",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 43140,
+      "frame": 2861,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "460ccc54d6d259e7e657d8078b18251fe2e03aab696dce8c9d90e244fa985fef",
+      "derivative_sha256": "1bac15b798243c77c9dead0c4e45c21ab3f39de95030c397052c2fa17ddd406b",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.305-alt-about": {
+      "release": "03.05.00",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 810012,
+      "frame": 49248,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "1ba46fcf9ebb7c89c9a3a0eaaa3ba2126194ef00ceea5acd1322a1633bbc5896",
+      "derivative_sha256": "287c13a8bea2a4924972676b61927b643ac1588fb1b1f692884d18cc397e26e2",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.305-raw-about": {
+      "release": "03.05.00",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 45102,
+      "frame": 2979,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "4132f2054980f8ddc63cbda19be490feb607a4b268cf3c660ad592d09d5c725e",
+      "derivative_sha256": "787a4f328d67305f1309e82dc03236f52c31b20b94581f8840a6b4a6c3e2ea2f",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.305-alt-thesaurus": {
+      "release": "03.05.00",
+      "machine": "tandy1000rsx",
+      "emulator_version": "7.0",
+      "ms": 185478,
+      "frame": 12560,
+      "bios_mode": 18,
+      "dimensions": [
+        640,
+        480
+      ],
+      "raw_sha256": "cd56194fad19a819d6a5d5098535c2b2e3d7e5d6e7192de70648f1d297f6a97b",
+      "derivative_sha256": "efbe9f33e520d2f699625ee1a780ed198c200f76763a0a176fccb3b963b56db4",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.sl2-rom-desktop-empty": {
+      "release": null,
+      "machine": "tandy1000sl2",
+      "emulator_version": "7.0",
+      "ms": 35000,
+      "frame": 2092,
+      "bios_mode": 3,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "b2ff69e7e29ec5bd666e4ce968333ff82d8eaae337f168ecb316e5553493189c",
+      "derivative_sha256": "51b53e01a89e8d6f3072a1c5e4f7ecfb18793d3b32bc902c4b1683a9670f7365",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels"
+    },
+    "ui.evolution.sl2-rom-desktop-program-disks": {
+      "release": null,
+      "machine": "tandy1000sl2",
+      "emulator_version": "7.0",
+      "ms": 14000,
+      "frame": 833,
+      "bios_mode": 3,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "f3e6f4fd0df4ede5ebb2c045660a7973d86ae1fb1cdc289f4ade68d6ae322f19",
+      "derivative_sha256": "8b97fad86b3cdfbe1e32c96ba3752cc53939a406c5bae4c905e0bfb6dcc9e479",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels",
+      "source_media_release": "03.03.01, MAME software-list attribution by exact disk hashes"
+    },
+    "ui.evolution.sl2-rom-music": {
+      "release": null,
+      "machine": "tandy1000sl2",
+      "emulator_version": "7.0",
+      "ms": 110576,
+      "frame": 6620,
+      "bios_mode": 3,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "08335af5108f732fd3a110d5d065d834ce04aefb0be0b4b033344a3165f21c94",
+      "derivative_sha256": "78cac27f11ef4175a524666f1e7fe5259c79425acbed1da02ae577d2a19c2e8a",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels",
+      "source_media_release": "03.03.01, MAME software-list attribution by exact disk hashes"
+    },
+    "ui.evolution.rl-kitchen-on-sl2": {
+      "release": null,
+      "machine": "tandy1000sl2",
+      "emulator_version": "7.0",
+      "ms": 102808,
+      "frame": 6155,
+      "bios_mode": 3,
+      "dimensions": [
+        640,
+        200
+      ],
+      "raw_sha256": "1ac47c91627ae3d6297c35df8ecbac0fcf4c900671b84a1bbc75043428ce8820",
+      "derivative_sha256": "56a8bc29485316f0054ba4e6c02dbb91bb04a8da457f07827f58f4c23076fa2c",
+      "method": "Held native 86Box framebuffer, RGB PNG re-encode at original dimensions with identical RGB pixels",
+      "source_media_release": "3.04 RL distribution, run under SL/2 ROM runtime"
+    }
+  }
+}

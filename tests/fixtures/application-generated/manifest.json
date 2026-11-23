@@ -4749,6 +4749,18 @@
       "evidence_class": "Application-generated change to stock empty database",
       "synthetic_data": true,
       "native_saved": true
+    },
+    {
+      "path": "text/305-alternate-thesaurus.doc",
+      "size": 32,
+      "sha256": "f815a81e10ba5470e0cf3a7fd7017bbb50e16da63fd45c72b73fd4135bd9b467",
+      "application": "Tandy DeskMate Text",
+      "version": "03.05.00, alternate five-ZIP installation with the separate Thesaurus companion",
+      "experiment": "2026-11-22 alternate 3.05 Text Thesaurus and Desktop Copy File",
+      "origin": "Native Text substituted center for quick, applied Bold, and saved THESDEMO.DOC. Desktop copied the file to THESCOPY.DOC. Independent FAT16 traversal and 7-Zip agreed on both files.",
+      "expected_content": "The word center followed by one editor-written space, with two format controls, no pictures, and a native formatted header.",
+      "synthetic_data": true,
+      "native_saved": true
     }
   ]
 }

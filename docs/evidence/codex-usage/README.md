@@ -218,3 +218,12 @@ The November 22 RSX OEM recovery recorded
 [the application data and OEM sweep](20261122-rsx-oem-fixtures.json), and
 [safe stop and validation](20261122-rsx-oem-completion.json).
 [Recovery record](../../research/deskmate-rsx-oem-recovery-20261122.md)
+
+The alternate 3.05 and SL/2 OEM campaign recorded
+[startup](20261122-305-sl2-startup.json),
+[alternate installation](20261122-305-sl2-installed.json),
+[matched 3.05 comparison](20261122-305-sl2-comparison.json),
+[SL/2 ROM and EEPROM controls](20261122-305-sl2-rom-control.json),
+[RL CookBook compatibility](20261122-305-sl2-rl.json), and
+[completion](20261122-305-sl2-completion.json).
+[Campaign report](../../research/deskmate-305-variants-sl2-20261122.md)

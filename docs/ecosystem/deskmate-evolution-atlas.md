@@ -17,13 +17,15 @@ from documented to verified, inspected, launched, and reproduced. A
 successful launch on related hardware is evidence for that profile.
 The [capture receipt](../evidence/deskmate-evolution-20261121.json)
 records native dimensions, emulated times, and source-image hashes.
+[Follow-up captures](../evidence/deskmate-305-sl2-20261122.json) cover the
+paired 3.05 desktops, the SL/2 ROM desktop, and the RL CookBook trial.
 
 The early Tandy 1000 association is dated to the **1984 product era**.
 The **1988** catalog and trade coverage document distinct later editions,
-including Professional DeskMate. The **1994** community listing is the
-date of that listing, and supports the DeskMate 3.01 lead. These dates
-describe different events. The release matrix leaves exact release
-dates open where the sources do. [Tandy 1000 context](../history/introduction.md#from-the-first-tandy-1000-to-deskmate-3) · [1988 Radio Shack catalog](https://www.worldradiohistory.com/Archive-Catalogs/Radio-Shack/Radio-Shack-1988.pdf) · [1988 *PC World* coverage](https://vintageapple.org/pcworld/pdf/PC_World_8805_May_1988.pdf) · [1994 program list](http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm_progs.txt)
+including Professional DeskMate. A **1990** review describes using
+DeskMate 3.01 from a four-disk set. A **1994** community listing supplies
+additional program information. These dates describe different events. The release matrix leaves exact release
+dates open where the sources do. [Tandy 1000 context](../history/introduction.md#from-the-first-tandy-1000-to-deskmate-3) · [1988 Radio Shack catalog](https://www.worldradiohistory.com/Archive-Catalogs/Radio-Shack/Radio-Shack-1988.pdf) · [1988 *PC World* coverage](https://vintageapple.org/pcworld/pdf/PC_World_8805_May_1988.pdf) · [1990 *Portable 100* review](https://ftp.whtech.com/club100/doc/p100-9011.pdf) · [1994 program list](http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dm_progs.txt)
 
 ## Original DeskMate and DeskMate II
 
@@ -102,6 +104,33 @@ layout has a different Desktop program and omits PC-Link. Both
 alternate layouts preserve the core application binaries.
 [Member-by-member summary and scope](../research/deskmate-evolution-native-20261121.md#alternate-305-media-comparison)
 
+### Comparing the two 3.05 desktops
+
+Both installations use a teal desktop with the Text and Programs
+panels, the illustrated Teach Me icon, four shortcut buttons, and a
+calendar. The alternate five-ZIP installation puts **Hangman** in
+the lower-right shortcut where the five raw disks put **PC-Link**.
+The installed alternate files omit the PC-Link program and supporting
+resources. Both distributions include Hangman and Telecom.
+[Matched RSX comparison](../research/deskmate-305-variants-sl2-20261122.md#desktop-program-and-configuration)
+
+### About dialog
+
+Both installations identify the suite as **03.05.00**. The Desktop's
+File → About dialog identifies its own module as **3.69** on the
+alternate installation and **3.68** on the raw-media control. This
+documents two Desktop builds within the same reported suite release.
+[Module identities and native captures](../research/deskmate-305-variants-sl2-20261122.md#desktop-program-and-configuration)
+
+### Thesaurus in Text
+
+The alternate distribution's separate Thesaurus archive supplied the
+synonym data for Text. With its three resources installed on the hard
+disk, the Edit menu looked up a test word and substituted a selected
+synonym. Teach Me listed the same nine lessons on both layouts, though
+the first introduction screen showed a different sample workspace.
+[Thesaurus procedure and lesson comparison](../research/deskmate-305-variants-sl2-20261122.md#file-operations-and-thesaurus)
+
 ## Machine-specific DeskMate 3
 
 The TL, TL/2, SL/2, 1100 FD, RL and RL-HD, RLX-HD B, and RSX media
@@ -111,10 +140,39 @@ two-disk procedure on the RLX-HD B. Surviving TL, TL/2, and SL/2
 program disks contain Music and Sound. The earlier RSX audio trial
 used selected OEM modules under generic 3.05. [Tandy Faxbacks 1367](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01367.txt), [1311](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01311.txt), and [1342](http://ftp.oldskool.org/pub/tvdog/tandy1000/faxback/01342.txt) · [RSX audio trial](../research/sound-native-20261118.md)
 
-The SL/2 booted its DOS floppy, and `SETUPSL2` saved the ROM
-startup selection. Two reboot controls then left a blank display.
-This edition remains an inspected distribution with an observed
-startup blocker. [Native SL/2 trial](../research/deskmate-evolution-native-20261121.md#tandy-1000-sl2-startup-blocker)
+### SL/2 ROM desktop
+
+Restoring the factory EEPROM settings in `SETUPSL2` made ROM
+startup reproducible in the pinned SL/2 profile. With the startup
+program set to MS-DOS, the computer reached a DOS 3.30.22 prompt
+with empty floppy drives. With DeskMate selected, the ROM brought
+up a blue-purple desktop with a text-only Teach Me panel. The
+program disks populated the Programs panel and added a Hangman
+shortcut. [Factory initialization and boot controls](../research/deskmate-305-variants-sl2-20261122.md#sl2-rom-startup-on-a-factory-initialized-eeprom)
+
+### SL/2 program disks
+
+Address Book, Calendar, Music, and Sound opened from the original SL/2
+program disk images under the ROM runtime. An empty-drive launch of
+Calendar asked for a disk in A:. MAME identifies the three exact
+program disks as 03.03.01, based on matching SHA-1 identities.
+[Native launch record](../research/deskmate-305-variants-sl2-20261122.md#rom-deskmate-with-and-without-program-media)
+
+### RL CookBook on the SL/2 runtime
+
+The Tandy 1000 RL's Kitchen disk opened CookBook under the
+SL/2 ROM DeskMate runtime after the RL's first program disk was
+inserted. Recipe categories, the servings control, and grocery-list
+navigation were visible. This is a related-machine launch of one
+RL application. [Compatibility trial](../research/deskmate-305-variants-sl2-20261122.md#rl-cookbook-on-the-sl2-runtime)
+
+### RLX-HD B media on a related machine
+
+The RLX B DOS disk booted MS-DOS 5.00 on the RSX, and both compressed
+DeskMate disks were readable there. The compressed disks require an installer environment with the
+necessary launcher. Exact RLX-HD B DeskMate startup remains open. [Related-machine DOS and disk trial](../research/deskmate-305-variants-sl2-20261122.md#rlx-hd-b-dos-and-compressed-media-on-the-rsx)
+
+### RSX OEM desktop
 
 The RSX OEM 03.04.04 Desktop adds an Applications menu, five
 illustrated task tiles, and shortcuts to AOL and Letter Invaders.
@@ -156,13 +214,11 @@ Teach Me lists lessons that can start from the installed desktop.
 
 ## Continuation
 
-1. Test the alternate five-ZIP 3.05 installer, its changed
-   Desktop, and its help files. The nine-ZIP layout is a subsequent
-   disk-order control. Keep the established 3.02, 3.03.01, and 3.05
-   installations for comparison.
-2. Reproduce SL/2 ROM **MS-DOS** startup on a fresh EEPROM
-   baseline, then qualify DeskMate startup. Preserve the successful
-   floppy-DOS profile for comparison.
+1. Test the nine-ZIP 3.05 layout as a disk-order control. Compare more
+   Help topics and later tutorial pages with the matched installed
+   five-ZIP and five-image controls.
+2. Expand the SL/2 application and audio-device tests using the
+   preserved factory-initialized EEPROM seed and original program media.
 3. Locate exact profiles or qualified configurations for the TL,
    TL/2, 1100 FD, RL/RL-HD, and RLX-HD B. The pinned 86Box machine
    table lacks exact profiles for those targets. Confirm the original

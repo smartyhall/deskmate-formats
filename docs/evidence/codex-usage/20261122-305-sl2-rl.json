@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "305-variants-sl2",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions_matched_files": 36,
+    "token_records": 7269,
+    "sessions": 33
+  },
+  "checkpoint": "rl-cookbook",
+  "collected_at": "2026-11-23T01:58:42.871636+00:00",
+  "commit": "59f458736bd9ce653ef770ad6fcdfad725fb7f22",
+  "observation": {
+    "session": "8fccd0132384e29b1e19289b",
+    "measured_at": "2026-11-23T01:58:41.501000+00:00",
+    "kind": "token_count",
+    "model": "gpt-6.2-sol",
+    "effort": "medium",
+    "cumulative": {
+      "input": 75622056,
+      "cached_input": 74758400,
+      "output": 82456,
+      "reasoning_output": 29563,
+      "total": 75704512
+    },
+    "reported_last": {
+      "input": 312436,
+      "cached_input": 311808,
+      "output": 2239,
+      "reasoning_output": 255,
+      "total": 314675
+    },
+    "windows": {
+      "300": {
+        "used_percent": 77.0,
+        "reset_epoch": 1795413869,
+        "status": "observed"
+      },
+      "10080": {
+        "used_percent": 73.0,
+        "reset_epoch": 1795836613,
+        "status": "observed"
+      }
+    },
+    "counter_state": "changed"
+  }
+}

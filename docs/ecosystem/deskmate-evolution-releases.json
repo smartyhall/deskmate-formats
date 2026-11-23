@@ -357,8 +357,8 @@
       "installation_or_startup": "No inspected product media",
       "principal_applications": [],
       "evidence": "reference",
-      "record": null,
-      "uncertainties": "Find an independently identified bundle and program disk",
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#documentary-media-leads",
+      "uncertainties": "Seek standalone Radio Shack product 25-1178 or an identified 3000 HL program disk.",
       "dates": [
         {
           "kind": "catalog-publication-year",
@@ -433,17 +433,22 @@
     {
       "id": "generic-301",
       "family": "DeskMate 3",
-      "edition": "Community-reported 3.01",
-      "version": "3.01 (community listing)",
-      "target_hardware": "PC family, exact hardware unknown",
+      "edition": "Standalone 3.01 described in a contemporary review",
+      "version": "3.01 (contemporary review and community listing)",
+      "target_hardware": "Reported in use on a Tandy 1400 LT; exact hardware requirements unknown",
       "dos_and_runtime": "Unknown",
       "distribution_media": [],
-      "installation_or_startup": "Community listing names SWITCH.EXE, installation unknown",
+      "installation_or_startup": "A November 1990 review describes four 3.5-inch disks and a two-drive floppy startup. The later community listing names SWITCH.EXE.",
       "principal_applications": [],
       "evidence": "reference",
-      "record": null,
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#documentary-media-leads",
       "uncertainties": "Find a complete, independently identified set",
       "dates": [
+        {
+          "kind": "review-publication-year",
+          "year": 1990,
+          "source": "https://ftp.whtech.com/club100/doc/p100-9011.pdf"
+        },
         {
           "kind": "archival-list-publication-year",
           "year": 1994,
@@ -531,7 +536,7 @@
         "Sound"
       ],
       "evidence": "inspected",
-      "record": null,
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#oem-compatibility-follow-up",
       "uncertainties": "Qualify exact TL model and ROM; Faxback 1367",
       "dates": [],
       "public_image_ids": [],
@@ -656,7 +661,7 @@
         "Sound"
       ],
       "evidence": "inspected",
-      "record": null,
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#oem-compatibility-follow-up",
       "uncertainties": "Exact build and ROM dependencies open",
       "dates": [],
       "public_image_ids": [],
@@ -706,9 +711,9 @@
       "id": "sl2-oem",
       "family": "DeskMate 3",
       "edition": "Tandy 1000 SL/2",
-      "version": null,
+      "version": "03.03.01 (MAME software-list identification of the program disks)",
       "target_hardware": "Tandy 1000 SL/2",
-      "dos_and_runtime": "Bundled DOS 3.30.22",
+      "dos_and_runtime": "Bundled floppy and ROM DOS 3.30.22. DeskMate shell starts from SL/2 ROM.",
       "distribution_media": [
         {
           "path": "tandy1000/system/1000SL2D.zip",
@@ -717,7 +722,7 @@
           "sha256": "516cb60ddad983cb1dd9d6ae1b496cdcd19b747d08c7566f52aa43a1e97c17ed"
         }
       ],
-      "installation_or_startup": "DOS floppy and three labelled disks; INSTALL.PDM, desktop startup requires ROM qualification",
+      "installation_or_startup": "Native floppy DOS, ROM DOS, and ROM Desktop boots on the exact SL/2 profile with factory-initialized EEPROM",
       "principal_applications": [
         "Text",
         "Calendar",
@@ -728,14 +733,17 @@
         "Music",
         "Sound"
       ],
-      "evidence": "inspected",
-      "record": "../research/deskmate-evolution-native-20261121.md#tandy-1000-sl2-startup-blocker",
-      "uncertainties": "Exact DeskMate release remains open. Compare ROM MS-DOS mode and fresh EEPROM state before repeating ROM DeskMate.",
+      "evidence": "launched",
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#sl2-rom-startup-on-a-factory-initialized-eeprom",
+      "uncertainties": "Suite version attributed to the exact media by SHA-1 match. Native installer and audio output remain untested.",
       "dates": [],
       "public_image_ids": [
-        "ui.evolution.sl2-setup-options"
+        "ui.evolution.sl2-setup-options",
+        "ui.evolution.sl2-rom-desktop-empty",
+        "ui.evolution.sl2-rom-desktop-program-disks",
+        "ui.evolution.sl2-rom-music"
       ],
-      "native_attempt": "bundled DOS booted; ROM DeskMate startup displayed a blank screen with and without program floppies",
+      "native_attempt": "The repaired configuration boots the ROM Desktop with and without disks. Address Book, Calendar, Music, and Sound opened from the three program disks.",
       "inspected_media_files": [
         {
           "member": "1000SL2D/DM1.IMG",
@@ -812,7 +820,7 @@
         "Worksheet"
       ],
       "evidence": "inspected",
-      "record": null,
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#oem-compatibility-follow-up",
       "uncertainties": "Exact launcher version, target machine and EMS dependencies open",
       "dates": [],
       "public_image_ids": [],
@@ -907,10 +915,12 @@
         "Travel"
       ],
       "evidence": "inspected",
-      "record": null,
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#rl-cookbook-on-the-sl2-runtime",
       "uncertainties": "Qualify exact build, alternate backup and disk fallback; Faxback 1311",
       "dates": [],
-      "public_image_ids": [],
+      "public_image_ids": [
+        "ui.evolution.rl-kitchen-on-sl2"
+      ],
       "inspected_media_files": [
         {
           "member": "MSDOS.DSK",
@@ -969,7 +979,8 @@
         "TOOLSLCT.PDM",
         "TRAVEL.PDM"
       ],
-      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified.",
+      "native_attempt": "KITCHEN.PDM reached CookBook on the SL/2 ROM runtime with the RL Program Disk 1 and Kitchen disk. Exact RL desktop and RL-HD installation remain open."
     },
     {
       "id": "rlx-hdb-30403",
@@ -995,8 +1006,8 @@
       "installation_or_startup": "Two compressed high-density disks",
       "principal_applications": [],
       "evidence": "inspected",
-      "record": null,
-      "uncertainties": "Qualify correct ROM, native decompressor, and disk target; Faxback 1342 The compressed set has client applications that remain to be identified by extraction or native install.",
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#rlx-hd-b-dos-and-compressed-media-on-the-rsx",
+      "uncertainties": "Qualify the B-revision ROM runtime, native decompressor, and RLX-HD B disk controller.",
       "dates": [],
       "public_image_ids": [],
       "inspected_media_files": [
@@ -1014,7 +1025,8 @@
       "disc_program_modules": [
         "INSTALL.PDM"
       ],
-      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
+      "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified.",
+      "native_attempt": "RLX B DOS 5.00 floppy booted on the related RSX. Both compressed DeskMate disks were readable, and DESK was unavailable in the test environment."
     },
     {
       "id": "rlx-hdb-tree",
@@ -1037,7 +1049,7 @@
         "Sound"
       ],
       "evidence": "inspected",
-      "record": null,
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#rlx-hd-b-dos-and-compressed-media-on-the-rsx",
       "uncertainties": "Exact installed lineage and truncated Cobb font; do not infer equality to compressed media",
       "dates": [],
       "public_image_ids": [],
@@ -1054,8 +1066,8 @@
       "installation_or_startup": "Vendor describes five uncompressed disks",
       "principal_applications": [],
       "evidence": "reference",
-      "record": null,
-      "uncertainties": "Identify the complete five-disk set",
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#documentary-media-leads",
+      "uncertainties": "Identify all five uncompressed DeskMate disks for the 25-1452B floppy model.",
       "dates": [],
       "public_image_ids": [],
       "emulator_profile_status": "Exact target profile absent from the pinned 86Box machine table; alternate hardware or emulation still to be qualified."
@@ -1203,7 +1215,7 @@
       "edition": "Alternate generic five ZIPs",
       "version": "03.05.00",
       "target_hardware": "Generic PC",
-      "dos_and_runtime": "Target minimum unverified",
+      "dos_and_runtime": "Tested Tandy 1000 RSX with Tandy MS-DOS 5.00 and internal VGA",
       "distribution_media": [
         {
           "path": "tandy1000/deskmate/dm369dks1.zip",
@@ -1242,7 +1254,7 @@
           "sha256": "c8241c43ce908c544504f7396f06ca9003d4095710a73cdb606ea347fe0bad65"
         }
       ],
-      "installation_or_startup": "Five-disk installation list with separate Thesaurus archive",
+      "installation_or_startup": "Native installer completed with five reconstructed 720 KiB disks, separate Thesaurus companion",
       "principal_applications": [
         "Calendar",
         "Address Book",
@@ -1253,11 +1265,17 @@
         "Telecom",
         "Thesaurus (separate companion)"
       ],
-      "evidence": "inspected",
-      "record": "../research/deskmate-evolution-native-20261121.md#alternate-305-media-comparison",
-      "uncertainties": "Different Desktop, help, and tutorial bytes and no PC-Link. Native installation and Thesaurus integration remain open.",
+      "evidence": "reproduced",
+      "record": "../research/deskmate-305-variants-sl2-20261122.md#alternate-305-installation-media",
+      "uncertainties": "Wider hardware and DOS compatibility remain open.",
       "dates": [],
-      "public_image_ids": []
+      "public_image_ids": [
+        "ui.evolution.305-alt-desktop",
+        "ui.evolution.305-alt-about",
+        "ui.evolution.305-alt-thesaurus"
+      ],
+      "desktop_module_version": "3.69",
+      "native_attempt": "Five-disk installation and hard-disk launch completed. Separate Thesaurus worked in Text after copying its three resources."
     },
     {
       "id": "generic-305-five-raw",
@@ -1291,8 +1309,11 @@
       "uncertainties": "Other DOS and media layouts untested",
       "dates": [],
       "public_image_ids": [
-        "ui.installation-303.desktop-305"
-      ]
+        "ui.installation-303.desktop-305",
+        "ui.evolution.305-raw-desktop",
+        "ui.evolution.305-raw-about"
+      ],
+      "desktop_module_version": "3.68"
     }
   ]
 }
