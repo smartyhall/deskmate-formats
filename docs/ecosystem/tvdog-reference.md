@@ -49,6 +49,8 @@ The table reflects the original media review. The
 [descriptive index review](tvdog-directory-index-review.md) extends the
 [ecosystem catalog](catalog.json) using TVDog's directory descriptions,
 nested member inventories, and executable metadata.
+The [current acquisition gaps](acquisition-gaps.md) incorporate the later
+review of the completed private mirror.
 
 ### Two historical document controls
 

@@ -4,6 +4,10 @@ The [TVDog descriptive index review](../../ecosystem/tvdog-directory-index-revie
 recorded [startup](20261123-tvdog-directory-index-startup.json),
 [reconciliation](20261123-tvdog-directory-index-reconciled.json), and
 [completion](20261123-tvdog-directory-index-completion.json).
+The publication handoff recorded
+[startup](20261123-tvdog-catalog-publication-startup.json),
+[media review](20261123-tvdog-catalog-publication-reviewed.json), and
+[publication checkpoint](20261123-tvdog-catalog-publication-checkpoint.json).
 
 The [RSX AOL 1.3 campaign](../../research/rsx-aol13-20261123.md) recorded
 [startup](20261123-rsx-aol13-startup.json),
