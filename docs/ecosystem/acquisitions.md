@@ -1,5 +1,9 @@
 # Immediate acquisition handoff — next Codex campaign
 
+For current acquisition priorities and edition status, use the
+[prioritized gap list](acquisition-gaps.md). The sections below retain the
+original leads, later transfer receipts, and experiment-specific plans.
+
 The operator supplied two archives in ChatGPT on 2026-11-19. Their
 exact uploaded bytes were hashed here; no transfer to the Windows VM
 is claimed. Acquire the same files by an accessible operator-provided
@@ -184,6 +188,11 @@ rather than substituting an unrelated DOS/Windows edition. No commercial
 media or extracted proprietary font resources belong in Git.
 
 ## Broader commercial software inventory
+
+The [descriptive index review](tvdog-directory-index-review.md)
+reconciles the completed preserved tree with the searchable archive. It
+identifies additional application, companion, and utility packages and
+records the claims still awaiting version or hardware checks.
 
 The operator also identified the parent archive directory as containing
 numerous DeskMate software packages:

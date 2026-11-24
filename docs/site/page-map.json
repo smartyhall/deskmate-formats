@@ -178,6 +178,22 @@
       "source": "docs/ecosystem/README.md"
     },
     {
+      "id": "applications.tvdog-index-review",
+      "slug": "applications/ecosystem/tvdog-index-review",
+      "title": "TVDog descriptive directory index review",
+      "section": "applications",
+      "role": "dated-research",
+      "source": "docs/ecosystem/tvdog-directory-index-review.md"
+    },
+    {
+      "id": "applications.acquisition-gaps",
+      "slug": "applications/ecosystem/acquisition-gaps",
+      "title": "DeskMate acquisition gaps",
+      "section": "applications",
+      "role": "current-guide",
+      "source": "docs/ecosystem/acquisition-gaps.md"
+    },
+    {
       "id": "research.filer",
       "slug": "research/filer",
       "title": "Filer native experiments",

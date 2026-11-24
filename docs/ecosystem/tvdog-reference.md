@@ -45,7 +45,12 @@ Here, acquired means the inspected release archive passed file/member checks. Id
 | DM_Music 1.04 | DM_MUSIC.ZIP | PE file/product version 1.04 | GUI and VB6 dependency statically identified | HDS text output documented |
 | DeskMate SDK 3.03 | Two manual ZIPs, Development Disk 1, Samples and two toolkits | Both PDFs and selected DMDB headers match project pins | Tools inventoried statically | DMDB interfaces and SND research candidates |
 
-The catalog now represents 31 product or toolkit entries. The remaining entries retain their historical identification and media/format statuses in [catalog.json](catalog.json).
+The table reflects the original media review. The
+[descriptive index review](tvdog-directory-index-review.md) extends the
+[ecosystem catalog](catalog.json) using TVDog's directory descriptions,
+nested member inventories, and executable metadata.
+The [current acquisition gaps](acquisition-gaps.md) incorporate the later
+review of the completed private mirror.
 
 ### Two historical document controls
 

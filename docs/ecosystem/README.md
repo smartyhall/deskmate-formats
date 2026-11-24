@@ -6,12 +6,19 @@ files actually left on a DeskMate system, not only those created by the
 bundled applications. The core formats and current Draw/font research
 remain the immediate priorities.
 
-[Machine-readable catalog](catalog.json) records 42 products and toolkits.
+[Machine-readable catalog](catalog.json) records 60 products and toolkits.
 The [TVDog reference library](tvdog-reference.md) links recovered media and
 documents to exact source identities, a release coverage matrix and
 research leads. A catalog listing, a downloadable archive, an acquired
 disk, a verified installation and a decoded native format are distinct
 facts.
+
+The [TVDog descriptive index review](tvdog-directory-index-review.md) maps
+archive filenames to 18 newly cataloged products and utilities and updates
+the media evidence for five existing companions. The
+[acquisition gaps](acquisition-gaps.md) distinguish verified private
+packages, preserved candidates, external sources, and historically
+documented titles still missing verified media.
 
 The [DeskMate installation index](deskmate-installations.md) compares
 preserved system distributions by version. The [illustrated 3.05 guide](deskmate-installation-305.md)
@@ -73,12 +80,13 @@ Catalog PDF text was accessible but page-image requests failed; confirm
 original scans and exact editions during the expanded inventory.
 Archive indexes are acquisition leads, not proof of intact disks.
 
-The first acquisition priorities are Express Publisher, Q&A Write and
-its DMQNAFNT.TXT font-import note, and First Publisher (operator
-archive already supplied). Also investigate Lotus Spreadsheet, FilePro,
-Home Organizer, Business Graphs, Macros, HomeWord II and Quicken.
-Locate the original DM_PROGS.TXT list by Kenneth Udut, DESKMOR.TXT
-developer announcement and other original catalog/listing documents.
+Express Publisher, First Publisher, Q&A Write, HomeWord II, Lotus
+Spreadsheet, filePro, and two Quicken 2.0 builds already have verified
+private media. The next identification priorities are the preserved Home
+Organizer disk sets, Business Graphs, and the Q&A Write demo. Quicken 2.1
+has an external source lead. For additional titles, use Kenneth Udut's
+recovered DM_PROGS.TXT list, Tandy's DESKMOR.TXT developer announcement,
+and other period catalogs. [Prioritized acquisition gaps](acquisition-gaps.md)
 Search beyond Radio Shack: original publishers, trade publications,
 shareware archives, user groups and preservation collections. Track
 negative findings and missing media, without inventing download links

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "status": "expanded-evidence-catalog",
-  "updated": "2026-11-19",
+  "updated": "2026-11-23",
   "scope": "PC/DOS DeskMate ecosystem, principally 3.x; companion, dedicated and runtime applications distinguished from DOS launcher-only programs, other platform variants and unverified candidates",
   "sources": {
     "rs1990": {
@@ -138,6 +138,86 @@
       "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Development-System-3.03/DeskMate-Development-Guide.zip",
       "verification": "Private bytes inspected. Source and member identities in tvdog-reference.json."
     },
+    "tvdog-media-homeword-ii": {
+      "title": "TVDog HomeWord II media",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Homeword-II-for-DeskMate/",
+      "verification": "Private archive and selected member evidence are summarized in acquisition-gaps.md."
+    },
+    "tvdog-media-form-finisher": {
+      "title": "TVDog Form Finisher program",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Form-Finisher/program.zip",
+      "verification": "Private archive and selected member evidence are summarized in acquisition-gaps.md."
+    },
+    "tvdog-media-lotus-spreadsheet": {
+      "title": "TVDog Lotus Spreadsheet for DeskMate disk sets",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Lotus-Spreadsheet-for-DeskMate/",
+      "verification": "Private archive and selected member evidence are summarized in acquisition-gaps.md."
+    },
+    "tvdog-media-filepro": {
+      "title": "TVDog filePro for DeskMate volumes",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/FilePro-for-DeskMate/",
+      "verification": "Private archive and selected member evidence are summarized in acquisition-gaps.md."
+    },
+    "tvdog-media-quicken": {
+      "title": "TVDog Quicken for DeskMate program ZIPs",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Quicken-for-DeskMate/QDM.zip",
+      "verification": "Private archive and selected member evidence are summarized in acquisition-gaps.md."
+    },
+    "tvdog-media-memorymate": {
+      "title": "TVDog MemoryMate for DeskMate program",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Memorymate-for-DeskMate/MEMODM.zip",
+      "verification": "Private archive and selected member evidence are summarized in acquisition-gaps.md."
+    },
+    "tvdog-media-rightwriter": {
+      "title": "TVDog RightWriter 3.2 disk images",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/RightWriter%203.2%20for%20DeskMate%20%285.25%29.7z",
+      "verification": "Private archive and selected member evidence are summarized in acquisition-gaps.md."
+    },
+    "tvdog-media-business-graphs": {
+      "title": "TVDog Business Graphs package",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Business-Graphs/",
+      "verification": "Private archive and selected member evidence are summarized in acquisition-gaps.md."
+    },
+    "tvdog-media-home-organizer": {
+      "title": "TVDog Home Organizer candidate disk sets",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/DeskMate-Home-Organizer/",
+      "verification": "Private archive and selected member evidence are summarized in acquisition-gaps.md."
+    },
+    "tvdog-media-music-studio": {
+      "title": "TVDog Music Studio candidate disk sets",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Music-Studio-3-for-DeskMate/",
+      "verification": "Private archive and selected member evidence are summarized in acquisition-gaps.md."
+    },
+    "tvdog-index-desk": {
+      "title": "TVDog DeskMate descriptive directory index",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/00_index.txt",
+      "verification": "Original bytes checked against the transfer receipt. See tvdog-directory-index-review.md for line locators and package evidence."
+    },
+    "tvdog-index-graphics": {
+      "title": "TVDog graphics descriptive directory index",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/graphics/00_index.txt",
+      "verification": "Original bytes checked against the transfer receipt. See tvdog-directory-index-review.md for line locators and package evidence."
+    },
+    "tvdog-index-sound": {
+      "title": "TVDog sound descriptive directory index",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/00_index.txt",
+      "verification": "Original bytes checked against the transfer receipt. See tvdog-directory-index-review.md for line locators and package evidence."
+    },
+    "tvdog-index-mavis": {
+      "title": "TVDog Mavis Beacon media readme",
+      "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Mavis-Beacon-for-DeskMate/readme.txt",
+      "verification": "Original bytes checked against the transfer receipt. See tvdog-directory-index-review.md for line locators and package evidence."
+    },
+    "rsx-letter-invaders": {
+      "title": "RSX OEM DeskMate application verification",
+      "url": "https://github.com/smartyhall/deskmate-formats/blob/main/docs/research/deskmate-rsx-oem-recovery-20261122.md#other-rsx-applications",
+      "verification": "Native About identifies LI.PDM 1.0 and Kriya Systems. The TVDog standalone archive member matches the RSX member by SHA-256."
+    },
+    "rsx-home-organizer": {
+      "title": "RSX OEM Home Organizer native observation",
+      "url": "https://github.com/smartyhall/deskmate-formats/blob/main/docs/research/deskmate-rsx-oem-recovery-20261122.md#other-rsx-applications",
+      "verification": "The native session reached the Home Organizer selector and opened Collections on the RSX OEM edition."
+    },
     "express-order-guide-1988": {
       "title": "Tandy Express Order Software Buyer's Guide (1988)",
       "url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/documents/expsoft.zip",
@@ -272,138 +352,155 @@
       "title": "HomeWord II",
       "publisher": "Sierra On-Line",
       "category": "word-processing",
-      "relationship": "third-party-dedicated",
-      "evidence_status": "documented",
+      "relationship": "third-party-with-runtime",
+      "evidence_status": "media-identified",
       "source_ids": [
         "rs1990",
         "rs1992",
         "review1989",
-        "express-order-guide-1988"
+        "express-order-guide-1988",
+        "tvdog-media-homeword-ii"
       ],
       "catalog_number": "25-1266",
-      "versions": [],
-      "media_status": "not-yet-verified",
+      "versions": [
+        "1.20"
+      ],
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Identify exact DeskMate-native versions and saved document formats."
+      "notes": "HOMEWORD.PDM identifies Sierra On-Line HomeWord II 1.20 in both the nested disk image and install ZIP. HW2.EXE identifies runtime 03.03.01."
     },
     {
       "id": "form-finisher",
       "title": "DeskMate Form Finisher",
-      "publisher": null,
+      "publisher": "Power Up Software",
       "category": "forms",
-      "relationship": "third-party-or-licensed-title",
-      "evidence_status": "documented",
+      "relationship": "third-party-with-runtime",
+      "evidence_status": "media-identified",
       "source_ids": [
         "rs1990",
-        "rs1992"
+        "rs1992",
+        "tvdog-media-form-finisher"
       ],
       "catalog_number": "25-1295",
-      "versions": [],
-      "media_status": "not-yet-verified",
+      "versions": [
+        "1.01"
+      ],
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Verify publisher and versions; print placement and form records."
+      "notes": "FF.PDM identifies Power Up Software and Form Finisher 1.01. FF.EXE identifies runtime 03.03.01."
     },
     {
       "id": "lotus-spreadsheet",
       "title": "Lotus Spreadsheet for DeskMate",
       "publisher": "Lotus",
       "category": "spreadsheet",
-      "relationship": "third-party-dedicated",
-      "evidence_status": "documented",
+      "relationship": "third-party-with-runtime",
+      "evidence_status": "media-identified",
       "source_ids": [
         "rs1990",
         "rs1992",
-        "review1989"
+        "review1989",
+        "tvdog-media-lotus-spreadsheet"
       ],
       "catalog_number": "25-1283",
-      "versions": [],
-      "media_status": "not-yet-verified",
+      "versions": [
+        "1.0"
+      ],
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Advertised 1-2-3 file compatibility; measure exact variants, charts and clipboard."
+      "notes": "LOTUS-DM.PDM identifies release 1.0. LOTUS-DM.EXE identifies Lotus Development and runtime 03.03.01. The second disk includes graph and translation modules."
     },
     {
       "id": "filepro",
       "title": "FilePro for DeskMate",
-      "publisher": null,
+      "publisher": "The Small Computer Company",
       "category": "database",
-      "relationship": "third-party-or-licensed-title",
-      "evidence_status": "documented",
+      "relationship": "third-party-with-runtime",
+      "evidence_status": "media-identified",
       "source_ids": [
-        "rs1992"
+        "rs1992",
+        "tvdog-media-filepro"
       ],
       "catalog_number": "25-1334",
       "versions": [],
-      "media_status": "not-yet-verified",
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Investigate database structure and advertised mail merge with Text and Q&A Write."
+      "notes": "FILEPRO.PDM identifies filePro for DeskMate and The Small Computer Company. FILEPRO.EXE identifies runtime 03.03.01. Product version and Professional edition equivalence remain open."
     },
     {
       "id": "quicken",
       "title": "Quicken for DeskMate",
       "publisher": "Intuit",
       "category": "finance",
-      "relationship": "third-party-dedicated",
-      "evidence_status": "documented",
+      "relationship": "third-party-with-runtime",
+      "evidence_status": "media-identified",
       "source_ids": [
         "rs1990",
         "quicken",
-        "express-order-guide-1988"
+        "express-order-guide-1988",
+        "tvdog-media-quicken"
       ],
       "catalog_number": "25-1246",
       "versions": [
-        "2.0",
-        "2.1"
+        "2.0 Release 3",
+        "2.0 Release 4"
       ],
-      "media_status": "archive-listing-located",
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Archive listings for versions 2.0 and 2.1; acquire privately and distinguish from DOS/Windows editions."
+      "notes": "QDM.zip and quicken2.zip share the 03.02.00 launcher. Their Q.PDM members identify 2.0 Release 3 and Release 4 respectively. WinWorld lists 2.1, whose identity remains unverified locally."
     },
     {
       "id": "memorymate",
       "title": "MemoryMate for DeskMate",
       "publisher": "Broderbund Software",
       "category": "information-management",
-      "relationship": "advertised-deskmate-interface",
-      "evidence_status": "documented",
+      "relationship": "native-deskmate-application",
+      "evidence_status": "media-identified",
       "source_ids": [
         "rs1990",
-        "express-order-guide-1988"
+        "express-order-guide-1988",
+        "tvdog-media-memorymate"
       ],
       "catalog_number": "25-1247",
-      "versions": [],
-      "media_status": "not-yet-verified",
+      "versions": [
+        "1.0"
+      ],
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Express Order guide page 10 displays the DeskMate logo beside retail number 25-1247. The program and exact runtime remain unverified."
+      "notes": "MEMODM.PDM identifies DeskMate version 1.0 and names Broderbund as publisher. Its credits name Precept and Jim Bean."
     },
     {
       "id": "rightwriter",
       "title": "RightWriter",
-      "publisher": null,
+      "publisher": "RightSoft",
       "category": "writing-assistance",
-      "relationship": "third-party-or-licensed-title",
-      "evidence_status": "documented",
+      "relationship": "native-deskmate-application",
+      "evidence_status": "media-identified",
       "source_ids": [
-        "rs1992"
+        "rs1992",
+        "tvdog-media-rightwriter"
       ],
       "catalog_number": "25-1300",
-      "versions": [],
-      "media_status": "not-yet-verified",
+      "versions": [
+        "3.2"
+      ],
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Verify exact edition and generated files."
+      "notes": "RIGHT.PDM inside the disk-image set identifies RightSoft and version 3.2, April 1989."
     },
     {
       "id": "home-lawyer",
@@ -449,15 +546,16 @@
       "relationship": "companion",
       "evidence_status": "documented",
       "source_ids": [
-        "rs1992"
+        "rs1992",
+        "tvdog-index-desk"
       ],
       "catalog_number": "25-1366",
       "versions": [],
-      "media_status": "not-yet-verified",
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Companion; investigate local financial file types."
+      "notes": "TVDog identifies pfa.zip as Personal Financial Assistant. The inventory includes PFA.SML, PFADAT.SML, and PFAHLP.SML. The link between the archive edition and printed SKU remains open."
     },
     {
       "id": "business-graphs",
@@ -467,15 +565,16 @@
       "relationship": "companion",
       "evidence_status": "documented",
       "source_ids": [
-        "rs1992"
+        "rs1992",
+        "tvdog-media-business-graphs"
       ],
       "catalog_number": "25-1363",
       "versions": [],
-      "media_status": "not-yet-verified",
+      "media_status": "private-archive-verified-edition-pending",
       "installation_status": "not-tested-in-demonstrator",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Chart data and graphics interchange priority."
+      "notes": "TVDog preserves graphs.zip and grafnote.zip. The program ZIP has INSTALL.PDM and SML payloads. Verify the payload title, version, and runtime."
     },
     {
       "id": "outliner",
@@ -485,15 +584,16 @@
       "relationship": "companion",
       "evidence_status": "documented",
       "source_ids": [
-        "rs1992"
+        "rs1992",
+        "tvdog-index-desk"
       ],
       "catalog_number": "25-1364",
       "versions": [],
-      "media_status": "not-yet-verified",
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Hierarchy and export formats."
+      "notes": "TVDog identifies outliner.zip and a separate notes PDF. The package contains OUTLIN88.SML and OUTLIN89.SML. Runtime differences and export formats remain open."
     },
     {
       "id": "thesaurus",
@@ -503,15 +603,16 @@
       "relationship": "companion",
       "evidence_status": "documented",
       "source_ids": [
-        "rs1992"
+        "rs1992",
+        "tvdog-index-desk"
       ],
       "catalog_number": "25-1365",
       "versions": [],
-      "media_status": "not-yet-verified",
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Dictionary resources and Text integration."
+      "notes": "TVDog identifies thes.zip and a separate manual. The archive contains DICT.SYN, DMTHES.RES, and THES.RES."
     },
     {
       "id": "macros",
@@ -521,15 +622,16 @@
       "relationship": "companion",
       "evidence_status": "documented",
       "source_ids": [
-        "rs1992"
+        "rs1992",
+        "tvdog-index-desk"
       ],
       "catalog_number": "25-1361",
       "versions": [],
-      "media_status": "not-yet-verified",
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested-in-demonstrator",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Potential native keystroke/mouse automation and macro data formats."
+      "notes": "TVDog identifies macros.zip as the Macro Companion. Its members include DMMACRO.ACC, DMMACRO.RES, and DMMACRO.HLP."
     },
     {
       "id": "home-organizer",
@@ -539,15 +641,17 @@
       "relationship": "companion",
       "evidence_status": "documented",
       "source_ids": [
-        "rs1992"
+        "rs1992",
+        "tvdog-media-home-organizer",
+        "rsx-home-organizer"
       ],
       "catalog_number": "25-1370",
       "versions": [],
-      "media_status": "not-yet-verified",
-      "installation_status": "not-tested-in-demonstrator",
+      "media_status": "private-archive-verified-edition-pending",
+      "installation_status": "oem-rsx-native-observed-retail-untested",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Inventory all 15 advertised modules and dataset types; use synthetic household examples."
+      "notes": "The three preserved disk sets share an identical TOOLSLCT.PDM. Retail SKU and completeness remain open. The separate RSX OEM edition was observed opening the selector and Collections."
     },
     {
       "id": "print-magic",
@@ -614,15 +718,16 @@
       "source_ids": [
         "legacy",
         "tvdog",
-        "express-order-guide-1988"
+        "express-order-guide-1988",
+        "tvdog-media-music-studio"
       ],
       "catalog_number": null,
       "versions": [],
-      "media_status": "not-yet-verified",
+      "media_status": "private-archive-verified-edition-pending",
       "installation_status": "not-tested-in-demonstrator",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Check DeskMate-specific edition and song/instrument formats."
+      "notes": "Two preserved program ZIPs and a manual ZIP are cataloged by TVDog. Disk 1 includes MSTUDIO.PDM and MUSIC.EXE. Exact product and version attribution remain open."
     },
     {
       "id": "typing-tutor",
@@ -848,15 +953,16 @@
       "relationship": "tandy-companion",
       "evidence_status": "documented",
       "source_ids": [
-        "express-order-guide-1988"
+        "express-order-guide-1988",
+        "tvdog-index-desk"
       ],
       "catalog_number": "25-1251",
       "versions": [],
-      "media_status": "not-yet-verified",
+      "media_status": "private-archive-hash-verified",
       "installation_status": "not-tested",
       "format_status": "not-inventoried",
       "formats": [],
-      "notes": "Page 9. Requires the retail DeskMate package at each station. The guide describes RS-232 plus TandyLink and 3Com group configurations."
+      "notes": "The 1988 guide describes RS-232, TandyLink, and 3Com configurations. TVDog preserves deskwork.zip with WGSETUP.PDM and networking modules. The companion notes specify DeskMate 3.02+ and DOS 3.2+."
     },
     {
       "id": "schoolmate",
@@ -1037,6 +1143,373 @@
       "format_status": "not-inventoried",
       "formats": [],
       "notes": "Pages 11 and 29 display the DeskMate logo. The latter describes the DeskMate interface explicitly. Planned availability 1988-10-30."
+    },
+    {
+      "id": "deskhelp",
+      "title": "DeskHelp",
+      "publisher": "Atmospheres",
+      "category": "utility",
+      "relationship": "early-deskmate-companion",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-desk"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "1.00.00 (demo)"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "DH-DEMO.EXE names Atmospheres and credits Bobby Ballard. TVDog describes compatibility with DeskMate 1 and II and excludes Personal DeskMate and DeskMate 3."
+    },
+    {
+      "id": "disk-info",
+      "title": "Disk Info",
+      "publisher": "Bob Jack Software",
+      "category": "utility",
+      "relationship": "native-deskmate-application",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-desk"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "3.01"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "DISKINFO.PDM identifies the program version and publisher. TVDog describes boot-sector inspection and excludes RAM disks."
+    },
+    {
+      "id": "kaleidocubes",
+      "title": "Kaleidocubes",
+      "publisher": null,
+      "category": "game",
+      "relationship": "native-deskmate-application",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-desk"
+      ],
+      "catalog_number": null,
+      "versions": [],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [
+        "KUB"
+      ],
+      "notes": "KUBES.PDM matches the RSX and RLX HD-B copies by SHA-256. The KUB files and KUBES.HLP await format and behavior tests."
+    },
+    {
+      "id": "letter-invaders",
+      "title": "Letter Invaders",
+      "publisher": "Kriya Systems",
+      "category": "education",
+      "relationship": "native-deskmate-application",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-desk",
+        "rsx-letter-invaders"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "1.0"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "oem-rsx-native-about-observed",
+      "format_status": "resource-inventory",
+      "formats": [
+        "WRD"
+      ],
+      "notes": "LI.PDM matches the preserved RSX and RLX HD-B copies. The prior RSX investigation reached About and the play instructions. Udut also associates the game with Typing Tutor IV, whose distribution remains unverified."
+    },
+    {
+      "id": "pocket-watch",
+      "title": "Pocket Watch",
+      "publisher": "Bob Jack Software",
+      "category": "utility",
+      "relationship": "native-deskmate-and-bundled-runtime",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-desk"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "3.1"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "POCKET.PDM identifies version 3.1. POCKET.DOC describes DeskMate 3 and standalone modes. The nested POCKET.EXE banner identifies runtime 03.03.01."
+    },
+    {
+      "id": "recipe-sharing",
+      "title": "Recipe Sharing for Home Organizer",
+      "publisher": null,
+      "category": "utility",
+      "relationship": "deskmate-companion-utility",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-desk"
+      ],
+      "catalog_number": null,
+      "versions": [],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "TVDog specifies Home Organizer. The archived RCPSHARE.PDM differs from the common RSX and RLX HD-B member. Edition and feature equivalence remain open."
+    },
+    {
+      "id": "fil2dbf",
+      "title": "Fil2dbf",
+      "publisher": "Jeffrey L. Hayes",
+      "category": "format-conversion",
+      "relationship": "native-deskmate-and-bundled-runtime",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-desk"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "0.1"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [
+        "DBF"
+      ],
+      "notes": "FIL2DBF.TXT documents DeskMate 3 database export to dBASE III/IV. The second archive provides a DOS runtime."
+    },
+    {
+      "id": "dbrepair",
+      "title": "DBrepair",
+      "publisher": "Tandy (package documentation attribution)",
+      "category": "utility",
+      "relationship": "deskmate-recovery-utility",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-desk"
+      ],
+      "catalog_number": null,
+      "versions": [],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "DBREPAIR.PDM matches the copy bundled with Fil2dbf. Its documentation specifies DeskMate 3.0 or later."
+    },
+    {
+      "id": "early-filer-ascii",
+      "title": "Filer ASCII conversion utility",
+      "publisher": null,
+      "category": "format-conversion",
+      "relationship": "external-deskmate-format-utility",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-desk"
+      ],
+      "catalog_number": null,
+      "versions": [],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "FILER.BAS and FILER.DOC describe two-way conversion between early Filer databases and delimited text. TVDog excludes DeskMate 3."
+    },
+    {
+      "id": "hmw2txt",
+      "title": "Hmw2txt",
+      "publisher": null,
+      "category": "format-conversion",
+      "relationship": "external-deskmate-format-utility",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-desk"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "0.1"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [
+        "HMW"
+      ],
+      "notes": "The package readme and C source identify a command-line converter from Sierra HomeWord for DeskMate to plain text."
+    },
+    {
+      "id": "prn2file",
+      "title": "Prn2file",
+      "publisher": "Jeffrey L. Hayes",
+      "category": "format-conversion",
+      "relationship": "external-deskmate-format-utility",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-desk"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "2"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "PRN2FILE.TXT identifies version 2. The DOS executable and C source convert DeskMate print-to-file report output to text."
+    },
+    {
+      "id": "backupdm",
+      "title": "BackupDM",
+      "publisher": null,
+      "category": "backup",
+      "relationship": "dos-companion-script",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-desk"
+      ],
+      "catalog_number": null,
+      "versions": [],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "The batch file and menu helper back up selected types of DeskMate data to floppy from a fixed installation path."
+    },
+    {
+      "id": "dmgif",
+      "title": "Dmgif",
+      "publisher": "Jeffrey L. Hayes",
+      "category": "graphics",
+      "relationship": "native-deskmate-and-bundled-runtime",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-graphics"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "0.9",
+        "1.2"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "The 0.9 package includes DMGIF.PDM. The 1.2 three-part set contains both DMGIF.EXE and DMGIF.PDM, with documented DeskMate 3.0x and standalone DOS installation choices."
+    },
+    {
+      "id": "dmsound",
+      "title": "Dmsound",
+      "publisher": "Jeffrey L. Hayes",
+      "category": "audio",
+      "relationship": "native-deskmate-and-bundled-runtime",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-sound"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "0.7"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [
+        "SND",
+        "WAV",
+        "AU"
+      ],
+      "notes": "DMSOUND.DOC specifies DeskMate 3.00+ or DOS 2.11+ with the extra runtime package. Hardware drivers are present."
+    },
+    {
+      "id": "mavis-beacon-teaches-typing",
+      "title": "Mavis Beacon Teaches Typing for DeskMate",
+      "publisher": "The Software Toolworks",
+      "category": "education",
+      "relationship": "third-party-with-runtime",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-mavis"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "1.31T"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "not-inventoried",
+      "formats": [],
+      "notes": "The installed-copy ZIP contains MAVIS.PDM 1.31T and a launcher with runtime banner 03.03.01. TVDog describes copy protection and TransCopy hardware for the distribution disks."
+    },
+    {
+      "id": "convert-mac-sound",
+      "title": "Convert (Mac sound to DeskMate)",
+      "publisher": null,
+      "category": "format-conversion",
+      "relationship": "external-deskmate-format-utility",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-sound"
+      ],
+      "catalog_number": null,
+      "versions": [],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [
+        "SND"
+      ],
+      "notes": "CONVERT.DOC describes rewriting the source audio header for DeskMate Sound. The archive includes CONVERT.EXE."
+    },
+    {
+      "id": "conv2snd",
+      "title": "Conv2snd",
+      "publisher": "Kenneth Udut and Jeffrey L. Hayes",
+      "category": "format-conversion",
+      "relationship": "external-deskmate-format-utility",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-sound"
+      ],
+      "catalog_number": null,
+      "versions": [
+        "2.02"
+      ],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [
+        "SND",
+        "WAV"
+      ],
+      "notes": "CONV2SND.DOC identifies version 2.02 and both contributors. Pascal source, the DOS converter, and a separate SND-to-WAV utility are present."
+    },
+    {
+      "id": "prtsnd",
+      "title": "Prtsnd",
+      "publisher": null,
+      "category": "audio",
+      "relationship": "external-deskmate-format-utility",
+      "evidence_status": "media-identified",
+      "source_ids": [
+        "tvdog-index-desk"
+      ],
+      "catalog_number": null,
+      "versions": [],
+      "media_status": "private-archive-hash-verified",
+      "installation_status": "not-tested",
+      "format_status": "resource-inventory",
+      "formats": [
+        "SND"
+      ],
+      "notes": "PRTSND.COM and its assembly source accompany TVDog's entry for printing uncompressed Tandy SND waveforms on compatible dot-matrix printers."
     }
   ]
 }
