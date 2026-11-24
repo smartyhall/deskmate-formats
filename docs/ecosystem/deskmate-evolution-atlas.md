@@ -194,6 +194,11 @@ Companion opens its own navigator for stationery and graphics, and
 Teach Me lists lessons that can start from the installed desktop.
 [Native application survey](../research/deskmate-rsx-oem-recovery-20261122.md#other-rsx-applications)
 
+The Print Companion follow-up opened all five branches. Graphics Manager
+invoked Draw for illustrations. Greeting Cards used the shared printer
+setup to produce both IBM Graphic and HP LaserJet jobs from one saved
+card. [Five-part survey and reconstructed print](../research/print-companion-20261123.md)
+
 ### America Online on the RSX
 
 The Tandy OEM America Online 1.3 installer copied the client to

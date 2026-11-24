@@ -21,3 +21,4 @@ global-exclude task-queue.sqlite3 task-queue.sqlite3-journal task-queue.sqlite3-
 global-exclude *.hds
 global-exclude *.db
 global-exclude *.col DMCORKBD
+global-exclude *.CRD *.NOT *.PER *.NTG *.FIG

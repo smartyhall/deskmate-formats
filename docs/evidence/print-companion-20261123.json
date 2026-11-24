@@ -1,0 +1,321 @@
+{
+  "date": "2026-11-23",
+  "version": "RSX OEM DeskMate 03.04.04",
+  "machine": "Tandy 1000 RSX, 386SX 25 MHz, 4096 KiB, internal VGA, PS/2, Tandy MS-DOS 5.00",
+  "86box_source": "855258da966f1594f568350be59e8e1eca082ed1",
+  "86box_executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+  "visible": true,
+  "seed": 1,
+  "baseline": {
+    "86box.cfg": "ccdfb129802cdee9467c1316ca1cbedeb30a83192d0ffdec7a57fad64d55b8b9",
+    "nvr\\tandy1000rsx.nvr": "e3ad097bc778d2be320b6f9a01e662eda1ba4ed4bcb9f4e41071d236f84368ac",
+    "rsx-dos5-working.img": "3085c68955b7fcad648995a40ff30f8f3a799e943710bd43cc0326c69a107fc1"
+  },
+  "stopped_image": {
+    "size": 54525952,
+    "sha256": "0299ac2e1b549a56eb59209d4c03da757ff150f9c84e45fb8596e5394516ff95"
+  },
+  "stopped_at_emulated_ms": 610524,
+  "modules": {
+    "CARDS.PDM": {
+      "size": 66785,
+      "sha256": "8b812251cb10767f993ff72e9e1e656a6742c32171a31c66293d3c05b25b0b81"
+    },
+    "DMDRWPRT.ACC": {
+      "size": 1638,
+      "sha256": "8a52c9281ff7b728476b05319fb268e5f0d21601b73f1bd39117c78dbdff9adb"
+    },
+    "DMPDASCI.ACC": {
+      "size": 12111,
+      "sha256": "f381c03ac057b2cb0a9506bd0487716d568e7ac0ae4c70d7348cfa87569a5315"
+    },
+    "DMPDASCI.RES": {
+      "size": 7588,
+      "sha256": "b7077de9184e6784704cf1c4e76cab747e3fa10804f288114790ad3d60eaaa3b"
+    },
+    "DMPDASCI.RFD": {
+      "size": 184,
+      "sha256": "992fc60bb64e8fa0347ec1b4936a91e0b44e449a57103d9b1f9e54eac6b56c82"
+    },
+    "DMPDIBMM.ACC": {
+      "size": 14533,
+      "sha256": "fc4a06a39e90a5e7423eb1a57a34c387c819623bf6e21ef10296fa42d340099c"
+    },
+    "DMPDIBMM.RES": {
+      "size": 24046,
+      "sha256": "25803941d45dc5a32b3f463915463229383c1be80be631bc0136371eae02cb4d"
+    },
+    "DMPDIBMM.RFD": {
+      "size": 3249,
+      "sha256": "fbbd1fbbaeed2ea9666706ef6132113a77ed658955b169896c4e99b7f9ba774b"
+    },
+    "DMPDLASR.ACC": {
+      "size": 11389,
+      "sha256": "05541021f076bd1af473b54df7e17ac920b9b3585a75be0f262937ea1e5f52d4"
+    },
+    "DMPDLASR.RES": {
+      "size": 24705,
+      "sha256": "3b3a10dae422a58dc1c3b2f02535d26d5ba2ef775d809751c73305399648ced9"
+    },
+    "DMPDLASR.RFD": {
+      "size": 211,
+      "sha256": "7226cb722294782dbc9e26937e76d51d57ac1ea6aa459d776bdb12b3f8a4ed01"
+    },
+    "DMPDS.ACC": {
+      "size": 13167,
+      "sha256": "b11118c0a7b37e2f801eabd7f8f2a8377853843544daf9d0c13da0206322f282"
+    },
+    "DMPDS.RES": {
+      "size": 33565,
+      "sha256": "98c0bd6b8d5fe117481ac33baef4379a498a065fb068c2c4e9ba0f3d29f4c997"
+    },
+    "DMPDS.RFD": {
+      "size": 2490,
+      "sha256": "b2a602b9bc694849ff1e0c130407a70717ec3e019cae409cb7288be1db63349f"
+    },
+    "DMPRTSEL.ACC": {
+      "size": 14103,
+      "sha256": "1e2303634aef24e24dd64b06844b4732f3ec79d4058fa508c2b24a6b0e14149d"
+    },
+    "DMSETUP.ACC": {
+      "size": 28689,
+      "sha256": "dc2b6a307fe42e2ff85270cdec70605e6e3d969657ee4b81558587525e96d425"
+    },
+    "DRAW.PDM": {
+      "size": 82822,
+      "sha256": "6108a84fe68e9e9792ecd905d407fd2069351e00765b53190e2adad8075396e0"
+    },
+    "GRAFXMGR.PDM": {
+      "size": 42057,
+      "sha256": "080b676882457f6d51c7955f7b61f63cebd546ed393621341fdd4146d20c8817"
+    },
+    "GREETER.PDM": {
+      "size": 22967,
+      "sha256": "921f733ac531beb61ae0ed1239b41fec8882038d7a0366ead9fff04c9ededa97"
+    },
+    "NAMETAGS.PDM": {
+      "size": 68481,
+      "sha256": "499c74984923f41278fbf266576aaee8676f5611688e18ee46b36ee22defe2da"
+    },
+    "NOTICES.PDM": {
+      "size": 60721,
+      "sha256": "cdb4299a54e9efc77ff50d36b627e129c37b4ecdb38e036124086c129add8882"
+    },
+    "PERSONAL.PDM": {
+      "size": 76969,
+      "sha256": "5f9dcc8f6872f5936fa4cd3862183248990a47b9400b382bf43d75fff50b8259"
+    },
+    "PRINT.EXE": {
+      "size": 15656,
+      "sha256": "f4266cb5e2a8de18d244812f670c1b9ba7c1784796dce08323abd90ac680360e"
+    },
+    "PRINTER.SYS": {
+      "size": 18804,
+      "sha256": "97d5a259cabb8b94f00095a2f7b2d8b95f48f720758dd70322fb625d17c448a6"
+    }
+  },
+  "printer_capture": {
+    "device": "86Box File (LPT) #1",
+    "port": "LPT1",
+    "strobe": true,
+    "flush": true,
+    "line_feed_filter": false,
+    "copy_count_per_job": 1,
+    "page_size_inches": [
+      8.5,
+      11
+    ],
+    "page_margins_inches": {
+      "top": 1,
+      "bottom": 1,
+      "left": 0,
+      "right": 0
+    },
+    "source": {
+      "guest_path": "DESKMATE/DOCUMENT/CARDS/W0414155.CRD",
+      "size": 242,
+      "sha256": "cff5e791e306daacfc872eb224b265873fad71aa43d593379bed42cdbb0c107d"
+    },
+    "session_capture": {
+      "size": 5738,
+      "sha256": "6a9dc09bf1e6fa75df6a809bdce3961d681c575fd12539219d685df73d225cc8"
+    },
+    "streams": {
+      "card-ibm-graphic.prn": {
+        "size": 1347,
+        "sha256": "236df7b76d8ed4dcc0562b74959c4770eb97feff50fd3765fa907b38adad6b6c",
+        "driver": "IBM Graphic",
+        "settings": {
+          "pitch_cpi": 10
+        },
+        "offset_in_capture": 0
+      },
+      "card-hp-laserjet.prn": {
+        "size": 4391,
+        "sha256": "78ae37d868eb7ed48bf65f2b21a689b39e674c1b0d44bbc860f4d12b4825e64c",
+        "driver": "HP LaserJet",
+        "settings": {
+          "pitch_cpi": 10,
+          "density_dpi": 150,
+          "font": "Courier"
+        },
+        "offset_in_capture": 1347
+      }
+    },
+    "ibm_completed_observed_ms": 293082,
+    "laserjet_completed_observed_ms": 517867,
+    "DMPD.CFG_before": {
+      "size": 20,
+      "sha256": "66ee4581e9b9ca5879a99979388a38046a9bc8af889ea9415c28c89d9d7adacf"
+    },
+    "DMPD.CFG_after": {
+      "size": 40,
+      "sha256": "3b8822a56a6fc4cd0239b585f75a0978867c5f559bb6f823289c220f43d6a990"
+    }
+  },
+  "specimens": {
+    "W0414155.CRD": {
+      "guest_path": "DESKMATE/DOCUMENT/CARDS/W0414155.CRD",
+      "size": 242,
+      "sha256": "cff5e791e306daacfc872eb224b265873fad71aa43d593379bed42cdbb0c107d"
+    },
+    "W0414325.NOT": {
+      "guest_path": "DESKMATE/DOCUMENT/NOTICES/W0414325.NOT",
+      "size": 127,
+      "sha256": "7240c7b2e9dae218bd479bd580666e4d4c427be6f6938b0f275537b6f3cfbef0"
+    },
+    "W0414444.PER": {
+      "guest_path": "DESKMATE/DOCUMENT/PERSONAL/W0414444.PER",
+      "size": 188,
+      "sha256": "d84fe67489f0806a1976aeab8342991c42b3ee6335857bb4c8ea1bef994700ce"
+    },
+    "W0414359.NTG": {
+      "guest_path": "DESKMATE/DOCUMENT/NAMETAGS/W0414359.NTG",
+      "size": 205,
+      "sha256": "1311b7d15bd1a4dea1e9833abb2fde2fa3e1c8e5289424c18cd708a80f61aec0"
+    },
+    "LABLINE.FIG": {
+      "guest_path": "DESKMATE/DOCUMENT/ILLSTRTN/LABLINE.FIG",
+      "size": 195,
+      "sha256": "f1c441afd8ed2f7f25eba9f0a1c0e9debb450ef5f601c5bf7528f91bce0000b4"
+    },
+    "W0415039.NOT": {
+      "guest_path": "DESKMATE/DOCUMENT/NOTICES/W0415039.NOT",
+      "size": 239,
+      "sha256": "d3d6b3699865e34c4553e1ecd95c2e215ad9a6b774566fa511ff71440900ebc2"
+    }
+  },
+  "frames": {
+    "navigator-full": {
+      "size": 18160,
+      "sha256": "99c7539f1939dbb4558f7795ef21a864036e38b0c1910a0105a4a5c20cf1e1dd",
+      "emulated_ms": 54488,
+      "bios_mode": 18
+    },
+    "card-reopened": {
+      "size": 13350,
+      "sha256": "a65d9a29e471f9155c8bce96c9d2e0c8f8423c028db0124cee1b80479d919000",
+      "emulated_ms": 300477,
+      "bios_mode": 18
+    },
+    "notice-reopened": {
+      "size": 13065,
+      "sha256": "e9555268000fcd8f0e09a9fa741affcca2cf9b8c90d43bb5267f1eda08c4db7f",
+      "emulated_ms": 336259,
+      "bios_mode": 18
+    },
+    "letter-reopened": {
+      "size": 13576,
+      "sha256": "a11f5f654a407a586cc4983c0b19e419b4f6fa5baa43549282e747ba93d492f1",
+      "emulated_ms": 414944,
+      "bios_mode": 18
+    },
+    "tags-reopened": {
+      "size": 13088,
+      "sha256": "0020dc18f989f3065861c77c56a9e57b5fd4ef4105ba24750f86aa4ac8bfcf87",
+      "emulated_ms": 369985,
+      "bios_mode": 18
+    },
+    "graphics-line-saved": {
+      "size": 20817,
+      "sha256": "1d31e81619e17ebb61a6a3dddd48962ef7950049189a509b846c8c0aca899430",
+      "emulated_ms": 566750,
+      "bios_mode": 18
+    },
+    "line-reopen": {
+      "size": 17724,
+      "sha256": "b6d8b180eca4147071daea075afb7d06c8f5afca549bc66948d62a406b7b8525",
+      "emulated_ms": 579729,
+      "bios_mode": 18
+    },
+    "card-page-setup": {
+      "size": 20974,
+      "sha256": "6a97abfabb298d7e17978fd552a5c5004a3aabfaa02d31ac21d4215f9e9f85fc",
+      "emulated_ms": 247292,
+      "bios_mode": 18
+    },
+    "printer-settings": {
+      "size": 17143,
+      "sha256": "fca4dae41ac462ec658ba5d72585438f51b00455361b9c3fe0f123c334890482",
+      "emulated_ms": 453595,
+      "bios_mode": 18
+    },
+    "laser-settings": {
+      "size": 17285,
+      "sha256": "88cd39f7a352e3c3e1da899af86334ef9549a884294455d4cb83b5c9b4c95f1c",
+      "emulated_ms": 457824,
+      "bios_mode": 18
+    }
+  },
+  "pdf_reconstruction": {
+    "size": 49159,
+    "sha256": "0f5e6ea0480f1eef14e0c26cfa9374894220427e9f3283a2ffd9500a99098fba",
+    "point_size": [
+      612,
+      792
+    ],
+    "distinct_dot_centers": 1090,
+    "reportlab": "5.1.0",
+    "dot_radius_pt": 0.32
+  },
+  "cold_body_control": {
+    "cold-tags-picker": {
+      "emulated_ms": 67433,
+      "sha256": "98b28515a3809653569afdf113d275919817f382d28f968abb7f8e462afa1a58"
+    },
+    "cold-tags-reopened": {
+      "size": 11978,
+      "sha256": "371ae4564699c60be62ee6cbbb5a1a57653613431822c23a8885ebfac4629893",
+      "emulated_ms": 70112,
+      "bios_mode": 18
+    },
+    "cold-notice-reopened": {
+      "emulated_ms": 94915,
+      "sha256": "f4aa6ff74150a1a824c666676b6639610e901d10a95ea5b537ebd0358f688176"
+    },
+    "notice-text-settings": {
+      "emulated_ms": 97352,
+      "sha256": "b67a59adcfd8abd7ac49a29a5be643bf156f967c11604cae56894db556667776"
+    },
+    "notice-preview": {
+      "emulated_ms": 114642,
+      "sha256": "fabcb0da8068a04676504d57e88c81a0a84ea63684ff8e05b6667a3fdae97a61"
+    },
+    "notice-line-saved": {
+      "size": 13226,
+      "sha256": "3868df717529c0e015dfa0d229bbc44985374e810e00922e67a90b4d7323070a",
+      "emulated_ms": 155734,
+      "bios_mode": 18
+    }
+  },
+  "cold_started_from": {
+    "size": 54525952,
+    "sha256": "0299ac2e1b549a56eb59209d4c03da757ff150f9c84e45fb8596e5394516ff95"
+  },
+  "cold_stopped_image": {
+    "size": 54525952,
+    "sha256": "6882b97c2d35255c426f3c21d578e283d2b38912cd3d0383271f65ec3c47d15c"
+  },
+  "cold_stopped_at_emulated_ms": 173450,
+  "cold_capture_file_size": 0
+}

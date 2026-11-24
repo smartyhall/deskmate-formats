@@ -74,6 +74,14 @@
       "source": "docs/research/database-components.md"
     },
     {
+      "id": "formats.print-companion",
+      "slug": "formats/print-companion",
+      "title": "Print Companion document observations",
+      "section": "formats",
+      "role": "current-guide",
+      "source": "docs/reference/deskmate-print-companion-formats.md"
+    },
+    {
       "id": "formats.corkboard",
       "slug": "formats/corkboard",
       "title": "Note Pad and Corkboard file format",
@@ -200,6 +208,14 @@
       "section": "research",
       "role": "dated-research",
       "source": "docs/research/deskmate-corkboard-20261123.md"
+    },
+    {
+      "id": "research.print-companion",
+      "slug": "research/print-companion",
+      "title": "Print Companion and native printing",
+      "section": "research",
+      "role": "dated-research",
+      "source": "docs/research/print-companion-20261123.md"
     },
     {
       "id": "research.text",

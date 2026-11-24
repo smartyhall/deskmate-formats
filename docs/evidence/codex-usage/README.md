@@ -9,6 +9,12 @@ The publication handoff recorded
 [media review](20261123-tvdog-catalog-publication-reviewed.json), and
 [publication checkpoint](20261123-tvdog-catalog-publication-checkpoint.json).
 
+The [RSX Print Companion campaign](../../research/print-companion-20261123.md)
+recorded [startup](20261123-print-companion-startup.json),
+[native survey](20261123-print-companion-native-survey.json),
+[cold controls](20261123-print-companion-cold-controls.json), and
+[completion](20261123-print-companion-completion.json).
+
 The [RSX AOL 1.3 campaign](../../research/rsx-aol13-20261123.md) recorded
 [startup](20261123-rsx-aol13-startup.json),
 [installation](20261123-rsx-aol13-installed.json), and
