@@ -4908,6 +4908,108 @@
       "evidence_class": "Native save and reopen, synthetic content",
       "synthetic_data": true,
       "native_saved": true
+    },
+    {
+      "path": "print-companion/W0414155.CRD",
+      "size": 242,
+      "sha256": "cff5e791e306daacfc872eb224b265873fad71aa43d593379bed42cdbb0c107d",
+      "application": "Greeting Cards",
+      "version": "RSX OEM DeskMate 03.04.04 installation",
+      "experiment": "2026-11-23 Print Companion survey",
+      "origin": "Original native save at DESKMATE/DOCUMENT/CARDS/W0414155.CRD; both FAT readers agreed.",
+      "expected_content": "LAB MOON. Front HELLO MOON. Inside FROM THE LAB.",
+      "native_saved": true,
+      "synthetic_data": true
+    },
+    {
+      "path": "print-companion/W0414325.NOT",
+      "size": 127,
+      "sha256": "7240c7b2e9dae218bd479bd580666e4d4c427be6f6938b0f275537b6f3cfbef0",
+      "application": "Notices",
+      "version": "RSX OEM DeskMate 03.04.04 installation",
+      "experiment": "2026-11-23 Print Companion survey",
+      "origin": "Original native save at DESKMATE/DOCUMENT/NOTICES/W0414325.NOT; both FAT readers agreed.",
+      "expected_content": "MOON LAB NOTICE. MOON LAB and OPEN TODAY separated by CR.",
+      "native_saved": true,
+      "synthetic_data": true
+    },
+    {
+      "path": "print-companion/W0414444.PER",
+      "size": 188,
+      "sha256": "d84fe67489f0806a1976aeab8342991c42b3ee6335857bb4c8ea1bef994700ce",
+      "application": "Personal Letters",
+      "version": "RSX OEM DeskMate 03.04.04 installation",
+      "experiment": "2026-11-23 Print Companion survey",
+      "origin": "Original native save at DESKMATE/DOCUMENT/PERSONAL/W0414444.PER; both FAT readers agreed.",
+      "expected_content": "MOON LAB LETTER. Dear Moon Lab, / Welcome to the moon lab.",
+      "native_saved": true,
+      "synthetic_data": true
+    },
+    {
+      "path": "print-companion/W0414359.NTG",
+      "size": 205,
+      "sha256": "1311b7d15bd1a4dea1e9833abb2fde2fa3e1c8e5289424c18cd708a80f61aec0",
+      "application": "Name Tags",
+      "version": "RSX OEM DeskMate 03.04.04 installation",
+      "experiment": "2026-11-23 Print Companion survey",
+      "origin": "Original native save at DESKMATE/DOCUMENT/NAMETAGS/W0414359.NTG; both FAT readers agreed.",
+      "expected_content": "MOON LAB TAG. The editor displayed MOON LAB and GUEST 01 after warm reopen.",
+      "native_saved": true,
+      "synthetic_data": true
+    },
+    {
+      "path": "print-companion/LABLINE.FIG",
+      "size": 195,
+      "sha256": "f1c441afd8ed2f7f25eba9f0a1c0e9debb450ef5f601c5bf7528f91bce0000b4",
+      "application": "Graphics Manager and Draw",
+      "version": "RSX OEM DeskMate 03.04.04 installation",
+      "experiment": "2026-11-23 Print Companion survey",
+      "origin": "Original native save at DESKMATE/DOCUMENT/ILLSTRTN/LABLINE.FIG; both FAT readers agreed.",
+      "expected_content": "One diagonal line, with associated FIG metadata.",
+      "native_saved": true,
+      "synthetic_data": true
+    },
+    {
+      "path": "print-companion/card-ibm-graphic.prn",
+      "size": 1347,
+      "sha256": "236df7b76d8ed4dcc0562b74959c4770eb97feff50fd3765fa907b38adad6b6c",
+      "application": "Greeting Cards",
+      "version": "RSX OEM DeskMate 03.04.04 installation",
+      "experiment": "2026-11-23 Print Companion survey",
+      "origin": "Native IBM Graphic job received by 86Box File (LPT) on LPT1; binary slice at offset 0.",
+      "expected_content": "One sheet and one final form feed. Original two-panel LAB MOON raster.",
+      "source_path": "print-companion/W0414155.CRD",
+      "source_sha256": "cff5e791e306daacfc872eb224b265873fad71aa43d593379bed42cdbb0c107d",
+      "evidence_class": "Native printer stream captured at emulated parallel device",
+      "synthetic_data": true
+    },
+    {
+      "path": "print-companion/card-hp-laserjet.prn",
+      "size": 4391,
+      "sha256": "78ae37d868eb7ed48bf65f2b21a689b39e674c1b0d44bbc860f4d12b4825e64c",
+      "application": "Greeting Cards",
+      "version": "RSX OEM DeskMate 03.04.04 installation",
+      "experiment": "2026-11-23 Print Companion survey",
+      "origin": "Native HP LaserJet job received by 86Box File (LPT) on LPT1; binary slice at offset 1347.",
+      "expected_content": "One sheet and one final form feed. Original two-panel LAB MOON raster.",
+      "source_path": "print-companion/W0414155.CRD",
+      "source_sha256": "cff5e791e306daacfc872eb224b265873fad71aa43d593379bed42cdbb0c107d",
+      "evidence_class": "Native printer stream captured at emulated parallel device",
+      "synthetic_data": true
+    },
+    {
+      "path": "print-companion/W0415039.NOT",
+      "size": 239,
+      "sha256": "d3d6b3699865e34c4553e1ecd95c2e215ad9a6b774566fa511ff71440900ebc2",
+      "application": "Notices",
+      "version": "RSX OEM DeskMate 03.04.04 installation",
+      "experiment": "2026-11-23 Print Companion illustration insertion control",
+      "origin": "Native Save As after selecting LABLINE.FIG from Illustrations. Both FAT16 readers agreed.",
+      "expected_content": "MOON LINE NOTICE with the original two lines and an embedded line illustration form.",
+      "source_path": "print-companion/LABLINE.FIG",
+      "source_sha256": "f1c441afd8ed2f7f25eba9f0a1c0e9debb450ef5f601c5bf7528f91bce0000b4",
+      "native_saved": true,
+      "synthetic_data": true
     }
   ]
 }

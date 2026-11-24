@@ -1,5 +1,12 @@
 # Project status — DeskMate formats
 
+## Print Companion and native printing — 2026-11-23
+
+The [RSX Print Companion campaign](docs/research/print-companion-20261123.md)
+opened all five branches and captured IBM Graphic and HP LaserJet jobs
+for the same native greeting card through isolated LPT1. The IBM raster
+reconstruction exposes the original two-panel print layout on Letter.
+
 ## Tandy OEM America Online 1.3 — 2026-11-23
 
 The [RSX AOL campaign](docs/research/rsx-aol13-20261123.md) ran the
