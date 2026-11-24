@@ -65,8 +65,11 @@ are withheld. Approved documentary figures are inserted from the verified
 `website/reference-images.json` manifest. Only explicitly authored assets
 under `website/src/assets` are copied into the site build.
 
-Browser search uses a locally generated index. Navigation and documents
-remain usable without JavaScript. The preview now uses **unmodified**
+Browser search uses a locally generated index covering the entire page map.
+The sidebar uses five curated overviews and the overview pages offer previous/next
+reading links. Every mapped detail page must have a direct editorial link from
+its overview (enforced by website tests). Navigation and documents remain usable
+without JavaScript. The preview now uses **unmodified**
 [BOOTSTRA.386 v5.3.1](https://github.com/kristopolous/BOOTSTRA.386)
 CSS, JavaScript, fonts and supporting glyphs. A build-time script downloads
 the original upstream ZIP pinned to commit

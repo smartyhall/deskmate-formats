@@ -10,6 +10,38 @@
       "source": "docs/history/introduction.md"
     },
     {
+      "id": "applications.overview",
+      "slug": "applications",
+      "title": "Software and releases",
+      "section": "applications",
+      "role": "current-guide",
+      "source": "docs/site/software-overview.md"
+    },
+    {
+      "id": "system.overview",
+      "slug": "technical",
+      "title": "Technical reference",
+      "section": "system",
+      "role": "current-guide",
+      "source": "docs/site/technical-overview.md"
+    },
+    {
+      "id": "recovery.overview",
+      "slug": "recovery",
+      "title": "Preserving and recovering files",
+      "section": "recovery",
+      "role": "current-guide",
+      "source": "docs/site/recovery-overview.md"
+    },
+    {
+      "id": "research.overview",
+      "slug": "research",
+      "title": "Research, evidence, and the project",
+      "section": "research",
+      "role": "current-guide",
+      "source": "docs/site/research-overview.md"
+    },
+    {
       "id": "site.overview",
       "slug": "planning/overview",
       "title": "Reference-site preparation",

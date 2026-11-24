@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 const test = require("node:test");
 const fs = require("node:fs");
 const path = require("node:path");
-const { ROOT, pages, sections, siteUrl, resolveLink, renderSource, searchRecord } =
+const { ROOT, pages, sections, readingPath, topicFor, readingStep, pageUrl, siteUrl, resolveLink, renderSource, searchRecord } =
   require("../lib/reference.cjs");
 
 test("source-map entries resolve to existing, uniquely identified Markdown", () => {
@@ -136,8 +136,10 @@ test("homepage prioritizes illustrated discovery, technical reference and recove
   assert.match(html, /Meet the other desktop of the PC era/);
   assert.match(html, /Where would you like to begin/);
   assert.match(html, /href="\/start\/"/);
-  assert.match(html, /href="\/system\/tandy-crosswalk\/"/);
-  assert.match(html, /href="\/recovery\/workbench\/"/);
+  assert.match(html, /href="\/applications\/"/);
+  assert.match(html, /href="\/technical\/"/);
+  assert.match(html, /href="\/recovery\/"/);
+  assert.match(html, /href="\/research\/"/);
   assert.match(html, /assets\/reference\/collection-01\/ui.desktop.launcher.png/);
   assert.match(html, /width="640" height="480"/);
   assert.doesNotMatch(html, /Private evidence paths|raw ROMs/);
@@ -154,6 +156,60 @@ test("discovery page and homepage honor non-root path deployment", () => {
     const entry = pages.find((item) => item.id === "history.introduction");
     const intro = renderSource(entry);
     assert.match(intro, /src="\/deskmate-formats\/assets\/reference\//);
+  } finally {
+    if (previous === undefined) delete process.env.SITE_BASE_PATH;
+    else process.env.SITE_BASE_PATH = previous;
+  }
+});
+
+test("reader-facing navigation has five overviews in coherent order", () => {
+  assert.deepEqual(readingPath.map((item) => item.id), [
+    "history.introduction", "applications.overview", "system.overview",
+    "recovery.overview", "research.overview",
+  ]);
+  for (const [index, topic] of readingPath.entries()) {
+    const entry = pages.find((page) => page.id === topic.id);
+    assert.equal(topicFor(entry).id, topic.id);
+    const step = readingStep(entry);
+    assert.equal(step.position, index + 1);
+    assert.equal(step.total, readingPath.length);
+    assert.equal(step.previous, readingPath[index - 1] || null);
+    assert.equal(step.next, readingPath[index + 1] || null);
+  }
+  const template = fs.readFileSync(path.join(ROOT, "website/src/_includes/base.njk"), "utf8");
+  assert.doesNotMatch(template, /section\.pages|<details open>/);
+  assert.match(template, /for topic in navigation/);
+  assert.match(template, /aria-label="Suggested reading order"/);
+  assert.match(template, /rel="prev"/);
+  assert.match(template, /rel="next"/);
+});
+
+test("all mapped detail pages have a direct editorial link from their overview", () => {
+  const rendered = new Map(readingPath.map((topic) => [
+    topic.id, renderSource(pages.find((entry) => entry.id === topic.id)),
+  ]));
+  for (const entry of pages) {
+    const matches = readingPath.filter((topic) => topic.sections.includes(entry.section));
+    assert.equal(matches.length, 1, "Unassigned or multiply assigned page: " + entry.id);
+    const topic = topicFor(entry);
+    if (entry.id === topic.id) continue;
+    assert.equal(readingStep(entry), null);
+    assert.ok(rendered.get(topic.id).includes('href="' + pageUrl(entry) + '"'),
+      "Add an explanatory link for " + entry.id + " to " + topic.id);
+  }
+});
+
+test("overview links retain the project-path prefix", () => {
+  const previous = process.env.SITE_BASE_PATH;
+  try {
+    process.env.SITE_BASE_PATH = "/deskmate-formats/";
+    const overview = pages.find((entry) => entry.id === "system.overview");
+    const target = pages.find((entry) => entry.id === "formats.filer");
+    assert.ok(renderSource(overview).includes('href="' + pageUrl(target) + '"'));
+    const Home = require("../src/index.11ty.js");
+    for (const topic of readingPath) {
+      assert.ok(new Home().render().includes('href="/deskmate-formats/' + topic.slug + '/"'));
+    }
   } finally {
     if (previous === undefined) delete process.env.SITE_BASE_PATH;
     else process.env.SITE_BASE_PATH = previous;

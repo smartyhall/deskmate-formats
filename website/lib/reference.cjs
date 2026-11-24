@@ -23,6 +23,30 @@ const sections = Object.freeze(
     id, title, pages: pages.filter((page) => page.section === id),
   }))
 );
+// Reader-facing navigation is deliberately separate from the full source map.
+const readingPath = Object.freeze([
+  { id: "history.introduction", label: "Discover DeskMate", sections: ["introduction"] },
+  { id: "applications.overview", label: "Software and releases", sections: ["applications"] },
+  { id: "system.overview", label: "Technical reference", sections: ["system", "formats"] },
+  { id: "recovery.overview", label: "File recovery", sections: ["recovery"] },
+  { id: "research.overview", label: "Research and evidence", sections: ["research", "evidence", "planning"] },
+].map((item) => {
+  const entry = pages.find((page) => page.id === item.id);
+  if (!entry) throw new Error("Missing reading-path overview: " + item.id);
+  return Object.freeze({ ...item, slug: entry.slug, title: entry.title });
+}));
+function topicFor(entry) {
+  return readingPath.find((topic) => topic.sections.includes(entry.section));
+}
+function readingStep(entry) {
+  const index = readingPath.findIndex((topic) => topic.id === entry.id);
+  if (index < 0) return null;
+  return {
+    position: index + 1, total: readingPath.length,
+    previous: readingPath[index - 1] || null,
+    next: readingPath[index + 1] || null,
+  };
+}
 const md = new MarkdownIt({ html: false, linkify: true, typographer: false });
 // Avoid treating bare Markdown filenames such as AGENTS.md as Internet domains.
 md.linkify.set({ fuzzyLink: false });
@@ -145,4 +169,4 @@ function searchRecord(entry) {
       .replace(/[#>*_\x60|]/g, " ").replace(/\s+/g, " ").trim().slice(0, 15000),
   };
 }
-module.exports = { ROOT, pages, sections, siteUrl, pageUrl, resolveLink, renderSource, searchRecord };
+module.exports = { ROOT, pages, sections, readingPath, topicFor, readingStep, siteUrl, pageUrl, resolveLink, renderSource, searchRecord };

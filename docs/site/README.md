@@ -32,13 +32,21 @@ not be silently conflated by a site builder.
 
 ## Reference navigation and ongoing coverage
 
-1. System architecture and common services.
-2. Built-in applications and their native file formats.
-3. Cross-application interchange, shared resources and runtime behavior.
-4. Recovery tools, verified compatibility and limitations.
-5. Experimental evidence, dated reports and unresolved questions.
-6. Versioned software releases, SDK material and the wider Tandy ecosystem.
-7. Visual atlas and design-system evidence (after individual image review).
+The public navigation follows five editorial overviews, in a suggested reading order:
+
+1. [Discover DeskMate](../history/introduction.md).
+2. [Software and releases](software-overview.md).
+3. [Technical reference](technical-overview.md).
+4. [Preserving and recovering files](recovery-overview.md).
+5. [Research, evidence, and the project](research-overview.md).
+
+The sidebar remains a short topic guide, not an expanded table of every article.
+Each overview explains the subject and links directly to its detailed pages.
+The underlying page map retains every existing ID, route, source, and role;
+the full collection is still indexed for search. A new mapped detail page
+must be introduced by an explanatory link from its assigned overview. The
+website test checks this reachability so the compact sidebar cannot silently
+hide new material.
 
 A page may have a planned route without yet being a final specification. The
 page map deliberately references existing Markdown rather than copying it into

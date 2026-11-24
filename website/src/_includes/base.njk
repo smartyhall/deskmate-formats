@@ -20,7 +20,6 @@
       <nav class="navbar navbar-expand bg-body-tertiary" aria-label="Primary">
         <div class="navbar-nav flex-row flex-wrap">
           <a class="nav-link px-2" href="{{ '/' | siteurl }}">Home</a>
-          <a class="nav-link px-2" href="{{ '/start/' | siteurl }}">Discover DeskMate</a>
           <a class="nav-link px-2" href="{{ '/search/' | siteurl }}">Search</a>
           <a class="nav-link px-2" href="#reference-sections">Browse topics</a>
           <a class="nav-link px-2" href="https://github.com/smartyhall/deskmate-formats">Source repository</a>
@@ -35,26 +34,40 @@
           <span>— Interpret source claims in the context of their date and verified evidence.</span>
         </div>
         {% endif %}
+        {% if currentTopic and currentTopic.id != currentId %}
+        <p class="topic-trail"><a href="{{ ('/' + currentTopic.slug + '/') | siteurl }}">{{ currentTopic.label }}</a> / {{ title | escape }}</p>
+        {% endif %}
         <article class="document">{{ content | safe }}</article>
+        {% if reading %}
+        <nav class="reading-order" aria-label="Suggested reading order">
+          <p class="reading-order-position">Reading guide · {{ reading.position }} of {{ reading.total }}</p>
+          <div class="reading-order-links">
+            {% if reading.previous %}
+            <a rel="prev" href="{{ ('/' + reading.previous.slug + '/') | siteurl }}">Previous: {{ reading.previous.label }}</a>
+            {% else %}
+            <a href="{{ '/' | siteurl }}">Return home</a>
+            {% endif %}
+            {% if reading.next %}
+            <a rel="next" href="{{ ('/' + reading.next.slug + '/') | siteurl }}">Next: {{ reading.next.label }}</a>
+            {% else %}
+            <a href="{{ '/start/' | siteurl }}">Return to Discover DeskMate</a>
+            {% endif %}
+          </div>
+        </nav>
+        {% endif %}
         {% if sourceLink %}
         <p class="source-note"><a href="{{ sourceLink }}">Review the source Markdown and history</a></p>
         {% endif %}
       </main>
       <aside class="col-12 col-lg-3 order-2 order-lg-1" id="reference-sections" aria-label="Documentation index">
         <nav aria-label="Reference sections">
-        {% for section in navigation %}
-          {% if section.pages.length %}
-          <details open>
-            <summary>{{ section.title }}</summary>
-            <ul>
-            {% for item in section.pages %}
-              <li><a href="{{ ('/' + item.slug + '/') | siteurl }}"
-               {% if currentId == item.id %}aria-current="page"{% endif %}>{{ item.title }}</a></li>
-            {% endfor %}
-            </ul>
-          </details>
-          {% endif %}
-        {% endfor %}
+          <p class="reference-nav-heading">Explore the reference</p>
+          <ol class="reference-topics">
+          {% for topic in navigation %}
+            <li><a href="{{ ('/' + topic.slug + '/') | siteurl }}"
+             {% if currentId == topic.id %}aria-current="page"{% elif currentTopic and currentTopic.id == topic.id %}aria-current="location"{% endif %}>{{ topic.label }}</a></li>
+          {% endfor %}
+          </ol>
         </nav>
       </aside>
     </div>

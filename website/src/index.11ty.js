@@ -34,12 +34,18 @@ module.exports = class Index {
       pathCard("Discover DeskMate",
         "A friendly history of the software, the original desktop and the applications people used.",
         "history.introduction", "Read the illustrated introduction"),
-      pathCard("Explore the technical reference",
-        "Native formats, original manufacturer documentation, verified behaviors and unresolved questions.",
-        "system.manufacturer-crosswalk", "Explore the format crosswalk"),
-      pathCard("Preserve and recover your files",
-        "Practical recovery tools, supported exports, limitations and guidance for preserving originals.",
-        "recovery.workbench", "Visit the Preservation Workbench"),
+      pathCard("Software and releases",
+        "Follow DeskMate's changing desktops, bundled programs, installation media, and wider software ecosystem.",
+        "applications.overview", "Explore the software"),
+      pathCard("Technical reference",
+        "Understand native formats, original manufacturer documentation, shared services, and verified behavior.",
+        "system.overview", "Explore the technical reference"),
+      pathCard("Preserving and recovering files",
+        "Practical recovery tools, supported exports, limitations, and guidance for preserving originals.",
+        "recovery.overview", "Start recovering files"),
+      pathCard("Research and evidence",
+        "Follow native experiments, visual evidence, unresolved questions, and the preservation project itself.",
+        "research.overview", "Explore the research"),
     ].join("");
     return '<section class="home-hero" aria-labelledby="home-title">' +
       '<div class="home-hero-copy">' +
@@ -55,6 +61,7 @@ module.exports = class Index {
       '</div>' + featuredDesktop() + '</section>' +
       '<section class="home-paths" aria-labelledby="paths-heading">' +
       '<h2 id="paths-heading">Where would you like to begin?</h2>' +
+      '<p>Follow these five topics in order for a guided tour, or choose the one that interests you.</p>' +
       '<div class="home-path-grid">' + cards + '</div></section>' +
       '<section class="home-context" aria-labelledby="about-heading">' +
       '<h2 id="about-heading">Historical software. Independently tested evidence.</h2>' +
@@ -62,9 +69,7 @@ module.exports = class Index {
       'DeskMate 3.05 installation. We distinguish historical claims, manufacturer ' +
       'documentation and observed behavior. Recovery capabilities are explicitly ' +
       'bounded; one version is never assumed to represent every DeskMate release.</p>' +
-      '<p>Continue with the <a href="' + urlFor("applications.inventory") +
-      '">application inventory</a>, <a href="' + urlFor("applications.ecosystem") +
-      '">wider software ecosystem</a> or <a href="' + urlFor("project.roadmap") +
-      '">preservation roadmap</a>.</p></section>';
+      '<p>Each overview introduces its collection of articles and references. ' +
+      'The full collection also remains searchable.</p></section>';
   }
 };

@@ -60,3 +60,14 @@
   .home-path-grid { display: block; }
   .home-path { break-inside: avoid; margin-bottom: 1rem; }
 }
+
+/* A short, stable topic rail and non-JavaScript reading sequence. */
+.reference-nav-heading { font-weight: bold; margin-bottom: .75rem; }
+#reference-sections .reference-topics { padding-inline-start: 1.5rem; margin-bottom: 1.5rem; }
+.reference-topics li { padding-block: .3rem; }
+.reference-topics a[aria-current] { font-weight: bold; text-decoration: underline; }
+.topic-trail { font-size: .9em; overflow-wrap: anywhere; margin-bottom: 1rem; }
+.reading-order { max-width: 95ch; border-top: 1px solid currentColor; margin-top: 2rem; padding-top: 1rem; }
+.reading-order-position { font-size: .9em; }
+.reading-order-links { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .75rem 2rem; }
+.reading-order-links a { max-width: 100%; overflow-wrap: anywhere; }

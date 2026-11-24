@@ -45,7 +45,10 @@ IDs stable when filenames move. A future renderer must resolve those links
 against the source map, preserve anchors, and generate redirects for changed
 routes. Avoid hardcoded absolute deployment URLs and theme-specific tags in
 the canonical source. No generator-specific front matter is required now.
-Use machine-readable metadata for section order and page role.
+Use machine-readable metadata for section order and page role. The public sidebar
+links only the five ordered editorial overviews. Add an explanatory link to the
+appropriate overview whenever a detail page is mapped; do not expand the sidebar
+into the full source map. Preserve direct routes, source roles, and search coverage.
 
 ## Interface and media
 

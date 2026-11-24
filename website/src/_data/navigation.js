@@ -1,1 +1,1 @@
-module.exports = require("../../lib/reference.cjs").sections;
+module.exports = require("../../lib/reference.cjs").readingPath;

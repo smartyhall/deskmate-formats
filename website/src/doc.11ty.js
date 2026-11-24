@@ -1,5 +1,5 @@
 "use strict";
-const { renderSource } = require("../lib/reference.cjs");
+const { renderSource, topicFor, readingStep } = require("../lib/reference.cjs");
 module.exports = class Document {
   data() {
     return {
@@ -9,7 +9,9 @@ module.exports = class Document {
       eleventyComputed: {
         title: (data) => data.entry.title,
         currentId: (data) => data.entry.id,
-        sourceRole: (data) => data.entry.id === "history.introduction" ? null : data.entry.role,
+        currentTopic: (data) => topicFor(data.entry),
+        reading: (data) => readingStep(data.entry),
+        sourceRole: (data) => readingStep(data.entry) ? null : data.entry.role,
         sourceLink: (data) =>
           "https://github.com/smartyhall/deskmate-formats/blob/main/" + data.entry.source,
       },
