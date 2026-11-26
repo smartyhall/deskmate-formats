@@ -97,6 +97,15 @@ scancodes. It supports ASCII punctuation, newline, tab, backspace and Escape.
 It cannot infer menu focus or prove that an application accepted typed input;
 check the resulting screen before continuing.
 
+`wait_text(line, timeout_ms)`, `wait_memory(address, expected, timeout_ms)` and
+`mouse(dx, dy, buttons)` expose the corresponding commands. `wait text` compares
+one screen row in a text mode and returns `matched`; it cannot see a graphics
+screen. `mouse` sends relative motion and a button mask (1 left, 2 right, 4
+middle) without changing host pointer capture. The
+[verified input facility](86box-input-delivery-20261126.md) builds bounded bursts
+and four-level evidence on top of these primitives, and documents why a reply, a
+drained BIOS ring and a changed screen are three different claims.
+
 ## Integrity and limits
 
 - Authentication is mandatory. Only numeric loopback addresses are accepted.

@@ -324,6 +324,42 @@ class Client:
                 if pace_ms is not None:
                     self.step(pace_ms)
 
+    def wait_text(self, text, timeout_ms):
+        """Run the guest until one text row contains `text`, or the timeout ends.
+
+        The emulator compares against live text-mode memory at the current video
+        base, one row at a time. It cannot see a graphics-mode screen, and a
+        match proves the string is on screen, not which window or field holds it.
+        """
+        if not isinstance(text, str) or not text or any(c in text for c in '\r\n\0'):
+            raise ValueError('wait text needs one non-empty screen line')
+        if type(timeout_ms) is not int or not 1 <= timeout_ms <= 600000:
+            raise ValueError('invalid wait timeout')
+        result = self._call(f'wait text {timeout_ms} {text}')
+        return dict(result, matched=result.get('matched') is True)
+
+    def wait_memory(self, address, expected, timeout_ms):
+        """Run until physical memory equals `expected`, or the timeout ends."""
+        if (type(address) is not int or address < 0 or address + len(expected) > 2**32
+                or not isinstance(expected, (bytes, bytearray)) or not 1 <= len(expected) <= 256):
+            raise ValueError('invalid wait memory span')
+        if type(timeout_ms) is not int or not 1 <= timeout_ms <= 600000:
+            raise ValueError('invalid wait timeout')
+        result = self._call(f'wait mem {timeout_ms} {address} {bytes(expected).hex()}')
+        return dict(result, matched=result.get('matched') is True)
+
+    def mouse(self, dx, dy, buttons=0):
+        """Relative pointer motion and button state; the guest driver decides what it means.
+
+        `buttons` is a bit mask (1 left, 2 right, 4 middle). Motion is passed to
+        the configured mouse device without changing the host pointer capture a
+        visible window uses, so the operator's display keeps working normally.
+        """
+        values = (dx, dy, buttons)
+        if any(type(v) is not int or not -32768 <= v <= 32767 for v in values) or buttons < 0:
+            raise ValueError('invalid mouse motion or button mask')
+        return self._call(f'mouse {dx} {dy} {buttons}')
+
     def floppy(self, drive, path=None):
         if type(drive) is not int or drive not in (0, 1):
             raise ValueError('floppy drive must be 0 or 1')
