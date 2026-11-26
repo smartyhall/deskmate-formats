@@ -49,7 +49,8 @@ class DeterministicTests(unittest.TestCase):
                          sha256((self.state / "stdout.bin").read_bytes()).hexdigest())
         self.assertEqual(outcome["inference"]["required"], False)
         self.assertEqual(outcome["inference"]["measurements"], [])
-        self.assertTrue(outcome["argv"][0].endswith(("python.exe", "python3", "python")))
+        # The recorded executable is this running interpreter, whatever its name.
+        self.assertEqual(outcome["argv"][0], str(Path(sys.executable).resolve()))
         self.assertEqual(outcome["limitations"][0][:25], "cooperating-owner custody")
         # The attempt is single-use and a plain replay is refused.
         with self.assertRaises(deterministic.DeterministicError):
