@@ -70,7 +70,7 @@
     "The receipt records the input size and SHA-256 and they match the request.",
     "The resolved language id is read back from the imported program, not echoed from the request.",
     "Memory-block records and stage timings are present.",
-    "When --reopen-check is requested, the reopen runs in a separate process and reports the same language and block count.",
+    "When --reopen-check is requested, the reopen runs in a separate process and its content fingerprint, language and block count match the imported program.",
     "No original input file is modified; the project directory was created or exclusively owned by this run."
   ],
   "exclusions": [
