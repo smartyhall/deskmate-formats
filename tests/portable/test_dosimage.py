@@ -154,6 +154,23 @@ class LoaderBlockTests(unittest.TestCase):
         blocks = self.mz.loader_blocks(self.data, 0x1000)
         self.assertNotIn('1020:', ' '.join(b['start'] for b in blocks))
 
+    def test_block_sizes_stay_consistent_after_the_far_return_adjustment(self):
+        # The adjustment moves one byte from the second block's head to the
+        # first block's tail. The first block's uninitialized tail is untouched
+        # and must not be decremented into a negative count.
+        blocks = self.mz.loader_blocks(self.data, 0x1000)
+        for block in blocks:
+            self.assertGreaterEqual(block['uninitialized_size'], 0)
+            self.assertGreaterEqual(block['initialized_size'], 0)
+            self.assertEqual(
+                block['initialized_size'] + block['uninitialized_size'],
+                block['size'],
+            )
+        self.assertEqual(blocks[0]['uninitialized_size'], 0)
+        self.assertEqual(blocks[0]['initialized_size'], 0x101)
+        self.assertEqual(blocks[1]['image_offset'], 0x101)
+        self.assertEqual(sum(b['size'] for b in blocks), self.mz.image_bytes)
+
     def test_block_model_is_independent_of_the_load_paragraph(self):
         low = self.mz.loader_blocks(self.data, 0x1000)
         high = self.mz.loader_blocks(self.data, 0x2000)
@@ -162,8 +179,27 @@ class LoaderBlockTests(unittest.TestCase):
 
 
 class ComAndErrorTests(unittest.TestCase):
+    def test_headerless_input_is_an_unqualified_com_candidate(self):
+        # Every byte sequence is a valid COM load image, so size, range and
+        # hash checks cannot identify one. Without an explicit claim the result
+        # must say so rather than assert a format.
+        data = fixtures.build_com(code=b'\xb4\x09\xcd\x21\xc3')
+        candidate = dosimage.identify(data)
+        self.assertEqual(candidate['format'], 'unknown')
+        self.assertTrue(candidate['com_candidate'])
+        self.assertEqual(candidate['interpretation'], 'none')
+        self.assertIn('no header', candidate['reason'])
+        self.assertIn('not a finding', candidate['scope'])
+        self.assertNotIn('entry_ip', candidate)
+
+        claimed = dosimage.identify(data, 'com')
+        self.assertEqual(claimed['format'], 'com')
+        self.assertEqual(claimed['interpretation'], 'explicit')
+
     def test_com_origin_and_mapping(self):
-        image = dosimage.identify(fixtures.build_com(code=b'\xb4\x09\xcd\x21\xc3'))
+        image = dosimage.identify(
+            fixtures.build_com(code=b'\xb4\x09\xcd\x21\xc3'), 'com'
+        )
         self.assertEqual(image['format'], 'com')
         self.assertEqual(image['entry_ip'], 0x100)
         com = dosimage.ComImage.parse(b'\xb4\x09\xcd\x21\xc3')
@@ -259,6 +295,66 @@ class CliTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertFalse(payload['segment_has_mz_relocation'])
         self.assertIsNone(payload['resolved_file_offset'])
+
+    def test_far_command_reports_outside_image_pointers_without_mapping_them(self):
+        # The relocated pair resolves to image offset C100h, past a 200h-byte
+        # image. It must be reported as unresolved-in-file rather than raising
+        # or inventing a file offset.
+        code, payload = self.run_cli(
+            'far', self.path, '--offset', hex(self.expected['far_pointer_file_offset'])
+        )
+        self.assertEqual(code, 0)
+        self.assertTrue(payload['segment_has_mz_relocation'])
+        self.assertEqual(payload['resolved_image_offset'], 0xC100)
+        self.assertFalse(payload['resolved_inside_image'])
+        self.assertIsNone(payload['resolved_file_offset'])
+        self.assertIn('no file', payload['note'])
+
+    def test_headerless_input_needs_an_explicit_interpretation(self):
+        headerless = fixtures.build_com(code=b'\xb4\x09\xcd\x21\xc3')
+        handle = tempfile.NamedTemporaryFile(delete=False, suffix='.COM')
+        handle.write(headerless)
+        handle.close()
+        self.addCleanup(Path(handle.name).unlink, missing_ok=True)
+
+        import contextlib
+        buffer = io.StringIO()
+        with contextlib.redirect_stderr(buffer):
+            code = probe.main(['blocks', handle.name])
+        self.assertEqual(code, 2)
+        self.assertIn('interpretation', json.loads(buffer.getvalue())['error'])
+
+        code, payload = self.run_cli(
+            'blocks', handle.name, '--interpretation', 'com'
+        )
+        self.assertEqual(code, 0)
+        self.assertEqual(payload['format'], 'com')
+        self.assertEqual(payload['interpretation'], 'com')
+
+    def test_expect_sha256_mismatch_is_refused(self):
+        import contextlib
+        buffer = io.StringIO()
+        with contextlib.redirect_stderr(buffer):
+            code = probe.main(
+                ['identify', self.path, '--expect-sha256', '0' * 64]
+            )
+        self.assertEqual(code, 2)
+        self.assertIn('does not match', json.loads(buffer.getvalue())['error'])
+
+    def test_out_of_range_addresses_are_refused(self):
+        cases = [
+            ['map', self.path, '--segment-offset', '0x10000', '0'],
+            ['map', self.path, '--segment-offset', '0', '0x10000'],
+            ['map', self.path, '--load-paragraph', '0x10000', '--file-offset', '0x40'],
+            ['far', self.path, '--offset', '0xFFFF'],
+            ['disasm', self.path, '--file-offset', '0', '--length', '0'],
+            ['disasm', self.path, '--file-offset', '0', '--length', '0x200000'],
+            ['disasm', self.path, '--file-offset', '0xFFFFFF', '--length', '4'],
+        ]
+        import contextlib
+        for argv in cases:
+            with contextlib.redirect_stderr(io.StringIO()):
+                self.assertEqual(probe.main(argv), 2, argv)
 
     def test_errors_exit_nonzero_without_traceback(self):
         import contextlib

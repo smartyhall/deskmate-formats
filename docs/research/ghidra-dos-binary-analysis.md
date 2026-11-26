@@ -173,6 +173,27 @@ python tools/inspect_dosimage.py disasm CALENDAR.PDM \
 `disasm` uses Capstone when installed and refuses to pretend otherwise. Ghidra
 listing text is never a substitute for the bytes.
 
+Upstream has already corrected the display. Issue
+[#9635](https://github.com/NationalSecurityAgency/ghidra/issues/9635) — with
+[#9739](https://github.com/NationalSecurityAgency/ghidra/issues/9739) closed as
+a duplicate — was fixed by PR
+[#9637](https://github.com/NationalSecurityAgency/ghidra/pull/9637), merged as
+`dc1e375` for the 12.2 milestone. The regression arrived with commit
+`f9ed6f4` ("GP-7018: Fixed register opsize for mov to/from segment
+registers"), which split the old `rm16 & Sreg` constructors into memory and
+register forms and left the register forms named `MOV Rmr16,Sreg`. The
+constructor name is the display template, so the printed operand order follows
+the name while the semantics follow the pattern.
+
+The one-line correction is to name the three `8E /r` register-form
+constructors `MOV Sreg,Rmr16`, `MOV Sreg,Rmr32` and `MOV Sreg,Rmr64` and leave
+the pattern order alone. A trial copy of this installation compiled with
+`support/sleigh -a Ghidra/Processors/x86` prints `MOV DS,AX` for `8E D8` and
+generates the same p-code as before. The shared installation is never
+modified; the trial is a separately identified directory. The pinned 12.1.4
+build keeps the reversed text, so this campaign reads segment-register
+instructions from bytes and reports semantics from p-code.
+
 ## Synthetic specimens
 
 `tests/fixtures/synthetic/dos_images.py` builds deterministic MZ and COM images

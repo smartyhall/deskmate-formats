@@ -8,6 +8,12 @@ Coordinate names follow ``deskmate_formats.dosimage``: *file* offsets index
 the stored file, *image* offsets index the load image, and *linear* addresses
 are ``16 * segment + offset``. A synthetic load paragraph turns an image
 offset into an analysis address; it is never a guest address.
+
+A file without an MZ signature carries no header at all, so no structural
+evidence can identify it as a COM program. The ``identify`` command reports
+such a file as an unqualified candidate unless the caller adopts the COM
+convention explicitly with ``--interpretation com``; applying the COM
+convention to a non-MZ input therefore always requires that explicit claim.
 """
 from __future__ import annotations
 
@@ -27,34 +33,65 @@ from deskmate_formats.dosimage import (
     segment_offset_to_linear,
 )
 
+MAX_SPAN = 1 << 20
+MAX_SEGMENT = 0xFFFF
 
-def _load(path: str) -> bytes:
-    return Path(path).read_bytes()
+
+def _load(args) -> bytes:
+    data = Path(args.path).read_bytes()
+    expected = getattr(args, "expect_sha256", None)
+    if expected:
+        actual = hashlib.sha256(data).hexdigest()
+        if actual != expected.lower():
+            raise DosImageError(
+                f"input SHA-256 {actual} does not match --expect-sha256 {expected.lower()}"
+            )
+    return data
 
 
-def _image(data: bytes):
-    if len(data) >= 2 and data[:2] == b"MZ":
+def _segment(value: int, label: str, allow_none: bool = False) -> int | None:
+    if value is None and allow_none:
+        return None
+    if not 0 <= value <= MAX_SEGMENT:
+        raise DosImageError(f"{label} must be within 0000h-FFFFh")
+    return value
+
+
+def _image(data: bytes, args):
+    """Return a parsed image, requiring an explicit claim for a headerless file."""
+    if len(data) >= 2 and data[:2] in (b"MZ", b"ZM"):
         return MzImage.parse(data)
+    interpretation = getattr(args, "interpretation", None)
+    if interpretation != "com":
+        raise DosImageError(
+            "input has no MZ signature and therefore no header evidence. A COM "
+            "load image has no magic number, so this is an interpretation, not a "
+            "finding; re-run with --interpretation com to adopt IP=0100h"
+        )
     return ComImage.parse(data)
 
 
+def _input_record(args, data: bytes) -> dict:
+    return {
+        "path": args.path,
+        "size": len(data),
+        "sha256": hashlib.sha256(data).hexdigest(),
+    }
+
+
 def command_identify(args) -> dict:
-    data = _load(args.path)
-    result = identify(data)
-    return result
+    data = _load(args)
+    return identify(data, args.interpretation)
 
 
 def command_blocks(args) -> dict:
-    data = _load(args.path)
-    image = _image(data)
+    data = _load(args)
+    image = _image(data, args)
     blocks = image.loader_blocks(data, args.load_paragraph)
     return {
-        "input": {
-            "path": args.path,
-            "size": len(data),
-            "sha256": hashlib.sha256(data).hexdigest(),
-        },
+        "input": _input_record(args, data),
         "format": image.describe()["format"],
+        "interpretation": getattr(args, "interpretation", None) or "structural",
         "load_paragraph": args.load_paragraph,
         "image_bytes": image.image_bytes,
         "block_total": sum(b["size"] for b in blocks),
@@ -68,15 +105,12 @@ def command_blocks(args) -> dict:
 
 
 def command_map(args) -> dict:
-    data = _load(args.path)
-    image = _image(data)
+    data = _load(args)
+    image = _image(data, args)
     result = {
-        "input": {
-            "path": args.path,
-            "size": len(data),
-            "sha256": hashlib.sha256(data).hexdigest(),
-        },
+        "input": _input_record(args, data),
         "format": image.describe()["format"],
+        "interpretation": getattr(args, "interpretation", None) or "structural",
         "load_paragraph": args.load_paragraph,
         "coordinates": [],
         "scope": (
@@ -87,6 +121,8 @@ def command_map(args) -> dict:
 
     if args.file_offset is not None:
         f = args.file_offset
+        if f < 0:
+            raise DosImageError("--file-offset must not be negative")
         linear = image.file_to_linear(f, args.load_paragraph)
         segment, offset = linear_to_segment_offset(linear, args.segment or args.load_paragraph)
         result["coordinates"].append(
@@ -120,8 +156,10 @@ def command_map(args) -> dict:
         )
 
     if args.segment_offset is not None:
-        pair = args.segment_offset
-        segment, offset = pair
+        segment, offset = args.segment_offset
+        _segment(segment, "--segment-offset SEGMENT")
+        if not 0 <= offset <= MAX_SEGMENT:
+            raise DosImageError("--segment-offset OFFSET must be within 0000h-FFFFh")
         linear = segment_offset_to_linear(segment, offset)
         entry = {"kind": "segment_offset", "segment": segment, "offset": offset,
                  "linear": linear}
@@ -141,26 +179,38 @@ def command_map(args) -> dict:
 
 
 def command_far(args) -> dict:
-    data = _load(args.path)
-    image = _image(data)
+    data = _load(args)
+    image = _image(data, args)
     if not isinstance(image, MzImage):
         raise DosImageError("far-pointer candidates require an MZ image")
+    if not 0 <= args.offset <= len(data) - 4:
+        raise DosImageError("--offset must address four bytes inside the input")
     pointer = image.far_pointer_at(data, args.offset)
+    resolved_file_offset = image.far_pointer_file_offset(pointer)
+    inside_image = (
+        pointer.resolved_image_offset is not None
+        and 0 <= pointer.resolved_image_offset < image.image_bytes
+    )
     payload = {
         "file_offset": pointer.file_offset,
         "offset_word": pointer.offset_word,
         "segment_word": pointer.segment_word,
         "segment_has_mz_relocation": pointer.segment_relocated,
         "resolved_image_offset": pointer.resolved_image_offset,
-        "resolved_file_offset": None,
+        "resolved_inside_image": inside_image,
+        "resolved_file_offset": resolved_file_offset,
         "resolution": pointer.resolution,
         "scope": (
             "candidate pointer arithmetic; the caller still has to establish that "
             "the bytes are a pointer and what its target is"
         ),
     }
-    if pointer.resolved_image_offset is not None:
-        payload["resolved_file_offset"] = image.image_to_file(pointer.resolved_image_offset)
+    if pointer.resolved_image_offset is not None and not inside_image:
+        payload["note"] = (
+            "the pair resolves outside the stored image, so it has no file "
+            "offset. Do not map it to one: the target is in another segment, an "
+            "overlay or unrelated data"
+        )
     return payload
 
 
@@ -176,21 +226,21 @@ def _disassembler():
 
 
 def command_disasm(args) -> dict:
-    data = _load(args.path)
-    image = _image(data)
-    starts = []
-
+    data = _load(args)
+    image = _image(data, args)
     if args.file_offset is not None:
-        prefix = 0
         first = args.file_offset
     elif args.image_offset is not None:
-        prefix = 0
         first = getattr(image, "header_bytes", 0) + args.image_offset
     else:
         raise DosImageError("supply --file-offset or --image-offset")
 
     if args.length <= 0:
         raise DosImageError("--length must be positive")
+    if args.length > MAX_SPAN:
+        raise DosImageError(f"--length must not exceed {MAX_SPAN}")
+    if args.max_instructions <= 0:
+        raise DosImageError("--max-instructions must be positive")
     if first < 0 or first + args.length > len(data):
         raise DosImageError("requested span is outside the input")
 
@@ -198,11 +248,7 @@ def command_disasm(args) -> dict:
     instructions = []
     if md is None:
         return {
-            "input": {
-                "path": args.path,
-                "size": len(data),
-                "sha256": hashlib.sha256(data).hexdigest(),
-            },
+            "input": _input_record(args, data),
             "decoder": None,
             "instructions": [],
             "warning": (
@@ -232,11 +278,7 @@ def command_disasm(args) -> dict:
             break
 
     return {
-        "input": {
-            "path": args.path,
-            "size": len(data),
-            "sha256": hashlib.sha256(data).hexdigest(),
-        },
+        "input": _input_record(args, data),
         "decoder": {
             "name": "capstone",
             "version": _capstone_version(),
@@ -268,8 +310,21 @@ def main(argv: list[str] | None = None) -> int:
 
     number = lambda s: int(s, 0)  # noqa: E731
 
+    def shared(p, *, interpretation: bool = False) -> None:
+        p.add_argument(
+            "--expect-sha256",
+            help="refuse the input unless it has this digest",
+        )
+        if interpretation:
+            p.add_argument(
+                "--interpretation",
+                choices=("com",),
+                help="adopt the COM load convention for a headerless input",
+            )
+
     identify_parser = sub.add_parser("identify", help="classify COM or MZ by header evidence")
     identify_parser.add_argument("path")
+    shared(identify_parser, interpretation=True)
     identify_parser.set_defaults(handler=command_identify)
 
     blocks_parser = sub.add_parser(
@@ -277,6 +332,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     blocks_parser.add_argument("path")
     blocks_parser.add_argument("--load-paragraph", type=number, default=DEFAULT_LOAD_PARAGRAPH)
+    shared(blocks_parser, interpretation=True)
     blocks_parser.set_defaults(handler=command_blocks)
 
     map_parser = sub.add_parser("map", help="convert between file, image, linear and segment:offset")
@@ -291,11 +347,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     map_parser.add_argument("--segment", type=number, help="segment label to apply")
     map_parser.add_argument("--load-paragraph", type=number, default=DEFAULT_LOAD_PARAGRAPH)
+    shared(map_parser, interpretation=True)
     map_parser.set_defaults(handler=command_map)
 
     far_parser = sub.add_parser("far", help="classify a 4-byte off16:seg16 candidate")
     far_parser.add_argument("path")
     far_parser.add_argument("--offset", type=number, required=True)
+    shared(far_parser)
     far_parser.set_defaults(handler=command_far)
 
     disasm_parser = sub.add_parser("disasm", help="bounded decode with an independent decoder")
@@ -306,9 +364,18 @@ def main(argv: list[str] | None = None) -> int:
     disasm_parser.add_argument("--segment", type=number)
     disasm_parser.add_argument("--load-paragraph", type=number, default=DEFAULT_LOAD_PARAGRAPH)
     disasm_parser.add_argument("--max-instructions", type=number, default=256)
+    shared(disasm_parser, interpretation=True)
     disasm_parser.set_defaults(handler=command_disasm)
 
     args = parser.parse_args(argv)
+    if getattr(args, "load_paragraph", None) is not None:
+        try:
+            _segment(args.load_paragraph, "--load-paragraph")
+            _segment(getattr(args, "segment", None), "--segment", allow_none=True)
+        except DosImageError as exc:
+            json.dump({"error": str(exc)}, sys.stderr)
+            sys.stderr.write("\n")
+            return 2
     try:
         result = args.handler(args)
     except (DosImageError, OSError) as exc:

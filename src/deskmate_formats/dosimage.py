@@ -349,6 +349,9 @@ class MzImage:
             )
 
         # adjustSegmentStarts: highest far return within the first 16 bytes.
+        # Bytes move from the head of one block to the tail of the previous
+        # block, so the previous block's uninitialized tail is unchanged and
+        # can never be driven negative.
         for index in range(1, len(blocks)):
             block = blocks[index]
             if block["initialized_size"] <= 0:
@@ -363,7 +366,6 @@ class MzImage:
                     previous = blocks[index - 1]
                     previous["size"] += moved
                     previous["initialized_size"] += moved
-                    previous["uninitialized_size"] -= moved
                     block["image_offset"] += moved
                     block["file_offset"] += moved
                     block["size"] -= moved
@@ -371,6 +373,12 @@ class MzImage:
                     break
 
         for block in blocks:
+            block["uninitialized_size"] = block["size"] - block["initialized_size"]
+            if block["uninitialized_size"] < 0 or block["initialized_size"] < 0:
+                raise DosImageError(
+                    "loader block sizes are inconsistent at image offset "
+                    f"{block['image_offset']:#x}"
+                )
             base = (load_paragraph << 4) + block["image_offset"]
             segment, offset = divmod(base, 16)
             block["start"] = f"{segment:04x}:{offset:04x}"
@@ -380,6 +388,19 @@ class MzImage:
         return blocks
 
     # -- data helpers ----------------------------------------------------
+    def far_pointer_file_offset(self, pointer: FarPointer) -> int | None:
+        """Map a resolved far pointer into this file, or None.
+
+        A pair can resolve outside the stored image (another segment, an
+        overlay, or unrelated data). Such a pointer is still reported, but it
+        has no file offset and must not be given one.
+        """
+        if pointer.resolved_image_offset is None:
+            return None
+        if not 0 <= pointer.resolved_image_offset < self.image_bytes:
+            return None
+        return self.header_bytes + pointer.resolved_image_offset
+
     def far_pointer_at(self, data: bytes, file_offset: int) -> FarPointer:
         """Read an explicit 4-byte off16:seg16 candidate and classify it."""
         if not 0 <= file_offset or file_offset + 4 > len(data):
@@ -544,10 +565,43 @@ class ComImage:
         }
 
 
-def identify(data: bytes) -> dict:
-    """Classify an image by standard header evidence only."""
+def identify(data: bytes, interpretation: str | None = None) -> dict:
+    """Classify an image from standard header evidence, or an explicit claim.
+
+    An MZ image is identified by its signature. Anything else has no header
+    and therefore **no structural signature at all**: every byte sequence is a
+    valid COM load image, so a COM reading is a chosen interpretation, not an
+    observation. Without ``interpretation="com"`` the result is an
+    unqualified candidate and callers should not map addresses through it.
+    """
     if len(data) >= 2 and data[:2] in (b"MZ", b"ZM"):
         return MzImage.parse(data).describe()
-    if len(data) >= 2 and data[:2] == b"ZM":
-        raise DosImageError("ZM-prefixed images are not standard DOS MZ images")
-    return ComImage.parse(data).describe()
+    if interpretation == "com":
+        result = ComImage.parse(data).describe()
+        result["interpretation"] = "explicit"
+        return result
+    if interpretation not in (None, "auto"):
+        raise DosImageError(f"unsupported interpretation: {interpretation}")
+    return {
+        "format": "unknown",
+        "size": len(data),
+        "sha256": hashlib.sha256(data).hexdigest(),
+        "com_candidate": True,
+        "header_bytes": None,
+        "trailing_bytes": None,
+        "relocation_count": 0,
+        "relocations": [],
+        "relocation_site_segments": [],
+        "relocated_segments": [],
+        "interpretation": "none",
+        "reason": (
+            "no MZ signature and no other header evidence; a COM image has no "
+            "header or magic number, so this classification cannot be made from "
+            "structure alone"
+        ),
+        "scope": (
+            "unqualified candidate only. Pass interpretation='com' to adopt the "
+            "COM load convention (IP=0100h), which is an assumption about the "
+            "file, not a finding"
+        ),
+    }
