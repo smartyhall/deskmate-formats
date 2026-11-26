@@ -25,6 +25,14 @@ DeskMate, Tandy, DOS, x86 or a particular model provider.
   framebuffer/audio capture, deterministic execution and evidence recording.
 - Analysis adapters (including Ghidra), agent adapters (including Codex),
   telemetry, and the observer's live/read-only and historical views.
+  Freebuff is an experimental supplementary agent, not an implemented
+  dispatch or telemetry backend. Preserve the pinned Codex protocol and
+  qualify provider-specific adapters separately; see the
+  [multi-agent campaign rules](../AGENTS.md#multi-agent-campaign-governance--supplementary-agent-integration-2026-11-25).
+  Prefer shared campaign identities, evidence and usage receipt contracts,
+  capability discovery, resource ownership, and provider-neutral skills;
+  retain provider-specific semantics and record unavailable telemetry.
+  Manual supplementary-agent campaigns need not wait for adapter work.
 - Subject-specific application profiles and experimental recipes outside the
   generic core. For example, a DeskMate profile owns window/control semantics;
   the platform owns guest memory access and the semantic observation interface.
