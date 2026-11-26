@@ -148,7 +148,8 @@ EXTENSION_FAMILIES = {
     'lha': 'lzh', 'tar': 'tar', 'gz': 'gz', 'tgz': 'tgz', 'z': 'compress',
     'bz2': 'bz2', 'xz': 'xz', 'imd': 'imd', 'td0': 'td0', 'qm': 'copyqm',
     'cqm': 'copyqm', 'dcf': 'dcf', 'img': 'disk-image', 'ima': 'disk-image',
-    'iso': 'iso9660', 'udf': 'udf', 'pdf': 'pdf',
+    'iso': 'iso9660', 'udf': 'udf', 'pdf': 'pdf', '7z': '7z', 'arj': 'arj',
+    'rar': 'rar', 'cab': 'cab', 'zoo': 'zoo', 'sqz': 'sqz', 'ha': 'ha', 'uc2': 'uc2',
 }
 
 

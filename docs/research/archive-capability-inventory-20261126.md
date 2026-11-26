@@ -495,6 +495,45 @@ executable reports structural kind `zip`, carrier `pe` and embedded `zip`
 together, while a ZIP merely named `.exe` reports no carrier at all. That keeps
 a genuine dual identity distinguishable from a misleading filename.
 
+## Identification axes applied to the corpus
+
+The axes are not only a registry vocabulary. `classify()` was run over all
+10,040 files of the TVDog mirror to see whether the distinctions matter in
+practice, and they do.
+
+| Measurement | Count |
+| --- | --- |
+| Files classified | 10,040 |
+| Executable carriers detected | 106 (all `mz`) |
+| Executables that also carry an embedded ZIP | 90 |
+| Files whose extension contradicts their bytes | 0 |
+| Files whose name says nothing but whose format is certain | 3 |
+
+The first result is the important one. Ninety of the 106 executables in this
+corpus are self-extracting ZIP archives. A single-identity inventory would have
+recorded each of them as either `zip` or `mz` and silently lost the other
+identity, which is exactly the failure the two-field model exists to prevent.
+It also reframes extraction coverage: most of the archives here are reachable
+only through an executable container, so an inventory that treats carriers as
+opaque executables undercounts the recoverable material substantially.
+
+The zero in the third row is reported rather than omitted. No file in this
+corpus carried a name asserting a format its bytes contradicted, so the
+"unexpected extension" category is implemented, exercised by tests, and simply
+empty here. The category that does appear is different and is listed
+separately: three files whose extension declares nothing at all while their
+structure is unambiguous — two `.apm` files that are ARJ archives and one
+hash-named file that is a ZIP. Those are formats that are certain under
+uninformative names, which is not the same condition as a format that remains
+uncertain.
+
+Two caveats bound these numbers. Only ZIP payloads inside executables are
+detected structurally, so 90 is a lower bound: an executable carrying an ARC or
+LHA payload would not raise the embedded flag, and reaching it still depends on
+the optional external adapter. And the indexer itself does not yet store these
+axes per occurrence — it records a single `kind` — so adopting them in the
+archive database requires a schema migration that this checkpoint deliberately
+left out.
 ## Verification for this checkpoint
 
 - `tests/portable/test_disk_images.py`: 28 tests pass, including the three
