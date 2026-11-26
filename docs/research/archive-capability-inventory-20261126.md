@@ -583,3 +583,6 @@ coherent review unit:
 - [Archive index migration proposal](archive-index-migration-20261126.md): a
   rehearsed, additive schema version 2 for identity axes, derived artifacts and
   selective reprocessing.
+- [Candidate Supervisor procedures](supervisor-archive-procedures-20261126.md):
+  a handoff of deterministic archival operations with their authorization and
+  bounds, none registered for unattended execution.
