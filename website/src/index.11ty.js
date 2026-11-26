@@ -1,9 +1,9 @@
 "use strict";
-const { pages, pageUrl, siteUrl } = require("../lib/reference.cjs");
+const { sections, byId, pageUrl, siteUrl, canonicalFor } = require("../lib/reference.cjs");
 const { escapeHtml, readFigures } = require("../lib/figures.cjs");
 
 function urlFor(id) {
-  const entry = pages.find((item) => item.id === id);
+  const entry = byId.get(id);
   if (!entry) throw new Error("Home destination missing from page map: " + id);
   return pageUrl(entry);
 }
@@ -19,28 +19,22 @@ function featuredDesktop() {
     '<figcaption>Original DeskMate 3.05 desktop, captured in our research lab. ' +
     'Other versions looked different.</figcaption></figure>';
 }
-function pathCard(title, description, id, linkText) {
-  return '<section class="home-path"><h3>' + escapeHtml(title) + '</h3>' +
-    '<p>' + escapeHtml(description) + '</p><p><a href="' + urlFor(id) + '">' +
-    escapeHtml(linkText) + '</a></p></section>';
+function pathCard(section) {
+  return '<section class="home-path"><h3>' + escapeHtml(section.shortTitle) + '</h3>' +
+    '<p>' + escapeHtml(section.hub.summary) + '</p>' +
+    '<p><a href="' + pageUrl(section.hub) + '">Start with ' +
+    escapeHtml(section.shortTitle) + '</a></p></section>';
 }
 module.exports = class Index {
   data() {
     return { permalink: "index.html", layout: "base.njk",
-      title: "Discover Tandy DeskMate", currentId: "home" };
+      title: "Discover Tandy DeskMate", currentId: "home",
+      canonicalUrl: canonicalFor(null),
+      summary: "An independent, evidence-based reference to Tandy DeskMate: " +
+        "its history, file formats, recovery tools, and research record." };
   }
   render() {
-    const cards = [
-      pathCard("Discover DeskMate",
-        "A friendly history of the software, the original desktop and the applications people used.",
-        "history.introduction", "Read the illustrated introduction"),
-      pathCard("Explore the technical reference",
-        "Native formats, original manufacturer documentation, verified behaviors and unresolved questions.",
-        "system.manufacturer-crosswalk", "Explore the format crosswalk"),
-      pathCard("Preserve and recover your files",
-        "Practical recovery tools, supported exports, limitations and guidance for preserving originals.",
-        "recovery.workbench", "Visit the Preservation Workbench"),
-    ].join("");
+    const cards = sections.map(pathCard).join("");
     return '<section class="home-hero" aria-labelledby="home-title">' +
       '<div class="home-hero-copy">' +
       '<p class="eyebrow">Tandy DeskMate · History and preservation</p>' +
@@ -49,9 +43,12 @@ module.exports = class Index {
       'approachable collection of programs for writing, planning, drawing ' +
       'and keeping records. Explore the original software, the documents ' +
       'its users created, and the work of recovering them today.</p>' +
-      '<p><a class="btn btn-primary" href="' + urlFor("history.introduction") +
-      '">Discover DeskMate</a> <a class="home-search-link" href="' +
-      siteUrl("/search/") + '">Search the reference</a></p>' +
+      '<p><a class="btn btn-primary" href="' + urlFor("deskmate.overview") +
+      '">Start with DeskMate</a> ' +
+      '<a class="home-search-link" href="' + urlFor("history.introduction") +
+      '">Read the illustrated history</a> ' +
+      '<a class="home-search-link" href="' + siteUrl("/search/") +
+      '">Search the reference</a></p>' +
       '</div>' + featuredDesktop() + '</section>' +
       '<section class="home-paths" aria-labelledby="paths-heading">' +
       '<h2 id="paths-heading">Where would you like to begin?</h2>' +

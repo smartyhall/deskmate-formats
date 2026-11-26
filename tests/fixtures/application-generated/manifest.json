@@ -5010,6 +5010,21 @@
       "source_sha256": "f1c441afd8ed2f7f25eba9f0a1c0e9debb450ef5f601c5bf7528f91bce0000b4",
       "native_saved": true,
       "synthetic_data": true
+    },
+    {
+      "path": "corkboard/freebuff-rsx-three-lines/DMCORKBD",
+      "size": 2864,
+      "sha256": "09030f49e5442dc4e7bdb48d1696ef71675f1367ca06c2775057abc9744fd61b",
+      "application": "Tandy DeskMate Corkboard",
+      "version": "DeskMate 03.04.04, Tandy 1000 RSX OEM",
+      "experiment": "November 26, 2026 Freebuff native emulator qualification",
+      "origin": "Typed three synthetic lines in the F10 Corkboard accessory on a fresh clone of the sealed RSX installation and closed with Escape. A cold boot reopened the note; one E was typed at the stored insertion point and the accessory was closed with Escape again. Direct FAT16 traversal and 7-Zip 26.05 agreed on the file bytes.",
+      "expected_content": "FREEBUFF NATIVE 20261126, CR, ALPHA LINE TWO, CR, OMEGA LINE THREE. Header words 56 and 0.",
+      "evidence_class": "Application-generated synthetic native specimen",
+      "evidence_report": "docs/research/freebuff-native-emulator-20261126.md",
+      "synthetic_data": true,
+      "native_saved": true,
+      "source_sha256": "2f61d4adfb5d007849c5420bea6cbe6fcb72b11478d2216bdcfd0095fba37e17"
     }
   ]
 }

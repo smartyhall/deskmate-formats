@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "provider": "Freebuff",
+  "agent": "Freebuff native desktop agent",
+  "campaign_id": "freebuff-native-emulator-20261126",
+  "checkpoint": "completion",
+  "observed_at_utc": null,
+  "observed_at_note": "Host date 2026-11-26; exact UTC instant unknown to agent tools.",
+  "git_revision": null,
+  "git_revision_note": "The receipt ships with the commit it describes, so it cannot contain that commit's own identity. The branch freebuff/native-emulator-20261126 and the pull request carry it.",
+  "execution_mode": "native desktop agent driving 86Box 7.0 over the authenticated loopback socket; visible window; no host input injection; no pointer input",
+  "model": null,
+  "reasoning_effort": null,
+  "model_note": "Not exposed to agent tools. No paid provider was connected, no credits were purchased and no other coding agent was dispatched.",
+  "source": {
+    "kind": "local allowlisted collector",
+    "version": "deskmate_formats.automation.client protocol 1",
+    "detail": "Five per-session socket journals; each status reply contributes its emulated millisecond counter."
+  },
+  "coverage": "Five held native sessions on two disposable clones of the sealed RSX DeskMate 03.04.04 installation, one cold-reopen check per clone, one in-application edit and one second-application survey.",
+  "attribution_limits": "Emulated guest time is emulator time, not host wall-clock or provider consumption. No MCP server was exercised because no MCP client exists in this configuration.",
+  "status": "campaign complete: two native Corkboard checkpoints, one controlled one-byte edit, one Information Center survey, two tooling fixes with portable tests, one published fixture, three published exemplars",
+  "measurements": [
+    {
+      "name": "emulated_guest_time_total",
+      "value": 295830,
+      "unit": "ms",
+      "scope": "campaign",
+      "semantics": "cumulative",
+      "observed_at": "completion",
+      "reset_boundary": null
+    },
+    {
+      "name": "native_sessions",
+      "value": 5,
+      "unit": "sessions",
+      "scope": "campaign",
+      "semantics": "cumulative",
+      "observed_at": "completion",
+      "reset_boundary": null
+    },
+    {
+      "name": "native_framebuffer_captures",
+      "value": 19,
+      "unit": "images",
+      "scope": "campaign",
+      "semantics": "cumulative",
+      "observed_at": "completion",
+      "reset_boundary": null
+    },
+    {
+      "name": "stopped_disk_checkpoints",
+      "value": 4,
+      "unit": "images",
+      "scope": "campaign",
+      "semantics": "cumulative",
+      "observed_at": "completion",
+      "reset_boundary": null
+    }
+  ],
+  "measurement_note": "Provider allowance, tokens, context size and quota remain unobservable to the agent. No figure is estimated.",
+  "private_evidence": "Five socket journals, 19 raw PNGs, stopped disks and launch receipts are retained outside Git; only sanitized receipts, the synthetic fixture and three documentary captures are published."
+}
