@@ -60,3 +60,14 @@
   .home-path-grid { display: block; }
   .home-path { break-inside: avoid; margin-bottom: 1rem; }
 }
+
+/* Reader-oriented navigation: breadcrumbs, contextual section list, role labels. */
+.breadcrumbs { margin-bottom: .75rem; font-size: .95em; }
+.breadcrumbs ol { list-style: none; display: flex; flex-wrap: wrap; gap: .35rem; padding: 0; margin: 0; }
+.breadcrumbs li + li::before { content: "›"; margin-right: .35rem; opacity: .7; }
+.sidebar-hub { font-weight: bold; margin-bottom: .5rem; }
+.sidebar-heading { margin-top: 1.5rem; font-weight: bold; }
+.sidebar-hubs { padding-inline-start: 1.25rem; }
+#reference-sections details { margin-block: .75rem; }
+.source-role { max-width: 95ch; }
+@media print { .breadcrumbs { display: none; } }

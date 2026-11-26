@@ -4,25 +4,61 @@ const path = require("node:path");
 const MarkdownIt = require("markdown-it");
 const { readFigures, injectFigures } = require("./figures.cjs");
 const ROOT = path.resolve(__dirname, "../..");
-const pages = Object.freeze(JSON.parse(
+const map = JSON.parse(
   fs.readFileSync(path.join(ROOT, "docs/site/page-map.json"), "utf8")
-).pages);
-const bySource = new Map(pages.map((p) => [p.source, p]));
-const names = Object.freeze({
-  introduction: "Start here",
-  planning: "Project and planning",
-  system: "System architecture",
-  formats: "Native formats",
-  applications: "Applications and ecosystem",
-  recovery: "Recovery tools",
-  research: "Native experiments",
-  evidence: "Evidence and verification",
-});
-const sections = Object.freeze(
-  Object.entries(names).map(([id, title]) => ({
-    id, title, pages: pages.filter((page) => page.section === id),
-  }))
 );
+if (map.schema_version !== 2) {
+  throw new Error(
+    "The renderer requires page-map schema_version 2; found " + map.schema_version
+  );
+}
+const pages = Object.freeze(map.pages);
+const byId = new Map(pages.map((page) => [page.id, page]));
+const bySource = new Map(pages.map((page) => [page.source, page]));
+/** Reader-question sections, in reading order. Membership is independent of slug. */
+const SECTION_IDS = Object.freeze([
+  "deskmate", "formats", "recovery", "research", "project",
+]);
+const SECTION_LABELS = Object.freeze({
+  deskmate: "DeskMate",
+  formats: "File formats",
+  recovery: "Recovery",
+  research: "Research",
+  project: "Project",
+});
+const ROLE_LABELS = Object.freeze({
+  "current-guide": "Maintained guide",
+  "manufacturer-reference": "Manufacturer reference",
+  "dated-research": "Dated experiment report",
+  "dated-snapshot": "Dated snapshot",
+  "site-plan": "Project planning document",
+});
+
+function compareEntries(left, right) {
+  return left.order - right.order || left.id.localeCompare(right.id);
+}
+
+const sections = Object.freeze(SECTION_IDS.map((id) => {
+  const sectionPages = pages.filter((page) => page.section === id).sort(compareEntries);
+  const hub = sectionPages.find((page) => page.is_hub);
+  if (!hub) throw new Error("Navigation section without a hub: " + id);
+  const titles = [];
+  for (const page of sectionPages) {
+    if (!page.is_hub && !titles.includes(page.subsection)) titles.push(page.subsection);
+  }
+  return {
+    id,
+    title: hub.title,
+    shortTitle: SECTION_LABELS[id] || hub.title,
+    hub,
+    pages: sectionPages,
+    subsections: titles.map((title) => ({
+      title,
+      pages: sectionPages.filter((page) => !page.is_hub && page.subsection === title),
+    })),
+  };
+}));
+
 const md = new MarkdownIt({ html: false, linkify: true, typographer: false });
 // Avoid treating bare Markdown filenames such as AGENTS.md as Internet domains.
 md.linkify.set({ fuzzyLink: false });
@@ -145,4 +181,29 @@ function searchRecord(entry) {
       .replace(/[#>*_\x60|]/g, " ").replace(/\s+/g, " ").trim().slice(0, 15000),
   };
 }
-module.exports = { ROOT, pages, sections, siteUrl, pageUrl, resolveLink, renderSource, searchRecord };
+/** Readable role label; hubs are navigation, not evidence, so they carry none. */
+function roleLabel(entry) {
+  if (entry.is_hub) return null;
+  return ROLE_LABELS[entry.role] || entry.role;
+}
+function sectionFor(entry) {
+  return sections.find((section) => section.id === entry.section) || null;
+}
+function breadcrumbsFor(entry) {
+  const section = sectionFor(entry);
+  if (!section) return null;
+  const trail = [{ label: "Home", href: siteUrl("/") },
+    { label: section.shortTitle, href: pageUrl(section.hub) }];
+  if (!entry.is_hub) {
+    if (entry.subsection) trail.push({ label: entry.subsection });
+    trail.push({ label: entry.title });
+  } else {
+    trail[1] = { label: section.shortTitle };
+  }
+  return trail;
+}
+module.exports = {
+  ROOT, pages, byId, sections, SECTION_IDS, SECTION_LABELS, ROLE_LABELS,
+  siteUrl, pageUrl, resolveLink, renderSource, searchRecord,
+  roleLabel, sectionFor, breadcrumbsFor,
+};

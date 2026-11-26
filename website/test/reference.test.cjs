@@ -3,8 +3,10 @@ const assert = require("node:assert/strict");
 const test = require("node:test");
 const fs = require("node:fs");
 const path = require("node:path");
-const { ROOT, pages, sections, siteUrl, resolveLink, renderSource, searchRecord } =
-  require("../lib/reference.cjs");
+const {
+  ROOT, pages, byId, sections, siteUrl, resolveLink, renderSource, searchRecord,
+  roleLabel, breadcrumbsFor,
+} = require("../lib/reference.cjs");
 
 test("source-map entries resolve to existing, uniquely identified Markdown", () => {
   assert.ok(pages.length >= 27);
@@ -113,8 +115,9 @@ test("site layout preserves independently scrollable technical tables on phones"
 test("newcomer introduction leads the reference and search index", () => {
   const entry = pages.find((item) => item.id === "history.introduction");
   assert.equal(entry.slug, "start");
-  assert.equal(sections[0].id, "introduction");
-  assert.equal(sections[0].pages[0].id, entry.id);
+  assert.equal(sections[0].id, "deskmate");
+  assert.equal(sections[0].hub.id, "deskmate.overview");
+  assert.equal(sections[0].subsections[0].pages[0].id, entry.id);
   const record = searchRecord(entry);
   assert.equal(record.url, "/start/");
   assert.match(record.text, /approachable/);
@@ -136,8 +139,9 @@ test("homepage prioritizes illustrated discovery, technical reference and recove
   assert.match(html, /Meet the other desktop of the PC era/);
   assert.match(html, /Where would you like to begin/);
   assert.match(html, /href="\/start\/"/);
-  assert.match(html, /href="\/system\/tandy-crosswalk\/"/);
-  assert.match(html, /href="\/recovery\/workbench\/"/);
+  assert.match(html, /href="\/deskmate\/"/);
+  assert.match(html, /href="\/formats\/"/);
+  assert.match(html, /href="\/recovery\/"/);
   assert.match(html, /assets\/reference\/collection-01\/ui.desktop.launcher.png/);
   assert.match(html, /width="640" height="480"/);
   assert.doesNotMatch(html, /Private evidence paths|raw ROMs/);
@@ -170,5 +174,62 @@ test("baseline page IDs retain their published routes", () => {
     if (entry.page_id !== null) {
       assert.equal(byId.get(entry.page_id), entry.route, "Changed baseline route: " + entry.page_id);
     }
+  }
+});
+
+test("navigation uses five reader sections with one hub each", () => {
+  assert.deepEqual(sections.map((section) => section.id),
+    ["deskmate", "formats", "recovery", "research", "project"]);
+  for (const section of sections) {
+    assert.equal(section.pages.filter((page) => page.is_hub).length, 1);
+    assert.equal(section.hub.slug, section.id);
+    assert.equal(section.hub.subsection, null);
+    assert.ok(section.subsections.length >= 1);
+    for (const group of section.subsections) assert.ok(group.pages.length);
+  }
+  assert.equal(sections.reduce((total, section) => total + section.pages.length, 0),
+    pages.length);
+});
+
+test("every mapped page belongs to exactly one section listing", () => {
+  for (const page of pages) {
+    const section = sections.find((item) => item.id === page.section);
+    assert.ok(section, "no section for " + page.id);
+    assert.equal(section.pages.filter((item) => item.id === page.id).length, 1);
+  }
+});
+
+test("section membership does not follow URL prefixes", () => {
+  assert.equal(byId.get("formats.sound-research").section, "research");
+  assert.equal(byId.get("applications.automatic-house-x10").section, "research");
+  assert.equal(byId.get("evidence.visual-policy").section, "project");
+  assert.equal(byId.get("system.architecture").section, "formats");
+  assert.equal(byId.get("applications.ecosystem").section, "deskmate");
+});
+
+test("hubs carry no evidence-role badge and documents get readable labels", () => {
+  assert.equal(roleLabel(byId.get("deskmate.overview")), null);
+  assert.equal(roleLabel(byId.get("formats.calendar")), "Dated snapshot");
+  assert.equal(roleLabel(byId.get("formats.filer")), "Manufacturer reference");
+  assert.equal(roleLabel(byId.get("research.draw")), "Dated experiment report");
+  assert.equal(roleLabel(byId.get("site.authoring")), "Project planning document");
+});
+
+test("breadcrumbs lead from home through the section to the page", () => {
+  const crumbs = breadcrumbsFor(byId.get("research.draw"));
+  assert.deepEqual(crumbs.map((crumb) => crumb.label),
+    ["Home", "Research", "Format experiments", "Native graphics experiments"]);
+  assert.equal(crumbs[1].href, "/research/");
+  const hubCrumbs = breadcrumbsFor(byId.get("formats.overview"));
+  assert.deepEqual(hubCrumbs.map((crumb) => crumb.label), ["Home", "File formats"]);
+  assert.equal(hubCrumbs[1].href, undefined);
+});
+
+test("hub pages render as prose-led landing pages with working links", () => {
+  for (const section of sections) {
+    const html = renderSource(section.hub);
+    assert.match(html, /<h2[^>]*>Start here<\/h2>/, section.id + " lacks a start-here list");
+    assert.match(html, /<h2[^>]*>Continue<\/h2>/, section.id + " lacks onward links");
+    assert.doesNotMatch(html, /#unpublished-source/);
   }
 });
