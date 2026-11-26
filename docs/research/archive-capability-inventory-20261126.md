@@ -580,3 +580,6 @@ coherent review unit:
 - [Successor checkpoint 3](archive-capability-inventory-20261126d.md): FAT32
   and VFAT structural hardening for bad clusters, cross-links, allocation-table
   copies, FSInfo and backup boot sectors.
+- [Archive index migration proposal](archive-index-migration-20261126.md): a
+  rehearsed, additive schema version 2 for identity axes, derived artifacts and
+  selective reprocessing.
