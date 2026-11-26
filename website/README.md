@@ -55,6 +55,26 @@ Pages settings, not through the Eleventy templates or the publishing workflow.
 With the custom-domain setting configured in GitHub's UI, an additional
 repository `CNAME` file is not necessary for the Actions-based build.
 
+## Navigation redesign and compatibility baseline
+
+See the [agreed implementation handoff](../docs/site/navigation-restructure.md).
+The existing generated-site audit now checks the
+[pre-redesign route inventory](../docs/site/published-route-baseline.json)
+as well as links and fragments. Route checks are active immediately; anchor
+capture is pending. From a separate checkout of the baseline's recorded
+`source_revision`, build the site with the original renderer and inspect the
+output. Then run the new checker from this checkout, pointing at that
+original build (replace OLD_SITE_OUTPUT with its absolute path):
+
+    python website/scripts/check_generated_site.py OLD_SITE_OUTPUT / --capture-anchors > captured-baseline.json
+
+Use a shell with UTF-8 redirection, or explicitly write UTF-8 in PowerShell.
+Review the resulting JSON, source revision and route inventory before
+replacing the tracked baseline in a review PR. Do not capture from a changed
+site. Subsequent preview and publishing checks then fail on missing recorded
+anchors as well as missing routes. Additions are permitted; preserve
+legacy named anchors and layout fragment targets when required.
+
 ## Source and publication policy
 
 All rendered pages come from the reviewed
