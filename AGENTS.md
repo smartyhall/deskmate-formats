@@ -1,5 +1,71 @@
 # Standing research instructions
 
+## Multi-agent campaign governance — supplementary agent integration (2026-11-25)
+
+These standing instructions apply to every producing agent, including Codex,
+Freebuff, delegated subagents and future providers, regardless of client or
+execution mode. Read [the contribution and campaign protocol](CONTRIBUTING.md#agent-assisted-campaigns)
+before starting. Historical provider-specific decisions remain in effect;
+the general rules below supplement them, not expand their grants.
+
+- Assign each writing campaign an owner, opaque campaign ID, base commit,
+  dedicated branch (`codex/<campaign>`, `freebuff/<campaign>`,
+  `chatgpt/<campaign>`, or another explicitly identified provider prefix),
+  and a separate worktree or checkout. Read-only audits may use an existing
+  checkout with the operator's knowledge; record HEAD/status before and
+  after and flag concurrent changes. Never switch another campaign's branch,
+  stage its files, reset its work or assume ignored files are unchanged.
+- Before mutation, inspect worktree ownership, active campaigns and shared
+  resources. Coordinate through the operator or a reviewed ownership/lease
+  mechanism. Isolate mutable builds, virtual environments, temporary files,
+  logs and experimental outputs; Git worktrees are not OS sandboxes and
+  still share refs/object storage. Never remove another worker's worktree
+  or break an uncertain lock. Resolve conflicts by coordination, not force.
+- Only an explicitly assigned campaign may operate a particular emulator,
+  socket, writable guest image or host-input channel. Preserve exclusive
+  ownership and evidence provenance; use the existing native 86Box control
+  protocol and its authorization gates. Coordinate shared downloaders,
+  archives, indexes, disk capacity and expensive I/O; prefer immutable
+  inputs and separate derived outputs.
+- All producers must honor the same evidence, licensing, privacy, CI,
+  editorial, visual-exemplar and publication rules. The existing eligible
+  synthetic-data and documentary-image grants may be used within authorized
+  research campaigns under the same checks, not as general permission to
+  redistribute third-party material or publish private data. A producer
+  cannot approve or merge its own PR, including work produced by its
+  delegated agents. Cross-agent reviews are useful but do not themselves
+  confer merge authority. The operator or an explicitly authorized
+  independent reviewer must review scope, provenance and passing checks.
+  The existing ChatGPT housekeeping merge grant for completed Codex PRs
+  remains unchanged; do not assume it extends to Freebuff or ChatGPT's own PRs.
+- Record provider, model/effort if known, execution mode, campaign and
+  checkpoint identity, evidence origin, tests, limitations and usage receipts
+  at startup, meaningful checkpoints and completion/safe stop. Keep existing
+  Codex receipts and tooling intact; use the provider-neutral receipt contract
+  in [the usage ledger](docs/evidence/codex-usage/README.md#supplementary-agent-receipts)
+  for other agents. Use null/unknown where telemetry is unavailable;
+  never make extra paid calls or invent usage. Preserve sanitized receipts
+  and independently checkable evidence before reporting completion.
+- Native Freebuff research is supplementary and experimental. Its initial
+  read-only assessment reported automatic AGENTS.md loading, a primary
+  checkout, local shell tools and no loaded MCP servers. These are reported
+  observations, not a security or compatibility guarantee. Recheck per
+  session. Do not presume Codex configuration/credentials, MCP registrations,
+  usage telemetry or conversation history transfer. Do not connect a model
+  provider, send private lab inputs to an external service, install an MCP
+  server, start another agent or use cloud execution merely because a client
+  exposes the capability. Check the service's data handling and the actual
+  data boundary; obtain separate authorization for new provider credentials,
+  paid use, unattended dispatch, live emulator work or consequential
+  external actions as required by existing policy.
+- Prefer versioned provider-neutral procedure documents and, where supported,
+  reusable skills and reviewed MCP configuration examples with placeholders
+  only. Never commit real authentication values or import another agent's
+  private logs or account settings. The Observatory's current Codex-specific
+  journal and Supervisor's pinned Codex protocol are not Freebuff adapters;
+  do not imply coverage, bypass live gates, or initiate an integration
+  implementation merely because of this policy.
+
 ## Accepted experimental laboratory risk — operator decision 2026-11-11
 
 **Read [experimental laboratory posture](docs/research/experimental-lab-operating-posture.md)
@@ -46,7 +112,7 @@ Challenge scope drift: evidence, consequence, rollback, minimum control.
   and its ecosystem running with synthetic/public sample data**, the project's
   own synthetic illustrations, and appropriately attributed, limited images
   prepared for public documentation to be curated and published in the
-  reference site. Codex may select, review and commit eligible examples in a
+  reference site. Authorized producing agents may select, review and commit eligible examples in a
   review PR without separate operator authorization for every screenshot.
   A contextual screenshot is not a license to redistribute commercial software,
   installed media, extracted proprietary assets, complete manuals or archives.
@@ -62,8 +128,8 @@ Challenge scope drift: evidence, consequence, rollback, minimum control.
   works or unverified redistribution terms still deserve a focused review,
   but do not presume routine UI screenshots are categorically forbidden.
   ChatGPT can independently review and merge eligible, passing PRs under the
-  existing housekeeping grant; producing Codex workers still cannot merge.
-- Representative visual evidence in Codex pull requests (operator, 2026-11-21):
+  existing Codex housekeeping grant; no producing agent may merge its own PR.
+- Representative visual evidence in research pull requests (operator, 2026-11-21):
   Every research PR should include a small, **representative set of exemplar
   images whenever the work has meaningful visual states or outputs**. Choose
   images proportional to the work: cover the principal applications, workflows,
@@ -96,8 +162,8 @@ Challenge scope drift: evidence, consequence, rollback, minimum control.
   test the committed bytes and ensure binary fixtures remain excluded from
   wheel/sdist. For authorized publication, push a dedicated branch and open a
   PR for independent review; the 2026-11-08 standing housekeeping grant
-  allows ChatGPT to merge a reviewed, passing PR, but not the producing Codex
-  worker to auto-merge. If publication is not authorized or is unsafe, keep
+  allows ChatGPT to merge a reviewed, passing Codex PR, but no producing
+  agent may merge its own PR. If publication is not authorized or is unsafe, keep
   the artifact private and report the precise blocker rather than silently
   substituting hashes for a usable file.
 - Never commit commercial installers, ROMs, executables, complete installed
@@ -124,8 +190,8 @@ Challenge scope drift: evidence, consequence, rollback, minimum control.
 - Inspect status/diffs, preserve local changes, fetch without resetting, and work
   on a dedicated branch. Run applicable portable checks before local commits.
   Push and open eligible synthetic research PRs only under the standing
-  publication grant or other explicit authorization. Codex must not merge
-  its own PRs; ChatGPT may independently merge ready PRs under the operator's
+  publication grant or other explicit authorization. No producing agent may merge
+  its own PRs; ChatGPT may independently merge ready Codex PRs under the operator's
   2026-11-08 post-run housekeeping grant. Do not infer approval for unrelated
   repository mutations, unattended dispatch, emulator control or paid calls.
 
@@ -141,7 +207,7 @@ versions and behaviors actually documented.
 Use the **Oxford (serial) comma** in public-facing reference-site prose:
 articles, historical introductions, editorial explanations, navigation text,
 captions, and alternative text. This is a reader-facing house style, not a
-requirement for Codex's internal research reports, experiment logs, source
+requirement for agents' internal research reports, experiment logs, source
 notes, or technical developer documentation; those may use the style most
 appropriate to their content. Do not rewrite original research evidence or
 verbatim historical quotations merely to enforce house style.
@@ -267,7 +333,7 @@ organization or interrupt active research solely because of this roadmap.
 
 Use the [standing secondary workstream](docs/archive-format-coverage.md)
 and [format backlog](docs/archive-format-backlog.json) for spare capacity
-within already authorized Codex campaigns after primary work is complete.
+within already authorized research campaigns after primary work is complete.
 Proactively qualify additional archives, compression, sector/track/flux
 images, recording encodings, filesystems and other media; preserve original
 bytes and uncertainty, use modular bounded processing and checkpoint
@@ -289,7 +355,7 @@ authorization merely to fill gaps.
 ## Laboratory storage inventory and hygiene — operator direction 2026-11-23
 
 Follow the [standing laboratory storage inventory workstream](docs/lab-storage-housekeeping.md)
-for bounded spare-capacity work after primary authorized Codex tasks are
+for bounded spare-capacity work after primary authorized research tasks are
 complete. The first dedicated Windows 10 storage/Win 98 VM lineage audit,
 [issue #169](https://github.com/smartyhall/deskmate-formats/issues/169),
 completed its read-only investigation in [PR #172](https://github.com/smartyhall/deskmate-formats/pull/172).
