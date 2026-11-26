@@ -236,11 +236,11 @@ def main():
         session.record('deskmate-desktop', digest=desktop['digest'],
                        capture=session.capture('07-deskmate-desktop'))
 
-        opened = session.input.press(F10, expect='change')
+        opened = session.input.press(F10, expect='changed')
         screens.capture('menu')
         session.record('menu-open', report=opened.as_dict(),
                        capture=session.capture('08-menu-open'))
-        restored = session.input.press(ESC, expect='restore', reference=desktop)
+        restored = session.input.press(ESC, expect='state', reference=desktop)
         session.record('menu-restore', report=restored.as_dict(),
                        capture=session.capture('09-menu-restored'))
 

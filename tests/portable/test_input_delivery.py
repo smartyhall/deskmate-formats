@@ -58,7 +58,8 @@ class Peer:
     def __init__(self, *, drop=(), substitute=None, duplicate_at=None, swallow=False,
                  queue_only=False, drain=True, trim=False, cursor_offset=0,
                  delay_steps=0, ring='normal', bios_mode=3, blink=False, history=False,
-                 commands=None, prompt='C:\\>', no_prompt_return=False, stale=None):
+                 commands=None, prompt='C:\\>', no_prompt_return=False, stale=None,
+                 instrumented=False):
         self.ms = 0
         self.frames = 1
         self.bios_mode = bios_mode
@@ -85,6 +86,18 @@ class Peer:
         self.shift = False
         self.head = 0x1E
         self.tail = 0x1E
+        # An instrumented build announces capabilities and reports its own
+        # automation queue and event counters; a stock build announces nothing.
+        self.instrumented = instrumented
+        self.seq = 0
+        self.accepted = 0
+        self.forwarded = 0
+        self.dropped = 0
+        self.sent_dx = 0
+        self.sent_dy = 0
+        self.sent_buttons = 0
+        # A build that lies about completion: reports events still queued.
+        self.completion_queue = 0
         if ring == 'wrapped':
             self.head, self.tail = 0x38, 0x1E
         elif ring == 'malformed':
@@ -132,6 +145,9 @@ class Peer:
         body = body[-ROWS:]
         rows = [' ' * COLS] * (ROWS - len(body)) + [row[:COLS].ljust(COLS) for row in body]
         return rows[-ROWS:]
+
+    def _depth(self):
+        return ((self.tail - self.head) % 0x20) // 2
 
     def _cursor(self):
         rows = self._screen()
@@ -188,6 +204,9 @@ class Peer:
     def _key(self, request):
         parts = request.split()
         down = parts[1] == 'down'
+        self.seq += 1
+        self.accepted += len(parts) - 2
+        self.forwarded += len(parts) - 2
         for token in parts[2:]:
             scan = int(token, 0)
             if scan == 0x2A:
@@ -204,7 +223,11 @@ class Peer:
                 else:
                     self._echo(scan)
             self.ms += 2
-        return {'ok': True, 'ms': self.ms, 'frames': self.frames, 'held': True}
+        reply = {'ok': True, 'ms': self.ms, 'frames': self.frames, 'held': True}
+        if self.instrumented:
+            reply.update({'events': len(parts) - 2, 'seq': self.seq,
+                          'queue': self.completion_queue})
+        return reply
 
     def _submit(self):
         if self.no_prompt_return:
@@ -232,9 +255,32 @@ class Peer:
         parts = request.split()
         verb = parts[0]
         if parts == ['status']:
-            return {'ok': True, 'protocol': 1, 'version': 'SYNTHETIC-PEER', 'ms': self.ms,
-                    'frames': self.frames, 'held': True, 'paused': False, 'ff': False,
-                    'w': 1, 'h': 1, 'bios_mode': self.bios_mode, 'quantum_ms': 1}
+            reply = {'ok': True, 'protocol': 1, 'version': 'SYNTHETIC-PEER', 'ms': self.ms,
+                     'frames': self.frames, 'held': True, 'paused': False, 'ff': False,
+                     'w': 1, 'h': 1, 'bios_mode': self.bios_mode, 'quantum_ms': 1}
+            if self.instrumented:
+                reply['caps'] = ['input_queue', 'event_seq', 'wait_queue', 'video_meta',
+                                 'mouse_state', 'keyboard_held']
+                reply['input'] = {'queue': self._depth(), 'capacity': 64, 'seq': self.seq,
+                                  'accepted': self.accepted, 'forwarded': self.forwarded,
+                                  'dropped': self.dropped, 'held_keys': 0, 'gap_ms': 2}
+            return reply
+        if parts == ['video']:
+            text = self.bios_mode in inp.TEXT_MODES
+            return {'ok': True, 'bios_mode': self.bios_mode, 'text': text,
+                    'cols': COLS if text else 0, 'rows': ROWS if text else 0,
+                    'cursor': self._cursor() if text else [-1, -1], 'w': 1, 'h': 1}
+        if parts == ['mouse', 'state']:
+            return {'ok': True, 'sent_dx': self.sent_dx, 'sent_dy': self.sent_dy,
+                    'buttons': self.sent_buttons, 'mode': 0}
+        if parts[:2] == ['wait', 'queue']:
+            budget = int(parts[2], 0)
+            if self.drain:
+                self.head = self.tail
+            matched = self._depth() == 0
+            self.ms += 0 if matched else budget
+            return {'ok': True, 'ms': self.ms, 'frames': self.frames, 'held': True,
+                    'matched': matched, 'queue': self._depth()}
         if parts == ['info']:
             return {'ok': True, 'version': 'SYNTHETIC-PEER', 'machine': 'SYNTHETIC',
                     'hard_resets': 1, 'soft_resets': 1, 'last_reset_ms': 0}
@@ -274,6 +320,9 @@ class Peer:
         if verb == 'mouse':
             if parts[1] != '0' or parts[2] != '0':
                 self.lines.append('pointer:' + parts[1] + ',' + parts[2] + ',' + parts[3])
+            self.sent_dx += int(parts[1], 0)
+            self.sent_dy += int(parts[2], 0)
+            self.sent_buttons = int(parts[3], 0)
             return {'ok': True, 'ms': self.ms, 'frames': self.frames, 'held': True}
         if verb == 'quit':
             return {'ok': True, 'ms': self.ms, 'frames': self.frames, 'held': True}
@@ -306,6 +355,8 @@ class FacilityTests(unittest.TestCase):
         self.assertEqual(report.status, inp.OBSERVED)
         self.assertTrue(report.evidence.acknowledged)
         self.assertTrue(report.evidence.delivered)
+        # This peer does queue each keystroke before draining it, so the ring is
+        # seen holding input and then empty: affirmative acceptance evidence.
         self.assertIs(report.evidence.accepted, True)
         self.assertIs(report.evidence.observed, True)
         self.assertEqual(report.observed, 'ABCDEFGHIJ')
@@ -324,9 +375,9 @@ class FacilityTests(unittest.TestCase):
         facility = self.facility(peer={'drop': (9,)}, chunk=10)
         report = facility.type_text('ABCDEFGHIJ', anchor=PROMPT)
         self.assertEqual(report.status, inp.OBSERVED)
-        # Resending a suffix after confirmed progress is the next burst, not a
-        # recovery; only a burst that produces nothing new is counted as one.
-        self.assertEqual((report.bursts, report.recoveries), (2, 0))
+        # The burst landed only partly, so the suffix is a recovery and spends
+        # the allowance even though it succeeds.
+        self.assertEqual((report.bursts, report.recoveries), (2, 1))
         self.assertEqual(self.peer.received, 'ABCDEFGHIJJ')
         self.assertEqual(self.peer.typed, 'ABCDEFGHIJ')
 
@@ -367,7 +418,9 @@ class FacilityTests(unittest.TestCase):
         report = facility.type_text('ABCD', anchor=PROMPT)
         self.assertEqual(report.status, inp.UNCHANGED)
         self.assertEqual(report.missing, 'ABCD')
-        self.assertIs(report.evidence.accepted, True)
+        # Nothing was ever seen queued, so there is no affirmative acceptance
+        # evidence even though the ring reads empty.
+        self.assertIsNone(report.evidence.accepted)
         self.assertEqual(self.peer.received, 'ABCD')
 
     def test_queued_input_blocks_sending_and_is_reported_pending(self):
@@ -397,6 +450,15 @@ class FacilityTests(unittest.TestCase):
         report = facility.type_text('ABCD', anchor=PROMPT)
         self.assertEqual(report.status, inp.UNCHANGED)
         self.assertEqual(self.peer.received, 'ABCD')
+
+    def test_partial_burst_spends_a_recovery_even_though_it_progressed(self):
+        facility = self.facility(peer={'drop': (7,)}, chunk=8, max_recoveries=1)
+        report = facility.type_text('ABCDEFGH', anchor=PROMPT)
+        self.assertEqual(report.status, inp.OBSERVED)
+        self.assertEqual((report.bursts, report.recoveries), (2, 1))
+        self.assertEqual(self.peer.typed, 'ABCDEFGH')
+        self.assertEqual(report.steps[0]['expected'], 'ABCDEFGH')
+        self.assertEqual(report.steps[0]['observed'], 'ABCDEFG')
 
     def test_attempt_budget_stops_a_peer_that_keeps_dropping(self):
         facility = self.facility(peer={'drop': tuple(range(9, 30))}, chunk=10,
@@ -455,6 +517,13 @@ class FacilityTests(unittest.TestCase):
         self.assertEqual((state['head'], state['tail']), (0x38, 0x1E))
         self.assertEqual(state['depth'], 3)     # three words queued across the wrap
 
+    def test_pointer_equal_to_the_exclusive_end_is_out_of_range(self):
+        facility = self.facility()
+        self.peer.tail = 0x3E          # the end offset itself, not a valid pointer
+        state = facility.bios_keyboard_queue()
+        self.assertFalse(state['valid'])
+        self.assertEqual(state['reason'], 'pointer outside extents')
+
     def test_ring_wraps_and_refuses_overflow_like_the_bios(self):
         facility = self.facility(peer={'queue_only': True, 'drain': False})
         facility.client.type_ascii('ABCDEFGHIJKLMNO')       # 15 keystrokes
@@ -490,10 +559,11 @@ class FacilityTests(unittest.TestCase):
         facility = self.facility(peer={'bios_mode': 0x12})
         start = facility.snapshot()
         self.assertEqual(start['basis'], 'frame')
-        opened = facility.press(0x44, expect='change')
-        self.assertEqual(opened.status, inp.OBSERVED)
+        opened = facility.press(0x44, expect='changed')
+        self.assertEqual(opened.status, 'changed')
+        self.assertIsNone(opened.evidence.observed)
         self.assertIsNone(opened.evidence.accepted)
-        closed = facility.press(0x01, expect='restore', reference=start)
+        closed = facility.press(0x01, expect='state', reference=start)
         self.assertEqual(closed.status, inp.OBSERVED)
 
     def test_a_press_without_an_expectation_never_claims_observation(self):
@@ -502,29 +572,37 @@ class FacilityTests(unittest.TestCase):
         self.assertEqual(report.status, 'changed')
         self.assertIsNone(report.evidence.observed)
 
+    def test_requested_change_is_still_not_success(self):
+        facility = self.facility(peer={'bios_mode': 0x12})
+        report = facility.press(0x44, expect='changed')
+        self.assertEqual(report.status, 'changed')
+        self.assertIsNone(report.evidence.observed)
+        self.assertNotEqual(report.status, inp.OBSERVED)
+
     def test_text_basis_ignores_a_blinking_cursor(self):
         facility = self.facility(peer={'blink': True})
         first = facility.frame_digest()[0]
         facility.client.step(600)
         self.assertNotEqual(first, facility.frame_digest()[0])
-        report = facility.press(0x44, expect='change')
+        report = facility.press(0x44, expect='changed')
         self.assertEqual(report.status, inp.UNCHANGED)
         self.assertEqual(report.steps[0]['basis'], 'text')
 
     def test_unexpected_no_change_is_reported_not_hidden(self):
         facility = self.facility(peer={'bios_mode': 0x12})
-        report = facility.press(0x01, expect='change')
+        report = facility.press(0x01, expect='changed')
         self.assertEqual(report.status, inp.UNCHANGED)
 
     def test_pointer_motion_is_delivered_and_visible(self):
         facility = self.facility(peer={'bios_mode': 0x12})
-        report = facility.pointer(5, -3, 1, expect='change')
-        self.assertEqual(report.status, inp.OBSERVED)
+        report = facility.pointer(5, -3, 1, expect='changed')
+        self.assertEqual(report.status, 'changed')
+        self.assertIsNone(report.evidence.observed)
         self.assertIn('mouse 5 -3 1', self.peer.requests)
 
     def test_pointer_click_without_change_is_not_success(self):
         facility = self.facility(peer={'bios_mode': 0x12})
-        report = facility.pointer(0, 0, 1, expect='change')
+        report = facility.pointer(0, 0, 1, expect='changed')
         self.assertEqual(report.status, inp.UNCHANGED)
 
     def test_render_gate_notices_a_live_guest(self):
@@ -565,6 +643,24 @@ class FacilityTests(unittest.TestCase):
         self.assertIn('execution state unknown', result.detail)
         self.assertEqual(self.peer.received, 'DIR')
 
+    def test_output_already_in_history_does_not_count(self):
+        # The screen already shows the string from an earlier command; a command
+        # that prints nothing must not be credited with producing it.
+        facility = self.facility(peer={'history': True})
+        prompt = profiles.DosPrompt(facility, PROMPT)
+        result = prompt.submit('NOOP', expect_output='MS-DOS Version', timeout_ms=300)
+        self.assertTrue(result.prompt_returned)
+        self.assertFalse(result.output_matched)
+        self.assertFalse(result.succeeded)
+
+    def test_output_in_a_new_row_counts_even_if_it_repeats_history(self):
+        facility = self.facility(peer={'history': True,
+                                       'commands': {'NOOP': ['MS-DOS Version 5.00']}})
+        prompt = profiles.DosPrompt(facility, PROMPT)
+        result = prompt.submit('NOOP', expect_output='MS-DOS Version')
+        self.assertTrue(result.output_matched)
+        self.assertTrue(result.prompt_returned)
+
     def test_expected_output_that_never_appears_is_reported(self):
         facility = self.facility()
         prompt = profiles.DosPrompt(facility, PROMPT)
@@ -587,6 +683,20 @@ class FacilityTests(unittest.TestCase):
         self.assertEqual(transition.status, inp.OBSERVED)
         self.assertTrue(transition.evidence.observed)
         self.assertEqual(screens.states['desktop'], desktop)
+
+    def test_transition_withholds_input_when_the_start_state_is_wrong(self):
+        facility = self.facility(peer={'bios_mode': 0x12})
+        screens = profiles.ScreenStates(facility)
+        screens.capture('desktop')
+        facility.press(0x44)
+        screens.capture('menu')
+        facility.press(0x01)                        # back to the desktop
+        before = len(self.peer.requests)
+        report = screens.transition(0x150, before='menu', after='desktop')
+        self.assertEqual(report.detail['action'], 'withheld')
+        self.assertFalse(report.evidence.delivered)
+        sent = [r for r in self.peer.requests[before:] if r.split()[0] == 'key']
+        self.assertEqual(sent, [])
 
     # ---- protocol primitives and validation ----
 
@@ -635,6 +745,76 @@ class FacilityTests(unittest.TestCase):
             facility.type_text('A', anchor=PROMPT)
         with self.assertRaises(profiles.ProfileError):
             profiles.DosPrompt(facility, PROMPT)
+
+    # ---- instrumented-build negotiation ----
+
+    def test_stock_build_announces_no_instrumentation(self):
+        facility = self.facility()
+        self.assertEqual(facility.client.capabilities(), [])
+        self.assertFalse(facility.client.supports('wait_queue'))
+        self.assertIsNone(facility.automation_queue())
+        self.assertIsNone(facility.wait_queue(10))
+        for operation in (lambda: facility.client.wait_queue(10),
+                          lambda: facility.client.video(),
+                          lambda: facility.client.mouse_state()):
+            with self.assertRaises(box.FeatureUnavailable):
+                operation()
+
+    def test_instrumented_build_reports_queue_sequence_and_counters(self):
+        facility = self.facility(peer={'instrumented': True})
+        self.assertTrue(facility.client.supports('input_queue'))
+        state = facility.automation_queue()
+        self.assertEqual((state['queue'], state['capacity'], state['seq']), (0, 64, 0))
+        report = facility.type_text('AB', anchor=PROMPT)
+        self.assertEqual(report.status, inp.OBSERVED)
+        self.assertTrue(report.steps[0]['automation']['matched'])
+        state = facility.automation_queue()
+        self.assertGreater(state['seq'], 0)
+        self.assertEqual((state['accepted'], state['forwarded'], state['dropped']),
+                         (8, 8, 0))
+
+    def test_key_completion_is_verified_when_the_build_reports_it(self):
+        facility = self.facility(peer={'instrumented': True})
+        facility.client.tap(0x0F)
+        facility.client.tap(0x10)
+        self.assertEqual(facility.client.last_key_seq, 4)
+        self.peer.completion_queue = 1
+        with self.assertRaises(box.ProtocolError):
+            facility.client.tap(0x11)
+
+    def test_wait_queue_is_bounded_when_the_queue_never_drains(self):
+        facility = self.facility(peer={'instrumented': True, 'queue_only': True, 'drain': False})
+        facility.client.type_ascii('A')
+        result = facility.client.wait_queue(40)
+        self.assertFalse(result['matched'])
+        self.assertGreater(result['queue'], 0)
+
+    def test_video_metadata_matches_the_text_cursor(self):
+        facility = self.facility(peer={'instrumented': True})
+        video = facility.client.video()
+        self.assertEqual((video['bios_mode'], video['text'], video['cols'], video['rows']),
+                         (3, True, COLS, ROWS))
+        facility.client.type_ascii('VER')
+        self.assertEqual(facility.client.video()['cursor'], facility.client.text()['cursor'])
+        self.peer.bios_mode = 0x12
+        graphics = facility.client.video()
+        self.assertFalse(graphics['text'])
+        self.assertEqual(graphics['cursor'], [-1, -1])
+
+    def test_mouse_state_reports_cumulative_delivery(self):
+        facility = self.facility(peer={'instrumented': True, 'bios_mode': 0x12})
+        facility.pointer(4, -2, 1)
+        facility.pointer(1, 3, 0)
+        state = facility.client.mouse_state()
+        self.assertEqual((state['sent_dx'], state['sent_dy'], state['buttons']), (5, 1, 0))
+
+    def test_forwarding_queue_blocks_observation_and_resend(self):
+        facility = self.facility(peer={'instrumented': True, 'queue_only': True, 'drain': False})
+        report = facility.type_text('ABC', anchor=PROMPT)
+        self.assertEqual(report.status, inp.PENDING)
+        self.assertIn('automation queue still forwarding', report.detail)
+        self.assertEqual((report.bursts, len(report.steps)), (1, 1))
+        self.assertEqual(report.steps[0]['automation']['matched'], False)
 
     def test_report_evidence_is_serializable_and_carries_each_layer(self):
         facility = self.facility(chunk=4)

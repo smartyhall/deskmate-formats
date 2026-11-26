@@ -18,8 +18,11 @@ did what we meant". This module keeps them apart and records each separately:
     reads at HEAD and advances HEAD, so occupancy is ``(tail - head) mod size``.
     The ring therefore counts translated keystrokes, not raw scan-code events:
     a bare modifier never enters it, and a program that hooks ``INT 09h`` or
-    polls the controller bypasses it entirely. An empty ring is a negative
-    observation, not proof that a particular keystroke was consumed.
+    polls the controller bypasses it entirely. ``True`` therefore requires
+    affirmative evidence: the ring was sampled non-empty (``peak``) and then
+    drained. A ring that reads empty throughout - because the guest consumed the
+    input before the first sample, or because it was never translated at all -
+    leaves ``accepted`` as ``None``. ``False`` means the ring kept the input.
 
 ``observed``
     Only set when the caller supplied an expectation and it was met: an exact
@@ -34,6 +37,8 @@ instead of replaying input.
 """
 from dataclasses import dataclass, field
 import hashlib
+
+from .client import FeatureUnavailable
 
 TEXT_MODES = (0, 1, 2, 3, 7)
 BIOS_CURSOR = 0x450
@@ -225,13 +230,31 @@ class VerifiedInput:
         size = end - start
         if not 2 <= size <= 64 or size % 2:
             result['reason'] = 'implausible extents'
-        elif not (start <= head <= end and start <= tail <= end):
+        elif not (start <= head < end and start <= tail < end):
+            # The BIOS end offset is exclusive: pointers wrap to `start` when they
+            # reach `end`, so a pointer equal to `end` is out of range.
             result['reason'] = 'pointer outside extents'
         elif (head - start) % 2 or (tail - start) % 2:
             result['reason'] = 'unaligned pointer'
         else:
             result.update(size=size, valid=True, depth=((tail - head) % size) // 2)
         return result
+
+    def automation_queue(self):
+        """The automation interface's own queue state, or None on a stock build.
+
+        This is a different queue from the BIOS ring: it counts events the
+        interface still owes to the keyboard controller.
+        """
+        return self.client.input_state()
+
+    def wait_queue(self, timeout_ms=None):
+        """Wait, bounded, for the automation queue to drain; None if unsupported."""
+        budget = self.drain_timeout_ms if timeout_ms is None else timeout_ms
+        try:
+            return self.client.wait_queue(budget)
+        except FeatureUnavailable:
+            return None
 
     def wait_drained(self, timeout_ms=None):
         """Advance until the BIOS ring reports empty, or the budget ends.
@@ -241,12 +264,17 @@ class VerifiedInput:
         """
         budget = self.drain_timeout_ms if timeout_ms is None else timeout_ms
         spent, state = 0, self.bios_keyboard_queue()
+        peak = state['depth'] or 0
         while state['depth'] not in (0, None) and spent < budget:
             slice_ms = min(50, max(1, budget - spent))
             self.client.step(slice_ms)
             spent += slice_ms
             state = self.bios_keyboard_queue()
-        return state
+            peak = max(peak, state['depth'] or 0)
+        # `peak` is what makes acceptance affirmative rather than assumed: a ring
+        # that was seen holding keystrokes and then emptied proves consumption,
+        # while a ring that was never seen holding any proves nothing.
+        return dict(state, peak=peak)
 
     def row_info(self, anchor, occurrence='only'):
         """Locate `anchor` on screen and return the raw characters after it.
@@ -315,13 +343,31 @@ class VerifiedInput:
             report.bursts += 1
             queue = self.wait_drained()
             report.queue = queue
-            if queue['valid']:
+            # An instrumented build also reports its own queue draining. When it
+            # says events are still being forwarded, observing the screen now
+            # would describe a half-delivered burst.
+            automation = self.wait_queue(self.drain_timeout_ms)
+            if automation is not None and automation['matched'] is False:
+                report.status = PENDING
+                report.detail = 'automation queue still forwarding; not resending'
+                report.steps.append({'burst': report.bursts, 'sent': burst,
+                                     'queue': queue, 'automation': automation,
+                                     'ms': self.client.status()['ms']})
+                return report
+            # Acceptance is only claimed from affirmative evidence: the ring was
+            # seen holding keystrokes and then emptied. An empty ring proves
+            # nothing, because the guest may have consumed the input before the
+            # first sample, or may never have translated it at all.
+            if queue['valid'] and queue['peak']:
                 report.evidence.accepted = queue['depth'] == 0
             observed, cursor = self._observe(anchor, occurrence, start_col)
+            expected = confirmed + burst
             report.observed, report.cursor = observed, cursor
             report.steps.append({'burst': report.bursts, 'sent': burst,
+                                 'expected': expected,
                                  'observed': observed, 'cursor': cursor,
-                                 'queue': queue, 'ms': self.client.status()['ms']})
+                                 'queue': queue, 'automation': automation,
+                                 'ms': self.client.status()['ms']})
             if observed == text and (cursor is None or not require_cursor
                                      or cursor == (before['row'], start_col + len(text))):
                 report.status = OBSERVED
@@ -340,21 +386,21 @@ class VerifiedInput:
                 report.evidence.observed = False
                 report.detail = 'input still queued; not resending'
                 return report
-            if observed and text.startswith(observed):
-                if len(observed) > len(confirmed):
-                    # Normal progress through the text, not a recovery.
-                    confirmed = observed
-                    pending = text[len(observed):]
-                    continue
-                # No new characters: this is now a proven-missing suffix, and it
-                # may be resent only from a verified insertion point.
-                if queue['depth'] is None:
-                    report.status = AMBIGUOUS
-                    report.detail = 'cannot read the keyboard ring; not resending'
-                    return report
-                if cursor != (before['row'], start_col + len(observed)):
-                    report.status = AMBIGUOUS
-                    report.detail = 'insertion point is not at the end of the prefix'
+            if observed == expected:
+                # A burst that landed completely is ordinary progress and does not
+                # spend recovery allowance.
+                confirmed = expected
+                pending = text[len(expected):]
+                continue
+            if observed and text.startswith(observed) and observed.startswith(confirmed):
+                # The burst landed only partly, even if what did land is new text.
+                # That is a partial delivery, and it must pass the same
+                # prerequisites as any other resend.
+                allowed, gate = self._recovery_gate(anchor, occurrence, start_col, observed)
+                report.steps[-1]['gate'] = gate
+                if not allowed:
+                    report.status = PENDING if gate['queue']['depth'] else AMBIGUOUS
+                    report.detail = gate['reason']
                     return report
                 if report.recoveries >= self.max_recoveries:
                     report.status, report.detail = AMBIGUOUS, 'recovery budget exhausted'
@@ -378,19 +424,20 @@ class VerifiedInput:
     def press(self, *codes, expect=None, reference=None, pace_ms=None):
         """Send key make/break events and report what the screen did.
 
-        `expect` is ``'change'`` (the screen must differ from the snapshot taken
-        before the press) or ``'restore'`` (it must equal `reference`, a snapshot
-        the caller kept earlier). Without an expectation, a difference is reported
-        as a change, never as success.
+        ``expect='changed'`` reports only that the screen differs from the
+        snapshot taken before the press. That is an arbitrary redraw and it never
+        sets ``evidence.observed``. ``expect='state'`` or ``'restore'`` compares
+        against `reference`, a snapshot the caller captured earlier, and only that
+        comparison can claim the intended application state.
         """
         if not codes:
             raise ValueError('at least one scancode is required')
-        if expect not in (None, 'change', 'restore'):
-            raise ValueError('expect must be change, restore or None')
+        if expect not in (None, 'changed', 'state', 'restore'):
+            raise ValueError('expect must be changed, state, restore or None')
         before = self.snapshot()
-        if expect == 'restore':
+        if expect in ('state', 'restore'):
             if not isinstance(reference, dict) or reference.get('basis') != before['basis']:
-                raise ValueError('restore needs a snapshot of the same basis')
+                raise ValueError('state comparison needs a snapshot of the same basis')
         report = Report('press', UNCHANGED, ' '.join(hex(code) for code in codes))
         for code in codes:
             self.client.tap(code)
@@ -403,10 +450,10 @@ class VerifiedInput:
         report.observed = after['digest']
         report.steps.append({'basis': before['basis'], 'before': before['digest'],
                              'after': after['digest'], 'ms': self.client.status()['ms']})
-        if expect is None:
+        if expect in (None, 'changed'):
             report.status = 'changed' if changed else UNCHANGED
             return report
-        satisfied = changed if expect == 'change' else after['digest'] == reference['digest']
+        satisfied = after['digest'] == reference['digest']
         report.status = OBSERVED if satisfied else (UNCHANGED if not changed else AMBIGUOUS)
         report.evidence.observed = satisfied
         return report
@@ -415,12 +462,15 @@ class VerifiedInput:
         """Move the configured mouse and optionally press buttons; observe the frame.
 
         A changed frame proves the pointer was redrawn, not that a control was hit.
-        A click's effect must be established by a state expectation of its own.
+        Only ``expect='state'`` against a caller snapshot can claim an application
+        state; a click's effect needs that comparison, not a difference.
         """
+        if expect not in (None, 'changed', 'state', 'restore'):
+            raise ValueError('expect must be changed, state, restore or None')
         before = self.snapshot()
-        if expect == 'restore':
+        if expect in ('state', 'restore'):
             if not isinstance(reference, dict) or reference.get('basis') != before['basis']:
-                raise ValueError('restore needs a snapshot of the same basis')
+                raise ValueError('state comparison needs a snapshot of the same basis')
         report = Report('pointer', UNCHANGED, f'{dx},{dy},{buttons}')
         self.client.mouse(dx, dy, buttons)
         report.evidence.delivered = True
@@ -432,13 +482,46 @@ class VerifiedInput:
         report.observed = after['digest']
         report.steps.append({'basis': before['basis'], 'before': before['digest'],
                              'after': after['digest'], 'ms': self.client.status()['ms']})
-        if expect is None:
+        if expect in (None, 'changed'):
             report.status = 'changed' if changed else UNCHANGED
             return report
-        satisfied = changed if expect == 'change' else after['digest'] == reference['digest']
+        satisfied = after['digest'] == reference['digest']
         report.status = OBSERVED if satisfied else (UNCHANGED if not changed else AMBIGUOUS)
         report.evidence.observed = satisfied
         return report
+
+    def _recovery_gate(self, anchor, occurrence, start_col, prefix):
+        """Re-read every recovery prerequisite at the moment of the resend.
+
+        A ring that was empty when the burst was observed does not prove that
+        device or application input has stopped arriving. One settle step passes
+        and then the ring, the cursor and the row are read again; the resend is
+        allowed only if all of them still agree with the verified prefix.
+        """
+        self.client.step(self.settle_step_ms)
+        queue = self.bios_keyboard_queue()
+        gate = {'queue': queue, 'cursor': None, 'reason': None, 'ok': False}
+        if not queue['valid']:
+            gate['reason'] = 'cannot read the keyboard ring; not resending'
+            return False, gate
+        if queue['depth']:
+            gate['reason'] = 'input still queued; not resending'
+            return False, gate
+        try:
+            info = self.row_info(anchor, occurrence)
+            cursor = self.cursor()
+        except ValueError:
+            gate['reason'] = 'anchor or cursor unavailable; not resending'
+            return False, gate
+        gate['cursor'] = list(cursor)
+        if info['after'][:len(prefix)] != prefix or info['after'][len(prefix):].strip(' '):
+            gate['reason'] = 'the row no longer shows exactly the verified prefix'
+            return False, gate
+        if cursor != (info['row'], start_col + len(prefix)):
+            gate['reason'] = 'insertion point is not at the end of the prefix'
+            return False, gate
+        gate['ok'] = True
+        return True, gate
 
     def _observe(self, anchor, occurrence, start_col):
         """Return the text the cursor says was typed, plus the cursor.

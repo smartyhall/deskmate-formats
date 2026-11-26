@@ -27,6 +27,15 @@ class CommandError(RuntimeError):
     """The emulator rejected a command; transport remains synchronized."""
 
 
+class FeatureUnavailable(RuntimeError):
+    """The connected build does not announce the capability being used.
+
+    Instrumentation is negotiated rather than assumed: a stock emulator answers
+    `status` without a capability list, and asking it for an instrumented field
+    must fail visibly instead of returning an invented value.
+    """
+
+
 class Client:
     """One serialized connection; finite timeouts and bounded JSON replies."""
 
@@ -53,6 +62,7 @@ class Client:
         self.sock = socket.create_connection((host, port), timeout=timeout)
         self.sock.settimeout(timeout)
         self.pending = bytearray()
+        self.last_key_seq = None
         try:
             self.sock.sendall(('auth ' + token + '\n').encode('ascii'))
             reply = self._read()
@@ -148,6 +158,77 @@ class Client:
 
     def info(self):
         return self._call('info')
+
+    def capabilities(self):
+        """Capabilities announced by this build; empty for a stock build."""
+        caps = self.status().get('caps', [])
+        if not isinstance(caps, list) or any(not isinstance(cap, str) for cap in caps):
+            self.close()
+            raise ProtocolError('invalid capability list')
+        return list(caps)
+
+    def supports(self, capability):
+        return capability in self.capabilities()
+
+    def input_state(self):
+        """Automation queue occupancy and event counters, or None if absent.
+
+        These counters belong to the automation interface. They never claim that
+        the BIOS ring or an application consumed an event.
+        """
+        state = self.status().get('input')
+        if state is None:
+            return None
+        expected = {'queue': int, 'capacity': int, 'seq': int,
+                    'accepted': int, 'forwarded': int, 'dropped': int}
+        if not isinstance(state, dict) or any(type(state.get(key)) is not kind
+                                              for key, kind in expected.items()):
+            self.close()
+            raise ProtocolError('invalid input state block')
+        if not 0 <= state['queue'] <= state['capacity'] or state['capacity'] < 1:
+            self.close()
+            raise ProtocolError('input queue occupancy outside capacity')
+        if state['forwarded'] > state['accepted'] or state['dropped'] > state['accepted']:
+            self.close()
+            raise ProtocolError('input counters are inconsistent')
+        return state
+
+    def wait_queue(self, timeout_ms):
+        """Wait, bounded, until the automation key queue has drained."""
+        if type(timeout_ms) is not int or not 1 <= timeout_ms <= 600000:
+            raise ValueError('timeout must be 1..600000 ms')
+        if not self.supports('wait_queue'):
+            raise FeatureUnavailable('this build does not implement wait queue')
+        result = self._call(f'wait queue {timeout_ms}')
+        if type(result.get('matched')) is not bool:
+            self.close()
+            raise ProtocolError('wait queue reply lacks a boolean matched field')
+        return result
+
+    def video(self):
+        """Video mode, text geometry and the BIOS cursor, in either mode."""
+        if not self.supports('video_meta'):
+            raise FeatureUnavailable('this build does not report video metadata')
+        result = self._call('video')
+        cursor = result.get('cursor')
+        if (type(result.get('bios_mode')) is not int or type(result.get('text')) is not bool
+                or type(result.get('cols')) is not int or type(result.get('rows')) is not int
+                or not isinstance(cursor, list) or len(cursor) != 2
+                or any(type(value) is not int for value in cursor)):
+            self.close()
+            raise ProtocolError('invalid video metadata reply')
+        return result
+
+    def mouse_state(self):
+        """What the interface has sent to the pointer device, cumulatively."""
+        if not self.supports('mouse_state'):
+            raise FeatureUnavailable('this build does not report mouse state')
+        result = self._call('mouse state')
+        if any(type(result.get(key)) is not int
+               for key in ('sent_dx', 'sent_dy', 'buttons', 'mode')):
+            self.close()
+            raise ProtocolError('invalid mouse state reply')
+        return result
 
     def hold(self):
         return self._call('hold')
@@ -286,7 +367,31 @@ class Client:
         if (action not in ('down', 'up') or not 1 <= len(codes) <= 8
                 or any(type(c) is not int or not 1 <= c <= 0x1ff for c in codes)):
             raise ValueError('invalid key action/scancode')
-        return self._call('key ' + action + ' ' + ' '.join(hex(c) for c in codes))
+        reply = self._call('key ' + action + ' ' + ' '.join(hex(c) for c in codes))
+        self._check_completion(reply, len(codes))
+        return reply
+
+    def _check_completion(self, reply, events):
+        """Verify an instrumented key reply's explicit completion semantics.
+
+        A stock build reports neither field, and nothing is assumed about it.
+        An instrumented build states how many events the request carried, gives
+        the request a monotonic sequence number and reports the queue empty at
+        completion: anything else is a partial delivery, not a finished one.
+        """
+        if 'seq' not in reply:
+            return
+        seq, queue, reported = reply.get('seq'), reply.get('queue'), reply.get('events')
+        if (type(seq) is not int or type(queue) is not int or type(reported) is not int):
+            self.close()
+            raise ProtocolError('malformed key completion reply')
+        if queue != 0 or reported != events:
+            self.close()
+            raise ProtocolError('key request completed with events still queued')
+        if self.last_key_seq is not None and seq != self.last_key_seq + 1:
+            self.close()
+            raise ProtocolError('input event sequence gap')
+        self.last_key_seq = seq
 
     def tap(self, code):
         with self.lock:
