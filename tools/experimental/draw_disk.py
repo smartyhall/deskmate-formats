@@ -1,4 +1,4 @@
-"""Read a native document directly from a stopped RSX FAT16 clone for verification."""
+"""Read a native file directly from a stopped RSX FAT16 clone for verification."""
 import argparse
 from hashlib import sha256
 import json
@@ -7,16 +7,19 @@ import re
 from struct import unpack_from
 
 
-def entry_name(name):
-    """Return the 11-byte directory name for an uppercase 8.3 or 8-character name.
+DOS_NAME = re.compile(r"[A-Z0-9!#$%&'()\-@^_`{}~]{1,8}(?:\.[A-Z0-9!#$%&'()\-@^_`{}~]{1,3})?")
 
-    Extensionless 8-character names such as ``DMCORKBD`` are ordinary DOS files;
-    they were excluded only because earlier checks listed extensions explicitly.
+
+def entry_name(name):
+    """Return the 11-byte FAT directory name for an uppercase DOS 8.3 name.
+
+    Extensionless names are measured in this repository (the Corkboard
+    ``DMCORKBD`` buffer), so they are accepted alongside ordinary documents.
     """
-    if not re.fullmatch(r'[A-Z0-9]{1,8}(?:\.[A-Z0-9]{1,3})?', name):
-        raise ValueError('expected an uppercase DOS research filename')
-    stem, _, extension = name.partition('.')
-    return (stem.ljust(8) + extension.ljust(3)).encode('ascii')
+    if not isinstance(name, str) or not DOS_NAME.fullmatch(name):
+        raise ValueError(f'expected an uppercase DOS 8.3 filename: {name!r}')
+    base, _, extension = name.partition('.')
+    return (base.ljust(8) + extension.ljust(3)).encode('ascii')
 
 
 def extract(image, names):
