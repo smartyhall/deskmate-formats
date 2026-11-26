@@ -45,3 +45,57 @@ Do not attach executables, ROMs, install media, complete installed snapshots,
 disk images, credentials, private paths, real user data or raw RAM dumps.
 Keep paid services and AI-dependent CI out of required verification.
 No automatic publication/release is configured.
+
+## Agent-assisted campaigns
+
+The [standing research instructions](AGENTS.md#multi-agent-campaign-governance--supplementary-agent-integration-2026-11-25)
+apply regardless of provider or whether a task is performed by an agent,
+subagent or human-assisted automation. Human contributors remain subject to
+the same evidence, licensing and verification requirements.
+
+### Campaign handoff and concurrent work
+
+Before writing, agree on a campaign ID, owner/provider, scope, base SHA,
+dedicated branch and worktree/checkout, expected outputs, authorized resources
+and review authority. Inspect Git status and worktree registrations; do not
+switch, reset, stage or clean another worker's checkout. A read-only campaign
+does not need a new worktree if its observations identify the inspected
+revision and any concurrent changes. Worktrees isolate indexes and checked-out
+files, not credentials, Git refs, host files or external services.
+
+Use campaign-specific paths for mutable outputs and environment/build state.
+Treat original media, sealed baselines and previous evidence as immutable.
+Reserve each emulator instance, writable image, automation socket, and
+other exclusive resource to one campaign. Coordinate archive/index writers
+and disk-intensive jobs with existing owners. Do not launch, terminate,
+reconfigure or take over another campaign's resources without authorization.
+If ownership is uncertain, pause only the conflicting operation and continue
+independent work where possible.
+
+At handoff, record the exact base and resulting commits, branch, campaign
+owner/provider, model and effort when known, execution mode, changed paths,
+tests actually run and outcomes, evidence locators/hashes, limitations,
+remaining work, and resource disposition. Keep private paths, raw transcripts
+and identifiers outside Git. Collect sanitized usage receipts per the
+[usage ledger](docs/evidence/codex-usage/README.md#supplementary-agent-receipts).
+Do not label agent inference as native observation or credit an unobserved
+agent with another agent's evidence.
+
+### Review and publication
+
+A producing agent (including its delegated subagents) must not approve or
+merge its own PR. A different model's review is useful corroboration, not
+automatic authority to merge. The operator or a separately authorized,
+independent reviewer checks the diff, provenance, licenses, publication
+eligibility, actual test/CI results and scope before merging. The standing
+ChatGPT housekeeping grant for Codex PRs is unchanged; other merges require
+applicable explicit authorization. Keep tests portable and AI-independent.
+Report skipped checks and unavailable telemetry accurately.
+
+Use existing publication grants only within the authorized task, and retain
+all exclusions and manifest requirements. Include representative visual
+exemplars when applicable under AGENTS.md. Provider connection, cloud
+execution, new paid calls, unattended dispatch and live emulator operations
+are distinct from permission to edit files. Never treat a client feature,
+repository instruction, worktree, or recoverable VM as proof of technical
+isolation or as additional authority.
