@@ -189,7 +189,11 @@ class EditingTests(unittest.TestCase):
             g = editing.grant(self.queue, self.state, "sample", 1, self.candidate.review_token,
                               task_class="source-edit-v1", authorize_checkpoint=True,
                               executable=sys.executable, profile="experimental-lab", auth_file=auth,
-                              model="synthetic-selected-model", effort="low", windows_sandbox="unelevated", timeout=2, deadline=4)
+                              model="synthetic-selected-model", effort="low", windows_sandbox="unelevated",
+                              # The synthetic peer answers in milliseconds of CPU, but this
+                              # test asserts the grant matrix, not latency. A tight window
+                              # turns a saturated host into a false "worker incomplete".
+                              timeout=10, deadline=30)
             run_root = self.state / g['claim']
             token = g['plan_sha256']
             for dispatch, checkpoint, model, risk in [(None,token,token,token),(token,None,token,token),

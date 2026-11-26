@@ -1,5 +1,20 @@
 # Project status — DeskMate formats
 
+## Heterogeneous worker infrastructure — 2026-11-26
+
+The [Supervisor and Observatory campaign](docs/research/heterogeneous-worker-infrastructure-20261126.md)
+added a no-model execution backend with a reviewed procedure registry, a
+capability-based worker interface, a private campaign registry with exclusive
+leases, an allowance-aware selector that keeps token, context and hour
+measurements separate, and a read-only campaign projection for the Observatory.
+The proven Codex protocol, ledger and live gates are unchanged and remain
+unexercised. The [state audit](docs/research/supervisor-observatory-state-audit-20261126.md)
+replaces contradictory statements in earlier planning prose; the
+[Freebuff discovery](docs/research/freebuff-integration-discovery-20261126.md)
+records that no programmatic interface is available without separate
+authorization. Two Windows test failures were traced to fixed test-local
+budgets under host contention, not to product defects.
+
 ## Print Companion and native printing — 2026-11-23
 
 The [RSX Print Companion campaign](docs/research/print-companion-20261123.md)
