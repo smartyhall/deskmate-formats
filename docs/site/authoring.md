@@ -82,9 +82,12 @@ source roles independently of reader navigation and use readable labels.
 Existing page IDs, routes and anchors are public compatibility contracts;
 section assignments must not dictate URL prefixes. The
 [baseline](published-route-baseline.json) protects the pre-redesign route set.
-Capture its rendered anchors from the pinned source revision before changing
-the layout or source headings; never refresh it from a changed build merely
-to silence failures. Add new routes/anchors after reviewed publication.
+The original rendered article-content anchors are captured from the pinned
+source revision; Home/Search are route-only and layout chrome is not pinned.
+Never refresh from a changed build merely to silence failures. Add new
+routes/anchors after reviewed publication. Deliberate retirement requires
+explicit review, an appropriate redirect or fragment alias, and a documented
+baseline edit; do not use additive capture to remove existing entries.
 Explain links to the source repository rather than automatically mapping all
 documents or pursuing a numerical coverage target. Continue to distinguish
 dated evidence from current specifications and apply the existing rights and
