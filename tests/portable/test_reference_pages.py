@@ -9,8 +9,7 @@ import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))
 from check_reference_pages import validate_map  # noqa: E402
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "website/scripts"))
-from check_generated_site import check_baseline  # noqa: E402
+from reference_route_baseline import check_baseline  # noqa: E402
 
 
 class ReferencePageMapTests(unittest.TestCase):
@@ -68,43 +67,86 @@ class ReferencePageMapTests(unittest.TestCase):
 
 
 class PublishedRouteBaselineTests(unittest.TestCase):
+    revision = "a" * 40
+
     def setUp(self):
         temp = TemporaryDirectory()
         self.addCleanup(temp.cleanup)
         self.root = Path(temp.name)
         self.baseline = {
-            "schema_version": 1,
+            "schema_version": 1, "source_revision": self.revision,
             "anchor_status": "pending-rendered-baseline",
-            "routes": [{"route": "/example/", "page_id": "example.page", "anchors": None}],
+            "routes": [
+                {"route": "/", "page_id": None, "anchors": None},
+                {"route": "/example/", "page_id": "example.page", "anchors": None},
+            ],
         }
+        (self.root / "index.html").write_text('<article id="home">Home</article>', encoding="utf-8")
         self.page = self.root / "example/index.html"
         self.page.parent.mkdir()
-        self.page.write_text('<h1 id="old">Example</h1><a name="legacy"></a>', encoding="utf-8")
+        self.page.write_text(
+            '<main id="chrome"><article><h1 id="old">Example</h1>'
+            '<a name="legacy"></a></article></main>', encoding="utf-8"
+        )
 
-    def test_capture_and_preserve_anchors(self):
-        self.assertEqual(check_baseline(self.root, self.baseline, capture=True), [])
+    def capture(self, **kwargs):
+        options = {"source_revision": self.revision, "source_kind": "verified-local-build"}
+        options.update(kwargs)
+        return check_baseline(self.root, self.baseline, capture=True, **options)
+
+    def test_capture_and_preserve_content_only(self):
+        self.assertEqual(self.capture(), [])
         self.assertEqual(self.baseline["anchor_status"], "captured")
-        self.assertEqual(self.baseline["routes"][0]["anchors"], ["legacy", "old"])
+        self.assertEqual(self.baseline["routes"][0]["anchors"], [])
+        self.assertEqual(self.baseline["routes"][1]["anchors"], ["legacy", "old"])
         self.assertEqual(check_baseline(self.root, self.baseline), [])
-        self.page.write_text('<h1 id="new">Example</h1>', encoding="utf-8")
+        self.page.write_text('<article><h1 id="new">Example</h1></article>', encoding="utf-8")
         self.assertIn("/example/: missing baseline anchor #old",
                       check_baseline(self.root, self.baseline))
-        self.assertTrue(check_baseline(self.root, self.baseline, capture=True))
+        self.assertTrue(self.capture())
 
     def test_missing_route_even_before_anchor_capture(self):
         self.page.unlink()
         self.assertIn("/example/: missing baseline route",
                       check_baseline(self.root, self.baseline))
+        self.assertTrue(self.capture())
+        self.assertIsNone(self.baseline["routes"][0]["anchors"])
 
-    def test_reject_malformed_or_traversal_route(self):
-        self.baseline["routes"][0]["route"] = "/../"
+    def test_reject_malformed_or_duplicate_route(self):
+        self.baseline["routes"][1]["route"] = "/../"
+        self.assertTrue(check_baseline(self.root, self.baseline))
+        self.baseline["routes"][1]["route"] = "/"
         self.assertTrue(check_baseline(self.root, self.baseline))
 
-    def test_new_anchor_does_not_break_baseline(self):
-        self.assertEqual(check_baseline(self.root, self.baseline, capture=True), [])
-        with self.page.open("a", encoding="utf-8") as output:
-            output.write('<h2 id="new">New</h2>')
+    def test_reject_invalid_schema_and_status(self):
+        self.baseline["schema_version"] = 2
+        self.assertTrue(check_baseline(self.root, self.baseline))
+        self.baseline["schema_version"] = 1
+        self.baseline["anchor_status"] = "unknown"
+        self.assertTrue(check_baseline(self.root, self.baseline))
+
+    def test_reject_wrong_revision_and_duplicate_anchor(self):
+        self.assertTrue(self.capture(source_revision="b" * 40))
+        self.page.write_text('<article><h1 id="x">X</h1><h2 id="x">Y</h2></article>',
+                             encoding="utf-8")
+        self.assertTrue(self.capture())
+
+    def test_additive_extension(self):
+        self.assertEqual(self.capture(), [])
+        self.page.write_text('<article><h1 id="old">Example</h1><a name="legacy"></a>'
+                             '<h2 id="new">New</h2></article>', encoding="utf-8")
         self.assertEqual(check_baseline(self.root, self.baseline), [])
+        self.assertEqual(check_baseline(
+            self.root, self.baseline, extend=True, source_revision="b" * 40,
+            source_kind="verified-local-build",
+        ), [])
+        self.assertEqual(self.baseline["routes"][1]["anchors"], ["legacy", "new", "old"])
+        self.page.write_text('<article><h1 id="old">Example</h1></article>', encoding="utf-8")
+        self.assertTrue(check_baseline(
+            self.root, self.baseline, extend=True, source_revision="c" * 40,
+            source_kind="verified-local-build",
+        ))
+        self.assertEqual(self.baseline["routes"][1]["anchors"], ["legacy", "new", "old"])
 
 
 if __name__ == "__main__":
