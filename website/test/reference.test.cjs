@@ -364,3 +364,31 @@ test("recorded dates render as American long dates", () => {
   assert.equal(formatDate("2026-13-01"), null);
   assert.equal(formatDate("17-11-2026"), null);
 });
+
+test("the search page keeps the section hubs reachable without JavaScript", () => {
+  const Search = require("../src/search.11ty.js");
+  const html = new Search().render();
+  assert.match(html, /<noscript>/);
+  for (const section of sections)
+    assert.ok(html.includes('href="' + siteUrl("/" + section.hub.slug + "/") + '"'),
+      section.id + " is missing from the no-script fallback");
+});
+
+test("review capture targets follow the reviewed page map", () => {
+  const { captureTargets, VIEWPORTS } = require("../scripts/capture_review.cjs");
+  assert.deepEqual(captureTargets().map((target) => target.route),
+    ["/"].concat(sections.map((section) => "/" + section.hub.slug + "/")));
+  assert.deepEqual(VIEWPORTS.map((viewport) => viewport.name), ["desktop", "phone"]);
+  assert.equal(VIEWPORTS[1].width, 390);
+});
+
+test("keyboard focus stays visible where the theme removes outlines", () => {
+  const css = fs.readFileSync(path.join(ROOT, "website/src/assets/site-layout.css"), "utf8");
+  assert.match(css, /a:focus-visible[\s\S]{0,300}?outline:\s*2px solid/);
+  assert.match(css, /summary:focus-visible/);
+});
+
+test("the primary navigation keeps a focus indicator the theme would remove", () => {
+  const css = fs.readFileSync(path.join(ROOT, "website/src/assets/site-layout.css"), "utf8");
+  assert.match(css, /nav\.navbar a\.nav-link:focus-visible\s*\{[^}]*outline:\s*2px solid/);
+});

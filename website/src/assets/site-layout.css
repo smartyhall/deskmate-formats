@@ -76,3 +76,26 @@
 .page-contents { border: 2px solid var(--bs-border-color, currentColor); padding: .75rem 1rem; margin-bottom: 1.5rem; }
 .page-contents-title { font-weight: bold; margin-bottom: .25rem; }
 .page-contents ol { margin-bottom: 0; }
+
+/*
+ * BOOTSTRA.386 marks focus by inverting the background, which works for links on
+ * the page background but not for the dark primary navigation or the sidebar
+ * summaries: those keep their own background, so keyboard focus had no visible
+ * cue. Keep a theme-colored indicator for keyboard users at every level.
+ */
+a:focus-visible,
+summary:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #ff5;
+  outline-offset: 2px;
+}
+
+/* The theme zeroes the outline on .nav-link:focus-visible; match that
+   specificity so the primary navigation keeps an indicator too. */
+nav.navbar a.nav-link:focus-visible {
+  outline: 2px solid #ff5;
+  outline-offset: 2px;
+}

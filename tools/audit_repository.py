@@ -80,10 +80,6 @@ SYNTHETIC_HDS = {
 TYPOGRAPHY_DIR = Path('examples/typography-comparison/v1')
 SITE_IMAGE_DIR = Path('website/src/assets/reference')
 SITE_IMAGE_MANIFEST = Path('website/reference-images.json')
-# Screenshots attached to an open pull request for review. They are never copied
-# into the generated site and never packaged (MANIFEST.in excludes PNGs
-# globally); the allowance is path-specific so no other image can borrow it.
-REVIEW_IMAGE_DIR = Path('docs/site/review')
 SITE_IMAGE_MAX_BYTES = 6 * 1024 * 1024
 SITE_IMAGE_MAX_PIXELS = 4_000_000
 SITE_IMAGE_ORIGINS = {
@@ -465,17 +461,6 @@ def audit():
             site_images_found.add(rel)
             count += 1
             continue
-        if rel_path.is_relative_to(REVIEW_IMAGE_DIR):
-            if rel.endswith('.png'):
-                sidecar = ROOT / (rel + '.license')
-                if not (sidecar.is_file() and 'SPDX-License-Identifier:' in
-                        sidecar.read_text(encoding='utf-8')):
-                    raise ValueError('review image requires a REUSE sidecar: ' + rel)
-                count += 1
-                continue
-            if rel.endswith(('.png.license', '.md', '.md.license')):
-                continue
-            raise ValueError('unexpected review attachment: ' + rel)
         if rel_path.is_relative_to(SITE_IMAGE_DIR):
             if not (rel.endswith('.png.license') and rel[:-8] in site_images):
                 raise ValueError('unlisted site image or sidecar: ' + rel)

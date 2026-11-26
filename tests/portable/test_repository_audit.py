@@ -463,21 +463,3 @@ class FixtureAuditTest(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
 
-    def test_review_screenshots_need_a_sidecar_and_stay_out_of_the_site(self):
-        """PR review attachments are allowed only as PNGs with REUSE sidecars."""
-        self.manifest([])
-        review = self.root / audit_repository.REVIEW_IMAGE_DIR / 'pr-184'
-        review.mkdir(parents=True)
-        image = review / 'home-desktop.png'
-        image.write_bytes(self.example_site_png())
-        with self.assertRaisesRegex(ValueError, 'review image requires a REUSE sidecar'):
-            self.audit()
-        image.with_suffix('.png.license').write_text(
-            'SPDX-License-Identifier: CC-BY-4.0\n', encoding='utf-8')
-        (review / 'README.md').write_text('# Review attachments\n', encoding='utf-8')
-        (review / 'README.md.license').write_text(
-            'SPDX-License-Identifier: CC-BY-4.0\n', encoding='utf-8')
-        self.audit()
-        (review / 'notes.txt').write_text('unexpected', encoding='utf-8')
-        with self.assertRaisesRegex(ValueError, 'unexpected review attachment'):
-            self.audit()
