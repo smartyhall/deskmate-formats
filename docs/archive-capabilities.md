@@ -132,21 +132,21 @@ Registered records: 24.
 
 ### Unix compress(1) LZW stream (.Z)
 
-- Implementation: `compression.decode_unix_compress` (native).
+- Implementation: `compression_streams.decode_unix_compress` (native).
 - Evidence: Round-trips synthetic streams across maximum code widths 9, 10, 12 and 16, including block-mode dictionary resets. Streams produced by the test encoder were extracted byte-identically by 7-Zip 26.05, independently confirming the variable-width code layout.
 - Limitations: Variable-width codes widen only after the code that triggered the change, as compress(1) does; a stream that ends mid-code yields a trailing-partial-code warning. No encoder is shipped.
 - Reference: [ncompress reference implementation](https://github.com/vapier/ncompress)
 
 ### bzip2 stream (.bz2)
 
-- Implementation: `compression.decode_bzip2` (library).
+- Implementation: `compression_streams.decode_bzip2` (library).
 - Evidence: Round-trip, truncation, corruption, trailing-data and output-bound cases are covered by portable tests.
 - Limitations: Decoding uses the CPython standard library; the independent-implementation claim rests on CPython, not on this project.
 - Reference: [bzip2 format notes](https://sourceware.org/bzip2/docs.html)
 
 ### xz stream (.xz)
 
-- Implementation: `compression.decode_xz` (library).
+- Implementation: `compression_streams.decode_xz` (library).
 - Evidence: Round-trip plus a one-mebibyte payload cut off by a 1 KiB output bound, exercised by portable tests.
 - Limitations: Decoding uses the CPython standard library. Legacy .lzma alone streams are not handled by this record.
 - Reference: [xz file format specification](https://tukaani.org/xz/format.html)

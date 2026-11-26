@@ -175,10 +175,10 @@ def _modules():
     tools = ROOT / 'tools' / 'archive'
     if str(tools) not in sys.path:
         sys.path.insert(0, str(tools))
-    import compression
+    import compression_streams
     import disk_images
     import intelligence_extract
-    return {'compression': compression, 'disk_images': disk_images,
+    return {'compression_streams': compression_streams, 'disk_images': disk_images,
             'intelligence_extract': intelligence_extract}
 
 

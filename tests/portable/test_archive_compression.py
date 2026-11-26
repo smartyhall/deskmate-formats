@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 TOOLS = Path(__file__).resolve().parents[2] / 'tools' / 'archive'
 with patch.object(sys, 'path', [str(TOOLS), *sys.path]):
-    import compression
+    import compression_streams
 
 
 class _BitWriter:
@@ -102,7 +102,7 @@ class UnixCompressTests(unittest.TestCase):
                 with self.subTest(maxbits=maxbits, size=len(payload)):
                     stream = compress_stream(payload, maxbits=maxbits)
                     self.assertEqual(stream[:2], b'\x1f\x9d')
-                    result = compression.decode_unix_compress(stream)
+                    result = compression_streams.decode_unix_compress(stream)
                     self.assertEqual(result.status, 'ok')
                     self.assertEqual(result.data, payload)
 
@@ -112,80 +112,80 @@ class UnixCompressTests(unittest.TestCase):
         payload = (b'0123456789abcdef' * 200)
         stream = compress_stream(payload, maxbits=9)
         self.assertGreater(len(stream), 3)
-        result = compression.decode_unix_compress(stream)
+        result = compression_streams.decode_unix_compress(stream)
         self.assertEqual(result.status, 'ok')
         self.assertEqual(result.data, payload)
 
     def test_unblocked_stream_never_emits_a_clear_code(self):
         payload = b'ABCDABCDABCDABCDABCD'
         stream = compress_stream(payload, maxbits=9, block_mode=False)
-        result = compression.decode_unix_compress(stream)
+        result = compression_streams.decode_unix_compress(stream)
         self.assertEqual(result.data, payload)
 
     def test_rejects_malformed_headers_and_invalid_codes(self):
-        self.assertEqual(compression.decode_unix_compress(b'\x1f\x9d').status, 'failed')
+        self.assertEqual(compression_streams.decode_unix_compress(b'\x1f\x9d').status, 'failed')
         unsupported = b'\x1f\x9d' + bytes([0x88])
-        self.assertEqual(compression.decode_unix_compress(unsupported).detail,
+        self.assertEqual(compression_streams.decode_unix_compress(unsupported).detail,
                          'unsupported compress maxbits')
         # A block-mode stream whose first code is 257 rather than a literal is invalid.
         invalid = b'\x1f\x9d' + bytes([0x90]) + bytes([0x01, 0x01])
-        self.assertEqual(compression.decode_unix_compress(invalid).detail,
+        self.assertEqual(compression_streams.decode_unix_compress(invalid).detail,
                          'invalid-initial-code')
 
     def test_bounds_truncated_input_and_output_expansion(self):
         payload = b'repeat ' * 400
         stream = compress_stream(payload)
-        bounds = compression.Bounds(output_bytes=64)
-        limited = compression.decode_unix_compress(stream, bounds)
+        bounds = compression_streams.Bounds(output_bytes=64)
+        limited = compression_streams.decode_unix_compress(stream, bounds)
         self.assertEqual((limited.status, limited.detail), ('limited', 'output-byte-limit'))
         self.assertIsNone(limited.data)
-        truncated = compression.decode_unix_compress(stream[:12])
+        truncated = compression_streams.decode_unix_compress(stream[:12])
         self.assertEqual(truncated.status, 'ok')
         self.assertNotEqual(truncated.data, payload)
-        self.assertEqual(compression.decode_unix_compress(b'').status, 'failed')
+        self.assertEqual(compression_streams.decode_unix_compress(b'').status, 'failed')
 
     def test_identification_requires_the_magic_pair(self):
-        self.assertEqual(compression.identify_stream(b'\x1f\x9d\x90'), 'unix-compress')
-        self.assertIsNone(compression.identify_stream(b'\x1f\x8b\x08'))
-        self.assertIsNone(compression.identify_stream(b''))
+        self.assertEqual(compression_streams.identify_stream(b'\x1f\x9d\x90'), 'unix-compress')
+        self.assertIsNone(compression_streams.identify_stream(b'\x1f\x8b\x08'))
+        self.assertIsNone(compression_streams.identify_stream(b''))
 
 
 class StandardLibraryStreamTests(unittest.TestCase):
     def test_bzip2_round_trip_and_identification(self):
         payload = b'synthetic bzip2 control\r\n' * 50
         stream = bz2.compress(payload)
-        self.assertEqual(compression.identify_stream(stream), 'bzip2')
-        result = compression.decode_bzip2(stream)
+        self.assertEqual(compression_streams.identify_stream(stream), 'bzip2')
+        result = compression_streams.decode_bzip2(stream)
         self.assertEqual((result.status, result.data), ('ok', payload))
 
     def test_xz_round_trip_and_identification(self):
         payload = b'synthetic xz control\r\n' * 50
         stream = lzma.compress(payload, format=lzma.FORMAT_XZ)
-        self.assertEqual(compression.identify_stream(stream), 'xz')
-        result = compression.decode_xz(stream)
+        self.assertEqual(compression_streams.identify_stream(stream), 'xz')
+        result = compression_streams.decode_xz(stream)
         self.assertEqual((result.status, result.data), ('ok', payload))
 
     def test_truncated_corrupt_and_trailing_data(self):
         payload = b'truncation control' * 20
         stream = bz2.compress(payload)
-        self.assertEqual(compression.decode_bzip2(stream[:-4]).status, 'failed')
-        self.assertEqual(compression.decode_bzip2(stream[:-4]).detail, 'truncated-stream')
+        self.assertEqual(compression_streams.decode_bzip2(stream[:-4]).status, 'failed')
+        self.assertEqual(compression_streams.decode_bzip2(stream[:-4]).detail, 'truncated-stream')
         corrupt = bytearray(stream)
         corrupt[10] ^= 0xFF
-        self.assertEqual(compression.decode_bzip2(bytes(corrupt)).status, 'failed')
+        self.assertEqual(compression_streams.decode_bzip2(bytes(corrupt)).status, 'failed')
         trailing = bz2.compress(payload) + b'leavings'
-        result = compression.decode_bzip2(trailing)
+        result = compression_streams.decode_bzip2(trailing)
         self.assertEqual(result.status, 'ok')
         self.assertIn('trailing-data', result.warnings)
 
     def test_output_bound_applies_before_full_expansion(self):
         payload = bytes(1 << 20)
         stream = lzma.compress(payload, format=lzma.FORMAT_XZ)
-        result = compression.decode_xz(stream, compression.Bounds(output_bytes=1024))
+        result = compression_streams.decode_xz(stream, compression_streams.Bounds(output_bytes=1024))
         self.assertEqual((result.status, result.detail), ('limited', 'output-byte-limit'))
 
     def test_unknown_family_is_unsupported(self):
-        self.assertEqual(compression.decode(b'x', 'lzo').status, 'unsupported')
+        self.assertEqual(compression_streams.decode(b'x', 'lzo').status, 'unsupported')
 
 
 class ExtractorIntegrationTests(unittest.TestCase):
