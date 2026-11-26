@@ -60,20 +60,26 @@ repository `CNAME` file is not necessary for the Actions-based build.
 See the [agreed implementation handoff](../docs/site/navigation-restructure.md).
 The existing generated-site audit now checks the
 [pre-redesign route inventory](../docs/site/published-route-baseline.json)
-as well as links and fragments. Route checks are active immediately; anchor
-capture is pending. From a separate checkout of the baseline's recorded
-`source_revision`, build the site with the original renderer and inspect the
-output. Then run the new checker from this checkout, pointing at that
-original build (replace OLD_SITE_OUTPUT with its absolute path):
+as well as links and fragments. The original baseline was captured from
+GitHub Actions run 45312811457, artifact 14883254568, with its ZIP digest
+verified against GitHub metadata. The 334 content anchors on mapped
+document pages are enforced; Home and Search are route-only. Layout IDs
+are intentionally excluded from automatic capture.
 
-    python website/scripts/check_generated_site.py OLD_SITE_OUTPUT / --capture-anchors > captured-baseline.json
+For a future additive update, verify the candidate build's exact source
+revision (checkout or CI artifact metadata and digest). Append reviewed
+new mapped routes to a separate candidate copy of the baseline with
+`anchors: []`, leaving all existing entries intact. Run:
 
-Use a shell with UTF-8 redirection, or explicitly write UTF-8 in PowerShell.
-Review the resulting JSON, source revision and route inventory before
-replacing the tracked baseline in a review PR. Do not capture from a changed
-site. Subsequent preview and publishing checks then fail on missing recorded
-anchors as well as missing routes. Additions are permitted; preserve
-legacy named anchors and layout fragment targets when required.
+    python website/scripts/check_generated_site.py SITE_OUTPUT / --baseline candidate.json --extend-baseline --source-revision FULL_SHA --source-kind verified-local-build --output extended.json
+
+For a CI artifact use `--source-kind verified-ci-artifact --artifact-id ID
+--artifact-sha256 DIGEST`. The supplied revision and digest are caller
+attestations; verify them independently. The checker refuses missing old
+anchors, duplicate targets, and malformed routes. Review the UTF-8 output,
+including its capture history, before replacing the tracked baseline.
+Never use extension to remove entries. Initial `--capture-anchors` is
+restricted to a pending baseline at its pinned revision.
 
 ## Source and publication policy
 
