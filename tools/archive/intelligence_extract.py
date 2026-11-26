@@ -20,10 +20,10 @@ import zipfile
 import zlib
 
 try:
-    from . import compression as compression_streams
+    from . import compression_streams
     from . import disk_images
 except ImportError:
-    import compression as compression_streams
+    import compression_streams
     import disk_images
 
 

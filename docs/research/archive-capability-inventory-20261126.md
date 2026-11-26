@@ -67,7 +67,7 @@ work should be scheduled:
 
 ### Standalone compression streams
 
-`tools/archive/compression.py` decodes three families, each into one bounded
+`tools/archive/compression_streams.py` decodes three families, each into one bounded
 payload:
 
 - **Unix `compress(1)` LZW (`.Z`)** — a native decoder following the published

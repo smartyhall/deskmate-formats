@@ -182,7 +182,7 @@
         "identify": "qualified", "metadata": "qualified", "list": "qualified",
         "extract": "qualified", "validate": "qualified", "recover": "partial"
       },
-      "implementation": {"module": "compression", "entry": "decode_unix_compress", "approach": "native"},
+      "implementation": {"module": "compression_streams", "entry": "decode_unix_compress", "approach": "native"},
       "dependencies": [],
       "specifications": [
         {"title": "ncompress reference implementation", "url": "https://github.com/vapier/ncompress"}
@@ -208,7 +208,7 @@
         "identify": "qualified", "metadata": "qualified", "list": "qualified",
         "extract": "qualified", "validate": "qualified", "recover": "partial"
       },
-      "implementation": {"module": "compression", "entry": "decode_bzip2", "approach": "library"},
+      "implementation": {"module": "compression_streams", "entry": "decode_bzip2", "approach": "library"},
       "dependencies": [],
       "specifications": [
         {"title": "bzip2 format notes", "url": "https://sourceware.org/bzip2/docs.html"}
@@ -234,7 +234,7 @@
         "identify": "qualified", "metadata": "qualified", "list": "qualified",
         "extract": "qualified", "validate": "qualified", "recover": "partial"
       },
-      "implementation": {"module": "compression", "entry": "decode_xz", "approach": "library"},
+      "implementation": {"module": "compression_streams", "entry": "decode_xz", "approach": "library"},
       "dependencies": [],
       "specifications": [
         {"title": "xz file format specification", "url": "https://tukaani.org/xz/format.html"}

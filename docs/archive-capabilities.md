@@ -174,7 +174,7 @@ implies the file is whole, or an explicit admission that neither is available.
 
 ### Unix compress(1) LZW stream (.Z)
 
-- Implementation: `compression.decode_unix_compress` (native).
+- Implementation: `compression_streams.decode_unix_compress` (native).
 - Extensions: .z.
 - Structural identification: 1F 9D header carrying maxbits and a block flag
 - Container completeness: unverified.
@@ -186,7 +186,7 @@ implies the file is whole, or an explicit admission that neither is available.
 
 ### bzip2 stream (.bz2)
 
-- Implementation: `compression.decode_bzip2` (library).
+- Implementation: `compression_streams.decode_bzip2` (library).
 - Extensions: .bz2.
 - Structural identification: 'BZh' block magic followed by a level digit
 - Container completeness: verified-sizes.
@@ -197,7 +197,7 @@ implies the file is whole, or an explicit admission that neither is available.
 
 ### xz stream (.xz)
 
-- Implementation: `compression.decode_xz` (library).
+- Implementation: `compression_streams.decode_xz` (library).
 - Extensions: .xz.
 - Structural identification: FD 37 7A 58 5A 00 stream header
 - Container completeness: verified-sizes.

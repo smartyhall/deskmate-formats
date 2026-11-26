@@ -7,6 +7,14 @@ remains responsible for recursion, persistence and hashing.
 Bounds are enforced on *output* bytes, so a small hostile input cannot expand
 without limit. Truncated input, trailing garbage and an unrecognised method
 are reported rather than repaired.
+
+The module is deliberately not named ``compression``. Python 3.14 added a
+standard-library ``compression`` package (``compression.bz2``, ``.gzip``,
+``.lzma``, ``.zlib``, ``.zstd``); this directory is placed on ``sys.path`` by
+the archival tools, so a module called ``compression`` here would shadow the
+stdlib package for the whole process and break ``bz2``, ``lzma``, ``zipfile``
+and ``tarfile`` users. ``tests/portable/test_archive_module_names.py`` guards
+the rule.
 """
 
 from dataclasses import dataclass, field
