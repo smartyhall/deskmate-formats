@@ -5,8 +5,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const {
   ROOT, pages, byId, sections, siteUrl, resolveLink, renderSource, searchRecord,
-  roleLabel, breadcrumbsFor,
+  roleLabel, breadcrumbsFor, canonicalFor, SITE_ORIGIN,
 } = require("../lib/reference.cjs");
+const Sitemap = require("../src/sitemap.11ty.js");
+const Robots = require("../src/robots.11ty.js");
 
 test("source-map entries resolve to existing, uniquely identified Markdown", () => {
   assert.ok(pages.length >= 27);
@@ -240,4 +242,45 @@ test("links to unpublished repository files keep their wording without an anchor
   assert.match(html, /LICENSING\.md/);
   assert.doesNotMatch(html, /href="[^"]*LICENSING\.md"/);
   assert.match(html, /href="https:\/\/github\.com\/smartyhall\/deskmate-formats\/blob\/main\/tests\//);
+});
+
+test("canonical URLs name the published origin, not the preview path", () => {
+  assert.equal(SITE_ORIGIN, "https://deskmate.retroconnect.org");
+  assert.equal(canonicalFor(byId.get("formats.calendar")),
+    "https://deskmate.retroconnect.org/formats/calendar/");
+  assert.equal(canonicalFor(byId.get("deskmate.overview")),
+    "https://deskmate.retroconnect.org/deskmate/");
+  assert.equal(canonicalFor(null), "https://deskmate.retroconnect.org/");
+});
+
+test("the sitemap lists every published page on the canonical origin", () => {
+  const xml = new Sitemap().render();
+  assert.match(xml, /^<\?xml version="1\.0" encoding="UTF-8"\?>/);
+  for (const page of pages)
+    assert.ok(xml.includes("<loc>" + SITE_ORIGIN + "/" + page.slug + "/</loc>"), page.id);
+  assert.ok(xml.includes("<loc>" + SITE_ORIGIN + "/</loc>"));
+  assert.ok(xml.includes("<loc>" + SITE_ORIGIN + "/search/</loc>"));
+  assert.equal((xml.match(/<url>/g) || []).length, pages.length + 2);
+});
+
+test("robots.txt allows crawling and names the sitemap", () => {
+  const text = new Robots().render();
+  assert.match(text, /^User-agent: \*$/m);
+  assert.match(text, /^Allow: \/$/m);
+  assert.match(text, /Sitemap: https:\/\/deskmate\.retroconnect\.org\/sitemap\.xml/);
+});
+
+test("contents lists appear exactly on long, non-hub pages", () => {
+  for (const page of pages) {
+    const html = renderSource(page);
+    const headings = (html.match(/<h2[ >]/g) || []).length;
+    const hasContents = html.includes('class="page-contents"');
+    assert.equal(hasContents, !page.is_hub && headings >= 4, page.id);
+    if (!hasContents) continue;
+    const ids = [...html.matchAll(/<a href="#([a-z0-9-]+)">/g)].map((match) => match[1]);
+    assert.ok(ids.length >= 4, page.id);
+    for (const id of ids) assert.ok(html.includes('id="' + id + '"'), page.id + " missing " + id);
+    const collapsed = !/<details class="page-contents" open>/.test(html);
+    assert.equal(collapsed, ids.length > 8, page.id + " collapse rule");
+  }
 });

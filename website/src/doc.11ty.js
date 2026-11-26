@@ -1,6 +1,6 @@
 "use strict";
 const {
-  renderSource, pageUrl, roleLabel, sectionFor, breadcrumbsFor,
+  renderSource, roleLabel, sectionFor, breadcrumbsFor, canonicalFor,
 } = require("../lib/reference.cjs");
 module.exports = class Document {
   data() {
@@ -19,6 +19,7 @@ module.exports = class Document {
           ? null
           : roleLabel(data.entry),
         breadcrumbs: (data) => breadcrumbsFor(data.entry),
+        canonicalUrl: (data) => canonicalFor(data.entry),
         sourceLink: (data) =>
           "https://github.com/smartyhall/deskmate-formats/blob/main/" + data.entry.source,
       },

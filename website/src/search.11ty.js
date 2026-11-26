@@ -1,8 +1,9 @@
 "use strict";
-const { siteUrl } = require("../lib/reference.cjs");
+const { siteUrl, SITE_ORIGIN } = require("../lib/reference.cjs");
 module.exports = class Search {
   data() {
-    return { permalink: "search/index.html", layout: "base.njk", title: "Search", currentId: "search" };
+    return { permalink: "search/index.html", layout: "base.njk", title: "Search",
+      currentId: "search", canonicalUrl: SITE_ORIGIN + "/search/" };
   }
   render() {
     return '<h1>Search the reference</h1>' +

@@ -77,6 +77,12 @@ function siteUrl(pathname) {
 function pageUrl(entry) {
   return siteUrl("/" + entry.slug + "/");
 }
+// The published site is root-mounted on its own domain, so canonical URLs are
+// independent of the base path used by a preview build.
+const SITE_ORIGIN = "https://deskmate.retroconnect.org";
+function canonicalFor(entry) {
+  return SITE_ORIGIN + (entry ? "/" + entry.slug + "/" : "/");
+}
 function sourcePath(entry) {
   const absolute = path.resolve(ROOT, entry.source);
   if (!absolute.startsWith(ROOT + path.sep) || !absolute.endsWith(".md"))
@@ -112,6 +118,7 @@ function renderSource(entry) {
   const raw = fs.readFileSync(sourcePath(entry), "utf8");
   const tokens = md.parse(raw, {});
   const headingIds = new Map();
+  const contents = [];
   let foundPageTitle = false;
   function walk(items) {
     for (let i = 0; i < items.length; i++) {
@@ -135,6 +142,9 @@ function renderSource(entry) {
         const count = headingIds.get(base) || 0;
         headingIds.set(base, count + 1);
         token.attrSet("id", count ? base + "-" + count : base);
+        // Long reports are read out of order; offer their section headings.
+        if (token.tag === "h2")
+          contents.push({ id: token.attrGet("id"), text: heading.replace(/[*_`]/g, "") });
       }
       if (token.type === "link_open") {
         const idx = token.attrIndex("href");
@@ -189,7 +199,7 @@ function renderSource(entry) {
     }
   }
   injectFigures(tokens, entry.id, figures, siteUrl);
-  return md.renderer.render(tokens, md.options, {});
+  return contentsBlock(contents, entry) + md.renderer.render(tokens, md.options, {});
 }
 function searchRecord(entry) {
   const raw = fs.readFileSync(sourcePath(entry), "utf8");
@@ -201,6 +211,22 @@ function searchRecord(entry) {
       .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
       .replace(/[#>*_\x60|]/g, " ").replace(/\s+/g, " ").trim().slice(0, 15000),
   };
+}
+function escapeText(value) {
+  return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+/** A contents list is worth the space only when the page has real sections. */
+function contentsBlock(contents, entry) {
+  // Hubs are short and already ordered; a contents list would only repeat them.
+  if (entry.is_hub || contents.length < 4) return "";
+  const items = contents.map((item) =>
+    '<li><a href="#' + escapeText(item.id) + '">' + escapeText(item.text) + "</a></li>");
+  // A report with twenty sections would otherwise push its own first paragraph
+  // off the screen, so the longer lists start collapsed.
+  const open = contents.length <= 8 ? " open" : "";
+  return '<details class="page-contents"' + open + '>' +
+    "<summary>On this page</summary><ol>" + items.join("") + "</ol></details>";
 }
 /** Readable role label; hubs are navigation, not evidence, so they carry none. */
 function roleLabel(entry) {
@@ -225,6 +251,7 @@ function breadcrumbsFor(entry) {
 }
 module.exports = {
   ROOT, pages, byId, sections, SECTION_IDS, SECTION_LABELS, ROLE_LABELS,
+  SITE_ORIGIN, canonicalFor,
   siteUrl, pageUrl, resolveLink, renderSource, searchRecord,
   roleLabel, sectionFor, breadcrumbsFor,
 };

@@ -1,5 +1,5 @@
 "use strict";
-const { sections, byId, pageUrl, siteUrl } = require("../lib/reference.cjs");
+const { sections, byId, pageUrl, siteUrl, canonicalFor } = require("../lib/reference.cjs");
 const { escapeHtml, readFigures } = require("../lib/figures.cjs");
 
 function urlFor(id) {
@@ -29,6 +29,7 @@ module.exports = class Index {
   data() {
     return { permalink: "index.html", layout: "base.njk",
       title: "Discover Tandy DeskMate", currentId: "home",
+      canonicalUrl: canonicalFor(null),
       summary: "An independent, evidence-based reference to Tandy DeskMate: " +
         "its history, file formats, recovery tools, and research record." };
   }

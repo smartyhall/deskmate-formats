@@ -71,3 +71,8 @@
 #reference-sections details { margin-block: .75rem; }
 .source-role { max-width: 95ch; }
 @media print { .breadcrumbs { display: none; } }
+
+/* Contents list for reports long enough to be read out of order. */
+.page-contents { border: 2px solid var(--bs-border-color, currentColor); padding: .75rem 1rem; margin-bottom: 1.5rem; }
+.page-contents-title { font-weight: bold; margin-bottom: .25rem; }
+.page-contents ol { margin-bottom: 0; }
