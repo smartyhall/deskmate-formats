@@ -186,9 +186,9 @@ is a check on the correction being display-only.
 
 Analysis wall clock is reported for completeness, not as a benchmark: the
 `CALENDAR.PDM` autoanalysis stage took 17.7 s under 12.2 against 45.6 s under
-12.1.4 on the same host, with the import stage at 2.1 s against 3.5 s. The
-vendor's 12.2 notes describe analysis performance work, but these two runs are
-not a controlled measurement and should not be quoted as a speedup.
+12.1.4 on the same host, with the import stage at 2.1 s against 3.5 s. That is
+a single pair of runs with no controlled warm-up or repetition, so it is not a
+measured speedup and should not be quoted as one.
 
 ## Existing scripts and annotations
 
