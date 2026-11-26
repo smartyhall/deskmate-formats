@@ -677,6 +677,154 @@ def _compressed(path, name, kind, limits):
                                       decoded.data, 'ok')], detail=detail)
 
 
+ARC_CRUNCH = {8: (12, True), 9: (13, False)}
+
+
+class _ArcBits:
+    """LSB-first bit reader that counts codes in groups of eight.
+
+    ARC's encoder wrote codes in groups of eight and padded a group before a
+    code-width change, so a decoder has to discard the rest of the current
+    group at the old width whenever the width changes.
+    """
+
+    def __init__(self, payload):
+        self.payload = payload
+        self.offset = 0
+        self.box = 0
+        self.left = 0
+        self.codeofs = 0
+
+    def read(self, width):
+        value = filled = 0
+        while filled < width:
+            if not self.left:
+                if self.offset >= len(self.payload):
+                    return None
+                self.box = self.payload[self.offset]
+                self.offset += 1
+                self.left = 8
+            take = min(self.left, width - filled)
+            value |= (self.box & ((1 << take) - 1)) << filled
+            self.box >>= take
+            self.left -= take
+            filled += take
+        self.codeofs = (self.codeofs + 1) & 7
+        return value
+
+    def resync(self, width):
+        while self.codeofs and self.read(width) is not None:
+            pass
+
+
+def _arc_crunch(payload, max_bits, rle, cap):
+    """Decode one ARC method 8 or 9 'crunched' member into original bytes.
+
+    Method 8 is 9-to-12-bit LZW followed by RLE90 and starts with one byte
+    holding the maximum code width, always 12. Method 9 is 9-to-13-bit LZW
+    with no RLE and no leading byte.
+
+    Code 256 does not clear the string table. It only drops the code width
+    back to nine bits and lets new strings overwrite the entries above 255,
+    so back-references to shorter codes keep resolving. All four method-8
+    members of the historical corpus reproduce their stored CRC with these
+    rules, and every one consumes its packed bytes exactly.
+    """
+    limit = 1 << max_bits
+    prefix = [-1] * limit
+    suffix = [-1] * limit
+    first = [-1] * limit
+    for value in range(256):
+        suffix[value] = value
+    last = 255
+    width = base = 9
+    bits = _ArcBits(payload)
+    if max_bits == 12:
+        bits.offset = 1
+    out = bytearray()
+    state = {'last': 0, 'pending': False}
+
+    def emit(byte):
+        if not rle:
+            out.append(byte)
+            return
+        if state['pending']:
+            if byte == 0:
+                out.append(0x90)
+            else:
+                out.extend(bytes([state['last']]) * (byte - 1))
+            state['pending'] = False
+        elif byte == 0x90:
+            state['pending'] = True
+        else:
+            out.append(byte)
+            state['last'] = byte
+
+    def output(code):
+        stack = []
+        while prefix[code] != -1 and len(stack) < limit:
+            stack.append(suffix[code])
+            code = prefix[code]
+        emit(suffix[code])
+        while stack:
+            emit(stack.pop())
+
+    def add(oldcode, byte):
+        nonlocal last
+        last += 1
+        if last & limit:
+            last = limit - 1
+            return
+        suffix[last] = byte
+        if oldcode >= limit:
+            return
+        prefix[last] = oldcode
+        first[last] = oldcode if prefix[oldcode] == -1 else first[oldcode]
+
+    def first_byte(code):
+        if prefix[code] != -1:
+            code = first[code]
+        return suffix[code]
+
+    previous = current = lead = 0
+    started = False
+    while True:
+        code = bits.read(width)
+        if code is None:
+            break
+        current = code
+        if not started:
+            lead = current
+            started = True
+        if current == 256:
+            last = 255
+            bits.resync(width)
+            width = base
+            code = bits.read(width)
+            if code is None:
+                break
+            current = code
+        if current <= last:
+            output(current)
+            lead = first_byte(current)
+        else:
+            # The only valid code above the table is the one the decoder is
+            # about to create: the previous string plus its own first byte.
+            output(previous)
+            emit(lead)
+        if last != limit - 1:
+            add(previous, lead)
+            if last != limit - 1 and last == (1 << width) - 1:
+                width += 1
+                bits.resync(width - 1)
+        previous = current
+        if len(out) > cap:
+            raise ValueError('ARC member exceeds the output budget')
+    if bits.offset != len(payload):
+        raise ValueError('ARC member did not consume its packed bytes')
+    return bytes(out)
+
+
 def _arc(path, limits, nomarch=None):
     """Inventory ARC headers and check CRCs for stored and supported compressed members."""
     size = path.stat().st_size
@@ -703,6 +851,8 @@ def _arc(path, limits, nomarch=None):
                 def load(cap):
                     if method in (1, 2):
                         data = stream.read(packed)
+                    elif method in ARC_CRUNCH:
+                        data = _arc_crunch(stream.read(packed), *ARC_CRUNCH[method], cap)
                     else:
                         # Isolate the exact ordinal without passing an archive-controlled
                         # path or a wildcard to the external decoder.
@@ -718,13 +868,14 @@ def _arc(path, limits, nomarch=None):
                     return data
 
                 reason = None
-                if method in (8, 9) and nomarch is not None:
+                if method in (1, 2):
+                    if packed != unpacked:
+                        reason = 'size-mismatch'
+                elif method in ARC_CRUNCH or nomarch is not None:
                     if packed > limits.member_bytes:
                         reason = 'packed-byte-limit'
-                elif method not in (1, 2):
+                else:
                     reason = f'unsupported-arc-method-{method}'
-                elif packed != unpacked:
-                    reason = 'size-mismatch'
                 yield name, unpacked, reason, load
                 stream.seek(end)
             raise ValueError('missing ARC end marker')

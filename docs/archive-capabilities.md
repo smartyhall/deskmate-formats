@@ -140,11 +140,11 @@ implies the file is whole, or an explicit admission that neither is available.
 - Extensions: .arc.
 - Structural identification: member header followed by a 1A 00 end-of-archive marker
 - Container completeness: structural.
-- Extraction methods: stored, rle, lzw, adapter.
-- Unsupported or ambiguous variants: Method 8 LZW with RLE90 and method 9 suspended members are not decoded natively.
+- Extraction methods: stored, lzw, adapter.
+- Unsupported or ambiguous variants: Methods 3 to 7 are reported unsupported; methods 5 and 6 can be routed through an optional nomarch build; Method 9 is decoded natively but has synthetic coverage only, with no genuine specimen yet.
 - Optional dependencies: nomarch (methods 8 and 9).
-- Evidence: Stored members are extracted and CRC-checked natively; methods 8 and 9 are isolated one member at a time through a bounded nomarch call with an exact length and CRC check. A 2026-11-26 content-based scan of the 10,037-file TVDog mirror found two ARC archives holding five members, four of which use method 8; native extraction therefore covers one of five, and 7-Zip 26.05 was checked as a possible substitute oracle but has no ARC handler. A native method-8 decoder now reproduces the exact unpacked length of one member but not its CRC, so the bit-level convention remains unresolved and no method-8 member is claimed.
-- Limitations: Methods other than 1, 2, 8 and 9 are reported unsupported. The 16-bit CRC covers the unpacked member only. There is no qualified native method-8/9 decoder and no independent oracle available locally, so nomarch remains the only qualified path for those methods.
+- Evidence: Stored members, methods 8 and 9 are decoded natively and checked against the stored member CRC. The method-8 rules were resolved on 2026-11-26 from nomarch 1.4's published decoder and then confirmed on genuine material: all four method-8 members of the two TVDog archives (6195, 726, 5366 and 128 unpacked bytes) reproduce their stored CRC and consume their packed bytes exactly, so both archives now extract completely, five members of five. ARC wrote its codes in padded groups of eight and padded a group before a width change, and code 256 only returns the width to nine bits without clearing the string table. A synthetic encoder in the portable suite covers literal runs, RLE90 escapes, width growth, table saturation and the 256 shrink; 7-Zip 26.05 has no ARC handler, so nomarch remained a comparison rather than a required backend.
+- Limitations: Methods 3 to 7 are reported unsupported; methods 5 and 6 use a hashed 12-bit table that has not been studied, and are only reachable through an optional nomarch build. Method 9 shares the method-8 code path but has not been seen in a genuine archive. The 16-bit CRC covers the unpacked member only, and a CRC mismatch is reported as a read error rather than as its own status.
 - Reference: [ARC member header layout](https://www.fileformat.info/format/arc/corion.htm)
 
 ### LHA / LZH level-0 archive

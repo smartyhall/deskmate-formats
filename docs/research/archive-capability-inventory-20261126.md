@@ -567,3 +567,13 @@ That distinction is deliberate and is not a claim that the whole suite passed.
    natural next consumer of the sector abstraction.
 6. **CopyQM against a genuine specimen**: the handler is still qualified only
    against hand-authored fixtures; no genuine `.QM` image has been obtained.
+
+## Successor checkpoints
+
+Later work in this campaign is recorded in separate reports so each stays a
+coherent review unit:
+
+- [Successor checkpoint 2](archive-capability-inventory-20261126c.md): the
+  Python 3.14 `compression` module collision, the missing REUSE sidecar, and
+  the resolution of the ARC method 8 bit conventions against four genuine
+  members.
