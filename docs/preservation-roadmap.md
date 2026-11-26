@@ -28,7 +28,7 @@ DeskMate, Tandy, DOS, x86 or a particular model provider.
   Freebuff is an experimental supplementary agent, not an implemented
   dispatch or telemetry backend. Preserve the pinned Codex protocol and
   qualify provider-specific adapters separately; see the
-  [multi-agent campaign rules](../AGENTS.md#multi-agent-campaign-governance--supplementary-agent-integration-2026-11-25).
+  [multi-agent campaign rules](https://github.com/smartyhall/deskmate-formats/blob/main/AGENTS.md#multi-agent-campaign-governance).
   Prefer shared campaign identities, evidence and usage receipt contracts,
   capability discovery, resource ownership, and provider-neutral skills;
   retain provider-specific semantics and record unavailable telemetry.
