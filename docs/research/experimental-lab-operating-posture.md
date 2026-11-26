@@ -107,3 +107,22 @@ a faithful record of experiments and the requirements applied *at that time*.
 This later **operator policy** supersedes its recommendation to prove a new
 OS-level/second-VM isolation boundary before a narrow S0 canary, but does not
 retract any empirical observation or itself authorize model usage.
+
+## Supplementary agents and shared lab resources (2026-11-25)
+
+The [multi-agent campaign rules](../../AGENTS.md#multi-agent-campaign-governance)
+apply to Freebuff and other supplementary agents. The operator's recoverable
+VM-local risk acceptance remains in effect; do not require a second VM merely
+to conduct a bounded authorized local campaign. However, a Git worktree
+separates campaign files, not operating-system authority or network access.
+Reserve mutable guest images and emulator instances/sockets to one campaign,
+isolate build and evidence outputs, and coordinate archive writers and storage
+I/O. Verify concrete external exposure and provider data handling before
+introducing a new service or sending lab inputs outside the authorized boundary.
+
+A native Freebuff session is not a Supervisor-owned Codex S0 turn. No Codex
+canary exception, live-dispatch permission, credential, paid-model grant or
+MCP access transfers simply because Freebuff can discover a checkout or launch
+a shell. The existing Codex launch gates and exact-plan requirements are
+unchanged. Any future adapter must be qualified on its own evidence. Manual
+authorized work and read-only evaluation need not wait for that adapter.

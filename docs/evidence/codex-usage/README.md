@@ -50,6 +50,11 @@ Draw II receipts cover [startup](20261119-draw-ii-startup.json),
 only. This directory is the central tracked destination, not a dump of the
 operator's account history.
 
+## Supplementary agent receipts
+
+See the [provider-neutral usage ledger](../agent-usage/README.md) for
+non-Codex campaigns. The existing Codex collector and schema are unchanged.
+
 ## Collection and publication contract
 
 - At campaign start, each useful checkpoint, and completion (or an early stop),
