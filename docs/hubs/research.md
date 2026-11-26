@@ -1,15 +1,16 @@
 # Research
 
-This section records how the project knows what it knows. It is organised by
+This section records how the project knows what it knows. It is organized by
 evidence rather than by subject, so a format page and its underlying
 experiments sit in different sections on purpose: the guide describes what is
 currently believed, and the experiment records how that belief was tested and
 what the test could not establish.
 
-Each report is dated. Reading an older report as a current specification is the
-most common way to misuse this section. Reports describe the state of
-understanding at the time of the run, including the parts that were later
-revised.
+Where a report records a date for its run — in its title, its opening line, or
+its filename — this page and the report's own header show that date. Reading an
+older report as a current specification is the most common way to misuse this
+section. Reports describe the state of understanding at the time of the run,
+including the parts that were later revised.
 
 ## Start here
 
@@ -45,6 +46,31 @@ revised.
 - [Visual-evidence curation policy](../visual-evidence-curation.md) states what
   may be published and how captures are selected.
 
+## Chronology
+
+The groups above answer "what do I want to know about?" This list answers "in
+what order did the project learn it?" It uses the date each source records for
+its run, oldest first.
+
+- **October 31, 2026** — [Repository transition verification](../verification.md)
+- **November 1, 2026** — [Database components research](../research/database-components.md)
+- **November 17, 2026** — [Filer native experiments](../research/filer-native-20261117.md)
+- **November 17, 2026** — [Text native experiments](../research/text-native-20261117.md)
+- **November 17, 2026** — [Native graphics experiments](../research/graphics-native-20261117.md)
+- **November 17, 2026** — [Worksheet native experiments](../research/worksheet-native-20261117.md)
+- **November 18, 2026** — [Native Sound research](../research/sound-native-20261118.md)
+- **November 18, 2026** — [Native Music research](../research/music-native-20261118.md)
+- **November 20, 2026** — [First private visual-evidence inventory report](../research/visual-evidence-first-pass-20261120.md)
+- **November 22, 2026** — [Automatic House, Plug 'n Power, and the CP290](../research/deskmate-automatic-house-x10.md)
+- **November 23, 2026** — [Corkboard and Home Organizer storage](../research/deskmate-corkboard-20261123.md)
+- **November 23, 2026** — [Print Companion and native printing](../research/print-companion-20261123.md)
+
+Two entries in this section carry no run date. The
+[TVDog descriptive directory index review](../ecosystem/tvdog-directory-index-review.md)
+records the dates of the snapshot and the verification it reports, but not a
+date for the report itself, and [Public and private evidence](../evidence/README.md)
+is a maintained guide rather than a dated report.
+
 ## Sources and evidence boundaries
 
 Reports distinguish four things that are easy to conflate: what the software
@@ -59,6 +85,6 @@ a rewrite of the historical record.
 
 ## Continue
 
-- Previous: [Recovery](../recovery.md).
-- Next: [Project](../project.md) for method, status, and contribution.
-- Maintained guides: [File Formats](../formats.md).
+- Previous: [Recovery](recovery.md).
+- Next: [Project](project.md) for method, direction, and contribution.
+- Maintained guides: [File Formats](formats.md).

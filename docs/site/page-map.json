@@ -113,7 +113,7 @@
       "subsection": "Application and system studies",
       "order": 100,
       "summary": "Dated research into the components of DeskMate's database files.",
-      "date": null,
+      "date": "2026-11-01",
       "is_hub": false,
       "role": "dated-research",
       "source": "docs/research/database-components.md"
@@ -230,7 +230,7 @@
       "subsection": "Format experiments",
       "order": 70,
       "summary": "Dated native investigation of DeskMate Sound.",
-      "date": null,
+      "date": "2026-11-18",
       "is_hub": false,
       "role": "dated-research",
       "source": "docs/research/sound-native-20261118.md"
@@ -243,7 +243,7 @@
       "subsection": "Format experiments",
       "order": 80,
       "summary": "Dated native investigation of DeskMate Music and instrument data.",
-      "date": null,
+      "date": "2026-11-18",
       "is_hub": false,
       "role": "dated-research",
       "source": "docs/research/music-native-20261118.md"
@@ -321,7 +321,7 @@
       "subsection": "Format experiments",
       "order": 10,
       "summary": "Dated native experiments on reading and writing Filer files.",
-      "date": null,
+      "date": "2026-11-17",
       "is_hub": false,
       "role": "dated-research",
       "source": "docs/research/filer-native-20261117.md"
@@ -334,7 +334,7 @@
       "subsection": "Format experiments",
       "order": 20,
       "summary": "Dated experiments on Corkboard and Home Organizer storage.",
-      "date": null,
+      "date": "2026-11-23",
       "is_hub": false,
       "role": "dated-research",
       "source": "docs/research/deskmate-corkboard-20261123.md"
@@ -347,7 +347,7 @@
       "subsection": "Format experiments",
       "order": 30,
       "summary": "Dated experiments on Print Companion documents and native printing paths.",
-      "date": null,
+      "date": "2026-11-23",
       "is_hub": false,
       "role": "dated-research",
       "source": "docs/research/print-companion-20261123.md"
@@ -360,7 +360,7 @@
       "subsection": "Format experiments",
       "order": 40,
       "summary": "Dated native experiments on Text documents.",
-      "date": null,
+      "date": "2026-11-17",
       "is_hub": false,
       "role": "dated-research",
       "source": "docs/research/text-native-20261117.md"
@@ -373,7 +373,7 @@
       "subsection": "Format experiments",
       "order": 50,
       "summary": "Dated native experiments on Draw graphics and rendering.",
-      "date": null,
+      "date": "2026-11-17",
       "is_hub": false,
       "role": "dated-research",
       "source": "docs/research/graphics-native-20261117.md"
@@ -386,7 +386,7 @@
       "subsection": "Format experiments",
       "order": 60,
       "summary": "Dated native experiments on Worksheet files and recalculation.",
-      "date": null,
+      "date": "2026-11-17",
       "is_hub": false,
       "role": "dated-research",
       "source": "docs/research/worksheet-native-20261117.md"
@@ -399,7 +399,7 @@
       "subsection": "Evidence and verification",
       "order": 120,
       "summary": "First inventory of captured visual evidence, with provenance and attribution notes.",
-      "date": null,
+      "date": "2026-11-20",
       "is_hub": false,
       "role": "dated-research",
       "source": "docs/research/visual-evidence-first-pass-20261120.md"
@@ -529,7 +529,7 @@
       "subsection": "Application and system studies",
       "order": 90,
       "summary": "Dated study of Automatic House, Plug 'n Power, and the CP290 interface.",
-      "date": null,
+      "date": "2026-11-22",
       "is_hub": false,
       "role": "dated-research",
       "source": "docs/research/deskmate-automatic-house-x10.md"

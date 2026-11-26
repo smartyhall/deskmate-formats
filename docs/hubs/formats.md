@@ -2,7 +2,7 @@
 
 DeskMate documents are ordinary DOS files with their own internal structure.
 Each program writes a format that reflects the way that program thinks: a
-worksheet stores cells, formulas and labels; a drawing stores object records
+worksheet stores cells, formulas, and labels; a drawing stores object records
 and a font; a calendar stores appointments and its own indexes. This section
 explains those structures, the conventions shared between them, and the limits
 of what has actually been verified.
@@ -16,7 +16,7 @@ confirmed, the page says so.
 ## Start here
 
 1. [Architecture and scope boundaries](../architecture.md) explains how the
-   independent format library is organised and what it deliberately does not
+   independent format library is organized and what it deliberately does not
    claim.
 2. [Built-in application and format inventory](../inventory.md) maps each
    application to the format it writes, which is the quickest way to find the
@@ -58,17 +58,17 @@ These are the maintained, per-application references:
 ## Sources and evidence boundaries
 
 A manufacturer reference records what the vendor published, including
-behaviour that later observation contradicted. A maintained guide records what
+behavior that later observation contradicted. A maintained guide records what
 this project has verified against files it created or holds. A dated snapshot
 records a point-in-time understanding that has not been revisited. Those roles
 are shown on each page rather than merged into a single confident voice.
 
 Read, write, and export capability is not implied by a documented structure.
-Supported operations are stated per format in [Recovery](../recovery.md), and
+Supported operations are stated per format in [Recovery](recovery.md), and
 unsupported records are preserved rather than silently rewritten.
 
 ## Continue
 
-- Previous: [DeskMate](../deskmate.md).
-- Next: [Recovery](../recovery.md) for the tools that read and write these files.
-- Evidence behind the format claims: [Research](../research.md).
+- Previous: [DeskMate](deskmate.md).
+- Next: [Recovery](recovery.md) for the tools that read and write these files.
+- Evidence behind the format claims: [Research](research.md).

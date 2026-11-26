@@ -5,7 +5,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const {
   ROOT, pages, byId, sections, siteUrl, resolveLink, renderSource, searchRecord,
-  roleLabel, breadcrumbsFor, canonicalFor, SITE_ORIGIN,
+  roleLabel, breadcrumbsFor, canonicalFor, formatDate, SITE_ORIGIN,
 } = require("../lib/reference.cjs");
 const Sitemap = require("../src/sitemap.11ty.js");
 const Robots = require("../src/robots.11ty.js");
@@ -49,13 +49,15 @@ test("mapped Markdown links are routed internally", () => {
   const target = pages.find((entry) => entry.id === "system.page-setup");
   assert.equal(resolveLink("tandy-common-headers.md#header-layout", source),
     "/" + target.slug + "/#header-layout");
-  assert.match(resolveLink("../research/nonmapped.md", source),
-    /^https:\/\/github\.com\/smartyhall\/deskmate-formats\/blob\/main\/docs\/research\//);
+  assert.throws(() => resolveLink("../research/nonmapped.md", source), /does not exist/);
   assert.equal(resolveLink("#section", source), "#section");
   assert.equal(resolveLink("https://example.org", source), "https://example.org");
   assert.equal(resolveLink("../../PROJECT_STATUS.md", source),
     "https://github.com/smartyhall/deskmate-formats/blob/main/PROJECT_STATUS.md");
-  assert.equal(resolveLink("../../unreviewed-root-secret.md", source), "#unpublished-source");
+  // A root file that exists but is outside the publication boundary is named,
+  // not linked; a root path that does not exist at all is an authoring error.
+  assert.equal(resolveLink("../../LICENSING.md", source), "#unpublished-source");
+  assert.throws(() => resolveLink("../../unreviewed-root-secret.md", source), /does not exist/);
 });
 
 test("historical Markdown renders and is indexed without copying originals", () => {
@@ -283,4 +285,82 @@ test("contents lists appear exactly on long, non-hub pages", () => {
     const collapsed = !/<details class="page-contents" open>/.test(html);
     assert.equal(collapsed, ids.length > 8, page.id + " collapse rule");
   }
+});
+
+const HUB_SEQUENCE = ["deskmate", "formats", "recovery", "research", "project"];
+
+function hubLinks(entry) {
+  const raw = fs.readFileSync(path.join(ROOT, entry.source), "utf8");
+  return [...raw.matchAll(/\[([^\]]+)\]\(([^)\s]+)\)/g)]
+    .map((match) => ({ text: match[1], href: match[2], url: resolveLink(match[2], entry) }));
+}
+
+test("every hub link resolves to a mapped site page", () => {
+  const routes = new Set(pages.map((page) => "/" + page.slug + "/"));
+  for (const section of sections) {
+    const links = hubLinks(section.hub);
+    assert.ok(links.length >= 8, section.id + " has too few links");
+    for (const link of links) {
+      assert.match(link.url, /^\//, section.id + ": " + link.href + " -> " + link.url);
+      assert.equal(routes.has(link.url.split("#")[0]), true,
+        section.id + ": " + link.href + " -> " + link.url);
+    }
+  }
+});
+
+test("the five hubs form one sequential reading path", () => {
+  HUB_SEQUENCE.forEach((id, index) => {
+    const hub = byId.get(id + ".overview");
+    const raw = fs.readFileSync(path.join(ROOT, hub.source), "utf8");
+    const next = /^- Next: \[[^\]]+\]\(([^)]+)\)/m.exec(raw);
+    const previous = /^- Previous: \[[^\]]+\]\(([^)]+)\)/m.exec(raw);
+    if (index < HUB_SEQUENCE.length - 1) {
+      assert.ok(next, id + " has no onward link");
+      assert.equal(resolveLink(next[1], hub), "/" + HUB_SEQUENCE[index + 1] + "/");
+    } else {
+      assert.equal(next, null, "the last hub must not link onward");
+    }
+    if (index > 0) {
+      assert.ok(previous, id + " has no previous link");
+      assert.equal(resolveLink(previous[1], hub), "/" + HUB_SEQUENCE[index - 1] + "/");
+    } else {
+      assert.equal(previous, null, "the first hub must not link back");
+    }
+  });
+});
+
+test("relative links to nonexistent destinations fail the build", () => {
+  const hub = byId.get("formats.overview");
+  assert.throws(() => resolveLink("../recovery.md", hub), /Broken relative link/);
+  assert.throws(() => resolveLink("../research/no-such-report.md", hub), /does not exist/);
+  // An existing repository document that is not mapped stays a source link.
+  assert.equal(fs.existsSync(path.join(ROOT, "docs/research/86box-client.md")), true);
+  assert.equal(resolveLink("../research/86box-client.md", hub),
+    "https://github.com/smartyhall/deskmate-formats/blob/main/docs/research/86box-client.md");
+  // Case is part of the path even on a case-insensitive filesystem.
+  assert.throws(() => resolveLink("../research/86Box-client.md", hub), /does not exist/);
+});
+
+test("the research chronology agrees with the recorded report dates", () => {
+  const hub = byId.get("research.overview");
+  const raw = fs.readFileSync(path.join(ROOT, hub.source), "utf8");
+  const listed = [...raw.matchAll(/^- \*\*([^*]+)\*\* — \[[^\]]+\]\(([^)]+)\)/gm)]
+    .map((match) => ({ date: match[1], url: resolveLink(match[2], hub) }));
+  const reports = pages.filter((page) => page.section === "research" && !page.is_hub);
+  const dated = reports.filter((page) => page.date)
+    .sort((left, right) => left.date.localeCompare(right.date) || left.order - right.order)
+    .map((page) => ({ date: formatDate(page.date), url: "/" + page.slug + "/" }));
+  assert.deepEqual(listed, dated);
+  const undatedNote = /carry no run date\.([\s\S]*?)## Sources/.exec(raw);
+  assert.ok(undatedNote, "the hub must say which reports are undated");
+  for (const page of reports.filter((item) => !item.date))
+    assert.ok(undatedNote[1].includes(page.source.replace(/^docs\//, "../")), page.id);
+});
+
+test("recorded dates render as American long dates", () => {
+  assert.equal(formatDate("2026-11-01"), "November 1, 2026");
+  assert.equal(formatDate("2026-11-17"), "November 17, 2026");
+  assert.equal(formatDate(null), null);
+  assert.equal(formatDate("2026-13-01"), null);
+  assert.equal(formatDate("17-11-2026"), null);
 });

@@ -33,6 +33,10 @@ const ROLE_LABELS = Object.freeze({
   "dated-snapshot": "Dated snapshot",
   "site-plan": "Project planning document",
 });
+const MONTHS = Object.freeze([
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+]);
 
 function compareEntries(left, right) {
   return left.order - right.order || left.id.localeCompare(right.id);
@@ -89,6 +93,45 @@ function sourcePath(entry) {
     throw new Error("Unapproved document source: " + entry.source);
   return absolute;
 }
+/** Report dates are recorded only when a source states one; never inferred. */
+function formatDate(iso) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(typeof iso === "string" ? iso : "");
+  if (!match) return null;
+  const month = MONTHS[Number(match[2]) - 1];
+  return month ? month + " " + Number(match[3]) + ", " + match[1] : null;
+}
+const existingPaths = new Map();
+/**
+ * Whether a repository-relative destination actually exists.
+ * Directory names are compared exactly: Windows resolves case-insensitively but
+ * GitHub and the Linux build do not, so a link that only works on the author's
+ * machine is still a broken link.
+ */
+function sourceExists(relative) {
+  const trimmed = relative.replace(/\/+$/, "");
+  if (!trimmed || trimmed === "." || trimmed.startsWith("../")) return false;
+  const cached = existingPaths.get(trimmed);
+  if (cached !== undefined) return cached;
+  let current = ROOT;
+  let found = true;
+  for (const segment of trimmed.split("/")) {
+    let entries;
+    try {
+      entries = fs.readdirSync(current);
+    } catch {
+      found = false;
+      break;
+    }
+    if (!entries.includes(segment)) {
+      found = false;
+      break;
+    }
+    current = path.join(current, segment);
+  }
+  if (found) found = fs.existsSync(current);
+  existingPaths.set(trimmed, found);
+  return found;
+}
 function resolveLink(href, entry) {
   if (!href || href[0] === "#") return href;
   if (/^[a-z][a-z0-9+.-]*:/i.test(href) || href.startsWith("//")) return href;
@@ -106,6 +149,14 @@ function resolveLink(href, entry) {
   }
   const mapped = bySource.get(resolved);
   if (mapped) return pageUrl(mapped) + suffix;
+  // A relative link has to point at something. Falling back to a repository URL
+  // for a destination that does not exist turns a typo into a broken external
+  // link that no generated-site check can see, so refuse it at build time.
+  if (!sourceExists(resolved))
+    throw new Error(
+      "Broken relative link in " + entry.id + ": " + href +
+      " resolves to " + resolved + ", which does not exist"
+    );
   // The public root status file is explicitly eligible as an external reference.
   // Do not admit arbitrary root files through the publication boundary.
   if (resolved !== "PROJECT_STATUS.md" &&
@@ -251,7 +302,7 @@ function breadcrumbsFor(entry) {
 }
 module.exports = {
   ROOT, pages, byId, sections, SECTION_IDS, SECTION_LABELS, ROLE_LABELS,
-  SITE_ORIGIN, canonicalFor,
+  SITE_ORIGIN, canonicalFor, formatDate,
   siteUrl, pageUrl, resolveLink, renderSource, searchRecord,
   roleLabel, sectionFor, breadcrumbsFor,
 };

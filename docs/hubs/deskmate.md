@@ -2,14 +2,14 @@
 
 Tandy DeskMate put a friendly, menu-driven desktop in front of DOS. Instead of
 remembering commands and paths, a user moved between writing, planning,
-drawing, filing and record-keeping programs that shared one look and one set of
+drawing, filing, and record-keeping programs that shared one look and one set of
 conventions. This section is the historical entry point to the reference: what
 the software was, which releases exist, how a copy is installed today, and how
 DeskMate fits into a wider library of Tandy and third-party software.
 
 If you have never used DeskMate, start with the illustrated introduction. If you
 are here to install or compare a specific release, go straight to the
-installation guides. If you are cataloguing software rather than running it,
+installation guides. If you are cataloging software rather than running it,
 the ecosystem pages describe what was published and what has been acquired.
 
 ## Start here
@@ -53,7 +53,7 @@ DeskMate was also a platform with third-party software around it.
 - [DeskMate acquisition gaps](../ecosystem/acquisition-gaps.md) names what is
   still missing, so a future search can be targeted rather than speculative.
 - [TVDog descriptive directory index review](../ecosystem/tvdog-directory-index-review.md)
-  is the dated research note behind part of that catalogue.
+  is the dated research note behind part of that catalog.
 - [Automatic House, Plug 'n Power, and the CP290](../research/deskmate-automatic-house-x10.md)
   is a worked example of one ecosystem product traced in detail.
 
@@ -62,13 +62,13 @@ DeskMate was also a platform with third-party software around it.
 Material here mixes three kinds of claim: manufacturer documentation,
 contemporary accounts, and this project's own native observations. Captures
 come from a small number of controlled installations, chiefly one DeskMate 3.05
-system, and are labelled as such. Catalogue entries distinguish software that
-has been acquired and run from software known only from listings. Commercial
+system, and are labeled as such. Catalog entries distinguish software that has
+been acquired and run from software known only from listings. Commercial
 media is not redistributed; installation guides describe procedures, not
 provide the disks.
 
 ## Continue
 
-- Next: [File Formats](../formats.md) for the native document formats.
-- Practical recovery: [Recovery](../recovery.md).
-- Method and evidence: [Research](../research.md).
+- Next: [File Formats](formats.md) for the native document formats.
+- Practical recovery: [Recovery](recovery.md).
+- Method and evidence: [Research](research.md).

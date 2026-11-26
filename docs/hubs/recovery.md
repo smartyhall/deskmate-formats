@@ -32,7 +32,7 @@ intact.
   you would rather work in a terminal than through a bundle.
 - [Built-in application and format inventory](../inventory.md) identifies which
   program writes which format, which determines what a file is likely to be.
-- [File Formats](../formats.md) is the structural reference behind the tools,
+- [File Formats](formats.md) is the structural reference behind the tools,
   including the structures that are only partly understood.
 
 ## Where the limits are
@@ -46,18 +46,18 @@ profiles; a format page describing a structure is not a claim that the tools
 can rewrite it.
 
 Format documentation is not a capability claim. A page in
-[File Formats](../formats.md) may describe a structure precisely while the
+[File Formats](formats.md) may describe a structure precisely while the
 recovery tools support only part of it, or none of it yet.
 
 ## Sources and evidence boundaries
 
 Statements about supported operations come from tests against real and
 synthetic files, not from the format description alone. Where a recovery claim
-rests on a single observed file, it is reported as such and not generalised to
+rests on a single observed file, it is reported as such and not generalized to
 every release.
 
 ## Continue
 
-- Previous: [File Formats](../formats.md).
-- Next: [Research](../research.md) if you want the evidence behind a claim.
-- Background: [DeskMate](../deskmate.md) for the software and its releases.
+- Previous: [File Formats](formats.md).
+- Next: [Research](research.md) if you want the evidence behind a claim.
+- Background: [DeskMate](deskmate.md) for the software and its releases.

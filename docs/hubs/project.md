@@ -22,7 +22,7 @@ Tandy or Radio Shack, and it does not redistribute commercial software.
    guide for changing a page without breaking its URL, anchors, or evidence
    role.
 
-## Status and direction
+## Direction and planning
 
 - [Preservation ecosystem roadmap](../preservation-roadmap.md) states the
   component boundaries and the standing direction.
@@ -31,8 +31,10 @@ Tandy or Radio Shack, and it does not redistribute commercial software.
 - [Reference-site preparation](../site/README.md) covers site structure,
   staging metadata, and the boundary between source and publication.
 
-A curated status summary is maintained here rather than publishing the raw
-working status file, which mixes completed work with internal notes.
+No curated status summary is published here yet. The working status file mixes
+completed work with internal notes, so it is not reproduced as it stands; until
+a reviewed summary exists, the roadmap and workplan are the citable statement
+of direction.
 
 ## Publishing and contribution
 
@@ -56,5 +58,5 @@ project does not hold.
 
 ## Continue
 
-- Previous: [Research](../research.md).
-- Start over: [DeskMate](../deskmate.md).
+- Previous: [Research](research.md).
+- Start over: [DeskMate](deskmate.md).

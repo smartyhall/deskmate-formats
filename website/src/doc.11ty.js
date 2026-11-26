@@ -1,6 +1,6 @@
 "use strict";
 const {
-  renderSource, roleLabel, sectionFor, breadcrumbsFor, canonicalFor,
+  renderSource, roleLabel, sectionFor, breadcrumbsFor, canonicalFor, formatDate,
 } = require("../lib/reference.cjs");
 module.exports = class Document {
   data() {
@@ -18,6 +18,9 @@ module.exports = class Document {
         sourceRoleLabel: (data) => data.entry.id === "history.introduction"
           ? null
           : roleLabel(data.entry),
+        // Only a date the source itself records; undated reports show none.
+        sourceDateIso: (data) => data.entry.date || null,
+        sourceDateLabel: (data) => formatDate(data.entry.date),
         breadcrumbs: (data) => breadcrumbsFor(data.entry),
         canonicalUrl: (data) => canonicalFor(data.entry),
         sourceLink: (data) =>

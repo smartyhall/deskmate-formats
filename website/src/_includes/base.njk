@@ -43,7 +43,7 @@
         {% endif %}
         {% if sourceRoleLabel %}
         <div class="alert alert-info source-role" role="note">
-          <strong>{{ sourceRoleLabel | escape }}</strong>
+          <strong>{{ sourceRoleLabel | escape }}</strong>{% if sourceDateLabel %} <time datetime="{{ sourceDateIso }}">{{ sourceDateLabel | escape }}</time>{% endif %}
           <span>— Read the claims here in the context of the source's date and the evidence behind it.</span>
         </div>
         {% endif %}
