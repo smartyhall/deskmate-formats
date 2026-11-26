@@ -12,10 +12,9 @@ existing publication boundaries and [authoring rules](authoring.md).
 
 Freebuff reported 38 mapped pages, eight open sidebar sections, 189 Markdown
 documents, 94 approved figures, and 181 on-site, 209 repository, and 142
-external link resolutions. Of those 532 listed outcomes, 209 were repository
-links; the report also cited 571 total resolutions (an unreconciled
-denominator). Of the 390 on-site/repository outcomes, 209 were repository
-links. Do not use an arbitrary reduction percentage as a release gate.
+external link resolutions. Freebuff's follow-up review corrected the total to 534 Markdown links:
+181 on-site, 209 repository, 142 external, and 2 in-page. Of the 390
+on-site/repository outcomes, 209 (53.6%) were repository links. Do not use an arbitrary reduction percentage as a release gate.
 Re-measure with a documented method against the actual implementation.
 
 Current main inspected for this handoff: `a23197ac66aade3638a3178f9831f353252a2160`.
@@ -27,8 +26,11 @@ theme and separate layout CSS; do not fork the theme or change generator as
 part of this work. Reconcile newer theme work if it lands in parallel.
 The [route baseline](published-route-baseline.json) records all 40 mapped
 routes plus Home and Search at this revision. It records source-map routes,
-not independently measured production availability. Capture the exact
-rendered anchor set from this revision before changing content or layout.
+not independently measured production availability. The 334 article-content anchors across 40 mapped documents have now been
+captured from the original GitHub Actions preview (run 45312811457,
+artifact 14883254568); the downloaded ZIP matched the recorded SHA-256.
+Home and Search are route-only, and layout chrome is not pinned. Preserve
+explicitly supported public content fragments even when the layout changes.
 
 The root problem is conflation of repository organization, evidence roles,
 and readers' navigation. Preserve source roles, but classify navigation
@@ -104,14 +106,58 @@ verification, interoperability, containers, TVDog reference) individually.
 Formalize multiple image placements with a single authoritative asset
 and provenance record; defer manifest changes until needed.
 
+## Page-map v2 contract and stable hub IDs
+
+Keep v1 support intact while adding v2 validation and tests; migrate the
+whole map atomically with the renderer, not entry by entry. A v2 map has
+`schema_version: 2` and `pages`, with these fields in every entry:
+
+- `id`, `slug`, `title`, `role`, and `source` retain existing types,
+  uniqueness, containment, and role validation.
+- `section`: one of `deskmate`, `formats`, `recovery`, `research`,
+  `project`; independent of slug and evidence role.
+- `subsection`: nonempty reader-oriented label (1–80 characters, trimmed)
+  for ordinary pages, null for a section hub.
+- `order`: nonnegative integer for ordering within a section/subsection;
+  resolve ties deterministically by ID.
+- `summary`: trimmed plain text, 1–240 characters, not raw markup.
+- `date`: ISO calendar date or null; record dates only when supported by
+  source evidence, not inferred from an unrelated commit.
+- `is_hub`: boolean; exactly one true per section, with a null subsection.
+
+Stable hub IDs and slugs: `deskmate.overview` / deskmate,
+`formats.overview` / formats, `recovery.overview` / recovery,
+`research.overview` / research, and `project.overview` / project.
+Use `current-guide` or `site-plan` as supported by actual editorial role;
+do not create a new evidence role merely to identify a hub. All existing
+IDs and slugs remain unchanged. V2 rejects missing or unknown fields and
+invalid types; v1 retains its original exact six-field contract. Update
+Python and Node tests before migrating, then use v2 in the renderer.
+Future extensions should be versioned, not implicit.
+
+## Rejected alternatives and deferred decisions
+
+Do not merely collapse the eight old groups, mirror repository folders in
+the nav, substitute a single exhaustive index, use facets as the sole
+navigation, build release microsites, switch generators, or map every
+document automatically. Facets and release-specific subsections may
+supplement the agreed structure. Preserve full reviewed research and
+provide approachable summaries; retain the Project material, subordinate
+its prominence, and link subject/evidence views. Defer Calendar successor
+specification, policy consolidation, image-placement schema changes, and
+theme replacement to their appropriate reviewed campaigns. Exact subsection
+names, hub prose, status summary format, and visual placement remain
+implementation/editorial decisions within this direction.
+
 ## Implementation phases and acceptance
 
 0. **Foundation, before visible change.** Record this plan and editorial
    rules; capture the route inventory and implement automated route
-   preservation. Build the pinned baseline revision with the actual
-   Eleventy renderer, capture existing HTML IDs/legacy named anchors
-   into the baseline and review it. Verify all routes/anchors in subsequent
-   preview and publish builds. Test deliberately missing route/anchor
+   preservation. The original CI build has been recovered and its article-content IDs and
+   legacy named anchors captured. Verify all routes/anchors in subsequent
+   preview and publish builds; preserve deliberately supported fragment
+   aliases even if moved outside the article. Home/Search and layout chrome
+   are excluded from automatic anchor capture. Test deliberately missing route/anchor
    failures. Do not regenerate the baseline from a changed site to hide a
    regression. Extend the page-map contract with hierarchy, ordering,
    summaries, dates where applicable, and hub identity; maintain transition
@@ -139,8 +185,8 @@ and provenance record; defer manifest changes until needed.
    redirect/anchor-alias mechanism if future moves are necessary. Validate
    actual route set, preview base paths, and fragment resolution. No
    redirects are needed merely to reclassify navigation.
-5. **Ongoing editorial governance.** Extend validation for summaries,
-   section/subsection membership, hub uniqueness, and navigation reachability.
+5. **Ongoing editorial governance.** Keep schema validation established in Phase 0; add regression checks for
+   navigation reachability and editorial upkeep in this phase.
    Review hub reading paths whenever material is added; maintain the
    route/anchor baseline additively after reviewed publication. Defer
    overlapping policy-page consolidation and Calendar specification rewrite
@@ -156,13 +202,13 @@ capture campaign to create illustrations.
 
 ## Handoff and current status
 
-The ChatGPT foundation PR is intended to implement the route baseline,
-automated compatibility checking, and the editorial record only. It does
-not implement the five hubs, metadata migration, a sidebar redesign, or
-actual anchor capture. The baseline has explicit null anchor sets until
-the pinned pre-redesign build is inspected. The next producing agent should
-finish Phase 0 anchor capture before modifying rendered pages, then
-implement the remaining phases in reviewable checkpoints. Prefer the
+The ChatGPT foundation PR implements the route/anchor baseline,
+automated compatibility checking, and the editorial record. It does
+not implement the five hubs, metadata migration, or a sidebar redesign.
+The original artifact's digest, run, and revision are recorded in the
+baseline. The next producing agent should verify the captured inventory,
+finish Phase 0 schema work, then implement remaining phases in reviewable
+checkpoints. Prefer the
 Freebuff local Worktree mode (or a separately owned local checkout) on a
 fresh main-based branch once the relevant policy and foundation changes
 are reviewed and merged. Avoid the existing Codex checkout. Use the
