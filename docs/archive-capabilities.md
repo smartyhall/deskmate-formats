@@ -20,6 +20,19 @@ Registered records: 24.
 - **planned**: No implementation. Listed so the gap is explicit rather than implied.
 - **blocked**: Implementation is prevented by a missing specification or specimen.
 
+## Identification axes
+
+A filename extension is a hint; the structural identity is what the bytes
+actually are. A carrier and an embedded archive are recorded together, so a
+self-extracting archive keeps both its executable and its archive identity
+instead of one replacing the other. Container completeness states the strongest
+claim the reader can make: sizes or checksums it can verify, structure that
+implies the file is whole, or an explicit admission that neither is available.
+
+| Format | Carrier | Embedded archive |
+| --- | --- | --- |
+| ZIP archive | mz | zip |
+
 ## Archive
 
 | Format | Identify | Metadata | List | Extract | Validate | Recover |
@@ -46,7 +59,7 @@ Registered records: 24.
 | Format | Identify | Metadata | List | Extract | Validate | Recover |
 | --- | --- | --- | --- | --- | --- | --- |
 | ImageDisk sector image (.imd) | yes | yes | yes | partial | yes | partial |
-| Sydex TeleDisk image (.td0), ordinary compression | yes | yes | yes | partial | partial | partial |
+| Sydex TeleDisk image (.td0), ordinary compression | yes | yes | yes | partial | yes | partial |
 | Sydex CopyQM image (.qm, .cqm) | yes | yes | yes | partial | partial | partial |
 | Disk Copy Fast image (.dcf) | no | no | no | no | no | no |
 | Tandy JV1, JV3, DMK, VDK and JVC images | planned | planned | planned | planned | planned | planned |
@@ -56,7 +69,7 @@ Registered records: 24.
 | Format | Identify | Metadata | List | Extract | Validate | Recover |
 | --- | --- | --- | --- | --- | --- | --- |
 | FAT12 and FAT16 filesystem | yes | yes | yes | yes | yes | partial |
-| FAT32 and VFAT long file names | planned | planned | planned | planned | planned | planned |
+| FAT32 and VFAT long file names | yes | yes | yes | yes | yes | partial |
 
 ## Optical
 
@@ -89,6 +102,12 @@ Registered records: 24.
 ### ZIP archive
 
 - Implementation: `intelligence_extract._zip` (native).
+- Extensions: .zip.
+- Structural identification: PK signature with a central directory at the end of file
+- Carrier: mz; embedded: zip.
+- Container completeness: verified-sizes.
+- Extraction methods: stored, deflate, adapter.
+- Unsupported or ambiguous variants: Methods other than store and deflate need the optional 7-Zip adapter.
 - Evidence: Portable tests cover stored and deflated members, unsafe paths, symbolic links, byte budgets, member-count limits and a malformed central directory.
 - Limitations: Shrink and Implode members require the optional 7-Zip adapter and are verified against the central-directory size and CRC. Encrypted and non-regular members are reported, never written.
 - Reference: [PKWARE APPNOTE 6.3.x](https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT)
@@ -96,6 +115,10 @@ Registered records: 24.
 ### POSIX tar archive
 
 - Implementation: `intelligence_extract._tar` (native).
+- Extensions: .tar.
+- Structural identification: ustar magic at offset 257 within the first header block
+- Container completeness: structural.
+- Extraction methods: stored.
 - Evidence: Portable tests cover a nested gzip/tar pair plus a symbolic-link member.
 - Limitations: Sparse members and non-regular types are reported as such. Header checksums are read by the standard library but not independently validated here.
 - Reference: [POSIX ustar header layout](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/pax.html)
@@ -103,6 +126,10 @@ Registered records: 24.
 ### gzip stream (.gz, .tgz)
 
 - Implementation: `intelligence_extract._gzip` (native).
+- Extensions: .gz, .tgz.
+- Structural identification: 1F 8B 08 header with a deflate body
+- Container completeness: verified-sizes.
+- Extraction methods: deflate.
 - Evidence: Portable test decompresses a synthetic tar.gz and identifies the inner ustar archive by structure.
 - Limitations: One member only, named from the containing filename. Multi-member streams are not enumerated.
 - Reference: [RFC 1952](https://www.rfc-editor.org/rfc/rfc1952)
@@ -110,14 +137,24 @@ Registered records: 24.
 ### ARC (SEA ARC) archive
 
 - Implementation: `intelligence_extract._arc` (native).
+- Extensions: .arc.
+- Structural identification: member header followed by a 1A 00 end-of-archive marker
+- Container completeness: structural.
+- Extraction methods: stored, rle, lzw, adapter.
+- Unsupported or ambiguous variants: Method 8 LZW with RLE90 and method 9 suspended members are not decoded natively.
 - Optional dependencies: nomarch (methods 8 and 9).
-- Evidence: Stored members are extracted and CRC-checked natively; methods 8 and 9 are isolated one member at a time through a bounded nomarch call with an exact length and CRC check. See docs/research/tvdog-arc-20261120.md. A 2026-11-26 content-based scan of the 10,037-file TVDog mirror found two ARC archives holding five members, four of which use method 8; native extraction therefore covers one of five, and 7-Zip 26.05 was checked as a possible substitute oracle but has no ARC handler.
-- Limitations: Methods other than 1, 2, 8 and 9 are reported unsupported. The 16-bit CRC covers the unpacked member only. There is no native method-8/9 decoder and no verified independent oracle available locally, so nomarch remains the only qualified path for those methods.
+- Evidence: Stored members are extracted and CRC-checked natively; methods 8 and 9 are isolated one member at a time through a bounded nomarch call with an exact length and CRC check. A 2026-11-26 content-based scan of the 10,037-file TVDog mirror found two ARC archives holding five members, four of which use method 8; native extraction therefore covers one of five, and 7-Zip 26.05 was checked as a possible substitute oracle but has no ARC handler. A native method-8 decoder now reproduces the exact unpacked length of one member but not its CRC, so the bit-level convention remains unresolved and no method-8 member is claimed.
+- Limitations: Methods other than 1, 2, 8 and 9 are reported unsupported. The 16-bit CRC covers the unpacked member only. There is no qualified native method-8/9 decoder and no independent oracle available locally, so nomarch remains the only qualified path for those methods.
 - Reference: [ARC member header layout](https://www.fileformat.info/format/arc/corion.htm)
 
 ### LHA / LZH level-0 archive
 
 - Implementation: `intelligence_extract._lhasa` (mockable-adapter).
+- Extensions: .lzh, .lha.
+- Structural identification: '-lh' or '-lz' header level with a leading length byte
+- Container completeness: structural.
+- Extraction methods: stored, adapter.
+- Unsupported or ambiguous variants: Compressed LZ methods need the optional 7-Zip adapter.
 - Optional dependencies: lhasa (level-0 extraction), 7-Zip (level-1 and level-2 headers).
 - Evidence: Portable test builds level-0 members by hand and checks the header checksum, the CRC-16 and the binary-stdout adapter contract.
 - Limitations: Only level-0 headers are parsed natively. Availability of an external helper is a deployment property, not a code property.
@@ -126,6 +163,11 @@ Registered records: 24.
 ### ARJ, CAB, RAR, 7z and ISO/UDF listing through 7-Zip
 
 - Implementation: `intelligence_extract._legacy` (external-adapter).
+- Extensions: .arj, .cab, .rar, .7z, .iso.
+- Structural identification: no signature of its own; delegated to an external lister
+- Container completeness: not-applicable.
+- Extraction methods: adapter.
+- Unsupported or ambiguous variants: Nothing is decoded without the external adapter.
 - Optional dependencies: 7-Zip (listing and single-member extraction).
 - Evidence: Portable tests drive the adapter with synthetic list output, including link entries, ambiguous names and a non-archive executable listing.
 - Limitations: Nothing here is an independent implementation of these formats; the adapter is bounded by member count, output bytes, a deadline and a single stdout stream. 7-Zip availability and version must be recorded per run.
@@ -133,6 +175,11 @@ Registered records: 24.
 ### Unix compress(1) LZW stream (.Z)
 
 - Implementation: `compression.decode_unix_compress` (native).
+- Extensions: .z.
+- Structural identification: 1F 9D header carrying maxbits and a block flag
+- Container completeness: unverified.
+- Extraction methods: lzw.
+- Unsupported or ambiguous variants: The stream records no length or checksum, so output cannot be verified.
 - Evidence: Round-trips synthetic streams across maximum code widths 9, 10, 12 and 16, including block-mode dictionary resets. Streams produced by the test encoder were extracted byte-identically by 7-Zip 26.05, independently confirming the variable-width code layout.
 - Limitations: Variable-width codes widen only after the code that triggered the change, as compress(1) does; a stream that ends mid-code yields a trailing-partial-code warning. No encoder is shipped.
 - Reference: [ncompress reference implementation](https://github.com/vapier/ncompress)
@@ -140,6 +187,10 @@ Registered records: 24.
 ### bzip2 stream (.bz2)
 
 - Implementation: `compression.decode_bzip2` (library).
+- Extensions: .bz2.
+- Structural identification: 'BZh' block magic followed by a level digit
+- Container completeness: verified-sizes.
+- Extraction methods: bwt, huffman.
 - Evidence: Round-trip, truncation, corruption, trailing-data and output-bound cases are covered by portable tests.
 - Limitations: Decoding uses the CPython standard library; the independent-implementation claim rests on CPython, not on this project.
 - Reference: [bzip2 format notes](https://sourceware.org/bzip2/docs.html)
@@ -147,6 +198,10 @@ Registered records: 24.
 ### xz stream (.xz)
 
 - Implementation: `compression.decode_xz` (library).
+- Extensions: .xz.
+- Structural identification: FD 37 7A 58 5A 00 stream header
+- Container completeness: verified-sizes.
+- Extraction methods: lzma.
 - Evidence: Round-trip plus a one-mebibyte payload cut off by a 1 KiB output bound, exercised by portable tests.
 - Limitations: Decoding uses the CPython standard library. Legacy .lzma alone streams are not handled by this record.
 - Reference: [xz file format specification](https://tukaani.org/xz/format.html)
@@ -154,21 +209,36 @@ Registered records: 24.
 ### ImageDisk sector image (.imd)
 
 - Implementation: `disk_images._imd` (native).
-- Evidence: Hand-authored fixtures exercise raw, fill-byte, absent, deleted-data-address-mark and read-error sector statuses; a normalised image is then handed to the FAT12 reader end to end.
-- Limitations: Per-sector cylinder and head maps and a 0xFF per-sector size table are parsed, but no real ImageDisk specimen has been qualified. Physical recording attributes (data rate, encoding) are recorded from the track mode and not verified against media.
+- Extensions: .imd.
+- Structural identification: 'IMD <version>:' identifying line before the 1A comment terminator
+- Container completeness: structural.
+- Extraction methods: raw, rle, fill.
+- Unsupported or ambiguous variants: Track modes outside raw, RLE and fill are reported unsupported.
+- Evidence: Hand-authored fixtures exercise raw, fill-byte, absent, deleted-data-address-mark and read-error sector statuses; a normalised image is then handed to the FAT12 reader end to end. Three genuine ImageDisk images then qualified the reader against real media: two complete 400-sector hard-disk images normalise with no gaps, and a 40-cylinder diagnostic disk parses 440 sector records with zero unknown statuses while exercising both the raw and fill paths. Sector placement is confirmed by content, since a normalised image begins with a Z80 boot jump.
+- Limitations: Per-sector cylinder and head maps and a 0xFF per-sector size table are parsed. The diagnostic specimen repeats one sector ID on its head-1 tracks, which is preserved as 40 reported conflicts rather than silently resolved. Physical recording attributes (data rate, encoding) are recorded from the track mode and not verified against media.
 - Reference: [ImageDisk format description](https://emuverse.ru/wiki/.imd)
 - Reference: [fdimg ImageDisk reader](https://www.os2museum.com/hg/fdimg/)
 
 ### Sydex TeleDisk image (.td0), ordinary compression
 
 - Implementation: `disk_images._td0` (native).
-- Evidence: Hand-authored fixtures exercise raw, repeated-2-byte-pattern and RLE sector methods, the skipped (0x10) and ID-only (0x20) flags, comments and truncation.
-- Limitations: The 'td' advanced variant compresses the whole post-header stream with an LZSS/Huffman coder; it is recognised, its header metadata is reported, and its payload is deliberately not decoded. The documented header-CRC polynomial is implemented but unconfirmed against a real specimen, so a mismatch is reported as a warning.
+- Extensions: .td0.
+- Structural identification: TD or td signature with a plausible version byte and a verified header CRC-16
+- Container completeness: structural.
+- Extraction methods: raw, rle, lzw.
+- Unsupported or ambiguous variants: The 'td' advanced variant compresses its payload with LZSS/Huffman and is not decoded.
+- Evidence: Hand-authored fixtures exercise raw, repeated-2-byte-pattern and RLE sector methods, the skipped (0x10) and ID-only (0x20) flags, comments and truncation. Three genuine images then qualified the header: the CRC-16 polynomial 0xA097 with preset 0 over the first ten bytes reproduces all three stored values (0x0A52, 0x609C, 0x17FB), which no competing convention does. The same specimens disproved a signature check byte: byte 3 is a volume-set identifier reading 0x42, 0x43 and 0x2E, so identification now uses the version byte and the header CRC, and all three files are recognised. The two ordinary images parse to 800 and 640 sectors with no unknown status, and the 640-sector image normalises to a complete image whose first sector is a DOS 2.11 boot record (E9 83 00, "ZDS 2.0").
+- Limitations: The 'td' advanced variant compresses the whole post-header stream with an LZSS/Huffman coder; it is recognised, its header metadata is reported, and its payload is deliberately not decoded. Sector payloads carry no checksum, so completeness is structural rather than verified. One genuine CP/M-86 image declares 800 sectors that collapse onto 400 logical sectors, and the normaliser reports the 400 unwritten sectors rather than inventing a head mapping.
 - Reference: [Teledisk .TD0 notes (Dave Dunfield)](http://dunfield.classiccmp.org/img42841/td0notes.txt)
 
 ### Sydex CopyQM image (.qm, .cqm)
 
 - Implementation: `disk_images._copyqm` (native).
+- Extensions: .qm, .cqm.
+- Structural identification: 'CQ 14' signature with a zero-byte-sum header
+- Container completeness: structural.
+- Extraction methods: rle, fill.
+- Unsupported or ambiguous variants: The 32-bit disk-data CRC is recorded but not verified.
 - Evidence: Hand-authored fixtures check the zero-byte-sum header invariant, the embedded BPB geometry, signed run lengths, a leading comment block, a truncated track and an implausible cylinder count. One fixture is a FAT12 volume extracted end to end.
 - Limitations: The documented disk-data CRC (32-bit, top two bits excluded) is recorded but not verified. Payload runs are decoded per track; a damaged run keeps every complete sector it described and names the remainder missing.
 - Reference: [LibDsk appendix M: the CopyQM file format](https://github.com/fdivitto/joyce-custom/blob/master/LibDsk/doc/libdsk.txt)
@@ -176,19 +246,33 @@ Registered records: 24.
 ### Disk Copy Fast image (.dcf)
 
 - Implementation: none.
+- Extensions: .dcf.
+- Structural identification: no published byte-level specification
+- Container completeness: unverified.
+- Extraction methods: none.
+- Unsupported or ambiguous variants: No published specification, so neither identification nor extraction is claimed.
 - Evidence: No structural test exists, because no specification does.
 - Limitations: Blocked: no published byte-level specification was found for Disk Copy Fast, and its distribution carries no format description. Contemporary sources agree only that it holds a raw floppy image with a leading header. Implementing it from file size or extension would be guessing; it needs a real specimen plus controlled reverse engineering. Aaru's 'CisCopy .DCF' is a different program and must not be used as a substitute.
 
 ### FAT12 and FAT16 filesystem
 
 - Implementation: `intelligence_extract._fat` (native).
+- Extensions: none.
+- Structural identification: BPB geometry with a 12- or 16-bit allocation table
+- Container completeness: structural.
+- Extraction methods: raw.
+- Unsupported or ambiguous variants: Only 8.3 short names here: long names belong to the FAT32/VFAT record.
 - Evidence: Portable tests read a synthetic FAT12 volume, follow a directory chain, and reject a self-referencing cluster chain. Container tests reach the same reader through a normalised IMD and CopyQM image.
-- Limitations: Eight-bit short names only: VFAT long file names are not interpreted, and FAT32 is not supported. Cluster chains are validated for loops and truncation, so a corrupt extent is reported rather than padded.
+- Limitations: Eight-bit short names are the primary view; long names and the FAT32 cluster threshold belong to the FAT32/VFAT record, which shares this reader. Cluster chains are validated for loops and truncation, so a corrupt extent is reported rather than padded.
 - Reference: [Microsoft FAT specification](https://download.microsoft.com/download/1/6/1/161ba512-40e2-4cc9-843a-923143f3456c/fatgen103.doc)
 
 ### ISO 9660 with 2048-byte logical blocks
 
 - Implementation: `intelligence_extract.optical_descriptor` (native).
+- Extensions: .iso.
+- Structural identification: 'CD001' volume descriptor at sector 16
+- Container completeness: structural.
+- Extraction methods: stored.
 - Optional dependencies: 7-Zip (member listing and extraction).
 - Evidence: Recognition checks the primary volume descriptor, mirrored volume sizes and the logical block length; four real images from the project mirror were listed. See docs/ecosystem/tvdog-extraction-capabilities.json.
 - Limitations: Recognition and metadata are native; enumeration and extraction are delegated to 7-Zip. No completeness claim for multisession media or every extension record.
@@ -197,6 +281,10 @@ Registered records: 24.
 ### UDF on cooked media
 
 - Implementation: `intelligence_extract.optical_descriptor` (native).
+- Extensions: .udf.
+- Structural identification: NSR02 or NSR03 descriptor sequence
+- Container completeness: structural.
+- Extraction methods: stored.
 - Optional dependencies: 7-Zip (member listing and extraction).
 - Evidence: Recognition by NSR02/NSR03 anchor descriptor; one independently generated bridge image was listed and one member extracted.
 - Limitations: No UDF-only extraction qualification. A hybrid disc is currently identified as ISO because the primary descriptor is checked first.
@@ -205,12 +293,21 @@ Registered records: 24.
 ### 2352-byte raw Mode 1 / Mode 2 Form 1 sector candidate
 
 - Implementation: `intelligence_extract.optical_descriptor` (native).
+- Extensions: none.
+- Structural identification: 2352-byte raw sector framing with a mode byte at offset 15
+- Container completeness: structural.
+- Extraction methods: raw.
 - Evidence: Synthetic raw Mode 1 descriptor only.
 - Limitations: Structural recognition alone: no raw-track decoding, CUE pairing or per-sector integrity verification.
 
 ### PDF text extraction
 
 - Implementation: `intelligence_extract._pypdf` (external-adapter).
+- Extensions: .pdf.
+- Structural identification: '%PDF-' header
+- Container completeness: unverified.
+- Extraction methods: stored.
+- Unsupported or ambiguous variants: Text extraction only; no rendering or object-level validation.
 - Optional dependencies: pypdf (in-process page text), pdftotext (layout-preserving page text).
 - Evidence: The worker protocol is tested with synthetic page rows, including a page-level error and an empty-text page that is triaged for OCR.
 - Limitations: Text only. Pages are preserved with one-based numbering; an image-only scan needs a separate OCR pass.
@@ -218,6 +315,12 @@ Registered records: 24.
 ### DOS MZ executable
 
 - Implementation: `intelligence_extract._legacy` (external-adapter).
+- Extensions: .exe, .com, .dll.
+- Structural identification: 'MZ' header, PE when e_lfanew reaches 'PE\0\0'
+- Carrier: mz; embedded: none.
+- Container completeness: structural.
+- Extraction methods: none.
+- Unsupported or ambiguous variants: Self-extracting payloads are listed through the optional adapter and never executed.
 - Optional dependencies: 7-Zip (self-extracting archive payload listing).
 - Evidence: Portable tests confirm an unrecognised executable stays 'unhandled' while a self-extracting payload is listed.
 - Limitations: Recovered executables are research objects and are never executed by this tool.
@@ -225,29 +328,52 @@ Registered records: 24.
 ### ARJ, ZOO, SQZ, HA, UC2 and DWC native readers
 
 - Implementation: none.
+- Extensions: .arj, .zoo, .sqz, .ha, .uc2, .dwc.
+- Structural identification: per-format magic and header checksums
+- Container completeness: structural.
+- Extraction methods: stored.
 - Evidence: Not implemented. ARJ is reachable only through the bounded 7-Zip adapter.
 - Limitations: ZOO, SQZ, HA, UC2 and DWC have no reader and no structural identification. Their header layouts must be transcribed from primary sources before any support claim is made.
 
 ### Unix Squeeze (.SQ) and Crunch (.Z/.Crunched)
 
 - Implementation: none.
+- Extensions: .sq, .z.
+- Structural identification: Squeeze magic and Crunch header fields
+- Container completeness: unverified.
+- Extraction methods: huffman.
 - Evidence: Not implemented.
 - Limitations: Both are Huffman-family schemes with several historical variants; the variant space needs a primary reference before coding.
 
 ### FAT32 and VFAT long file names
 
-- Implementation: none.
-- Evidence: Not implemented; the current reader rejects cluster counts at or above the FAT32 threshold.
-- Limitations: Requires a 32-bit FAT reader, a root directory expressed as a cluster chain, and LFN entry reconstruction with checksum validation.
+- Implementation: `intelligence_extract._fat` (native).
+- Extensions: none.
+- Structural identification: BPB whose cluster count reaches the FAT32 threshold, with a cluster-based root directory
+- Container completeness: structural.
+- Extraction methods: raw.
+- Unsupported or ambiguous variants: A long name whose checksum does not cover its short name falls back to the short name.
+- Evidence: Portable tests build a sparse volume whose cluster count sits above the FAT32 threshold, so the 32-bit allocation table, the cluster-chained root directory and the high cluster-word merge are all exercised: a file placed at cluster 0x10003 is read back byte for byte. A single-slot VFAT long name is assembled from its UTF-16 code units and reported instead of the 8.3 alias, and a long-name chain whose checksum does not cover the short name is rejected in favour of the short name.
+- Limitations: Only contiguous numbered long-name chains bound to a matching short-name checksum are accepted. Multi-slot long names are assembled but not yet exercised by a fixture, and FSInfo, backup boot sectors and the FAT32 mirroring rules are not consulted.
 
 ### IBM XDF extended-density disk layout
 
 - Implementation: none.
+- Extensions: none.
+- Structural identification: XDF track descriptor carrying mixed sector sizes
+- Container completeness: not-applicable.
+- Extraction methods: none.
+- Unsupported or ambiguous variants: Not implemented: the layout belongs to the geometry layer.
 - Evidence: Not implemented.
 - Limitations: XDF is a mixed-sector-size track layout, so it belongs on the geometry layer rather than in a sector container. It cannot be represented by the current fixed-geometry normaliser.
 
 ### Tandy JV1, JV3, DMK, VDK and JVC images
 
 - Implementation: none.
+- Extensions: .jv1, .jv3, .dmk, .vdk, .jvc.
+- Structural identification: per-format track descriptors and sector status bytes
+- Container completeness: structural.
+- Extraction methods: none.
+- Unsupported or ambiguous variants: Not implemented yet.
 - Evidence: Not implemented.
 - Limitations: These containers preserve per-sector status, track descriptors and in some cases competing encodings. They are the natural next layer above the sector abstraction added here.

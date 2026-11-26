@@ -1,0 +1,57 @@
+{
+  "schema": "supplementary-agent-receipt/1",
+  "provider": "Freebuff",
+  "agent_label": "Buffy (Freebuff coding agent)",
+  "campaign_id": "freebuff/archival-format-coverage-research-campaign",
+  "provider_prefix": "freebuff",
+  "checkpoint": "genuine-specimen-qualification-and-identification-axes",
+  "observed_at": "2026-11-26T00:00:00Z",
+  "observed_at_note": "Local observation date only. No wall-clock timestamp was captured at the time of the checkpoint; recorded as the campaign date rather than invented.",
+  "execution_mode": "interactive local session, filesystem and shell tools on the enrolled workstation",
+  "git": {
+    "base_revision": "36226e3",
+    "working_branch": "freebuff/archive-qualification-2",
+    "predecessor_pull_request": 194,
+    "merged": false,
+    "note": "Successor checkpoint on a separate branch so the completed predecessor stays a coherent review unit. No merge was performed by this agent."
+  },
+  "model": {
+    "label": null,
+    "reasoning_setting": null,
+    "verified_runtime_identity": false,
+    "note": "The agent tool surface did not expose model identity, context size or quota. The desktop model selector was not treated as an independently verified runtime identity."
+  },
+  "source": {
+    "kind": "manual-ui-observation",
+    "collector_version": null,
+    "coverage": "Campaign-level observations only.",
+    "attribution_limitations": "Usage is shared with a human-operated account and cannot be attributed per campaign from the client. No telemetry source exposes per-campaign consumption."
+  },
+  "measurements": [],
+  "measurements_note": "No token counters, quota windows or reset epochs were exposed to this agent. Measurements are an empty list with an explicit gap rather than zero values.",
+  "checkpoint_status": "complete-for-scope",
+  "scope_completed": [
+    "TeleDisk header CRC-16 convention resolved against three genuine images",
+    "TeleDisk identification defect found and corrected, with the volume-set byte documented",
+    "Three genuine ImageDisk images parsed with zero unknown sector statuses",
+    "Sector placement corroborated by boot-record content in two genuine images",
+    "Native ARC method 8 LZW decoder written and shown not to reproduce any member CRC",
+    "FAT32 allocation tables, cluster-chained root directories and high cluster words",
+    "VFAT long-name reconstruction with short-name checksum validation",
+    "Identification axes added to every capability record, with validation and rendering",
+    "Run-time classify() separating structural kind, extension hint, carrier and embedded archive"
+  ],
+  "scope_deferred": [
+    "ARC method 8 and 9 qualified extraction",
+    "TeleDisk advanced LZSS/Huffman payload decoding",
+    "CopyQM validation against a genuine specimen",
+    "ZOO, SQZ, HA, UC2, DWC",
+    "IBM XDF, Tandy, Commodore, Apple and Amiga families"
+  ],
+  "blockers_recorded": [
+    "ARC method 8 bit-level convention remains unresolved after exhausting the modelled hypotheses; no member CRC is reproduced",
+    "No external oracle is available for ARC methods 8 and 9: 7-Zip 26.05 has no ARC handler and no C toolchain is present to build nomarch",
+    "Disk Copy Fast (.DCF) has no published byte-level specification"
+  ],
+  "privacy_note": "No raw transcripts, prompts, private paths, archive contents, credentials or account identifiers are included. Specimens were held outside the repository and only derived structural facts, such as header hex and stored checksums, are recorded."
+}

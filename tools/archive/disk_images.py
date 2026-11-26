@@ -163,9 +163,12 @@ def identify(data: bytes) -> str | None:
         if 0 < line_end <= 64 and b':' in data[:line_end]:
             return 'imd'
     if (len(data) >= 12 and data[:1] in (b'T', b't') and data[1:2] in (b'D', b'd')
-            and data[3] == (data[0] + data[1] + data[2]) & 0xFF):
-        # 'TD' is the ordinary image and 'td' the advanced-compression variant;
-        # the check byte makes either spelling structural rather than textual.
+            and 0x10 <= data[4] <= 0x2F):
+        # 'TD' is the ordinary image and 'td' the advanced-compression variant.
+        # Byte 3 is a *volume set* identifier, not a checksum: three genuine
+        # TeleDisk images carry 0x42, 0x43 and 0x2E there, so a sum test would
+        # reject every real file. The header CRC at offset 10 is the actual
+        # integrity field and is verified by the reader instead.
         return 'td0-advanced' if data[:1] == b't' else 'td0'
     if (len(data) >= COPYQM_HEADER_BYTES and data[:3] == COPYQM_SIGNATURE
             and sum(data[:COPYQM_HEADER_BYTES]) & 0xFF == 0):
@@ -307,8 +310,9 @@ def _imd(data, bounds):
 def _td0_crc16(data, crc=0):
     """CRC-16 with polynomial 0xA097 and preset 0, as documented for TeleDisk.
 
-    The published notes give the polynomial and preset but not a worked
-    example, so a mismatch is reported as an observation, never as failure.
+    Confirmed against three genuine images with distinct stored values, which
+    is what distinguishes this from the four alternative CRC conventions that
+    all fail on the same files.
     """
     for byte in data:
         crc ^= byte << 8
@@ -359,9 +363,12 @@ def _td0(data, bounds):
     header = data[:12]
     (sequence, check, version, rate, drive, stepping, dos_flag, sides,
      stored_crc) = unpack_from('<BBBBBBBBH', header, 2)
+    header_crc_verified = _td0_crc16(header[:10]) == stored_crc
     metadata = {
         'advanced_compression': advanced,
         'volume_sequence': sequence,
+        'volume_set': check,
+        'header_crc_verified': header_crc_verified,
         'teledisk_version': f'{version >> 4}.{version & 0x0F}',
         'data_rate': TD0_DATA_RATES.get(rate & 0x03, f'unknown-{rate & 0x03}'),
         'single_density': bool(rate & 0x80),
@@ -373,8 +380,11 @@ def _td0(data, bounds):
         'computed_header_crc': _td0_crc16(header[:10]),
     }
     warnings = []
-    if metadata['computed_header_crc'] != stored_crc:
-        warnings.append('header-crc-unconfirmed-algorithm')
+    # CRC-16 with polynomial 0xA097, preset 0, most-significant bit first, was
+    # confirmed against three genuine TeleDisk images (see the campaign report),
+    # so a mismatch now reports real damage rather than an unconfirmed guess.
+    if not header_crc_verified:
+        warnings.append('header-crc-mismatch')
     geometry_hint = TD0_DRIVE_GEOMETRY.get(drive)
     geometry = Geometry(*(geometry_hint + (512,)) if geometry_hint else (None, None, None, None))
     if advanced:

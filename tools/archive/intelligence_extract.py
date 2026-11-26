@@ -9,7 +9,7 @@ import os
 from pathlib import Path, PurePosixPath
 import re
 import stat
-from struct import unpack_from
+from struct import pack, unpack_from
 import subprocess
 import sys
 import tarfile
@@ -141,6 +141,68 @@ def optical_descriptor(path):
             if not offset and udf:
                 return {'kind': 'udf', 'sector_bytes': stride, 'data_offset': offset}
     return None
+
+
+EXTENSION_FAMILIES = {
+    'exe': 'mz', 'com': 'mz', 'dll': 'mz', 'zip': 'zip', 'arc': 'arc', 'lzh': 'lzh',
+    'lha': 'lzh', 'tar': 'tar', 'gz': 'gz', 'tgz': 'tgz', 'z': 'compress',
+    'bz2': 'bz2', 'xz': 'xz', 'imd': 'imd', 'td0': 'td0', 'qm': 'copyqm',
+    'cqm': 'copyqm', 'dcf': 'dcf', 'img': 'disk-image', 'ima': 'disk-image',
+    'iso': 'iso9660', 'udf': 'udf', 'pdf': 'pdf',
+}
+
+
+@dataclass(frozen=True)
+class Classification:
+    """A file's identities, kept apart instead of collapsed into one.
+
+    A self-extracting archive is an MZ executable *and* a ZIP archive. Reporting
+    only the structural kind would lose the carrier; reporting only the
+    extension would lose the payload. Both are therefore recorded, and an
+    extension that merely disagrees with the bytes stays distinguishable from a
+    file that genuinely carries two formats.
+    """
+
+    kind: str
+    extension: str
+    extension_kind: str | None
+    carrier: str | None
+    embedded: tuple
+
+    @property
+    def unexpected_extension(self) -> bool:
+        """True when the name implies a format the bytes do not support."""
+        return (self.extension_kind is not None and self.extension_kind != self.kind
+                and not self.embedded)
+
+
+def _carrier(data):
+    """Name the executable container a body is wrapped in, if any."""
+    if data[:2] == b'MZ':
+        if len(data) >= 0x40:
+            offset = unpack_from('<I', data, 0x3C)[0]
+            if 0x40 <= offset <= len(data) - 4 and data[offset:offset + 4] == b'PE\0\0':
+                return 'pe'
+        return 'mz'
+    if data[:4] == b'\x7fELF':
+        return 'elf'
+    return None
+
+
+def classify(path, name=None) -> Classification:
+    """Report structural identity, name hint, carrier and embedded archive."""
+    path = Path(path)
+    name = name or path.name
+    with path.open('rb') as stream:
+        head = stream.read(0x100)
+    carrier = _carrier(head)
+    kind = identify(path, name)
+    # Only a ZIP payload inside an executable is detected structurally; other
+    # embedded archives are reached through the optional external adapter.
+    embedded = ('zip',) if carrier is not None and kind == 'zip' else ()
+    label = PurePosixPath(name.replace('\\', '/')).name
+    extension = PurePosixPath(label).suffix[1:].casefold()
+    return Classification(kind, extension, EXTENSION_FAMILIES.get(extension), carrier, embedded)
 
 
 def identify(path: Path, name: str) -> str:
@@ -347,6 +409,7 @@ class _FATLayout:
     root_start: int
     root_bytes: int
     data_start: int
+    root_cluster: int | None = None
 
 
 def _fat_layout(boot, size):
@@ -358,7 +421,7 @@ def _fat_layout(boot, size):
     if (sector not in (128, 256, 512, 1024, 2048, 4096) or
             sectors_per_cluster not in (1, 2, 4, 8, 16, 32, 64, 128) or
             copies not in (1, 2) or media not in (0xf0, *range(0xf8, 0x100)) or
-            not reserved or not root_entries or not fat):
+            not reserved or not fat):
         return None
     total = total or unpack_from('<I', boot, 32)[0]
     root = reserved + copies * fat
@@ -367,11 +430,23 @@ def _fat_layout(boot, size):
     if not first_data < total <= size // sector:
         return None
     cluster_count = (total - first_data) // sectors_per_cluster
-    bits = 12 if cluster_count < 4085 else 16
-    if not 0 < cluster_count < 65525 or (cluster_count + 2) * bits > fat * sector * 8:
+    if not 0 < cluster_count < 0x0FFFFFF5:
+        return None
+    if cluster_count >= 65525:
+        # FAT32 keeps the root directory in the data area and has no fixed
+        # root region, so a non-zero root-entry count contradicts the layout.
+        if root_entries:
+            return None
+        bits, root_cluster = 32, unpack_from('<I', boot, 44)[0]
+        root_bytes = 0
+    else:
+        bits, root_cluster = (12 if cluster_count < 4085 else 16), None
+        root_bytes = root_entries * 32
+    if (cluster_count + 2) * bits > fat * sector * 8:
         return None
     return _FATLayout(bits, sector * sectors_per_cluster, cluster_count,
-                      reserved * sector, fat * sector, root * sector, root_entries * 32, first_data * sector)
+                      reserved * sector, fat * sector, root * sector, root_bytes,
+                      first_data * sector, root_cluster)
 
 
 def _partitions(boot, size):
@@ -384,6 +459,32 @@ def _partitions(boot, size):
         start, count = unpack_from('<II', boot, offset + 8)
         if start and count and (start + count) * 512 <= size:
             yield index + 1, start * 512, count * 512
+
+
+def _short_checksum(entry):
+    """VFAT checksum binding a long-name chain to its 11-byte short name."""
+    checksum = 0
+    for byte in entry[:11]:
+        checksum = (((checksum & 1) << 7) + (checksum >> 1) + byte) & 0xFF
+    return checksum
+
+
+def _vfat_fragment(entry):
+    """One long-name slot as (ordinal, is_last, code_units, checksum)."""
+    order = entry[0]
+    if order in (0x00, 0xE5):
+        return None
+    ordinal = order & 0x1F
+    if not 1 <= ordinal <= 20:
+        return None
+    raw = entry[1:11] + entry[14:26] + entry[28:32]
+    units = []
+    for index in range(0, len(raw), 2):
+        unit = unpack_from('<H', raw, index)[0]
+        if unit in (0x0000, 0xFFFF):
+            break
+        units.append(unit)
+    return ordinal, bool(order & 0x40), units, entry[13]
 
 
 class _FATVolume:
@@ -405,21 +506,27 @@ class _FATVolume:
     def chain(self, cluster):
         seen = set()
         layout = self.layout
-        stop = 0xff8 if layout.bits == 12 else 0xfff8
-        reserved = 0xff0 if layout.bits == 12 else 0xfff0
+        bits = layout.bits
+        stop = {12: 0xff8, 16: 0xfff8, 32: 0x0ffffff8}[bits]
+        reserved = {12: 0xff0, 16: 0xfff0, 32: 0x0ffffff0}[bits]
         while cluster < stop:
             if not 2 <= cluster < min(layout.cluster_count + 2, reserved) or cluster in seen:
                 raise ValueError('invalid FAT cluster chain')
             seen.add(cluster)
             yield layout.data_start + (cluster - 2) * layout.cluster_bytes
-            if layout.bits == 12:
+            if bits == 12:
                 value = unpack_from('<H', self.fat, cluster + cluster // 2)[0]
                 cluster = (value >> (4 * (cluster % 2))) & 0xfff
-            else:
+            elif bits == 16:
                 cluster = unpack_from('<H', self.fat, cluster * 2)[0]
+            else:
+                cluster = unpack_from('<I', self.fat, cluster * 4)[0] & 0x0fffffff
 
     def _blocks(self, cluster):
+        if cluster is None and self.layout.root_cluster is not None:
+            cluster = self.layout.root_cluster
         if cluster is None:
+            # FAT12/FAT16 only: the fixed root-directory region.
             yield self.read(self.layout.root_start, self.layout.root_bytes)
         else:
             for offset in self.chain(cluster):
@@ -438,18 +545,43 @@ class _FATVolume:
         return bytes(data)
 
     def entries(self, prefix='', cluster=None, depth=0):
+        fragments, expected = {}, None
         for block in self._blocks(cluster):
             for cursor in range(0, len(block), 32):
                 entry = block[cursor:cursor + 32]
                 if not entry[0]:
                     return
+                if entry[11] == 0x0F:
+                    fragment = _vfat_fragment(entry)
+                    if fragment is None:
+                        fragments, expected = {}, None
+                        continue
+                    ordinal, last, units, checksum = fragment
+                    if last:
+                        fragments, expected = {}, checksum
+                    fragments[ordinal] = units
+                    continue
                 if entry[0] == 0xe5 or entry[11] & 8 or entry[:1] == b'.':
+                    fragments, expected = {}, None
                     continue
                 root = bytes([0xe5]) + entry[1:8] if entry[0] == 5 else entry[:8]
                 name = root.decode('cp437').rstrip(' ')
                 ext = entry[8:11].decode('cp437').rstrip(' ')
                 name = prefix + name + ('.' + ext if ext else '')
-                child, size = unpack_from('<HI', entry, 26)
+                if fragments and expected == _short_checksum(entry):
+                    # Only a contiguous chain 1..N that the short name vouches
+                    # for may replace the 8.3 name; a dangling fragment must not.
+                    if sorted(fragments) == list(range(1, max(fragments) + 1)):
+                        units = [unit for ordinal in sorted(fragments)
+                                 for unit in fragments[ordinal]]
+                        candidate = prefix + b''.join(
+                            pack('<H', unit) for unit in units).decode('utf-16-le', 'replace')
+                        if safe_member(candidate):
+                            name = candidate
+                fragments, expected = {}, None
+                high = unpack_from('<H', entry, 20)[0] if self.layout.bits == 32 else 0
+                child = unpack_from('<H', entry, 26)[0] | (high << 16)
+                size = unpack_from('<I', entry, 28)[0]
                 if entry[11] & 16:
                     invalid = child in self.directories or depth >= 24 or not safe_member(name)
                     yield name, 0, 'invalid-directory' if invalid else 'directory', None

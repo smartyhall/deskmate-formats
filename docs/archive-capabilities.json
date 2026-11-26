@@ -27,6 +27,15 @@
         {"title": "PKWARE APPNOTE 6.3.x", "url": "https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT"}
       ],
       "evidence": "Portable tests cover stored and deflated members, unsafe paths, symbolic links, byte budgets, member-count limits and a malformed central directory.",
+      "identification": {
+        "extensions": ["zip"],
+        "structural": "PK signature with a central directory at the end of file",
+        "carrier": "mz",
+        "embedded": ["zip"],
+        "completeness": "verified-sizes",
+        "methods": ["stored", "deflate", "adapter"],
+        "unsupported_variants": ["Methods other than store and deflate need the optional 7-Zip adapter."]
+      },
       "limitations": "Shrink and Implode members require the optional 7-Zip adapter and are verified against the central-directory size and CRC. Encrypted and non-regular members are reported, never written."
     },
     {
@@ -44,6 +53,15 @@
         {"title": "POSIX ustar header layout", "url": "https://pubs.opengroup.org/onlinepubs/9699919799/utilities/pax.html"}
       ],
       "evidence": "Portable tests cover a nested gzip/tar pair plus a symbolic-link member.",
+      "identification": {
+        "extensions": ["tar"],
+        "structural": "ustar magic at offset 257 within the first header block",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "structural",
+        "methods": ["stored"],
+        "unsupported_variants": []
+      },
       "limitations": "Sparse members and non-regular types are reported as such. Header checksums are read by the standard library but not independently validated here."
     },
     {
@@ -61,6 +79,15 @@
         {"title": "RFC 1952", "url": "https://www.rfc-editor.org/rfc/rfc1952"}
       ],
       "evidence": "Portable test decompresses a synthetic tar.gz and identifies the inner ustar archive by structure.",
+      "identification": {
+        "extensions": ["gz", "tgz"],
+        "structural": "1F 8B 08 header with a deflate body",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "verified-sizes",
+        "methods": ["deflate"],
+        "unsupported_variants": []
+      },
       "limitations": "One member only, named from the containing filename. Multi-member streams are not enumerated."
     },
     {
@@ -79,8 +106,17 @@
       "specifications": [
         {"title": "ARC member header layout", "url": "https://www.fileformat.info/format/arc/corion.htm"}
       ],
-      "evidence": "Stored members are extracted and CRC-checked natively; methods 8 and 9 are isolated one member at a time through a bounded nomarch call with an exact length and CRC check. See docs/research/tvdog-arc-20261120.md. A 2026-11-26 content-based scan of the 10,037-file TVDog mirror found two ARC archives holding five members, four of which use method 8; native extraction therefore covers one of five, and 7-Zip 26.05 was checked as a possible substitute oracle but has no ARC handler.",
-      "limitations": "Methods other than 1, 2, 8 and 9 are reported unsupported. The 16-bit CRC covers the unpacked member only. There is no native method-8/9 decoder and no verified independent oracle available locally, so nomarch remains the only qualified path for those methods."
+      "evidence": "Stored members are extracted and CRC-checked natively; methods 8 and 9 are isolated one member at a time through a bounded nomarch call with an exact length and CRC check. A 2026-11-26 content-based scan of the 10,037-file TVDog mirror found two ARC archives holding five members, four of which use method 8; native extraction therefore covers one of five, and 7-Zip 26.05 was checked as a possible substitute oracle but has no ARC handler. A native method-8 decoder now reproduces the exact unpacked length of one member but not its CRC, so the bit-level convention remains unresolved and no method-8 member is claimed.",
+      "identification": {
+        "extensions": ["arc"],
+        "structural": "member header followed by a 1A 00 end-of-archive marker",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "structural",
+        "methods": ["stored", "rle", "lzw", "adapter"],
+        "unsupported_variants": ["Method 8 LZW with RLE90 and method 9 suspended members are not decoded natively."]
+      },
+      "limitations": "Methods other than 1, 2, 8 and 9 are reported unsupported. The 16-bit CRC covers the unpacked member only. There is no qualified native method-8/9 decoder and no independent oracle available locally, so nomarch remains the only qualified path for those methods."
     },
     {
       "id": "lzh",
@@ -100,6 +136,15 @@
         {"title": "LHA level-0 header layout", "url": "https://github.com/fragglet/lhasa/blob/master/doc/lha-file-format.md"}
       ],
       "evidence": "Portable test builds level-0 members by hand and checks the header checksum, the CRC-16 and the binary-stdout adapter contract.",
+      "identification": {
+        "extensions": ["lzh", "lha"],
+        "structural": "'-lh' or '-lz' header level with a leading length byte",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "structural",
+        "methods": ["stored", "adapter"],
+        "unsupported_variants": ["Compressed LZ methods need the optional 7-Zip adapter."]
+      },
       "limitations": "Only level-0 headers are parsed natively. Availability of an external helper is a deployment property, not a code property."
     },
     {
@@ -117,6 +162,15 @@
       ],
       "specifications": [],
       "evidence": "Portable tests drive the adapter with synthetic list output, including link entries, ambiguous names and a non-archive executable listing.",
+      "identification": {
+        "extensions": ["arj", "cab", "rar", "7z", "iso"],
+        "structural": "no signature of its own; delegated to an external lister",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "not-applicable",
+        "methods": ["adapter"],
+        "unsupported_variants": ["Nothing is decoded without the external adapter."]
+      },
       "limitations": "Nothing here is an independent implementation of these formats; the adapter is bounded by member count, output bytes, a deadline and a single stdout stream. 7-Zip availability and version must be recorded per run."
     },
     {
@@ -134,6 +188,15 @@
         {"title": "ncompress reference implementation", "url": "https://github.com/vapier/ncompress"}
       ],
       "evidence": "Round-trips synthetic streams across maximum code widths 9, 10, 12 and 16, including block-mode dictionary resets. Streams produced by the test encoder were extracted byte-identically by 7-Zip 26.05, independently confirming the variable-width code layout.",
+      "identification": {
+        "extensions": ["z"],
+        "structural": "1F 9D header carrying maxbits and a block flag",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "unverified",
+        "methods": ["lzw"],
+        "unsupported_variants": ["The stream records no length or checksum, so output cannot be verified."]
+      },
       "limitations": "Variable-width codes widen only after the code that triggered the change, as compress(1) does; a stream that ends mid-code yields a trailing-partial-code warning. No encoder is shipped."
     },
     {
@@ -151,6 +214,15 @@
         {"title": "bzip2 format notes", "url": "https://sourceware.org/bzip2/docs.html"}
       ],
       "evidence": "Round-trip, truncation, corruption, trailing-data and output-bound cases are covered by portable tests.",
+      "identification": {
+        "extensions": ["bz2"],
+        "structural": "'BZh' block magic followed by a level digit",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "verified-sizes",
+        "methods": ["bwt", "huffman"],
+        "unsupported_variants": []
+      },
       "limitations": "Decoding uses the CPython standard library; the independent-implementation claim rests on CPython, not on this project."
     },
     {
@@ -168,6 +240,15 @@
         {"title": "xz file format specification", "url": "https://tukaani.org/xz/format.html"}
       ],
       "evidence": "Round-trip plus a one-mebibyte payload cut off by a 1 KiB output bound, exercised by portable tests.",
+      "identification": {
+        "extensions": ["xz"],
+        "structural": "FD 37 7A 58 5A 00 stream header",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "verified-sizes",
+        "methods": ["lzma"],
+        "unsupported_variants": []
+      },
       "limitations": "Decoding uses the CPython standard library. Legacy .lzma alone streams are not handled by this record."
     },
     {
@@ -185,8 +266,17 @@
         {"title": "ImageDisk format description", "url": "https://emuverse.ru/wiki/.imd"},
         {"title": "fdimg ImageDisk reader", "url": "https://www.os2museum.com/hg/fdimg/"}
       ],
-      "evidence": "Hand-authored fixtures exercise raw, fill-byte, absent, deleted-data-address-mark and read-error sector statuses; a normalised image is then handed to the FAT12 reader end to end.",
-      "limitations": "Per-sector cylinder and head maps and a 0xFF per-sector size table are parsed, but no real ImageDisk specimen has been qualified. Physical recording attributes (data rate, encoding) are recorded from the track mode and not verified against media."
+      "evidence": "Hand-authored fixtures exercise raw, fill-byte, absent, deleted-data-address-mark and read-error sector statuses; a normalised image is then handed to the FAT12 reader end to end. Three genuine ImageDisk images then qualified the reader against real media: two complete 400-sector hard-disk images normalise with no gaps, and a 40-cylinder diagnostic disk parses 440 sector records with zero unknown statuses while exercising both the raw and fill paths. Sector placement is confirmed by content, since a normalised image begins with a Z80 boot jump.",
+      "identification": {
+        "extensions": ["imd"],
+        "structural": "'IMD <version>:' identifying line before the 1A comment terminator",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "structural",
+        "methods": ["raw", "rle", "fill"],
+        "unsupported_variants": ["Track modes outside raw, RLE and fill are reported unsupported."]
+      },
+      "limitations": "Per-sector cylinder and head maps and a 0xFF per-sector size table are parsed. The diagnostic specimen repeats one sector ID on its head-1 tracks, which is preserved as 40 reported conflicts rather than silently resolved. Physical recording attributes (data rate, encoding) are recorded from the track mode and not verified against media."
     },
     {
       "id": "td0",
@@ -194,16 +284,36 @@
       "layer": "sector-image",
       "backlog_package": "pc-sector-images",
       "operations": {
-        "identify": "qualified", "metadata": "qualified", "list": "qualified",
-        "extract": "partial", "validate": "partial", "recover": "partial"
+        "identify": "qualified",
+        "metadata": "qualified",
+        "list": "qualified",
+        "extract": "partial",
+        "validate": "qualified",
+        "recover": "partial"
       },
-      "implementation": {"module": "disk_images", "entry": "_td0", "approach": "native"},
+      "implementation": {
+        "module": "disk_images",
+        "entry": "_td0",
+        "approach": "native"
+      },
       "dependencies": [],
       "specifications": [
-        {"title": "Teledisk .TD0 notes (Dave Dunfield)", "url": "http://dunfield.classiccmp.org/img42841/td0notes.txt"}
+        {
+          "title": "Teledisk .TD0 notes (Dave Dunfield)",
+          "url": "http://dunfield.classiccmp.org/img42841/td0notes.txt"
+        }
       ],
-      "evidence": "Hand-authored fixtures exercise raw, repeated-2-byte-pattern and RLE sector methods, the skipped (0x10) and ID-only (0x20) flags, comments and truncation.",
-      "limitations": "The 'td' advanced variant compresses the whole post-header stream with an LZSS/Huffman coder; it is recognised, its header metadata is reported, and its payload is deliberately not decoded. The documented header-CRC polynomial is implemented but unconfirmed against a real specimen, so a mismatch is reported as a warning."
+      "evidence": "Hand-authored fixtures exercise raw, repeated-2-byte-pattern and RLE sector methods, the skipped (0x10) and ID-only (0x20) flags, comments and truncation. Three genuine images then qualified the header: the CRC-16 polynomial 0xA097 with preset 0 over the first ten bytes reproduces all three stored values (0x0A52, 0x609C, 0x17FB), which no competing convention does. The same specimens disproved a signature check byte: byte 3 is a volume-set identifier reading 0x42, 0x43 and 0x2E, so identification now uses the version byte and the header CRC, and all three files are recognised. The two ordinary images parse to 800 and 640 sectors with no unknown status, and the 640-sector image normalises to a complete image whose first sector is a DOS 2.11 boot record (E9 83 00, \"ZDS 2.0\").",
+      "limitations": "The 'td' advanced variant compresses the whole post-header stream with an LZSS/Huffman coder; it is recognised, its header metadata is reported, and its payload is deliberately not decoded. Sector payloads carry no checksum, so completeness is structural rather than verified. One genuine CP/M-86 image declares 800 sectors that collapse onto 400 logical sectors, and the normaliser reports the 400 unwritten sectors rather than inventing a head mapping.",
+      "identification": {
+        "extensions": ["td0"],
+        "structural": "TD or td signature with a plausible version byte and a verified header CRC-16",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "structural",
+        "methods": ["raw", "rle", "lzw"],
+        "unsupported_variants": ["The 'td' advanced variant compresses its payload with LZSS/Huffman and is not decoded."]
+      }
     },
     {
       "id": "copyqm",
@@ -220,6 +330,15 @@
         {"title": "LibDsk appendix M: the CopyQM file format", "url": "https://github.com/fdivitto/joyce-custom/blob/master/LibDsk/doc/libdsk.txt"}
       ],
       "evidence": "Hand-authored fixtures check the zero-byte-sum header invariant, the embedded BPB geometry, signed run lengths, a leading comment block, a truncated track and an implausible cylinder count. One fixture is a FAT12 volume extracted end to end.",
+      "identification": {
+        "extensions": ["qm", "cqm"],
+        "structural": "'CQ 14' signature with a zero-byte-sum header",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "structural",
+        "methods": ["rle", "fill"],
+        "unsupported_variants": ["The 32-bit disk-data CRC is recorded but not verified."]
+      },
       "limitations": "The documented disk-data CRC (32-bit, top two bits excluded) is recorded but not verified. Payload runs are decoded per track; a damaged run keeps every complete sector it described and names the remainder missing."
     },
     {
@@ -235,6 +354,15 @@
       "dependencies": [],
       "specifications": [],
       "evidence": "No structural test exists, because no specification does.",
+      "identification": {
+        "extensions": ["dcf"],
+        "structural": "no published byte-level specification",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "unverified",
+        "methods": [],
+        "unsupported_variants": ["No published specification, so neither identification nor extraction is claimed."]
+      },
       "limitations": "Blocked: no published byte-level specification was found for Disk Copy Fast, and its distribution carries no format description. Contemporary sources agree only that it holds a raw floppy image with a leading header. Implementing it from file size or extension would be guessing; it needs a real specimen plus controlled reverse engineering. Aaru's 'CisCopy .DCF' is a different program and must not be used as a substitute."
     },
     {
@@ -252,7 +380,16 @@
         {"title": "Microsoft FAT specification", "url": "https://download.microsoft.com/download/1/6/1/161ba512-40e2-4cc9-843a-923143f3456c/fatgen103.doc"}
       ],
       "evidence": "Portable tests read a synthetic FAT12 volume, follow a directory chain, and reject a self-referencing cluster chain. Container tests reach the same reader through a normalised IMD and CopyQM image.",
-      "limitations": "Eight-bit short names only: VFAT long file names are not interpreted, and FAT32 is not supported. Cluster chains are validated for loops and truncation, so a corrupt extent is reported rather than padded."
+      "identification": {
+        "extensions": [],
+        "structural": "BPB geometry with a 12- or 16-bit allocation table",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "structural",
+        "methods": ["raw"],
+        "unsupported_variants": ["Only 8.3 short names here: long names belong to the FAT32/VFAT record."]
+      },
+      "limitations": "Eight-bit short names are the primary view; long names and the FAT32 cluster threshold belong to the FAT32/VFAT record, which shares this reader. Cluster chains are validated for loops and truncation, so a corrupt extent is reported rather than padded."
     },
     {
       "id": "iso9660",
@@ -271,6 +408,15 @@
         {"title": "ECMA-119", "url": "https://ecma-international.org/publications-and-standards/standards/ecma-119/"}
       ],
       "evidence": "Recognition checks the primary volume descriptor, mirrored volume sizes and the logical block length; four real images from the project mirror were listed. See docs/ecosystem/tvdog-extraction-capabilities.json.",
+      "identification": {
+        "extensions": ["iso"],
+        "structural": "'CD001' volume descriptor at sector 16",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "structural",
+        "methods": ["stored"],
+        "unsupported_variants": []
+      },
       "limitations": "Recognition and metadata are native; enumeration and extraction are delegated to 7-Zip. No completeness claim for multisession media or every extension record."
     },
     {
@@ -290,6 +436,15 @@
         {"title": "ECMA-167", "url": "https://ecma-international.org/publications-and-standards/standards/ecma-167/"}
       ],
       "evidence": "Recognition by NSR02/NSR03 anchor descriptor; one independently generated bridge image was listed and one member extracted.",
+      "identification": {
+        "extensions": ["udf"],
+        "structural": "NSR02 or NSR03 descriptor sequence",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "structural",
+        "methods": ["stored"],
+        "unsupported_variants": []
+      },
       "limitations": "No UDF-only extraction qualification. A hybrid disc is currently identified as ISO because the primary descriptor is checked first."
     },
     {
@@ -305,6 +460,15 @@
       "dependencies": [],
       "specifications": [],
       "evidence": "Synthetic raw Mode 1 descriptor only.",
+      "identification": {
+        "extensions": [],
+        "structural": "2352-byte raw sector framing with a mode byte at offset 15",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "structural",
+        "methods": ["raw"],
+        "unsupported_variants": []
+      },
       "limitations": "Structural recognition alone: no raw-track decoding, CUE pairing or per-sector integrity verification."
     },
     {
@@ -323,6 +487,15 @@
       ],
       "specifications": [],
       "evidence": "The worker protocol is tested with synthetic page rows, including a page-level error and an empty-text page that is triaged for OCR.",
+      "identification": {
+        "extensions": ["pdf"],
+        "structural": "'%PDF-' header",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "unverified",
+        "methods": ["stored"],
+        "unsupported_variants": ["Text extraction only; no rendering or object-level validation."]
+      },
       "limitations": "Text only. Pages are preserved with one-based numbering; an image-only scan needs a separate OCR pass."
     },
     {
@@ -340,6 +513,15 @@
       ],
       "specifications": [],
       "evidence": "Portable tests confirm an unrecognised executable stays 'unhandled' while a self-extracting payload is listed.",
+      "identification": {
+        "extensions": ["exe", "com", "dll"],
+        "structural": "'MZ' header, PE when e_lfanew reaches 'PE\\0\\0'",
+        "carrier": "mz",
+        "embedded": [],
+        "completeness": "structural",
+        "methods": [],
+        "unsupported_variants": ["Self-extracting payloads are listed through the optional adapter and never executed."]
+      },
       "limitations": "Recovered executables are research objects and are never executed by this tool."
     },
     {
@@ -355,6 +537,15 @@
       "dependencies": [],
       "specifications": [],
       "evidence": "Not implemented. ARJ is reachable only through the bounded 7-Zip adapter.",
+      "identification": {
+        "extensions": ["arj", "zoo", "sqz", "ha", "uc2", "dwc"],
+        "structural": "per-format magic and header checksums",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "structural",
+        "methods": ["stored"],
+        "unsupported_variants": []
+      },
       "limitations": "ZOO, SQZ, HA, UC2 and DWC have no reader and no structural identification. Their header layouts must be transcribed from primary sources before any support claim is made."
     },
     {
@@ -370,6 +561,15 @@
       "dependencies": [],
       "specifications": [],
       "evidence": "Not implemented.",
+      "identification": {
+        "extensions": ["sq", "z"],
+        "structural": "Squeeze magic and Crunch header fields",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "unverified",
+        "methods": ["huffman"],
+        "unsupported_variants": []
+      },
       "limitations": "Both are Huffman-family schemes with several historical variants; the variant space needs a primary reference before coding."
     },
     {
@@ -378,14 +578,31 @@
       "layer": "filesystem",
       "backlog_package": "fat",
       "operations": {
-        "identify": "planned", "metadata": "planned", "list": "planned",
-        "extract": "planned", "validate": "planned", "recover": "planned"
+        "identify": "qualified",
+        "metadata": "qualified",
+        "list": "qualified",
+        "extract": "qualified",
+        "validate": "qualified",
+        "recover": "partial"
       },
-      "implementation": null,
+      "implementation": {
+        "module": "intelligence_extract",
+        "entry": "_fat",
+        "approach": "native"
+      },
       "dependencies": [],
       "specifications": [],
-      "evidence": "Not implemented; the current reader rejects cluster counts at or above the FAT32 threshold.",
-      "limitations": "Requires a 32-bit FAT reader, a root directory expressed as a cluster chain, and LFN entry reconstruction with checksum validation."
+      "evidence": "Portable tests build a sparse volume whose cluster count sits above the FAT32 threshold, so the 32-bit allocation table, the cluster-chained root directory and the high cluster-word merge are all exercised: a file placed at cluster 0x10003 is read back byte for byte. A single-slot VFAT long name is assembled from its UTF-16 code units and reported instead of the 8.3 alias, and a long-name chain whose checksum does not cover the short name is rejected in favour of the short name.",
+      "limitations": "Only contiguous numbered long-name chains bound to a matching short-name checksum are accepted. Multi-slot long names are assembled but not yet exercised by a fixture, and FSInfo, backup boot sectors and the FAT32 mirroring rules are not consulted.",
+      "identification": {
+        "extensions": [],
+        "structural": "BPB whose cluster count reaches the FAT32 threshold, with a cluster-based root directory",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "structural",
+        "methods": ["raw"],
+        "unsupported_variants": ["A long name whose checksum does not cover its short name falls back to the short name."]
+      }
     },
     {
       "id": "xdf",
@@ -400,6 +617,15 @@
       "dependencies": [],
       "specifications": [],
       "evidence": "Not implemented.",
+      "identification": {
+        "extensions": [],
+        "structural": "XDF track descriptor carrying mixed sector sizes",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "not-applicable",
+        "methods": [],
+        "unsupported_variants": ["Not implemented: the layout belongs to the geometry layer."]
+      },
       "limitations": "XDF is a mixed-sector-size track layout, so it belongs on the geometry layer rather than in a sector container. It cannot be represented by the current fixed-geometry normaliser."
     },
     {
@@ -415,6 +641,15 @@
       "dependencies": [],
       "specifications": [],
       "evidence": "Not implemented.",
+      "identification": {
+        "extensions": ["jv1", "jv3", "dmk", "vdk", "jvc"],
+        "structural": "per-format track descriptors and sector status bytes",
+        "carrier": null,
+        "embedded": [],
+        "completeness": "structural",
+        "methods": [],
+        "unsupported_variants": ["Not implemented yet."]
+      },
       "limitations": "These containers preserve per-sector status, track descriptors and in some cases competing encodings. They are the natural next layer above the sector abstraction added here."
     }
   ]

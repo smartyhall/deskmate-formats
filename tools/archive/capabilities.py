@@ -20,6 +20,12 @@ STATUSES = ('qualified', 'partial', 'identify-only', 'unsupported', 'planned', '
 APPROACHES = ('native', 'library', 'external-adapter', 'mockable-adapter')
 LAYERS = ('archive', 'compression', 'sector-image', 'filesystem', 'disk-layout',
           'optical', 'document', 'executable', 'recording')
+CARRIERS = ('mz', 'pe', 'elf')
+COMPLETENESS = ('verified-sizes', 'structural', 'unverified', 'not-applicable')
+METHODS = ('raw', 'stored', 'rle', 'fill', 'deflate', 'lzw', 'lzma', 'huffman', 'bwt',
+           'adapter')
+IDENTIFICATION = ('extensions', 'structural', 'carrier', 'embedded', 'completeness',
+                  'methods', 'unsupported_variants')
 IDENTIFIER = re.compile(r'^[a-z0-9][a-z0-9-]{0,63}$')
 TABLE_ORDER = ('qualified', 'partial', 'identify-only', 'unsupported', 'planned', 'blocked')
 
@@ -59,6 +65,32 @@ def validate(registry):
         for operation, status in operations.items():
             if status not in STATUSES:
                 raise ValueError(f'{identifier}.{operation}: unknown status {status!r}')
+        identification = record.get('identification')
+        if not isinstance(identification, dict):
+            raise ValueError(f'{identifier}: an identification block is required')
+        if set(identification) != set(IDENTIFICATION):
+            raise ValueError(f'{identifier}: identification must name exactly {IDENTIFICATION}')
+        extensions = identification['extensions']
+        if not isinstance(extensions, list) or any(
+                not isinstance(item, str) or not item or item != item.lower().lstrip('.')
+                or '.' in item for item in extensions):
+            raise ValueError(f'{identifier}: identification.extensions must be bare lowercase suffixes')
+        if not isinstance(identification['structural'], str) or not identification['structural']:
+            raise ValueError(f'{identifier}: identification.structural is required')
+        if identification['carrier'] not in (None, *CARRIERS):
+            raise ValueError(f'{identifier}: unknown carrier {identification["carrier"]!r}')
+        embedded = identification['embedded']
+        if not isinstance(embedded, list) or any(
+                not isinstance(item, str) or not item for item in embedded):
+            raise ValueError(f'{identifier}: identification.embedded must list format names')
+        if identification['completeness'] not in COMPLETENESS:
+            raise ValueError(f'{identifier}: unknown completeness '
+                             f'{identification["completeness"]!r}')
+        methods = identification['methods']
+        if not isinstance(methods, list) or any(item not in METHODS for item in methods):
+            raise ValueError(f'{identifier}: unknown extraction method in {methods!r}')
+        if not isinstance(identification['unsupported_variants'], list):
+            raise ValueError(f'{identifier}: identification.unsupported_variants must be a list')
         implementation = record.get('implementation')
         if implementation is None:
             # A record without an implementation may only claim non-support,
@@ -131,6 +163,24 @@ def render_markdown(registry):
     for status in STATUSES:
         lines.append(f'- **{status}**: {registry["status_meanings"][status]}')
     lines.append('')
+    lines.append('## Identification axes')
+    lines.append('')
+    lines.append('A filename extension is a hint; the structural identity is what the bytes')
+    lines.append('actually are. A carrier and an embedded archive are recorded together, so a')
+    lines.append('self-extracting archive keeps both its executable and its archive identity')
+    lines.append('instead of one replacing the other. Container completeness states the strongest')
+    lines.append('claim the reader can make: sizes or checksums it can verify, structure that')
+    lines.append('implies the file is whole, or an explicit admission that neither is available.')
+    lines.append('')
+    dual = [record for record in formats if record['identification']['embedded']]
+    if dual:
+        lines.append('| Format | Carrier | Embedded archive |')
+        lines.append('| --- | --- | --- |')
+        for record in dual:
+            ident = record['identification']
+            lines.append(f'| {record["title"]} | {ident["carrier"]} '
+                         f'| {", ".join(ident["embedded"])} |')
+        lines.append('')
     layers = []
     for record in formats:
         if record['layer'] not in layers:
@@ -157,6 +207,18 @@ def render_markdown(registry):
                          f'({implementation["approach"]}).')
         else:
             lines.append('- Implementation: none.')
+        ident = record['identification']
+        suffixes = ', '.join('.' + item for item in ident['extensions']) or 'none'
+        lines.append(f'- Extensions: {suffixes}.')
+        lines.append(f'- Structural identification: {ident["structural"]}')
+        if ident['carrier'] or ident['embedded']:
+            lines.append(f'- Carrier: {ident["carrier"] or "none"}; embedded: '
+                         f'{", ".join(ident["embedded"]) or "none"}.')
+        lines.append(f'- Container completeness: {ident["completeness"]}.')
+        lines.append(f'- Extraction methods: {", ".join(ident["methods"]) or "none"}.')
+        if ident['unsupported_variants']:
+            variants = '; '.join(item.rstrip('.') for item in ident['unsupported_variants'])
+            lines.append(f'- Unsupported or ambiguous variants: {variants}.')
         dependencies = record.get('dependencies') or []
         if dependencies:
             named = ', '.join(

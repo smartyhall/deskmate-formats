@@ -50,11 +50,26 @@ def imd_track(entries, cylinder=0, head=0, mode=3, size_code=2):
     return bytes(out)
 
 
+def td0_crc(data):
+    """Independent CRC-16/0xA097 (MSB first, preset 0) for fixture headers.
+
+    Written from the polynomial rather than imported from the reader, so the
+    reader's own CRC cannot validate itself.
+    """
+    crc = 0
+    for byte in data:
+        crc ^= byte << 8
+        for _ in range(8):
+            crc = ((crc << 1) ^ 0xA097) & 0xFFFF if crc & 0x8000 else (crc << 1) & 0xFFFF
+    return crc
+
+
 def td0_header(signature=b'TD', sequence=0, version=0x15, rate=2, drive=4,
-               stepping=0, dos=0, sides=1, stored_crc=0):
-    check = (signature[0] + signature[1] + sequence) & 0xFF
-    return (signature + bytes([sequence, check, version, rate, drive, stepping,
-                               dos, sides]) + pack('<H', stored_crc))
+               stepping=0, dos=0, sides=1, volume_set=0x42, stored_crc=None):
+    """Byte 3 is a volume-set identifier, not a checksum of the signature."""
+    head = signature + bytes([sequence, volume_set, version, rate, drive,
+                              stepping, dos, sides])
+    return head + pack('<H', td0_crc(head) if stored_crc is None else stored_crc)
 
 
 def td0_track(sectors, cylinder=0, head=0):
@@ -93,14 +108,34 @@ class IdentificationTests(unittest.TestCase):
         self.assertIsNone(disk_images.identify(b'IMD but no identifying line\r\n\x1a'))
         self.assertIsNone(disk_images.identify(b'ordinary reference notes\r\n'))
 
-    def test_teledisk_requires_a_consistent_check_byte(self):
+    def test_teledisk_identification_ignores_the_volume_set_byte(self):
         header = td0_header()
         self.assertEqual(disk_images.identify(header + b'\xff'), 'td0')
         self.assertEqual(disk_images.identify(td0_header(b'td') + b'\xff'), 'td0-advanced')
-        broken = bytearray(header)
-        broken[3] ^= 0xFF
-        self.assertIsNone(disk_images.identify(bytes(broken) + b'\xff'))
+        # Genuine images carry 0x42, 0x43 and 0x2E here, so byte 3 cannot be a
+        # checksum: identification must not depend on its value.
+        for volume_set in (0x00, 0x2E, 0x42, 0x43, 0xFF):
+            altered = bytearray(header)
+            altered[3] = volume_set
+            self.assertEqual(disk_images.identify(bytes(altered) + b'\xff'), 'td0')
+        implausible = bytearray(header)
+        implausible[4] = 0x00
+        self.assertIsNone(disk_images.identify(bytes(implausible) + b'\xff'))
         self.assertIsNone(disk_images.identify(b'TD reference notes only'))
+
+    def test_genuine_header_crc_vectors_are_reproduced(self):
+        # Ten-byte headers of three genuine TeleDisk images: structural
+        # metadata only, no disk content. Each stored value differs, which is
+        # what rules out the competing CRC conventions.
+        for header_hex, advanced in (('74640042150001800002520a', True),
+                                     ('544400431500018000029c60', False),
+                                     ('5444002e150001800002fb17', False)):
+            head = bytes.fromhex(header_hex)
+            stored = int.from_bytes(head[10:12], 'little')
+            self.assertEqual(disk_images._td0_crc16(head[:10]), stored)
+            self.assertEqual(td0_crc(head[:10]), stored)
+            self.assertEqual(disk_images.identify(head + b'\xff'),
+                             'td0-advanced' if advanced else 'td0')
 
     def test_copyqm_requires_the_zero_byte_sum(self):
         image = copyqm_file(pack('<h', 5120) + bytes(5120))
@@ -205,13 +240,21 @@ class TeleDiskTests(unittest.TestCase):
         self.assertEqual(volume.sectors[1].data, b'\x34\x12' * 64)
         self.assertEqual(volume.sectors[2].data, literal + bytes(64))
 
-    def test_header_metadata_and_unconfirmed_crc_observation(self):
+    def test_header_metadata_and_verified_crc(self):
         volume = self.read(self.build([(1, 2, 0, 0, b'Q' * 512)],
                                       version=0x16, rate=0x82, drive=2))
         self.assertEqual(volume.metadata['teledisk_version'], '1.6')
         self.assertEqual(volume.metadata['data_rate'], '500 kbps')
         self.assertTrue(volume.metadata['single_density'])
-        self.assertIn('header-crc-unconfirmed-algorithm', volume.warnings)
+        self.assertEqual(volume.metadata['volume_set'], 0x42)
+        self.assertTrue(volume.metadata['header_crc_verified'])
+        self.assertEqual(volume.warnings, ())
+        self.assertEqual(volume.status, 'ok')
+
+    def test_damaged_header_crc_is_reported_as_damage(self):
+        volume = self.read(self.build([(1, 2, 0, 0, b'Q' * 512)], stored_crc=0x1234))
+        self.assertFalse(volume.metadata['header_crc_verified'])
+        self.assertEqual(volume.warnings, ('header-crc-mismatch',))
         self.assertEqual(volume.status, 'ok')
 
     def test_skipped_and_id_only_sectors_carry_no_data(self):
