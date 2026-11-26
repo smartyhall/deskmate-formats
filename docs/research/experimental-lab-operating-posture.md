@@ -110,7 +110,7 @@ retract any empirical observation or itself authorize model usage.
 
 ## Supplementary agents and shared lab resources (2026-11-25)
 
-The [multi-agent campaign rules](../../AGENTS.md#multi-agent-campaign-governance--supplementary-agent-integration-2026-11-25)
+The [multi-agent campaign rules](../../AGENTS.md#multi-agent-campaign-governance)
 apply to Freebuff and other supplementary agents. The operator's recoverable
 VM-local risk acceptance remains in effect; do not require a second VM merely
 to conduct a bounded authorized local campaign. However, a Git worktree
