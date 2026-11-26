@@ -382,6 +382,26 @@ test("review capture targets follow the reviewed page map", () => {
   assert.equal(VIEWPORTS[1].width, 390);
 });
 
+test("capture route normalization accepts public forms only", () => {
+  const { normalizeRoute } = require("../scripts/capture_review.cjs");
+  assert.equal(normalizeRoute("/research"), "/research/");
+  assert.equal(normalizeRoute("https://deskmate.retroconnect.org/research/?q=1#top"), "/research/");
+  assert.equal(normalizeRoute("research/"), "/research/");
+  assert.equal(normalizeRoute(null), null);
+  assert.equal(normalizeRoute(42), null);
+});
+
+test("capture reads PNG dimensions from the header", () => {
+  const { parsePngSize } = require("../scripts/capture_review.cjs");
+  const header = Buffer.alloc(24);
+  Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]).copy(header, 0);
+  header.write("IHDR", 12, "ascii");
+  header.writeUInt32BE(390, 16);
+  header.writeUInt32BE(844, 20);
+  assert.deepEqual(parsePngSize(header), { width: 390, height: 844 });
+  assert.throws(() => parsePngSize(Buffer.from("not a png")), /not a PNG/);
+});
+
 test("keyboard focus stays visible where the theme removes outlines", () => {
   const css = fs.readFileSync(path.join(ROOT, "website/src/assets/site-layout.css"), "utf8");
   assert.match(css, /a:focus-visible[\s\S]{0,300}?outline:\s*2px solid/);

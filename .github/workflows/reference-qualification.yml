@@ -1,0 +1,203 @@
+# Cross-engine qualification for the reference website.
+#
+# Routine runs are bounded: the home page and the five hubs across the three
+# engines, which covers site-wide chrome, navigation, and layout without
+# multiplying every page by every profile on every pull request. Comprehensive
+# and focused runs are dispatch-only so they are deliberate.
+#
+# Nothing here is committed to the repository: screenshots, the contact sheet,
+# and the structured summary are run artifacts.
+name: Reference browser qualification
+
+on:
+  pull_request:
+    paths:
+      - "website/**"
+      - "qualification/**"
+      - "docs/**/*.md"
+      - "docs/site/**"
+      - ".github/workflows/reference-qualification.yml"
+  workflow_dispatch:
+    inputs:
+      level:
+        description: "Qualification level"
+        type: choice
+        options: [routine, comprehensive, focused]
+        default: routine
+      engines:
+        description: "Focused only: comma-separated engines (chromium,firefox,webkit,chrome,msedge)"
+        type: string
+        default: chromium
+      profiles:
+        description: "Focused only: comma-separated profiles"
+        type: string
+        default: desktop,mobile
+      pages:
+        description: "Focused only: comma-separated routes, or 'all'"
+        type: string
+        default: "/,/research/"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reference-qualification-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  routine:
+    if: ${{ github.event_name == 'pull_request' || inputs.level == 'routine' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install site dependencies
+        working-directory: website
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Build custom-domain root
+        working-directory: website
+        env:
+          SITE_BASE_PATH: /
+        run: npm run build
+      - name: Install qualification dependencies
+        working-directory: qualification
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Install browsers
+        working-directory: qualification
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Select pages
+        id: pages
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ -n "$BASE_SHA" ]; then
+            changed="$(node qualification/scripts/changed-pages.cjs "$BASE_SHA")"
+          else
+            changed=""
+          fi
+          hubs="/,/deskmate/,/formats/,/recovery/,/research/,/project/,/search/"
+          if [ -n "$changed" ]; then
+            echo "routes=$hubs,$changed" >> "$GITHUB_OUTPUT"
+          else
+            echo "routes=$hubs" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Qualify
+        working-directory: qualification
+        run: |
+          node cli.cjs \
+            --serve-dir ../website/_site \
+            --engines chromium,firefox,webkit \
+            --profiles desktop,mobile,no-js \
+            --pages "${{ steps.pages.outputs.routes }}" \
+            --axe \
+            --out qualification-results
+      - name: Upload qualification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qualification-routine
+          path: qualification/qualification-results
+          retention-days: 14
+
+  comprehensive:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.level == 'comprehensive' }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            engines: chromium,firefox,webkit
+          - os: windows-latest
+            engines: chromium,firefox,msedge
+          - os: macos-latest
+            engines: webkit,chromium,firefox
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install site dependencies
+        working-directory: website
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Build custom-domain root
+        working-directory: website
+        env:
+          SITE_BASE_PATH: /
+        run: npm run build
+      - name: Install qualification dependencies
+        working-directory: qualification
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Install browsers (Linux)
+        if: ${{ runner.os == 'Linux' }}
+        working-directory: qualification
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Install browsers (Windows and macOS)
+        if: ${{ runner.os != 'Linux' }}
+        working-directory: qualification
+        run: npx playwright install chromium firefox webkit msedge
+      - name: Qualify
+        working-directory: qualification
+        shell: bash
+        run: |
+          node cli.cjs \
+            --serve-dir ../website/_site \
+            --engines "${{ matrix.engines }}" \
+            --profiles desktop,tablet,mobile,no-js,reflow,forced-colors,reduced-motion,print \
+            --pages "/,/deskmate/,/formats/,/recovery/,/research/,/project/,/search/" \
+            --axe \
+            --out qualification-results
+      - name: Upload qualification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qualification-${{ matrix.os }}
+          path: qualification/qualification-results
+          retention-days: 14
+
+  focused:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.level == 'focused' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install site dependencies
+        working-directory: website
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Build custom-domain root
+        working-directory: website
+        env:
+          SITE_BASE_PATH: /
+        run: npm run build
+      - name: Install qualification dependencies
+        working-directory: qualification
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Install browsers
+        working-directory: qualification
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Qualify
+        working-directory: qualification
+        run: |
+          node cli.cjs \
+            --serve-dir ../website/_site \
+            --engines "${{ inputs.engines }}" \
+            --profiles "${{ inputs.profiles }}" \
+            --pages "${{ inputs.pages }}" \
+            --axe \
+            --out qualification-results
+      - name: Upload qualification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qualification-focused
+          path: qualification/qualification-results
+          retention-days: 14
