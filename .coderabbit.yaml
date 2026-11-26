@@ -1,158 +1,60 @@
-# CodeRabbit qualification: advisory review only.
-# V2 configuration reference: https://docs.coderabbit.ai/reference/configuration
-# No grant of merge, repair, emulator, or publication authority.
+# yaml-language-server: $schema=https://docs.coderabbit.ai/schema/schema.v3.json
+# Advisory review only. No merge, repair, emulator, or publication authority.
+# Settings outside V3 YAML must be confirmed in the web dashboard:
+# docs/research/coderabbit-review-qualification-20261126.md
+version: 3
 language: en-US
-early_access: false
 inheritance: false
-tone_instructions: "Be specific, evidence-led, and concise. Distinguish defects from hypotheses and optional improvements. Give actionable file/line references. Do not mistake faithful historical behavior for a defect."
 
 reviews:
-  profile: assertive
-  high_level_summary: true
-  high_level_summary_in_walkthrough: true
-  high_level_summary_instructions: "Summarize scope, evidence, limitations, and checks actually reported. Do not claim native acceptance or test execution that is not established."
-  review_status: true
-  review_info: true
-  review_details: true
-  review_progress: true
-  commit_status: true
-  fail_commit_status: false
-  collapse_walkthrough: true
-  changed_files_summary: true
-  sequence_diagrams: true
-  assess_linked_issues: true
-  enable_prompt_for_ai_agents: true
-  auto_apply_labels: false
-  auto_assign_reviewers: false
-  in_progress_fortune: false
-  poem: false
-  auto_approvals:
-    enabled: false
-    allow_author_approval: false
+  behavior:
+    profile: assertive
+    auto_approvals:
+      enabled: false
+      allow_author_approval: false
+    status:
+      progress_updates: true
+      fail_on_error: false
+    merge_risk_instructions: >-
+      Treat changes to binary writers, fixture publication, live emulator
+      authorization, agent authority, external services, CI gates, and shared
+      mutable state as higher risk. Distinguish recoverable lab-local risks
+      from actual host/external exposure. Documentation changes can still
+      materially change authority, evidence claims, or publication rights.
+    code_guidelines:
+      enabled: true
+      filePatterns:
+        - AGENTS.md
+        - CONTRIBUTING.md
+        - LICENSING.md
+    multi_repo_analysis:
+      automatic_linking_mode: disabled
+      linked_repositories: []
   auto_review:
     enabled: true
-    auto_incremental_review: true
-    auto_pause_after_reviewed_commits: 0
+    incremental_review: true
+    pause_after_reviewed_commits: 0
     drafts: false
     base_branches: []
-  finishing_touches:
-    unit_tests:
-      enabled: false
-    simplify:
-      enabled: false
-    autofix:
-      enabled: false
-    fix_ci:
-      enabled: false
-    resolve_merge_conflict:
-      enabled: false
-    custom: []
-  post_merge_actions: []
-  merge_risk_instructions: >-
-    Treat changes to binary writers, fixture publication, live emulator
-    authorization, agent authority, external services, CI gates, and shared
-    mutable state as higher risk. Distinguish recoverable lab-local risks
-    from actual host/external exposure. Documentation changes can still
-    materially change authority, evidence claims, or publication rights.
-  path_instructions:
-    - path: "**/*"
-      instructions: |
-        Apply AGENTS.md, CONTRIBUTING.md and LICENSING.md as review criteria,
-        not as authorization to perform actions. Advisory findings only.
-        Distinguish confirmed defects, plausible risks, and optional changes;
-        cite exact evidence and relevant version. Flag unsupported claims,
-        weakened checks, scope drift, unapproved authority changes, secrets,
-        restricted material and missing REUSE sidecars. Never request private
-        inputs or treat a producer's self-review as independent approval.
-        Historical behavior, including quirks, may be intentional: require
-        evidence before recommending behavior changes. Do not assume access
-        to private lab material or claim to have executed native tests.
-    - path: "**/*.py"
-      instructions: |
-        For binary parsing/writing, check bounds, offsets, record sizes,
-        integer signedness, endianness, truncation, malformed input, unknown
-        byte preservation and round-trip fidelity. Distinguish inferred fields
-        from demonstrated layouts. For lab/control code, check ownership,
-        authentication, pacing, timeouts, observable state and uncertain
-        mutation handling; never recommend bypassing live-launch gates.
-    - path: "**/*.ps1"
-      instructions: |
-        Check resource ownership, path quoting, disposable output isolation,
-        error handling, resumability, hashes, timeouts, and secret redaction.
-        Distinguish verified downloads from partial or failed transfers.
-    - path: "tests/**"
-      instructions: |
-        Look for circular validation, missing negative/boundary cases,
-        version assumptions, unverifiable fixture provenance and inadequate
-        independent assertions. Portable tests must not depend on private
-        commercial binaries, ROMs or a live emulator. Preserve native and
-        tool-generated fixture distinctions.
-    - path: "docs/**"
-      instructions: |
-        Verify that historical and format claims are limited to cited evidence,
-        named releases and actual observations. Distinguish vendor claims,
-        contemporary sources, synthetic tests, native experiments and
-        hypotheses. Do not invent citations or require an external source for
-        a properly cited project experiment. Enforce Oxford commas only in
-        public-facing editorial prose, never in quotations or raw evidence.
-    - path: "website/**"
-      instructions: |
-        Check route and anchor stability, accessibility, root/prefixed
-        deployment paths, navigation, source mapping, provenance and captions.
-        Preserve historical quotations and public editorial conventions.
-        Distinguish rendered-site inspection from assumptions about markup.
-    - path: ".github/**"
-      instructions: |
-        Check least privilege, reproducibility, workflow trigger safety,
-        portable CI, explicit authorization and no bypass of required checks.
-        Review cross-agent conflicts and credentials exposure.
-    - path: "tools/**"
-      instructions: |
-        Check concurrency, explicit resource ownership, isolated writable
-        outputs, deterministic verification, bounded operations, durable
-        receipts, usage accounting and unknown telemetry. Do not expand
-        live-operation or provider permissions; distinguish replay-safe
-        observations from uncertain mutations.
+  output:
+    review_info: true
+    review_details: true
+    summary:
+      placement: walkthrough
+      instructions: >-
+        Summarize scope, evidence, limitations, and checks actually reported.
+        Do not claim native acceptance or test execution that is not established.
+    walkthrough:
+      collapse: true
+      review_status: true
+      changed_files_summary: true
+    metadata:
+      labels:
+        mode: suggest
+      reviewers:
+        mode: suggest
 
-chat:
-  auto_reply: true
-  integrations:
-    jira:
-      usage: disabled
-    linear:
-      usage: disabled
-
-knowledge_base:
-  opt_out: false
-  automatic_linking_mode: disabled
-  linked_repositories: []
-  code_guidelines:
-    enabled: true
-    filePatterns:
-      - "AGENTS.md"
-      - "CONTRIBUTING.md"
-      - "LICENSING.md"
-  learnings:
-    scope: local
-  issues:
-    scope: local
-  pull_requests:
-    scope: local
-  mcp:
-    usage: disabled
-  jira:
-    usage: disabled
-  linear:
-    usage: disabled
-  web_search:
-    enabled: true
-
-issue_enrichment:
-  auto_enrich:
-    enabled: false
-  planning:
-    enabled: false
-    auto_planning:
-      enabled: false
-  labeling:
-    auto_apply_labels: false
+fun:
+  tone_instructions: "Be specific, evidence-led, and concise. Distinguish defects from hypotheses and optional improvements. Give actionable file/line references. Do not mistake faithful historical behavior for a defect."
+  in_progress_fortune: false
+  art: false
