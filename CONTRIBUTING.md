@@ -48,7 +48,7 @@ No automatic publication/release is configured.
 
 ## Agent-assisted campaigns
 
-The [standing research instructions](AGENTS.md#multi-agent-campaign-governance--supplementary-agent-integration-2026-11-25)
+The [standing research instructions](AGENTS.md#multi-agent-campaign-governance)
 apply regardless of provider or whether a task is performed by an agent,
 subagent or human-assisted automation. Human contributors remain subject to
 the same evidence, licensing and verification requirements.
@@ -62,6 +62,13 @@ switch, reset, stage or clean another worker's checkout. A read-only campaign
 does not need a new worktree if its observations identify the inspected
 revision and any concurrent changes. Worktrees isolate indexes and checked-out
 files, not credentials, Git refs, host files or external services.
+
+Ordinary read access across project resources is unrestricted, except for
+explicitly blinded experiments with documented rationale and unblinding
+criteria. This is not authority to access unrelated personal data or secrets,
+export private material, mutate another campaign's resources, or publish
+restricted inputs. Record ownership privately in a machine-readable campaign
+registry; publish sanitized summaries rather than local paths.
 
 Use campaign-specific paths for mutable outputs and environment/build state.
 Treat original media, sealed baselines and previous evidence as immutable.
@@ -77,7 +84,7 @@ owner/provider, model and effort when known, execution mode, changed paths,
 tests actually run and outcomes, evidence locators/hashes, limitations,
 remaining work, and resource disposition. Keep private paths, raw transcripts
 and identifiers outside Git. Collect sanitized usage receipts per the
-[usage ledger](docs/evidence/codex-usage/README.md#supplementary-agent-receipts).
+[usage ledger](docs/evidence/agent-usage/README.md).
 Do not label agent inference as native observation or credit an unobserved
 agent with another agent's evidence.
 
@@ -89,7 +96,9 @@ automatic authority to merge. The operator or a separately authorized,
 independent reviewer checks the diff, provenance, licenses, publication
 eligibility, actual test/CI results and scope before merging. The standing
 ChatGPT housekeeping grant for Codex PRs is unchanged; other merges require
-applicable explicit authorization. Keep tests portable and AI-independent.
+applicable explicit authorization. Changes to governance or merge authority
+require explicit operator approval and independent review, outside standing
+grants. Keep tests portable and AI-independent.
 Report skipped checks and unavailable telemetry accurately.
 
 Use existing publication grants only within the authorized task, and retain
