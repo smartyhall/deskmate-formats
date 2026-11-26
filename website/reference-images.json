@@ -75,7 +75,7 @@
       "height": 480,
       "origin": "documentary-software-ui-capture",
       "source_id": "deskmate-visual-4f1ca7038ea9ab75",
-      "caption": "The schedule for October 23 shows the synthetic 9:00–10:00 AM appointment with its time range highlighted.",
+      "caption": "The schedule for October 23 shows the synthetic 9:00\u00e2\u20ac\u201c10:00 AM appointment with its time range highlighted.",
       "alt": "Day schedule with Prev and Next and a single test appointment whose time range is highlighted yellow.",
       "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
       "page_id": "formats.calendar",
@@ -107,7 +107,7 @@
       "height": 480,
       "origin": "documentary-software-ui-capture",
       "source_id": "deskmate-visual-b064f054232851be",
-      "caption": "Filer’s Open File dialog lists two FIL files, a parent directory and drives A and C.",
+      "caption": "Filer\u00e2\u20ac\u2122s Open File dialog lists two FIL files, a parent directory and drives A and C.",
       "alt": "Open File dialog with a blank filename field, scrollable file list, FIL extension and outlined OK.",
       "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
       "page_id": "research.filer",
@@ -235,7 +235,7 @@
       "height": 480,
       "origin": "documentary-software-ui-capture",
       "source_id": "deskmate-visual-fb5f2c49100704c8",
-      "caption": "Draw’s Text dialog shows Dixon selected in outline mode, with 24-point size, 100% width and left justification.",
+      "caption": "Draw\u00e2\u20ac\u2122s Text dialog shows Dixon selected in outline mode, with 24-point size, 100% width and left justification.",
       "alt": "Text dialog with Dixon highlighted in the font list, left justification selected and an outlined OK button.",
       "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
       "page_id": "research.draw",
@@ -795,7 +795,7 @@
       "origin": "documentary-software-ui-capture",
       "source_id": "deskmate-evolution-20261121-orig-menu",
       "caption": "Original DeskMate 01.01.00 shows its task screen on the 1000 SX compatibility profile.",
-      "alt": "Text-mode screen with Calendar and today’s events above six application file panels and ten function-key labels.",
+      "alt": "Text-mode screen with Calendar and today\u00e2\u20ac\u2122s events above six application file panels and ten function-key labels.",
       "rights_note": "Documentary software UI capture under the operator's 2026-11-21 authorization. Tandy Corporation retains its rights in the original interface.",
       "page_id": "applications.evolution-atlas",
       "section_heading": "Original DeskMate and DeskMate II"
@@ -1482,7 +1482,7 @@
       "height": 480,
       "origin": "documentary-software-ui-capture",
       "source_id": "rsx-aol13-20261123-initial-geos",
-      "caption": "America Online 1.3 first-run setup detects 640 × 480 16-color VGA on the RSX.",
+      "caption": "America Online 1.3 first-run setup detects 640 \u00c3\u2014 480 16-color VGA on the RSX.",
       "alt": "Gray GEOS setup screen listing the detected VGA mode and keyboard commands.",
       "rights_note": "Documentary UI capture under the 2026-11-21 operator authorization. Original interface rights remain with America Online, Inc., and GeoWorks.",
       "page_id": "applications.evolution-atlas",
@@ -1791,6 +1791,21 @@
       "rights_note": "Documentary capture under the operator's 2026-11-21 approval. Original software interface: Tandy Corporation. Vendor rights are retained.",
       "page_id": "research.print-companion",
       "section_heading": "Native application survey"
+    },
+    {
+      "id": "ui.desktop.accessories-menu",
+      "path": "collection-01/ui.desktop.accessories-menu.png",
+      "sha256": "2d0b16f4ebf7e819f7dedca67a0cef866306e4ca344d747ba44171c6a90db620",
+      "source_sha256": "2d0b16f4ebf7e819f7dedca67a0cef866306e4ca344d747ba44171c6a90db620",
+      "size": 19662,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "freebuff-input-delivery-20261126-menu",
+      "caption": "The DeskMate 03.04.04 F10 Applications menu lists the accessories available on the RSX hard-disk installation.",
+      "alt": "DeskMate desktop with the F10 Applications menu open, listing Spell Checker, Calculator, Phone List, Corkboard, Month, Alarm, To Do List, Clipboard and Task Switch.",
+      "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+      "page_id": "applications.note-pad-corkboard"
     }
   ]
 }

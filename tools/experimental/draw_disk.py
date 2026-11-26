@@ -7,6 +7,18 @@ import re
 from struct import unpack_from
 
 
+def entry_name(name):
+    """Return the 11-byte directory name for an uppercase 8.3 or 8-character name.
+
+    Extensionless 8-character names such as ``DMCORKBD`` are ordinary DOS files;
+    they were excluded only because earlier checks listed extensions explicitly.
+    """
+    if not re.fullmatch(r'[A-Z0-9]{1,8}(?:\.[A-Z0-9]{1,3})?', name):
+        raise ValueError('expected an uppercase DOS research filename')
+    stem, _, extension = name.partition('.')
+    return (stem.ljust(8) + extension.ljust(3)).encode('ascii')
+
+
 def extract(image, names):
     def word(offset):
         return unpack_from('<H', image, offset)[0]
@@ -57,9 +69,7 @@ def extract(image, names):
     entries = dict(directory(chain(word(desk + 26)), cluster_size))
     result = {}
     for name in names:
-        if not re.fullmatch(r'[A-Z0-9]{1,8}\.(?:FIG|DOC|FIL|FF1|PRN)', name):
-            raise ValueError('expected an uppercase DOS research filename')
-        entry = entries[(name[:-4].ljust(8) + name[-3:]).encode('ascii')]
+        entry = entries[entry_name(name)]
         size = dword(entry + 28)
         blocks = chain(word(entry + 26))
         if image[entry + 11] & 16 or not blocks or not (len(blocks) - 1) * cluster_size < size <= len(blocks) * cluster_size:
