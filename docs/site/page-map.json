@@ -405,6 +405,32 @@
       "source": "docs/research/visual-evidence-first-pass-20261120.md"
     },
     {
+      "id": "research.evidence",
+      "slug": "research/evidence",
+      "title": "Public and private evidence",
+      "section": "research",
+      "subsection": "Evidence and verification",
+      "order": 125,
+      "summary": "Where public and private evidence lives, and what may be published as a synthetic fixture.",
+      "date": null,
+      "is_hub": false,
+      "role": "current-guide",
+      "source": "docs/evidence/README.md"
+    },
+    {
+      "id": "research.verification",
+      "slug": "research/verification",
+      "title": "Repository transition verification (2026-10-31)",
+      "section": "research",
+      "subsection": "Evidence and verification",
+      "order": 130,
+      "summary": "Dated record of the repository-transition verification runs and their results.",
+      "date": "2026-10-31",
+      "is_hub": false,
+      "role": "dated-research",
+      "source": "docs/verification.md"
+    },
+    {
       "id": "evidence.visual-policy",
       "slug": "evidence/visual-policy",
       "title": "Visual-evidence curation policy",
@@ -429,6 +455,32 @@
       "is_hub": false,
       "role": "current-guide",
       "source": "docs/preservation-workbench.md"
+    },
+    {
+      "id": "recovery.compatibility",
+      "slug": "recovery/compatibility",
+      "title": "Compatibility and supported versions",
+      "section": "recovery",
+      "subsection": "Supported operations",
+      "order": 20,
+      "summary": "Measured profiles and supported operations per format, with what is deliberately not supported.",
+      "date": null,
+      "is_hub": false,
+      "role": "current-guide",
+      "source": "docs/compatibility.md"
+    },
+    {
+      "id": "recovery.cli",
+      "slug": "recovery/cli",
+      "title": "Command-line tools",
+      "section": "recovery",
+      "subsection": "Supported operations",
+      "order": 30,
+      "summary": "Which installed console command to use for inspection, export, or creation, and which are lab-only.",
+      "date": null,
+      "is_hub": false,
+      "role": "current-guide",
+      "source": "docs/recovery/cli.md"
     },
     {
       "id": "project.roadmap",

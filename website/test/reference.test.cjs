@@ -233,3 +233,11 @@ test("hub pages render as prose-led landing pages with working links", () => {
     assert.doesNotMatch(html, /#unpublished-source/);
   }
 });
+
+test("links to unpublished repository files keep their wording without an anchor", () => {
+  const html = renderSource(byId.get("research.evidence"));
+  assert.doesNotMatch(html, /unpublished-source/);
+  assert.match(html, /LICENSING\.md/);
+  assert.doesNotMatch(html, /href="[^"]*LICENSING\.md"/);
+  assert.match(html, /href="https:\/\/github\.com\/smartyhall\/deskmate-formats\/blob\/main\/tests\//);
+});

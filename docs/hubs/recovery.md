@@ -21,10 +21,15 @@ intact.
    supported-operation boundary, so you can tell an unimplemented feature from
    a broken one.
 
-## What is here now
+## Tools and supported operations
 
 - [DeskMate Preservation Workbench](../preservation-workbench.md) documents the
   recovery tools and their intended workflow.
+- [Compatibility and supported versions](../compatibility.md) is the authoritative
+  list of measured profiles, and of the operations that are deliberately not
+  supported for each one.
+- [Command-line tools](../recovery/cli.md) says which installed command to reach for when
+  you would rather work in a terminal than through a bundle.
 - [Built-in application and format inventory](../inventory.md) identifies which
   program writes which format, which determines what a file is likely to be.
 - [File Formats](../formats.md) is the structural reference behind the tools,
@@ -36,6 +41,9 @@ Recovery support is per format and per operation. Reading a file, previewing
 it, exporting it, and writing it back are four different capabilities, and one
 does not imply another. When an operation is not supported, the workbench is
 expected to stop rather than write a plausible-looking but incorrect file.
+[Compatibility and supported versions](../compatibility.md) states the measured
+profiles; a format page describing a structure is not a claim that the tools
+can rewrite it.
 
 Format documentation is not a capability claim. A page in
 [File Formats](../formats.md) may describe a structure precisely while the

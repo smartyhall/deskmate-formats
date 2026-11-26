@@ -138,7 +138,28 @@ function renderSource(entry) {
       }
       if (token.type === "link_open") {
         const idx = token.attrIndex("href");
-        if (idx >= 0) token.attrs[idx][1] = resolveLink(token.attrs[idx][1], entry);
+        if (idx >= 0) {
+          const href = resolveLink(token.attrs[idx][1], entry);
+          if (href === "#unpublished-source") {
+            // A link to something the site does not publish is not a link: keep
+            // the wording, drop the anchor rather than emit a dead fragment.
+            for (let j = i + 1; j < items.length; j++) {
+              if (items[j].type === "link_close") {
+                items[j].type = "text";
+                items[j].tag = "";
+                items[j].attrs = null;
+                items[j].content = "";
+                break;
+              }
+            }
+            token.type = "text";
+            token.tag = "";
+            token.attrs = null;
+            token.content = "";
+          } else {
+            token.attrs[idx][1] = href;
+          }
+        }
       }
       if (token.type === "image") {
         token.type = "text";
