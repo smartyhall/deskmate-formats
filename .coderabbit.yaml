@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=https://docs.coderabbit.ai/schema/schema.v3.json
+# Advisory review only. No merge, repair, emulator, or publication authority.
+# Settings outside V3 YAML must be confirmed in the web dashboard:
+# docs/research/coderabbit-review-qualification-20261126.md
+version: 3
+language: en-US
+inheritance: false
+
+reviews:
+  behavior:
+    profile: assertive
+    auto_approvals:
+      enabled: false
+      allow_author_approval: false
+    status:
+      progress_updates: true
+      fail_on_error: false
+    merge_risk_instructions: >-
+      Treat changes to binary writers, fixture publication, live emulator
+      authorization, agent authority, external services, CI gates, and shared
+      mutable state as higher risk. Distinguish recoverable lab-local risks
+      from actual host/external exposure. Documentation changes can still
+      materially change authority, evidence claims, or publication rights.
+    code_guidelines:
+      enabled: true
+      filePatterns:
+        - AGENTS.md
+        - CONTRIBUTING.md
+        - LICENSING.md
+    multi_repo_analysis:
+      automatic_linking_mode: disabled
+      linked_repositories: []
+  auto_review:
+    enabled: true
+    incremental_review: true
+    pause_after_reviewed_commits: 0
+    drafts: false
+    base_branches: []
+  output:
+    review_info: true
+    review_details: true
+    summary:
+      placement: walkthrough
+      instructions: >-
+        Summarize scope, evidence, limitations, and checks actually reported.
+        Do not claim native acceptance or test execution that is not established.
+    walkthrough:
+      collapse: true
+      review_status: true
+      changed_files_summary: true
+    metadata:
+      labels:
+        mode: suggest
+      reviewers:
+        mode: suggest
+
+fun:
+  tone_instructions: "Be specific, evidence-led, and concise. Distinguish defects from hypotheses and optional improvements. Give actionable file/line references. Do not mistake faithful historical behavior for a defect."
+  in_progress_fortune: false
+  art: false
