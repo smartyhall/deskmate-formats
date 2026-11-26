@@ -93,3 +93,26 @@ documents or pursuing a numerical coverage target. Continue to distinguish
 dated evidence from current specifications and apply the existing rights and
 image-review rules. Review actual desktop/mobile previews and no-JavaScript
 navigation before merging layout changes.
+
+## Report dates and review attachments
+
+A page's `date` in the [page map](page-map.json) records when the source says the
+work happened: a date in the title, an explicit statement in the report, or the
+date suffix that the report's own filename carries. Do not infer a date from a
+Git commit, a filesystem timestamp, or the date a page was added to the map.
+Leave the value null when the source records none, and say on the section hub
+that the entry is undated rather than guessing; the Research hub names the two
+entries that have no recorded run date.
+
+Relative links resolve against the source file. A destination that does not
+exist is a build failure rather than a repository link, so a mistyped path
+cannot become a quietly broken external URL that no site check inspects. Exact
+filename case is checked too, because the Linux build and GitHub are
+case-sensitive even when the author's workstation is not.
+
+Screenshots supplied for pull-request review belong under
+`docs/site/review/<pull-request>/` with a REUSE sidecar. They are review
+attachments, never published assets: nothing there is copied into the site,
+listed in the image manifest, or included in the source distribution. Delete
+the directory when the review closes, and use the documented image-manifest
+route for anything that should appear on the published site.
