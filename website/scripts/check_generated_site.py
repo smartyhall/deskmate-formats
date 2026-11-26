@@ -4,6 +4,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 from __future__ import annotations
 
+import argparse
+import json
 import posixpath
 import sys
 from html.parser import HTMLParser
@@ -73,10 +75,85 @@ def check(root: Path, base: str) -> list[str]:
     return issues
 
 
+def check_baseline(root: Path, baseline: dict, *, capture: bool = False) -> list[str]:
+    """Check source-revision routes and recorded HTML anchors independently of links.
+
+    Capture is deliberately explicit and should be run against the pinned
+    pre-change build, never a changed build to silence a regression.
+    """
+    issues: list[str] = []
+    if baseline.get("schema_version") != 1:
+        return ["unsupported route baseline schema"]
+    status = baseline.get("anchor_status")
+    if status not in ("pending-rendered-baseline", "captured"):
+        return ["invalid route baseline anchor status"]
+    if capture and status != "pending-rendered-baseline":
+        return ["refusing to overwrite a captured anchor baseline"]
+    routes = baseline.get("routes")
+    if not isinstance(routes, list) or not routes:
+        return ["route baseline must contain routes"]
+    seen: set[str] = set()
+    for entry in routes:
+        if not isinstance(entry, dict):
+            issues.append("malformed baseline entry")
+            continue
+        route = entry.get("route")
+        if (not isinstance(route, str) or not route.startswith("/")
+                or not route.endswith("/") or "//" in route
+                or any(part in (".", "..") for part in route.split("/"))
+                or any(char in route for char in "\\?#%")):
+            issues.append(f"invalid baseline route: {route!r}")
+            continue
+        if route in seen:
+            issues.append(f"duplicate baseline route: {route}")
+            continue
+        seen.add(route)
+        expected = entry.get("anchors")
+        if expected is None and status == "captured":
+            issues.append(f"{route}: captured baseline has no anchor list")
+        if expected is not None and (
+            not isinstance(expected, list)
+            or not all(isinstance(a, str) and a for a in expected)
+            or len(set(expected)) != len(expected)
+        ):
+            issues.append(f"{route}: invalid baseline anchors")
+            continue
+        target = root / route.strip("/") / "index.html"
+        if not target.is_file():
+            issues.append(f"{route}: missing baseline route")
+            continue
+        parser = Document()
+        parser.feed(target.read_text(encoding="utf-8"))
+        if capture:
+            entry["anchors"] = sorted(parser.ids)
+        elif expected is not None:
+            for missing in sorted(set(expected) - parser.ids):
+                issues.append(f"{route}: missing baseline anchor #{missing}")
+    if capture and not issues:
+        baseline["anchor_status"] = "captured"
+    return issues
+
+
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        raise SystemExit("Usage: check_generated_site.py SITE_OUTPUT BASE_PATH")
-    failures = check(Path(sys.argv[1]), sys.argv[2])
+    cli = argparse.ArgumentParser(description=__doc__)
+    cli.add_argument("site_output", type=Path)
+    cli.add_argument("base_path")
+    cli.add_argument(
+        "--baseline", type=Path,
+        default=Path(__file__).resolve().parents[2] / "docs/site/published-route-baseline.json",
+    )
+    cli.add_argument("--capture-anchors", action="store_true",
+                     help="emit baseline JSON from the pinned pre-change build to stdout")
+    args = cli.parse_args()
+    baseline = json.loads(args.baseline.read_text(encoding="utf-8"))
+    failures = check_baseline(args.site_output, baseline, capture=args.capture_anchors)
+    if args.capture_anchors:
+        if not failures:
+            print(json.dumps(baseline, indent=2, ensure_ascii=False))
+    else:
+        if baseline["anchor_status"] == "pending-rendered-baseline":
+            print("Route baseline active; rendered anchor capture pending", file=sys.stderr)
+        failures.extend(check(args.site_output, args.base_path))
     for problem in failures:
         print(problem, file=sys.stderr)
     raise SystemExit(bool(failures))
