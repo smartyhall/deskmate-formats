@@ -1,0 +1,273 @@
+"""Synthetic probes for DOS executable structure and address mapping.
+
+Every specimen is generated here from a known description. No commercial
+binary, emulator, Ghidra installation or private lab path is required.
+"""
+import importlib.util
+import io
+import json
+import struct
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+
+spec = importlib.util.spec_from_file_location(
+    'inspect_dosimage', ROOT / 'tools/inspect_dosimage.py')
+probe = importlib.util.module_from_spec(spec)
+sys.path.insert(0, str(ROOT / 'src'))
+spec.loader.exec_module(probe)
+
+fixtures_spec = importlib.util.spec_from_file_location(
+    'dos_images', ROOT / 'tests/fixtures/synthetic/dos_images.py')
+fixtures = importlib.util.module_from_spec(fixtures_spec)
+fixtures_spec.loader.exec_module(fixtures)
+
+from deskmate_formats import dosimage  # noqa: E402
+
+
+class MzStructureTests(unittest.TestCase):
+    def setUp(self):
+        self.data, self.expected = fixtures.build_segmented_mz()
+        self.mz = dosimage.MzImage.parse(self.data)
+
+    def test_header_and_size_facts(self):
+        self.assertEqual(self.mz.header_bytes, self.expected['header_bytes'])
+        self.assertEqual(self.mz.declared_file_bytes, len(self.data))
+        self.assertEqual(self.mz.image_bytes, self.expected['image_bytes'])
+        self.assertEqual(self.mz.trailing_bytes, 0)
+        self.assertEqual(self.mz.entry_cs, self.expected['entry_cs'])
+        self.assertEqual(self.mz.entry_file_offset,
+                         self.expected['entry_file_offset'])
+
+    def test_relocation_site_versus_relocated_value(self):
+        self.assertEqual(len(self.mz.relocations), 2)
+        sites = [(r.segment, r.offset) for r in self.mz.relocations]
+        self.assertEqual(sorted(sites), sorted(self.expected['relocation_sites']))
+        self.assertEqual(sorted(self.mz.relocated_segments),
+                         sorted(self.expected['relocated_values']))
+        self.assertEqual(sorted(self.mz.relocation_site_segments), [0])
+        for record in self.mz.relocations:
+            self.assertEqual(record.file_offset,
+                             self.expected['header_bytes'] + record.image_offset)
+
+    def test_string_offset_is_reported_as_a_file_offset(self):
+        offset = self.expected['string_file_offset']
+        self.assertEqual(self.data[offset:offset + 5], b'DMDB\x00')
+
+    def test_far_pointer_resolution_requires_a_relocation(self):
+        relocated = self.mz.far_pointer_at(
+            self.data, self.expected['far_pointer_file_offset']
+        )
+        self.assertTrue(relocated.segment_relocated)
+        self.assertEqual(relocated.offset_word, 0xC000)
+        self.assertEqual(relocated.segment_word, 0x0010)
+        # 16 * 0010h + C000h, i.e. offset C000 in the second image segment.
+        self.assertEqual(relocated.resolved_image_offset, 0xC100)
+        self.assertIn('outside the stored image', relocated.resolution)
+
+        plain = self.mz.far_pointer_at(self.data, self.expected['header_bytes'] + 0x40)
+        self.assertFalse(plain.segment_relocated)
+        self.assertIsNone(plain.resolved_image_offset)
+        self.assertIn('no MZ relocation', plain.resolution)
+
+    def test_relocated_pair_outside_the_image_is_flagged_not_dereferenced(self):
+        pointer = self.mz.far_pointer_at(
+            self.data, self.expected['header_bytes'] + 0x32
+        )
+        self.assertTrue(pointer.segment_relocated)
+        self.assertEqual(pointer.segment_word, 0x0020)
+        self.assertIn('outside the stored image', pointer.resolution)
+        self.assertEqual(pointer.resolved_image_offset, 0x210)
+
+
+class CoordinateTests(unittest.TestCase):
+    def setUp(self):
+        self.data, _ = fixtures.build_segmented_mz()
+        self.mz = dosimage.MzImage.parse(self.data)
+
+    def test_file_image_and_linear_round_trip(self):
+        for file_offset in (0x40, 0x50, 0x140):
+            self.assertEqual(self.mz.image_to_file(self.mz.file_to_image(file_offset)),
+                             file_offset)
+            linear = self.mz.file_to_linear(file_offset, 0x2000)
+            self.assertEqual(self.mz.linear_to_file(linear, 0x2000), file_offset)
+
+    def test_load_segment_changes_the_linear_address(self):
+        a = self.mz.file_to_linear(0x40, 0x1000)
+        b = self.mz.file_to_linear(0x40, 0x2000)
+        self.assertEqual(b - a, 0x10000)
+
+    def test_linear_to_segment_offset_is_one_valid_labelling(self):
+        linear = (0x1234 << 4) + 0x0010
+        self.assertEqual(dosimage.linear_to_segment_offset(linear, 0x1234),
+                         (0x1234, 0x0010))
+        self.assertEqual(dosimage.linear_to_segment_offset(linear, 0x1230),
+                         (0x1230, 0x0050))
+        with self.assertRaises(dosimage.DosImageError):
+            dosimage.linear_to_segment_offset(linear, 0x2000)
+
+    def test_segment_offset_arithmetic_is_checked(self):
+        self.assertEqual(dosimage.segment_offset_to_linear(0x1000, 0x0010), 0x10010)
+        with self.assertRaises(dosimage.DosImageError):
+            dosimage.segment_offset_to_linear(0x10000, 0)
+        with self.assertRaises(dosimage.DosImageError):
+            dosimage.segment_offset_to_linear(0, 0x10000)
+
+    def test_offsets_outside_the_image_are_rejected(self):
+        with self.assertRaises(dosimage.DosImageError):
+            self.mz.file_to_image(0x10)
+        with self.assertRaises(dosimage.DosImageError):
+            self.mz.file_to_image(len(self.data))
+        with self.assertRaises(dosimage.DosImageError):
+            self.mz.linear_to_file(0x1000)
+
+
+class LoaderBlockTests(unittest.TestCase):
+    def setUp(self):
+        self.data, _ = fixtures.build_segmented_mz()
+        self.mz = dosimage.MzImage.parse(self.data)
+
+    def test_loader_segments_come_from_relocated_values(self):
+        self.assertEqual(self.mz.loader_segments(0x1000), [0x1000, 0x1010, 0x1020])
+
+    def test_blocks_cover_the_image_once(self):
+        blocks = self.mz.loader_blocks(self.data, 0x1000)
+        self.assertEqual(sum(b['size'] for b in blocks), self.mz.image_bytes)
+        self.assertEqual(blocks[0]['image_offset'], 0)
+        for previous, current in zip(blocks, blocks[1:]):
+            self.assertEqual(previous['image_offset'] + previous['size'],
+                             current['image_offset'])
+
+    def test_far_return_adjustment_moves_the_split_point(self):
+        blocks = self.mz.loader_blocks(self.data, 0x1000)
+        self.assertEqual([b['name'] for b in blocks], ['CODE_0', 'CODE_1'])
+        # Segment 0x1010 starts at image 0x100, whose first byte is CB.
+        self.assertEqual(blocks[1]['image_offset'], 0x101)
+        self.assertEqual(blocks[1]['start'], '1010:0001')
+        self.assertEqual(blocks[0]['size'], 0x101)
+
+    def test_segment_outside_the_stored_image_is_skipped(self):
+        # 0x1020 starts past the end of a 0x200-byte image.
+        blocks = self.mz.loader_blocks(self.data, 0x1000)
+        self.assertNotIn('1020:', ' '.join(b['start'] for b in blocks))
+
+    def test_block_model_is_independent_of_the_load_paragraph(self):
+        low = self.mz.loader_blocks(self.data, 0x1000)
+        high = self.mz.loader_blocks(self.data, 0x2000)
+        self.assertEqual([b['size'] for b in low], [b['size'] for b in high])
+        self.assertEqual(high[0]['start'], '2000:0000')
+
+
+class ComAndErrorTests(unittest.TestCase):
+    def test_com_origin_and_mapping(self):
+        image = dosimage.identify(fixtures.build_com(code=b'\xb4\x09\xcd\x21\xc3'))
+        self.assertEqual(image['format'], 'com')
+        self.assertEqual(image['entry_ip'], 0x100)
+        com = dosimage.ComImage.parse(b'\xb4\x09\xcd\x21\xc3')
+        self.assertEqual(com.file_to_linear(0, 0x1000), 0x10100)
+        self.assertEqual(com.linear_to_file(0x10100, 0x1000), 0)
+
+    def test_rejects_structurally_impossible_headers(self):
+        data, _ = fixtures.build_segmented_mz()
+        cases = [
+            b'',
+            b'NZ' + data[2:],
+            data[:8],
+        ]
+        for bad in cases:
+            with self.assertRaises(dosimage.DosImageError):
+                dosimage.MzImage.parse(bad)
+
+        zero_pages = bytearray(data)
+        struct.pack_into('<H', zero_pages, 4, 0)
+        with self.assertRaises(dosimage.DosImageError):
+            dosimage.MzImage.parse(bytes(zero_pages))
+
+        short_image = bytearray(data)
+        struct.pack_into('<H', short_image, 4, 1)
+        with self.assertRaises(dosimage.DosImageError):
+            dosimage.MzImage.parse(bytes(short_image))
+
+    def test_relocation_outside_image_is_rejected(self):
+        data, _ = fixtures.build_segmented_mz()
+        broken = bytearray(data)
+        struct.pack_into('<H', broken, 0x1E, 0xFFF0)  # site offset
+        with self.assertRaises(dosimage.DosImageError):
+            dosimage.MzImage.parse(bytes(broken))
+
+    def test_trailing_bytes_are_reported_not_interpreted(self):
+        data = fixtures.build_mz(
+            image=b'\x90' * 0x20, entry_cs=0, entry_ip=0, trailing=b'OVERLAY'
+        )
+        mz = dosimage.MzImage.parse(data)
+        self.assertEqual(mz.trailing_bytes, len(b'OVERLAY'))
+        describe = mz.describe()
+        self.assertIn('no runtime', describe['scope'])
+
+
+class CliTests(unittest.TestCase):
+    def setUp(self):
+        self.data, self.expected = fixtures.build_segmented_mz()
+        handle = tempfile.NamedTemporaryFile(delete=False, suffix='.EXE')
+        handle.write(self.data)
+        handle.close()
+        self.path = handle.name
+
+    def tearDown(self):
+        Path(self.path).unlink(missing_ok=True)
+
+    def run_cli(self, *argv):
+        buffer = io.StringIO()
+        import contextlib
+        with contextlib.redirect_stdout(buffer):
+            code = probe.main(list(argv))
+        return code, json.loads(buffer.getvalue())
+
+    def test_identify_reports_hash_and_scope(self):
+        code, payload = self.run_cli('identify', self.path)
+        self.assertEqual(code, 0)
+        self.assertEqual(payload['format'], 'mz')
+        self.assertEqual(payload['size'], len(self.data))
+        self.assertEqual(len(payload['sha256']), 64)
+        self.assertEqual(payload['relocation_count'],
+                         self.expected['relocation_count'])
+
+    def test_blocks_matches_the_model(self):
+        code, payload = self.run_cli('blocks', self.path, '--load-paragraph', '0x4000')
+        self.assertEqual(code, 0)
+        self.assertEqual(payload['block_total'], payload['image_bytes'])
+        self.assertEqual(payload['blocks'][0]['start'], '4000:0000')
+
+    def test_map_reports_every_coordinate_form(self):
+        code, payload = self.run_cli(
+            'map', self.path, '--file-offset', hex(self.expected['string_file_offset'])
+        )
+        self.assertEqual(code, 0)
+        entry = payload['coordinates'][0]
+        self.assertEqual(entry['image_offset'],
+                         self.expected['string_file_offset'] - self.expected['header_bytes'])
+        self.assertEqual(entry['linear'],
+                         (0x1000 << 4) + entry['image_offset'])
+
+    def test_far_command_marks_unrelocated_pointers(self):
+        code, payload = self.run_cli(
+            'far', self.path, '--offset', hex(self.expected['header_bytes'] + 0x40)
+        )
+        self.assertEqual(code, 0)
+        self.assertFalse(payload['segment_has_mz_relocation'])
+        self.assertIsNone(payload['resolved_file_offset'])
+
+    def test_errors_exit_nonzero_without_traceback(self):
+        import contextlib
+        buffer = io.StringIO()
+        with contextlib.redirect_stderr(buffer):
+            code = probe.main(['identify', str(ROOT / 'does-not-exist.bin')])
+        self.assertEqual(code, 2)
+        self.assertIn('error', json.loads(buffer.getvalue()))
+
+
+if __name__ == '__main__':
+    unittest.main()
