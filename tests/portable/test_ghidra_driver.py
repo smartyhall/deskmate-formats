@@ -56,7 +56,7 @@ class FakeWorker:
         self.stderr = stderr
         self.calls = []
 
-    def __call__(self, mode_args, timeout):
+    def __call__(self, mode_args, timeout, python=None):
         self.calls.append((list(mode_args), timeout))
         if '--import-worker' in mode_args:
             output = Path(mode_args[mode_args.index('--output') + 1])
@@ -215,7 +215,7 @@ class StatusPropagationTests(DriverTestCase):
         self.assertEqual(receipt['worker_exit_code'], 134)
 
     def test_timeout_terminates_the_worker_and_reports_the_project_as_unsafe(self):
-        def spawn(mode_args, timeout):
+        def spawn(mode_args, timeout, python=None):
             return driver.subprocess.TimeoutExpired(mode_args, timeout), True
 
         self.assertEqual(self.run_main(spawn), driver.EXIT_TIMEOUT)
