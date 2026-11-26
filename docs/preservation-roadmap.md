@@ -206,3 +206,15 @@ eventual migration cost. Do not treat it as an immediate reorganization
 assignment or a reason to divert the archive intelligence, typography, music,
 or other ongoing native-format work. Follow AGENTS.md and the current research
 handoff for operative authorization and priorities.
+
+## Infrastructure priority update — 2026-11-25
+
+The operator agreed that supplementary agent capacity makes a timely return
+to Supervisor development more practical. Follow the
+[revised Supervisor campaign direction](research/supervisor-next-campaign-20261125.md):
+audit the existing implementation, prioritize a useful deterministic task
+runner, and develop provider-neutral coordination around proven adapters.
+Freebuff integration and sustainable allowance remain qualification questions.
+Preserve the read-only Observatory boundary and existing live authorization
+gates. Do not interrupt the website implementation or treat this direction
+as an immediate repository split or live dispatch grant.
