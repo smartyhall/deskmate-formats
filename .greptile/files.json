@@ -1,0 +1,41 @@
+{
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "description": "Standing project evidence, execution, ownership and publication policies"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "description": "Independent review, contribution, campaign and verification requirements"
+    },
+    {
+      "path": "LICENSING.md",
+      "description": "Licensing and narrow publication grants"
+    },
+    {
+      "path": "docs/evidence/README.md",
+      "description": "Research evidence classifications and provenance",
+      "scope": [
+        "docs/**",
+        "tests/**",
+        "src/**"
+      ]
+    },
+    {
+      "path": "docs/architecture.md",
+      "description": "Current architecture and implementation boundaries",
+      "scope": [
+        "src/**",
+        "tools/**"
+      ]
+    },
+    {
+      "path": "docs/site/visual-assets.md",
+      "description": "Editorial visual evidence and asset provenance",
+      "scope": [
+        "website/**",
+        "docs/site/**"
+      ]
+    }
+  ]
+}

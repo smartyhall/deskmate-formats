@@ -1,0 +1,91 @@
+{
+  "effort": "base",
+  "autoReview": [],
+  "triggerOnDrafts": false,
+  "strictness": 2,
+  "commentTypes": [
+    "logic",
+    "syntax"
+  ],
+  "autoApprove": {
+    "enabled": false
+  },
+  "shouldUpdateDescription": false,
+  "updateSummaryOnly": false,
+  "statusCheck": true,
+  "statusCommentsEnabled": true,
+  "fixWithAI": false,
+  "sequenceDiagramSection": {
+    "included": false
+  },
+  "issuesTableSection": {
+    "included": true
+  },
+  "confidenceScoreSection": {
+    "included": true
+  },
+  "context": {
+    "repos": []
+  },
+  "instructions": "Advisory review only; follow AGENTS.md, CONTRIBUTING.md and LICENSING.md. Prioritize demonstrable correctness, evidence integrity, data preservation, security and actual authority boundaries. Report concrete file/line, consequence, evidence and a bounded correction or test. Distinguish confirmed defects from uncertainties. Do not assume a historical quirk is a defect, claim native tests ran, or recommend broad rewrites merely for style. Never request private lab inputs or treat review output as merge, execution, publication or paid-use authority.",
+  "rules": [
+    {
+      "id": "evidence-integrity",
+      "severity": "high",
+      "rule": "Flag claims of native acceptance or compatibility that exceed pinned version, actual observed behavior, hashes or cited primary evidence. Distinguish source/static findings, synthetic tests, native observations and hypotheses; do not infer shared layouts from superficial resemblance."
+    },
+    {
+      "id": "binary-fidelity",
+      "severity": "high",
+      "scope": [
+        "src/**",
+        "tests/**",
+        "tools/**",
+        "docs/formats/**",
+        "docs/containers/**"
+      ],
+      "rule": "Check bounds, length and offset arithmetic, malformed input, opaque/reserved bytes, index and record semantics, and preservation of originals. Check reader/writer symmetry and exact-source constraints; require independent regression evidence for widened support. Do not invent allocation, normalization or encoding semantics."
+    },
+    {
+      "id": "automation-boundaries",
+      "severity": "high",
+      "scope": [
+        "src/deskmate_formats/automation/**",
+        "src/deskmate_formats/observer/**",
+        "src/deskmate_formats/supervisor/**",
+        "tools/**",
+        "deployment/**",
+        "docs/research/**"
+      ],
+      "rule": "Distinguish acknowledged, delivered, guest-accepted and observed emulator input. Flag unsafe retry of uncertain mutations, missing deadlines/authentication, ownership violations, credential exposure or bypass of live-launch gates. Separate recoverable lab-local risk from host/external exposure."
+    },
+    {
+      "id": "publication-governance",
+      "severity": "high",
+      "rule": "Flag actual authorization changes, leakage of private evidence, unlicensed redistribution, missing provenance or inconsistent manifest/hash/REUSE declarations. Respect the existing narrow grants for synthetic fixtures and documentary images; do not recommend blocking eligible material merely for its native format. Do not weaken required portable checks or grant bots approval/merge authority."
+    },
+    {
+      "id": "portable-verification",
+      "severity": "high",
+      "scope": [
+        "src/**",
+        "tests/**",
+        "tools/**",
+        ".github/**",
+        "pyproject.toml",
+        "MANIFEST.in"
+      ],
+      "rule": "Check for independent regressions, synthetic versus native evidence, cross-platform behavior, deterministic failure paths and package exclusions. Public CI must not require a live emulator, commercial binaries, private lab evidence, AI services or paid calls."
+    },
+    {
+      "id": "reference-site",
+      "severity": "medium",
+      "scope": [
+        "website/**",
+        "docs/**",
+        "README.md"
+      ],
+      "rule": "Check substantive factual contradictions, broken navigation or source links, unsupported version claims, incorrect provenance/captions, and accessibility regressions. Cite evidence at the first substantive claim. Apply Oxford comma only to public-facing editorial prose, not historical quotations or internal logs. Avoid copyediting nitpicks."
+    }
+  ]
+}
