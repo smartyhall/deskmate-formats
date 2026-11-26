@@ -134,6 +134,23 @@ The same 41 errors appeared on both, so the difference is platform overhead,
 not a different test set. This is not a controlled benchmark and is recorded
 only as a durable observation.
 
+A later run of the same branch that passed every configuration gives the
+matching successful numbers, recorded here because they compare like with like
+and the failure-mode figures above do not:
+
+| Platform | Interpreter | Job wall time |
+| --- | --- | --- |
+| Linux | 3.13 | 2 m 09 s |
+| Linux | 3.14 | 2 m 16 s |
+| Windows | 3.13 | 9 m 07 s |
+| Windows | 3.14 | 8 m 21 s |
+
+Windows takes roughly four times as long on an identical, passing suite, and
+the two Windows figures reverse the interpreter ordering, so neither the
+platform ratio nor the interpreter difference should be read as a refined
+measurement. What the pair of runs does show is that the platform gap is in the
+suite's execution and not in the 41 shared failures.
+
 The full portable suite was again not run locally; the supervisor and observer
 subprocess tests exceed the local budget. Focused suites and CI carry the rest.
 
