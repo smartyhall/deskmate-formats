@@ -12,6 +12,9 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))
+from reference_route_baseline import check_baseline  # noqa: E402
+
 
 class Document(HTMLParser):
     def __init__(self) -> None:
@@ -75,65 +78,6 @@ def check(root: Path, base: str) -> list[str]:
     return issues
 
 
-def check_baseline(root: Path, baseline: dict, *, capture: bool = False) -> list[str]:
-    """Check source-revision routes and recorded HTML anchors independently of links.
-
-    Capture is deliberately explicit and should be run against the pinned
-    pre-change build, never a changed build to silence a regression.
-    """
-    issues: list[str] = []
-    if baseline.get("schema_version") != 1:
-        return ["unsupported route baseline schema"]
-    status = baseline.get("anchor_status")
-    if status not in ("pending-rendered-baseline", "captured"):
-        return ["invalid route baseline anchor status"]
-    if capture and status != "pending-rendered-baseline":
-        return ["refusing to overwrite a captured anchor baseline"]
-    routes = baseline.get("routes")
-    if not isinstance(routes, list) or not routes:
-        return ["route baseline must contain routes"]
-    seen: set[str] = set()
-    for entry in routes:
-        if not isinstance(entry, dict):
-            issues.append("malformed baseline entry")
-            continue
-        route = entry.get("route")
-        if (not isinstance(route, str) or not route.startswith("/")
-                or not route.endswith("/") or "//" in route
-                or any(part in (".", "..") for part in route.split("/"))
-                or any(char in route for char in "\\?#%")):
-            issues.append(f"invalid baseline route: {route!r}")
-            continue
-        if route in seen:
-            issues.append(f"duplicate baseline route: {route}")
-            continue
-        seen.add(route)
-        expected = entry.get("anchors")
-        if expected is None and status == "captured":
-            issues.append(f"{route}: captured baseline has no anchor list")
-        if expected is not None and (
-            not isinstance(expected, list)
-            or not all(isinstance(a, str) and a for a in expected)
-            or len(set(expected)) != len(expected)
-        ):
-            issues.append(f"{route}: invalid baseline anchors")
-            continue
-        target = root / route.strip("/") / "index.html"
-        if not target.is_file():
-            issues.append(f"{route}: missing baseline route")
-            continue
-        parser = Document()
-        parser.feed(target.read_text(encoding="utf-8"))
-        if capture:
-            entry["anchors"] = sorted(parser.ids)
-        elif expected is not None:
-            for missing in sorted(set(expected) - parser.ids):
-                issues.append(f"{route}: missing baseline anchor #{missing}")
-    if capture and not issues:
-        baseline["anchor_status"] = "captured"
-    return issues
-
-
 if __name__ == "__main__":
     cli = argparse.ArgumentParser(description=__doc__)
     cli.add_argument("site_output", type=Path)
@@ -142,18 +86,38 @@ if __name__ == "__main__":
         "--baseline", type=Path,
         default=Path(__file__).resolve().parents[2] / "docs/site/published-route-baseline.json",
     )
-    cli.add_argument("--capture-anchors", action="store_true",
-                     help="emit baseline JSON from the pinned pre-change build to stdout")
+    modes = cli.add_mutually_exclusive_group()
+    modes.add_argument("--capture-anchors", action="store_true")
+    modes.add_argument("--extend-baseline", action="store_true")
+    cli.add_argument("--source-revision")
+    cli.add_argument("--source-kind", choices=("verified-ci-artifact", "verified-local-build"))
+    cli.add_argument("--artifact-id", type=int)
+    cli.add_argument("--artifact-sha256")
+    cli.add_argument("--output", type=Path, help="write reviewed candidate JSON as UTF-8")
     args = cli.parse_args()
-    baseline = json.loads(args.baseline.read_text(encoding="utf-8"))
-    failures = check_baseline(args.site_output, baseline, capture=args.capture_anchors)
-    if args.capture_anchors:
-        if not failures:
-            print(json.dumps(baseline, indent=2, ensure_ascii=False))
-    else:
-        if baseline["anchor_status"] == "pending-rendered-baseline":
-            print("Route baseline active; rendered anchor capture pending", file=sys.stderr)
-        failures.extend(check(args.site_output, args.base_path))
+    try:
+        baseline = json.loads(args.baseline.read_text(encoding="utf-8"))
+        updating = args.capture_anchors or args.extend_baseline
+        failures = check_baseline(
+            args.site_output, baseline, capture=args.capture_anchors,
+            extend=args.extend_baseline, source_revision=args.source_revision,
+            source_kind=args.source_kind, artifact_id=args.artifact_id,
+            artifact_sha256=args.artifact_sha256,
+        )
+        if updating and not failures:
+            payload = json.dumps(baseline, indent=2, ensure_ascii=True) + "\n"
+            if args.output:
+                if args.output.resolve() == args.baseline.resolve():
+                    raise ValueError("write candidate to a separate file for review")
+                args.output.write_text(payload, encoding="utf-8")
+            else:
+                print(payload, end="")
+        elif not updating:
+            if isinstance(baseline, dict) and baseline.get("anchor_status") == "pending-rendered-baseline":
+                print("Route baseline active; rendered anchor capture pending", file=sys.stderr)
+            failures.extend(check(args.site_output, args.base_path))
+    except (OSError, UnicodeError, ValueError) as error:
+        failures = [f"Unable to read or process route baseline: {error}"]
     for problem in failures:
         print(problem, file=sys.stderr)
     raise SystemExit(bool(failures))
