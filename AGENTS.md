@@ -1,6 +1,8 @@
 # Standing research instructions
 
-## Multi-agent campaign governance — supplementary agent integration (2026-11-25)
+## Multi-agent campaign governance
+
+Operator direction: 2026-11-25.
 
 These standing instructions apply to every producing agent, including Codex,
 Freebuff, delegated subagents and future providers, regardless of client or
@@ -15,9 +17,23 @@ the general rules below supplement them, not expand their grants.
   checkout with the operator's knowledge; record HEAD/status before and
   after and flag concurrent changes. Never switch another campaign's branch,
   stage its files, reset its work or assume ignored files are unchanged.
+- Read access to project research resources is generally unrestricted,
+  including sibling worktrees, private project evidence, original media,
+  archives and lab documentation. No per-resource permission is necessary
+  for ordinary project research. Only an explicitly defined blinded
+  experimental sequence restricts access to relevant prior evidence; record
+  its rationale, exclusions and unblinding criteria. This does not authorize
+  reading unrelated personal data, authentication secrets or unrelated
+  accounts, sending private inputs outside the approved data boundary,
+  modifying resources, or publishing restricted material.
+- Changes to governance/authority require explicit operator approval and
+  independent review; no standing housekeeping grant authorizes their merge.
 - Before mutation, inspect worktree ownership, active campaigns and shared
   resources. Coordinate through the operator or a reviewed ownership/lease
-  mechanism. Isolate mutable builds, virtual environments, temporary files,
+  mechanism. Maintain a private machine-readable campaign registry with
+  campaign ID, owner, base SHA, branch, local path, reserved resources,
+  status and handoff/release; publish only sanitized summaries. A simple
+  operator-maintained record suffices until tooling is qualified. Isolate mutable builds, virtual environments, temporary files,
   logs and experimental outputs; Git worktrees are not OS sandboxes and
   still share refs/object storage. Never remove another worker's worktree
   or break an uncertain lock. Resolve conflicts by coordination, not force.
@@ -36,13 +52,13 @@ the general rules below supplement them, not expand their grants.
   delegated agents. Cross-agent reviews are useful but do not themselves
   confer merge authority. The operator or an explicitly authorized
   independent reviewer must review scope, provenance and passing checks.
-  The existing ChatGPT housekeeping merge grant for completed Codex PRs
-  remains unchanged; do not assume it extends to Freebuff or ChatGPT's own PRs.
+  The existing ChatGPT housekeeping merge grant is clarified as covering
+  completed Codex PRs only; do not assume it extends to Freebuff or ChatGPT's own PRs.
 - Record provider, model/effort if known, execution mode, campaign and
   checkpoint identity, evidence origin, tests, limitations and usage receipts
   at startup, meaningful checkpoints and completion/safe stop. Keep existing
   Codex receipts and tooling intact; use the provider-neutral receipt contract
-  in [the usage ledger](docs/evidence/codex-usage/README.md#supplementary-agent-receipts)
+  in [the usage ledger](docs/evidence/agent-usage/README.md)
   for other agents. Use null/unknown where telemetry is unavailable;
   never make extra paid calls or invent usage. Preserve sanitized receipts
   and independently checkable evidence before reporting completion.
@@ -127,7 +143,7 @@ Challenge scope drift: evidence, consequence, rollback, minimum control.
   Tandy, Radio Shack or third-party interface artwork. Unusual third-party
   works or unverified redistribution terms still deserve a focused review,
   but do not presume routine UI screenshots are categorically forbidden.
-  ChatGPT can independently review and merge eligible, passing PRs under the
+  ChatGPT can independently review and merge eligible, passing Codex PRs under the
   existing Codex housekeeping grant; no producing agent may merge its own PR.
 - Representative visual evidence in research pull requests (operator, 2026-11-21):
   Every research PR should include a small, **representative set of exemplar
