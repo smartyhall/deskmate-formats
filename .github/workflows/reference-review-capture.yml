@@ -1,0 +1,48 @@
+name: Reference review captures
+
+# Review screenshots are evidence about a rendering, not published assets, so
+# they are produced on demand and attached to the run as an artifact. Nothing is
+# committed to the repository and nothing is deployed.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install pinned direct dependencies
+        working-directory: website
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Build custom-domain root preview
+        working-directory: website
+        env:
+          SITE_BASE_PATH: /
+        run: npm run build
+      - name: Serve the built site on loopback
+        run: |
+          python -m http.server 8088 --bind 127.0.0.1 --directory website/_site &
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8088/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "static preview server did not answer on loopback" >&2
+          exit 1
+      - name: Capture desktop and phone renders
+        run: node website/scripts/capture_review.cjs --base http://127.0.0.1:8088 --out review-captures
+      - name: Upload review captures
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-review-captures
+          path: review-captures/
+          if-no-files-found: error
+          retention-days: 14

@@ -258,6 +258,8 @@ event edit or explicit save.
 * [Visible and unattended launch modes](docs/research/86box-visible-operation.md),
   [read-only browser observer](docs/research/86box-observer-design.md)
 * [Original guest canary: measured source, register, RAM and screen correspondence](docs/research/86box-guest-canary.md)
+* [Freebuff native 86Box and DeskMate interaction qualification](docs/research/freebuff-native-emulator-20261126.md),
+  a provider assessment with five native sessions, a reproduced Corkboard fixture and two tooling fixes
 * [Calendar specification](docs/formats/calendar/CALENDAR_FORMAT.md) with original
   evidence/confidence distinctions and historical experiment checkpoints retained
 * [Experimental method](docs/experiments/methodology.md), [Phase III-A](docs/experiments/phase-iii-a.md)

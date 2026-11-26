@@ -156,3 +156,11 @@ GitHub commenting and public PR submission are within the assigned campaign:
    inputs in review requests or replies. See the
    [qualification record](docs/research/coderabbit-review-qualification-20261126.md)
    for the current V3 limitations and reassessment plan.
+
+### Greptile advisory review
+
+For selective second reviews under the Starter allowance, follow the
+[Greptile qualification and credit runbook](docs/research/greptile-review-qualification-20261126.md).
+Do not treat reviewer feedback as evidence or merge authority, or trigger
+unallocated reviews. CodeRabbit and normal independent verification remain
+in place. This guidance does not enlarge any agent's authority.

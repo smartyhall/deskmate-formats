@@ -7,7 +7,7 @@
     "build": "eleventy --config=eleventy.config.cjs",
     "dev": "eleventy --serve --config=eleventy.config.cjs",
     "test": "node --test test/*.test.cjs",
-    "theme:sync": "python3 scripts/vendor_bootstra.py",
+    "theme:sync": "node scripts/run_python.cjs scripts/vendor_bootstra.py",
     "prebuild": "npm run theme:sync",
     "predev": "npm run theme:sync"
   },

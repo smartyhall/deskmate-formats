@@ -60,3 +60,42 @@
   .home-path-grid { display: block; }
   .home-path { break-inside: avoid; margin-bottom: 1rem; }
 }
+
+/* Reader-oriented navigation: breadcrumbs, contextual section list, role labels. */
+.breadcrumbs { margin-bottom: .75rem; font-size: .95em; }
+.breadcrumbs ol { list-style: none; display: flex; flex-wrap: wrap; gap: .35rem; padding: 0; margin: 0; }
+.breadcrumbs li + li::before { content: "›"; margin-right: .35rem; opacity: .7; }
+.sidebar-hub { font-weight: bold; margin-bottom: .5rem; }
+.sidebar-heading { margin-top: 1.5rem; font-weight: bold; }
+.sidebar-hubs { padding-inline-start: 1.25rem; }
+#reference-sections details { margin-block: .75rem; }
+.source-role { max-width: 95ch; }
+@media print { .breadcrumbs { display: none; } }
+
+/* Contents list for reports long enough to be read out of order. */
+.page-contents { border: 2px solid var(--bs-border-color, currentColor); padding: .75rem 1rem; margin-bottom: 1.5rem; }
+.page-contents-title { font-weight: bold; margin-bottom: .25rem; }
+.page-contents ol { margin-bottom: 0; }
+
+/*
+ * BOOTSTRA.386 marks focus by inverting the background, which works for links on
+ * the page background but not for the dark primary navigation or the sidebar
+ * summaries: those keep their own background, so keyboard focus had no visible
+ * cue. Keep a theme-colored indicator for keyboard users at every level.
+ */
+a:focus-visible,
+summary:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #ff5;
+  outline-offset: 2px;
+}
+
+/* The theme zeroes the outline on .nav-link:focus-visible; match that
+   specificity so the primary navigation keeps an indicator too. */
+nav.navbar a.nav-link:focus-visible {
+  outline: 2px solid #ff5;
+  outline-offset: 2px;
+}
