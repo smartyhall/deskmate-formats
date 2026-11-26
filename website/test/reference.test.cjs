@@ -159,3 +159,16 @@ test("discovery page and homepage honor non-root path deployment", () => {
     else process.env.SITE_BASE_PATH = previous;
   }
 });
+
+test("baseline page IDs retain their published routes", () => {
+  const baseline = JSON.parse(fs.readFileSync(
+    path.join(ROOT, "docs/site/published-route-baseline.json"), "utf8"
+  ));
+  assert.equal(baseline.schema_version, 1);
+  const byId = new Map(pages.map((page) => [page.id, "/" + page.slug + "/"]));
+  for (const entry of baseline.routes) {
+    if (entry.page_id !== null) {
+      assert.equal(byId.get(entry.page_id), entry.route, "Changed baseline route: " + entry.page_id);
+    }
+  }
+});

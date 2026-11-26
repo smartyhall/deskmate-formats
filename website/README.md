@@ -55,6 +55,32 @@ Pages settings, not through the Eleventy templates or the publishing workflow.
 With the custom-domain setting configured in GitHub's UI, an additional
 repository `CNAME` file is not necessary for the Actions-based build.
 
+## Navigation redesign and compatibility baseline
+
+See the [agreed implementation handoff](../docs/site/navigation-restructure.md).
+The existing generated-site audit now checks the
+[pre-redesign route inventory](../docs/site/published-route-baseline.json)
+as well as links and fragments. The original baseline was captured from
+GitHub Actions run 45312811457, artifact 14883254568, with its ZIP digest
+verified against GitHub metadata. The 334 content anchors on mapped
+document pages are enforced; Home and Search are route-only. Layout IDs
+are intentionally excluded from automatic capture.
+
+For a future additive update, verify the candidate build's exact source
+revision (checkout or CI artifact metadata and digest). Append reviewed
+new mapped routes to a separate candidate copy of the baseline with
+`anchors: []`, leaving all existing entries intact. Run:
+
+    python website/scripts/check_generated_site.py SITE_OUTPUT / --baseline candidate.json --extend-baseline --source-revision FULL_SHA --source-kind verified-local-build --output extended.json
+
+For a CI artifact use `--source-kind verified-ci-artifact --artifact-id ID
+--artifact-sha256 DIGEST`. The supplied revision and digest are caller
+attestations; verify them independently. The checker refuses missing old
+anchors, duplicate targets, and malformed routes. Review the UTF-8 output,
+including its capture history, before replacing the tracked baseline.
+Never use extension to remove entries. Initial `--capture-anchors` is
+restricted to a pending baseline at its pinned revision.
+
 ## Source and publication policy
 
 All rendered pages come from the reviewed

@@ -67,3 +67,29 @@ Inventory canonical source ownership, cross-repo links, downstream packages,
 fixture identifiers, versioned schemas, licensing and redirects. Create a
 reviewed migration plan; do not move current implementation sources, change
 packages or publish a site solely by virtue of this staging metadata.
+
+## Reader-oriented navigation (accepted direction, 2026-11-25)
+
+Follow the [navigation restructuring handoff](navigation-restructure.md).
+The target primary sections are DeskMate, File Formats, Recovery, Research,
+and Project, in that reading order. Each hub is a substantive introduction,
+annotated resource guide, and link to neighbouring hubs, not merely a list.
+Do not add primary sections just because the source corpus grows. Use
+subsection metadata and cross-links for application/release/evidence
+relationships. Keep internal planning accessible but subordinate. Retain
+source roles independently of reader navigation and use readable labels.
+
+Existing page IDs, routes and anchors are public compatibility contracts;
+section assignments must not dictate URL prefixes. The
+[baseline](published-route-baseline.json) protects the pre-redesign route set.
+The original rendered article-content anchors are captured from the pinned
+source revision; Home/Search are route-only and layout chrome is not pinned.
+Never refresh from a changed build merely to silence failures. Add new
+routes/anchors after reviewed publication. Deliberate retirement requires
+explicit review, an appropriate redirect or fragment alias, and a documented
+baseline edit; do not use additive capture to remove existing entries.
+Explain links to the source repository rather than automatically mapping all
+documents or pursuing a numerical coverage target. Continue to distinguish
+dated evidence from current specifications and apply the existing rights and
+image-review rules. Review actual desktop/mobile previews and no-JavaScript
+navigation before merging layout changes.

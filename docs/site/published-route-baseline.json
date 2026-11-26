@@ -1,0 +1,601 @@
+{
+  "schema_version": 1,
+  "source_revision": "a23197ac66aade3638a3178f9831f353252a2160",
+  "anchor_status": "captured",
+  "routes": [
+    {
+      "route": "/",
+      "page_id": null,
+      "anchors": []
+    },
+    {
+      "route": "/search/",
+      "page_id": null,
+      "anchors": []
+    },
+    {
+      "route": "/start/",
+      "page_id": "history.introduction",
+      "anchors": [
+        "a-desktop-instead-of-a-command-prompt",
+        "beyond-the-bundled-suite",
+        "discover-deskmate",
+        "from-the-first-tandy-1000-to-deskmate-3",
+        "historical-sources-and-picture-notes",
+        "what-could-you-do-with-it",
+        "where-to-go-next",
+        "why-preserve-deskmate"
+      ]
+    },
+    {
+      "route": "/planning/overview/",
+      "page_id": "site.overview",
+      "anchors": [
+        "current-presentation-and-delivery",
+        "current-safety-boundary",
+        "reference-navigation-and-ongoing-coverage",
+        "reference-site-source-map-and-editorial-planning",
+        "validation",
+        "what-is-here"
+      ]
+    },
+    {
+      "route": "/planning/authoring/",
+      "page_id": "site.authoring",
+      "anchors": [
+        "before-a-repository-split",
+        "evidence-and-references",
+        "interface-and-media",
+        "portable-text-and-urls",
+        "reference-authoring-and-migration-conventions",
+        "source-roles-and-page-identifiers"
+      ]
+    },
+    {
+      "route": "/planning/core-formats/",
+      "page_id": "site.workplan",
+      "anchors": [
+        "controlled-comparison-backlog",
+        "core-format-and-application-recovery-workplan",
+        "documentation-completion-rule",
+        "other-deskmate-software-one-comparable-questionnaire",
+        "shared-infrastructure-is-a-hypothesis-to-test"
+      ]
+    },
+    {
+      "route": "/planning/visual-assets/",
+      "page_id": "site.visual-workflow",
+      "anchors": [
+        "a-useful-deskmate-derived-design-system",
+        "atlas-coverage-to-measure",
+        "inventory-already-established",
+        "ready-for-publication-checklist",
+        "representative-images-in-research-pull-requests",
+        "selection-and-future-site-asset-contract",
+        "visual-atlas-and-publication-workflow"
+      ]
+    },
+    {
+      "route": "/system/architecture/",
+      "page_id": "system.architecture",
+      "anchors": [
+        "agent-activity-and-task-authority",
+        "architecture-and-scope-boundaries",
+        "corkboard-text-versus-indexed-application-databases",
+        "emulator-observation"
+      ]
+    },
+    {
+      "route": "/system/tandy-crosswalk/",
+      "page_id": "system.manufacturer-crosswalk",
+      "anchors": [
+        "cross-application-interfaces",
+        "guide-map",
+        "important-discrepancies-and-boundaries",
+        "operating-procedure-for-codex",
+        "tandy-appendix-a-format-evidence-crosswalk"
+      ]
+    },
+    {
+      "route": "/system/page-setup/",
+      "page_id": "system.page-setup",
+      "anchors": [
+        "header-layout-zero-based-file-offsets",
+        "pgsetup-layout-18-one-byte-members",
+        "tandy-appendix-a-common-page-setup-header",
+        "validation-questions"
+      ]
+    },
+    {
+      "route": "/system/database-components/",
+      "page_id": "system.database-study",
+      "anchors": [
+        "bounded-static-examination-of-database-components",
+        "evidence-boundary",
+        "metadata-data-references",
+        "module-relationships-observation-versus-call-evidence",
+        "pcl-resource-directories-a-useful-negative-result",
+        "what-the-files-contain"
+      ]
+    },
+    {
+      "route": "/formats/print-companion/",
+      "page_id": "formats.print-companion",
+      "anchors": [
+        "print-companion-document-observations"
+      ]
+    },
+    {
+      "route": "/formats/corkboard/",
+      "page_id": "formats.corkboard",
+      "anchors": [
+        "clear-residual-bytes-and-recovery",
+        "compatibility-and-limits",
+        "deskmate-note-pad-and-corkboard-read-only-file-format-reference",
+        "identification-and-editions",
+        "measured-binary-layout"
+      ]
+    },
+    {
+      "route": "/formats/calendar/",
+      "page_id": "formats.calendar",
+      "anchors": [
+        "actual-physical-layout-and-hypotheses",
+        "application-procedure-and-preserved-evidence",
+        "application-verification-and-roundtrip",
+        "appointment-record-and-framing",
+        "bounded-interpretation-and-identity-implications",
+        "bounded-interpretation-relative-to-e11e13",
+        "complete-byte-comparison",
+        "complete-e10-e11-comparison",
+        "complete-e12-e13-comparison",
+        "conclusions-and-bounds",
+        "controlled-deletion-and-visual-evidence",
+        "controlled-edit-and-provenance",
+        "controlled-edit-and-visual-evidence",
+        "controlled-ui-edit-and-evidence",
+        "deskmate-305-calendar-initial-personalcln-specification",
+        "e03-isolated-start-time-edit",
+        "e04-isolated-end-time-edit",
+        "e05-isolated-date-edit-with-both-days-verified",
+        "e06-month-boundary-prediction-test",
+        "e07-isolated-year-edit",
+        "e08-decoder-feasibility-update",
+        "e08-second-appointment-and-index-enumeration",
+        "e09-deletion-of-trailing-beta456-appointment",
+        "e10-same-sized-replacement-record-reuse",
+        "e11-non-trailing-description-growth-and-relocation",
+        "e12-physically-interior-deletion-compaction-and-reassigned-id",
+        "e13-description-shrinkage-and-exact-binary-restoration",
+        "e14-physically-non-trailing-shrinkage-preserves-ids-and-compacts-the-following-row",
+        "e15-observed-first-extra-personal-data-page-2026-10-31",
+        "e16-deletion-leaves-a-retained-unindexed-page-6-row-2026-10-31",
+        "e17-insertion-after-the-retained-page-6-tombstone-observed-2026-11-01",
+        "e19-first-page-six-pressure-transition-observed-2026-11-01",
+        "embedded-column-definitions",
+        "evidence-and-provenance",
+        "exact-comparisons-and-the-extra-e02-byte",
+        "exact-sample-and-insertion-order",
+        "exhaustive-binary-comparison",
+        "exhaustive-e11-e14-comparison",
+        "existing-parser-and-regression-results",
+        "existing-parser-verification-and-regression",
+        "experimental-writer-reconstruction-2026-10-31",
+        "experimentally-supported-datetime-formulas",
+        "file-organization",
+        "final-automated-verification",
+        "independent-e07-and-e09-restoration-checks",
+        "independent-e07-e09-comparison",
+        "independent-e08-e09-comparison",
+        "independent-e08-e10-replacement-comparison",
+        "independent-e09-e10-allocation-comparison",
+        "independent-report-verification",
+        "independent-revalidation-2026-10-30",
+        "index-and-counters",
+        "initial-read-only-parser-implementation-and-validation",
+        "interpretation-bounded-to-this-deletion",
+        "interpretation-what-shrinkage-does-and-does-not-prove",
+        "next-experiment-e15-proposed-only-after-phase-iii-a",
+        "observed-physical-records-logical-events-and-index-entries",
+        "observed-record-and-index-maintenance",
+        "parser-and-automated-validation",
+        "parser-and-preservation-verification",
+        "parser-and-regression-verification",
+        "parser-tests-and-preservation-verification",
+        "phase-iii-a-bounded-multi-record-generation-and-deskmate-validation",
+        "phase-iii-a-bounded-multi-record-writer-and-application-acceptance-2026-10-31",
+        "procedure-and-visual-evidence",
+        "procedure-and-visual-evidence-1",
+        "proposed-e15-writer-prepared-page-boundary-application-owned-allocation",
+        "protected-and-alarm",
+        "read-only-decoder-feasibility-historical-assessment-before-implementation",
+        "record-index-and-metadata-results",
+        "reproduction-and-unresolved-questions",
+        "what-this-confirms-and-what-remains-a-hypothesis"
+      ]
+    },
+    {
+      "route": "/formats/address-book/",
+      "page_id": "formats.address-book",
+      "anchors": [
+        "config",
+        "data",
+        "names",
+        "tandy-appendix-a-address-book-phone-list",
+        "text-interoperation",
+        "verification-boundaries"
+      ]
+    },
+    {
+      "route": "/formats/filer/",
+      "page_id": "formats.filer",
+      "anchors": [
+        "context-sensitive-formatting",
+        "data-and-sorting",
+        "graphics-encoding-reference",
+        "item-type-codes-type",
+        "layouts-documented-13-column-semantics",
+        "table-families-and-the-counting-caveat",
+        "tandy-appendix-a-filer-form-setup-file-format-reference"
+      ]
+    },
+    {
+      "route": "/formats/text/",
+      "page_id": "formats.text",
+      "anchors": [
+        "documented-controls",
+        "dynamic-fields",
+        "embedded-draw-picture",
+        "headers-and-footers",
+        "paragraph-margins",
+        "reader-development-and-minimum-regression-corpus",
+        "tandy-appendix-a-deskmate-text-format",
+        "two-stream-profiles"
+      ]
+    },
+    {
+      "route": "/formats/draw/",
+      "page_id": "formats.draw",
+      "anchors": [
+        "native-test-matrix",
+        "outer-file-layout",
+        "palette",
+        "related-representations",
+        "tandy-appendix-a-deskmate-draw-format"
+      ]
+    },
+    {
+      "route": "/formats/worksheet/",
+      "page_id": "formats.worksheet",
+      "anchors": [
+        "cell-record-layouts",
+        "documented-outer-structure",
+        "original-validation-questions",
+        "string-pool",
+        "tandy-appendix-a-deskmate-worksheet-format",
+        "toplist-member-semantics"
+      ]
+    },
+    {
+      "route": "/formats/sound-research/",
+      "page_id": "formats.sound-research",
+      "anchors": [
+        "container-grammar",
+        "deskmate-sound-containers-and-pcm",
+        "emulated-playback",
+        "music-and-speech-compression",
+        "native-recording-and-instrument-differentials",
+        "next-sampled-playback-controls",
+        "reader-and-export",
+        "sources-and-laboratory",
+        "synthetic-pcm-round-trip"
+      ]
+    },
+    {
+      "route": "/formats/music-research/",
+      "page_id": "formats.music-research",
+      "anchors": [
+        "container-and-event-representation",
+        "controlled-native-notation",
+        "deskmate-music-score-streams",
+        "instrument-lookup",
+        "midi-and-workbench",
+        "next-music-controls"
+      ]
+    },
+    {
+      "route": "/applications/note-pad-corkboard/",
+      "page_id": "applications.note-pad-corkboard",
+      "anchors": [
+        "home-organizer-different-jobs-different-records",
+        "note-pad-corkboard-and-information-center-one-note-across-editions",
+        "other-native-states",
+        "the-note-is-not-the-message-database",
+        "three-ways-to-leave-a-note"
+      ]
+    },
+    {
+      "route": "/applications/inventory/",
+      "page_id": "applications.inventory",
+      "anchors": [
+        "application-and-format-coverage",
+        "common-controls-and-alerts",
+        "corkboard-and-home-organizer",
+        "deskmate-format-inventory",
+        "desktop-and-launcher"
+      ]
+    },
+    {
+      "route": "/applications/ecosystem/",
+      "page_id": "applications.ecosystem",
+      "anchors": [
+        "deskmate-ecosystem-catalog-and-recovery-roadmap",
+        "express-publisher-100-native-interface",
+        "initial-sources-and-priorities",
+        "publication",
+        "scope-and-evidence"
+      ]
+    },
+    {
+      "route": "/applications/ecosystem/tvdog-index-review/",
+      "page_id": "applications.tvdog-index-review",
+      "anchors": [
+        "five-companion-media-confirmations",
+        "new-catalog-entries",
+        "open-verification-questions",
+        "tvdog-descriptive-directory-index-review",
+        "validation-record"
+      ]
+    },
+    {
+      "route": "/applications/ecosystem/acquisition-gaps/",
+      "page_id": "applications.acquisition-gaps",
+      "anchors": [
+        "1-verified-private-media",
+        "2-preserved-media-awaiting-definitive-identification",
+        "3-known-external-acquisition-sources",
+        "4-historically-documented-titles-without-verified-media",
+        "deskmate-acquisition-gaps"
+      ]
+    },
+    {
+      "route": "/research/filer/",
+      "page_id": "research.filer",
+      "anchors": [
+        "baselines-and-menu-availability",
+        "deskmate-305-filer-native-records",
+        "independent-native-schema-and-reader",
+        "native-carmaint-mutation-sequence",
+        "storage-behavior"
+      ]
+    },
+    {
+      "route": "/research/corkboard/",
+      "page_id": "research.corkboard",
+      "anchors": [
+        "corkboard-information-center-and-financial-notebook-2026-11-23",
+        "corkboard-storage",
+        "cross-release-writes",
+        "financial-notebook-and-collections",
+        "information-center-middle-row-removal",
+        "release-survey",
+        "reproduction-and-follow-up",
+        "rsx-write-and-cold-reopen-trial",
+        "shared-database-framing",
+        "static-dmdb-comparison"
+      ]
+    },
+    {
+      "route": "/research/print-companion/",
+      "page_id": "research.print-companion",
+      "anchors": [
+        "document-storage",
+        "native-application-survey",
+        "pdf-reconstructed-from-the-ibm-stream",
+        "print-companion-and-native-printing-on-the-tandy-1000-rsx",
+        "printer-setup-and-isolated-capture",
+        "shared-printing-and-next-experiments",
+        "two-print-streams-from-one-card"
+      ]
+    },
+    {
+      "route": "/research/text/",
+      "page_id": "research.text",
+      "anchors": [
+        "deskmate-305-text-native-documents",
+        "measured-byte-structure",
+        "native-corpus",
+        "read-independently"
+      ]
+    },
+    {
+      "route": "/research/draw/",
+      "page_id": "research.draw",
+      "anchors": [
+        "draw-native-controls-and-file-layout",
+        "draw-pictures-in-text",
+        "form-setup-graphics-and-database-storage",
+        "native-deskmate-draw-text-and-filer-graphics",
+        "readers-and-usage",
+        "recurring-visual-comparisons-and-classic-workbench",
+        "reproduction-and-evidence-scope",
+        "shared-form-payload",
+        "shipped-carmaint-and-invntory",
+        "static-checks-and-drawlist"
+      ]
+    },
+    {
+      "route": "/research/worksheet/",
+      "page_id": "research.worksheet",
+      "anchors": [
+        "cell-records-and-strings",
+        "deskmate-305-native-worksheet-format",
+        "file-layout",
+        "inspect-a-worksheet",
+        "native-controls",
+        "native-corpus",
+        "numbers-formulas-and-inputs",
+        "reproduction"
+      ]
+    },
+    {
+      "route": "/evidence/visual-inventory/",
+      "page_id": "evidence.visual-catalog",
+      "anchors": [
+        "expanded-pass",
+        "first-private-visual-evidence-inventory",
+        "repeat-the-inventory",
+        "visually-reviewed-exemplars"
+      ]
+    },
+    {
+      "route": "/evidence/visual-policy/",
+      "page_id": "evidence.visual-policy",
+      "anchors": [
+        "classification-and-exemplars",
+        "outputs-and-acceptance",
+        "private-inventory",
+        "publication-boundary",
+        "scheduling-and-scope",
+        "standing-secondary-workstream-visual-evidence-curation"
+      ]
+    },
+    {
+      "route": "/recovery/workbench/",
+      "page_id": "recovery.workbench",
+      "anchors": [
+        "bundle-and-verification",
+        "collections",
+        "deskmate-preservation-workbench",
+        "exports-and-evidence-limits",
+        "reproduce-the-native-demo",
+        "use"
+      ]
+    },
+    {
+      "route": "/project/roadmap/",
+      "page_id": "project.roadmap",
+      "anchors": [
+        "1-general-purpose-emulated-research-platform",
+        "2-general-purpose-archival-research-toolkit",
+        "3-independent-deskmate-and-tandy-reference-knowledge-base",
+        "4-core-deskmate-format-and-preservation-software",
+        "5-adjacent-and-third-party-format-implementations",
+        "6-optional-umbrella-organization",
+        "intended-component-boundaries",
+        "long-term-preservation-ecosystem-roadmap",
+        "migration-sequence-and-readiness-criteria",
+        "standing-direction-for-current-campaigns",
+        "visual-direction-explicit-operator-preference"
+      ]
+    },
+    {
+      "route": "/installation/",
+      "page_id": "applications.installations",
+      "anchors": [
+        "deskmate-installation-media-by-release",
+        "native-comparisons-and-open-coverage",
+        "scope-and-compatibility",
+        "version-and-installation-media-comparison"
+      ]
+    },
+    {
+      "route": "/installation/evolution-atlas/",
+      "page_id": "applications.evolution-atlas",
+      "anchors": [
+        "about-dialog",
+        "america-online-on-the-rsx",
+        "comparing-the-two-305-desktops",
+        "continuation",
+        "corkboard-and-note-pad",
+        "deskmate-evolution-atlas",
+        "generic-deskmate-3",
+        "machine-specific-deskmate-3",
+        "native-observation-procedure",
+        "original-deskmate-and-deskmate-ii",
+        "personal-deskmate",
+        "reading-the-atlas",
+        "rl-cookbook-on-the-sl2-runtime",
+        "rlx-hd-b-media-on-a-related-machine",
+        "rsx-household-applications",
+        "rsx-oem-desktop",
+        "sl2-program-disks",
+        "sl2-rom-desktop",
+        "thesaurus-in-text"
+      ]
+    },
+    {
+      "route": "/applications/automatic-house-x10/",
+      "page_id": "applications.automatic-house-x10",
+      "anchors": [
+        "automatic-house-on-the-rsx",
+        "automatic-house-plug-n-power-and-the-cp290",
+        "building-a-room-and-a-schedule",
+        "building-a-routine",
+        "cp290-protocol-documentation",
+        "floor-plan-routine-maker-and-scheduler",
+        "next-experiments",
+        "observed-cp290-serial-exchange",
+        "oem-file-comparison",
+        "period-software-and-hardware-identification",
+        "teach-me",
+        "why-this-lead-matters"
+      ]
+    },
+    {
+      "route": "/installation/deskmate-303/",
+      "page_id": "applications.installation-303",
+      "anchors": [
+        "finish-and-verify-the-reboot",
+        "install-deskmate-30301-on-a-dos-pc",
+        "launch-and-verify",
+        "prepare-the-four-installation-disks",
+        "requirements-and-preparation",
+        "set-the-destination-and-change-disks",
+        "start-the-installer",
+        "troubleshooting-and-evidence-limits"
+      ]
+    },
+    {
+      "route": "/installation/deskmate-303-305/",
+      "page_id": "applications.comparison-303-305",
+      "anchors": [
+        "address-book",
+        "calendar",
+        "cross-version-opening-and-saving",
+        "deskmate-302-stretch-experiment",
+        "deskmate-30301-and-305-native-comparison",
+        "desktop-menus-and-dialogs",
+        "installation-and-controls",
+        "outstanding-tests",
+        "published-samples-and-visual-provenance",
+        "text-and-file-dialogs"
+      ]
+    },
+    {
+      "route": "/installation/deskmate-305/",
+      "page_id": "applications.installation-305",
+      "anchors": [
+        "choose-the-printer-and-finish",
+        "identify-the-five-disk-set",
+        "install-deskmate-305-on-a-dos-pc",
+        "launch-and-verify",
+        "requirements-and-preparation",
+        "set-the-destination-and-change-disks",
+        "start-the-installer",
+        "troubleshooting-and-evidence-limits",
+        "verify-the-installed-configuration"
+      ]
+    }
+  ],
+  "capture_history": [
+    {
+      "source_revision": "a23197ac66aade3638a3178f9831f353252a2160",
+      "source_kind": "verified-ci-artifact",
+      "captured_at": "2026-11-26T05:24:00Z",
+      "artifact_id": 14883254568,
+      "artifact_sha256": "80b9fdf94e401bc6fbfb5a775b54247a597987e9faf291e5e49a4f9ff37c9bb7",
+      "workflow_run_id": 45312811457
+    }
+  ]
+}

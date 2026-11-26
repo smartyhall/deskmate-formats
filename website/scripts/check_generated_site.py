@@ -4,11 +4,16 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 from __future__ import annotations
 
+import argparse
+import json
 import posixpath
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))
+from reference_route_baseline import check_baseline  # noqa: E402
 
 
 class Document(HTMLParser):
@@ -74,9 +79,45 @@ def check(root: Path, base: str) -> list[str]:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        raise SystemExit("Usage: check_generated_site.py SITE_OUTPUT BASE_PATH")
-    failures = check(Path(sys.argv[1]), sys.argv[2])
+    cli = argparse.ArgumentParser(description=__doc__)
+    cli.add_argument("site_output", type=Path)
+    cli.add_argument("base_path")
+    cli.add_argument(
+        "--baseline", type=Path,
+        default=Path(__file__).resolve().parents[2] / "docs/site/published-route-baseline.json",
+    )
+    modes = cli.add_mutually_exclusive_group()
+    modes.add_argument("--capture-anchors", action="store_true")
+    modes.add_argument("--extend-baseline", action="store_true")
+    cli.add_argument("--source-revision")
+    cli.add_argument("--source-kind", choices=("verified-ci-artifact", "verified-local-build"))
+    cli.add_argument("--artifact-id", type=int)
+    cli.add_argument("--artifact-sha256")
+    cli.add_argument("--output", type=Path, help="write reviewed candidate JSON as UTF-8")
+    args = cli.parse_args()
+    try:
+        baseline = json.loads(args.baseline.read_text(encoding="utf-8"))
+        updating = args.capture_anchors or args.extend_baseline
+        failures = check_baseline(
+            args.site_output, baseline, capture=args.capture_anchors,
+            extend=args.extend_baseline, source_revision=args.source_revision,
+            source_kind=args.source_kind, artifact_id=args.artifact_id,
+            artifact_sha256=args.artifact_sha256,
+        )
+        if updating and not failures:
+            payload = json.dumps(baseline, indent=2, ensure_ascii=True) + "\n"
+            if args.output:
+                if args.output.resolve() == args.baseline.resolve():
+                    raise ValueError("write candidate to a separate file for review")
+                args.output.write_text(payload, encoding="utf-8")
+            else:
+                print(payload, end="")
+        elif not updating:
+            if isinstance(baseline, dict) and baseline.get("anchor_status") == "pending-rendered-baseline":
+                print("Route baseline active; rendered anchor capture pending", file=sys.stderr)
+            failures.extend(check(args.site_output, args.base_path))
+    except (OSError, UnicodeError, ValueError) as error:
+        failures = [f"Unable to read or process route baseline: {error}"]
     for problem in failures:
         print(problem, file=sys.stderr)
     raise SystemExit(bool(failures))

@@ -9,6 +9,7 @@ on:
       - "website/**"
       - "docs/**"
       - "tools/check_reference_pages.py"
+      - "tools/reference_route_baseline.py"
       - ".github/workflows/reference-publish.yml"
   workflow_dispatch:
 

@@ -30,6 +30,15 @@ is a dated snapshot. The [compatibility matrix](../compatibility.md) describes
 currently supported implementation boundaries. These three source roles must
 not be silently conflated by a site builder.
 
+## Reference navigation redesign
+
+The operator accepted the [navigation and editorial restructuring plan](navigation-restructure.md)
+on 2026-11-25. It defines the future five reader-oriented hubs and phased
+implementation, with a [route preservation baseline](published-route-baseline.json).
+The current layout remains in use until the corresponding changes are
+reviewed and deployed. The older topical list below describes coverage,
+not the intended top-level navigation.
+
 ## Reference navigation and ongoing coverage
 
 1. System architecture and common services.
