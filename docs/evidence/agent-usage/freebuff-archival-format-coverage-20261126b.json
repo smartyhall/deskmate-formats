@@ -32,6 +32,7 @@
   "checkpoint_status": "complete-for-scope",
   "scope_completed": [
     "TeleDisk header CRC-16 convention resolved against three genuine images",
+    "TeleDisk RLE and repeat-pattern block conventions confirmed by 785 genuine sectors",
     "TeleDisk identification defect found and corrected, with the volume-set byte documented",
     "Three genuine ImageDisk images parsed with zero unknown sector statuses",
     "Sector placement corroborated by boot-record content in two genuine images",

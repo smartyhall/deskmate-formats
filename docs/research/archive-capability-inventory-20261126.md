@@ -354,6 +354,30 @@ than about our uncertainty. The three 12-byte headers are embedded in the
 portable tests as structural vectors, so the convention is regression-tested
 without shipping any specimen.
 
+## TeleDisk RLE and repeat-pattern conventions: resolved
+
+The previous checkpoint also listed the RLE block length as unconfirmed. The
+genuine specimens settle it, because both compressed sector methods are used by
+real data rather than only by fixtures: 359 sectors use the RLE method and 426
+use the repeated-pattern method across the two ordinary images.
+
+Two independent facts support the convention. First, every one of those 785
+sectors decodes to exactly its declared sector size, and the decoder rejects
+both undershoot and overshoot, so a wrong block length would have to overshoot
+or fall short. Second, the very first RLE block of the DOS 2.11 image is
+`00 1b` followed by 27 literal bytes beginning `E9 83 00 5A 44 53`, which is
+the boot record at the offset the disk layout predicts. A zero flag therefore
+introduces a literal block whose length is the following byte, and a non-zero
+flag introduces a block of `flag * 2` bytes repeated the number of times given
+by the next byte. The repeat-pattern method is confirmed the same way: a block
+of `00 01 f6 f6` fills an entire 512-byte sector with `0xF6`.
+
+Exact length is necessary rather than sufficient, and disk data is highly
+repetitive, so a coincidence is not formally excluded. What can be said is
+that the reading of both methods is consistent with 785 genuine sectors and
+with a known boot record recovered at its expected offset, which is far
+stronger than the published notes alone.
+
 ## Identification defect found by the specimens
 
 The previous rule required `data[3] == (data[0] + data[1] + data[2]) & 0xFF`,
