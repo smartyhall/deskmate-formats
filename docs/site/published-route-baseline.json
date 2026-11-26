@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "source_revision": "a23197ac66aade3638a3178f9831f353252a2160",
+  "anchor_status": "pending-rendered-baseline",
+  "routes": [
+    {
+      "route": "/",
+      "page_id": null,
+      "anchors": null
+    },
+    {
+      "route": "/search/",
+      "page_id": null,
+      "anchors": null
+    },
+    {
+      "route": "/start/",
+      "page_id": "history.introduction",
+      "anchors": null
+    },
+    {
+      "route": "/planning/overview/",
+      "page_id": "site.overview",
+      "anchors": null
+    },
+    {
+      "route": "/planning/authoring/",
+      "page_id": "site.authoring",
+      "anchors": null
+    },
+    {
+      "route": "/planning/core-formats/",
+      "page_id": "site.workplan",
+      "anchors": null
+    },
+    {
+      "route": "/planning/visual-assets/",
+      "page_id": "site.visual-workflow",
+      "anchors": null
+    },
+    {
+      "route": "/system/architecture/",
+      "page_id": "system.architecture",
+      "anchors": null
+    },
+    {
+      "route": "/system/tandy-crosswalk/",
+      "page_id": "system.manufacturer-crosswalk",
+      "anchors": null
+    },
+    {
+      "route": "/system/page-setup/",
+      "page_id": "system.page-setup",
+      "anchors": null
+    },
+    {
+      "route": "/system/database-components/",
+      "page_id": "system.database-study",
+      "anchors": null
+    },
+    {
+      "route": "/formats/print-companion/",
+      "page_id": "formats.print-companion",
+      "anchors": null
+    },
+    {
+      "route": "/formats/corkboard/",
+      "page_id": "formats.corkboard",
+      "anchors": null
+    },
+    {
+      "route": "/formats/calendar/",
+      "page_id": "formats.calendar",
+      "anchors": null
+    },
+    {
+      "route": "/formats/address-book/",
+      "page_id": "formats.address-book",
+      "anchors": null
+    },
+    {
+      "route": "/formats/filer/",
+      "page_id": "formats.filer",
+      "anchors": null
+    },
+    {
+      "route": "/formats/text/",
+      "page_id": "formats.text",
+      "anchors": null
+    },
+    {
+      "route": "/formats/draw/",
+      "page_id": "formats.draw",
+      "anchors": null
+    },
+    {
+      "route": "/formats/worksheet/",
+      "page_id": "formats.worksheet",
+      "anchors": null
+    },
+    {
+      "route": "/formats/sound-research/",
+      "page_id": "formats.sound-research",
+      "anchors": null
+    },
+    {
+      "route": "/formats/music-research/",
+      "page_id": "formats.music-research",
+      "anchors": null
+    },
+    {
+      "route": "/applications/note-pad-corkboard/",
+      "page_id": "applications.note-pad-corkboard",
+      "anchors": null
+    },
+    {
+      "route": "/applications/inventory/",
+      "page_id": "applications.inventory",
+      "anchors": null
+    },
+    {
+      "route": "/applications/ecosystem/",
+      "page_id": "applications.ecosystem",
+      "anchors": null
+    },
+    {
+      "route": "/applications/ecosystem/tvdog-index-review/",
+      "page_id": "applications.tvdog-index-review",
+      "anchors": null
+    },
+    {
+      "route": "/applications/ecosystem/acquisition-gaps/",
+      "page_id": "applications.acquisition-gaps",
+      "anchors": null
+    },
+    {
+      "route": "/research/filer/",
+      "page_id": "research.filer",
+      "anchors": null
+    },
+    {
+      "route": "/research/corkboard/",
+      "page_id": "research.corkboard",
+      "anchors": null
+    },
+    {
+      "route": "/research/print-companion/",
+      "page_id": "research.print-companion",
+      "anchors": null
+    },
+    {
+      "route": "/research/text/",
+      "page_id": "research.text",
+      "anchors": null
+    },
+    {
+      "route": "/research/draw/",
+      "page_id": "research.draw",
+      "anchors": null
+    },
+    {
+      "route": "/research/worksheet/",
+      "page_id": "research.worksheet",
+      "anchors": null
+    },
+    {
+      "route": "/evidence/visual-inventory/",
+      "page_id": "evidence.visual-catalog",
+      "anchors": null
+    },
+    {
+      "route": "/evidence/visual-policy/",
+      "page_id": "evidence.visual-policy",
+      "anchors": null
+    },
+    {
+      "route": "/recovery/workbench/",
+      "page_id": "recovery.workbench",
+      "anchors": null
+    },
+    {
+      "route": "/project/roadmap/",
+      "page_id": "project.roadmap",
+      "anchors": null
+    },
+    {
+      "route": "/installation/",
+      "page_id": "applications.installations",
+      "anchors": null
+    },
+    {
+      "route": "/installation/evolution-atlas/",
+      "page_id": "applications.evolution-atlas",
+      "anchors": null
+    },
+    {
+      "route": "/applications/automatic-house-x10/",
+      "page_id": "applications.automatic-house-x10",
+      "anchors": null
+    },
+    {
+      "route": "/installation/deskmate-303/",
+      "page_id": "applications.installation-303",
+      "anchors": null
+    },
+    {
+      "route": "/installation/deskmate-303-305/",
+      "page_id": "applications.comparison-303-305",
+      "anchors": null
+    },
+    {
+      "route": "/installation/deskmate-305/",
+      "page_id": "applications.installation-305",
+      "anchors": null
+    }
+  ]
+}
