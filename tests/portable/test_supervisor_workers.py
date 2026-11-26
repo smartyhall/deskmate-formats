@@ -6,7 +6,7 @@ import sys
 from tempfile import TemporaryDirectory
 import unittest
 
-from deskmate_formats.supervisor import workers
+from deskmate_formats.supervisor import deterministic, workers
 
 
 class WorkerCapabilityTests(unittest.TestCase):
@@ -84,19 +84,44 @@ class DeterministicWorkerIntegrationTests(unittest.TestCase):
     def test_failing_procedure_reports_a_structured_failure(self):
         root = Path(self.enterContext(TemporaryDirectory()))
         worktree = root / "worktree"
-        worktree.mkdir()
+        (worktree / "tests" / "portable").mkdir(parents=True)
+        (worktree / "src").mkdir()
+        (worktree / "src" / "synthetic.py").write_text("VALUE = 1\n", encoding="utf-8")
+        (worktree / "pyproject.toml").write_text("[project]\nname = 'synthetic'\n",
+                                                  encoding="utf-8")
+        (worktree / "tests" / "portable" / "test_supervisor_synthetic_failure.py").write_text(
+            "import unittest\n\n\nclass SyntheticFailure(unittest.TestCase):\n"
+            "    def test_deliberate_failure(self):\n"
+            "        self.fail('synthetic failure for the worker contract')\n",
+            encoding="utf-8")
         worker = workers.DeterministicWorker()
         attempt = worker.prepare({
             "directory": root / "attempt",
             "campaign": "synthetic-campaign",
-            "procedure": "hash-files",
-            "arguments": {"paths": ["missing.txt"]},
+            "procedure": "portable-tests",
+            "arguments": {"scope": "supervisor"},
             "working_directory": str(worktree),
         })
         result = worker.dispatch(attempt, authorization=attempt.plan_sha256)
         self.assertEqual((result.state, result.exit_status), ("failed", 1))
         status = worker.status(attempt)
-        self.assertIn("not a regular file", status["outcome"]["stderr"]["excerpt"])
+        self.assertIn("synthetic failure for the worker contract",
+                      status["outcome"]["stderr"]["excerpt"])
+
+    def test_a_named_input_that_does_not_exist_is_refused_before_dispatch(self):
+        # An input whose content cannot be bound cannot be authorized either.
+        root = Path(self.enterContext(TemporaryDirectory()))
+        worktree = root / "worktree"
+        worktree.mkdir()
+        worker = workers.DeterministicWorker()
+        with self.assertRaises(deterministic.DeterministicError):
+            worker.prepare({
+                "directory": root / "attempt",
+                "campaign": "synthetic-campaign",
+                "procedure": "hash-files",
+                "arguments": {"paths": ["missing.txt"]},
+                "working_directory": str(worktree),
+            })
 
 
 if __name__ == "__main__":

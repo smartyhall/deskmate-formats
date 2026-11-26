@@ -76,6 +76,9 @@ def validate(snapshot):
     if snapshot.get("schema_version") != SCHEMA_VERSION:
         raise CampaignSnapshotError("unsupported snapshot schema version")
     _utc(snapshot.get("generated_at_utc"))
+    unreachable = snapshot.get("unreachable", [])
+    if type(unreachable) is not list or len(unreachable) > MAX_ITEMS:
+        raise CampaignSnapshotError("invalid unreachable list")
     campaigns = _items(snapshot.get("campaigns"), "campaigns", MAX_CAMPAIGNS)
     for record in campaigns:
         if type(record) is not dict:
@@ -165,6 +168,13 @@ def _campaign_view(record, now, *, stale_seconds):
                      for item in _items(record.get("evidence"), "evidence") if type(item) is dict],
         "activity": {"basis": "measured" if last else "unknown",
                      "last_observed_at_utc": last},
+        "synthetic": record.get("synthetic") is True,
+        "sources": [{"label": _text(item.get("label"), 64),
+                     "kind": _text(item.get("kind"), 32) or "unknown",
+                     "observed_at_utc": item.get("observed_at_utc")
+                     if type(item.get("observed_at_utc")) is str else None}
+                    for item in _items(record.get("sources"), "sources")
+                    if type(item) is dict],
     }
 
 
@@ -190,6 +200,7 @@ def projection(snapshot, *, now=None, stale_seconds=MAX_STALE_SECONDS):
         "campaign_count": len(campaigns),
         "task_states": states,
         "campaigns": campaigns,
+        "unreachable": [_text(item, 200) for item in snapshot.get("unreachable", [])],
         "note": "Read-only projection. Measured activity is reported separately from unknown state.",
     }
 
@@ -206,11 +217,13 @@ def render_text(view):
         f"Campaigns        {view['campaign_count']}",
         f"Task states      " + (", ".join(f"{key}={value}" for key, value in
                                          sorted(view["task_states"].items())) or "none"),
+        f"Unreachable      {len(view['unreachable'])}",
         "",
     ]
     for campaign in view["campaigns"]:
+        marker = " (SYNTHETIC)" if campaign["synthetic"] else ""
         lines.append(f"[{campaign['id']}] {campaign['status']} / {campaign['worker_kind']} / "
-                     f"owner {campaign['owner']}")
+                     f"owner {campaign['owner']}{marker}")
         if campaign["branch"]:
             lines.append(f"  Branch         {campaign['branch']}")
         lines.append(f"  Milestone      {_cell(campaign['milestone'])}")
@@ -240,6 +253,10 @@ def render_text(view):
                 lines.append(f"  Usage          {measurement['metric']} = unknown "
                              f"{measurement['unit']}")
         lines.append("")
+    if view["unreachable"]:
+        lines.append("UNREACHABLE SOURCES")
+        lines.extend(f"  {item}" for item in view["unreachable"])
+        lines.append("")
     return ascii_display("\n".join(lines))
 
 
@@ -254,9 +271,13 @@ def render_html(view):
             for item in campaign["measurements"]) or "not reported"
         resources = ", ".join(f"{escape(item['name'])} ({escape(item['state'])})"
                               for item in campaign["resources"]) or "none"
+        if campaign["synthetic"]:
+            campaign_id = f"{campaign['id']} (synthetic)"
+        else:
+            campaign_id = campaign["id"]
         rows.append(
             "<tr>"
-            f"<th scope=\"row\">{escape(campaign['id'])}</th>"
+            f"<th scope=\"row\">{escape(campaign_id)}</th>"
             f"<td>{escape(campaign['status'])}</td>"
             f"<td>{escape(campaign['worker_kind'])}</td>"
             f"<td>{escape(campaign['owner'])}</td>"

@@ -15,6 +15,7 @@ and an explicit operator reason, and it leaves a durable takeover record.
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime, timedelta
+from hashlib import sha256
 import json
 import os
 from pathlib import Path
@@ -24,13 +25,15 @@ from deskmate_formats.observer._private_storage import LockBusy, journal_lock, p
 from deskmate_formats.observer.events import EventError, decode_json, encode_json
 from deskmate_formats.observer.process_health import verify_process
 
+from .process_tree import tree_state
+
 FILE = "campaigns.json"
 MAX_RECORDS = 256
 MAX_BYTES = 1024 * 1024
 MAX_TTL_SECONDS = 7 * 24 * 3600
 MAX_RESOURCES = 16
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 PROVIDERS = frozenset(("codex", "freebuff", "chatgpt", "operator", "deterministic"))
 STATUSES = frozenset(("planning", "active", "blocked", "paused", "completed", "abandoned"))
 _CAMPAIGN = re.compile(r"[a-z0-9][a-z0-9-]{0,63}")
@@ -123,6 +126,7 @@ class Campaign:
 @dataclass(frozen=True, slots=True)
 class Lease:
     resource: str
+    identity: str
     campaign: str
     pid: int
     process_identity: str
@@ -130,10 +134,28 @@ class Lease:
     expires_at: str
     stale: bool
     owner_alive: str
+    descendants: str
+
+
+# Resources whose identity is a real local object rather than an opaque label.
+# Two campaigns naming the same worktree must collide, so the identity is the
+# canonical path, not the name a caller chose for it.
+_PATH_KINDS = frozenset(("worktree", "guest-image", "evidence", "build", "preview"))
+
+
+_LEASE_KEYS = frozenset(("resource", "identity", "campaign", "pid", "process_identity",
+                         "session", "scope", "acquired_at", "expires_at", "ttl_seconds"))
 
 
 def _empty():
     return {"schema_version": SCHEMA_VERSION, "campaigns": {}, "leases": {}, "takeovers": []}
+
+
+def _valid_lease(record):
+    return (type(record) is dict and set(record) == _LEASE_KEYS
+            and type(record["pid"]) is int and 1 <= record["pid"] < 2**31
+            and type(record["ttl_seconds"]) in (int, float)
+            and record["scope"] in ("session", "process"))
 
 
 def _load(path):
@@ -145,12 +167,15 @@ def _load(path):
         value = decode_json(raw, MAX_BYTES)
     except EventError:
         raise RegistryError("campaign registry is unreadable") from None
+    if type(value) is dict and value.get("schema_version") == 1:
+        raise RegistryError("campaign registry schema 1 is unsupported; recreate the private registry")
     if (type(value) is not dict or value.keys() != _empty().keys()
             or value["schema_version"] != SCHEMA_VERSION
             or type(value["campaigns"]) is not dict or type(value["leases"]) is not dict
             or type(value["takeovers"]) is not list
             or len(value["campaigns"]) > MAX_RECORDS or len(value["leases"]) > MAX_RECORDS
-            or len(value["takeovers"]) > MAX_RECORDS):
+            or len(value["takeovers"]) > MAX_RECORDS
+            or not all(_valid_lease(item) for item in value["leases"].values())):
         raise RegistryError("campaign registry is damaged or unsupported")
     return value
 
@@ -249,8 +274,95 @@ class Registry:
         return Campaign(**record)
 
     # ---- leases --------------------------------------------------------
-    def acquire(self, resource, identifier, *, pid, process_identity, ttl_seconds, now=None):
+    def _identity(self, resource):
+        """Canonical identity for a resource name.
+
+        A path-like resource resolves through the registered campaign's own
+        worktree, so two campaigns naming the same directory collide instead of
+        holding two independent 'exclusive' leases.
+        """
+        kind, _, label = resource.partition(":")
+        if kind not in _PATH_KINDS:
+            return f"{kind}:{label}"
+        record = self._data["campaigns"].get(label)
+        if record is None:
+            raise RegistryError("a path lease must name a registered campaign")
+        canonical = os.path.normcase(os.path.realpath(record["worktree"]))
+        return f"{kind}:{sha256(canonical.encode('utf-8')).hexdigest()[:32]}"
+
+    def _claim(self, record):
+        claim = {"pid": record["pid"], "identity": record["process_identity"]}
+        if record.get("session") is not None:
+            claim["session"] = record["session"]
+        return claim
+
+    def _record(self, resource, identity, identifier, pid, process_identity,
+                ttl, now, session, scope):
+        return {"resource": resource, "identity": identity, "campaign": identifier,
+                "pid": pid, "process_identity": process_identity,
+                "session": session, "scope": scope, "acquired_at": _stamp(now),
+                "expires_at": _stamp(now + timedelta(seconds=ttl)), "ttl_seconds": ttl}
+
+    def _owned(self, record, identity, pid, process_identity):
+        return (record["campaign"], record["pid"], record["process_identity"]) == (
+            identity, pid, process_identity)
+
+    def acquire(self, resource, identifier, *, pid, process_identity, ttl_seconds,
+                session=None, scope="process", now=None):
+        return self.reserve([resource], identifier, pid=pid,
+                            process_identity=process_identity, ttl_seconds=ttl_seconds,
+                            session=session, scope=scope, now=now)[0]
+
+    def renew(self, resource, identifier, *, pid, process_identity, ttl_seconds, now=None):
+        identity = self._identity(resource_name(resource))
+        current = self._data["leases"].get(identity)
+        if current is None:
+            raise RegistryError("no lease to renew")
+        if not self._owned(current, campaign_id(identifier), pid, process_identity):
+            raise RegistryError("only the recorded owner identity may renew this lease")
+        ttl = _ttl(ttl_seconds)
+        now = now or utcnow()
+        current["expires_at"] = _stamp(now + timedelta(seconds=ttl))
+        current["ttl_seconds"] = ttl
+        self._commit()
+        return self.lease(resource, now=now)
+
+    def release(self, resource, identifier, *, pid, process_identity):
+        identity = self._identity(resource_name(resource))
+        current = self._data["leases"].get(identity)
+        if current is None:
+            return False
+        if not self._owned(current, campaign_id(identifier), pid, process_identity):
+            raise RegistryError("only the recorded owner identity may release this lease")
+        del self._data["leases"][identity]
+        self._commit()
+        return True
+
+    def lease(self, resource, *, now=None, tree=tree_state):
         resource = resource_name(resource)
+        current = self._data["leases"].get(self._identity(resource))
+        if current is None:
+            return None
+        now = now or utcnow()
+        expires = datetime.fromisoformat(current["expires_at"].replace("Z", "+00:00"))
+        observed = tree(self._claim(current))
+        return Lease(current["resource"], current["identity"], current["campaign"],
+                     current["pid"], current["process_identity"], current["acquired_at"],
+                     current["expires_at"], now >= expires, observed["owner"],
+                     observed["descendants"])
+
+    def leases(self, *, now=None, tree=tree_state):
+        return [self.lease(record["resource"], now=now, tree=tree)
+                for _, record in sorted(self._data["leases"].items())]
+
+    def reserve(self, resources, identifier, *, pid, process_identity, ttl_seconds,
+                session=None, scope="process", now=None):
+        """Validate every resource, then commit the whole reservation once.
+
+        Nothing is written until all resources are known to be available, so a
+        failed reservation cannot disturb a lease that already existed.
+        """
+        names = _resources(resources)
         identifier = campaign_id(identifier)
         if identifier not in self._data["campaigns"]:
             raise RegistryError("unknown campaign")
@@ -259,119 +371,85 @@ class Registry:
         _text(process_identity, 128, "process identity")
         ttl = _ttl(ttl_seconds)
         now = now or utcnow()
-        current = self._data["leases"].get(resource)
-        if current is not None:
-            same = (current["campaign"], current["pid"], current["process_identity"])
-            if same != (identifier, pid, process_identity):
-                # An expired lease still blocks implicit takeover: the previous
-                # owner's process may simply be unreachable from here.
-                raise LeaseConflict("resource is leased; reconcile before reserving again")
-        self._data["leases"][resource] = {
-            "resource": resource, "campaign": identifier, "pid": pid,
-            "process_identity": process_identity, "acquired_at": _stamp(now),
-            "expires_at": _stamp(now + timedelta(seconds=ttl)), "ttl_seconds": ttl,
-        }
+        identities = {}
+        for name in names:
+            identity = self._identity(name)
+            current = self._data["leases"].get(identity)
+            if current is not None:
+                same = (current["campaign"], current["pid"], current["process_identity"])
+                if same != (identifier, pid, process_identity):
+                    # An expired lease still blocks implicit takeover: the
+                    # previous owner's process may simply be unreachable here.
+                    raise LeaseConflict("resource is leased; reconcile before reserving again")
+            identities[name] = identity
+        for name, identity in identities.items():
+            self._data["leases"][identity] = self._record(
+                name, identity, identifier, pid, process_identity, ttl, now, session, scope)
         self._commit()
-        return self.lease(resource, now=now)
-
-    def renew(self, resource, identifier, *, ttl_seconds, now=None):
-        resource = resource_name(resource)
-        current = self._data["leases"].get(resource)
-        if current is None or current["campaign"] != campaign_id(identifier):
-            raise RegistryError("no lease owned by that campaign")
-        ttl = _ttl(ttl_seconds)
-        now = now or utcnow()
-        current["expires_at"] = _stamp(now + timedelta(seconds=ttl))
-        current["ttl_seconds"] = ttl
-        self._commit()
-        return self.lease(resource, now=now)
-
-    def release(self, resource, identifier):
-        resource = resource_name(resource)
-        current = self._data["leases"].get(resource)
-        if current is None:
-            return False
-        if current["campaign"] != campaign_id(identifier):
-            raise RegistryError("cannot release another campaign's lease")
-        del self._data["leases"][resource]
-        self._commit()
-        return True
-
-    def lease(self, resource, *, now=None, probe=verify_process):
-        resource = resource_name(resource)
-        current = self._data["leases"].get(resource)
-        if current is None:
-            return None
-        now = now or utcnow()
-        expires = datetime.fromisoformat(current["expires_at"].replace("Z", "+00:00"))
-        return Lease(current["resource"], current["campaign"], current["pid"],
-                     current["process_identity"], current["acquired_at"], current["expires_at"],
-                     now >= expires, probe(current["pid"], current["process_identity"]))
-
-    def leases(self, *, now=None, probe=verify_process):
-        return [self.lease(name, now=now, probe=probe) for name in sorted(self._data["leases"])]
-
-    def reserve(self, resources, identifier, *, pid, process_identity, ttl_seconds, now=None):
-        """Acquire every resource or none, leaving the registry unchanged on conflict."""
-        names = _resources(resources)
-        now = now or utcnow()
-        taken = []
-        try:
-            for name in names:
-                self.acquire(name, identifier, pid=pid, process_identity=process_identity,
-                             ttl_seconds=ttl_seconds, now=now)
-                taken.append(name)
-        except RegistryError:
-            for name in taken:
-                self._data["leases"].pop(name, None)
-            self._commit()
-            raise
         return [self.lease(name, now=now) for name in names]
 
-    def reclaim(self, resource, identifier, *, operator_reason, now=None, probe=verify_process):
-        """Take over an expired lease only from a positively dead owner.
+    def reclaim(self, resource, identifier, *, pid, process_identity, ttl_seconds,
+                operator_reason, confirm_descendants_stopped=False, session=None,
+                scope="process", now=None, probe=verify_process, tree=tree_state):
+        """Take over an expired lease only from a positively stopped tree.
 
-        ``verify_process`` returning ``unknown`` or ``identity-mismatch`` is not
-        proof of death, so the request is refused. The takeover is recorded.
+        The new owner must be a real live process, not a placeholder, and the
+        previous owner's descendants are checked separately from the owner: a
+        dead parent says nothing about what it started.
         """
         resource = resource_name(resource)
         identifier = campaign_id(identifier)
         if identifier not in self._data["campaigns"]:
             raise RegistryError("unknown campaign")
-        current = self._data["leases"].get(resource)
-        if current is None:
-            raise RegistryError("no lease to reclaim")
         reason = _text(operator_reason, 240, "operator reason")
         if not reason.strip():
             raise RegistryError("operator reason must not be blank")
+        if type(pid) is not int or not 1 <= pid < 2**31:
+            raise RegistryError("invalid owning PID")
+        _text(process_identity, 128, "process identity")
+        if probe(pid, process_identity) != "alive":
+            raise RegistryError("the new owner identity must be a live local process")
+        ttl = _ttl(ttl_seconds)
+        identity = self._identity(resource)
+        current = self._data["leases"].get(identity)
+        if current is None:
+            raise RegistryError("no lease to reclaim")
         now = now or utcnow()
         expires = datetime.fromisoformat(current["expires_at"].replace("Z", "+00:00"))
         if now < expires:
             raise RegistryError("lease has not expired; wait or coordinate with the owner")
-        observed = probe(current["pid"], current["process_identity"])
-        if observed not in ("stopped", "not-found"):
+        observed = tree(self._claim(current))
+        if observed["owner"] not in ("stopped", "not-found"):
             raise RegistryError("owner process is not positively stopped; reconcile explicitly")
+        if observed["descendants"] == "alive":
+            raise RegistryError("a descendant of the previous owner is still running")
+        if observed["descendants"] == "unknown" and not confirm_descendants_stopped:
+            raise RegistryError("descendants cannot be proven stopped; confirm explicitly")
         if len(self._data["takeovers"]) >= MAX_RECORDS:
             raise RegistryError("takeover record limit reached")
         self._data["takeovers"].append({
-            "resource": resource, "previous_campaign": current["campaign"],
-            "previous_pid": current["pid"], "previous_identity": current["process_identity"],
-            "new_campaign": identifier, "reason": reason, "observed_owner": observed,
-            "taken_at": _stamp(now),
+            "resource": current["resource"], "identity": identity,
+            "previous_campaign": current["campaign"],
+            "previous_pid": current["pid"],
+            "previous_identity": current["process_identity"],
+            "previous_owner": observed["owner"],
+            "previous_descendants": observed["descendants"],
+            "descendants_confirmed": bool(confirm_descendants_stopped),
+            "new_campaign": identifier, "reason": reason, "taken_at": _stamp(now),
         })
-        del self._data["leases"][resource]
+        del self._data["leases"][identity]
         self._commit()
-        return self.acquire(resource, identifier, pid=1, process_identity="reclaimed",
-                            ttl_seconds=3600, now=now)
+        return self.acquire(resource, identifier, pid=pid, process_identity=process_identity,
+                            ttl_seconds=ttl, session=session, scope=scope, now=now)
 
     def takeovers(self):
         return list(self._data["takeovers"])
 
 
-def summarize(registry, *, now=None, probe=verify_process):
+def summarize(registry, *, now=None, tree=tree_state):
     """Public-safe campaign summary: no local paths, PIDs or process identities."""
     now = now or utcnow()
-    leases = {lease.resource: lease for lease in registry.leases(now=now, probe=probe)}
+    leases = {lease.resource: lease for lease in registry.leases(now=now, tree=tree)}
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at_utc": _stamp(now),
@@ -382,7 +460,8 @@ def summarize(registry, *, now=None, probe=verify_process):
              "updated_at": record.updated_at,
              "resources": [{"name": lease.resource, "campaign": lease.campaign,
                             "expires_at": lease.expires_at, "stale": lease.stale,
-                            "owner_alive": lease.owner_alive}
+                            "owner_alive": lease.owner_alive,
+                            "descendants": lease.descendants}
                            for lease in leases.values() if lease.campaign == record.id]}
             for record in registry.campaigns()
         ],

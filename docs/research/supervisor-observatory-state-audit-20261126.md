@@ -36,7 +36,10 @@ experiment, and **proposed** means neither.
 | Source-edit task dispatch (S3) | Yes | Yes, synthetic only | No | `editing.py`, `workspace.py`; native editing unverified |
 | Deterministic (no-model) execution | **Added** | Yes, real subprocesses | Yes, local development procedures | `procedures.py`, `deterministic.py`; see §7 |
 | Common worker abstraction | **Added** | Yes | n/a | `workers.py`; capability negotiation, no pretend parity |
-| Campaign registry and resource leases | **Added** | Yes | Yes, local coordination | `campaigns.py`; no blind takeover |
+| Campaign registry and resource leases | **Added** | Yes | Yes, local coordination | `campaigns.py`; no blind takeover. Schema 2: leases carry owner identity, session and scope, and path resources resolve to canonical identities |
+| Execution integrity binding | **Added** | Yes, including hostile cases | Yes, local runs | `deterministic.py`; plan binds working-tree content, implementation digest, module origins, interpreter and acceptance; `run` refuses on any drift |
+| Process-tree inspection and recovery | **Added** | Yes, real parent/child processes | Yes, Windows and Linux | `process_tree.py`; owner status and descendant status are separate, recovery refuses while anything may run |
+| Snapshot collector | **Added** | Yes | Yes, from real attempts and registry | `supervisor/snapshot.py` plus `deskmate-observer-snapshot`; unreachable sources are listed, unstated values stay unknown |
 | Allowance-aware worker selection | **Added** | Yes, synthetic | No | `scheduling.py`; explicit unknowns, no unit conversion |
 | Heterogeneous campaign projection | **Added** | Yes | Yes, synthetic concurrent workers | `observer/campaigns.py` plus read-only HTTP routes |
 | Unattended Supervisor service / daemon | No | n/a | No | No service loop, scheduler daemon or auto-approval exists |
@@ -278,6 +281,23 @@ product defect.
   [integration discovery](freebuff-integration-discovery-20261126.md).
 
 ## 13. What remains genuinely unproven
+
+**Revision 2026-11-26 (integrity pass).** The independent review of PR #191
+found nineteen defects; `docs/research/execution-integrity-20261126.md` records
+each one with its evidence and correction. What changed in this audit's terms:
+
+- A deterministic plan now binds the *content* of the inputs it will read, not
+  only the Git revision. Matching HEAD is no longer offered as proof that the
+  executed source is the reviewed source.
+- Path-like leases are keyed by canonical identity, so two campaign names for
+  one worktree collide instead of both obtaining exclusivity.
+- Recovery distinguishes an owner from its descendants, and refuses while
+  either may still be running.
+- The Observatory reads a snapshot assembled from real records by a collector
+  that reports unreachable sources and never invents a status.
+
+Still unproven, unchanged in kind: no operating-system confinement boundary, no
+network isolation, no unattended service, and no live model dispatch.
 
 - Any live S2 or S3 model dispatch beyond the 2026-11-16 S0 canary.
 - Native S3 editing under the Windows sandbox.

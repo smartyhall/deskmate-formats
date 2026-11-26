@@ -12,9 +12,8 @@ import os
 from pathlib import Path
 import sys
 
-from deskmate_formats.observer.process_health import process_claim
-
 from . import campaigns, deterministic, procedures
+from .process_tree import tree_claim
 from .task_manifest import TaskError
 from .task_queue import QueueError, QueueUnresolved, open_queue
 
@@ -33,22 +32,38 @@ def _arguments(raw):
     return value
 
 
+EXIT_STATES = {"completed": 0, "failed": 1, "cancelled": 3, "timed-out": 4,
+               "uncertain": 5}
+
+
 def _reservation(registry_directory, ttl_seconds):
     """Lease the owned worktree for the duration of one attempt."""
     def reserve(plan):
-        claim = process_claim(os.getpid())
+        claim = tree_claim(os.getpid())
         if claim is None:
             raise TaskError("could not establish the owning process identity")
         resource = f"worktree:{plan['campaign']}"
         with campaigns.open_registry(registry_directory) as registry:
             registry.acquire(resource, plan["campaign"], pid=claim["pid"],
-                             process_identity=claim["identity"], ttl_seconds=ttl_seconds)
+                             process_identity=claim["identity"],
+                             session=claim.get("session"), scope=claim["scope"],
+                             ttl_seconds=ttl_seconds)
 
         def release():
             with campaigns.open_registry(registry_directory) as registry:
-                registry.release(resource, plan["campaign"])
+                registry.release(resource, plan["campaign"], pid=claim["pid"],
+                                 process_identity=claim["identity"])
         return release
     return reserve
+
+
+def _revalidation(queue_path):
+    """Re-establish the accepted revision immediately before dispatch."""
+    def revalidate(acceptance):
+        with open_queue(queue_path) as queue:
+            return deterministic.accepted(queue, acceptance["id"], acceptance["revision"],
+                                           acceptance["review_token"])
+    return revalidate
 
 
 def _parser():
@@ -78,6 +93,8 @@ def _parser():
         command.add_argument("--state", type=Path, required=True)
         if action == "run":
             command.add_argument("--authorization", required=True)
+            command.add_argument("--queue", type=Path,
+                                 help="revalidate the accepted revision before dispatch")
             command.add_argument("--registry", type=Path)
             command.add_argument("--lease-seconds", type=float, default=900)
     cancel = actions.add_parser("cancel", allow_abbrev=False)
@@ -108,7 +125,8 @@ def _run(args):
             attempt = deterministic.prepare(
                 args.state, campaign=args.campaign, procedure=binding["procedure"],
                 arguments=binding["arguments"], working_directory=str(args.working_directory),
-                source_commit=binding["source"]["commit"], timeout_seconds=args.timeout)
+                source_commit=binding["source"]["commit"], timeout_seconds=args.timeout,
+                acceptance=binding)
         _json({"attempt_id": attempt.attempt_id, "procedure": attempt.procedure,
                "plan_sha256": attempt.plan_sha256, "state": attempt.state,
                "binding": binding, "authorization_required": True})
@@ -117,13 +135,15 @@ def _run(args):
         reservation = None
         if args.registry is not None:
             reservation = _reservation(args.registry, args.lease_seconds)
-        _json(deterministic.run(args.state, authorization=args.authorization,
-                                reservation=reservation))
-        return 0
+        revalidate = _revalidation(args.queue) if args.queue is not None else None
+        outcome = deterministic.run(args.state, authorization=args.authorization,
+                                    reservation=reservation, revalidate=revalidate)
+        _json(outcome)
+        return EXIT_STATES[outcome["state"]]
     if args.action == "status":
         view = deterministic.status(args.state)
         _json(view)
-        return 0 if not view["requires_inspection"] else 3
+        return 0
     if args.action == "cancel":
         deterministic.cancel(args.state, authorization=args.authorization)
         _json({"cancel_requested": True})
@@ -138,17 +158,17 @@ def main(argv=None):
         return _run(args)
     except campaigns.RegistryBusy as error:
         print(str(error), file=sys.stderr)
-        return 4
+        return 6
     except (TaskError, deterministic.DeterministicError, procedures.ProcedureError,
             campaigns.RegistryError) as error:
         print(str(error), file=sys.stderr)
         return 2
     except QueueUnresolved as error:
         print(str(error), file=sys.stderr)
-        return 5
+        return 2
     except (QueueError, OSError) as error:
         print(str(error), file=sys.stderr)
-        return 4
+        return 6
     except KeyboardInterrupt:
         print("Interrupted; inspect the attempt directory before retrying", file=sys.stderr)
         return 130

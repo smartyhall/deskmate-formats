@@ -13,6 +13,7 @@ import sys
 from deskmate_formats.observer.process_health import process_claim
 
 from . import campaigns
+from .process_tree import tree_claim
 
 
 def _json(value):
@@ -29,7 +30,15 @@ def _campaign(record):
 def _lease(lease):
     return None if lease is None else {
         "resource": lease.resource, "campaign": lease.campaign, "expires_at": lease.expires_at,
-        "stale": lease.stale, "owner_alive": lease.owner_alive}
+        "stale": lease.stale, "owner_alive": lease.owner_alive,
+        "descendants": lease.descendants}
+
+
+def _claim():
+    claim = tree_claim()
+    if claim is None:
+        raise campaigns.RegistryError("could not establish the owning process identity")
+    return claim
 
 
 def _parser():
@@ -61,10 +70,17 @@ def _parser():
     release = actions.add_parser("release", allow_abbrev=False)
     release.add_argument("id")
     release.add_argument("--resource", required=True)
+    renew = actions.add_parser("renew", allow_abbrev=False)
+    renew.add_argument("id")
+    renew.add_argument("--resource", required=True)
+    renew.add_argument("--ttl", type=float, default=900)
     reclaim = actions.add_parser("reclaim", allow_abbrev=False)
     reclaim.add_argument("id")
     reclaim.add_argument("--resource", required=True)
     reclaim.add_argument("--reason", required=True)
+    reclaim.add_argument("--ttl", type=float, default=3600)
+    reclaim.add_argument("--confirm-descendants-stopped", action="store_true",
+                         help="assert that no descendant of the previous owner survives")
     export = actions.add_parser("export", allow_abbrev=False)
     export.add_argument("--output", type=Path, required=True)
     return parser
@@ -90,17 +106,28 @@ def _run(args):
         elif args.action == "handoff":
             _json(_campaign(registry.handoff(args.id, owner=args.owner)))
         elif args.action == "lease":
-            claim = process_claim()
-            if claim is None:
-                raise campaigns.RegistryError("could not establish the owning process identity")
+            claim = _claim()
             _json(_lease(registry.acquire(args.resource, args.id, pid=claim["pid"],
                                           process_identity=claim["identity"],
-                                          ttl_seconds=args.ttl)))
+                                          session=claim.get("session"),
+                                          scope=claim["scope"], ttl_seconds=args.ttl)))
+        elif args.action == "renew":
+            claim = _claim()
+            _json(_lease(registry.renew(args.resource, args.id, pid=claim["pid"],
+                                        process_identity=claim["identity"],
+                                        ttl_seconds=args.ttl)))
         elif args.action == "release":
-            _json({"released": registry.release(args.resource, args.id)})
+            claim = _claim()
+            _json({"released": registry.release(args.resource, args.id, pid=claim["pid"],
+                                                 process_identity=claim["identity"])})
         elif args.action == "reclaim":
-            _json(_lease(registry.reclaim(args.resource, args.id,
-                                          operator_reason=args.reason)))
+            claim = _claim()
+            _json(_lease(registry.reclaim(
+                args.resource, args.id, pid=claim["pid"],
+                process_identity=claim["identity"], ttl_seconds=args.ttl,
+                session=claim.get("session"), scope=claim["scope"],
+                operator_reason=args.reason,
+                confirm_descendants_stopped=args.confirm_descendants_stopped)))
         else:
             _json(campaigns.export(registry, args.output))
     return 0
@@ -112,13 +139,13 @@ def main(argv=None):
         return _run(args)
     except campaigns.RegistryBusy as error:
         print(str(error), file=sys.stderr)
-        return 4
+        return 6
     except campaigns.RegistryError as error:
         print(str(error), file=sys.stderr)
         return 2
     except OSError:
         print("Private registry storage is unavailable or busy", file=sys.stderr)
-        return 4
+        return 6
     except KeyboardInterrupt:
         print("Interrupted; inspect the registry before retrying", file=sys.stderr)
         return 130

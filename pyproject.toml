@@ -45,6 +45,7 @@ deskmate-supervisor-s2 = "deskmate_formats.supervisor.bridge_cli:main"
 deskmate-supervisor-deterministic = "deskmate_formats.supervisor.deterministic_cli:main"
 deskmate-supervisor-campaigns = "deskmate_formats.supervisor.campaigns_cli:main"
 deskmate-observer-campaigns = "deskmate_formats.observer.campaign_cli:main"
+deskmate-observer-snapshot = "deskmate_formats.supervisor.snapshot:main"
 
 [tool.setuptools.package-data]
 "*" = ["*.license"]

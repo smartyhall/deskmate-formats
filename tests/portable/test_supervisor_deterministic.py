@@ -1,6 +1,7 @@
 """Deterministic attempt lifecycle: real subprocesses, durable receipts, no replay."""
 
 from hashlib import sha256
+import os
 from pathlib import Path
 import sys
 from tempfile import TemporaryDirectory
@@ -26,6 +27,7 @@ class DeterministicTests(unittest.TestCase):
     def setUp(self):
         self.root = Path(self.enterContext(TemporaryDirectory()))
         self.state = self.root / "attempt"
+        (self.root / "README.md").write_text("synthetic input\n", encoding="utf-8")
 
     def prepare(self, script, *, timeout=10, campaign="synthetic-campaign"):
         with patch.object(procedures, "build", return_value=[PYTHON, "-I", "-c", script]):
@@ -139,7 +141,8 @@ class DeterministicTests(unittest.TestCase):
 
     def test_changed_implementation_or_revision_is_refused(self):
         attempt = self.prepare("print('never')\n")
-        with patch.object(deterministic, "implementation_hashes", return_value={"x.py": "0" * 64}):
+        with patch.object(deterministic, "implementation_binding",
+                          return_value={"sha256": "0" * 64}):
             with self.assertRaisesRegex(deterministic.DeterministicError, "implementation changed"):
                 deterministic.run(self.state, authorization=attempt.plan_sha256)
         self.assertFalse((self.state / "attempt.json").exists())
@@ -194,3 +197,156 @@ class PlanEncodingTests(unittest.TestCase):
                 deterministic._write_once(root / "plan.json", {"a": 2})
             self.assertEqual((root / "plan.json").read_bytes(),
                              encode_json({"a": 1}) + b"\n")
+
+
+def _symlinks_supported(directory):
+    target = Path(directory) / "_link_target.txt"
+    link = Path(directory) / "_link_probe.txt"
+    try:
+        target.write_text("x", encoding="utf-8")
+        os.symlink(target, link)
+    except (OSError, NotImplementedError):
+        return False
+    finally:
+        for path in (link, target):
+            try:
+                path.unlink()
+            except OSError:
+                pass
+    return True
+
+
+class IntegrityTests(unittest.TestCase):
+    """Every identity the plan binds is re-established before dispatch."""
+
+    def setUp(self):
+        self.root = Path(self.enterContext(TemporaryDirectory()))
+        self.state = self.root / "attempt"
+        (self.root / "README.md").write_text("synthetic input\n", encoding="utf-8")
+        self.links = _symlinks_supported(self.root)
+
+    def prepare(self, *, paths=("README.md",), procedure="hash-files", arguments=None,
+                timeout=10, **extra):
+        arguments = arguments if arguments is not None else {"paths": list(paths)}
+        return deterministic.prepare(
+            self.state, campaign="synthetic-campaign", procedure=procedure,
+            arguments=arguments, working_directory=str(self.root),
+            timeout_seconds=timeout, **extra)
+
+    def test_requested_revision_that_cannot_be_established_is_refused(self):
+        with self.assertRaisesRegex(deterministic.DeterministicError, "cannot be established"):
+            self.prepare(source_commit="a" * 40)
+        self.assertFalse(self.state.exists())
+
+    def test_changed_working_tree_input_after_authorization_is_refused(self):
+        attempt = self.prepare()
+        (self.root / "README.md").write_text("changed after approval\n", encoding="utf-8")
+        with patch.object(deterministic, "_execute",
+                          side_effect=AssertionError("must not execute")):
+            with self.assertRaisesRegex(deterministic.DeterministicError, "inputs changed"):
+                deterministic.run(self.state, authorization=attempt.plan_sha256)
+        self.assertFalse((self.state / "attempt.json").exists())
+
+    def test_untracked_executable_input_appearing_after_authorization_is_refused(self):
+        attempt = self.prepare(procedure="repository-audit", arguments={})
+        (self.root / "notes-appearing-later.md").write_text("new\n", encoding="utf-8")
+        with patch.object(deterministic, "_execute",
+                          side_effect=AssertionError("must not execute")):
+            with self.assertRaisesRegex(deterministic.DeterministicError, "inputs changed"):
+                deterministic.run(self.state, authorization=attempt.plan_sha256)
+
+    def test_plan_binds_acceptance_and_refuses_without_revalidation(self):
+        acceptance = {"queue_id": "queue", "sequence": 1, "id": "sample", "revision": 1,
+                      "idempotency_key": "sample-1", "review_token": "t" * 64,
+                      "source": {"repository": "https://example.invalid/lab/synthetic.git",
+                                 "branch": "main", "commit": "a" * 40,
+                                 "path": "ops/tasks/sample.json", "blob": "b" * 40,
+                                 "sha256": "c" * 64},
+                      "procedure": "hash-files", "arguments": {"paths": ["README.md"]}}
+        attempt = self.prepare(acceptance=acceptance)
+        with patch.object(deterministic, "_execute",
+                          side_effect=AssertionError("must not execute")):
+            with self.assertRaisesRegex(deterministic.DeterministicError, "requires revalidation"):
+                deterministic.run(self.state, authorization=attempt.plan_sha256)
+            with self.assertRaisesRegex(deterministic.DeterministicError, "changed after preparation"):
+                deterministic.run(self.state, authorization=attempt.plan_sha256,
+                                  revalidate=lambda value: {**value, "revision": 2})
+        outcome = deterministic.run(
+            self.state, authorization=attempt.plan_sha256,
+            revalidate=lambda value: dict(value))
+        self.assertEqual(outcome["state"], "completed")
+        self.assertEqual(outcome["acceptance_binding"]["id"], "sample")
+
+    def test_acceptance_binding_is_visible_in_the_terminal_outcome(self):
+        acceptance = {"queue_id": "queue", "sequence": 1, "id": "sample", "revision": 1,
+                      "idempotency_key": "sample-1", "review_token": "t" * 64,
+                      "source": {}, "procedure": "hash-files",
+                      "arguments": {"paths": ["README.md"]}}
+        attempt = self.prepare(acceptance=acceptance)
+        outcome = deterministic.run(self.state, authorization=attempt.plan_sha256,
+                                    revalidate=lambda value: dict(value))
+        self.assertEqual(outcome["acceptance_binding"]["review_token"], "t" * 64)
+        stored = deterministic.status(self.state)["outcome"]
+        self.assertEqual(stored["acceptance_binding"]["id"], "sample")
+
+    def test_acceptance_binding_must_match_the_requested_procedure(self):
+        acceptance = {"queue_id": "queue", "sequence": 1, "id": "sample", "revision": 1,
+                      "idempotency_key": "sample-1", "review_token": "t" * 64,
+                      "source": {}, "procedure": "reuse-lint", "arguments": {}}
+        with self.assertRaisesRegex(deterministic.DeterministicError, "does not match"):
+            self.prepare(acceptance=acceptance)
+
+    def test_working_directory_reached_through_a_link_is_refused(self):
+        if not self.links:
+            self.skipTest("this host cannot create symlinks")
+        real = self.root / "real"
+        real.mkdir()
+        alias = self.root / "alias"
+        os.symlink(real, alias)
+        with self.assertRaisesRegex(deterministic.DeterministicError, "canonical path"):
+            deterministic.prepare(self.state, campaign="c", procedure="hash-files",
+                                  arguments={"paths": ["README.md"]},
+                                  working_directory=str(alias))
+
+    def test_input_that_is_a_link_is_refused(self):
+        if not self.links:
+            self.skipTest("this host cannot create symlinks")
+        os.symlink(self.root / "README.md", self.root / "alias.txt")
+        with self.assertRaisesRegex(deterministic.DeterministicError, "link"):
+            self.prepare(paths=("alias.txt",))
+
+    def test_artifact_byte_and_count_limits_are_enforced(self):
+        with patch.object(procedures, "build", return_value=[PYTHON, "-I", "-c", ARTIFACT_SCRIPT]):
+            attempt = self.prepare(timeout=20)
+        with patch.object(deterministic, "MAX_ARTIFACT_BYTES", 8):
+            outcome = deterministic.run(self.state, authorization=attempt.plan_sha256)
+        self.assertEqual(outcome["state"], "completed")
+        self.assertEqual(outcome["artifacts"], [])
+        self.assertIn("byte limit", outcome["artifact_error"])
+        self.assertTrue((self.state / "outcome.json").exists())
+
+    def test_stdout_exactly_at_the_limit_is_not_truncated(self):
+        with patch.object(procedures, "build",
+                          return_value=[PYTHON, "-I", "-c", "import sys\nsys.stdout.write('x'*8)\n"]):
+            attempt = deterministic.prepare(
+                self.root / "second", campaign="c", procedure="hash-files",
+                arguments={"paths": ["README.md"]}, working_directory=str(self.root))
+        with patch.object(deterministic, "MAX_STDOUT_BYTES", 8):
+            outcome = deterministic.run(self.root / "second",
+                                        authorization=attempt.plan_sha256)
+        self.assertFalse(outcome["stdout"]["truncated"])
+        self.assertEqual((outcome["stdout"]["bytes"], outcome["stdout"]["captured_bytes"]),
+                         (8, 8))
+
+    def test_interrupted_record_write_leaves_no_partial_file(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory) / "state"
+            deterministic.storage_directory(root, create=True)
+            with patch("deskmate_formats.supervisor.deterministic.os.replace",
+                       side_effect=OSError("simulated crash")):
+                with self.assertRaises(OSError):
+                    deterministic._write_once(root / "plan.json", {"a": 1})
+            self.assertFalse((root / "plan.json").exists())
+            self.assertEqual([path.name for path in root.iterdir()], [])
+            deterministic._write_once(root / "plan.json", {"a": 1})
+            self.assertTrue((root / "plan.json").exists())

@@ -15,6 +15,19 @@ records that no programmatic interface is available without separate
 authorization. Two Windows test failures were traced to fixed test-local
 budgets under host contention, not to product defects.
 
+An independent review of that work found nineteen integrity defects, all
+confirmed and corrected: the execution plan now binds the working-tree content
+it will read, the implementation and interpreter it will import, and the
+acceptance it was approved under; leases are keyed by canonical resource
+identity and carry the owner's process identity; recovery distinguishes an
+owner from its descendants; and exit states separate completed, failed,
+refused, cancelled, timed-out and uncertain. The
+[integrity report](docs/research/execution-integrity-20261126.md) records the
+evidence for each correction, and the
+[upstream research](docs/research/freebuff-upstream-integration-20261126.md)
+withdraws the earlier authenticated-endpoint probe in favour of the paid SDK or
+in-binary ACP, because Freebuff refuses third-party clients with a ban warning.
+
 ## Print Companion and native printing — 2026-11-23
 
 The [RSX Print Companion campaign](docs/research/print-companion-20261123.md)

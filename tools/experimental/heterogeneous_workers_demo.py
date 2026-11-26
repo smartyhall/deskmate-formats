@@ -1,9 +1,10 @@
 """Synthetic-but-real demonstration of heterogeneous worker coordination.
 
 Two deterministic procedures really execute in owned attempt directories while a
-private campaign registry tracks who owns which worktree. The resulting attempt
-receipts and an explicitly synthetic agent campaign are projected into the
-read-only Observatory campaign view.
+private campaign registry tracks who owns which worktree. The frozen campaign
+snapshot is then assembled from those actual records by the same collector an
+operator would use, and one explicitly synthetic agent campaign is added to show
+a heterogeneous view.
 
 Nothing here uses model inference, the network, an emulator, or another agent.
 Run it from the repository root:
@@ -17,8 +18,8 @@ directory, because Supervisor private state must live outside Git worktrees.
 from argparse import ArgumentParser
 from datetime import UTC, datetime, timedelta
 import json
-import os
 from pathlib import Path
+import shutil
 import sys
 import tempfile
 from threading import Thread
@@ -26,8 +27,8 @@ from time import sleep
 from uuid import uuid4
 
 from deskmate_formats.observer import campaigns as observatory
-from deskmate_formats.observer.process_health import process_claim
-from deskmate_formats.supervisor import campaigns, deterministic, scheduling
+from deskmate_formats.supervisor import campaigns, deterministic, scheduling, snapshot
+from deskmate_formats.supervisor.process_tree import tree_claim
 
 STALE_SECONDS = 900
 
@@ -50,18 +51,20 @@ def _with_registry(directory, action, *, attempts=100):
 
 
 def _reserve(registry_directory, campaign, ttl_seconds=600):
-    claim = process_claim(os.getpid())
+    claim = tree_claim()
     if claim is None:
         raise SystemExit("cannot establish the owning process identity")
 
     def reserve(_plan):
         _with_registry(registry_directory, lambda registry: registry.acquire(
             f"worktree:{campaign}", campaign, pid=claim["pid"],
-            process_identity=claim["identity"], ttl_seconds=ttl_seconds))
+            process_identity=claim["identity"], session=claim.get("session"),
+            scope=claim["scope"], ttl_seconds=ttl_seconds))
 
         def release():
             _with_registry(registry_directory, lambda registry: registry.release(
-                f"worktree:{campaign}", campaign))
+                f"worktree:{campaign}", campaign, pid=claim["pid"],
+                process_identity=claim["identity"]))
         return release
     return reserve
 
@@ -70,23 +73,9 @@ def run_procedure(state_root, registry, campaign, procedure, arguments, worktree
     directory = state_root / campaign / procedure
     attempt = deterministic.prepare(directory, campaign=campaign, procedure=procedure,
                                     arguments=arguments, working_directory=str(worktree))
-    return deterministic.run(directory, authorization=attempt.plan_sha256,
-                             reservation=_reserve(registry, campaign))
-
-
-def _task(campaign, outcome):
-    return {
-        "id": f"{campaign}-{outcome['procedure']}",
-        "revision": 1,
-        "state": outcome["state"],
-        "procedure": outcome["procedure"],
-        "worker": "deterministic-local",
-        "attempt": outcome["attempt_id"],
-        "started_at_utc": outcome["started_at_utc"],
-        "finished_at_utc": outcome["finished_at_utc"],
-        "exit_status": outcome["exit_status"],
-        "result_sha256": outcome["stdout"]["sha256"],
-    }
+    outcome = deterministic.run(directory, authorization=attempt.plan_sha256,
+                                reservation=_reserve(registry, campaign))
+    return directory, outcome
 
 
 def _measurement(metric, unit, *, scope, semantics, source, value=None, observed=None):
@@ -97,30 +86,13 @@ def _measurement(metric, unit, *, scope, semantics, source, value=None, observed
             "source": source, "value": value, "observed_at_utc": observed, "known": True}
 
 
-def build_snapshot(registry_directory, outcomes, *, now=None):
-    now = now or datetime.now(UTC)
-    with campaigns.open_registry(registry_directory) as registry:
-        summary = campaigns.summarize(registry, now=now)
-    by_campaign = {}
-    for campaign, outcome in outcomes:
-        by_campaign.setdefault(campaign, []).append(outcome)
-    records = []
-    for record in summary["campaigns"]:
-        record = dict(record)
-        tasks = [_task(record["id"], outcome) for outcome in by_campaign.get(record["id"], [])]
-        record.update({
-            "tasks": tasks,
-            "results": [{"label": task["procedure"], "state": task["state"],
-                         "exit_status": task["exit_status"]} for task in tasks],
-            "measurements": [],
-        })
-        records.append(record)
-    # An explicitly synthetic agent campaign. It proves the projection carries an
-    # agent worker alongside deterministic ones without claiming real activity.
-    records.append({
-        "id": "synthetic-agent-session", "owner": "Freebuff (synthetic)", "provider": "freebuff",
-        "worker_kind": "freebuff", "status": "active",
+def synthetic_campaign(now):
+    """An explicitly synthetic agent campaign. It never claims measured work."""
+    return {
+        "id": "synthetic-agent-session", "owner": "Freebuff (synthetic)",
+        "provider": "freebuff", "worker_kind": "freebuff", "status": "active",
         "milestone": "synthetic multi-worker projection", "checkpoint": "none",
+        "synthetic": True,
         "tasks": [{"id": "synthetic-analysis", "revision": 1, "state": "running",
                    "worker": "freebuff", "attempt": "synthetic",
                    "started_at_utc": _stamp(now - timedelta(minutes=2))}],
@@ -136,9 +108,10 @@ def build_snapshot(registry_directory, outcomes, *, now=None):
                          semantics="current", source="ui-observation", value=16.0,
                          observed=_stamp(now - timedelta(minutes=3))),
         ],
+        "sources": [{"label": "synthetic demonstration", "kind": "synthetic",
+                     "observed_at_utc": _stamp(now)}],
         "evidence": [{"label": "synthetic", "locator": "not-applicable", "sha256": None}],
-    })
-    return {"schema_version": 1, "generated_at_utc": _stamp(now), "campaigns": records}
+    }
 
 
 def scheduler_demonstration(now):
@@ -180,28 +153,45 @@ def main(argv=None):
         raise SystemExit("state directory must not already exist")
     registry_directory = state_root / "registry"
     state_root.mkdir(parents=True)
+
+    # A second, separate checkout for the second campaign: two campaigns that
+    # name the same directory are one canonical resource, not two.
+    docs_worktree = state_root / "docs-worktree"
+    docs_worktree.mkdir()
+    for name in ("README.md", "AGENTS.md"):
+        source = worktree / name
+        if source.is_file():
+            shutil.copyfile(source, docs_worktree / name)
+    shutil.copyfile(worktree / "pyproject.toml", docs_worktree / "pyproject.toml")
+
     with campaigns.open_registry(registry_directory, create=True):
         pass
     with campaigns.open_registry(registry_directory) as registry:
-        for campaign, branch, purpose in (
-                ("audit-worker", "freebuff/supervisor-audit", "State audit and deterministic backend"),
-                ("docs-worker", "freebuff/observatory-projection", "Campaign projection work")):
+        for campaign, branch, purpose, root in (
+                ("audit-worker", "freebuff/supervisor-audit",
+                 "State audit and deterministic backend", worktree),
+                ("docs-worker", "freebuff/observatory-projection",
+                 "Campaign projection work", docs_worktree),
+                ("shared-claim", "freebuff/shared-claim",
+                 "Demonstrates canonical resource identity", worktree)):
             registry.register(campaign, owner="Freebuff", provider="freebuff", branch=branch,
-                              worktree=str(worktree), purpose=purpose)
+                              worktree=str(root), purpose=purpose)
 
     jobs = [
-        ("audit-worker", "hash-files", {"paths": ["README.md", "AGENTS.md"]}),
+        ("audit-worker", "hash-files", {"paths": ["README.md", "AGENTS.md"]}, worktree),
         ("docs-worker", "fixture-compare",
-         {"expected": "pyproject.toml", "actual": "pyproject.toml"}),
+         {"expected": "pyproject.toml", "actual": "pyproject.toml"}, docs_worktree),
     ]
-    outcomes, errors = {}, []
+    outcomes, directories, errors = {}, {}, []
 
-    def worker(campaign, procedure, arguments):
+    def worker(campaign, procedure, arguments, root):
         try:
-            outcomes[campaign] = run_procedure(state_root, registry_directory, campaign,
-                                               procedure, arguments, worktree)
+            directory, outcome = run_procedure(state_root, registry_directory, campaign,
+                                               procedure, arguments, root)
+            outcomes[campaign] = outcome
+            directories[campaign] = directory
         except Exception as error:  # noqa: BLE001 - the demo reports, never hides
-            errors.append((campaign, type(error).__name__))
+            errors.append((campaign, type(error).__name__, str(error)))
 
     threads = [Thread(target=worker, args=job) for job in jobs]
     for thread in threads:
@@ -214,9 +204,11 @@ def main(argv=None):
         raise SystemExit("a deterministic worker did not finish")
 
     now = datetime.now(UTC)
-    pairs = [(campaign, outcomes[campaign]) for campaign, _, _ in jobs]
-    snapshot = build_snapshot(registry_directory, pairs, now=now)
-    view = observatory.projection(snapshot, now=now, stale_seconds=STALE_SECONDS)
+    document = snapshot.collect(registry_directory=registry_directory,
+                                attempts=[directories[campaign] for campaign, *_ in jobs],
+                                now=now)
+    document["campaigns"].append(synthetic_campaign(now))
+    view = observatory.projection(document, now=now, stale_seconds=STALE_SECONDS)
     _, text = observatory.render(view, "text")
     _, html = observatory.render(view, "html")
     _, payload = observatory.render(view, "json")
@@ -226,12 +218,27 @@ def main(argv=None):
 
     print(text)
     print("DETERMINISTIC ATTEMPT RECEIPTS")
-    for campaign, outcome in pairs:
+    for campaign, procedure, _, _ in jobs:
+        outcome = outcomes[campaign]
         print(f"  {campaign}: {outcome['procedure']} -> {outcome['state']} "
               f"exit={outcome['exit_status']} elapsed={outcome['elapsed_seconds']}s "
               f"stdout_sha256={outcome['stdout']['sha256'][:16]}...")
         for artifact in outcome["artifacts"]:
             print(f"    artifact {artifact['path']} {artifact['sha256'][:16]}...")
+    print("\nCANONICAL RESOURCE IDENTITY")
+    claim = tree_claim()
+    with campaigns.open_registry(registry_directory) as registry:
+        registry.acquire("worktree:audit-worker", "audit-worker", pid=claim["pid"],
+                         process_identity=claim["identity"], ttl_seconds=60)
+        try:
+            registry.acquire("worktree:shared-claim", "shared-claim", pid=claim["pid"],
+                             process_identity=claim["identity"], ttl_seconds=60)
+            print("  shared-claim acquired the audit worktree (UNEXPECTED)")
+        except campaigns.LeaseConflict:
+            print("  shared-claim was refused: same canonical worktree as audit-worker")
+        finally:
+            registry.release("worktree:audit-worker", "audit-worker", pid=claim["pid"],
+                             process_identity=claim["identity"])
     print("\nSCHEDULER DECISIONS")
     for decision in scheduler_demonstration(now):
         print(f"  worker={decision['worker_id']} rationale={decision['rationale']}")

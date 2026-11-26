@@ -69,6 +69,11 @@ def process_claim(pid=None):
     return {"pid": pid, "identity": identity} if status == "alive" else None
 
 
+def process_status(pid):
+    """Public liveness probe: ``alive``, ``stopped``, ``not-found`` or ``unknown``."""
+    return _sample(pid)[1]
+
+
 def verify_process(pid, expected_identity):
     identity, status = _sample(pid)
     if identity is not None and identity != expected_identity:
