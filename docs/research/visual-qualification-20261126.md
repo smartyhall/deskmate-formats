@@ -99,6 +99,14 @@ inconclusive entry is WebKit focus order on the home page: WebKit moves Tab
 between form controls only, so a zero-stop result says nothing about keyboard
 access. It is recorded as inconclusive rather than passed or failed.
 
+The same harness ran in CI on `ubuntu-latest` (run `45789440944`), which covered
+the seven base pages plus five changed pages selected from the diff:
+Chromium 159.0.8154.6, **Firefox 159.0**, and WebKit 27.2 all launched, and
+**108 of 108 renderings were accepted with 0 axe violations** and no
+inconclusive checks. Firefox is therefore available in CI even though it cannot
+start on this workstation, so the local skip is a host limitation rather than a
+missing matrix entry.
+
 ### Defects found and fixed
 
 1. **`link-in-text-block` (serious, 3–12 nodes per page).** The theme sets
@@ -124,7 +132,7 @@ standard public-repository runners:
 
 | Level | Trigger | Coverage | Rough cost |
 | --- | --- | --- | --- |
-| Routine | `pull_request` | Ubuntu, Chromium + Firefox + WebKit, home and five hubs plus changed pages, `desktop`, `mobile`, `no-js`, axe | one job, about 6–10 minutes |
+| Routine | `pull_request` | Ubuntu, Chromium + Firefox + WebKit, home and five hubs plus changed pages, `desktop`, `mobile`, `no-js`, axe | one job; measured **15 min 27 s** for 108 renderings |
 | Comprehensive | dispatch | Ubuntu, Windows, macOS; per-platform engines (Linux: Chromium/Firefox/WebKit; Windows: Chromium/Firefox/Edge; macOS: WebKit/Chromium/Firefox); eight profiles; hubs | three jobs, about 15–25 minutes each |
 | Focused | dispatch | caller-chosen engines, profiles, and routes on Ubuntu | one job |
 
