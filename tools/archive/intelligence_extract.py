@@ -19,6 +19,13 @@ from time import monotonic
 import zipfile
 import zlib
 
+try:
+    from . import compression as compression_streams
+    from . import disk_images
+except ImportError:
+    import compression as compression_streams
+    import disk_images
+
 
 EXTENSIONS = {
     **dict.fromkeys(('txt', 'nfo', 'asc', 'me', 'diz', 'lst', 'log', 'ini', 'cfg', 'bat',
@@ -39,7 +46,9 @@ NATIVE_SIGNATURES = {
 LEGACY_KINDS = {'arj': 'Arj', 'cab': 'Cab', 'lzh': 'Lzh', '7z': '7z', 'rar': 'Rar', 'iso9660': 'Iso', 'udf': 'Udf', 'mz': None}
 OPTICAL_KINDS = frozenset({'iso9660', 'udf', 'cd-raw', 'optical-image'})
 SEVEN_OPTIONS = ('-sccUTF-8', '-spd', '-bsp0', '-p-')
-CONTAINER_KINDS = frozenset({'zip', 'tar', 'gz', 'tgz', 'fat', 'disk-image', 'arc', *OPTICAL_KINDS, *LEGACY_KINDS})
+CONTAINER_KINDS = frozenset({'zip', 'tar', 'gz', 'tgz', 'fat', 'disk-image', 'arc',
+                            *OPTICAL_KINDS, *LEGACY_KINDS,
+                            *disk_images.READERS, *compression_streams.DECODERS})
 TEXT_KINDS = frozenset({'text', 'html', 'pdf', 'native-doc', 'doc', 'rtf'})
 TEXT_CONTROL = re.compile(rb'[\x00-\x07\x0e-\x19\x1b-\x1f]')
 
@@ -142,6 +151,12 @@ def identify(path: Path, name: str) -> str:
     with path.open('rb') as stream:
         data = stream.read(4096)
     if kind := NATIVE_SIGNATURES.get(data[:4]):
+        return kind
+    # Sector containers and compression streams carry mandatory structural
+    # invariants, so they are recognised without trusting the filename.
+    if kind := disk_images.identify(data):
+        return kind
+    if kind := compression_streams.identify_stream(data):
         return kind
     if data[:5] in (b'\xbd\x7a\0\x01\x01', b'\xbd\x7a\x01\x01\x01') and data[32:34] == b'\x2e\0':
         return 'ff1'
@@ -467,6 +482,66 @@ def _fat(path, limits):
                 yield from _FATVolume(stream, offset, layout).entries(f'partition-{index}/')
 
         return _members(entries(), limits)
+
+
+def _sector_image(path, kind, limits):
+    """Normalise a sector container, then read its filesystem if it has one.
+
+    The normalised logical-block image is a derivative written to a private
+    scratch path; only its member listing and geometry summary are retained.
+    """
+    volume = disk_images.read(path, kind, disk_images.Bounds(
+        input_bytes=limits.input_bytes, sectors=limits.members,
+        sector_bytes=min(limits.member_bytes, 65536)))
+    geometry = volume.geometry
+    summary = (f'{volume.container}; {geometry.cylinders}c/{geometry.heads}h/'
+               f'{geometry.sectors_per_track}spt x {geometry.sector_size}B; '
+               f'{len(volume.sectors)} sectors')
+    if volume.detail:
+        summary += f'; {volume.detail}'
+    if volume.warnings:
+        summary += '; ' + ', '.join(volume.warnings)
+    if volume.status in ('failed', 'unsupported', 'limited'):
+        return Extraction(status=volume.status, detail=summary)
+    normalised = disk_images.to_lba(volume)
+    if normalised.status == 'unknown-geometry':
+        return Extraction(status='unsupported', detail=summary + '; unknown-geometry')
+    summary += (f'; lba {normalised.status} {normalised.written}/{normalised.total_sectors}')
+    if normalised.missing:
+        summary += f'; {len(normalised.missing)} missing'
+    if normalised.conflicts:
+        summary += f'; {len(normalised.conflicts)} conflicting'
+    with TemporaryDirectory(prefix='deskmate-sector-') as scratch:
+        staged = Path(scratch) / 'normalised.img'
+        staged.write_bytes(normalised.data)
+        result = _fat(staged, limits)
+    result.detail = summary + ('; ' + result.detail if result.detail else '')
+    # A clean filesystem read of an incomplete volume is still an incomplete
+    # recovery: the container, not the filesystem, decides that status.
+    if result.status == 'ok' and (volume.status != 'ok' or normalised.status != 'complete'):
+        result.status = 'partial'
+    return result
+
+
+def _compressed(path, name, kind, limits):
+    """Decode one standalone compression stream into a single opaque member."""
+    decoded = compression_streams.decode(
+        path.read_bytes(), kind,
+        compression_streams.Bounds(output_bytes=limits.member_bytes))
+    if decoded.status != 'ok':
+        return Extraction(status='limited' if decoded.status == 'limited' else 'failed',
+                          detail=f'{kind}; {decoded.detail}')
+    basename = PurePosixPath(name.replace('\\', '/')).name
+    suffix = compression_streams.SUFFIXES[kind]
+    if basename.casefold().endswith(suffix):
+        child = basename[:-len(suffix)]
+    elif '.' in basename:
+        child = basename.rsplit('.', 1)[0]
+    else:
+        child = basename
+    detail = kind if not decoded.warnings else kind + '; ' + ', '.join(decoded.warnings)
+    return Extraction(members=[Member(0, child or 'payload', len(decoded.data),
+                                      decoded.data, 'ok')], detail=detail)
 
 
 def _arc(path, limits, nomarch=None):
@@ -872,6 +947,10 @@ def extract(path: Path, name: str, kind: str, limits: Limits = Limits(), *,
             return _gzip(path, name, kind, limits)
         if kind in ('fat', 'disk-image'):
             return _fat(path, limits)
+        if kind in disk_images.READERS:
+            return _sector_image(path, kind, limits)
+        if kind in compression_streams.DECODERS:
+            return _compressed(path, name, kind, limits)
         if kind == 'arc':
             return _arc(path, limits, nomarch)
         if kind == 'lzh' and lhasa is not None:
