@@ -87,7 +87,7 @@ try {
         $winget=Get-Command winget.exe -ErrorAction SilentlyContinue
         if (-not $SkipOnlinePackages -and $null -ne $winget) {
             foreach ($id in @('Git.Git','GitHub.cli','Python.Python.3.13',
-                    'EclipseAdoptium.Temurin.21.JDK','7zip.7zip','MSYS2.MSYS2',
+                    'EclipseAdoptium.Temurin.25.JDK','7zip.7zip','MSYS2.MSYS2',
                     'OpenJS.NodeJS.LTS')) {
                 Write-Host "Installing $id via WinGet"
                 & $winget.Source install --exact --id $id --source winget --silent --disable-interactivity --accept-package-agreements --accept-source-agreements
@@ -99,14 +99,16 @@ try {
             throw 'WinGet missing: cannot claim the lab is fully provisioned.'
         }
         # Exact Ghidra version used by our 2026 reverse-engineering reports.
-        $ghidraDir='C:\Tools\ghidra_12.1.4_PUBLIC'
+        # 12.2 is the preferred release: it corrects the 12.1.3/12.1.4 reversed
+        # MOV Sreg,/r display and operand order (GP-7279) and requires Java 25.
+        $ghidraDir='C:\Tools\ghidra_12.2_PUBLIC'
         if (-not (Test-Path (Join-Path $ghidraDir 'support\analyzeHeadless.bat'))) {
-            $ghidraZip=Join-Path $root 'Packages\ghidra_12.1.4_PUBLIC_20260921.zip'
+            $ghidraZip=Join-Path $root 'Packages\ghidra_12.2_PUBLIC_20261016.zip'
             if (-not (Test-Path $ghidraZip)) {
-                $url='https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.1.4_build/ghidra_12.1.4_PUBLIC_20260921.zip'
+                $url='https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.2_build/ghidra_12.2_PUBLIC_20261016.zip'
                 Invoke-WebRequest -Uri $url -OutFile $ghidraZip -UseBasicParsing
             }
-            $expected='ddac49f903da9d5bac833e5cc79395098b9c33cfd3279be5f31bd00387d2d4db'
+            $expected='2c2cd776db3c1f6a097ba418922378ac3649cadd5e844a6f5f088ae628a7be67'
             $actual=(Get-FileHash -LiteralPath $ghidraZip -Algorithm SHA256).Hash.ToLowerInvariant()
             if ($actual -ne $expected) { throw 'Ghidra zip SHA-256 verification failed.' }
             New-Item -ItemType Directory -Path 'C:\Tools' -Force | Out-Null

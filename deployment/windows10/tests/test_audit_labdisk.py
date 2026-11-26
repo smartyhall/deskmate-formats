@@ -35,7 +35,7 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(result["lab_account_mode"], "Lab")
         self.assertEqual(result["provisioning_phase"], "no_execution_evidence")
         self.assertEqual(result["lab_payload_files"]["provision_script"], "present")
-        self.assertEqual(result["application_location_hints"]["ghidra_12_1_4"], "absent")
+        self.assertEqual(result["application_location_hints"]["ghidra_12_2"], "absent")
 
     def test_classified_error_never_leaks_private_content(self):
         self.put("DeskMateLab/setup-logs/last-error.txt", "Secret Xsword987 confidential-party-somebody WinGet missing: private token\n")

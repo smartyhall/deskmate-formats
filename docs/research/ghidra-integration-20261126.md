@@ -127,6 +127,10 @@ original bytes for exactly this reason, and `BoundedDecode.java` does the same.
 
 No language file was patched. A local patch would make our listings
 irreproducible against a stock installation, which is worse than the defect.
+Ghidra 12.2 corrects it in the shipped release (GP-7279); the 12.1.4 text in
+this table is the historical observation, and the 12.2 re-run plus the
+assembler and operand-indexing consequences are recorded in
+[`ghidra-12.2-qualification-20261126.md`](ghidra-12.2-qualification-20261126.md).
 
 ## Independently reproduced observations
 

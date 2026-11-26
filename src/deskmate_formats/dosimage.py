@@ -304,7 +304,7 @@ class MzImage:
         data: bytes,
         load_paragraph: int = DEFAULT_LOAD_PARAGRAPH,
     ) -> list[dict]:
-        """Reproduce the memory blocks Ghidra 12.1.4's MZ loader creates.
+        """Reproduce the memory blocks Ghidra 12.1.4 and 12.2 MZ loaders create.
 
         Modelled from ``MzLoader.processMemoryBlocks`` and
         ``adjustSegmentStarts``: one initialized block per loader segment,

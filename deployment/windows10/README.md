@@ -284,8 +284,8 @@ logon task under SYSTEM (where WinGet may not be available). Provisioning create
 `C:\DeskMateLab\setup-logs`, applies conservative telemetry preferences,
 installs Google Chrome Enterprise from its official URL (or a signed MSI
 provided with the build); installs Git, GitHub CLI, Python 3.13, Temurin
-JDK 21, 7-Zip, MSYS2 and Node.js LTS if WinGet is present; checks the
-Ghidra 12.1.4 SHA-256 and extracts it; installs the Codex CLI (without
+JDK 25, 7-Zip, MSYS2 and Node.js LTS if WinGet is present; checks the
+Ghidra 12.2 SHA-256 and extracts it (12.2 needs Java 25); installs the Codex CLI (without
 authentication); and clones the public deskmate-formats repository. It writes the
 completion marker **only if these steps succeeded**. It does not fake success
 on missing WinGet or install errors.

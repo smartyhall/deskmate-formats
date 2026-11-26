@@ -54,7 +54,7 @@ The earlier driver deleted `NAME.lock` when its own `created_project` flag was
 set. That flag says nothing about ownership at the moment of deletion, and
 Ghidra may still be releasing the lock in its shutdown sequence.
 
-Measured behaviour on the qualification host (Ghidra 12.1.4, Windows):
+Measured behaviour on the qualification host (Ghidra 12.1.4 and 12.2, Windows):
 
 * a clean import worker exit leaves `desk3.lock` visible for a moment —
   `lock_after_exit.present` was `true` in the run recorded at
@@ -62,7 +62,10 @@ Measured behaviour on the qualification host (Ghidra 12.1.4, Windows):
 * the next JVM that opens the project closes it cleanly and the lock is gone —
   `reopen.lock_after.present` was `false` in the same receipt;
 * reopen succeeded on its **first** attempt in both full runs, with no lock
-  file touched.
+  file touched;
+* the same held under 12.2: `DESK.EXE` and `CALENDAR.PDM` each imported with
+  `--analyze` and reopened on the first attempt (`receipts-122/desk.json`,
+  `receipts-122/cal.json`, both exit 0).
 
 So no deletion is needed for the normal lifecycle, and deletion would be
 actively harmful: if another worker did own the project, removing the lock

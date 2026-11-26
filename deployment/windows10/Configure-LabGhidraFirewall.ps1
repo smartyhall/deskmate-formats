@@ -13,7 +13,7 @@
 [CmdletBinding(SupportsShouldProcess=$true)]
 param(
     [string]$JavaHome,
-    [string]$GhidraInstallDir = 'C:\Tools\ghidra_12.1.4_PUBLIC'
+    [string]$GhidraInstallDir = 'C:\Tools\ghidra_12.2_PUBLIC'
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -46,7 +46,9 @@ if ($JavaHome) {
     }
     $adoptium = Join-Path $env:ProgramFiles 'Eclipse Adoptium'
     if (Test-Path -LiteralPath $adoptium) {
-        Get-ChildItem -LiteralPath $adoptium -Directory -Filter 'jdk-21*' |
+        # Newest Adoptium JDK first: Ghidra 12.2 requires Java 25, while an
+        # older lab image may still hold the Java 21 runtime beside it.
+        Get-ChildItem -LiteralPath $adoptium -Directory -Filter 'jdk-2*' |
             Sort-Object Name -Descending | ForEach-Object { $candidates.Add($_.FullName) }
     }
 }
