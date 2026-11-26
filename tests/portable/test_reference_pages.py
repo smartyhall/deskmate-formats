@@ -9,6 +9,9 @@ import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))
 from check_reference_pages import validate_map  # noqa: E402
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "website/scripts"))
+from check_generated_site import check_baseline  # noqa: E402
+
 
 class ReferencePageMapTests(unittest.TestCase):
     def setUp(self):
@@ -62,6 +65,46 @@ class ReferencePageMapTests(unittest.TestCase):
         self.assertEqual(
             validate_map(json.loads(location.read_text(encoding="utf-8")), repo), []
         )
+
+
+class PublishedRouteBaselineTests(unittest.TestCase):
+    def setUp(self):
+        temp = TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        self.root = Path(temp.name)
+        self.baseline = {
+            "schema_version": 1,
+            "anchor_status": "pending-rendered-baseline",
+            "routes": [{"route": "/example/", "page_id": "example.page", "anchors": None}],
+        }
+        self.page = self.root / "example/index.html"
+        self.page.parent.mkdir()
+        self.page.write_text('<h1 id="old">Example</h1><a name="legacy"></a>', encoding="utf-8")
+
+    def test_capture_and_preserve_anchors(self):
+        self.assertEqual(check_baseline(self.root, self.baseline, capture=True), [])
+        self.assertEqual(self.baseline["anchor_status"], "captured")
+        self.assertEqual(self.baseline["routes"][0]["anchors"], ["legacy", "old"])
+        self.assertEqual(check_baseline(self.root, self.baseline), [])
+        self.page.write_text('<h1 id="new">Example</h1>', encoding="utf-8")
+        self.assertIn("/example/: missing baseline anchor #old",
+                      check_baseline(self.root, self.baseline))
+        self.assertTrue(check_baseline(self.root, self.baseline, capture=True))
+
+    def test_missing_route_even_before_anchor_capture(self):
+        self.page.unlink()
+        self.assertIn("/example/: missing baseline route",
+                      check_baseline(self.root, self.baseline))
+
+    def test_reject_malformed_or_traversal_route(self):
+        self.baseline["routes"][0]["route"] = "/../"
+        self.assertTrue(check_baseline(self.root, self.baseline))
+
+    def test_new_anchor_does_not_break_baseline(self):
+        self.assertEqual(check_baseline(self.root, self.baseline, capture=True), [])
+        with self.page.open("a", encoding="utf-8") as output:
+            output.write('<h2 id="new">New</h2>')
+        self.assertEqual(check_baseline(self.root, self.baseline), [])
 
 
 if __name__ == "__main__":
