@@ -263,7 +263,7 @@ implies the file is whole, or an explicit admission that neither is available.
 - Extraction methods: raw.
 - Unsupported or ambiguous variants: Only 8.3 short names here: long names belong to the FAT32/VFAT record.
 - Evidence: Portable tests read a synthetic FAT12 volume, follow a directory chain, and reject a self-referencing cluster chain. Container tests reach the same reader through a normalised IMD and CopyQM image.
-- Limitations: Eight-bit short names are the primary view; long names and the FAT32 cluster threshold belong to the FAT32/VFAT record, which shares this reader. Cluster chains are validated for loops and truncation, so a corrupt extent is reported rather than padded.
+- Limitations: Eight-bit short names are the primary view; long names and the FAT32 cluster threshold belong to the FAT32/VFAT record, which shares this reader. Cluster chains are validated for loops, truncation and bad-cluster markers, so a corrupt extent is reported rather than padded.
 - Reference: [Microsoft FAT specification](https://download.microsoft.com/download/1/6/1/161ba512-40e2-4cc9-843a-923143f3456c/fatgen103.doc)
 
 ### ISO 9660 with 2048-byte logical blocks
@@ -352,9 +352,9 @@ implies the file is whole, or an explicit admission that neither is available.
 - Structural identification: BPB whose cluster count reaches the FAT32 threshold, with a cluster-based root directory
 - Container completeness: structural.
 - Extraction methods: raw.
-- Unsupported or ambiguous variants: A long name whose checksum does not cover its short name falls back to the short name.
-- Evidence: Portable tests build a sparse volume whose cluster count sits above the FAT32 threshold, so the 32-bit allocation table, the cluster-chained root directory and the high cluster-word merge are all exercised: a file placed at cluster 0x10003 is read back byte for byte. A single-slot VFAT long name is assembled from its UTF-16 code units and reported instead of the 8.3 alias, and a long-name chain whose checksum does not cover the short name is rejected in favour of the short name.
-- Limitations: Only contiguous numbered long-name chains bound to a matching short-name checksum are accepted. Multi-slot long names are assembled but not yet exercised by a fixture, and FSInfo, backup boot sectors and the FAT32 mirroring rules are not consulted.
+- Unsupported or ambiguous variants: A long name whose checksum does not cover its short name falls back to the short name; Volume-level inconsistencies such as divergent mirrored allocation tables or an invalid FSInfo signature are reported as observations, not repaired.
+- Evidence: Portable tests build sparse volumes whose cluster count sits above the FAT32 threshold, so the 32-bit allocation table, the cluster-chained root directory and the high cluster-word merge are all exercised: a file placed at cluster 0x10003 is read back byte for byte. A three-slot VFAT long name with non-ASCII characters is reconstructed instead of its 8.3 alias, and a chain whose checksum does not cover the short name falls back to that alias. Damaged structures are exercised separately: a bad-cluster marker ends the read with an error rather than passing for an end of chain, a self-referencing chain is rejected, a cross-linked second file is refused while the first keeps its bytes, a declared length beyond the chain is an error, and a volume too short for its declared total is not read as a filesystem. BPB_ExtFlags selects the active allocation-table copy, divergent mirrored copies are reported as fat-copy-N-differs, and FSInfo and backup boot sectors are checked and reported as observations rather than trusted.
+- Limitations: Only contiguous numbered long-name chains bound to a matching short-name checksum are accepted. FSInfo values and the backup boot sector are advisory: they are validated and reported, never used to allocate or to place files, and a divergence is an observation rather than a failure. Directory cluster chains are not cross-link checked, and no volume created by an independent filesystem implementation has been qualified yet: the fixtures are written from the on-disk structures.
 
 ### IBM XDF extended-density disk layout
 

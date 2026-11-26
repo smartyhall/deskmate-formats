@@ -302,15 +302,16 @@ class ArchiveExtractionTests(unittest.TestCase):
         self.assertEqual([m.status for m in result.members], ['ok', 'read-error', 'unsafe-or-unsupported-lhasa-name'])
         self.assertEqual([call.args[0][-1] for call in run.call_args_list], ['index.txt', 'broken.txt'])
 
-    def test_arc_stored_member_and_unsupported_method(self):
+    def test_arc_stored_member_and_static_method_needing_an_adapter(self):
         name = b'INDEX.TXT\0ABC'
         payload = b'stored control'
         header = name + pack('<IHHHI', len(payload), 0, 0, archive._arc_crc(payload), len(payload))
-        self.payload.write_bytes(b'\x1a\x02' + header + payload + b'\x1a\x08' + header + payload + b'\x1a\0')
+        # Method 5 is the static 12-bit form; the dynamic method 8 is native.
+        self.payload.write_bytes(b'\x1a\x02' + header + payload + b'\x1a\x05' + header + payload + b'\x1a\0')
         kind, result = self.classify_and_extract('opaque.bin')
         self.assertEqual(kind, 'arc')
         self.assertEqual(result.members[0].data, payload)
-        self.assertEqual(result.members[1].status, 'unsupported-arc-method-8')
+        self.assertEqual(result.members[1].status, 'unsupported-arc-method-5')
 
     def test_html_and_pdf_page_locators(self):
         self.payload.write_bytes(b'<html><title>Reference</title><script>hidden()</script><p>Paper &amp; pen</p>')

@@ -411,6 +411,14 @@ class _FATLayout:
     root_bytes: int
     data_start: int
     root_cluster: int | None = None
+    copies: int = 1
+    active: int = 0
+    fsinfo: int | None = None
+    backup_boot: int | None = None
+    media: int = 0xf8
+    total_sectors: int = 0
+    sector_bytes: int = 512
+    mirrored: bool = True
 
 
 def _fat_layout(boot, size):
@@ -433,12 +441,26 @@ def _fat_layout(boot, size):
     cluster_count = (total - first_data) // sectors_per_cluster
     if not 0 < cluster_count < 0x0FFFFFF5:
         return None
+    fsinfo = backup = None
+    active = 0
+    mirrored = True
     if cluster_count >= 65525:
         # FAT32 keeps the root directory in the data area and has no fixed
         # root region, so a non-zero root-entry count contradicts the layout.
         if root_entries:
             return None
         bits, root_cluster = 32, unpack_from('<I', boot, 44)[0]
+        if not 2 <= root_cluster < cluster_count + 2:
+            return None
+        # BPB_ExtFlags: bit 7 disables FAT mirroring; the low nibble then names
+        # the active copy. A mirroring-enabled volume must use copy zero.
+        ext_flags = unpack_from('<H', boot, 40)[0]
+        active = ext_flags & 0x0f if ext_flags & 0x80 else 0
+        if active >= copies:
+            return None
+        fsinfo = unpack_from('<H', boot, 48)[0] or None
+        backup = unpack_from('<H', boot, 50)[0] or None
+        mirrored = not ext_flags & 0x80
         root_bytes = 0
     else:
         bits, root_cluster = (12 if cluster_count < 4085 else 16), None
@@ -447,7 +469,8 @@ def _fat_layout(boot, size):
         return None
     return _FATLayout(bits, sector * sectors_per_cluster, cluster_count,
                       reserved * sector, fat * sector, root * sector, root_bytes,
-                      first_data * sector, root_cluster)
+                      first_data * sector, root_cluster, copies, active, fsinfo,
+                      backup, media, total, sector, mirrored)
 
 
 def _partitions(boot, size):
@@ -489,13 +512,65 @@ def _vfat_fragment(entry):
 
 
 class _FATVolume:
-    def __init__(self, stream, offset, layout):
+    def __init__(self, stream, offset, layout, boot=b''):
         self.stream = stream
         self.offset = offset
         self.layout = layout
         link_bytes = ((layout.cluster_count + 2) * layout.bits + 7) // 8
-        self.fat = self.read(layout.fat_start, link_bytes)
+        self.fat = self.read(layout.fat_start + layout.active * layout.fat_bytes, link_bytes)
         self.directories = set()
+        self.owned = {}
+        self.observations = []
+        self._inspect_copies(link_bytes)
+        if self.fat[0] != layout.media & 0xFF:
+            self.observations.append('fat-media-byte-differs')
+        self._inspect_fsinfo()
+        self._inspect_backup_boot(boot)
+
+    def _inspect_copies(self, link_bytes):
+        """Compare mirrored copies and report the first divergence.
+
+        A volume with mirroring disabled may legitimately keep stale mirrors,
+        so only a mirrored volume is compared.
+        """
+        layout = self.layout
+        if layout.copies < 2 or not layout.mirrored:
+            return
+        for index in range(layout.copies):
+            if index == layout.active:
+                continue
+            other = self.read(layout.fat_start + index * layout.fat_bytes, link_bytes)
+            if other != self.fat:
+                self.observations.append(f'fat-copy-{index}-differs')
+                return
+
+    def _inspect_fsinfo(self):
+        """Check the FSInfo signatures and value plausibility, never its hints."""
+        layout = self.layout
+        if not layout.fsinfo or layout.fsinfo >= layout.total_sectors:
+            return
+        sector = self.read(layout.fsinfo * layout.sector_bytes, layout.sector_bytes)
+        if (unpack_from('<I', sector, 0)[0] != 0x41615252 or
+                unpack_from('<I', sector, 484)[0] != 0x61417272 or
+                unpack_from('<I', sector, 508)[0] != 0xAA550000):
+            self.observations.append('fsinfo-signature-invalid')
+            return
+        free, next_free = unpack_from('<II', sector, 488)
+        if ((free != 0xFFFFFFFF and free > layout.cluster_count) or
+                (next_free != 0xFFFFFFFF
+                 and not 2 <= next_free < layout.cluster_count + 2)):
+            self.observations.append('fsinfo-values-implausible')
+
+    def _inspect_backup_boot(self, boot):
+        layout = self.layout
+        if not layout.backup_boot or not boot:
+            return
+        offset = layout.backup_boot * layout.sector_bytes
+        if offset + len(boot) > layout.total_sectors * layout.sector_bytes:
+            self.observations.append('backup-boot-outside-volume')
+            return
+        if self.read(offset, len(boot)) != boot:
+            self.observations.append('backup-boot-differs')
 
     def read(self, offset, size):
         self.stream.seek(self.offset + offset)
@@ -510,7 +585,13 @@ class _FATVolume:
         bits = layout.bits
         stop = {12: 0xff8, 16: 0xfff8, 32: 0x0ffffff8}[bits]
         reserved = {12: 0xff0, 16: 0xfff0, 32: 0x0ffffff0}[bits]
-        while cluster < stop:
+        # A bad-cluster marker is a distinct end, not an end of chain.
+        bad = {12: 0xff7, 16: 0xfff7, 32: 0x0ffffff7}[bits]
+        while True:
+            if cluster >= stop:
+                return
+            if cluster == bad:
+                raise ValueError('bad FAT cluster in chain')
             if not 2 <= cluster < min(layout.cluster_count + 2, reserved) or cluster in seen:
                 raise ValueError('invalid FAT cluster chain')
             seen.add(cluster)
@@ -533,16 +614,23 @@ class _FATVolume:
             for offset in self.chain(cluster):
                 yield self.read(offset, self.layout.cluster_bytes)
 
-    def file(self, cluster, size):
+    def file(self, cluster, size, name=None):
         if not cluster and not size:
             return b''
+        chain = list(self.chain(cluster))
+        for offset in chain:
+            owner = self.owned.get(offset)
+            if owner is not None and owner != name:
+                raise ValueError('cross-linked FAT chain')
         data = bytearray()
-        for offset in self.chain(cluster):
+        for offset in chain:
             if len(data) >= size:
                 raise ValueError('extra FAT clusters beyond file extent')
             data.extend(self.read(offset, min(self.layout.cluster_bytes, size - len(data))))
         if len(data) != size:
             raise ValueError('FAT chain is shorter than file extent')
+        for offset in chain:
+            self.owned[offset] = name
         return bytes(data)
 
     def entries(self, prefix='', cluster=None, depth=0):
@@ -593,7 +681,16 @@ class _FATVolume:
                         except ValueError:
                             yield name, None, 'invalid-directory-chain', None
                 else:
-                    yield name, size, None, lambda cap: self.file(child, size)
+                    yield name, size, None, lambda cap: self.file(child, size, name)
+
+
+def _volume_detail(result, volumes):
+    """Attach volume-level observations without hiding the member results."""
+    notes = [note for volume in volumes for note in volume.observations]
+    if notes:
+        joined = ', '.join(dict.fromkeys(notes))
+        result.detail = joined + ('; ' + result.detail if result.detail else '')
+    return result
 
 
 def _fat(path, limits):
@@ -601,20 +698,22 @@ def _fat(path, limits):
     with path.open('rb') as stream:
         boot = stream.read(512)
         if layout := _fat_layout(boot, size):
-            return _members(_FATVolume(stream, 0, layout).entries(), limits)
+            volume = _FATVolume(stream, 0, layout, boot)
+            return _volume_detail(_members(volume.entries(), limits), [volume])
         volumes = []
         for index, offset, length in _partitions(boot, size):
             stream.seek(offset)
-            if layout := _fat_layout(stream.read(512), length):
-                volumes.append((index, offset, layout))
+            partition_boot = stream.read(512)
+            if layout := _fat_layout(partition_boot, length):
+                volumes.append((index, _FATVolume(stream, offset, layout, partition_boot)))
         if not volumes:
             return Extraction(status='unsupported', detail='no-fat12-or-fat16-layout')
 
         def entries():
-            for index, offset, layout in volumes:
-                yield from _FATVolume(stream, offset, layout).entries(f'partition-{index}/')
+            for index, volume in volumes:
+                yield from volume.entries(f'partition-{index}/')
 
-        return _members(entries(), limits)
+        return _volume_detail(_members(entries(), limits), [volume for _, volume in volumes])
 
 
 def _sector_image(path, kind, limits):

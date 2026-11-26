@@ -577,3 +577,6 @@ coherent review unit:
   Python 3.14 `compression` module collision, the missing REUSE sidecar, and
   the resolution of the ARC method 8 bit conventions against four genuine
   members.
+- [Successor checkpoint 3](archive-capability-inventory-20261126d.md): FAT32
+  and VFAT structural hardening for bad clusters, cross-links, allocation-table
+  copies, FSInfo and backup boot sectors.
