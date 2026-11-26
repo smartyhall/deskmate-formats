@@ -82,6 +82,29 @@ the general rules below supplement them, not expand their grants.
   do not imply coverage, bypass live gates, or initiate an integration
   implementation merely because of this policy.
 
+### CodeRabbit advisory review — operator decision 2026-11-26
+
+For review-ready PRs, follow the [CodeRabbit review procedure](CONTRIBUTING.md#coderabbit-advisory-review)
+and [qualification record](docs/research/coderabbit-review-qualification-20261126.md).
+This is a standard, nonblocking review step for all producing agents, not a
+required CI check or delegation of approval/merge authority. Request an ordinary
+manual review when automatic review is unavailable (currently the repository
+is below the ten-star threshold); avoid duplicate requests and paid calls.
+Verify the reviewed revision and effective configuration, independently
+adjudicate findings, and record status, dispositions and limitations at handoff.
+If a review is unavailable or pending at safe stop, preserve and submit work
+normally and identify the outstanding review for the independent reviewer.
+
+CodeRabbit may review eligible public repository changes and public PR context.
+Do not send it private laboratory inputs, restricted materials or credentials,
+invoke Autofix/Autopilot, finishing touches, code or test generation, CI or
+conflict repairs, issue planning, or other autonomous actions without separate
+operator authorization. Do not alter reviewer policy, dashboard settings,
+integration access or review gates to obtain a preferred review outcome.
+Existing campaign, publication and merge authority remains unchanged.
+V3 administrative restrictions are not all technically enforceable at present;
+observe these procedural boundaries regardless of the options the UI exposes.
+
 ## Accepted experimental laboratory risk — operator decision 2026-11-11
 
 **Read [experimental laboratory posture](docs/research/experimental-lab-operating-posture.md)
