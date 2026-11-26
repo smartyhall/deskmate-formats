@@ -65,7 +65,7 @@ test("contact sheet marks failures and escapes content", () => {
   const html = contactSheet(results, { base: "http://x", generated_at: "now", totals: { renderings: 1, passed: 0, failed: 1 } });
   assert.match(html, /figure class="fail"/);
   assert.match(html, /&lt;script&gt;/);
-  assert.doesNotMatch(html, /<script>/);
+  assert.ok(!html.toLowerCase().includes("<script>"), "raw script tags are escaped");
   assert.match(html, /layout: too wide/);
   assert.equal(escape("a&b"), "a&amp;b");
 });
