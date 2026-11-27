@@ -71,6 +71,14 @@ cyclic dependencies, completion evidence, source paths and deterministic
 ordering. The validator checks structure, not scientific correctness,
 current remote state or the truth of closeout references.
 
+## Existing recovery capabilities
+
+The [Workbench capability crosswalk](workbench-capability-crosswalk-20261127.md)
+maps integrated reader and converter entry points, separate archive tooling,
+and the proposed offline interface boundary to campaign IDs. It deliberately
+excludes unmerged capabilities and does not duplicate the maintained support
+matrix.
+
 ## Future integration
 
 Only after the inventory has been reviewed and maintained through several

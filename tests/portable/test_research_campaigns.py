@@ -13,14 +13,34 @@ SPEC.loader.exec_module(planner)
 
 class CampaignInventoryTests(unittest.TestCase):
     def setUp(self):
-        self.data = planner.load()
+        # Synthetic planning states must not change when real milestones close.
+        self.data = {
+            "schema_version": 1, "as_of": "2026-11-27", "base_revision": "a" * 40,
+            "purpose": "Synthetic planning controls",
+            "campaigns": [],
+        }
+        for key, status, deps in (
+            ("supervisor-integration", "review", []),
+            ("environment-isolation", "proposed", []),
+            ("deterministic-canary", "proposed", ["supervisor-integration", "environment-isolation"]),
+            ("archive-format-followup", "standing", []),
+        ):
+            self.data["campaigns"].append({
+                "id": key, "domain": "infrastructure", "priority": 1, "status": status,
+                "effort": "small", "workers": ["offline-lab"], "resources": ["owned-worktree"],
+                "depends_on": deps, "sources": ["AGENTS.md"], "issues": [], "pull_requests": [],
+                "evidence": "Synthetic control", "acceptance": "Synthetic completion",
+                "completion_refs": [],
+            })
+        planner.validate(self.data)
 
     def test_inventory_and_order(self):
-        result = planner.report(self.data)
+        inventory = planner.load()
+        result = planner.report(inventory)
         self.assertTrue(result["advisory_only"])
         entries = result["campaigns"]
         self.assertEqual(entries, sorted(entries, key=lambda x: (x["priority"], x["id"])))
-        self.assertEqual(len(entries), len(self.data["campaigns"]))
+        self.assertEqual(len(entries), len(inventory["campaigns"]))
 
     def test_filter_preserves_unresolved_dependencies(self):
         entries = planner.report(self.data, "offline-lab")["campaigns"]
