@@ -439,6 +439,66 @@ class ExtractorIntegrationTests(unittest.TestCase):
         self.assertEqual((result.status, result.detail), ('limited', 'xz; output-byte-limit'))
         self.assertEqual(result.members, [])
 
+    def test_the_aggregate_budget_caps_a_standalone_stream(self):
+        archive = self.load()
+        payload = b'aggregate control ' * 512
+        target = self.root / 'AGG.TXT.Z'
+        target.write_bytes(compress_stream(payload))
+        # The member cap is generous; only the aggregate cap is small, and the
+        # decoded payload is larger than it.
+        generous = archive.Limits(member_bytes=1 << 20, total_bytes=4 << 10)
+        limited = archive.extract(target, 'AGG.TXT.Z', 'unix-compress', generous)
+        self.assertEqual((limited.status, limited.detail),
+                         ('limited', 'unix-compress; output-byte-limit'))
+        self.assertEqual(limited.members, [])
+        # One byte less than the payload is still refused, the exact payload
+        # fits, and the same stream decodes when the aggregate can hold it.
+        under = archive.Limits(member_bytes=1 << 20, total_bytes=len(payload) - 1)
+        self.assertEqual(archive.extract(target, 'AGG.TXT.Z', 'unix-compress', under).status,
+                         'limited')
+        exact = archive.Limits(member_bytes=1 << 20, total_bytes=len(payload))
+        result = archive.extract(target, 'AGG.TXT.Z', 'unix-compress', exact)
+        self.assertEqual((result.status, result.members[0].data), ('ok', payload))
+        self.assertEqual(result.members[0].size, len(payload))
+
+    def test_the_aggregate_budget_caps_a_bzip2_member_that_fits_the_decoder(self):
+        archive = self.load()
+        payload = b'B' * (700 * 1024)
+        target = self.root / 'AGG.BIN.BZ2'
+        target.write_bytes(bz2.compress(payload, compresslevel=1))
+        # 600 KiB accommodates the 100 kB-block decoder (documented 500 KiB)
+        # but not the 700 KiB payload, so the aggregate cap is what stops it.
+        aggregate = archive.Limits(member_bytes=2 << 20, total_bytes=600 << 10)
+        result = archive.extract(target, 'AGG.BIN.BZ2', 'bzip2', aggregate)
+        self.assertEqual((result.status, result.detail),
+                         ('limited', 'bzip2; output-byte-limit'))
+        self.assertEqual(result.members, [])
+        # The decoder budget is still independent of the output budget.
+        tight = archive.Limits(member_bytes=2 << 20, total_bytes=64 << 10)
+        self.assertEqual(archive.extract(target, 'AGG.BIN.BZ2', 'bzip2', tight).detail,
+                         'bzip2; decoder-memory-limit')
+        # Raising only the aggregate budget is enough to decode it.
+        roomy = archive.Limits(member_bytes=2 << 20, total_bytes=len(payload))
+        ok = archive.extract(target, 'AGG.BIN.BZ2', 'bzip2', roomy)
+        self.assertEqual((ok.status, ok.members[0].size), ('ok', len(payload)))
+
+    def test_partial_recovery_stays_inside_the_aggregate_budget(self):
+        archive = self.load()
+        first = b'first verified member\n' * 8
+        # Both members declare 100 kB blocks so the 1 MiB decoder budget admits
+        # them; the second is then stopped by its damaged data, not by memory.
+        damaged = bytearray(bz2.compress(b'second damaged member\n' * 8, compresslevel=1))
+        damaged[10] ^= 0xFF
+        target = self.root / 'CONCAT.BZ2'
+        target.write_bytes(bz2.compress(first, compresslevel=1) + bytes(damaged))
+        result = archive.extract(target, 'CONCAT.BZ2', 'bzip2',
+                                 archive.Limits(member_bytes=1 << 20,
+                                                total_bytes=1 << 20))
+        self.assertEqual(result.status, 'partial')
+        self.assertEqual([(m.size, m.status) for m in result.members],
+                         [(len(first), 'partial')])
+        self.assertEqual(result.members[0].data, first)
+
     def test_the_compression_input_bound_is_enforced_by_the_read_itself(self):
         archive = self.load()
         target = self.root / 'payload.xz'
