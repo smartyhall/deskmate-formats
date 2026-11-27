@@ -22,15 +22,15 @@ CodeRabbit checks optional; a successful status is not proof of review
 coverage. V3 fixes sequence diagrams and linked-issue assessment off, and
 agent prompts and chat auto-reply on.
 
-### Administrator dashboard confirmation before adoption
+### Administrator dashboard targets and outstanding limitations
 
 V3 does not accept the old YAML keys for Knowledge Base scopes and
 privacy, chat integrations, finishing touches, post-merge actions, code
 generation, issue enrichment, or early access. The previous V2 file is
 preserved in commit `bf6137d79ebad347fa64f15c232cf8eeae9e6007` for comparison
 and rollback; repository YAML does not migrate these values into saved
-dashboard settings. An authorized administrator must verify the effective
-settings before merging:
+dashboard settings. The following are desired administrator settings, not
+verified effective values:
 
 - App installation restricted to this repository; no additional
   repository, provider, or private laboratory access.
@@ -47,12 +47,52 @@ settings before merging:
   not defeat these choices. Pin trusted configuration to main after
   qualification if available, with trusted-PR overrides disabled.
 
-If a setting is unavailable or cannot be confirmed, record the limitation
-and defer adoption where it affects authorization or privacy. No private
-lab data, credentials, raw logs, restricted media, paid calls, cloud
-coding, automatic remediation or new execution environments are
-authorized. No GitHub branch protection or merge rule changes. No
-producing agent may merge this PR.
+### Operator decision — retain V3 during qualification (2026-11-26)
+
+PR [#185](https://github.com/smartyhall/deskmate-formats/pull/185) was merged
+by the operator. The root V3 file is present on main. In the
+[configuration response](https://github.com/smartyhall/deskmate-formats/pull/185#issuecomment-7184708865),
+CodeRabbit recognized V3, the proposed repository revision, and Assertive
+review settings. That command explicitly did not load directory documents.
+Application of all eight instructions during a review remains to be
+verified; machine schema validation was not completed. Earlier review
+output for [#184](https://github.com/smartyhall/deskmate-formats/pull/184#issuecomment-7184488318)
+and [#186](https://github.com/smartyhall/deskmate-formats/pull/186#issuecomment-7184692841)
+reported Auto source mode, no repository file, and Chill profile.
+Those observations do not establish post-merge behavior.
+
+The operator confirmed Admin in the account membership table after
+relogin, but Configuration source was inaccessible and V3 preferences
+reported read-only access. Organization-default YAML accepted V3 only;
+an accessible V2 global-override editor was not found. The cause is
+unconfirmed (permissions defect or product/account limitation). Runtime
+defaults reported for several moved settings included Auto knowledge
+scopes/integrations and enabled generation/repair and issue-planning
+features. Availability does not itself mean automatic invocation.
+No claim is made that these targets are technically enforced.
+
+The operator explicitly chose to retain V3, accept these limitations
+for advisory use, and revisit administrative configuration later.
+Use the procedural safeguards in
+[AGENTS.md](../../AGENTS.md#coderabbit-advisory-review--operator-decision-2026-11-26)
+and [CONTRIBUTING.md](../../CONTRIBUTING.md#coderabbit-advisory-review).
+Keep checks optional. No private lab data, credentials, raw logs,
+restricted media, paid calls, cloud coding, automatic remediation or new
+execution environments are authorized. No GitHub branch-protection or
+merge-rule changes are authorized. Review configuration must not be
+changed by producers to evade scrutiny. Existing approval and merge
+authority remains unchanged.
+
+The operator approved a separate weekly public-source watch for relevant
+CodeRabbit fixes, workarounds or policy clarifications, plus a December
+26, 2026 reassessment even if no changes are announced. At reassessment,
+check effective review policy and directory coverage; retry administrator
+controls for default-branch pinning, trusted-PR override restrictions,
+V3 preferences/global overrides, local context scopes, integrations and
+repair/planning controls. Record confirmed values and remaining gaps.
+Monitoring is read-only, with no account/repository changes, review
+requests or paid usage. No Supervisor/Observatory implementation or
+additional unattended dispatch is authorized by this record.
 
 ### V3 migration verification
 

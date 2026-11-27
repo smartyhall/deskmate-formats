@@ -93,3 +93,32 @@ documents or pursuing a numerical coverage target. Continue to distinguish
 dated evidence from current specifications and apply the existing rights and
 image-review rules. Review actual desktop/mobile previews and no-JavaScript
 navigation before merging layout changes.
+
+## Report dates and review attachments
+
+A page's `date` in the [page map](page-map.json) records when the source says the
+work happened: a date in the title, an explicit statement in the report, or the
+date suffix that the report's own filename carries. Do not infer a date from a
+Git commit, a filesystem timestamp, or the date a page was added to the map.
+Leave the value null when the source records none, and say on the section hub
+that the entry is undated rather than guessing; the Research hub names the two
+entries that have no recorded run date.
+
+Relative links resolve against the source file. A destination that does not
+exist is a build failure rather than a repository link, so a mistyped path
+cannot become a quietly broken external URL that no site check inspects. Exact
+filename case is checked too, because the Linux build and GitHub are
+case-sensitive even when the author's workstation is not.
+
+Screenshots supplied for review are build artifacts, not repository content.
+Do not commit temporary review images: the publication audit correctly refuses
+unlisted binaries, and a committed directory would need the full image-manifest
+route with provenance, integrity, and a lifecycle. Instead build the site and
+run `node website/scripts/capture_review.cjs --base http://127.0.0.1:<port>`,
+which renders the home page and the five section hubs at a desktop and a phone
+viewport, writes them under the gitignored `local-results/review-captures/`,
+and records the measured viewport and scroll width so horizontal overflow is
+reported rather than overlooked. The `Reference review captures` workflow runs
+the same script on demand and publishes the result as a GitHub Actions artifact,
+which is the supported way to attach rendered evidence to a review. Anything
+that should appear on the published site still needs an image-manifest entry.

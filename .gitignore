@@ -55,6 +55,7 @@ task-queue.sqlite3-shm
 
 # Local Eleventy installation and generated site
 website/node_modules/
+qualification/node_modules/
 website/_site/
 
 # Downloaded pinned BOOTSTRA.386 distribution (never commit third-party binaries)

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "provider": "Freebuff",
+  "agent": "Freebuff native desktop agent",
+  "campaign_id": "freebuff-native-emulator-20261126",
+  "checkpoint": "first-native-fixture",
+  "observed_at_utc": null,
+  "observed_at_note": "Host date 2026-11-26; exact UTC instant unknown to agent tools.",
+  "git_revision": null,
+  "git_revision_note": "The checkpoint precedes the campaign commit; the committed report records the branch tip.",
+  "execution_mode": "native desktop agent driving 86Box 7.0 over the authenticated loopback socket, held-step execution, visible window",
+  "model": null,
+  "reasoning_effort": null,
+  "model_note": "Not exposed to agent tools.",
+  "source": {
+    "kind": "local allowlisted collector",
+    "version": "deskmate_formats.automation.client protocol 1",
+    "detail": "Per-session socket journals written by the repository client record every request and reply."
+  },
+  "coverage": "One complete native session: sealed RSX clone, F10 Corkboard write, clean exit to DOS, socket quit, stopped-disk recovery.",
+  "attribution_limits": "Emulated time is measured by the emulator and is not host wall-clock or provider usage. Recovery agreement was checked with 7-Zip 26.05 and the repository FAT16 walker.",
+  "status": "first native fixture reproduced byte-for-byte from the published two-line specimen",
+  "measurements": [
+    {
+      "name": "emulated_guest_time",
+      "value": 67862,
+      "unit": "ms",
+      "scope": "session",
+      "semantics": "cumulative",
+      "observed_at": "session end",
+      "reset_boundary": null
+    },
+    {
+      "name": "native_framebuffer_captures",
+      "value": 10,
+      "unit": "images",
+      "scope": "session",
+      "semantics": "cumulative",
+      "observed_at": "session end",
+      "reset_boundary": null
+    }
+  ],
+  "measurement_note": "No provider token, allowance or quota figure was available for this checkpoint.",
+  "private_evidence": "Stopped disk 52b3dc4d82eeae0b08bced4decf83f503cce64d15764b220ad47879c094f4f0d and its captures remain in the lab."
+}
