@@ -121,6 +121,17 @@ class ClassificationAxesTests(unittest.TestCase):
         bare = extractor.Classification('fat', 'td0', 'td0', None, (), 'structure')
         self.assertTrue(bare.unexpected_extension)
 
+    def test_an_embedded_archive_does_not_hide_a_wrong_extension(self):
+        # The payload is a genuine second identity, but it must not excuse a
+        # suffix that names a third format the identities do not support.
+        found = self.classify('SETUP.ARC', self_extracting_archive())
+        self.assertEqual(found.identities, ('zip', 'pe'))
+        self.assertEqual(found.extension_kind, 'arc')
+        self.assertTrue(found.unexpected_extension)
+        # A suffix outside the registry makes no claim either way.
+        self.assertFalse(self.classify('SETUP.TXT', self_extracting_archive())
+                         .unexpected_extension)
+
     def test_identities_never_collapse_into_one_label(self):
         found = self.classify('SETUP.EXE', self_extracting_archive())
         self.assertGreater(len(found.identities), 1)
