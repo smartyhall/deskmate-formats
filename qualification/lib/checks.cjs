@@ -34,16 +34,18 @@ async function images(page) {
   const result = await page.evaluate(() => {
     const missingAlt = [];
     const broken = [];
+    const pending = [];
     for (const image of document.querySelectorAll("img")) {
       if (!image.hasAttribute("alt")) missingAlt.push(image.getAttribute("src") || "(inline)");
+      if (!image.complete) pending.push(image.getAttribute("src") || "(inline)");
       if (image.complete && image.naturalWidth === 0) broken.push(image.getAttribute("src") || "(inline)");
     }
-    return { total: document.querySelectorAll("img").length, missingAlt, broken };
+    return { total: document.querySelectorAll("img").length, missingAlt, broken, pending };
   });
-  const ok = result.missingAlt.length === 0 && result.broken.length === 0;
+  const ok = result.missingAlt.length === 0 && result.broken.length === 0 && result.pending.length === 0;
   const detail = ok
     ? `${result.total} image(s) carry alt text and loaded`
-    : `${result.missingAlt.length} without alt, ${result.broken.length} failed to load`;
+    : `${result.missingAlt.length} without alt, ${result.broken.length} failed to load, ${result.pending.length} not loaded`;
   return { name: "images", ok, detail, ...result };
 }
 
