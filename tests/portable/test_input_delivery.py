@@ -61,7 +61,7 @@ class Peer:
                  commands=None, prompt='C:\\>', no_prompt_return=False, stale=None,
                  instrumented=False, cursor_offset_after=0, hold_last=None,
                  regress_at=None, regress_to=0, mutate_after=None, clear_on=(),
-                 leave_text_on=(), long_history=False):
+                 leave_text_on=(), long_history=False, discard_at=None):
         self.ms = 0
         self.frames = 1
         self.bios_mode = bios_mode
@@ -81,6 +81,8 @@ class Peer:
         self.regressed = False
         self.mutate_after = mutate_after
         self.mutated = False
+        self.discard_at = discard_at
+        self.discarded = False
         self.clear_on = set(clear_on)
         self.leave_text_on = set(leave_text_on)
         self.delay_steps = delay_steps
@@ -230,6 +232,12 @@ class Peer:
         parts = request.split()
         down = parts[1] == 'down'
         self.seq += 1
+        if (self.discard_at is not None and not self.discarded
+                and len(self.received) >= self.discard_at):
+            # The interface accepted an event and then discarded it: an empty
+            # queue afterwards must not read as full delivery.
+            self.dropped += 1
+            self.discarded = True
         self.accepted += len(parts) - 2
         self.forwarded += len(parts) - 2
         for token in parts[2:]:
@@ -965,6 +973,12 @@ class FacilityTests(unittest.TestCase):
                           lambda: facility.client.mouse_state()):
             with self.assertRaises(box.FeatureUnavailable):
                 operation()
+
+    def test_discarded_events_are_not_reported_as_success(self):
+        facility = self.facility(peer={'instrumented': True, 'discard_at': 2}, chunk=8)
+        report = facility.type_text('ABCD', anchor=PROMPT)
+        self.assertEqual(report.status, inp.AMBIGUOUS)
+        self.assertIn('discarded', report.detail)
 
     def test_instrumented_build_reports_queue_sequence_and_counters(self):
         facility = self.facility(peer={'instrumented': True})

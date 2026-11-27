@@ -365,6 +365,10 @@ class VerifiedInput:
             return report
         start_col = before['col'] + len(anchor)
         report.cursor = list(cursor)
+        # An instrumented build counts events it had to discard. An empty queue
+        # alone does not mean everything this operation sent was forwarded, so
+        # the cumulative count is held as a baseline and compared at the end.
+        baseline = self.automation_queue()
         pending = text
         confirmed = ''          # what has been verified as present, so far
         while pending:
@@ -390,6 +394,14 @@ class VerifiedInput:
             # says events are still being forwarded, observing the screen now
             # would describe a half-delivered burst.
             automation = self.wait_queue(self.drain_timeout_ms)
+            dropped = self._dropped_since(baseline)
+            if dropped is not None:
+                report.status = AMBIGUOUS
+                report.detail = 'the interface discarded accepted events'
+                report.steps.append({'burst': report.bursts, 'sent': burst,
+                                     'dropped': dropped,
+                                     'ms': self.client.status()['ms']})
+                return report
             if automation is not None and automation['matched'] is False:
                 report.status = PENDING
                 report.detail = 'automation queue still forwarding; not resending'
@@ -418,6 +430,11 @@ class VerifiedInput:
                 # and the cursor at the instant success would be claimed.
                 completion = self._completion(anchor, occurrence, before, start_col, text)
                 report.steps[-1]['completion'] = completion
+                dropped = self._dropped_since(baseline)
+                if dropped is not None:
+                    report.status = AMBIGUOUS
+                    report.detail = 'the interface discarded accepted events'
+                    return report
                 report.queue, report.automation = completion['queue'], completion['automation']
                 if not completion['ok']:
                     report.status = PENDING if completion['pending'] else AMBIGUOUS
@@ -575,6 +592,9 @@ class VerifiedInput:
             result['pending'] = True
             result['reason'] = 'keystrokes still queued in the BIOS ring'
             return result
+        if automation is not None and automation.get('accounting') is False:
+            result['reason'] = 'input accounting is inconsistent; input withheld'
+            return result
         if automation is not None and automation['queue']:
             result['pending'] = True
             result['reason'] = 'automation queue still forwarding'
@@ -584,6 +604,21 @@ class VerifiedInput:
             result['reason'] = 'no translation or automation queue is observable'
         result['ok'] = True
         return result
+
+    def _dropped_since(self, baseline):
+        """Return the discarded-event delta since `baseline`, or None.
+
+        None means either build reports no counters or none were discarded. A
+        number is a positive count of accepted events this interface discarded;
+        an empty queue alongside it would otherwise look like full delivery.
+        """
+        if baseline is None:
+            return None
+        current = self.automation_queue()
+        if current is None:
+            return None
+        delta = current['dropped'] - baseline['dropped']
+        return delta if delta > 0 else None
 
     def _insertion_point(self, anchor, occurrence):
         """Establish, before any input, that the cursor is at the anchor's end.

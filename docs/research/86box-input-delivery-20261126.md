@@ -128,7 +128,7 @@ can still arrive and a quiet screen proves nothing yet.
 
 ## Synthetic verification
 
-`tests/portable/test_input_delivery.py` (78 tests) and
+`tests/portable/test_input_delivery.py` (79 tests) and
 `tests/portable/test_draw_disk_names.py` (3 tests) run without an emulator. The
 peer speaks the real authenticated protocol over loopback and models a 25x80
 screen, a BIOS cursor, and the ring.
@@ -157,6 +157,7 @@ screen, a BIOS cursor, and the ring.
 | command echo only, scrolled history | output not matched |
 | cleared screen with new output | output matched |
 | command that leaves text mode | prompt return null, execution unknown |
+| instrumented build discards an accepted event | ambiguous, not observed |
 | menu open/restore, blink, render gate | observed, unchanged, false |
 
 ## Native qualification
