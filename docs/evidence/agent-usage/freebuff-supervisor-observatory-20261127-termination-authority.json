@@ -1,0 +1,41 @@
+{
+  "agent_label": "Freebuff Desktop native session (local shell and file tools)",
+  "attribution_limitations": [
+    "A shared account meter cannot be attributed to one campaign.",
+    "Token counts, context utilization and allowance hours are distinct units with no verified exchange relationship.",
+    "Cumulative thread usage reported by the desktop UI is not a per-campaign charge."
+  ],
+  "campaign_id": "freebuff-supervisor-observatory-20261126",
+  "checkpoint": "termination-authority",
+  "checkpoint_status": "observation and termination authority separated; every signal bound to a creation identity or an owned process handle; parent chains grant no descendant authority; traversal deadlines and Toolhelp completion aligned; focused regression tests added; Supervisor suite, Ruff, REUSE and repository audit pass locally",
+  "coverage": "this campaign only; shared account state is not attributable",
+  "evidence": [
+    "docs/research/termination-authority-20261127.md",
+    "docs/research/process-tree-observation-20261127.md",
+    "src/deskmate_formats/supervisor/process_control.py",
+    "src/deskmate_formats/supervisor/process_tree.py",
+    "src/deskmate_formats/supervisor/deterministic.py",
+    "tests/portable/test_supervisor_process_control.py",
+    "tests/portable/test_supervisor_process_tree.py"
+  ],
+  "execution_mode": "interactive local desktop session; no unattended dispatch, no model API call, no provider endpoint contacted, no native emulator experiment, no paid call",
+  "git_revision": "432edb2",
+  "measurement_note": "No measurement was observed. A missing measurement is recorded as absent, never as zero.",
+  "measurements": [],
+  "model": {
+    "note": "The client model selector and runtime model identity were not observed at any checkpoint.",
+    "reasoning_effort": null,
+    "runtime_identity": null,
+    "selected_label": null
+  },
+  "observed_at_utc": "2026-11-27T08:36:44Z",
+  "privacy": "No transcript, credential, account identifier or private path is included.",
+  "provider": "freebuff",
+  "receipt_written_utc": "2026-11-27T08:36:44Z",
+  "schema_version": 1,
+  "source": {
+    "detail": "No programmatic usage interface is available to this session; the desktop context tooltip was not read.",
+    "kind": "unavailable",
+    "version": "Freebuff Desktop orchestrator build f1641d8af2a035dfb8a1b107d7f256ce9172276c (2026-11-23)"
+  }
+}
