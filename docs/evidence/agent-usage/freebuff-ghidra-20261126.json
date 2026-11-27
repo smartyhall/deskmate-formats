@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "provider": "freebuff",
+  "agent_label": "Freebuff Desktop agent (Buffy)",
+  "campaign_id": "fb-ghidra-20261126",
+  "checkpoint": "completion",
+  "observed_at_utc": "2026-11-26T00:00:00Z",
+  "observed_at_utc_note": "Date-level precision only; the agent runtime exposed no clock reading to the tool surface.",
+  "git_revision": "3d3f78471ec8832f944baa4d12102fe1ed508305",
+  "git_revision_kind": "base commit of the campaign branch freebuff/ghidra-integration-and-binary-analysis; the checkpoint commit is created after this receipt and is identifiable by branch and date",
+  "execution_mode": "interactive, single agent, native local shell and filesystem tools",
+  "model": {
+    "identity": null,
+    "reasoning_setting": null,
+    "note": "The client exposes no model identity, effort setting or context-size reading to the agent's tools."
+  },
+  "collection": {
+    "source_kind": "unavailable",
+    "source_version": null,
+    "coverage": "No token, quota, credit or wall-clock allowance was observable. Tool calls executed and files created are recorded below as activity, not as provider consumption.",
+    "attribution_limits": "Any measurement would belong to the operator's account, not to this campaign. Nothing is inferred from a shared account meter.",
+    "status": "partially observed"
+  },
+  "measurements": [],
+  "measurements_note": "No usage measurement was observed, so none is reported. Values are omitted rather than set to zero.",
+  "activity": {
+    "processes_started": {
+      "ghidra_headless_batch": 2,
+      "pyghidra_jvm_sessions": 6,
+      "note": "Counts are Ghidra JVM lifecycles started by this campaign on the local host; two were short probe sessions used to discover the PyGhidra 3.2 project and persistence API."
+    },
+    "emulator_use": "none",
+    "network_use": "python package index, for the campaign-local virtual environment (pyghidra 3.2.0, capstone 5.0.7), and one public web search for Ghidra MCP licensing and maintenance facts",
+    "inference_calls_beyond_this_session": "none"
+  },
+  "artifacts": {
+    "published_commit": "see branch freebuff/ghidra-integration-and-binary-analysis",
+    "private_evidence": "kept outside Git under the laboratory private-evidence tree; locators omitted from this public receipt"
+  }
+}

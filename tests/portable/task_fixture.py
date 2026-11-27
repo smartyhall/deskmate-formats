@@ -38,8 +38,12 @@ class TaskRepo:
                    GIT_AUTHOR_NAME="Synthetic Fixture", GIT_AUTHOR_EMAIL="fixture@example.invalid",
                    GIT_COMMITTER_NAME="Synthetic Fixture", GIT_COMMITTER_EMAIL="fixture@example.invalid",
                    GIT_AUTHOR_DATE="2026-01-01T00:00:00Z", GIT_COMMITTER_DATE="2026-01-01T00:00:00Z")
+        # This is a hang guard, not a latency assertion: a local git command can
+        # exceed ten seconds on a saturated Windows host (for example while other
+        # campaigns run their own suites), which says nothing about the code under
+        # test. Keep it generous so contention cannot masquerade as a defect.
         return subprocess.run(["git", *args], cwd=self.path, check=True, input=data,
-                              capture_output=True, env=env, timeout=10).stdout
+                              capture_output=True, env=env, timeout=60).stdout
 
     def head(self):
         return self.git("rev-parse", "HEAD").decode("ascii").strip()

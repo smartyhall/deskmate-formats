@@ -1,5 +1,33 @@
 # Project status — DeskMate formats
 
+## Heterogeneous worker infrastructure — 2026-11-26
+
+The [Supervisor and Observatory campaign](docs/research/heterogeneous-worker-infrastructure-20261126.md)
+added a no-model execution backend with a reviewed procedure registry, a
+capability-based worker interface, a private campaign registry with exclusive
+leases, an allowance-aware selector that keeps token, context and hour
+measurements separate, and a read-only campaign projection for the Observatory.
+The proven Codex protocol, ledger and live gates are unchanged and remain
+unexercised. The [state audit](docs/research/supervisor-observatory-state-audit-20261126.md)
+replaces contradictory statements in earlier planning prose; the
+[Freebuff discovery](docs/research/freebuff-integration-discovery-20261126.md)
+records that no programmatic interface is available without separate
+authorization. Two Windows test failures were traced to fixed test-local
+budgets under host contention, not to product defects.
+
+An independent review of that work found nineteen integrity defects, all
+confirmed and corrected: the execution plan now binds the working-tree content
+it will read, the implementation and interpreter it will import, and the
+acceptance it was approved under; leases are keyed by canonical resource
+identity and carry the owner's process identity; recovery distinguishes an
+owner from its descendants; and exit states separate completed, failed,
+refused, cancelled, timed-out and uncertain. The
+[integrity report](docs/research/execution-integrity-20261126.md) records the
+evidence for each correction, and the
+[upstream research](docs/research/freebuff-upstream-integration-20261126.md)
+withdraws the earlier authenticated-endpoint probe in favour of the paid SDK or
+in-binary ACP, because Freebuff refuses third-party clients with a ban warning.
+
 ## Print Companion and native printing — 2026-11-23
 
 The [RSX Print Companion campaign](docs/research/print-companion-20261123.md)
@@ -499,7 +527,7 @@ the [README](README.md) for commands.
 | Filer | [Native campaign](docs/research/filer-native-20261117.md) covers empty-to-two records, menu changes, editing, deletion, sort configuration and page growth. A new Form Setup schema and its populated version exercise the [bounded inspector](src/deskmate_formats/filer.py). | Conditional Find remains open. Legacy five-field DBCOLS rows and a stale directory tail after Sort fall outside the reader's profile. |
 | Text | [Native corpus and extractor](docs/research/text-native-20261117.md) cover plain and default-header formatted streams, mixed bold/underline, centering, soft wrap and a multi-cluster document. | Pictures, other layout controls and alternate headers remain open. |
 | 86Box and Observatory | Native authenticated loopback client, held DOS guest evidence, and [Observatory M0/M1](docs/research/observatory-v2-m0-m1.md) read-only publication with [M2](docs/research/observatory-v2-m2.md) opt-in Codex telemetry. Scoped held-canary verification recorded 0 ms guest advance. | No proven unattended service/old-browser acceptance; launcher startup timeout still warrants safe reconciliation [#35](https://github.com/smartyhall/deskmate-formats/issues/35). |
-| Supervisor | [S0](docs/research/codex-supervisor-s0.md) owned protocol/receipts and [installable driver](docs/research/codex-supervisor-operator-driver.md); [real single-turn S0 canary passed](docs/research/codex-supervisor-s0-second-live-result-20261116.md); [S1](docs/research/codex-supervisor-s1.md) trusted Git intake; synthetic-only S2 bridge. | Native restart/resume and real S2 dispatch remain unverified. A queued task is not execution authority; further live operations require separate authorization. |
+| Supervisor | [S0](docs/research/codex-supervisor-s0.md) owned protocol/receipts and [installable driver](docs/research/codex-supervisor-operator-driver.md); [real single-turn S0 canary passed](docs/research/codex-supervisor-s0-second-live-result-20261116.md); [S1](docs/research/codex-supervisor-s1.md) trusted Git intake; synthetic-only S2 bridge. Deterministic procedures now bind plan, source, interpreter, modules, resources and recovery, with [process-tree observation semantics](docs/research/process-tree-observation-20261127.md), an [observation/termination-authority boundary](docs/research/termination-authority-20261127.md) (identity-bound members, `pidfd`/process-handle signalling, no tree-wide walks) and a qualified Windows [Job Object experiment](src/deskmate_formats/supervisor/job_object.py). | Native restart/resume and real S2 dispatch remain unverified. A queued task is not execution authority; further live operations require separate authorization. Custody is cooperating-owner only: no OS sandbox, no job-object execution path yet, and a descendant that leaves the recorded session or breaks away is outside the observation. Only an identity-bound member of a kernel-held scope may be signalled, so Windows descendant custody stays `unknown` and its recovery/reclamation require explicit confirmation. A session counts only while its leader record still carries the recorded identity, so a recycled session number grants nothing; a group signal additionally requires custody of the unreaped direct child, and live processes that cannot be bound to the attempt are recorded as `custody: "uncertain"` rather than as cleanup. A candidate's membership is revalidated after its own record is read and against the recorded boot, and the numeric group signal takes the live unreaped child rather than any stored custody value. |
 | Windows lab | Existing Windows 10 Pro research VM and [source-only provisioning work](deployment/windows10/INTEGRATION-STATUS.md). | Fresh full ISO/OOBE and recovery validation incomplete; system modifications need explicit review [#32](https://github.com/smartyhall/deskmate-formats/issues/32). |
 
 Worksheet and Draw remain outside implemented application codecs. See

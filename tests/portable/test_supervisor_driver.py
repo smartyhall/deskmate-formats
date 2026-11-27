@@ -22,6 +22,26 @@ from deskmate_formats.observer.events import encode_json
 from test_supervisor_protocol import AVAILABLE
 
 
+def await_evidence(directory, kind, *, timeout=10.0):
+    """Wait for one durable evidence record, independent of owner liveness.
+
+    A fast owner can finish and exit before this observer's next scan. Process
+    exit is therefore not a stop condition for the wait; only the deadline is,
+    and a missing record still fails the caller's assertion.
+    """
+    deadline = monotonic() + timeout
+    while True:
+        for path in sorted(Path(directory).glob("[0-9]*.json")):
+            try:
+                if read_record(path).get("kind") == kind:
+                    return True
+            except (ValueError, OSError):
+                pass
+        if monotonic() >= deadline:
+            return False
+        sleep(0.02)
+
+
 @unittest.skipUnless(AVAILABLE, "requires supervisor extra and supported process identity")
 class DriverTests(unittest.TestCase):
     def setUp(self):
@@ -62,6 +82,22 @@ class DriverTests(unittest.TestCase):
         with self.assertRaises(DriverError):
             run(self.directory, authorization=token)
         self.assertEqual((self.directory / "evidence" / "peer.json").read_bytes(), state)
+
+    def test_durable_record_is_observed_after_its_writer_exits(self):
+        """Regression: a fast owner must not skip the observer's evidence scan."""
+        run_directory = self.root / "fast-owner"
+        prepare(run_directory, mode="history-only", timeout=5, deadline=60)
+        record = run_directory / "evidence" / "0001.json"
+        subprocess.run([sys.executable, "-I", "-c",
+                        "import sys; from pathlib import Path; "
+                        "from deskmate_formats.supervisor.driver import write_record; "
+                        "write_record(Path(sys.argv[1]), "
+                        "{'kind': 'turn-result', 'value': {}})", str(record)],
+                       check=True, timeout=30)
+        # The writer has exited, so no process liveness remains to observe.
+        self.assertTrue(record.is_file())
+        self.assertTrue(await_evidence(run_directory / "evidence", "turn-result", timeout=5))
+        self.assertFalse(await_evidence(run_directory / "evidence", "absent-kind", timeout=0.2))
 
     def test_missing_delayed_ack_never_replayed_and_unacknowledged_restart_stays_unresolved(self):
         for mode in ("lost-ack", "delayed-ack"):
@@ -267,16 +303,7 @@ class DriverTests(unittest.TestCase):
                                  creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
         observed = False
         try:
-            deadline = monotonic() + 10
-            while monotonic() < deadline and owner.poll() is None:
-                for path in (self.directory / "evidence").glob("[0-9]*.json"):
-                    try:
-                        observed |= read_record(path)["kind"] == "turn-result"
-                    except (ValueError, OSError):
-                        pass
-                if observed:
-                    break
-                sleep(0.02)
+            observed = await_evidence(self.directory / "evidence", "turn-result")
             self.assertTrue(observed, "owner never durably observed acknowledgement")
         finally:
             if owner.poll() is None:
