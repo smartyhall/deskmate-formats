@@ -8,6 +8,12 @@ Two independent reviews were read at their exact heads and answered here:
 - PR #194, review `pullrequestreview-6078744944`, at `cca20c2`;
 - PR #195, review `pullrequestreview-6078745158`, at `4343b9b`.
 
+A follow-up exact-head review of PR #194,
+`pullrequestreview-6085087858`, confirmed the geometry, logical-image, CHS,
+degraded-sector and xz `memlimit` corrections and named one remaining defect in
+the concatenated-stream lifecycle. It is answered in the follow-up section
+below.
+
 Both reviews are integration holds, not experiment repeats: the earlier genuine
 specimen work (TeleDisk, ImageDisk, ARC methods 8/9) is retained unchanged and
 was not rerun.
@@ -79,7 +85,48 @@ smoothed over. It does not affect the 12–16 bit streams real compress(1) write
 - xz decoding passes `memlimit` from `Bounds.decoder_bytes`, so a small stream
   declaring a 16 MiB dictionary is refused under a 64 KiB bound rather than
   allocated. bzip2's block size is declared in its header and checked the same
-  way. This is the point the review made: bounding output does not bound memory.
+  way, per member. This is the point the review made: bounding output does not
+  bound memory, and one member's header cannot speak for the next.
+
+## Follow-up review: concatenated-stream decoder budgets
+
+The follow-up review found that `decode_bzip2` validated the declared block size
+of the **first** member only, while `_bounded_streams` constructed a fresh
+decoder for every later member. A `BZh1` member followed by a `BZh9` member
+therefore decoded under a budget only the first member satisfied. The same
+lifecycle questions applied to the input bound in `_compressed`.
+
+| Finding | Resolution | Guard |
+| --- | --- | --- |
+| Later bzip2 members bypassed `decoder_bytes` | `_bzip2_member` validates every member's header before that member's decoder is constructed; the budget is the caller's for every member | `test_a_later_member_cannot_raise_the_decoder_memory_budget` |
+| Four block bytes understated the decoder | The comparison uses bzip2(1)'s documented decompression requirement per block size, which covers libbzip2's `tt` allocation and its fixed tables | `test_the_documented_bzip2_requirement_is_the_budget_unit` |
+| A later xz member could raise the dictionary budget | Every member is a new `LZMADecompressor` with the same `memlimit` | `test_a_later_member_cannot_raise_the_xz_dictionary_budget` |
+| A damaged later member discarded members that had already verified | `_stream_stop` returns the verified members as `partial` and names the member that stopped the join; damage in the first member still yields no payload | `test_a_damaged_later_member_keeps_the_members_that_verified`, `test_a_damaged_first_member_yields_no_payload` |
+| `_compressed` bounded input by a separate `stat` | The bound is enforced by the read that feeds the decoder, one byte past the limit | `test_the_compression_input_bound_is_enforced_by_the_read_itself` |
+| A partial payload was recorded as an `ok` member | The member carries the extraction's qualifier | `test_a_partial_stream_is_not_reported_as_a_complete_member` |
+
+Every member is now classified before it is decoded: a member too short for its
+header is `truncated-member-header`, a digit outside `1`–`9` is
+`unsupported-block-size`, a member whose documented requirement exceeds the
+budget is `limited`/`decoder-memory-limit`, and a decoder error is
+`bzip2-integrity-or-structure` or `xz-integrity-or-structure`. Truncation inside
+a member stays `truncated-stream`. Only one decoder is live at a time: the
+previous member's is released before the next is constructed, so the working
+set is the largest member's requirement rather than the sum.
+
+### Documented bzip2 memory, per block size
+
+| `-1` | `-2` | `-3` | `-4` | `-5` | `-6` | `-7` | `-8` | `-9` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 500 KiB | 900 KiB | 1300 KiB | 1700 KiB | 2100 KiB | 2500 KiB | 2900 KiB | 3300 KiB | 3700 KiB |
+
+bzip2(1)'s MEMORY MANAGEMENT table gives these figures, and libbzip2's
+`decompress.c` allocates `tt` as `blockSize100k * 100000 * sizeof(Int32)` as
+soon as it reads the header, with fixed tables besides; the table's value — not
+four block bytes — is the documented bound a caller's budget is compared
+against. The standard library never selects the 2.5-bytes-per-block-byte `-s`
+decoder, so the normal figures apply. These are vendor estimates, not
+measurements taken here.
 
 ## Resource bounds, layer by layer
 
@@ -94,7 +141,7 @@ before allocation:
 | All decoded sectors | `total_bytes` | every appended payload |
 | Declared geometry | `geometry_sectors` | before any coordinate is used |
 | Logical image | `lba_bytes` | before `bytearray(total * size)` |
-| Decoder memory | `decoder_bytes` | xz `memlimit`, bzip2 block size |
+| Decoder memory | `decoder_bytes` | xz `memlimit` per member, bzip2 documented requirement per member |
 
 `intelligence_extract._sector_image` derives each of these from the caller's
 `Limits`, so a container header cannot enlarge a caller's bound. The tests use
@@ -179,6 +226,9 @@ change is proposed here.
   on-disk specification. This is the largest outstanding evidence gap.
 - Nine-bit compress(1) streams are decoded but not cross-validated against an
   independent decoder.
+- bzip2's working-memory figures come from its published table; peak allocation
+  was not measured on this machine, and a caller's budget is compared against
+  the documented requirement rather than an observed high-water mark.
 - DCF remains blocked on a byte-level specification; no unrelated format was
   substituted.
 
