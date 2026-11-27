@@ -1,0 +1,819 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-11-27",
+  "base_revision": "7dee5fa25eb1b02b2724bdd87759ce53fcb3256b",
+  "purpose": "Advisory research planning inventory; not a queue, permission, availability assertion, or capability registry. Status is a dated planning assessment, not live GitHub state.",
+  "campaigns": [
+    {
+      "id": "supervisor-integration",
+      "domain": "infrastructure",
+      "priority": 1,
+      "status": "review",
+      "effort": "medium",
+      "workers": [
+        "repository-review"
+      ],
+      "resources": [
+        "github-ci"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/research/codex-supervisor-design.md",
+        "docs/research/observatory-v2-spec.md"
+      ],
+      "issues": [],
+      "pull_requests": [
+        191
+      ],
+      "evidence": "Deterministic runner and private campaign leases are proposed in #191, not integrated at this snapshot.",
+      "acceptance": "Independent exact-head review, combined tests and custody corrections; preserve manual gates.",
+      "completion_refs": []
+    },
+    {
+      "id": "environment-isolation",
+      "domain": "infrastructure",
+      "priority": 1,
+      "status": "proposed",
+      "effort": "medium",
+      "workers": [
+        "offline-lab",
+        "repository-development"
+      ],
+      "resources": [
+        "owned-python-environment",
+        "owned-worktree"
+      ],
+      "depends_on": [],
+      "sources": [
+        "AGENTS.md",
+        "CONTRIBUTING.md"
+      ],
+      "issues": [
+        201
+      ],
+      "pull_requests": [],
+      "evidence": "Shared Python imports can confound worktree provenance; an owned interpreter is required.",
+      "acceptance": "Two source-distinct checkouts prove parent and isolated child import identity; no shared environment mutation.",
+      "completion_refs": []
+    },
+    {
+      "id": "performance-integration",
+      "domain": "infrastructure",
+      "priority": 1,
+      "status": "review",
+      "effort": "medium",
+      "workers": [
+        "repository-review"
+      ],
+      "resources": [
+        "github-ci"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/research/codex-supervisor-operator-driver.md"
+      ],
+      "issues": [
+        147
+      ],
+      "pull_requests": [
+        199
+      ],
+      "evidence": "Measurement harness is under review; previous measurements are not a quiet integrated baseline.",
+      "acceptance": "Reconcile shared fixtures and configuration, independent exact-head tests, retain raw measurement distinctions. Coordinate shared fixture/configuration merge order with #191; neither PR is a hard functional prerequisite of the other.",
+      "completion_refs": []
+    },
+    {
+      "id": "quiet-performance-baseline",
+      "domain": "infrastructure",
+      "priority": 1,
+      "status": "proposed",
+      "effort": "large",
+      "workers": [
+        "offline-lab"
+      ],
+      "resources": [
+        "owned-python-environment",
+        "quiet-host"
+      ],
+      "depends_on": [
+        "environment-isolation",
+        "performance-integration"
+      ],
+      "sources": [
+        "docs/research/codex-supervisor-operator-driver.md"
+      ],
+      "issues": [
+        147
+      ],
+      "pull_requests": [],
+      "evidence": "A loaded-host run identified Git-heavy tests; comparable isolated measurements remain open.",
+      "acceptance": "Record complete equivalent test selection, source/import identity, CPU and subprocess metrics, repetitions and limitations.",
+      "completion_refs": []
+    },
+    {
+      "id": "git-performance",
+      "domain": "infrastructure",
+      "priority": 2,
+      "status": "proposed",
+      "effort": "medium",
+      "workers": [
+        "repository-development",
+        "offline-lab"
+      ],
+      "resources": [
+        "owned-python-environment",
+        "quiet-host"
+      ],
+      "depends_on": [
+        "quiet-performance-baseline"
+      ],
+      "sources": [
+        "docs/research/codex-supervisor-operator-driver.md"
+      ],
+      "issues": [
+        147
+      ],
+      "pull_requests": [],
+      "evidence": "Git subprocess batching is a hypothesis, not a demonstrated whole-suite improvement.",
+      "acceptance": "Controlled before/after exact test set and semantic equivalence, fewer subprocesses, measured improvement.",
+      "completion_refs": []
+    },
+    {
+      "id": "deterministic-canary",
+      "domain": "infrastructure",
+      "priority": 1,
+      "status": "proposed",
+      "effort": "small",
+      "workers": [
+        "offline-lab",
+        "operator",
+        "repository-review"
+      ],
+      "resources": [
+        "owned-python-environment",
+        "owned-worktree",
+        "trusted-task-source"
+      ],
+      "depends_on": [
+        "supervisor-integration",
+        "environment-isolation"
+      ],
+      "sources": [
+        "docs/research/codex-supervisor-design.md"
+      ],
+      "issues": [
+        204
+      ],
+      "pull_requests": [],
+      "evidence": "Local deterministic procedures are proposed in #191; real GitHub-to-lab result return unproved.",
+      "acceptance": "One reviewed hash-files task, independent expected digest, explicit authorization, one attempt and sanitized returned receipt.",
+      "completion_refs": []
+    },
+    {
+      "id": "guest-input-integration",
+      "domain": "infrastructure",
+      "priority": 1,
+      "status": "review",
+      "effort": "medium",
+      "workers": [
+        "repository-review"
+      ],
+      "resources": [
+        "github-ci"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/research/86box-client.md",
+        "docs/research/freebuff-native-emulator-20261126.md"
+      ],
+      "issues": [
+        10,
+        35
+      ],
+      "pull_requests": [
+        187,
+        193
+      ],
+      "evidence": "Stock input improvements and stacked experimental instrumentation must remain separately qualified.",
+      "acceptance": "Exact-head guard review and focused tests; experimental #193 stays draft unless separately approved.",
+      "completion_refs": []
+    },
+    {
+      "id": "ghidra-integration",
+      "domain": "infrastructure",
+      "priority": 1,
+      "status": "review",
+      "effort": "medium",
+      "workers": [
+        "repository-review"
+      ],
+      "resources": [
+        "github-ci"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/research/database-call-review.md"
+      ],
+      "issues": [],
+      "pull_requests": [
+        190,
+        196,
+        198
+      ],
+      "evidence": "Candidate static-analysis tooling, fresh-process reopen checks, and separate 12.2 qualification; native binding not thereby established.",
+      "acceptance": "Review stack in order, preserve old receipts and release-specific claims, verify exact heads.",
+      "completion_refs": []
+    },
+    {
+      "id": "archive-integration",
+      "domain": "archive",
+      "priority": 1,
+      "status": "review",
+      "effort": "medium",
+      "workers": [
+        "repository-review"
+      ],
+      "resources": [
+        "github-ci"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/archive-format-coverage.md",
+        "docs/archive-format-backlog.json"
+      ],
+      "issues": [],
+      "pull_requests": [
+        194,
+        195
+      ],
+      "evidence": "Candidate registry and new bounded archive/image/filesystem handlers; real specimen coverage varies.",
+      "acceptance": "Review predecessors before successors, check bounds, provenance and CI; no live index migration.",
+      "completion_refs": []
+    },
+    {
+      "id": "archive-format-followup",
+      "domain": "archive",
+      "priority": 2,
+      "status": "standing",
+      "effort": "large",
+      "workers": [
+        "offline-lab",
+        "repository-development"
+      ],
+      "resources": [
+        "private-archive-read",
+        "owned-worktree"
+      ],
+      "depends_on": [
+        "archive-integration"
+      ],
+      "sources": [
+        "docs/archive-format-backlog.json",
+        "docs/archive-format-coverage.md"
+      ],
+      "issues": [],
+      "pull_requests": [],
+      "evidence": "Canonical archive backlog owns individual families; candidate registry is separate from coverage.",
+      "acceptance": "Select an unmet operation and exact variant from canonical backlog; independent controls, bounded decoder, no live writer interference.",
+      "completion_refs": []
+    },
+    {
+      "id": "archive-index-enrichment",
+      "domain": "archive",
+      "priority": 3,
+      "status": "proposed",
+      "effort": "medium",
+      "workers": [
+        "offline-lab"
+      ],
+      "resources": [
+        "private-archive-read",
+        "owned-index-copy"
+      ],
+      "depends_on": [
+        "archive-integration"
+      ],
+      "sources": [
+        "docs/ecosystem/archive-mirror.md",
+        "docs/research/tvdog-intelligence-20261119.md"
+      ],
+      "issues": [],
+      "pull_requests": [],
+      "evidence": "Private mirror and index exist; do not assert full acquisition or migration completion.",
+      "acceptance": "Measure current inventory, rehearse migration on copy, verify counts and recovery; production adoption separately authorized.",
+      "completion_refs": []
+    },
+    {
+      "id": "calendar-index",
+      "domain": "native-formats",
+      "priority": 2,
+      "status": "proposed",
+      "effort": "medium",
+      "workers": [
+        "native-lab",
+        "offline-lab"
+      ],
+      "resources": [
+        "owned-emulator",
+        "synthetic-fixtures"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/research/calendar-index-trigger-20261117.md",
+        "docs/research/calendar-index-boundaries-20261117.md",
+        "docs/research/calendar-second-first-event-native.md"
+      ],
+      "issues": [
+        71,
+        81,
+        69
+      ],
+      "pull_requests": [],
+      "evidence": "Native open/close changes the index; multicalendar and writer boundaries remain evidence-sensitive.",
+      "acceptance": "Small paired controls isolate rewrite trigger, table isolation and native cold reopen; compare byte and semantic outcomes.",
+      "completion_refs": []
+    },
+    {
+      "id": "dmdb-binding",
+      "domain": "native-formats",
+      "priority": 2,
+      "status": "proposed",
+      "effort": "medium",
+      "workers": [
+        "offline-lab",
+        "native-lab"
+      ],
+      "resources": [
+        "private-archive-read",
+        "owned-emulator"
+      ],
+      "depends_on": [
+        "ghidra-integration"
+      ],
+      "sources": [
+        "docs/research/database-call-map.json",
+        "docs/research/database-call-review.md",
+        "docs/research/database-components.md"
+      ],
+      "issues": [
+        25
+      ],
+      "pull_requests": [],
+      "evidence": "Shared service thunks are observed, but universal allocator and runtime binding unproved.",
+      "acceptance": "Resolve one exact binding through static and native evidence; document counterexamples and limits.",
+      "completion_refs": []
+    },
+    {
+      "id": "addressbook-multicontact",
+      "domain": "native-formats",
+      "priority": 2,
+      "status": "proposed",
+      "effort": "medium",
+      "workers": [
+        "native-lab",
+        "repository-development"
+      ],
+      "resources": [
+        "owned-emulator",
+        "synthetic-fixtures"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/research/addressbook-two-contact-native-20261117.md",
+        "docs/research/addressbook-codec.md"
+      ],
+      "issues": [
+        70
+      ],
+      "pull_requests": [],
+      "evidence": "Native second contact exists; maintained inventory restricts writer to one contact.",
+      "acceptance": "Reproduce insertion ordering, ID allocation and boundary controls; native cold reopen before extending writer.",
+      "completion_refs": []
+    },
+    {
+      "id": "filer-utilities",
+      "domain": "native-formats",
+      "priority": 2,
+      "status": "proposed",
+      "effort": "large",
+      "workers": [
+        "native-lab",
+        "offline-lab"
+      ],
+      "resources": [
+        "owned-emulator",
+        "private-archive-read",
+        "synthetic-fixtures"
+      ],
+      "depends_on": [
+        "ghidra-integration"
+      ],
+      "sources": [
+        "docs/research/filer-native-20261117.md",
+        "docs/research/database-components.md"
+      ],
+      "issues": [
+        178,
+        54
+      ],
+      "pull_requests": [
+        179
+      ],
+      "evidence": "Static shared service skeleton is a candidate observation, not proof of repair or conversion.",
+      "acceptance": "Known-good and single-field defective Filer controls; independent DBF prediction, repair results and cold reopen.",
+      "completion_refs": []
+    },
+    {
+      "id": "corkboard-storage",
+      "domain": "native-formats",
+      "priority": 2,
+      "status": "proposed",
+      "effort": "medium",
+      "workers": [
+        "native-lab",
+        "offline-lab"
+      ],
+      "resources": [
+        "owned-emulator",
+        "synthetic-fixtures"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/research/deskmate-corkboard-20261123.md",
+        "docs/reference/deskmate-corkboard-format.md"
+      ],
+      "issues": [
+        165
+      ],
+      "pull_requests": [
+        193,
+        196
+      ],
+      "evidence": "Shared fixed Corkboard buffer is distinct from the Information Center database; header semantics remain bounded.",
+      "acceptance": "Controlled mid-text edit, save/cold reopen and cross-edition comparisons; identify exact header semantics or record uncertainty. Use an already qualified input path; #187 may improve efficiency but is not a prerequisite.",
+      "completion_refs": []
+    },
+    {
+      "id": "home-organizer-db",
+      "domain": "native-formats",
+      "priority": 3,
+      "status": "proposed",
+      "effort": "medium",
+      "workers": [
+        "native-lab",
+        "offline-lab"
+      ],
+      "resources": [
+        "owned-emulator",
+        "synthetic-fixtures"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/research/deskmate-corkboard-20261123.md",
+        "docs/research/cross-application-db.md"
+      ],
+      "issues": [],
+      "pull_requests": [],
+      "evidence": "Information Center, Financial Notebook and Collections share some framing but not universal semantics.",
+      "acceptance": "Choose one profile and field/control; capture semantic and structural change, compare shared parser without conflating schemas.",
+      "completion_refs": []
+    },
+    {
+      "id": "text-worksheet",
+      "domain": "native-formats",
+      "priority": 3,
+      "status": "proposed",
+      "effort": "medium",
+      "workers": [
+        "native-lab",
+        "repository-development"
+      ],
+      "resources": [
+        "owned-emulator",
+        "synthetic-fixtures"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/research/text-native-20261117.md",
+        "docs/research/worksheet-native-20261117.md",
+        "docs/preservation-workbench.md"
+      ],
+      "issues": [],
+      "pull_requests": [],
+      "evidence": "Bounded readers and exports exist; unsupported controls and formula semantics are not universal.",
+      "acceptance": "Select one documented gap, vary one native control, preserve raw bytes and record projection losses.",
+      "completion_refs": []
+    },
+    {
+      "id": "draw-font-graphics",
+      "domain": "native-formats",
+      "priority": 2,
+      "status": "proposed",
+      "effort": "large",
+      "workers": [
+        "native-lab",
+        "repository-development"
+      ],
+      "resources": [
+        "owned-emulator",
+        "synthetic-fixtures"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/research/draw-font-style-word-20261120.md",
+        "docs/research/draw-shared-graphics-20261119.md",
+        "docs/research/native-semantics-campaign-handoff-20261120.md"
+      ],
+      "issues": [],
+      "pull_requests": [],
+      "evidence": "FIG/SVG and style descriptors have measured scope; external font reconstruction remains incomplete.",
+      "acceptance": "One-factor native font controls, independent rendering comparison and preservation of unsupported records; fixed comparison library.",
+      "completion_refs": []
+    },
+    {
+      "id": "music-sound",
+      "domain": "native-formats",
+      "priority": 3,
+      "status": "proposed",
+      "effort": "large",
+      "workers": [
+        "native-lab",
+        "offline-lab"
+      ],
+      "resources": [
+        "owned-emulator",
+        "synthetic-fixtures",
+        "private-archive-read"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/research/midimapper-semantics-20261120.md",
+        "docs/research/sound-corpus-20261120.md",
+        "docs/research/native-semantics-campaign-handoff-20261120.md"
+      ],
+      "issues": [],
+      "pull_requests": [],
+      "evidence": "Linear score export and bounded samples are measured; player scheduling, program selection and source truncation remain.",
+      "acceptance": "Repeat pinned timing controls; compare native and independent outputs and record exact sample/score provenance.",
+      "completion_refs": []
+    },
+    {
+      "id": "help-database",
+      "domain": "native-formats",
+      "priority": 3,
+      "status": "proposed",
+      "effort": "medium",
+      "workers": [
+        "native-lab",
+        "offline-lab"
+      ],
+      "resources": [
+        "owned-emulator",
+        "private-archive-read"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/research/deskmate-help-database-20261120.md",
+        "docs/research/native-semantics-campaign-handoff-20261120.md"
+      ],
+      "issues": [],
+      "pull_requests": [],
+      "evidence": "Help resources attributed; setup Help index boundary unresolved, no writer qualified.",
+      "acceptance": "Trace exact DMSETUP.HLP lookup and distinguish boundary hypothesis from native-confirmed behavior.",
+      "completion_refs": []
+    },
+    {
+      "id": "print-companion",
+      "domain": "native-formats",
+      "priority": 3,
+      "status": "proposed",
+      "effort": "medium",
+      "workers": [
+        "native-lab",
+        "repository-development"
+      ],
+      "resources": [
+        "owned-emulator",
+        "synthetic-fixtures",
+        "private-output-sink"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/research/print-companion-20261123.md"
+      ],
+      "issues": [],
+      "pull_requests": [],
+      "evidence": "Five applications surveyed and two printer streams observed; Name Tags text loss and layouts remain.",
+      "acceptance": "Isolate one format or printer discrepancy with native save/reopen and binary LPT evidence.",
+      "completion_refs": []
+    },
+    {
+      "id": "release-installation",
+      "domain": "ecosystem",
+      "priority": 3,
+      "status": "standing",
+      "effort": "large",
+      "workers": [
+        "native-lab",
+        "repository-development"
+      ],
+      "resources": [
+        "owned-emulator",
+        "private-archive-read"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/ecosystem/deskmate-installations.md",
+        "docs/ecosystem/deskmate-evolution-atlas.md"
+      ],
+      "issues": [
+        153
+      ],
+      "pull_requests": [],
+      "evidence": "Atlas identifies many distributions and compatibility trials; exact hardware/profile coverage is incomplete.",
+      "acceptance": "Reproduce one unqualified release with exact media identity, supported profile, install runbook and representative eligible capture.",
+      "completion_refs": []
+    },
+    {
+      "id": "faxback-curation",
+      "domain": "ecosystem",
+      "priority": 3,
+      "status": "standing",
+      "effort": "medium",
+      "workers": [
+        "offline-lab",
+        "repository-development"
+      ],
+      "resources": [
+        "private-archive-read",
+        "owned-index-copy"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/research/faxback-ocr-20261120.md"
+      ],
+      "issues": [
+        154
+      ],
+      "pull_requests": [],
+      "evidence": "Private OCR profiles and selected evidence exist; facsimile and verified-text rights remain distinct.",
+      "acceptance": "Incremental same-profile OCR, checked text and provenance, rights review before any public derivative.",
+      "completion_refs": []
+    },
+    {
+      "id": "telecom-pclink",
+      "domain": "ecosystem",
+      "priority": 4,
+      "status": "proposed",
+      "effort": "large",
+      "workers": [
+        "native-lab",
+        "repository-development"
+      ],
+      "resources": [
+        "owned-emulator",
+        "isolated-guest-network"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/research/rsx-aol13-20261123.md"
+      ],
+      "issues": [
+        167,
+        166,
+        175
+      ],
+      "pull_requests": [],
+      "evidence": "Historical communications and AOL research; paired virtual modem and revival are not established.",
+      "acceptance": "Offline isolated paired transfer controls and documented protocol evidence; external connection separately authorized.",
+      "completion_refs": []
+    },
+    {
+      "id": "chronology",
+      "domain": "reference",
+      "priority": 3,
+      "status": "blocked",
+      "effort": "medium",
+      "workers": [
+        "repository-development"
+      ],
+      "resources": [
+        "historical-image-source"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/history/introduction.md",
+        "docs/ecosystem/deskmate-evolution-atlas.md"
+      ],
+      "issues": [],
+      "pull_requests": [
+        155
+      ],
+      "evidence": "Draft timeline has a factual catalog-page correction, figure-tool validation, and unresolved source-image/rights review; no public derivatives yet.",
+      "acceptance": "Inspect actual historical images, source/license/caption review, manifest derivatives, then route and editorial verification.",
+      "completion_refs": []
+    },
+    {
+      "id": "website-qualification",
+      "domain": "reference",
+      "priority": 1,
+      "status": "review",
+      "effort": "medium",
+      "workers": [
+        "repository-review"
+      ],
+      "resources": [
+        "github-ci"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/site/authoring.md",
+        "docs/site/visual-assets.md"
+      ],
+      "issues": [
+        200
+      ],
+      "pull_requests": [
+        197,
+        202,
+        203
+      ],
+      "evidence": "Browser corrections and publication checks submitted; successful preview is not a production deployment.",
+      "acceptance": "Independent review of each stack, requested matrix and publication evidence; actual reviewed deployment separately qualifies live behavior.",
+      "completion_refs": []
+    },
+    {
+      "id": "visual-curation",
+      "domain": "reference",
+      "priority": 4,
+      "status": "standing",
+      "effort": "medium",
+      "workers": [
+        "offline-lab",
+        "repository-development"
+      ],
+      "resources": [
+        "private-evidence-read"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/visual-evidence-curation.md",
+        "docs/site/visual-assets.md"
+      ],
+      "issues": [],
+      "pull_requests": [],
+      "evidence": "Existing captures can fill gaps without new emulator runs.",
+      "acceptance": "Inspect actual pixels, hash and record provenance, select only eligible representative derivatives.",
+      "completion_refs": []
+    },
+    {
+      "id": "workbench-capability-map",
+      "domain": "workbench",
+      "priority": 2,
+      "status": "proposed",
+      "effort": "medium",
+      "workers": [
+        "repository-development"
+      ],
+      "resources": [
+        "github-ci"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/preservation-workbench.md",
+        "docs/inventory.md",
+        "docs/compatibility.md"
+      ],
+      "issues": [],
+      "pull_requests": [],
+      "evidence": "Existing offline CLI creates preservation bundles; a unified discovery/GUI workflow remains a design question.",
+      "acceptance": "Map real inspect/export/verify entry points and per-profile losses; distinguish archive inspection from native document exports; no new GUI required.",
+      "completion_refs": []
+    },
+    {
+      "id": "storage-inventory",
+      "domain": "infrastructure",
+      "priority": 4,
+      "status": "standing",
+      "effort": "small",
+      "workers": [
+        "offline-lab"
+      ],
+      "resources": [
+        "private-storage-read"
+      ],
+      "depends_on": [],
+      "sources": [
+        "docs/lab-storage-housekeeping.md",
+        "docs/research/lab-storage-audit-20261123.md"
+      ],
+      "issues": [
+        169
+      ],
+      "pull_requests": [],
+      "evidence": "Existing read-only baseline; guest and datastore headroom differ.",
+      "acceptance": "Refresh relevant metadata only, preserve image lineage; no deletion, compaction or resize.",
+      "completion_refs": []
+    }
+  ]
+}

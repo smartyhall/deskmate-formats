@@ -34,6 +34,7 @@
         "current-presentation-and-delivery",
         "current-safety-boundary",
         "reference-navigation-and-ongoing-coverage",
+        "reference-navigation-redesign",
         "reference-site-source-map-and-editorial-planning",
         "validation",
         "what-is-here"
@@ -47,7 +48,9 @@
         "evidence-and-references",
         "interface-and-media",
         "portable-text-and-urls",
+        "reader-oriented-navigation-accepted-direction-2026-11-25",
         "reference-authoring-and-migration-conventions",
+        "report-dates-and-review-attachments",
         "source-roles-and-page-identifiers"
       ]
     },
@@ -449,6 +452,26 @@
       ]
     },
     {
+      "route": "/research/evidence/",
+      "page_id": "research.evidence",
+      "anchors": [
+        "portable-tests",
+        "private-archival-integration-tests",
+        "public-and-private-evidence"
+      ]
+    },
+    {
+      "route": "/research/verification/",
+      "page_id": "research.verification",
+      "anchors": [
+        "e15-and-dependency-maintenance-verification-2026-10-31",
+        "e16-verification-2026-10-31",
+        "hosted-checkpoint-2026-10-31",
+        "repository-transition-verification-2026-10-31",
+        "screen-state-research-verification-2026-10-31"
+      ]
+    },
+    {
       "route": "/evidence/visual-policy/",
       "page_id": "evidence.visual-policy",
       "anchors": [
@@ -470,6 +493,34 @@
         "exports-and-evidence-limits",
         "reproduce-the-native-demo",
         "use"
+      ]
+    },
+    {
+      "route": "/recovery/compatibility/",
+      "page_id": "recovery.compatibility",
+      "anchors": [
+        "address-book-profile-and-interchange",
+        "compatibility-and-supported-versions",
+        "default-calendar-profile",
+        "experimental-sdk-calendar-profile",
+        "manual-ui-time-normalization-evidence-not-a-native-codec-claim",
+        "multimedia-profiles",
+        "note-padcorkboard-and-rsx-household-data",
+        "preservation-workbench",
+        "separate-experimental-new-file-calendar-builder"
+      ]
+    },
+    {
+      "route": "/recovery/cli/",
+      "page_id": "recovery.cli",
+      "anchors": [
+        "choosing-between-reading-and-writing",
+        "command-line-tools",
+        "continue",
+        "document-recovery",
+        "formats-and-media",
+        "laboratory-automation-not-recovery",
+        "sources-and-evidence-boundaries"
       ]
     },
     {
@@ -586,6 +637,69 @@
         "troubleshooting-and-evidence-limits",
         "verify-the-installed-configuration"
       ]
+    },
+    {
+      "route": "/deskmate/",
+      "page_id": "deskmate.overview",
+      "anchors": [
+        "applications-and-releases",
+        "continue",
+        "deskmate-the-other-desktop-of-the-pc-era",
+        "sources-and-evidence-boundaries",
+        "start-here",
+        "the-wider-ecosystem"
+      ]
+    },
+    {
+      "route": "/formats/",
+      "page_id": "formats.overview",
+      "anchors": [
+        "application-format-guides",
+        "architecture-and-shared-structures",
+        "continue",
+        "file-formats",
+        "manufacturer-and-platform-reference",
+        "sources-and-evidence-boundaries",
+        "start-here"
+      ]
+    },
+    {
+      "route": "/recovery/",
+      "page_id": "recovery.overview",
+      "anchors": [
+        "continue",
+        "recovery",
+        "sources-and-evidence-boundaries",
+        "start-here",
+        "tools-and-supported-operations",
+        "where-the-limits-are"
+      ]
+    },
+    {
+      "route": "/research/",
+      "page_id": "research.overview",
+      "anchors": [
+        "application-and-system-studies",
+        "chronology",
+        "continue",
+        "evidence-and-verification",
+        "format-experiments",
+        "research",
+        "sources-and-evidence-boundaries",
+        "start-here"
+      ]
+    },
+    {
+      "route": "/project/",
+      "page_id": "project.overview",
+      "anchors": [
+        "continue",
+        "direction-and-planning",
+        "project",
+        "publishing-and-contribution",
+        "sources-and-evidence-boundaries",
+        "start-here"
+      ]
     }
   ],
   "capture_history": [
@@ -596,6 +710,14 @@
       "artifact_id": 14883254568,
       "artifact_sha256": "80b9fdf94e401bc6fbfb5a775b54247a597987e9faf291e5e49a4f9ff37c9bb7",
       "workflow_run_id": 45312811457
+    },
+    {
+      "source_revision": "b5e525002b150352a8995de1bcddfbc5dc18a838",
+      "source_kind": "verified-ci-artifact",
+      "captured_at": "2026-11-26T08:44:01Z",
+      "artifact_id": 15099174471,
+      "artifact_sha256": "4ccf5c456f8b215a5b20bfd21c5694a30d6bea2b21926828ae287509cd76b389",
+      "workflow_run_id": 45785003695
     }
   ]
 }

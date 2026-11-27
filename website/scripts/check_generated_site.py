@@ -15,6 +15,11 @@ from urllib.parse import unquote, urlsplit
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))
 from reference_route_baseline import check_baseline  # noqa: E402
 
+BASE_PATH_HINT = (
+    " A bare '/' argument is rewritten by some shells; on Git Bash/MSYS "
+    "prefix the command with MSYS_NO_PATHCONV=1, or quote the argument."
+)
+
 
 class Document(HTMLParser):
     def __init__(self) -> None:
@@ -39,7 +44,7 @@ class Document(HTMLParser):
 
 def check(root: Path, base: str) -> list[str]:
     if not base.startswith("/") or not base.endswith("/"):
-        raise ValueError("Base path must start and end with /")
+        raise ValueError("Base path must start and end with /." + BASE_PATH_HINT)
     files = {p.relative_to(root).as_posix(): p for p in root.rglob("*") if p.is_file()}
     docs = {name: Document() for name in files if name.endswith(".html")}
     for name, parser in docs.items():
@@ -78,7 +83,7 @@ def check(root: Path, base: str) -> list[str]:
     return issues
 
 
-if __name__ == "__main__":
+def _parser() -> argparse.ArgumentParser:
     cli = argparse.ArgumentParser(description=__doc__)
     cli.add_argument("site_output", type=Path)
     cli.add_argument("base_path")
@@ -93,31 +98,54 @@ if __name__ == "__main__":
     cli.add_argument("--source-kind", choices=("verified-ci-artifact", "verified-local-build"))
     cli.add_argument("--artifact-id", type=int)
     cli.add_argument("--artifact-sha256")
+    cli.add_argument("--workflow-run-id", type=int)
     cli.add_argument("--output", type=Path, help="write reviewed candidate JSON as UTF-8")
-    args = cli.parse_args()
-    try:
-        baseline = json.loads(args.baseline.read_text(encoding="utf-8"))
-        updating = args.capture_anchors or args.extend_baseline
-        failures = check_baseline(
-            args.site_output, baseline, capture=args.capture_anchors,
-            extend=args.extend_baseline, source_revision=args.source_revision,
-            source_kind=args.source_kind, artifact_id=args.artifact_id,
-            artifact_sha256=args.artifact_sha256,
-        )
-        if updating and not failures:
-            payload = json.dumps(baseline, indent=2, ensure_ascii=True) + "\n"
-            if args.output:
-                if args.output.resolve() == args.baseline.resolve():
-                    raise ValueError("write candidate to a separate file for review")
-                args.output.write_text(payload, encoding="utf-8")
-            else:
-                print(payload, end="")
-        elif not updating:
-            if isinstance(baseline, dict) and baseline.get("anchor_status") == "pending-rendered-baseline":
-                print("Route baseline active; rendered anchor capture pending", file=sys.stderr)
-            failures.extend(check(args.site_output, args.base_path))
-    except (OSError, UnicodeError, ValueError) as error:
-        failures = [f"Unable to read or process route baseline: {error}"]
+    return cli
+
+
+def _report(failures: list[str]) -> int:
     for problem in failures:
         print(problem, file=sys.stderr)
-    raise SystemExit(bool(failures))
+    return 1 if failures else 0
+
+
+def run(argv=None) -> int:
+    args = _parser().parse_args(argv)
+    updating = args.capture_anchors or args.extend_baseline
+    try:
+        baseline = json.loads(args.baseline.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError) as error:
+        return _report([f"Unable to read route baseline {args.baseline}: {error}"])
+    if not updating and isinstance(baseline, dict) and \
+            baseline.get("anchor_status") == "pending-rendered-baseline":
+        print("Route baseline active; rendered anchor capture pending", file=sys.stderr)
+    failures = check_baseline(
+        args.site_output, baseline, capture=args.capture_anchors,
+        extend=args.extend_baseline, source_revision=args.source_revision,
+        source_kind=args.source_kind, artifact_id=args.artifact_id,
+        artifact_sha256=args.artifact_sha256, workflow_run_id=args.workflow_run_id,
+    )
+    if updating:
+        if not failures:
+            payload = json.dumps(baseline, indent=2, ensure_ascii=True) + "\n"
+            try:
+                if args.output:
+                    if args.output.resolve() == args.baseline.resolve():
+                        raise ValueError(
+                            "write the candidate to a separate file for review"
+                        )
+                    args.output.write_text(payload, encoding="utf-8")
+                else:
+                    print(payload, end="")
+            except (OSError, ValueError) as error:
+                failures = [f"Unable to write baseline candidate: {error}"]
+    else:
+        try:
+            failures.extend(check(args.site_output, args.base_path))
+        except ValueError as error:
+            failures.append(str(error))
+    return _report(failures)
+
+
+if __name__ == "__main__":
+    raise SystemExit(run())

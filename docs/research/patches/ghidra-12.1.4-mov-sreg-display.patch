@@ -11,6 +11,11 @@ It applies to a separately identified copy of the installation, never to a
 shared one. Rebuild the compiled languages afterwards with
   support/sleigh -a Ghidra/Processors/x86
 
+The patched file is part of Ghidra itself, distributed under the Apache
+License 2.0. This reproduction of the upstream change conveys no rights in
+Ghidra or its source; the project's license covers only this note and the
+enclosed diff against that third-party file.
+
 --- a/Ghidra/Processors/x86/data/languages/ia.sinc
 +++ b/Ghidra/Processors/x86/data/languages/ia.sinc
 @@ -4012,10 +4012,10 @@

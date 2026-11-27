@@ -1,0 +1,54 @@
+{
+  "schema": "supplementary-agent-receipt/1",
+  "provider": "Freebuff",
+  "agent_label": "Buffy (Freebuff coding agent)",
+  "campaign_id": "freebuff/archival-format-coverage-research-campaign",
+  "provider_prefix": "freebuff",
+  "checkpoint": "capability-registry-and-sector-compression-packages",
+  "observed_at": "2026-11-26T00:00:00Z",
+  "observed_at_note": "Local observation date only. No wall-clock timestamp was captured at the time of the checkpoint; recorded as the campaign date rather than invented.",
+  "execution_mode": "interactive local session, filesystem and shell tools on the enrolled workstation",
+  "git": {
+    "base_revision": "3d3f784",
+    "working_branch": "freebuff/archival-format-coverage-research-campaign",
+    "merged": false,
+    "note": "Checkpoint recorded before any commit or push. No pull request was opened and no merge was attempted by this agent."
+  },
+  "model": {
+    "label": null,
+    "reasoning_setting": null,
+    "verified_runtime_identity": false,
+    "note": "The agent tool surface did not expose model identity, context size or quota. The desktop model selector was not treated as an independently verified runtime identity."
+  },
+  "source": {
+    "kind": "manual-ui-observation",
+    "collector_version": null,
+    "coverage": "Campaign-level observations only.",
+    "attribution_limitations": "Usage is shared with a human-operated account and cannot be attributed per campaign from the client. No telemetry source exposes per-campaign consumption."
+  },
+  "measurements": [],
+  "measurements_note": "No token counters, quota windows or reset epochs were exposed to this agent. Measurements are an empty list with an explicit gap rather than zero values.",
+  "checkpoint_status": "complete-for-scope",
+  "scope_completed": [
+    "Machine-readable capability registry with generated documentation and consistency tests",
+    "Native Unix compress(1) LZW decoder with external cross-check",
+    "bounded bzip2 and xz decoding",
+    "Native ImageDisk, TeleDisk (ordinary compression) and CopyQM sector-image decoders",
+    "Sector-to-logical-block normaliser that reports missing and conflicting sectors",
+    "Integration of both new layers into the existing identifier and extractor",
+    "Bounded read-only classification of the 10,037-file TVDog mirror"
+  ],
+  "scope_deferred": [
+    "ARC method 8 and 9 native decoder",
+    "FAT32 and VFAT",
+    "TeleDisk advanced LZSS/Huffman payload decoding",
+    "ZOO, SQZ, HA, UC2, DWC",
+    "IBM XDF, Tandy, Commodore, Apple and Amiga families"
+  ],
+  "blockers_recorded": [
+    "Disk Copy Fast (.DCF) has no published byte-level specification and no specimen is held",
+    "TeleDisk header CRC and RLE block-length variants are unconfirmed against a real image",
+    "No external oracle is available for ARC methods 8 and 9: 7-Zip 26.05 has no ARC handler"
+  ],
+  "privacy_note": "No raw transcripts, prompts, private paths, archive contents, credentials or account identifiers are included. Corpus findings are aggregate counts and format metadata only."
+}

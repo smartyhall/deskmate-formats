@@ -189,6 +189,11 @@ class ClientTests(unittest.TestCase):
                 operation()
         self.assertEqual(len(wire.sent), 1)
 
+    def test_carriage_return_and_newline_both_send_dos_enter(self):
+        client, wire = self.client([line(), line(), line(), line()])
+        client.type_ascii('\r\n')
+        self.assertEqual(wire.sent[1:], [b'key down 0x1c\n', b'key up 0x1c\n'] * 2)
+
     def test_png_dimensions_crc_and_truncation(self):
         png = synthetic_png()
         for payload, width, success in ((png, 1, True), (png, 2, False),

@@ -327,6 +327,28 @@ payload, and a failure payload from a zero-exit worker. Five more assert that a
 published receipt whose `reopen` section claims `ok` without this attempt's
 identifier, or without a literal `match`/`complete`, is rejected.
 
+### 14. A nested section of the wrong type crashed the validator
+
+Integration checkpoint, 2026-11-27. `validate_receipt` reported a nested section
+that was not an object as a set of absent fields, but then read that same
+section with `.get`: a receipt whose `program` was `"PROGRAM"`, or whose `input`
+was a list, raised `AttributeError` out of the validator instead of being
+rejected. The process still failed, but with a traceback instead of a receipt,
+so the defect was invisible to every consumer of receipts and could not be told
+apart from a crash of the driver itself.
+
+* **Shape is checked once.** `_shape_problems` reports a section that is
+  present but is a string, list or number, naming the section and the type it
+  actually holds.
+* **Every read is shaped.** `_mapping` reads a nested section as empty when it
+  is not an object, so the identity comparisons still run and the ordinary
+  missing-field problems are reported beside the shape problem.
+* **Rejection keeps its diagnostic.** The attempt exits 8 with
+  `outcome: receipt_malformed` and `schema_problems` naming the section, so a
+  malformed nested object is a reported defect rather than a stack trace.
+  `validate_reopen_payload` already guarded every nested read this way; the
+  published-receipt path is now consistent with it.
+
 ## Qualification as a deterministic procedure
 
 Determinism here means: the same stored bytes and the same declared

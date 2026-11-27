@@ -1,10 +1,25 @@
-"""Read a native document directly from a stopped RSX FAT16 clone for verification."""
+"""Read a native file directly from a stopped RSX FAT16 clone for verification."""
 import argparse
 from hashlib import sha256
 import json
 from pathlib import Path
 import re
 from struct import unpack_from
+
+
+DOS_NAME = re.compile(r"[A-Z0-9!#$%&'()\-@^_`{}~]{1,8}(?:\.[A-Z0-9!#$%&'()\-@^_`{}~]{1,3})?")
+
+
+def entry_name(name):
+    """Return the 11-byte FAT directory name for an uppercase DOS 8.3 name.
+
+    Extensionless names are measured in this repository (the Corkboard
+    ``DMCORKBD`` buffer), so they are accepted alongside ordinary documents.
+    """
+    if not isinstance(name, str) or not DOS_NAME.fullmatch(name):
+        raise ValueError(f'expected an uppercase DOS 8.3 filename: {name!r}')
+    base, _, extension = name.partition('.')
+    return (base.ljust(8) + extension.ljust(3)).encode('ascii')
 
 
 def extract(image, names):
@@ -57,9 +72,7 @@ def extract(image, names):
     entries = dict(directory(chain(word(desk + 26)), cluster_size))
     result = {}
     for name in names:
-        if not re.fullmatch(r'[A-Z0-9]{1,8}\.(?:FIG|DOC|FIL|FF1|PRN)', name):
-            raise ValueError('expected an uppercase DOS research filename')
-        entry = entries[(name[:-4].ljust(8) + name[-3:]).encode('ascii')]
+        entry = entries[entry_name(name)]
         size = dword(entry + 28)
         blocks = chain(word(entry + 26))
         if image[entry + 11] & 16 or not blocks or not (len(blocks) - 1) * cluster_size < size <= len(blocks) * cluster_size:

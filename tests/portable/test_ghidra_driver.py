@@ -886,6 +886,59 @@ class SchemaTests(unittest.TestCase):
             self.assertIn(outcome, driver.EXIT_FOR_OUTCOME)
 
 
+class MalformedSectionTests(DriverTestCase):
+    """A section of the wrong type is a reported defect, not a crash."""
+
+    SECTIONS = ('attempt', 'input', 'requested', 'project', 'program',
+                'persistence', 'resolved_language', 'reopen')
+
+    def unit_receipt(self):
+        return envelope(dict(imported()), attempt='a' * 32, sha=SHA,
+                        project='probe', project_dir='/projects')
+
+    def test_every_section_of_a_wrong_type_is_reported_as_a_shape_problem(self):
+        for section in self.SECTIONS:
+            for value in ('text', ['text'], 0):
+                with self.subTest(section=section, value=value):
+                    receipt = self.unit_receipt()
+                    receipt[section] = value
+                    problems = driver.validate_receipt(
+                        receipt, attempt_id='a' * 32, input_sha256=SHA,
+                        project='probe', project_dir='/projects',
+                    )
+                    self.assertTrue(
+                        any(problem.startswith(f'{section} is ')
+                            and 'not a JSON object' in problem
+                            for problem in problems),
+                        problems,
+                    )
+
+    def test_a_string_program_is_rejected_instead_of_raised(self):
+        worker = FakeWorker(receipts=[imported(program='PROGRAM')])
+        self.assertEqual(self.run_main(worker), driver.EXIT_RECEIPT_REJECTED)
+        receipt = self.receipt()
+        self.assertEqual(receipt['outcome'], 'receipt_malformed')
+        self.assertTrue(any(problem.startswith('program.')
+                            for problem in receipt['schema_problems']))
+
+    def test_a_list_input_section_is_rejected_with_its_shape_named(self):
+        worker = FakeWorker(receipts=[imported(input=['SPECIMEN.EXE'])])
+        self.assertEqual(self.run_main(worker), driver.EXIT_RECEIPT_REJECTED)
+        receipt = self.receipt()
+        self.assertEqual(receipt['outcome'], 'receipt_malformed')
+        self.assertTrue(any(problem.startswith('input.')
+                            for problem in receipt['schema_problems']))
+        self.assertTrue(any('input is list' in problem
+                            for problem in receipt['schema_problems']))
+
+    def test_a_numeric_requested_section_is_rejected(self):
+        worker = FakeWorker(receipts=[imported(requested=7)])
+        self.assertEqual(self.run_main(worker), driver.EXIT_RECEIPT_REJECTED)
+        receipt = self.receipt()
+        self.assertTrue(any('requested is int' in problem
+                            for problem in receipt['schema_problems']))
+
+
 class ParserTests(unittest.TestCase):
     def test_documented_exit_codes_are_distinct(self):
         codes = [driver.EXIT_OK, driver.EXIT_USAGE, driver.EXIT_IMPORT_FAILED,

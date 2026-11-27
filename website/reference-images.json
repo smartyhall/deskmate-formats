@@ -1791,6 +1791,54 @@
       "rights_note": "Documentary capture under the operator's 2026-11-21 approval. Original software interface: Tandy Corporation. Vendor rights are retained.",
       "page_id": "research.print-companion",
       "section_heading": "Native application survey"
+    },
+    {
+      "id": "ui.corkboard.freebuff-note-created",
+      "path": "native-emulator-20261126/ui.corkboard.freebuff-note-created.png",
+      "sha256": "feaf47e2a18451b0acbb5336fd0674c2703f997e6f9a2b69e018591bcb511e5c",
+      "source_sha256": "feaf47e2a18451b0acbb5336fd0674c2703f997e6f9a2b69e018591bcb511e5c",
+      "size": 20750,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "freebuff-native-20261126-feaf47e2a18451b0",
+      "caption": "Reproduced Corkboard note typed through the native socket in RSX DeskMate 03.04.04.",
+      "alt": "The two synthetic lines CORKBOARD ATLAS TEST 20261123 and SECOND LINE in the Corkboard accessory, with Clear, Print, and Cancel controls.",
+      "rights_note": "Synthetic test content. Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+      "page_id": "applications.note-pad-corkboard",
+      "section_heading": "Three ways to leave a note"
+    },
+    {
+      "id": "ui.corkboard.freebuff-cold-reopen-edit",
+      "path": "native-emulator-20261126/ui.corkboard.freebuff-cold-reopen-edit.png",
+      "sha256": "74396b356cae0da782e9aa708b1de3734c8d1d21cf385d4f73a4e574760e3803",
+      "source_sha256": "74396b356cae0da782e9aa708b1de3734c8d1d21cf385d4f73a4e574760e3803",
+      "size": 21078,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "freebuff-native-20261126-74396b356cae0da7",
+      "caption": "Corkboard reopened after a cold boot, showing the campaign three-line note after one character was appended at the stored insertion point.",
+      "alt": "The yellow Corkboard note with three synthetic lines ending in a cursor block under the Clear, Print, and Cancel controls.",
+      "rights_note": "Synthetic test content. Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+      "page_id": "applications.note-pad-corkboard",
+      "section_heading": "Three ways to leave a note"
+    },
+    {
+      "id": "ui.information-center.freebuff-shared-note",
+      "path": "native-emulator-20261126/ui.information-center.freebuff-shared-note.png",
+      "sha256": "5735bc8c79343dfa4f389e6bb0e55431c751070f936c10d6edd141f63a82914a",
+      "source_sha256": "5735bc8c79343dfa4f389e6bb0e55431c751070f936c10d6edd141f63a82914a",
+      "size": 21274,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "freebuff-native-20261126-5735bc8c79343dfa",
+      "caption": "Information Center 3.61 shows the campaign Corkboard note on its dashboard notepad in the same RSX session series.",
+      "alt": "Household dashboard with a November 2026 calendar, an empty messages area, a phone panel, and a yellow notepad holding the three synthetic lines.",
+      "rights_note": "Synthetic test content. Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+      "page_id": "applications.note-pad-corkboard",
+      "section_heading": "Three ways to leave a note"
     }
   ]
 }

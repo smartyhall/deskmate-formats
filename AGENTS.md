@@ -52,8 +52,14 @@ the general rules below supplement them, not expand their grants.
   delegated agents. Cross-agent reviews are useful but do not themselves
   confer merge authority. The operator or an explicitly authorized
   independent reviewer must review scope, provenance and passing checks.
-  The existing ChatGPT housekeeping merge grant is clarified as covering
-  completed Codex PRs only; do not assume it extends to Freebuff or ChatGPT's own PRs.
+  The operator extended ChatGPT's standing housekeeping merge authority on
+  2026-11-26 to completed PRs from any other producing agent, including Codex
+  and Freebuff, after independent review of the exact head, scope, provenance,
+  licensing, publication eligibility, and passing required checks. Escalate
+  matters requiring additional operator oversight, including changes to
+  governance or authority, material unresolved regressions, or disputed
+  publication boundaries. This does not authorize ChatGPT to merge its own
+  work, including delegated work, or enlarge any other agent's authority.
 - Record provider, model/effort if known, execution mode, campaign and
   checkpoint identity, evidence origin, tests, limitations and usage receipts
   at startup, meaningful checkpoints and completion/safe stop. Keep existing
@@ -81,6 +87,29 @@ the general rules below supplement them, not expand their grants.
   journal and Supervisor's pinned Codex protocol are not Freebuff adapters;
   do not imply coverage, bypass live gates, or initiate an integration
   implementation merely because of this policy.
+
+### CodeRabbit advisory review — operator decision 2026-11-26
+
+For review-ready PRs, follow the [CodeRabbit review procedure](CONTRIBUTING.md#coderabbit-advisory-review)
+and [qualification record](docs/research/coderabbit-review-qualification-20261126.md).
+This is a standard, nonblocking review step for all producing agents, not a
+required CI check or delegation of approval/merge authority. Request an ordinary
+manual review when automatic review is unavailable (currently the repository
+is below the ten-star threshold); avoid duplicate requests and paid calls.
+Verify the reviewed revision and effective configuration, independently
+adjudicate findings, and record status, dispositions and limitations at handoff.
+If a review is unavailable or pending at safe stop, preserve and submit work
+normally and identify the outstanding review for the independent reviewer.
+
+CodeRabbit may review eligible public repository changes and public PR context.
+Do not send it private laboratory inputs, restricted materials or credentials,
+invoke Autofix/Autopilot, finishing touches, code or test generation, CI or
+conflict repairs, issue planning, or other autonomous actions without separate
+operator authorization. Do not alter reviewer policy, dashboard settings,
+integration access or review gates to obtain a preferred review outcome.
+Existing campaign, publication and merge authority remains unchanged.
+V3 administrative restrictions are not all technically enforceable at present;
+observe these procedural boundaries regardless of the options the UI exposes.
 
 ## Accepted experimental laboratory risk — operator decision 2026-11-11
 
@@ -120,7 +149,9 @@ Challenge scope drift: evidence, consequence, rollback, minimum control.
   unreviewed third-party content, or restricted/confidential inputs. Use a review PR.
   On 2026-11-08, the operator separately authorized ChatGPT as an independent
   reviewer to merge completed Codex PRs after scope review and passing checks
-  during routine post-run housekeeping. This does NOT authorize Codex workers
+  during routine post-run housekeeping. On 2026-11-26 the operator extended
+  this grant to completed PRs from any other producing agent, subject to the
+  multi-agent governance rules above. This does NOT authorize producing agents
   to merge their own PRs, bypass tests, operate a VM, spend model quota or
   publish private/commercial inputs.
 - Standing documentary-image publication permission (operator, 2026-11-21):
@@ -143,8 +174,9 @@ Challenge scope drift: evidence, consequence, rollback, minimum control.
   Tandy, Radio Shack or third-party interface artwork. Unusual third-party
   works or unverified redistribution terms still deserve a focused review,
   but do not presume routine UI screenshots are categorically forbidden.
-  ChatGPT can independently review and merge eligible, passing Codex PRs under the
-  existing Codex housekeeping grant; no producing agent may merge its own PR.
+  ChatGPT can independently review and merge eligible, passing PRs from other
+  producing agents under the expanded 2026-11-26 housekeeping grant; no
+  producing agent may merge its own PR.
 - Representative visual evidence in research pull requests (operator, 2026-11-21):
   Every research PR should include a small, **representative set of exemplar
   images whenever the work has meaningful visual states or outputs**. Choose
@@ -177,9 +209,9 @@ Challenge scope drift: evidence, consequence, rollback, minimum control.
   expected semantic contents and accurate REUSE sidecar to the manifest/docs;
   test the committed bytes and ensure binary fixtures remain excluded from
   wheel/sdist. For authorized publication, push a dedicated branch and open a
-  PR for independent review; the 2026-11-08 standing housekeeping grant
-  allows ChatGPT to merge a reviewed, passing Codex PR, but no producing
-  agent may merge its own PR. If publication is not authorized or is unsafe, keep
+  PR for independent review; the standing housekeeping grant, expanded on
+  2026-11-26, allows ChatGPT to merge a reviewed, passing PR from another
+  producing agent, but no producing agent may merge its own PR. If publication is not authorized or is unsafe, keep
   the artifact private and report the precise blocker rather than silently
   substituting hashes for a usable file.
 - Never commit commercial installers, ROMs, executables, complete installed
@@ -207,8 +239,8 @@ Challenge scope drift: evidence, consequence, rollback, minimum control.
   on a dedicated branch. Run applicable portable checks before local commits.
   Push and open eligible synthetic research PRs only under the standing
   publication grant or other explicit authorization. No producing agent may merge
-  its own PRs; ChatGPT may independently merge ready Codex PRs under the operator's
-  2026-11-08 post-run housekeeping grant. Do not infer approval for unrelated
+  its own PRs; ChatGPT may independently merge ready PRs from other producing
+  agents under the operator's expanded 2026-11-26 post-run housekeeping grant. Do not infer approval for unrelated
   repository mutations, unattended dispatch, emulator control or paid calls.
 
 ## Editorial evidence and style — operator decision 2026-11-21
