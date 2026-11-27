@@ -1,0 +1,18 @@
+{
+  "schema_version": 3,
+  "id": "github-hash-canary",
+  "revision": 1,
+  "idempotency_key": "github-hash-canary-1",
+  "title": "Hash README.md from the accepted exact source revision",
+  "description": "Hash the tracked README.md of the accepted exact source revision with the reviewed controller procedure hash-files and return a structured file receipt. No source mutation, no workspace import, no network access and no model call. The expected SHA-256 and byte count are established independently from the committed bytes before dispatch, and the observed values are compared against them. Acceptance does not execute; a separate operator authorization of the exact frozen plan digest is required before the single run.",
+  "category": "verification",
+  "profile": "offline",
+  "resources": ["source-read"],
+  "dependencies": [],
+  "deterministic": {
+    "procedure": "hash-files",
+    "arguments": {
+      "paths": ["README.md"]
+    }
+  }
+}
