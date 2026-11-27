@@ -64,6 +64,5 @@ Only a real reviewed deployment can qualify the end-to-end behavior. No
 production deployment was initiated during this investigation.
 
 The earlier worker's 58-file byte comparison is reported in
-[visual qualification](../research/visual-qualification-20261126.md) on
-PR #197. Independent inspection here is limited to logs and source, not
+[visual qualification report in PR #197](https://github.com/smartyhall/deskmate-formats/blob/5aee34c413ece85fd5ef62bfb2e5485d1d5afd47/docs/research/visual-qualification-20261126.md). Independent inspection here is limited to logs and source, not
 downloaded archive bytes or the live site.
