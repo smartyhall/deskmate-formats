@@ -42,6 +42,10 @@ deskmate-supervisor-task = "deskmate_formats.supervisor.task_cli:main"
 deskmate-supervisor-s0 = "deskmate_formats.supervisor.driver_cli:main"
 deskmate-supervisor-s3 = "deskmate_formats.supervisor.editing_cli:main"
 deskmate-supervisor-s2 = "deskmate_formats.supervisor.bridge_cli:main"
+deskmate-supervisor-deterministic = "deskmate_formats.supervisor.deterministic_cli:main"
+deskmate-supervisor-campaigns = "deskmate_formats.supervisor.campaigns_cli:main"
+deskmate-observer-campaigns = "deskmate_formats.observer.campaign_cli:main"
+deskmate-observer-snapshot = "deskmate_formats.supervisor.snapshot:main"
 
 [tool.setuptools.package-data]
 "*" = ["*.license"]

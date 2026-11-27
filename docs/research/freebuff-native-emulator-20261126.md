@@ -73,9 +73,10 @@ Procedure, all guest time advanced in explicit steps on a held machine:
    followed by `C:\>`.
 2. Type `CD \DESKMATE`, then `DESK`; at 12,000 emulated ms the guest is in BIOS
    video mode 18 (VGA 640 × 480) with the teal DeskMate desktop.
-3. Press F10. The Applications menu opens with **no** item selected and lists
+3. Press F10. The Accessories menu opens with **no** item selected and lists
    Setup, Spell Checker, Calculator, Phone List, Corkboard, Month, Alarm, To Do
-   List, Clipboard and Task Switch. Five Downs select **Corkboard**; Enter
+   List, Clipboard and Task Switch. (F8 is the Applications menu; this run did
+   not open it.) Five Downs select **Corkboard**; Enter
    opens the note editor with Clear, Print and Cancel controls.
 4. Type `CORKBOARD ATLAS TEST 20261123`, Enter, `SECOND LINE`, then Escape.
    The accessory closes and the desktop returns; the note is retained.
