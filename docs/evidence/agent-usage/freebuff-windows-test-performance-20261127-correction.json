@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "provider": "Freebuff",
+  "agent": "Freebuff desktop agent",
+  "campaign_id": "freebuff-windows-test-performance-20261126",
+  "checkpoint": "correction-checkpoint",
+  "observed_at_utc": "2026-11-27T08:45:00Z",
+  "git_revision": null,
+  "git_revision_note": "The receipt ships with the commit it describes, so it cannot contain that commit's own identity. The branch freebuff/windows-test-performance-under-concurrent-load and pull request #199 carry it.",
+  "execution_mode": "local desktop agent in one dedicated worktree on the shared laboratory VM; only this checkout, its own temporary directories and its private evidence directory were written; no other campaign's worktree, branch, interpreter or process was modified",
+  "model": null,
+  "reasoning_effort": null,
+  "model_note": "Not exposed to agent tools. No paid provider was connected, no credits purchased, no additional AI worker launched, and no runtime was reinstalled globally.",
+  "source": {
+    "kind": "local allowlisted collector",
+    "version": "deskmate_formats.perf report schema 2",
+    "detail": "Instrumented test runs written by this campaign's own harness, with pre/post source identity, imported package origin and host sampling coverage; plus the campaign registry and the focused regression suite."
+  },
+  "coverage": "Measurement-integrity checkpoint only. One two-arm controlled fixture comparison re-run with identity-recording reports (2 suite iterations per arm, 5 tests each), one re-judgment of the two preserved full-run reports with the corrected comparator, 75 focused harness and fixture-isolation tests, and the repository checks. No full portable suite run and no new microbenchmark session were performed, by instruction.",
+  "attribution_limits": "Host CPU, memory, process and thread counts describe a shared VM and are not provider consumption. Suite wall-clock is test execution time, not agent session time. The two full-run host CPU percentages quoted in this checkpoint are reconstructions from stored per-sample percentages, not direct measurements. No per-campaign or account-level provider allowance is observable to the agent.",
+  "status": "correction checkpoint: comparison and lifecycle defects corrected with regression tests; stored host-CPU figures reconciled from raw samples and labelled reconstructed; fixture improvement re-measured under qualified conditions; stored evidence preserved rather than re-run",
+  "measurements": [
+    {
+      "name": "instrumented_suite_runs",
+      "value": 2,
+      "unit": "runs",
+      "scope": "checkpoint",
+      "semantics": "delta",
+      "observed_at": "correction checkpoint",
+      "reset_boundary": null
+    },
+    {
+      "name": "suite_iterations",
+      "value": 4,
+      "unit": "iterations",
+      "scope": "checkpoint",
+      "semantics": "delta",
+      "observed_at": "correction checkpoint",
+      "reset_boundary": null
+    },
+    {
+      "name": "measured_test_wall_clock",
+      "value": 56.7,
+      "unit": "seconds",
+      "scope": "checkpoint",
+      "semantics": "delta",
+      "observed_at": "correction checkpoint",
+      "reset_boundary": null
+    },
+    {
+      "name": "traced_process_spawns",
+      "value": 574,
+      "unit": "spawns",
+      "scope": "checkpoint",
+      "semantics": "delta",
+      "observed_at": "correction checkpoint",
+      "reset_boundary": null
+    },
+    {
+      "name": "regression_tests_executed",
+      "value": 75,
+      "unit": "tests",
+      "scope": "checkpoint",
+      "semantics": "delta",
+      "observed_at": "correction checkpoint",
+      "reset_boundary": null
+    },
+    {
+      "name": "microbenchmark_iterations",
+      "value": 0,
+      "unit": "iterations",
+      "scope": "checkpoint",
+      "semantics": "delta",
+      "observed_at": "correction checkpoint",
+      "reset_boundary": null
+    }
+  ],
+  "measurement_note": "measured_test_wall_clock is the sum of the two comparison arms (31.36 s + 25.36 s) and excludes the focused regression suite run time. traced_process_spawns is the sum of the two arms' traced spawns (308 + 266) and equals their Git invocations. regression_tests_executed is 72 harness tests plus 3 fixture-isolation tests. The two full portable-suite runs from the previous checkpoints are preserved and were deliberately not repeated; their host CPU figures reported here are reconstructions (baseline mean 78.3 %, second run mean 32.9 %, both +/- about 2 points) and the stored defective means (82.9 % and 60.5 %) remain quoted alongside them.",
+  "private_evidence": "Raw run JSON, host timelines, comparison artifacts, the re-measured A/B arms and the campaign registry are retained outside Git under the laboratory private-evidence directory; only the harness, the analysis and these reviewed receipts are published. The sanitized projection written by --public-out is the publishable form of a run report."
+}
