@@ -10,9 +10,17 @@ count.
 
 Write mode (``--annotate``) proves that persistent annotations and transactions
 work in a project we own: it writes a plate comment, a bookmark and a label in
-one transaction, saves, and reports the result. ``--verify-annotation`` is a
-separate invocation that reopens the project and reads them back, because a
-reopen inside the writing JVM proves nothing about persistence.
+one transaction, saves, and reports the exact values it wrote. The plate and the
+bookmark comment carry the attempt identifier, so an annotation can be told
+apart from an earlier probe left at the same address.
+
+``--verify-annotation`` is a separate invocation that reopens the project and
+reads those values back, because a reopen inside the writing JVM proves nothing
+about persistence. It is bound to the annotate receipt (``--annotation-receipt``)
+and requires that receipt's attempt, project, program, address, plate comment,
+bookmark type/category/comment and label to match exactly. A missing, stale,
+mismatched or partial annotation is ``not_persisted``; nothing is inferred from
+the presence of some comment.
 
 Receipt rules (see docs/research/ghidra-dos-import-receipts.md):
 
@@ -21,6 +29,8 @@ Receipt rules (see docs/research/ghidra-dos-import-receipts.md):
 * A missing project is a failure. This tool never creates one.
 * An annotation that was committed but not saved is reported as unsaved, not
   as persisted.
+* A verified annotation must match the annotation an annotate receipt names,
+  component by component.
 * Receipts are published atomically.
 
 Exit codes::
@@ -52,10 +62,15 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-ANNOTATION_PLATE = "campaign probe: %s"
+# The plate and the bookmark comment both carry the attempt identifier: an
+# annotation that cannot be attributed to one attempt cannot be distinguished
+# from a stale probe left at the same address.
+ANNOTATION_PLATE = "campaign probe (%s): %s"
 ANNOTATION_LABEL = "probe_label"
+ANNOTATION_BOOKMARK_TYPE = "Note"
+ANNOTATION_BOOKMARK_CATEGORY = "campaign-probe"
 
-RECEIPT_SCHEMA = "ghidra-program-report/2"
+RECEIPT_SCHEMA = "ghidra-program-report/3"
 
 EXIT_OK = 0
 EXIT_USAGE = 2
@@ -463,7 +478,9 @@ def _open_readonly(project_dir: Path, name: str, program_path: str):
     return pyghidra.program_context(project, program_path), project
 
 
-def _annotate(project_dir: Path, name: str, program_path: str, text: str) -> dict:
+def _annotate(
+    project_dir: Path, name: str, program_path: str, text: str, attempt_id: str
+) -> dict:
     import pyghidra  # noqa: PLC0415
 
     from ghidra.framework.model import ProjectLocator  # noqa: PLC0415
@@ -478,8 +495,16 @@ def _annotate(project_dir: Path, name: str, program_path: str, text: str) -> dic
         raise FileNotFoundError(f"project {name} does not exist in {project_dir}")
     project = manager.openProject(locator, False, False)
     consumer = Object()
+    plate = ANNOTATION_PLATE % (attempt_id, text)
     record: dict = {
         "program": program_path,
+        "plate": plate,
+        "bookmark": {
+            "type": ANNOTATION_BOOKMARK_TYPE,
+            "category": ANNOTATION_BOOKMARK_CATEGORY,
+            "comment": plate,
+        },
+        "label": ANNOTATION_LABEL,
         "committed": False,
         "saved": False,
         "persisted": False,
@@ -493,13 +518,17 @@ def _annotate(project_dir: Path, name: str, program_path: str, text: str) -> dic
         )
         try:
             start = program.getMinAddress()
+            record["address"] = str(start)
             listing = program.getListing()
             transaction = program.startTransaction("campaign annotation probe")
             committed = False
             try:
-                listing.setComment(start, CommentType.PLATE, text)
+                listing.setComment(start, CommentType.PLATE, plate)
                 program.getBookmarkManager().setBookmark(
-                    start, "Note", "campaign-probe", text
+                    start,
+                    ANNOTATION_BOOKMARK_TYPE,
+                    ANNOTATION_BOOKMARK_CATEGORY,
+                    plate,
                 )
                 program.getSymbolTable().createLabel(
                     start, ANNOTATION_LABEL, SourceType.USER_DEFINED
@@ -508,7 +537,6 @@ def _annotate(project_dir: Path, name: str, program_path: str, text: str) -> dic
             finally:
                 program.endTransaction(transaction, committed)
             record["committed"] = committed
-            record["address"] = str(start)
             if committed:
                 try:
                     program.save("campaign annotation probe", pyghidra.task_monitor())
@@ -530,28 +558,224 @@ def _annotate(project_dir: Path, name: str, program_path: str, text: str) -> dic
     return record
 
 
-def _verify_annotation(project_dir: Path, name: str, program_path: str) -> dict:
+def _text_key(value) -> str:
+    """Compare recorded text (a path, an address) by value, not by spelling."""
+    return str(value or "").strip().lower()
+
+
+def _path_key(value) -> str:
+    """Compare paths by the file they name, not by how they were written."""
+    return os.path.normcase(os.path.realpath(os.path.abspath(str(value or "."))))
+
+
+def _annotation_expectations(
+    receipt_path: str, project: str, project_dir: Path, program_path: str
+) -> tuple[dict | None, list[str]]:
+    """Resolve the annotation a verify run must find, from the annotate receipt.
+
+    A verify run is only meaningful against a named annotation, so every part of
+    the expectation comes from the receipt the annotate run published: the
+    attempt, the project, the program, the address, the plate comment, the
+    bookmark and the label. Nothing is taken from whatever the program happens
+    to contain, because a comment written by an earlier probe at the same
+    address would otherwise pass as evidence of this one.
+    """
+    problems: list[str] = []
+    try:
+        data = Path(receipt_path).read_bytes()
+    except OSError as exc:
+        return None, [f"annotation receipt {receipt_path} is unreadable: {exc}"]
+    try:
+        receipt = json.loads(data.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        return None, [f"annotation receipt {receipt_path} is not JSON: {exc}"]
+    if not isinstance(receipt, dict):
+        return None, [
+            f"annotation receipt is {type(receipt).__name__}, not a JSON object"
+        ]
+    digest = hashlib.sha256(data).hexdigest()
+
+    if receipt.get("schema") != RECEIPT_SCHEMA:
+        problems.append(
+            f"annotation receipt schema is {receipt.get('schema')!r}, "
+            f"not {RECEIPT_SCHEMA}"
+        )
+    if receipt.get("tool") != "tools/ghidra/ghidra_program_report.py":
+        problems.append("annotation receipt was not written by this tool")
+    if receipt.get("outcome") != "succeeded":
+        problems.append(
+            f"annotation receipt outcome is {receipt.get('outcome')!r}, "
+            "not 'succeeded'"
+        )
+    attempt = receipt.get("attempt")
+    attempt_id = attempt.get("id") if isinstance(attempt, dict) else None
+    if not isinstance(attempt_id, str) or not attempt_id:
+        problems.append("annotation receipt names no attempt")
+        attempt_id = None
+
+    annotation = receipt.get("annotation")
+    if not isinstance(annotation, dict):
+        problems.append("annotation receipt has no annotation record")
+        annotation = {}
+    if annotation.get("persisted") is not True:
+        problems.append("annotation receipt does not claim persisted annotations")
+
+    requested = receipt.get("requested")
+    if not isinstance(requested, dict):
+        problems.append("annotation receipt has no requested section")
+        requested = {}
+    if requested.get("project") != project:
+        problems.append(
+            f"annotation receipt names project {requested.get('project')!r}, "
+            f"not {project!r}"
+        )
+    if _text_key(requested.get("program_path")) != _text_key(program_path):
+        problems.append(
+            f"annotation receipt names program {requested.get('program_path')!r}, "
+            f"not {program_path!r}"
+        )
+    if _path_key(requested.get("project_dir")) != _path_key(project_dir):
+        problems.append(
+            "annotation receipt names project directory "
+            f"{requested.get('project_dir')!r}, not {str(project_dir)!r}"
+        )
+
+    address = annotation.get("address")
+    if not isinstance(address, str) or not address.strip():
+        problems.append("annotation record names no address")
+        address = None
+    plate = annotation.get("plate")
+    if not isinstance(plate, str) or not plate.strip():
+        problems.append("annotation record names no plate comment")
+        plate = None
+    elif attempt_id is None or attempt_id not in plate:
+        problems.append(
+            "annotation plate does not carry the attempt identifier, so a stale "
+            "annotation at the same address cannot be excluded"
+        )
+    bookmark = annotation.get("bookmark")
+    if not isinstance(bookmark, dict):
+        problems.append("annotation record names no bookmark")
+        bookmark = {}
+    else:
+        if bookmark.get("type") != ANNOTATION_BOOKMARK_TYPE:
+            problems.append(
+                f"annotation bookmark type is {bookmark.get('type')!r}, "
+                f"not {ANNOTATION_BOOKMARK_TYPE!r}"
+            )
+        if bookmark.get("category") != ANNOTATION_BOOKMARK_CATEGORY:
+            problems.append(
+                f"annotation bookmark category is {bookmark.get('category')!r}, "
+                f"not {ANNOTATION_BOOKMARK_CATEGORY!r}"
+            )
+        if plate is not None and bookmark.get("comment") != plate:
+            problems.append(
+                "annotation bookmark comment is not the plate the receipt names"
+            )
+    if annotation.get("label") != ANNOTATION_LABEL:
+        problems.append(
+            f"annotation label is {annotation.get('label')!r}, "
+            f"not {ANNOTATION_LABEL!r}"
+        )
+
+    if problems:
+        return None, problems
+    return {
+        "receipt": str(receipt_path),
+        "receipt_sha256": digest,
+        "attempt_id": attempt_id,
+        "project": project,
+        "project_dir": str(project_dir),
+        "program_path": program_path,
+        "address": address,
+        "plate": plate,
+        "bookmark": {
+            "type": bookmark["type"],
+            "category": bookmark["category"],
+            "comment": bookmark["comment"],
+        },
+        "label": annotation["label"],
+    }, []
+
+
+def _compare_annotation(expected: dict, observed: dict) -> dict:
+    """Check every component of the named annotation; none of them is implied."""
+    symbols = observed.get("symbols") or []
+    bookmarks = observed.get("bookmarks") or []
+    want_bookmark = expected["bookmark"]
+    checks = {
+        "address": {
+            "expected": expected["address"],
+            "observed": observed.get("address"),
+            "ok": observed.get("address") is not None
+            and _text_key(observed["address"]) == _text_key(expected["address"]),
+        },
+        "plate_comment": {
+            "expected": expected["plate"],
+            "observed": observed.get("plate_comment"),
+            "ok": observed.get("plate_comment") == expected["plate"],
+        },
+        "bookmark": {
+            "expected": want_bookmark,
+            "observed": bookmarks,
+            "ok": any(
+                row.get("type") == want_bookmark["type"]
+                and row.get("category") == want_bookmark["category"]
+                and row.get("comment") == want_bookmark["comment"]
+                for row in bookmarks
+            ),
+        },
+        "label": {
+            "expected": expected["label"],
+            "observed": symbols,
+            "ok": expected["label"] in symbols,
+        },
+    }
+    return {"checks": checks, "persisted": all(c["ok"] for c in checks.values())}
+
+
+def _verify_annotation(
+    project_dir: Path, name: str, program_path: str, expected: dict
+) -> dict:
     from ghidra.program.model.listing import CommentType  # noqa: PLC0415
 
+    observed: dict = {
+        "address": None,
+        "plate_comment": None,
+        "bookmarks": [],
+        "symbols": [],
+    }
     context, project = _open_readonly(project_dir, name, program_path)
     try:
         with context as program:
-            start = program.getMinAddress()
-            plate = program.getListing().getComment(CommentType.PLATE, start)
-            bookmarks = [
-                {"type": str(b.getTypeString()), "category": str(b.getCategory()),
-                 "comment": str(b.getComment())}
-                for b in program.getBookmarkManager().getBookmarks(start)
-            ]
-            symbols = [s.getName() for s in program.getSymbolTable().getSymbols(start)]
+            try:
+                target = program.getAddressFactory().getAddress(expected["address"])
+            except Exception:  # noqa: BLE001 - unresolvable is a failed check
+                target = None
+            if target is not None:
+                observed["address"] = str(target)
+                plate = program.getListing().getComment(CommentType.PLATE, target)
+                observed["plate_comment"] = str(plate) if plate else None
+                observed["bookmarks"] = [
+                    {
+                        "type": str(row.getTypeString()),
+                        "category": str(row.getCategory()),
+                        "comment": str(row.getComment()),
+                    }
+                    for row in program.getBookmarkManager().getBookmarks(target)
+                ]
+                observed["symbols"] = [
+                    str(symbol.getName())
+                    for symbol in program.getSymbolTable().getSymbols(target)
+                ]
     finally:
         project.close()
+    comparison = _compare_annotation(expected, observed)
     return {
-        "address": str(start),
-        "plate_comment": plate,
-        "bookmarks": bookmarks,
-        "symbols": symbols,
-        "persisted": bool(plate) and ANNOTATION_LABEL in symbols,
+        "address": observed["address"],
+        "observed": observed,
+        "checks": comparison["checks"],
+        "persisted": comparison["persisted"],
     }
 
 
@@ -564,6 +788,7 @@ def _validate(args) -> list[str]:
     modes = [
         args.summary,
         args.functions,
+        args.symbols,
         bool(args.xrefs),
         bool(args.disassemble),
         bool(args.pcode),
@@ -575,6 +800,12 @@ def _validate(args) -> list[str]:
         errors.append("request at least one read or write mode")
     if args.annotate and args.verify_annotation:
         errors.append("--annotate and --verify-annotation are separate invocations")
+    if args.verify_annotation and not args.annotation_receipt:
+        errors.append(
+            "--verify-annotation needs --annotation-receipt from the annotate run"
+        )
+    if args.annotation_receipt and not args.verify_annotation:
+        errors.append("--annotation-receipt is only read with --verify-annotation")
     if args.text_output and not args.decompile:
         errors.append("--text-output needs --decompile")
     return errors
@@ -600,6 +831,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--text-output", help="private file for decompiled source")
     parser.add_argument("--annotate", help="plate comment text to persist")
     parser.add_argument("--verify-annotation", action="store_true")
+    parser.add_argument(
+        "--annotation-receipt",
+        help="receipt published by the --annotate run whose annotation is verified",
+    )
     parser.add_argument(
         "--attempt-id",
         default=None,
@@ -647,6 +882,22 @@ def main(argv: list[str] | None = None) -> int:
         sys.stderr.write("\n".join(problems) + "\n")
         return EXIT_USAGE
 
+    # The annotation to verify is resolved from the annotate receipt before any
+    # JVM starts, so a receipt for another attempt, project or program is a
+    # request error rather than an inconclusive run.
+    expectation = None
+    if args.verify_annotation:
+        expectation, receipt_problems = _annotation_expectations(
+            args.annotation_receipt, args.project, project_dir, program_path
+        )
+        if receipt_problems:
+            record["outcome"] = "invalid_request"
+            record["errors"] = receipt_problems
+            publish_json(args.output, record)
+            sys.stderr.write("\n".join(receipt_problems) + "\n")
+            return EXIT_USAGE
+        record["annotation_expectation"] = expectation
+
     project_file = project_dir / f"{args.project}.gpr"
     if not project_file.exists():
         record["outcome"] = "project_missing"
@@ -683,7 +934,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.annotate:
             record["annotation"] = _annotate(
-                project_dir, args.project, program_path, args.annotate
+                project_dir, args.project, program_path, args.annotate, attempt_id
             )
             record["outcome"] = (
                 "succeeded"
@@ -692,7 +943,7 @@ def main(argv: list[str] | None = None) -> int:
             )
         elif args.verify_annotation:
             record["annotation"] = _verify_annotation(
-                project_dir, args.project, program_path
+                project_dir, args.project, program_path, expectation
             )
             record["outcome"] = (
                 "succeeded" if record["annotation"]["persisted"] else "not_persisted"

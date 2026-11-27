@@ -4,7 +4,7 @@
   "revision": 1,
   "idempotency_key": "ghidra-program-report-1",
   "title": "Report structural facts from an owned Ghidra program, or prove an annotation persists",
-  "description": "Read a stored program from a project this campaign owns and emit a receipt with counts, function and reference tables, and a decompilation digest. Optionally write a plate comment, bookmark and label in one transaction and verify them from a separate process. Never publish decompiled source, never annotate a project that is also evidence.",
+  "description": "Read a stored program from a project this campaign owns and emit a receipt with counts, function and reference tables, and a decompilation digest. Optionally write an attempt-stamped plate comment, bookmark and label in one transaction, then verify them from a separate process bound to the annotate receipt. Never publish decompiled source, never annotate a project that is also evidence.",
   "category": "analysis",
   "profile": "offline",
   "resources": [
@@ -87,7 +87,7 @@
   "acceptance": [
     "The receipt identifies the program by project path and reports its language id.",
     "Decompiled source appears only as a digest and a line count unless a private text path was given.",
-    "An annotation run reports committed and saved, and a separate verify run reports the same comment, bookmark and label.",
+    "An annotation run reports committed and saved with the values it wrote, and a separate verify run bound to that receipt reports each of the address, plate comment, bookmark and label as matched; a missing, stale or partial annotation is not persisted.",
     "Function names, boundaries and decompiler signatures are labelled as tool output, not as program metadata.",
     "No project that is also evidence is annotated."
   ],
