@@ -97,6 +97,10 @@ class Peer:
         self.commands = dict(commands or {})
         self.no_prompt_return = no_prompt_return
         self.stale = stale
+        # A guest event between two observations can leave the caret somewhere
+        # other than the end of the text, or shift the row the anchor is on.
+        self.indent = 0
+        self.caret = None
         self.menu = False
         self.shift = False
         self.head = 0x1E
@@ -157,7 +161,8 @@ class Peer:
     def _screen(self):
         # Stale cells are left by a longer previous line and become visible as
         # soon as this input starts overwriting that row.
-        body = self.lines + [self.prompt + self.typed + ((self.stale or '') if self.typed else '')]
+        live = ' ' * self.indent + self.prompt + self.typed
+        body = self.lines + [live + ((self.stale or '') if self.typed else '')]
         body = body[-ROWS:]
         rows = [' ' * COLS] * (ROWS - len(body)) + [row[:COLS].ljust(COLS) for row in body]
         return rows[-ROWS:]
@@ -171,7 +176,9 @@ class Peer:
         offset = self.cursor_offset
         if self.typed:
             offset += self.cursor_offset_after
-        column = len(self.prompt) + len(self.typed) + offset
+        column = self.indent + len(self.prompt) + len(self.typed) + offset
+        if self.caret is not None:
+            column = self.caret
         return [row, max(0, min(COLS - 1, column))]
 
     def _memory(self):
@@ -739,6 +746,124 @@ class FacilityTests(unittest.TestCase):
         self.assertEqual(report.status, inp.AMBIGUOUS)
         self.assertEqual(report.detail, 'previously verified text regressed')
         self.assertEqual(report.recoveries, 1)
+
+    # ---- prerequisites for every further burst, not only a recovery ----
+
+    def between_bursts(self, facility, mutate, *, after=1, settle=True):
+        """Apply a guest event just after the `after`-th observation returns.
+
+        Between two observations the guest can move the caret, print, lose text
+        or deliver a late keystroke. Reproducing that exact moment keeps the test
+        independent of how many reads an observation happens to make.
+        """
+        observe = facility._observe
+        seen = []
+
+        def observing(anchor, occurrence, start_col):
+            result = observe(anchor, occurrence, start_col)
+            seen.append(result)
+            if len(seen) == after:
+                if settle:
+                    facility.client.step(facility.settle_step_ms)
+                mutate()
+            return result
+
+        facility._observe = observing
+
+    def test_row_info_counts_occurrences_within_a_single_row(self):
+        facility = self.facility()
+        self.peer.lines = ['AB one AB two']
+        first = facility.row_info('AB', 'first')
+        last = facility.row_info('AB', 'last')
+        self.assertEqual((first['row'], first['col']), (ROWS - 2, 0))
+        self.assertTrue(first['after'].startswith(' one AB two'))
+        self.assertEqual((last['row'], last['col']), (ROWS - 2, 7))
+        self.assertEqual(last['after'].strip(' '), 'two')
+        with self.assertRaises(ValueError) as caught:
+            facility.row_info('AB', 'only')
+        self.assertIn('2 positions', str(caught.exception))
+
+    def test_same_row_duplicate_anchor_refuses_an_occurrence_only_request(self):
+        # One row with the anchor twice is as ambiguous as two rows, and no
+        # input may be sent against a silently chosen occurrence.
+        facility = self.facility()
+        self.peer.lines = ['AB one AB two']
+        with self.assertRaises(ValueError):
+            facility.type_text('X', anchor='AB')
+        self.assertEqual(self.peer.received, '')
+        self.assertEqual([r for r in self.peer.requests if r.split()[0] == 'key'], [])
+
+    def test_cursor_relocated_after_a_complete_burst_stops_further_input(self):
+        # The first burst landed completely and was verified. The guest then
+        # moves the caret to column 3, so the next burst has no insertion point
+        # it can justify: nothing more may be sent.
+        facility = self.facility(chunk=4)
+        self.between_bursts(facility, lambda: setattr(self.peer, 'caret', 3))
+        report = facility.type_text('ABCDEFGH', anchor=PROMPT)
+        self.assertEqual(report.status, inp.AMBIGUOUS)
+        self.assertIn('insertion point', report.detail)
+        self.assertEqual(report.bursts, 1)
+        self.assertEqual(self.peer.received, 'ABCD')
+        self.assertIn('next', report.steps[-1])
+        self.assertFalse(report.steps[-1]['next']['ok'])
+
+    def test_late_input_between_bursts_prevents_the_next_burst(self):
+        # A keystroke arrives after the observation returned: the row now holds
+        # more than the verified prefix, so the next burst is not justified.
+        facility = self.facility(chunk=4)
+        self.between_bursts(facility, lambda: setattr(self.peer, 'typed', 'ABCDZ'))
+        report = facility.type_text('ABCDEFGH', anchor=PROMPT)
+        self.assertEqual(report.status, inp.AMBIGUOUS)
+        self.assertIn('after the verified prefix', report.detail)
+        self.assertEqual(report.bursts, 1)
+        self.assertEqual(self.peer.received, 'ABCD')
+
+    def test_anchor_duplicated_between_bursts_stops_input(self):
+        facility = self.facility(chunk=4)
+        self.between_bursts(facility, lambda: self.peer.lines.append(PROMPT))
+        report = facility.type_text('ABCDEFGH', anchor=PROMPT)
+        self.assertEqual(report.status, inp.AMBIGUOUS)
+        self.assertIn('ambiguous', report.detail)
+        self.assertEqual(report.bursts, 1)
+        self.assertEqual(self.peer.received, 'ABCD')
+
+    def test_anchor_relocated_between_bursts_stops_input(self):
+        facility = self.facility(chunk=4)
+        self.between_bursts(facility, lambda: setattr(self.peer, 'indent', 2))
+        report = facility.type_text('ABCDEFGH', anchor=PROMPT)
+        self.assertEqual(report.status, inp.AMBIGUOUS)
+        self.assertIn('anchor moved', report.detail)
+        self.assertEqual(report.bursts, 1)
+        self.assertEqual(self.peer.received, 'ABCD')
+
+    def test_verified_prefix_regression_between_bursts_is_ambiguous(self):
+        facility = self.facility(chunk=4)
+        self.between_bursts(facility, lambda: setattr(self.peer, 'typed', 'AB'))
+        report = facility.type_text('ABCDEFGH', anchor=PROMPT)
+        self.assertEqual(report.status, inp.AMBIGUOUS)
+        self.assertEqual(report.detail, 'previously verified prefix regressed')
+        self.assertEqual(report.bursts, 1)
+        self.assertEqual(self.peer.received, 'ABCD')
+
+    def test_unreadable_ring_between_bursts_withholds_further_input(self):
+        facility = self.facility(chunk=4)
+        self.between_bursts(facility, lambda: setattr(self.peer, 'ring', 'malformed'))
+        report = facility.type_text('ABCDEFGH', anchor=PROMPT)
+        # The queue evidence itself became unusable, so nothing further is sent
+        # and the outcome is a refusal rather than a pending wait.
+        self.assertEqual(report.status, inp.WITHHELD)
+        self.assertIn('unreadable', report.detail)
+        self.assertEqual(report.bursts, 1)
+        self.assertEqual(self.peer.received, 'ABCD')
+
+    def test_bypass_profile_continues_without_queue_evidence_and_says_so(self):
+        facility = self.facility(peer={'ring': 'malformed'},
+                                 keyboard=inp.KEYBOARD_BYPASS, chunk=2)
+        report = facility.type_text('ABCD', anchor=PROMPT)
+        self.assertEqual(report.status, inp.OBSERVED)
+        self.assertEqual(report.bursts, 2)
+        self.assertIn('pending_input_not_excluded_between_bursts',
+                      report.evidence.limitations)
 
     # ---- menus, pointer and render gates ----
 

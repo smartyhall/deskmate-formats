@@ -37,11 +37,18 @@ did what we meant". This module keeps them apart and records each separately:
     anchored text row plus the BIOS cursor at the end of the expected text, or a
     declared screen state. A redraw alone is never recorded as success.
 
-Recovery is narrow by construction. It happens only when the observation is a
-strict prefix of the intended text, the BIOS ring is provably empty, the
-insertion point is exactly at the end of that prefix, and the observation was
-stable across two samples. Everything else stops with a classified result
-instead of replaying input.
+Every further burst is gated, not just a recovery. Before an ordinary second
+burst is sent, the anchor, the row, the cursor and both queues are re-read; a
+burst that landed completely proves the text so far, never that the caret is
+still where the next characters belong. A guest can move the caret, print, lose
+text or deliver a late keystroke between two observations, and each of those
+stops the operation with a classified result instead of typing at an insertion
+point that no longer exists.
+
+Recovery is narrower still. It happens only when the observation is a strict
+prefix of the intended text, the BIOS ring is provably empty, the insertion
+point is exactly at the end of that prefix, and the observation was stable
+across two samples. Everything else stops rather than replaying input.
 """
 from dataclasses import dataclass, field
 import hashlib
@@ -313,7 +320,12 @@ class VerifiedInput:
         return dict(state, peak=peak)
 
     def row_info(self, anchor, occurrence='only'):
-        """Locate `anchor` on screen and return the raw characters after it.
+        """Locate every occurrence of `anchor` on screen and describe one.
+
+        Matches are counted per occurrence, not per row: a row can contain the
+        anchor twice, and that is exactly as ambiguous as two rows that each hold
+        it once. An overlapping occurrence counts as a separate position, so an
+        anchor that repeats inside itself is refused rather than resolved.
 
         Nothing is stripped: unused cells are spaces in the guest's text memory
         and an intentional trailing space is also a space, so the caller's
@@ -326,13 +338,14 @@ class VerifiedInput:
         matches = []
         for index, line in enumerate(self.text_lines()):
             column = line.find(anchor)
-            if column >= 0:
+            while column >= 0:
                 matches.append({'row': index, 'col': column,
                                 'after': line[column + len(anchor):]})
+                column = line.find(anchor, column + 1)
         if not matches:
             raise ValueError(f'anchor {anchor!r} matched no row')
         if len(matches) > 1 and occurrence == 'only':
-            raise ValueError(f'anchor {anchor!r} matched {len(matches)} rows')
+            raise ValueError(f'anchor {anchor!r} matched {len(matches)} positions')
         return matches[-1] if occurrence == 'last' else matches[0]
 
     def row_after(self, anchor, occurrence='only'):
@@ -346,9 +359,11 @@ class VerifiedInput:
         """Type `text` after a text-mode anchor, verifying and recovering suffixes.
 
         Success requires the anchored row to read exactly `text` and, by default,
-        the BIOS cursor to sit at the end of it. A short observation is retried
-        only as a proven-missing suffix when the ring is empty and the insertion
-        point is exactly where the prefix ends. Anything else stops.
+        the BIOS cursor to sit at the end of it. Every further burst - ordinary
+        progress as much as a recovery - is sent only after the anchor, the row,
+        the cursor and the queues have been re-read and still agree. A short
+        observation is retried only as a proven-missing suffix. Anything else
+        stops without replaying input.
         """
         if not isinstance(text, str) or not text:
             raise ValueError('text must be a non-empty string')
@@ -375,14 +390,47 @@ class VerifiedInput:
             if report.bursts >= self.max_bursts:
                 report.status, report.detail = AMBIGUOUS, 'burst budget exhausted'
                 return report
-            guard = self.readiness()
-            report.queue, report.automation = guard['queue'], guard['automation']
-            if not guard['ok']:
-                report.status = PENDING if guard['pending'] else WITHHELD
-                report.detail = guard['reason']
-                if not guard['pending']:
+            if confirmed:
+                # A burst that landed completely is ordinary progress, and it is
+                # permission for the next burst only while the insertion point
+                # still supports it. Checking that here - not only when
+                # recovering - closes the gap between two successful bursts, in
+                # which the guest can move the caret, print or lose text, or
+                # deliver a late keystroke after the observation returned.
+                dropped = self._dropped_since(baseline)
+                if dropped is not None:
+                    report.status = AMBIGUOUS
+                    report.detail = 'the interface discarded accepted events'
                     report.evidence.observed = False
-                return report
+                    return report
+                allowed, gate = self._burst_gate(anchor, occurrence, before,
+                                                 start_col, confirmed,
+                                                 allow_limited=True)
+                report.queue, report.automation = gate['queue'], gate['automation']
+                if report.steps:
+                    report.steps[-1]['next'] = gate
+                if not allowed:
+                    report.status = gate['status'] or AMBIGUOUS
+                    report.detail = gate['reason']
+                    report.evidence.observed = False
+                    return report
+                if (gate['limited']
+                        and 'pending_input_not_excluded_between_bursts'
+                        not in report.evidence.limitations):
+                    # The bypass profile has no queue to read, so the row and the
+                    # cursor are the only between-burst evidence; say so rather
+                    # than implying the queue was checked.
+                    report.evidence.limitations.append(
+                        'pending_input_not_excluded_between_bursts')
+            else:
+                guard = self.readiness()
+                report.queue, report.automation = guard['queue'], guard['automation']
+                if not guard['ok']:
+                    report.status = PENDING if guard['pending'] else WITHHELD
+                    report.detail = guard['reason']
+                    if not guard['pending']:
+                        report.evidence.observed = False
+                    return report
             burst = pending[:self.chunk]
             self.client.type_ascii(burst, pace_ms=pace_ms)
             report.evidence.acknowledged = True
@@ -479,7 +527,8 @@ class VerifiedInput:
                                                     start_col, observed)
                 report.steps[-1]['gate'] = gate
                 if not allowed:
-                    report.status = PENDING if gate['pending'] else AMBIGUOUS
+                    report.status = gate['status'] or (PENDING if gate['pending']
+                                                       else AMBIGUOUS)
                     report.detail = gate['reason']
                     return report
                 if report.recoveries >= self.max_recoveries:
@@ -688,46 +737,79 @@ class VerifiedInput:
         result['ok'] = True
         return result
 
-    def _recovery_gate(self, anchor, occurrence, original, start_col, prefix):
-        """Re-read every recovery prerequisite at the moment of the resend.
+    def _burst_gate(self, anchor, occurrence, original, start_col, prefix,
+                    *, allow_limited=False):
+        """Re-read every prerequisite before any further burst is sent.
 
-        A ring that was empty when the burst was observed does not prove that
-        device or application input has stopped arriving. A settle step and a
-        bounded automation-queue wait pass first, then the ring, the automation
-        queue, the anchor location, the row and the cursor are read again; the
-        resend is allowed only if all of them still agree with the verified
-        prefix at its original location.
+        A ring that was empty when the last burst was observed does not prove
+        that device or application input has stopped arriving, and a row that
+        matched a moment ago does not prove the caret is still where the next
+        burst belongs. A settle step and a bounded automation-queue wait pass
+        first, then the ring, the automation queue, the anchor location, the row
+        and the cursor are read again. Further input is sent only if the anchor
+        is still unique and at its original cell, the row still reads exactly the
+        verified prefix, and the cursor sits at the end of that prefix.
+
+        ``allow_limited`` decides what happens when no queue is observable at all
+        (the bypass profile on a stock build). Ordinary progress may continue on
+        the row and cursor alone, and the caller records the limitation. A
+        recovery may not: resending a suffix that may already have arrived would
+        duplicate it, and nothing observable could show otherwise.
+
+        ``status`` names the class of refusal: ``withheld`` when the queue
+        evidence itself is unusable and nothing more may be sent, ``pending``
+        when events are still owed, and ``ambiguous`` when the screen no longer
+        supports the next burst.
         """
         self.client.step(self.settle_step_ms)
         self.wait_queue(self.drain_timeout_ms)
         guard = self.readiness()
         gate = {'queue': guard['queue'], 'automation': guard['automation'],
-                'cursor': None, 'reason': None, 'ok': False,
-                'pending': guard['pending'], 'limited': guard['limited']}
+                'cursor': None, 'reason': None, 'ok': False, 'status': AMBIGUOUS,
+                'pending': guard['pending'], 'limited': guard['limited'],
+                'prefix': prefix}
         if not guard['ok']:
             gate['reason'] = guard['reason']
+            gate['status'] = PENDING if guard['pending'] else WITHHELD
             return False, gate
-        if guard['limited']:
+        if guard['limited'] and not allow_limited:
+            # No queue is observable, so a suffix that may already have arrived
+            # cannot be told apart from one that has not. That is a refusal, not
+            # a wait: nothing observable will change if the caller tries again.
             gate['reason'] = 'pending input cannot be excluded; not resending'
             return False, gate
         try:
             info = self.row_info(anchor, occurrence)
             cursor = self.cursor()
         except ValueError:
-            gate['reason'] = 'anchor or cursor unavailable; not resending'
+            gate['reason'] = 'the anchor is unavailable or ambiguous; not resending'
             return False, gate
         gate['cursor'] = list(cursor)
         if info['row'] != original['row'] or info['col'] != original['col']:
             gate['reason'] = 'the anchor moved; not resending at a different location'
             return False, gate
-        if info['after'][:len(prefix)] != prefix or info['after'][len(prefix):].strip(' '):
-            gate['reason'] = 'the row no longer shows exactly the verified prefix'
+        # Cells after the text are blank padding, so a shorter row must be
+        # compared with its padding removed: 'AB' in a row of 'AB    ' is a
+        # regression of a verified 'ABCD', not a divergence from it.
+        visible = info['after'][:len(prefix)]
+        if visible != prefix:
+            gate['reason'] = ('previously verified prefix regressed'
+                              if prefix.startswith(visible.rstrip(' '))
+                              else 'the row diverged from the verified prefix')
+            return False, gate
+        if info['after'][len(prefix):].strip(' '):
+            gate['reason'] = 'text appeared after the verified prefix; not resending'
             return False, gate
         if cursor != (info['row'], start_col + len(prefix)):
-            gate['reason'] = 'insertion point is not at the end of the prefix'
+            gate['reason'] = 'insertion point is not at the end of the verified prefix'
             return False, gate
         gate['ok'] = True
+        gate['status'] = None
         return True, gate
+
+    def _recovery_gate(self, anchor, occurrence, original, start_col, prefix):
+        """The resend gate: a recovery may not proceed on an unobservable queue."""
+        return self._burst_gate(anchor, occurrence, original, start_col, prefix)
 
     def await_quiet(self, quiet_ms=250, budget_ms=3000):
         """Step until the observable stops changing for `quiet_ms`.

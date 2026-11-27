@@ -1,8 +1,9 @@
 # Bounded, verified guest input for 86Box automation
 
-2026-11-26, revised after two independent reviews of PR #187 (the second on
-2026-11-27). Provider-independent improvement to the automation layer, qualified
-with portable tests and six authorized native sessions on disposable clones.
+2026-11-26, revised after three independent reviews of PR #187 (the second and
+third on 2026-11-27). Provider-independent improvement to the automation layer,
+qualified with portable tests and six authorized native sessions on disposable
+clones.
 
 The question was not "can we send keys". It was: after a key is sent, what can
 the emulator, the guest BIOS, and the application each prove, and what should an
@@ -52,6 +53,37 @@ advanced HEAD on insert, so it agreed with the bug instead of exposing it. The
 peer now models the documented producer/consumer split, wraps at the extents,
 and refuses overflow the way the BIOS does, which is why the reversed arithmetic
 is now caught by the tests rather than confirmed by them.
+
+## Third independent review, 2026-11-27
+
+| Finding | Disposition | Basis |
+| --- | --- | --- |
+| A completely successful non-final burst is treated as permission to keep typing, without re-establishing the insertion point | Confirmed, corrected | `_burst_gate` now runs before *every* further burst, ordinary progress included: it settles, waits for the automation queue, re-reads the ring and the automation queue, and requires the anchor to be unique and at its original cell, the row to read exactly the verified prefix, and the cursor to sit at that prefix's end |
+| `row_info` counts matching rows, not occurrences within a row | Confirmed, corrected | Every occurrence is collected, including overlapping ones; `first`/`last` are ordered readings, not row selectors |
+| `occurrence='only'` silently accepts a same-row ambiguity | Confirmed, corrected | Two occurrences in one row raise exactly as two rows do, before any input is sent |
+| The same class of defect elsewhere | Reviewed, none found | `_completion` already re-reads the queue, anchor, row and cursor at the success instant; `_recovery_gate` is now the same gate with the queue-unobservable refusal; `_insertion_point` requires two concordant reads before the first burst |
+
+The gate distinguishes its refusals rather than collapsing them: unusable queue
+evidence is `withheld` (nothing further is sent and no wait will repair it),
+still-owed events are `pending`, and a screen that no longer supports the next
+burst is `ambiguous`. Discarded-event counters are re-read between bursts as
+well, so an interface that drops an accepted event cannot present an empty queue
+as complete delivery.
+
+The bypass profile has no queue to read at all. It may continue between bursts
+on the row and cursor evidence alone, and it records
+`pending_input_not_excluded_between_bursts` instead of implying a queue check
+that never happened; a recovery is still refused there, because a suffix that
+may already have arrived cannot be told apart from one that has not.
+
+Verification is portable and synthetic: nine new tests cover caret relocation
+after a complete intermediate burst, a late keystroke between bursts, an anchor
+duplicated between observations, an anchor that moved, a shorter row that
+regresses a verified prefix, a ring that becomes unreadable between bursts, the
+same-row duplicate anchor at the unit and `type_text` level, and a bypass-profile
+continuation. No native session was repeated: the corrected paths are
+deterministic state-machine logic, and the existing native DOS, ring and
+Corkboard evidence still stands.
 
 ## Four evidence layers
 
