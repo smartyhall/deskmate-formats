@@ -88,6 +88,46 @@ and identifiers outside Git. Collect sanitized usage receipts per the
 Do not label agent inference as native observation or credit an unobserved
 agent with another agent's evidence.
 
+### Producer handoff and CI ownership
+
+Operator decision: 2026-11-27. Applies to Codex, Freebuff, delegated agents,
+and future providers. Separate producing work, automated verification, and
+independent integration review.
+
+1. **Producer:** finish the assigned work and local verification, publish the
+   owned branch/PR, and establish that expected workflows have been triggered
+   for the exact head when observable. Request eligible advisory review per
+   the procedure below, without waiting for its completion. Report base and
+   head SHA, PR link, changed scope, local checks and actual outcomes, expected
+   CI workflows and observed run links/status (pending, completed, failed,
+   skipped, missing, or unknown), advisory review state, limitations, and
+   resource disposition. Clearly identify any known failure or missing check;
+   do not represent a queued or running check as passing. Pending CI is a valid
+   handoff state, not proof of merge readiness.
+2. **CI infrastructure:** performs automated qualification independently of
+   the producing agent's conversational turn.
+3. **Authorized integration reviewer:** checks the exact head and current base,
+   required CI results, advisory findings when available, and independent
+   review requirements; coordinates corrections or requalification and merges
+   only within existing authorization. A change of head invalidates old
+   exact-head evidence. The producer must not approve or merge its own PR.
+
+Do not keep a producing-agent turn alive by repeatedly sleeping, polling,
+or waiting solely for CI or advisory-review completion. Conclude once a
+useful handoff is recorded, even if checks are queued or running. An exception
+is appropriate when observing results is materially necessary to the assigned
+task, such as CI diagnosis, integration, or publication recovery. Even then,
+use bounded observation and durable checkpoints; where feasible, separate
+launch, status inspection and result collection into distinct turns.
+For independently running laboratory jobs, preserve ownership, process
+identity, evidence locations, and safe status/collection instructions; do
+not relaunch or terminate an existing job merely because a model turn ends.
+Do not create extra model turns or unattended monitoring without authority.
+
+This is a division of labor, not permission to omit local checks, weaken
+required gates, claim unobserved results, or expand execution, publication,
+provider-use, or merge authority.
+
 ### Review and publication
 
 A producing agent (including its delegated subagents) must not approve or
