@@ -102,6 +102,70 @@ name-based. This campaign did not locate a code path that validates a header
 or magic number, so "structure-based recognition" remains an **inference from
 absence** and should not be repeated as a finding.
 
+## Shared service skeleton in the two `.PDM` modules
+
+The two modules are not independent implementations of the same idea. The
+instruction sequences around the `INT E0` calls match byte for byte while the
+data offsets they load differ:
+
+```text
+DBREPAIR.PDM  0x12A8  06 53 1E 07 B8 08 02 BA 8C 11 BB 88 11 CD E0 0B C0 7E 16 C6 06 9C 11 01 B8 06 02 CD E0
+FIL2DBF.PDM   0x2409  06 53 1E 07 B8 08 02 BA A0 18 BB 9C 18 CD E0 0B C0 7E 16 C6 06 B0 18 01 B8 06 02 CD E0
+```
+
+`PUSH DS` / `POP ES`, selector `0208`, a name in `DX`, a slot in `BX`, the same
+`OR AX,AX` / `JLE` test, the same `MOV BYTE PTR [slot],1` and the same
+follow-up with selector `0206` — with `DX,BX` pointing at `118Ch`/`1188h` in one
+module and `18A0h`/`189Ch` in the other. A third site ends in a case-folding
+loop (`CMP AL,61h` / `SUB AL,20h`) before the same selector call, so table
+names are upper-cased before they are passed.
+
+This is direct static corroboration of the documented claim that `FIL2DBF.PDM`
+*redistributes* `DBREPAIR.PDM`: it carries a compiled copy of the same service
+helper skeleton. It also explains why the two modules have identical selector
+histograms below — the calls come from shared code, not from independent
+authors converging on the same interface.
+
+## DOS and service call profile
+
+Counts are of immediate-adjacent call sites and are therefore a floor, not a
+total: an `AH` loaded earlier and carried in a register through intervening
+instructions escapes the scan (the large `unknown` bucket).
+
+| Module | `INT 21h` functions seen | `INT E0` sites | `MOV AX,imm; INT E0` selectors |
+| --- | --- | ---: | --- |
+| `DBREPAIR.PDM` | `30h`, `3Eh`, `40h`, `42h`, `48h`, `4Ah`, `4Ch` | 21 | `0206`×5, `0207`×4, `020B`×2, `0208`×1, `020C`×1, `0600`×1, `0700`×1 |
+| `FIL2DBF.PDM` | `25h`, `2Ah`, `2Ch`, `30h`, `40h`, `42h`, `48h`, `4Ah`, `4Ch` | 21 | identical |
+| `FIL2DBF.EXE` | `01h`, `06h`, `09h`, `0Eh`, `19h`, `1Ah`, `25h`, `2Fh`, `30h`, `35h`, `3Bh`, `3Eh`, `3Fh`, `47h`, `48h`, `49h`, `4Ah`, `4Dh`, `4Eh`, `4Fh`, `50h`, `51h`, `52h`, `55h`, `59h` | 0 | none |
+
+The profile separates the two worlds cleanly. The `.PDM` modules do their file
+work through the DeskMate service (`INT E0`), with DOS used for memory and
+standard-handle operations. The standalone `.EXE` carries a broad DOS surface —
+read (`3Fh`), close (`3Eh`), seek (`42h`), DTA (`1Ah`/`2Fh`), disk (`0Eh`,
+`19h`), memory (`48h`–`52h`), character output (`09h`) — and no DeskMate
+dispatch at all. It is a DOS program that prepares an environment rather than a
+module bound into one.
+
+`FIL2DBF.EXE`'s `AH=4Bh` (EXEC) does not appear in the immediate-adjacent set,
+so how it starts the DeskMate runtime remains unestablished; it may load a
+module through a service in the runtime it starts, or build the call
+indirectly.
+
+## dBASE output: what static evidence can and cannot show
+
+`FIL2DBF.PDM` holds the strings `dBASE` (12 occurrences), `DBF`/`dbf`, `Field`,
+`field`, `record`, and its error text names the operations: create a dBASE
+file, prompt for a field name and type, write the header, handle an empty
+table. It also contains the four bytes `03 00 00 00` three times, and `03` is
+the dBASE III version byte that begins a `.DBF` header.
+
+That is **a candidate, not a finding**. A four-byte run in a 45 KB binary is
+not a header construction; it could be a version number, a length or unrelated
+data. What would settle it is a native run whose output file begins with `03`
+and whose 32-byte field descriptors match the widths our parser derives from
+the same table. Until then the claim stays at "the converter contains dBASE
+vocabulary and a plausible version byte".
+
 ## Promising future experiments
 
 These need native execution and therefore belong to an emulator campaign with
@@ -128,6 +192,46 @@ campaign could only observe statically.
 
 None of these were performed. No utility was executed, and no guest resource
 was claimed by this campaign.
+
+## Native qualification matrix
+
+Every row needs native execution under the emulator campaign's authorization;
+none was performed here, and no utility was run on the host. The point of the
+matrix is that each row can **contradict** a current belief, not merely confirm
+it, and that the outputs it must preserve are named in advance.
+
+| # | Specimen | Hypothesis under test | Outputs to preserve | Corroborates if | Contradicts if |
+| ---: | --- | --- | --- | --- | --- |
+| U1 | committed valid `.FIL` fixture, unmodified | `DBREPAIR` repairs nothing and rewrites nothing when the file is intact | input and output hashes, `.OLD` presence, message text | hashes equal, no `.OLD`, success message | any byte change, or `.OLD` created |
+| U2 | same fixture with one record's text byte changed | repair is record-granular | recovered record/byte counts, output hash, diff | the reported recovered count matches whole records | a byte-granular count, as the message wording implies |
+| U3 | same fixture with a damaged index/row pointer | the repair path rebuilds an index from records rather than trusting it | output hash, table list, any index-shaped bytes | output readable by `FIL2DBF` afterwards | refusal, or an output our parser cannot read |
+| U4 | zero-length file | an empty file is refused, not "recovered" | exact message, exit behaviour, file state | a refusal naming emptiness | a created or rewritten file |
+| U5 | truncated file (header only, then half the records) | the utility salvages complete records and stops | recovered/unrecovered byte counts, output hash | counts consistent with the truncation offset | counts that exceed the surviving bytes |
+| U6 | header with an unknown schema marker | recognition is structural and version-tolerant | message, whether the file is touched | a clear refusal | acceptance and rewrite |
+| U7 | valid fixture, `FIL2DBF` conversion | the produced `.DBF` header matches our column types and widths | `.DBF` bytes (header, descriptors, records), `.OLD` name | descriptor widths equal our parser's | a width or type we do not predict |
+| U8 | empty table, `FIL2DBF` conversion | an empty table yields a header with zero records, not an error | `.DBF` header bytes, record count | 32-byte header, zero records | an error message, or a missing file |
+| U9 | fixture whose column name exceeds 10 characters | dBASE's 10-character name limit is enforced, truncated or refused | prompt text, `.DBF` descriptor name field | a deterministic, documented choice | silent corruption of the name field |
+| U10 | selector trace during U7 | `0206` = open/load, `0207`/`0208` = table/column operations | selector, `DX`/`BX` arguments, return `AX` per call | the sequence matches the static call order | a selector used with a role we did not predict |
+| U11 | `FIL2DBF.EXE` startup | the `.EXE` loads the DeskMate runtime and hands it the `.PDM` | every `EXEC`/module-load call, loaded file name | an `AH=4Bh` or service load of a runtime module | a self-contained implementation, no runtime load |
+
+Reading of the columns: "corroborates" means the observation is consistent
+with the current specification; "contradicts" means it falsifies a claim we
+currently make, and the campaign must then change the claim rather than explain
+the observation away.
+
+Two practical rules for running the matrix:
+
+* each specimen is generated by us, committed as a fixture, and copied into the
+trial disk. The original is never the thing that gets damaged;
+* the emulator disk is disposable and the input hash is recorded before the run,
+so a surprising output can be attributed to the program rather than to a
+drifted test image.
+
+The most informative rows are U3, U5 and U7. U3 separates "repair" from
+"index rebuild"; U5 tests the byte-granular salvage claim that the program's own
+message wording suggests; U7 is the only row where a third-party program's
+output is compared against our parser's independent prediction, which is
+stronger evidence than either agreeing with itself.
 
 ## Publication boundary
 

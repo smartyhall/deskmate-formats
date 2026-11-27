@@ -46,6 +46,7 @@ deskmate-supervisor-deterministic = "deskmate_formats.supervisor.deterministic_c
 deskmate-supervisor-campaigns = "deskmate_formats.supervisor.campaigns_cli:main"
 deskmate-observer-campaigns = "deskmate_formats.observer.campaign_cli:main"
 deskmate-observer-snapshot = "deskmate_formats.supervisor.snapshot:main"
+deskmate-campaign-env = "deskmate_formats.campaign_env.cli:main"
 deskmate-test-perf = "deskmate_formats.perf.cli:main"
 
 [tool.setuptools.package-data]
