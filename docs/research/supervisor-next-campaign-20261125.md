@@ -14,6 +14,15 @@ This supplements the [existing Supervisor design](codex-supervisor-design.md),
 authorization for a live model call, unattended dispatch, an external control
 endpoint, or emulator operation.
 
+
+## Integration checkpoint — 2026-11-27
+
+The numbered implementation sequence below preserves the November 25 planning
+record. The first implementation is now submitted in [PR #191](https://github.com/smartyhall/deskmate-formats/pull/191): the worker reports a deterministic procedure registry, version-3 trusted task intake, separate prepare/run/recovery gates, a heterogeneous worker descriptor, campaign leases, allowance-aware selection, and read-only Observatory projections. These are candidate capabilities pending independent integration; do not treat a branch or passing CI as proof of live operation. Freebuff remains a manual worker, not a qualified automatic adapter.
+
+The next bounded infrastructure steps are campaign-specific Python environment
+isolation and import identity ([#201](https://github.com/smartyhall/deskmate-formats/issues/201)), integration of the current stack, and a single harmless trusted-Git deterministic hash task with independently checked result return ([#204](https://github.com/smartyhall/deskmate-formats/issues/204)). The performance work ([#199](https://github.com/smartyhall/deskmate-formats/pull/199), [#147](https://github.com/smartyhall/deskmate-formats/issues/147)) needs an integrated quiet-host baseline before optimization; it need not block a separately qualified hash canary. No unattended dispatch or model authorization is implied.
+
 ## Motivation and initial state
 
 The previous development trade-off was that engineering the Supervisor
