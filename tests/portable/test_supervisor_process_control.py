@@ -5,7 +5,8 @@ check, that an unknown status was silently retained as "live", and that a Window
 parent chain could associate an unrelated process with a reused owner number.
 These tests fence the *authority* contract separately from the observation one:
 only an identity-bound member of a kernel-held scope may be signalled, a changed
-identity is refused, and an unrelated process is never touched.
+or unreadable identity is refused, and no numeric PID kill stands in for a handle
+this attempt cannot acquire.
 """
 
 import os
@@ -22,6 +23,8 @@ from deskmate_formats.observer import process_health
 from deskmate_formats.supervisor import deterministic, process_control, process_tree
 
 POSIX = unittest.skipIf(os.name == "nt", "POSIX session semantics")
+WINDOWS = unittest.skipIf(os.name != "nt", "Windows parent-chain semantics")
+LINUX = unittest.skipIf(sys.platform != "linux", "Linux pidfd semantics")
 
 SLEEPER = "import time; time.sleep(60)"
 SPAWNER = (
@@ -31,8 +34,8 @@ SPAWNER = (
     "time.sleep(60)\n"
 )
 
-# A session claim whose session scan reports one member, and an owner that is
-# demonstrably alive: the shape every authority question is asked about.
+# A session claim whose scan reports one member and an owner that is demonstrably
+# alive: the shape every authority question is asked about.
 SESSION_CLAIM = {"pid": 424242, "identity": "linux-abc-100", "session": 424242,
                  "scope": "session", "boot": "abc"}
 ONE_MEMBER = process_tree.Scan((424243,), True, "complete", "session", "session-scan-complete")
@@ -121,7 +124,7 @@ class MemberBindingTests(unittest.TestCase):
         with mock.patch.object(process_tree, "_scan", return_value=ONE_MEMBER), \
                 mock.patch.object(process_tree, "process_status", return_value="alive"), \
                 mock.patch.object(process_control, "verify_process", return_value="alive"), \
-                mock.patch.object(process_control, "process_health_identity",
+                mock.patch.object(process_tree, "member_identity",
                                   return_value="linux-abc-200"):
             authorization = process_control.authorize(SESSION_CLAIM)
         self.assertEqual([member.pid for member in authorization.members], [424243])
@@ -133,7 +136,7 @@ class MemberBindingTests(unittest.TestCase):
         with mock.patch.object(process_tree, "_scan", return_value=ONE_MEMBER), \
                 mock.patch.object(process_tree, "process_status", return_value="alive"), \
                 mock.patch.object(process_control, "verify_process", return_value="alive"), \
-                mock.patch.object(process_control, "process_health_identity", return_value=None):
+                mock.patch.object(process_tree, "member_identity", return_value=None):
             authorization = process_control.authorize(SESSION_CLAIM)
         self.assertEqual(authorization.members, ())
         self.assertEqual(authorization.enumeration, "degraded")
@@ -146,9 +149,7 @@ class MemberBindingTests(unittest.TestCase):
                                  "scope-loses-orphans")
         with mock.patch.object(process_tree, "_scan", return_value=scan), \
                 mock.patch.object(process_tree, "process_status", return_value="alive"), \
-                mock.patch.object(process_control, "verify_process", return_value="alive"), \
-                mock.patch.object(process_control, "process_health_identity",
-                                  return_value="win-1b"):
+                mock.patch.object(process_control, "verify_process", return_value="alive"):
             authorization = process_control.authorize(claim)
         self.assertEqual(authorization.members, ())
         self.assertEqual(authorization.reason, "scope-not-identity-bound")
@@ -174,6 +175,35 @@ class MemberBindingTests(unittest.TestCase):
                 self.assertEqual(authorization.members, ())
                 self.assertEqual(authorization.reason, "no-tree-handle")
 
+    @POSIX
+    def test_membership_and_identity_come_from_the_same_record(self):
+        """A member number reused into another session is not a member."""
+        root = Path(self.enterContext(TemporaryDirectory()))
+        process, ready = spawn_tree(root, "member")
+        self.addCleanup(stop, process)
+        self.assertTrue(ready)
+        claim = process_tree.tree_claim(process.pid)
+        self.assertIsNotNone(claim)
+        self.assertEqual(claim["scope"], "session")
+        found = process_tree.live_pids(claim).pids
+        self.assertTrue(found)
+        for pid in found:
+            identity = process_tree.member_identity(claim, pid)
+            self.assertIsNotNone(identity)
+            self.assertEqual(identity, process_health.process_health_identity(pid))
+        # The same numbers observed in a different session are not members, so
+        # enumeration cannot be replayed as authority after a scope change.
+        elsewhere = dict(claim, session=claim["session"] + 1)
+        for pid in found:
+            self.assertIsNone(process_tree.member_identity(elsewhere, pid))
+        # A process outside the recorded session is never a member of it.
+        self.assertIsNone(process_tree.member_identity(claim, os.getpid()))
+
+    @POSIX
+    def test_a_member_without_a_recorded_boot_cannot_be_bound(self):
+        claim = dict(SESSION_CLAIM, identity=None, boot=None)
+        self.assertIsNone(process_tree.member_identity(claim, 424243))
+
 
 class SignalRefusalTests(unittest.TestCase):
     """A signal must reach the observed instance or nothing at all."""
@@ -190,7 +220,59 @@ class SignalRefusalTests(unittest.TestCase):
         self.assertEqual(process_health.process_status(process.pid), "alive")
         self.assertIsNone(process.poll(), "an unrelated instance must not be signalled")
 
+    def test_a_live_foreign_identity_is_refused(self):
+        """The reuse case: another running instance's identity on this number."""
+        target, other = sleeper(), sleeper()
+        self.addCleanup(stop, target)
+        self.addCleanup(stop, other)
+        foreign = process_health.process_health_identity(other.pid)
+        self.assertIsNotNone(foreign)
+        self.assertNotEqual(foreign, process_health.process_health_identity(target.pid))
+        result = process_control.signal(process_control.Member(target.pid, foreign, False))
+        self.assertEqual(result["result"], "identity-mismatch")
+        self.assertEqual(process_health.process_status(target.pid), "alive")
+
+    @POSIX
+    def test_an_unknown_verification_is_not_an_identity_match_on_the_group_path(self):
+        process = sleeper()
+        self.addCleanup(stop, process)
+        identity = process_health.process_health_identity(process.pid)
+        self.assertTrue(process_control.group_leader(process.pid))
+        member = process_control.Member(process.pid, identity, True)
+        with mock.patch.object(process_control, "verify_process", return_value="unknown"):
+            result = process_control.signal(member, group=True)
+        self.assertEqual(result["result"], "unknown")
+        self.assertIsNone(result["identity_matched"])
+        self.assertEqual(process_health.process_status(process.pid), "alive")
+
+    @LINUX
+    def test_an_unknown_verification_is_not_an_identity_match_on_the_pidfd_path(self):
+        process = sleeper()
+        self.addCleanup(stop, process)
+        identity = process_health.process_health_identity(process.pid)
+        member = process_control.Member(process.pid, identity, False)
+        with mock.patch.object(process_control, "verify_process", return_value="unknown"):
+            result = process_control.signal(member)
+        self.assertEqual(result["mechanism"], "pidfd")
+        self.assertEqual(result["result"], "unknown")
+        self.assertIsNone(result["identity_matched"])
+        self.assertEqual(process_health.process_status(process.pid), "alive")
+
+    @POSIX
+    def test_no_identity_bound_handle_means_no_signal(self):
+        """A numeric kill after a separate sample is not authority."""
+        process = sleeper()
+        self.addCleanup(stop, process)
+        identity = process_health.process_health_identity(process.pid)
+        with mock.patch.object(process_control, "_PIDFD_AVAILABLE", False):
+            result = process_control.signal(process_control.Member(process.pid, identity, False))
+        self.assertEqual(result["result"], "unavailable")
+        self.assertEqual(result["mechanism"], "none")
+        self.assertEqual(process_health.process_status(process.pid), "alive")
+
     def test_a_member_bound_to_its_observed_identity_is_signalled(self):
+        if os.name != "nt" and not process_control._PIDFD_AVAILABLE:
+            self.skipTest("this host exposes no identity-bound handle")
         process = sleeper()
         self.addCleanup(stop, process)
         identity = process_health.process_health_identity(process.pid)
@@ -200,9 +282,65 @@ class SignalRefusalTests(unittest.TestCase):
                                    process_control.group_leader(process.pid)))
         self.assertEqual(result["result"], "signalled")
         self.assertTrue(result["identity_matched"])
-        self.assertIn(result["mechanism"], ("pidfd", "pid", "process-handle"))
+        if sys.platform == "linux":
+            # The claimed path must be the pidfd path, not the numeric fallback.
+            self.assertEqual(result["mechanism"], "pidfd")
         process.wait(timeout=30)
         self.assertIn(process_health.process_status(process.pid), ("stopped", "not-found"))
+
+    @LINUX
+    def test_the_pidfd_capability_is_read_from_the_documented_namespace(self):
+        self.assertIs(process_control._PIDFD_OPEN, os.pidfd_open)
+        self.assertIs(process_control._PIDFD_SEND, getattr(signal, "pidfd_send_signal", None))
+        self.assertTrue(process_control._PIDFD_AVAILABLE)
+
+    @LINUX
+    def test_a_bound_member_is_signalled_through_the_descriptor(self):
+        """The real descriptor route, with only the send recorded."""
+        process = sleeper()
+        self.addCleanup(stop, process)
+        identity = process_health.process_health_identity(process.pid)
+        sent = []
+        self.assertIsNotNone(process_control._PIDFD_SEND)
+
+        def record(descriptor, number, *rest):
+            sent.append((descriptor, number))
+
+        with mock.patch.object(process_control, "_PIDFD_SEND", record):
+            result = process_control.signal(process_control.Member(process.pid, identity, False))
+        self.assertEqual(result["mechanism"], "pidfd")
+        self.assertEqual(result["result"], "signalled")
+        self.assertEqual([number for _, number in sent], [signal.SIGKILL])
+        # Only the send was stubbed, so the instance is still running.
+        self.assertEqual(process_health.process_status(process.pid), "alive")
+
+    @POSIX
+    def test_the_pidfd_route_opens_verifies_sends_and_closes(self):
+        """The descriptor discipline, independent of the host kernel."""
+        process = sleeper()
+        self.addCleanup(stop, process)
+        identity = process_health.process_health_identity(process.pid)
+        opened, sent = [], []
+
+        def open_fake(pid, flags):
+            opened.append((pid, flags))
+            return os.open(os.devnull, os.O_RDONLY)
+
+        def send_fake(descriptor, number):
+            sent.append((descriptor, number))
+
+        with mock.patch.object(process_control, "_PIDFD_AVAILABLE", True), \
+                mock.patch.object(process_control, "_PIDFD_OPEN", open_fake), \
+                mock.patch.object(process_control, "_PIDFD_SEND", send_fake):
+            result = process_control.signal(process_control.Member(process.pid, identity, False))
+        self.assertEqual(result["mechanism"], "pidfd")
+        self.assertEqual(result["result"], "signalled")
+        self.assertEqual(opened, [(process.pid, 0)])
+        self.assertEqual([number for _, number in sent], [signal.SIGKILL])
+        # The implementation closes the descriptor it opened.
+        with self.assertRaises(OSError):
+            os.fstat(sent[0][0])
+        self.assertEqual(process_health.process_status(process.pid), "alive")
 
     @POSIX
     def test_a_group_signal_is_refused_for_a_process_that_does_not_lead_its_group(self):
@@ -254,12 +392,28 @@ class TerminationPathTests(unittest.TestCase):
             (process_control.Member(10, "linux-abc-1", False),),
             "session", "complete", "identity-bound-members")
         with mock.patch.object(process_control, "authorize", return_value=granted), \
-                mock.patch.object(process_control, "signal", return_value=refusal), \
-                mock.patch.object(deterministic, "_STOP_ROUNDS", 2):
+                mock.patch.object(process_control, "signal", return_value=refusal):
             result = deterministic._stop_tree(process, claim)
-        self.assertEqual(result["signals"]["results"]["identity-mismatch"], 2)
+        self.assertGreaterEqual(result["signals"]["results"]["identity-mismatch"], 1)
         self.assertEqual(result["signals"]["refused"][0]["result"], "identity-mismatch")
         self.assertEqual(result["authority"]["members"], 1)
+
+    def test_an_unavailable_handle_ends_the_rounds_instead_of_spinning(self):
+        process = sleeper()
+        self.addCleanup(stop, process)
+        claim = process_tree.tree_claim(process.pid)
+        identity = process_health.process_health_identity(process.pid)
+        unavailable = {"pid": 10, "result": "unavailable", "mechanism": "none",
+                       "identity_matched": None, "group": False}
+        granted = process_control.Authorization(
+            process_control.Member(process.pid, identity, False),
+            (process_control.Member(10, "linux-abc-1", False),),
+            "session", "complete", "identity-bound-members")
+        with mock.patch.object(process_control, "authorize", return_value=granted), \
+                mock.patch.object(process_control, "signal", return_value=unavailable):
+            result = deterministic._stop_tree(process, claim)
+        self.assertEqual(result["signals"]["results"]["unavailable"], 1)
+        self.assertEqual(result["signals"]["refused"][0]["mechanism"], "none")
 
     @POSIX
     def test_a_descendant_of_another_tree_is_never_signalled(self):

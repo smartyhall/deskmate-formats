@@ -202,6 +202,15 @@ if sys.platform == "win32":
         """Windows has no session handle; the parent chain is the tree handle."""
         return None
 
+    def member_identity(claim, pid):
+        """A parent chain proves neither membership nor identity.
+
+        Its association can be manufactured by a reused number, so there is no
+        single record that would place ``pid`` in this tree. Returning ``None``
+        keeps that scope from ever becoming authority to signal anything.
+        """
+        return None
+
 else:
     def _boot_id():
         """Boot identity in the same form a process identity embeds."""
@@ -359,6 +368,28 @@ else:
         if claim.get("session") is None:
             return _chain_scan(claim, deadline)
         return _session_scan(claim, deadline)
+
+    def member_identity(claim, pid):
+        """Identity of ``pid`` when one record also places it in the claim's scope.
+
+        Session membership and the creation stamp come from the same read, so a
+        number reused between two reads cannot satisfy the scope check with an
+        identity that belongs to a different process. ``None`` means the process
+        cannot be bound to this tree, and is never authority to signal it.
+        """
+        if type(claim) is not dict or claim.get("scope") not in DURABLE_SCOPES:
+            return None
+        session = claim.get("session")
+        boot = claim.get("boot") or identity_boot(claim.get("identity"))
+        if type(session) is not int or boot is None or pid == claim.get("pid"):
+            return None
+        try:
+            state, _, member_of, start = _stat_fields(pid)
+        except (OSError, ValueError):
+            return None
+        if member_of != session or state in (b"Z", b"X", b"x"):
+            return None
+        return f"linux-{boot}-{start}"
 
 
 def _valid(claim):

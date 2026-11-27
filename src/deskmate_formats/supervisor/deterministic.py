@@ -549,10 +549,10 @@ def _stop_tree(process, claim=None):
 
     Authority is established separately from observation: the direct child is
     terminated through the handle this attempt owns, and a descendant is
-    signalled only when a fresh scan binds it to a creation identity inside a
-    scope the kernel holds. Every signal records its outcome, so a refused or
-    impossible termination is reported as such instead of being read as a
-    successful cleanup.
+    signalled only through an identity-bound handle after a fresh scan binds it
+    to a creation identity inside a scope the kernel holds. Every signal records
+    its outcome, so a refused or impossible termination is reported as such
+    instead of being read as a successful cleanup.
     """
     deadline = monotonic() + _STOP_SECONDS
     signals = []
@@ -562,7 +562,12 @@ def _stop_tree(process, claim=None):
     if owner is not None and owner.group and os.name != "nt":
         # Issued before ``wait``: while the leader is unreaped its number cannot
         # be recycled, so the numeric group identifier still names this group.
-        signals.append(process_control.signal(owner, group=True))
+        group = process_control.signal(owner, group=True)
+        signals.append(group)
+        if group["result"] != "signalled":
+            # The group is optional authority; the handle this attempt owns is
+            # not. A refusal here must still end the child.
+            signals.append(_kill_owned_child(process))
     else:
         signals.append(_kill_owned_child(process))
     try:
@@ -584,8 +589,13 @@ def _stop_tree(process, claim=None):
                 claim, deadline_seconds=max(0.25, deadline - monotonic()))
             if not authorization.members:
                 break
-            for member in authorization.members:
-                signals.append(process_control.signal(member))
+            delivered = [process_control.signal(member) for member in authorization.members]
+            signals.extend(delivered)
+            if not any(item["result"] == "signalled" for item in delivered):
+                # Nothing was delivered, so repeating the round cannot help: an
+                # unavailable handle or an unverified identity is reported, not
+                # retried into a claim of cleanup.
+                break
             sleep(_STOP_PAUSE)
     return _termination(process_tree.tree_state(claim) if claim is not None
                         else {"owner": "unknown", "descendants": "unknown", "live": None,

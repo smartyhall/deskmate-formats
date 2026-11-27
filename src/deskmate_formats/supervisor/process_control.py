@@ -16,10 +16,10 @@ identity-bound member
     confined to a tree this attempt created.
 
 authorised owner
-    The recorded owner is authorised only while its identity still matches the
-    claim. ``identity-mismatch`` means the number belongs to something else now:
-    it is evidence that the owner is gone and never authority over the new
-    holder.
+    The recorded owner is authorised only while its identity still verifies as
+    ``alive`` against the claim. ``identity-mismatch`` means the number belongs
+    to something else now: it is evidence that the owner is gone and never
+    authority over the new holder. ``unknown`` is not a match either.
 
 authorised descendants
     Only a scope whose membership the kernel holds grants it. A POSIX session is
@@ -30,19 +30,26 @@ authorised descendants
     an unrelated process to this tree. A parent chain, on either platform,
     therefore grants no descendant authority.
 
+    Membership is re-proved *and* the identity re-sampled in one read of the
+    process record (:func:`process_tree.member_identity`), so a number reused
+    between enumeration and authorisation cannot satisfy the scope check with an
+    identity that belongs to a different process.
+
 signal
-    Every signal re-checks the identity first, and prefers an identity-bound
-    operating-system handle: a Linux ``pidfd`` (the descriptor pins one instance,
-    so the signal cannot reach a later holder of the number), or a Windows
-    process handle (the creation stamp is read from the handle and
-    ``TerminateProcess`` acts on that handle). Where neither exists the identity
-    is sampled immediately before the signal, which narrows the window without
-    closing it, and the mechanism is recorded with the result.
+    A descendant is signalled only through a handle that names one instance:
+    a Linux ``pidfd`` (the descriptor pins the process, so the signal cannot
+    reach a later holder of the number) or a Windows process handle (the creation
+    stamp is read from the handle and ``TerminateProcess`` acts on that handle).
+    Both re-verify the identity after the handle is open and require ``alive``.
+    If no such handle can be acquired the signal is refused: this module never
+    performs a numeric PID kill for a descendant, because it cannot establish
+    authority for one.
 
 refusal
-    ``identity-mismatch``, ``gone``, ``unknown``, ``refused`` and ``failed`` are
-    reported as such. None of them is reported as a successful termination, and
-    a member whose identity cannot be established is never signalled.
+    ``identity-mismatch``, ``unknown``, ``gone``, ``refused``, ``unavailable``
+    and ``failed`` are reported as such. None of them is a successful
+    termination, and a member whose identity cannot be established is never
+    signalled.
 
 This module sends signals and nothing else: it never starts, waits for or
 enumerates a process.
@@ -54,8 +61,7 @@ import os
 import signal as _signal
 import sys
 
-from deskmate_formats.observer.process_health import (process_health_identity,
-                                                      start_stamp, verify_process)
+from deskmate_formats.observer.process_health import start_stamp, verify_process
 
 from . import process_tree
 
@@ -65,7 +71,7 @@ from . import process_tree
 IDENTITY_SCOPES = process_tree.DURABLE_SCOPES
 
 #: Results that must never be read as "the tree was cleaned up".
-REFUSED_RESULTS = frozenset(("identity-mismatch", "unknown", "refused", "failed"))
+REFUSED_RESULTS = frozenset(("identity-mismatch", "unknown", "refused", "unavailable", "failed"))
 
 #: ``pid`` and ``identity`` name one process instance; ``group`` says a group
 #: signal is confined to a group this attempt created.
@@ -76,6 +82,13 @@ Member = namedtuple("Member", "pid identity group")
 Authorization = namedtuple("Authorization", "owner members scope enumeration reason")
 
 NO_AUTHORITY = Authorization(None, (), "none", "unavailable", "no-tree-handle")
+
+# ``pidfd_send_signal`` is a member of the ``signal`` module, not of ``os``.
+# Reading it from the wrong namespace silently disables the only identity-bound
+# handle this platform offers, so the probe is written as an explicit pair.
+_PIDFD_OPEN = getattr(os, "pidfd_open", None)
+_PIDFD_SEND = getattr(_signal, "pidfd_send_signal", None)
+_PIDFD_AVAILABLE = _PIDFD_OPEN is not None and _PIDFD_SEND is not None
 
 
 def _report(pid, result, mechanism, matched, *, group=False):
@@ -127,7 +140,10 @@ def authorize(claim, *, deadline_seconds=process_tree.SCAN_DEADLINE_SECONDS):
         if monotonic() >= deadline:
             return Authorization(owner, tuple(members), scan.scope, "timed-out",
                                  "authorisation-deadline")
-        observed = process_health_identity(candidate)
+        # One record yields the creation stamp and the scope identifier, so the
+        # member cannot be placed in this scope and identified by a different
+        # process than the one enumerated.
+        observed = process_tree.member_identity(claim, candidate)
         stamp = start_stamp(observed)
         if observed is None or stamp is None:
             unverified += 1
@@ -169,30 +185,40 @@ def _signal_group(member):
     status = verify_process(member.pid, member.identity)
     if status == "identity-mismatch":
         return _report(member.pid, "identity-mismatch", "group", False, group=True)
-    matched = True if status == "alive" else None
+    if status != "alive":
+        # A group identifier is only this attempt's group while its leader is
+        # still verified as the instance that created it. Anything less refuses,
+        # and the caller falls back to per-member signals.
+        return _report(member.pid, "gone" if status in ("stopped", "not-found") else "unknown",
+                       "group", True if status in ("stopped", "not-found") else None,
+                       group=True)
+    if not group_leader(member.pid):
+        # The number no longer leads the group it led at authorisation.
+        return _report(member.pid, "refused", "group-changed", None, group=True)
     try:
         # The group identifier is the leader's ``struct pid``. The kernel keeps
-        # that number reserved while any member survives, so a group signal
-        # cannot be redirected to a later holder of the same number.
+        # that number reserved while any member survives, and the leader itself
+        # is alive and unreaped here, so this signal cannot be redirected to a
+        # later holder of the same number.
         os.killpg(member.pid, _signal.SIGKILL)
     except ProcessLookupError:
-        return _report(member.pid, "gone", "group", matched, group=True)
+        return _report(member.pid, "gone", "group", True, group=True)
     except OSError:
-        return _report(member.pid, "failed", "group", matched, group=True)
-    return _report(member.pid, "signalled", "group", matched, group=True)
+        return _report(member.pid, "failed", "group", True, group=True)
+    return _report(member.pid, "signalled", "group", True, group=True)
 
 
 def _signal_pidfd(member):
-    open_fd = getattr(os, "pidfd_open", None)
-    send = getattr(os, "pidfd_send_signal", None)
-    if open_fd is None or send is None:
-        return _signal_by_pid(member)
+    if not _PIDFD_AVAILABLE:
+        # No handle that names this instance. A numeric kill after a separate
+        # sample is not authority to terminate it, so nothing is sent.
+        return _report(member.pid, "unavailable", "none", None)
     try:
-        descriptor = open_fd(member.pid, 0)
+        descriptor = _PIDFD_OPEN(member.pid, 0)
     except ProcessLookupError:
         return _report(member.pid, "gone", "pidfd", None)
     except OSError:
-        return _signal_by_pid(member)
+        return _report(member.pid, "unavailable", "pidfd", None)
     try:
         # The descriptor pins one instance. The identity is checked *after* it
         # is opened, so a number recycled before the open is refused instead of
@@ -202,7 +228,10 @@ def _signal_pidfd(member):
             return _report(member.pid, "identity-mismatch", "pidfd", False)
         if status in ("stopped", "not-found"):
             return _report(member.pid, "gone", "pidfd", True)
-        send(descriptor, _signal.SIGKILL)
+        if status != "alive":
+            # An unreadable liveness is not an identity match.
+            return _report(member.pid, "unknown", "pidfd", None)
+        _PIDFD_SEND(descriptor, _signal.SIGKILL)
         return _report(member.pid, "signalled", "pidfd", True)
     except ProcessLookupError:
         return _report(member.pid, "gone", "pidfd", True)
@@ -213,27 +242,6 @@ def _signal_pidfd(member):
             os.close(descriptor)
         except OSError:
             pass
-
-
-def _signal_by_pid(member):
-    """Fallback: sample the identity immediately before the signal.
-
-    The gap between the check and the signal is not zero, so the mechanism is
-    recorded as ``pid``. A host with neither ``pidfd`` nor a process handle
-    cannot close it, and this module does not pretend otherwise.
-    """
-    status = verify_process(member.pid, member.identity)
-    if status == "identity-mismatch":
-        return _report(member.pid, "identity-mismatch", "pid", False)
-    if status in ("stopped", "not-found"):
-        return _report(member.pid, "gone", "pid", True)
-    try:
-        os.kill(member.pid, _signal.SIGKILL)
-    except ProcessLookupError:
-        return _report(member.pid, "gone", "pid", True)
-    except OSError:
-        return _report(member.pid, "failed", "pid", True)
-    return _report(member.pid, "signalled", "pid", True)
 
 
 if sys.platform == "win32":
@@ -286,4 +294,4 @@ if sys.platform == "win32":
             _kernel.CloseHandle(handle)
 else:
     def _signal_handle(member):  # pragma: no cover - unreachable off Windows
-        return _report(member.pid, "refused", "process-handle", None)
+        return _report(member.pid, "unavailable", "none", None)

@@ -44,7 +44,7 @@ process this attempt does not own.
 | Identity-bound member | `process_control.Member(pid, identity, group)` carries the creation stamp sampled when the member was authorised, so it names an instance, not a number. |
 | Authorised owner | Only while `verify_process(pid, claim_identity) == "alive"`. `identity-mismatch` is evidence the owner is gone and never authority over the new holder. |
 | Authorised descendants | Only for a scope whose membership the kernel holds. A parent chain, on either platform, grants none. |
-| Signal | Every signal re-checks the identity and prefers an identity-bound OS handle; the mechanism and the refusal are recorded with the outcome. |
+| Signal | A descendant is signalled only through an identity-bound OS handle, after a verification that must return literally `alive`; the mechanism and every refusal are recorded with the outcome. |
 | Refusal is reported | `identity-mismatch`, `gone`, `unknown`, `refused` and `failed` are results. None is a successful cleanup. |
 
 ### Why a POSIX session is authority and a Windows parent chain is not
@@ -71,12 +71,15 @@ boundary, so `process_tree` keeps its documented read-only contract:
   `Authorization(owner, members, scope, enumeration, reason)`. Members are dropped
   and the enumeration downgraded when a stamp cannot be read, when a stamp predates
   the owner, or when the deadline expires mid-authorisation.
-* `signal(member, group=False)` — Linux `pidfd`: open the descriptor, *then* verify
-  the identity, then signal through the descriptor, so a number recycled before the
-  open is refused and a number recycled afterwards is unreachable. Windows: open the
-  process once, read the creation `FILETIME` from that handle, then
-  `TerminateProcess` on the same handle. Everywhere else: sample immediately before
-  `os.kill` and record the mechanism as `pid`.
+* `signal(member, group=False)` — Linux `pidfd`: open the descriptor with
+  `os.pidfd_open`, *then* verify the identity, then send with
+  **`signal.pidfd_send_signal`** (the function lives in the `signal` module, not in
+  `os`), so a number recycled before the open is refused and a number recycled
+  afterwards is unreachable. Windows: open the process once, read the creation
+  `FILETIME` from that handle, then `TerminateProcess` on the same handle. Every
+  verification must return literally `alive`: `unknown` is refused, not matched. If
+  neither handle is available the signal is refused as `unavailable` — there is no
+  numeric PID fallback for a descendant.
 * `group_leader(pid)` — a group signal is honoured only for a member authorised as
   its own group leader.
 
@@ -135,6 +138,13 @@ left in the error slot is an early stop, not a complete enumeration.
 | `taskkill /T` tree walk in the backend | `test_the_direct_child_is_terminated_through_a_bound_handle` (asserts `subprocess.run` was never called) |
 | Refusal recorded as cleanup | `test_a_refused_member_signal_is_recorded_rather_than_read_as_cleanup` |
 | **Unrelated tree signalled** | `test_a_descendant_of_another_tree_is_never_signalled` (POSIX: two real sessions; the second's members stay alive) |
+| pidfd read from the wrong namespace | `test_the_pidfd_capability_is_read_from_the_documented_namespace` (Linux) |
+| Descriptor discipline: open, verify, send, close | `test_the_pidfd_route_opens_verifies_sends_and_closes` (POSIX) |
+| The real Linux route is selected, not a fallback | `test_a_member_bound_to_its_observed_identity_is_signalled` asserts `mechanism == "pidfd"` on Linux |
+| `unknown` verification treated as a match | `test_an_unknown_verification_is_not_an_identity_match_on_the_pidfd_path`, `..._on_the_group_path` |
+| Numeric kill standing in for a missing handle | `test_no_identity_bound_handle_means_no_signal` |
+| Reuse between enumeration and authorisation | `test_a_live_foreign_identity_is_refused`, `test_membership_and_identity_come_from_the_same_record` |
+| A stalled termination round retried into a claim | `test_an_unavailable_handle_ends_the_rounds_instead_of_spinning` |
 
 The test that matters most for the review's concern is the pair of real-process
 tests: one proves a mismatched identity is refused and the process keeps running, the
@@ -182,10 +192,54 @@ while the report names the parent's checkout. Inspection of this branch:
   `unknown`, and the backend no longer attempts to force it to `stopped`.
 * A POSIX descendant that calls `setsid` leaves the session and is outside both the
   observation and the authority. It is reported, never claimed.
-* The `pid` fallback (hosts with neither `pidfd` nor a Windows handle) leaves a
-  non-zero window between the identity check and the signal. It is recorded as
-  `mechanism: "pid"` rather than described as atomic.
+* A POSIX host with neither `pidfd_open` nor `pidfd_send_signal` (for example macOS)
+  can terminate only its own direct child, through the `Popen` handle; descendants
+  are reported as `unavailable` and left running. That is the fail-closed state, not
+  a missing code path.
 * A `TerminateProcess`/`pidfd_send_signal` call that fails after the identity matched
   is reported as `failed`; the outcome then stays `unobserved`.
 * Job-backed execution (`CREATE_SUSPENDED` → assign → resume) is still the only path
   to a Windows `stopped` verdict, and remains a separate change.
+
+## 9. Correction after the second follow-up review (2026-11-27)
+
+The follow-up review (`pullrequestreview-6085614784`) found a concrete defect in the
+new signalling path, and it was correct.
+
+**The defect.** `_signal_pidfd` probed `os.pidfd_send_signal`. CPython exposes
+`pidfd_send_signal` in the `signal` module (next to `os.pidfd_open`), so the probe
+always returned `None` on Linux and every descendant signal silently took the numeric
+fallback instead. The identity-bound path the documentation claimed was never selected
+on any host. The regression test that should have caught it asserted only that the
+mechanism was one of `("pidfd", "pid", "process-handle")`, which accepted the fallback
+as a pass.
+
+**Corrections.**
+
+* The probe is now `getattr(os, "pidfd_open", None)` and
+  `getattr(signal, "pidfd_send_signal", None)`, with an explicit comment recording
+  which namespace each belongs to. A unit test asserts the module attributes are
+  identical objects to the documented ones, and the end-to-end Linux test now asserts
+  `mechanism == "pidfd"`.
+* Positive verification is required. `verify_process` must return literally `alive`;
+  `unknown` is refused on the pidfd path and on the group path, both covered by
+  tests.
+* No numeric PID kill remains for a descendant. `_signal_by_pid` is deleted: a host
+  without an identity-bound handle reports `unavailable` and leaves the process
+  running. The direct child is still terminated through the `Popen` handle, which is
+  identity-bound on both platforms and is not a numeric kill.
+* A refused group signal now falls back to the owned-child handle instead of leaving
+  the child alive, and a termination round that delivers nothing ends immediately
+  rather than repeating a refusal twenty times.
+* Session membership is re-proved at authorisation time. `process_tree.member_identity`
+  returns the creation stamp from the *same* read of the process record that yields
+  the session identifier, so a number reused between two reads cannot satisfy the
+  scope check with an identity that belongs to a different process. `authorize` uses
+  it in place of a separate identity sample.
+* Group signalling re-checks both the identity and that the number still leads its own
+  group immediately before `killpg`, and refuses if the leader is not positively alive.
+
+**Scope held.** No new service, no emulator, no agent dispatch, no change to live
+grants or to PR #199 or the issue #201 campaign's files. The local Windows host cannot
+exercise the pidfd branch, so that half is settled by the ubuntu CI jobs; the Windows
+half by the windows jobs.
