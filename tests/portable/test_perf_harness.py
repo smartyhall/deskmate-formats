@@ -392,6 +392,16 @@ class ReportTests(unittest.TestCase):
         durations = [entry["wall_seconds"] for entry in ranking]
         self.assertEqual(durations, sorted(durations, reverse=True))
 
+    def test_ranking_order_is_pinned_by_fixed_durations(self):
+        # The real-run ranking above also exercises aggregation, but its order
+        # should not depend on how the host scheduled two sleeps.
+        payload = _report([_record("m.C.fast", 0.1), _record("m.C.slow", 5.0),
+                           _record("m.C.middle", 2.0)])
+        ranking = report.summarize(payload)["ranking"]
+        self.assertEqual([entry["test_id"] for entry in ranking],
+                         ["m.C.slow", "m.C.middle", "m.C.fast"])
+        self.assertAlmostEqual(ranking[0]["share_percent"], 70.42, delta=0.01)
+
     def test_pareto_and_totals_are_consistent(self):
         summary = report.summarize(self.payload)
         pareto = summary["pareto"]
