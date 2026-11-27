@@ -26,6 +26,7 @@ import math
 import os
 from pathlib import Path
 import platform
+from stat import S_ISREG
 import subprocess
 import sys
 import threading
@@ -566,6 +567,75 @@ _UNTRACKED_MAX_FILES = 400
 _UNTRACKED_MAX_FILE_BYTES = 1_048_576
 _UNTRACKED_MAX_TOTAL_BYTES = 8_388_608
 
+#: Read size for one unbuffered chunk.  The bound is enforced per chunk, so a
+#: file that grows or redirects during the read cannot run past it.
+_UNTRACKED_CHUNK_BYTES = 65_536
+
+
+class _UntrackedUnqualified(Exception):
+    """An untracked file's bytes could not be measured as a stable file.
+
+    The message is a fixed category, never a pathname: it is recorded in a
+    report that may be published, and the file's name is private.
+    """
+
+
+def _read_untracked_file(path: Path, limit: int) -> bytes:
+    """Read one regular file, refusing redirects and enforcing ``limit``.
+
+    ``stat().st_size`` followed by ``read_bytes()`` is not a bound: the file can
+    grow between the two calls, and a symbolic link, junction or device can
+    redirect the read elsewhere or block it forever.  The path is therefore
+    checked with ``lstat`` first, opened without following a link where the
+    platform supports it, re-checked with ``fstat`` to confirm the descriptor is
+    the same regular file that was listed, and read in bounded chunks.  A file
+    that is larger, shorter or newer than it was when listed is refused,
+    because a digest over only some of its bytes cannot prove the source stayed
+    the same.
+    """
+    try:
+        listed = path.lstat()
+    except OSError as error:
+        raise _UntrackedUnqualified("unreadable") from error
+    if not S_ISREG(listed.st_mode):
+        raise _UntrackedUnqualified("nonregular")
+    if listed.st_size > limit:
+        raise _UntrackedUnqualified("over_budget")
+    flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
+    # A FIFO opened without this can block until a writer appears; on Windows
+    # the flag does not exist and a non-regular file is rejected by ``S_ISREG``.
+    flags |= getattr(os, "O_NONBLOCK", 0)
+    try:
+        descriptor = os.open(path, flags)
+    except OSError as error:
+        raise _UntrackedUnqualified("unreadable") from error
+    try:
+        opened = os.fstat(descriptor)
+        if not S_ISREG(opened.st_mode):
+            raise _UntrackedUnqualified("nonregular")
+        if (opened.st_dev, opened.st_ino) != (listed.st_dev, listed.st_ino):
+            raise _UntrackedUnqualified("redirected")
+        if (opened.st_size, opened.st_mtime_ns) != (listed.st_size, listed.st_mtime_ns):
+            raise _UntrackedUnqualified("changed")
+        content = bytearray()
+        while len(content) <= limit:
+            chunk = os.read(descriptor, min(_UNTRACKED_CHUNK_BYTES, limit + 1 - len(content)))
+            if not chunk:
+                break
+            content += chunk
+        after = os.fstat(descriptor)
+    except OSError as error:
+        raise _UntrackedUnqualified("unreadable") from error
+    finally:
+        os.close(descriptor)
+    if len(content) > limit:
+        raise _UntrackedUnqualified("over_budget")
+    if len(content) != opened.st_size:
+        raise _UntrackedUnqualified("changed")
+    if (after.st_size, after.st_mtime_ns) != (opened.st_size, opened.st_mtime_ns):
+        raise _UntrackedUnqualified("changed")
+    return bytes(content)
+
 
 def _untracked_identity(directory: Path, listing: bytes) -> dict[str, Any]:
     """Bind the contents of untracked files, within a fixed budget.
@@ -578,29 +648,36 @@ def _untracked_identity(directory: Path, listing: bytes) -> dict[str, Any]:
     ``git ls-files --others --exclude-standard`` names the files; their sizes
     and SHA-256 digests are folded into one digest.  Files Git is told to ignore
     are deliberately excluded, because they are not part of the measured source.
+
+    The per-file limit for each read is the smaller of the per-file budget and
+    what is left of the total, so the aggregate bound holds *before* a file is
+    read and while it is read, not after it.  Any refusal yields
+    ``untracked_truncated`` with no digest and a category in
+    ``untracked_reason``; the file's name is never reported.
     """
     names = sorted(name for name in listing.split(b"\0") if name)
+    if len(names) > _UNTRACKED_MAX_FILES:
+        names = names[:_UNTRACKED_MAX_FILES]
+        reason: str | None = "file_count"
+    else:
+        reason = None
     digest = hashlib.sha256()
     hashed = 0
     total = 0
-    truncated = bool(names) and len(names) > _UNTRACKED_MAX_FILES
-    for name in names[:_UNTRACKED_MAX_FILES]:
-        if total >= _UNTRACKED_MAX_TOTAL_BYTES:
-            truncated = True
-            break
+    for name in names:
+        remaining = _UNTRACKED_MAX_TOTAL_BYTES - total
+        limit = min(_UNTRACKED_MAX_FILE_BYTES, remaining)
         try:
             path = directory / name.decode("utf-8", "surrogateescape")
-            size = path.stat().st_size
-        except (OSError, UnicodeError):
-            truncated = True
+            content = _read_untracked_file(path, limit)
+        except UnicodeError:
+            reason = "unreadable"
             break
-        if size > _UNTRACKED_MAX_FILE_BYTES:
-            truncated = True
-            break
-        try:
-            content = path.read_bytes()
         except OSError:
-            truncated = True
+            reason = "unreadable"
+            break
+        except _UntrackedUnqualified as refusal:
+            reason = str(refusal)
             break
         digest.update(name)
         digest.update(b"\0")
@@ -609,11 +686,13 @@ def _untracked_identity(directory: Path, listing: bytes) -> dict[str, Any]:
         digest.update(hashlib.sha256(content).digest())
         hashed += 1
         total += len(content)
+    truncated = reason is not None
     return {
         "untracked_files": hashed,
         "untracked_bytes": total,
         "untracked_digest": None if truncated else digest.hexdigest(),
         "untracked_truncated": truncated,
+        "untracked_reason": reason,
     }
 
 
@@ -643,6 +722,7 @@ def _source_revision(directory: Path) -> dict[str, Any]:
         "untracked_bytes": None,
         "untracked_digest": None,
         "untracked_truncated": None,
+        "untracked_reason": None,
         "observed_utc": _utc_now(),
         "complete": False,
         "failed_commands": [],

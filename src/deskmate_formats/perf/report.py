@@ -476,6 +476,7 @@ def _run_identity(report: dict[str, Any]) -> dict[str, Any]:
         "worktree_digest": source.get("worktree_digest"),
         "untracked_digest": source.get("untracked_digest"),
         "untracked_files": source.get("untracked_files"),
+        "untracked_reason": source.get("untracked_reason"),
         "source_state": source.get("state") or (
             "stable" if source.get("complete") and source.get("revision") else "unknown"
         ),
@@ -650,9 +651,13 @@ def compare(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
         elif ident["source_changed"]:
             source_unknown.append(f"{label}: the checkout changed during the run")
         elif ident["untracked_digest"] is None:
+            # ``untracked_reason`` is a fixed category (``file_count``,
+            # ``over_budget``, ``nonregular``, ``redirected``, ``changed``,
+            # ``unreadable``), never a pathname.
+            detail = f" ({ident['untracked_reason']})" if ident["untracked_reason"] else ""
             source_unknown.append(
-                f"{label}: untracked file contents were not bound to a digest, so"
-                " a change in an already-untracked file could not be detected"
+                f"{label}: untracked file contents were not bound to a digest{detail},"
+                " so a change in an already-untracked file could not be detected"
             )
     if source_unknown:
         note("source", "unknown", "; ".join(source_unknown))

@@ -84,7 +84,7 @@ PUBLIC_ENVIRONMENT_KEYS: tuple[str, ...] = (
 _SOURCE_KEYS = (
     "revision", "branch", "dirty", "complete", "worktree_digest",
     "untracked_digest", "untracked_files", "untracked_bytes",
-    "untracked_truncated", "state", "observed_utc",
+    "untracked_truncated", "untracked_reason", "state", "observed_utc",
 )
 
 

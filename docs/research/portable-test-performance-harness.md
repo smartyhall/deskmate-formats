@@ -55,6 +55,20 @@ recorded as an **incomplete** identity rather than a partly hashed one, and an
 incomplete identity cannot qualify a comparison. Files Git is told to ignore are
 excluded: they are not part of the measured source.
 
+The bound has to hold against the file, not only against the listing. Each path
+is `lstat`ed and must be a regular file: a symbolic link, junction, device or
+other non-regular file is refused rather than followed or blocked on, and the
+descriptor is opened without following a link where the platform supports it and
+re-checked with `fstat` for the same device/inode, size and modification time.
+The read limit is the smaller of the per-file budget and what is left of the
+total, and it is enforced *before* the file is opened and while it is read (at
+most one byte past the limit), so the aggregate bound cannot be exceeded by the
+final file, by a file that grows during the read, or by a path that redirects.
+A changing, unreadable, redirected or oversized file makes the identity
+incomplete; `source.untracked_reason` records the fixed category (`file_count`,
+`over_budget`, `nonregular`, `redirected`, `changed`, `unreadable`) so an
+operator can tell why without the report naming a private pathname.
+
 **Imported package identity.** `--source` names a checkout; it does not prove
 that the interpreter imported code from it. The report records the resolved
 `deskmate_formats` package directory, whether it is the `src/` directory of the
@@ -260,7 +274,12 @@ duration does not show that the same wall time is reclaimable.
 - Untracked-file binding stops at a fixed budget. More than 400 untracked files,
   a single file above 1 MiB, or more than 8 MiB in total is recorded as an
   incomplete identity rather than a partial digest, so the bound is visible and
-  such a run cannot qualify a comparison.
+  such a run cannot qualify a comparison. The bound is enforced per read chunk
+  as well as before the file is opened, and only regular files are accepted:
+  symbolic links, junctions, devices, files that grow between listing and
+  reading, and files whose size or modification time changes during the read
+  are refused. The refusal is categorized, not described: no untracked
+  pathname enters a report, public or private.
 - Reports written before this correction included the post-run Git queries in
   `wall_seconds`. They are preserved as recorded; their suite durations are
   upper bounds by a few tenths of a second, and they are not restated as if they

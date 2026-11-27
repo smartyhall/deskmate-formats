@@ -138,6 +138,7 @@ def _merge(results: list[RunResult]) -> RunResult:
             "dirty": None,
             "worktree_digest": None,
             "untracked_digest": None,
+            "untracked_reason": None,
             "observed_utc": (last.meta.get("source_after") or {}).get("observed_utc"),
             "complete": False,
             "state": "changed",

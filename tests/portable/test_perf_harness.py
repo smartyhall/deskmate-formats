@@ -293,6 +293,76 @@ class SourceIdentityTests(unittest.TestCase):
         # Unbound bytes must not read as a qualified identity.
         self.assertFalse(info["complete"])
 
+    def test_untracked_aggregate_budget_refuses_the_file_that_would_exceed_it(self):
+        (self.directory / "first.bin").write_bytes(b"a" * 3_000)
+        (self.directory / "second.bin").write_bytes(b"b" * 3_000)
+        with mock.patch.object(runner_module, "_UNTRACKED_MAX_TOTAL_BYTES", 4_096):
+            info = runner_module._untracked_identity(
+                self.directory, b"first.bin\0second.bin\0")
+        # The first file fits; the second is refused *before* its bytes are
+        # read, so the digest cannot quietly describe only part of the tree.
+        self.assertEqual(info["untracked_files"], 1)
+        self.assertEqual(info["untracked_bytes"], 3_000)
+        self.assertEqual(info["untracked_reason"], "over_budget")
+        self.assertTrue(info["untracked_truncated"])
+        self.assertIsNone(info["untracked_digest"])
+
+    def test_untracked_symbolic_link_is_refused_without_following_it(self):
+        target = self.directory / "outside.txt"
+        target.write_text("private\n", encoding="utf-8")
+        link = self.directory / "redirect.txt"
+        try:
+            os.symlink(target, link)
+        except (OSError, NotImplementedError, AttributeError):
+            self.skipTest("symbolic links are not available to this account")
+        info = runner_module._untracked_identity(self.directory, b"redirect.txt\0")
+        self.assertEqual(info["untracked_reason"], "nonregular")
+        self.assertTrue(info["untracked_truncated"])
+        self.assertIsNone(info["untracked_digest"])
+        self.assertEqual(info["untracked_files"], 0)
+
+    def test_untracked_file_that_grows_between_listing_and_reading_is_refused(self):
+        target = self.directory / "growing.bin"
+        target.write_bytes(b"small\n")
+        real_open = os.open
+
+        def grow_then_open(path, flags, *arguments, **keywords):
+            # The file is listed at one size and read at another, as a build
+            # step writing into the tree between the two syscalls would do.
+            Path(path).write_bytes(Path(path).read_bytes() + b"more\n")
+            return real_open(path, flags, *arguments, **keywords)
+
+        with mock.patch.object(runner_module.os, "open", grow_then_open):
+            info = runner_module._untracked_identity(self.directory, b"growing.bin\0")
+        self.assertEqual(info["untracked_reason"], "changed")
+        self.assertTrue(info["untracked_truncated"])
+        self.assertIsNone(info["untracked_digest"])
+
+    def test_untracked_read_cannot_run_past_the_remaining_budget(self):
+        (self.directory / "bounded.bin").write_bytes(b"x" * 4)
+        real_read = os.read
+
+        def overlong(descriptor, count):
+            # A descriptor that keeps producing bytes must be stopped by the
+            # reader, not by the file happening to end.
+            return real_read(descriptor, count) + b"y" * count
+
+        with mock.patch.object(runner_module, "_UNTRACKED_MAX_TOTAL_BYTES", 8), \
+                mock.patch.object(runner_module.os, "read", overlong):
+            info = runner_module._untracked_identity(self.directory, b"bounded.bin\0")
+        self.assertEqual(info["untracked_reason"], "over_budget")
+        self.assertTrue(info["untracked_truncated"])
+        self.assertIsNone(info["untracked_digest"])
+
+    def test_untracked_identity_reports_no_filename(self):
+        (self.directory / "confidential-name.py").write_text("VALUE = 1\n", encoding="utf-8")
+        bound = runner_module._untracked_identity(self.directory, b"confidential-name.py\0")
+        self.assertRegex(bound["untracked_digest"], r"^[0-9a-f]{64}$")
+        refused = runner_module._untracked_identity(self.directory, b"../confidential-name.py\0")
+        for info in (bound, refused):
+            self.assertNotIn("confidential-name", json.dumps(info))
+            self.assertNotIn(str(self.directory), json.dumps(info))
+
 
 class RunnerTests(unittest.TestCase):
     def test_records_identity_outcome_and_fixture_time(self):
