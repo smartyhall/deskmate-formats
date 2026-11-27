@@ -81,6 +81,21 @@ class CampaignInventoryTests(unittest.TestCase):
         with self.assertRaisesRegex(planner.InventoryError, "incomplete dependency"):
             planner.validate(data)
 
+    def test_completed_milestone_with_completed_dependencies(self):
+        data = deepcopy(self.data)
+        for row in data["campaigns"][:3]:
+            row.update(status="completed", completion_refs=["synthetic receipt"])
+        planner.validate(data)
+        canary = next(row for row in planner.report(data)["campaigns"]
+                      if row["id"] == "deterministic-canary")
+        self.assertEqual(canary["unresolved_dependencies"], [])
+
+    def test_unsupported_schema(self):
+        data = deepcopy(self.data)
+        data["schema_version"] = 2
+        with self.assertRaisesRegex(planner.InventoryError, "unsupported schema"):
+            planner.validate(data)
+
     def test_duplicate_json_properties(self):
         with TemporaryDirectory() as folder:
             path = Path(folder) / "bad.json"

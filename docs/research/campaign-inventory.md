@@ -33,7 +33,7 @@ no resource is reserved, no task is accepted, and no execution is authorized.
   to existing operator gates. `completed` requires explicit evidence references.
 - `review` means proposed work in review, `proposed` means candidate scope,
   `blocked` means a stated missing prerequisite, `standing` means recurring
-  candidate work, and `completed` means recorded closeout evidence.
+  candidate work, and `completed` means recorded closeout evidence. The `evidence` field names the blocker for a `blocked` row; version 1 has no separate structured blocker field.
   Even a proposed package with completed dependencies is only a candidate
   for human selection. Unstated dependencies (specimens, authorization, worker
   health, capacity) must still be checked.
@@ -48,7 +48,7 @@ no resource is reserved, no task is accepted, and no execution is authorized.
 Integrate the current stacks independently; isolate campaign environments;
 qualify the single deterministic hash task in issue #204. The quiet integrated
 performance baseline in #147 precedes optimization but is not a dependency
-of the hash canary. Resume the highest-value native work when resources and
+of the hash canary. Coordinate #191/#199 shared fixture and configuration changes as merge-order concerns, not hard functional dependencies. Existing native socket procedures can support Corkboard follow-up independently of the candidate input improvements. Resume the highest-value native work when resources and
 authority are available. Preserve the archive backlog rather than copying
 its individual formats into this inventory.
 
@@ -68,7 +68,7 @@ a read-only planner. No external API, model, network, or lab access is used.
 
 Portable tests cover strict shape, duplicate IDs/JSON keys, unknown or
 cyclic dependencies, completion evidence, source paths and deterministic
-ordering. The validator checks structure, not scientific correctness,
+ordering. The validator checks structure (including revision spelling, not Git object existence or ancestry), not scientific correctness,
 current remote state or the truth of closeout references.
 
 ## Existing recovery capabilities

@@ -68,9 +68,7 @@
       "resources": [
         "github-ci"
       ],
-      "depends_on": [
-        "supervisor-integration"
-      ],
+      "depends_on": [],
       "sources": [
         "docs/research/codex-supervisor-operator-driver.md"
       ],
@@ -81,7 +79,7 @@
         199
       ],
       "evidence": "Measurement harness is under review; previous measurements are not a quiet integrated baseline.",
-      "acceptance": "Reconcile shared fixtures and configuration, independent exact-head tests, retain raw measurement distinctions.",
+      "acceptance": "Reconcile shared fixtures and configuration, independent exact-head tests, retain raw measurement distinctions. Coordinate shared fixture/configuration merge order with #191; neither PR is a hard functional prerequisite of the other.",
       "completion_refs": []
     },
     {
@@ -439,9 +437,7 @@
         "owned-emulator",
         "synthetic-fixtures"
       ],
-      "depends_on": [
-        "guest-input-integration"
-      ],
+      "depends_on": [],
       "sources": [
         "docs/research/deskmate-corkboard-20261123.md",
         "docs/reference/deskmate-corkboard-format.md"
@@ -454,7 +450,7 @@
         196
       ],
       "evidence": "Shared fixed Corkboard buffer is distinct from the Information Center database; header semantics remain bounded.",
-      "acceptance": "Controlled mid-text edit, save/cold reopen and cross-edition comparisons; identify exact header semantics or record uncertainty.",
+      "acceptance": "Controlled mid-text edit, save/cold reopen and cross-edition comparisons; identify exact header semantics or record uncertainty. Use an already qualified input path; #187 may improve efficiency but is not a prerequisite.",
       "completion_refs": []
     },
     {
@@ -713,7 +709,7 @@
       "pull_requests": [
         155
       ],
-      "evidence": "Draft timeline has chosen period figures; original image bytes and publication review remain missing.",
+      "evidence": "Draft timeline has a factual catalog-page correction, figure-tool validation, and unresolved source-image/rights review; no public derivatives yet.",
       "acceptance": "Inspect actual historical images, source/license/caption review, manifest derivatives, then route and editorial verification.",
       "completion_refs": []
     },
