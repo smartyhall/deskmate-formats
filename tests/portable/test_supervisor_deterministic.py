@@ -1,9 +1,9 @@
 """Deterministic attempt lifecycle: real subprocesses, durable receipts, no replay."""
 
 from hashlib import sha256
+import json
 import os
 from pathlib import Path
-import shutil
 import sys
 from tempfile import TemporaryDirectory
 from threading import Event, Thread
@@ -71,7 +71,11 @@ class DeterministicTests(unittest.TestCase):
                 arguments={"paths": ["README.md"]},
                 working_directory=str(self.root), timeout_seconds=10)
         self.assertNotEqual(first.plan_sha256, second.plan_sha256)
-        shutil.copyfile(self.state / "outcome.json", other / "outcome.json")
+        # Published exactly as real evidence (private permissions, atomic
+        # rename), so the only thing that can refuse it is its plan binding.
+        deterministic._write_once(
+            other / "outcome.json",
+            json.loads((self.state / "outcome.json").read_text(encoding="utf-8")))
         with self.assertRaisesRegex(deterministic.DeterministicError, "another plan"):
             deterministic.status(other)
         with self.assertRaisesRegex(deterministic.DeterministicError, "another plan"):

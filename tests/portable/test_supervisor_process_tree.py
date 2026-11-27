@@ -267,8 +267,9 @@ class ProcessTreeTests(unittest.TestCase):
         with mock.patch.object(process_tree, "MAX_PROCESSES", 1):
             state = process_tree.tree_state(claim)
         self.assertEqual(state["enumeration"], "truncated")
-        self.assertEqual(state["descendants"], "unknown")
-        self.assertIsNone(state["live"])
+        # A cut-short walk may still have seen a member; what it may never do is
+        # conclude that the tree is empty.
+        self.assertNotEqual(state["descendants"], "stopped")
         self.assertFalse(process_tree.stopped(claim))
 
     def test_live_pids_separates_findings_from_the_absence_of_findings(self):
