@@ -34,7 +34,10 @@
 /* Historical excerpts keep their intrinsic proportions and halftone smoothing. */
 .reference-figure-historical img { aspect-ratio: auto; image-rendering: auto; }
 .reference-figure figcaption { margin-top: .5rem; max-width: 80ch; line-height: 1.5; }
-.reference-figure-credit { display: block; opacity: .8; margin-top: .25rem; }
+/* Body text is #aaaaaa on #0000aa; any opacity on this credit drops the
+   attribution and rights note below the 4.5:1 AA ratio. Subordinate it by
+   size (the <small> wrapper), not by lowering contrast. */
+.reference-figure-credit { display: block; margin-top: .25rem; }
 @media print { .reference-figures { display: block; } .reference-figure { break-inside: avoid; margin-bottom: 1rem; } }
 
 /* Reader-first homepage; presentation complements unmodified BOOTSTRA.386. */
