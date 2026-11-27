@@ -133,29 +133,29 @@ Registered records: 24.
 ### Unix compress(1) LZW stream (.Z)
 
 - Implementation: `compression_streams.decode_unix_compress` (native).
-- Evidence: Round-trips synthetic streams across maximum code widths 9, 10, 12 and 16, including block-mode dictionary resets. Streams produced by the test encoder were extracted byte-identically by 7-Zip 26.05, independently confirming the variable-width code layout.
-- Limitations: Variable-width codes widen only after the code that triggered the change, as compress(1) does; a stream that ends mid-code yields a trailing-partial-code warning. No encoder is shipped.
+- Evidence: Portable tests generate streams at every maximum code width from 9 to 16 that cross one or more width transitions, in block and non-block mode, with a dictated dictionary CLEAR and with the table saturated. gzip 1.15's independent unlzw decoder reproduced every payload from the 10-16 bit streams byte for byte, which validates the generator's eight-code group convention rather than our decoder's assumptions; our decoder then reproduced the same bytes and the same termination. The earlier direction still holds: 7-Zip 26.05 extracted this project's encoded streams byte-identically.
+- Limitations: Codes are packed in groups of eight; a width change and a block-mode CLEAR both pad the current group at the old width, and the group origin is re-based after every jump. A CLEAR resumes without resetting the previous code, exactly as ncompress's decoder does, and a full table freezes rather than widening past maxbits. A stream that ends inside a code is reported as partial with truncated-final-code instead of as a complete member. Output bytes, code count and decoder working memory are bounded separately; the decoder's tables are fixed by maxbits and do not follow output. Nine-bit streams are decoded but not cross-validated, because gzip 1.15 rejects one once its table fills; the difference is recorded rather than smoothed over. Reserved header bits 0x20 and 0x40 are reported as reserved-header-flags. No encoder is shipped.
 - Reference: [ncompress reference implementation](https://github.com/vapier/ncompress)
 
 ### bzip2 stream (.bz2)
 
 - Implementation: `compression_streams.decode_bzip2` (library).
-- Evidence: Round-trip, truncation, corruption, trailing-data and output-bound cases are covered by portable tests.
-- Limitations: Decoding uses the CPython standard library; the independent-implementation claim rests on CPython, not on this project.
+- Evidence: Round-trip, truncation, corruption, trailing-data, concatenated-stream and output-bound cases are covered by portable tests. The block size declared in the header is checked against the decoder-memory bound, and the number of concatenated streams is bounded separately from the output budget.
+- Limitations: Decoding uses the CPython standard library; the independent-implementation claim rests on CPython, not on this project. bzip2 keeps several block-sized tables whose size the stream header declares, so decoder memory is bounded through that declaration rather than by the output budget.
 - Reference: [bzip2 format notes](https://sourceware.org/bzip2/docs.html)
 
 ### xz stream (.xz)
 
 - Implementation: `compression_streams.decode_xz` (library).
-- Evidence: Round-trip plus a one-mebibyte payload cut off by a 1 KiB output bound, exercised by portable tests.
-- Limitations: Decoding uses the CPython standard library. Legacy .lzma alone streams are not handled by this record.
+- Evidence: Round-trip, concatenated-stream, trailing-data, truncation, integrity and output-bound cases are exercised by portable tests, and a block declaring a 16 MiB dictionary is refused under a 64 KiB decoder-memory bound.
+- Limitations: Decoding uses the CPython standard library with memlimit taken from the decoder-memory bound, because a small stream can declare a large dictionary and allocate it before emitting a byte. The stream count is bounded so concatenated input cannot allocate decoders without limit. Legacy .lzma alone streams are not handled by this record.
 - Reference: [xz file format specification](https://tukaani.org/xz/format.html)
 
 ### ImageDisk sector image (.imd)
 
 - Implementation: `disk_images._imd` (native).
 - Evidence: Hand-authored fixtures exercise raw, fill-byte, absent, deleted-data-address-mark and read-error sector statuses; a normalised image is then handed to the FAT12 reader end to end.
-- Limitations: Per-sector cylinder and head maps and a 0xFF per-sector size table are parsed, but no real ImageDisk specimen has been qualified. Physical recording attributes (data rate, encoding) are recorded from the track mode and not verified against media.
+- Limitations: Per-sector cylinder and head maps and a 0xFF per-sector size table are parsed, but no real ImageDisk specimen has been qualified. Physical recording attributes (data rate, encoding) are recorded from the track mode and not verified against media. Decoding enforces the caller's input-byte, per-sector, aggregate-decoded, per-track sector and geometry bounds before it allocates, so a declared track length or sector count cannot enlarge them.
 - Reference: [ImageDisk format description](https://emuverse.ru/wiki/.imd)
 - Reference: [fdimg ImageDisk reader](https://www.os2museum.com/hg/fdimg/)
 
@@ -163,14 +163,14 @@ Registered records: 24.
 
 - Implementation: `disk_images._td0` (native).
 - Evidence: Hand-authored fixtures exercise raw, repeated-2-byte-pattern and RLE sector methods, the skipped (0x10) and ID-only (0x20) flags, comments and truncation.
-- Limitations: The 'td' advanced variant compresses the whole post-header stream with an LZSS/Huffman coder; it is recognised, its header metadata is reported, and its payload is deliberately not decoded. The documented header-CRC polynomial is implemented but unconfirmed against a real specimen, so a mismatch is reported as a warning.
+- Limitations: The 'td' advanced variant compresses the whole post-header stream with an LZSS/Huffman coder; it is recognised, its header metadata is reported, and its payload is deliberately not decoded. The documented header-CRC polynomial is implemented but unconfirmed against a real specimen, so a mismatch is reported as a warning. Decoding enforces the caller's input-byte, per-sector, aggregate-decoded and per-track sector bounds before allocating, and the normaliser refuses a geometry or logical-image size outside its own bounds instead of allocating it.
 - Reference: [Teledisk .TD0 notes (Dave Dunfield)](http://dunfield.classiccmp.org/img42841/td0notes.txt)
 
 ### Sydex CopyQM image (.qm, .cqm)
 
 - Implementation: `disk_images._copyqm` (native).
 - Evidence: Hand-authored fixtures check the zero-byte-sum header invariant, the embedded BPB geometry, signed run lengths, a leading comment block, a truncated track and an implausible cylinder count. One fixture is a FAT12 volume extracted end to end.
-- Limitations: The documented disk-data CRC (32-bit, top two bits excluded) is recorded but not verified. Payload runs are decoded per track; a damaged run keeps every complete sector it described and names the remainder missing.
+- Limitations: The documented disk-data CRC (32-bit, top two bits excluded) is recorded but not verified. A track is expanded only after its declared sectors-per-track, track length and total geometry are checked against the caller's track, sector, aggregate-byte and geometry budgets, and the sector cap is applied to the whole track before the inner sector loop can run. Payload runs are decoded per track; a damaged run keeps every complete sector it described and names the remainder missing.
 - Reference: [LibDsk appendix M: the CopyQM file format](https://github.com/fdivitto/joyce-custom/blob/master/LibDsk/doc/libdsk.txt)
 
 ### Disk Copy Fast image (.dcf)

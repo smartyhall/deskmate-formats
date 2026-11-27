@@ -22,7 +22,7 @@ deliberately absent rather than guessed from file size or extension.
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from struct import unpack_from
+from struct import error as StructError, unpack_from
 
 
 IMD_MAGIC = b'IMD '
@@ -30,6 +30,10 @@ TD0_SIGNATURES = (b'TD', b'td')
 COPYQM_SIGNATURE = b'CQ\x14'
 COPYQM_HEADER_BYTES = 133
 SECTOR_SIZES = (128, 256, 512, 1024, 2048, 4096, 8192)
+# No pc-era controller addressed more than this, so a container that claims a
+# larger coordinate space is describing something other than a disk.
+MAX_CYLINDERS = 4096
+MAX_HEADS = 256
 
 # IMD sector-data status bytes: 0 = absent, odd = raw, even = fill byte.
 IMD_STATUS = {
@@ -59,14 +63,26 @@ STANDARD_GEOMETRY = {
 
 @dataclass(frozen=True)
 class Bounds:
-    """Input and member limits applied while decoding a container."""
+    """Input, member and aggregate limits applied while decoding a container.
+
+    One limit per layer, so a container's own header can never widen a bound
+    the caller supplied: ``sector_bytes`` bounds one sector, ``total_bytes``
+    bounds everything the container may decode, ``geometry_sectors`` bounds the
+    coordinates it may claim, ``track_sectors``/``track_bytes`` bound one track
+    before it is expanded, and ``lba_bytes`` bounds the normalised image.
+    """
 
     input_bytes: int = 512 * 1024 * 1024
     sectors: int = 200_000
     sector_bytes: int = 8192
+    total_bytes: int = 64 * 1024 * 1024
+    geometry_sectors: int = 1_000_000
+    lba_bytes: int = 64 * 1024 * 1024
+    track_bytes: int = 4 * 1024 * 1024
+    track_sectors: int = 4096
 
     def __post_init__(self):
-        if min(self.input_bytes, self.sectors, self.sector_bytes) <= 0:
+        if min(vars(self).values()) <= 0:
             raise ValueError('sector-image bounds must be positive')
 
 
@@ -113,7 +129,14 @@ class Volume:
 
 @dataclass(frozen=True)
 class LbaImage:
-    """A normalised logical-block derivative with its gaps named explicitly."""
+    """A normalised logical-block derivative with its gaps named explicitly.
+
+    ``missing`` blocks were never supplied, ``conflicts`` blocks were supplied
+    twice with different bytes, ``degraded`` blocks hold the bytes of a sector
+    the container flagged as a read error or deleted data, and ``rejected``
+    counts sectors whose cylinder/head/number fell outside the declared
+    geometry. A degraded or rejected block is never reported as verified.
+    """
 
     data: bytes
     sector_size: int
@@ -122,6 +145,8 @@ class LbaImage:
     missing: tuple[int, ...]
     conflicts: tuple[int, ...]
     status: str
+    degraded: tuple[int, ...] = ()
+    rejected: int = 0
 
 
 class _Truncated(Exception):
@@ -163,9 +188,12 @@ def identify(data: bytes) -> str | None:
         if 0 < line_end <= 64 and b':' in data[:line_end]:
             return 'imd'
     if (len(data) >= 12 and data[:1] in (b'T', b't') and data[1:2] in (b'D', b'd')
-            and data[3] == (data[0] + data[1] + data[2]) & 0xFF):
-        # 'TD' is the ordinary image and 'td' the advanced-compression variant;
-        # the check byte makes either spelling structural rather than textual.
+            and 0x10 <= data[4] <= 0x2F):
+        # 'TD' is the ordinary image and 'td' the advanced-compression variant.
+        # Byte 3 is a *volume set* identifier, not a checksum: three genuine
+        # TeleDisk images carry 0x42, 0x43 and 0x2E there, so a sum test would
+        # reject every real file. The header CRC at offset 10 is the actual
+        # integrity field and is verified by the reader instead.
         return 'td0-advanced' if data[:1] == b't' else 'td0'
     if (len(data) >= COPYQM_HEADER_BYTES and data[:3] == COPYQM_SIGNATURE
             and sum(data[:COPYQM_HEADER_BYTES]) & 0xFF == 0):
@@ -190,6 +218,22 @@ def _geometry_from_bpb(boot: bytes):
     if not 1 <= cylinders <= 1024:
         return None
     return Geometry(cylinders, heads, spt, sector_size)
+
+
+def _plausible_geometry(geometry, bounds):
+    """True when every coordinate is inside the caller's declared bounds."""
+    if geometry is None or not geometry.sector_size:
+        return False
+    if geometry.sector_size not in SECTOR_SIZES or geometry.sector_size > bounds.sector_bytes:
+        return False
+    values = (geometry.cylinders, geometry.heads, geometry.sectors_per_track)
+    if any(value is None for value in values):
+        return False
+    cylinders, heads, spt = values
+    if not (1 <= cylinders <= MAX_CYLINDERS and 1 <= heads <= MAX_HEADS
+            and 1 <= spt <= bounds.track_sectors):
+        return False
+    return cylinders * heads * spt <= bounds.geometry_sectors
 
 
 def raw_geometry(size: int, boot: bytes | None = None):
@@ -221,6 +265,7 @@ def _imd(data, bounds):
     max_cylinder = max_head = None
     spt = None
     size_seen = None
+    decoded_bytes = 0
     status, detail = 'ok', None
     while cursor.remaining():
         if len(sectors) >= bounds.sectors:
@@ -237,6 +282,9 @@ def _imd(data, bounds):
             break
         if not count:
             status, detail = 'failed', 'empty-track'
+            break
+        if count > bounds.track_sectors or len(sectors) + count > bounds.sectors:
+            status, detail = 'limited', 'sector-limit'
             break
         cylinder_map_present = bool(head & 0x80)
         head_map_present = bool(head & 0x40)
@@ -287,6 +335,12 @@ def _imd(data, bounds):
                 status, detail = 'partial', 'truncated-sector-data'
                 truncated = True
                 break
+            if payload is not None:
+                decoded_bytes += len(payload)
+                if decoded_bytes > bounds.total_bytes:
+                    status, detail = 'limited', 'decoded-byte-limit'
+                    truncated = True
+                    break
             sectors.append(Sector(
                 cylinder_map[index] if cylinder_map else cylinder,
                 head_map[index] if head_map else physical_head,
@@ -307,8 +361,9 @@ def _imd(data, bounds):
 def _td0_crc16(data, crc=0):
     """CRC-16 with polynomial 0xA097 and preset 0, as documented for TeleDisk.
 
-    The published notes give the polynomial and preset but not a worked
-    example, so a mismatch is reported as an observation, never as failure.
+    Confirmed against three genuine images with distinct stored values, which
+    is what distinguishes this from the four alternative CRC conventions that
+    all fail on the same files.
     """
     for byte in data:
         crc ^= byte << 8
@@ -318,7 +373,12 @@ def _td0_crc16(data, crc=0):
 
 
 def _td0_repeat_pattern(payload, size):
-    """Method 1: repeated 16-bit pattern, 4-byte (count, pattern) entries."""
+    """Method 1: repeated 16-bit pattern, 4-byte (count, pattern) entries.
+
+    Confirmed against genuine images: a real block of `00 01 f6 f6` fills a
+    whole 512-byte sector with 0xF6, and all 426 genuine repeat-pattern
+    sectors of the held specimens decode to exactly their declared size.
+    """
     out = bytearray()
     cursor = _Cursor(payload)
     while len(out) < size:
@@ -332,7 +392,14 @@ def _td0_repeat_pattern(payload, size):
 
 
 def _td0_rle(payload, size):
-    """Method 2: literal blocks and repeat blocks, as documented by Dunfield."""
+    """Method 2: literal blocks and repeat blocks, as documented by Dunfield.
+
+    Confirmed against genuine images rather than only the notes: the first
+    block of a real DOS 2.11 TeleDisk image is `00 1b` followed by the 27-byte
+    boot record, so a zero flag introduces a literal block whose length is the
+    next byte. All 359 genuine RLE sectors decode to exactly their declared
+    size, which a wrong block-length convention would overshoot or undershoot.
+    """
     out = bytearray()
     cursor = _Cursor(payload)
     while len(out) < size:
@@ -356,12 +423,18 @@ def _td0_rle(payload, size):
 
 def _td0(data, bounds):
     advanced = data[:1] == b't'
+    if len(data) < 12:
+        return Volume('td0', Geometry(None, None, None, None), status='failed',
+                      detail='truncated-header')
     header = data[:12]
     (sequence, check, version, rate, drive, stepping, dos_flag, sides,
      stored_crc) = unpack_from('<BBBBBBBBH', header, 2)
+    header_crc_verified = _td0_crc16(header[:10]) == stored_crc
     metadata = {
         'advanced_compression': advanced,
         'volume_sequence': sequence,
+        'volume_set': check,
+        'header_crc_verified': header_crc_verified,
         'teledisk_version': f'{version >> 4}.{version & 0x0F}',
         'data_rate': TD0_DATA_RATES.get(rate & 0x03, f'unknown-{rate & 0x03}'),
         'single_density': bool(rate & 0x80),
@@ -373,8 +446,11 @@ def _td0(data, bounds):
         'computed_header_crc': _td0_crc16(header[:10]),
     }
     warnings = []
-    if metadata['computed_header_crc'] != stored_crc:
-        warnings.append('header-crc-unconfirmed-algorithm')
+    # CRC-16 with polynomial 0xA097, preset 0, most-significant bit first, was
+    # confirmed against three genuine TeleDisk images (see the campaign report),
+    # so a mismatch now reports real damage rather than an unconfirmed guess.
+    if not header_crc_verified:
+        warnings.append('header-crc-mismatch')
     geometry_hint = TD0_DRIVE_GEOMETRY.get(drive)
     geometry = Geometry(*(geometry_hint + (512,)) if geometry_hint else (None, None, None, None))
     if advanced:
@@ -395,6 +471,7 @@ def _td0(data, bounds):
         return Volume('td0', geometry, status='partial', detail='truncated-comment',
                       warnings=tuple(warnings), metadata=metadata)
     sectors = []
+    decoded_bytes = 0
     status, detail = 'ok', None
     max_cylinder = max_head = spt = None
     sector_size = None
@@ -419,6 +496,9 @@ def _td0(data, bounds):
         physical_head = head_byte & 0x01
         if not count:
             status, detail = 'failed', 'empty-track'
+            break
+        if count > bounds.track_sectors or len(sectors) + count > bounds.sectors:
+            status, detail = 'limited', 'sector-limit'
             break
         truncated = False
         for _ in range(count):
@@ -491,6 +571,12 @@ def _td0(data, bounds):
             if decoded is None and sector_status == 'ok':
                 sector_status = 'malformed-encoding'
                 status = 'partial'
+            if decoded is not None:
+                decoded_bytes += len(decoded)
+                if decoded_bytes > bounds.total_bytes:
+                    status, detail = 'limited', 'decoded-byte-limit'
+                    truncated = True
+                    break
             sectors.append(Sector(sector_cylinder, sector_head, number, size, decoded, sector_status))
             sector_size = size if sector_size is None else max(sector_size, size)
         if truncated:
@@ -575,15 +661,27 @@ def _copyqm(data, bounds):
     if sector_size > bounds.sector_bytes:
         return Volume('copyqm', Geometry(None, None, None, None), status='limited',
                       detail='sector-size-out-of-range', metadata=metadata)
+    # Nothing is expanded until the header's own geometry fits every bound: a
+    # u16 sectors-per-track combined with a legal 8 KiB sector would otherwise
+    # ask for half a gigabyte from a single track. The declared coordinates are
+    # also checked before they are used to index anything.
+    track_bytes = spt * sector_size
+    if (spt > bounds.track_sectors or heads > MAX_HEADS
+            or cylinders_in_image > MAX_CYLINDERS or track_bytes > bounds.track_bytes
+            or cylinders_in_image * heads * spt > bounds.geometry_sectors):
+        return Volume('copyqm', Geometry(None, None, None, None), status='limited',
+                      detail='geometry-exceeds-bounds', metadata=metadata)
     geometry = Geometry(cylinders_in_image, heads, spt, sector_size)
     cursor = _Cursor(data, COPYQM_HEADER_BYTES + comment_length)
-    track_bytes = spt * sector_size
     sectors = []
+    decoded_bytes = 0
     status, detail = 'ok', None
     first_number = sector_base + 1
     for cylinder in range(cylinders_in_image):
         for head in range(heads):
-            if len(sectors) >= bounds.sectors:
+            # The sector cap is enforced for the whole track before it is
+            # expanded, so the inner loop cannot run past the caller's limit.
+            if len(sectors) + spt > bounds.sectors:
                 status, detail = 'limited', 'sector-limit'
                 break
             try:
@@ -595,11 +693,17 @@ def _copyqm(data, bounds):
                 start = index * sector_size
                 chunk = track[start:start + sector_size]
                 if len(chunk) == sector_size:
+                    decoded_bytes += sector_size
+                    if decoded_bytes > bounds.total_bytes:
+                        status, detail = 'limited', 'decoded-byte-limit'
+                        break
                     sectors.append(Sector(cylinder, head, first_number + index,
                                           sector_size, chunk, 'ok'))
                 else:
                     sectors.append(Sector(cylinder, head, first_number + index,
                                           sector_size, None, 'missing'))
+            if status != 'ok':
+                break
             if not complete:
                 status, detail = 'partial', f'truncated-track-{cylinder}-{head}'
                 break
@@ -616,9 +720,20 @@ READERS = {'imd': _imd, 'td0': _td0, 'td0-advanced': _td0, 'copyqm': _copyqm}
 
 
 def read(path: Path, kind: str | None = None, bounds: Bounds = Bounds()) -> Volume:
-    """Decode one sector-image container. ``kind`` defaults to structural sniffing."""
-    data = path.read_bytes() if path.stat().st_size <= bounds.input_bytes else None
-    if data is None:
+    """Decode one sector-image container. ``kind`` defaults to structural sniffing.
+
+    The limit is enforced by the read itself rather than by a preceding
+    ``stat()``, so a file that grows between the two cannot be read in full.
+    An explicit ``kind`` on a file shorter than that container's fixed header
+    is reported as a truncated header instead of raising from ``unpack``.
+    """
+    try:
+        with Path(path).open('rb') as stream:
+            data = stream.read(bounds.input_bytes + 1)
+    except OSError as exc:
+        return Volume(kind or 'unknown', Geometry(None, None, None, None),
+                      status='failed', detail=type(exc).__name__)
+    if len(data) > bounds.input_bytes:
         return Volume(kind or 'unknown', Geometry(None, None, None, None),
                       status='limited', detail='input-byte-limit')
     resolved = kind or identify(data)
@@ -629,40 +744,63 @@ def read(path: Path, kind: str | None = None, bounds: Bounds = Bounds()) -> Volu
     if reader is None:
         return Volume(resolved, Geometry(None, None, None, None),
                       status='unsupported', detail='no-sector-reader')
+    minimum = {'td0': 12, 'td0-advanced': 12, 'copyqm': COPYQM_HEADER_BYTES}.get(resolved, 0)
+    if len(data) < minimum:
+        return Volume(resolved, Geometry(None, None, None, None),
+                      status='failed', detail='truncated-header')
     try:
         return reader(data, bounds)
-    except (ValueError, IndexError, KeyError, _Truncated) as exc:
+    except (ValueError, IndexError, KeyError, StructError, _Truncated) as exc:
         return Volume(resolved, Geometry(None, None, None, None),
                       status='failed', detail=type(exc).__name__)
 
 
-def to_lba(volume: Volume, first_sector_number: int = 1) -> LbaImage:
+def to_lba(volume: Volume, first_sector_number: int = 1, bounds: Bounds = Bounds()) -> LbaImage:
     """Normalise a volume to a logical-block derivative.
 
     Logical block order is ``((cylinder * heads) + head) * spt + (number - first)``.
     Every unwritten block is listed in ``missing`` and every conflicting write
     in ``conflicts``; neither is silently replaced by another value.
+
+    Three qualities are kept apart: a *recovered* block may hold bytes a
+    container flagged as a read error, a *complete* image has every block, and
+    a *verified* image has every block from a sector the container called good.
+    Only the last is ``complete``; recovered bytes are listed in ``degraded``
+    so a read error can never establish a fully verified logical image.
+
+    The declared geometry is validated before anything is allocated, and a
+    sector whose cylinder/head/number is outside it is counted in ``rejected``
+    rather than being wrapped onto a legitimate block.
     """
     geometry = volume.geometry
     total = geometry.total_sectors
     if total is None or not geometry.sector_size:
         return LbaImage(b'', 0, 0, 0, (), (), 'unknown-geometry')
-    if len(volume.sectors) > total * 2:
-        return LbaImage(b'', geometry.sector_size, total, 0, (), (), 'implausible-sector-count')
-    image = bytearray(total * geometry.sector_size)
+    if not _plausible_geometry(geometry, bounds):
+        return LbaImage(b'', 0, 0, 0, (), (), 'invalid-geometry')
+    size = geometry.sector_size
+    if total * size > bounds.lba_bytes:
+        return LbaImage(b'', size, total, 0, (), (), 'lba-byte-limit')
+    if len(volume.sectors) > bounds.sectors:
+        return LbaImage(b'', size, total, 0, (), (), 'implausible-sector-count')
+    image = bytearray(total * size)
     written = set()
+    degraded = set()
     conflicts = []
+    rejected = 0
     heads = geometry.heads
     spt = geometry.sectors_per_track
-    size = geometry.sector_size
     for sector in volume.sectors:
         if sector.data is None or sector.size != size:
             continue
         index = sector.number - first_sector_number
-        if not 0 <= index < spt:
+        if not 0 <= index < spt or not 0 <= sector.head < heads \
+                or not 0 <= sector.cylinder < geometry.cylinders:
+            rejected += 1
             continue
         block = (sector.cylinder * heads + sector.head) * spt + index
         if not 0 <= block < total:
+            rejected += 1
             continue
         start = block * size
         if block in written:
@@ -671,6 +809,14 @@ def to_lba(volume: Volume, first_sector_number: int = 1) -> LbaImage:
             continue
         image[start:start + size] = sector.data
         written.add(block)
+        if sector.status != 'ok':
+            degraded.add(block)
     missing = tuple(index for index in range(total) if index not in written)
-    status = 'complete' if not missing and not conflicts else 'incomplete'
-    return LbaImage(bytes(image), size, total, len(written), missing, tuple(conflicts), status)
+    if missing or conflicts:
+        status = 'incomplete'
+    elif degraded or rejected:
+        status = 'degraded'
+    else:
+        status = 'complete'
+    return LbaImage(bytes(image), size, total, len(written), missing, tuple(conflicts),
+                    status, tuple(sorted(degraded)), rejected)
