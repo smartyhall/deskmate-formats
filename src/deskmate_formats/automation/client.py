@@ -27,6 +27,15 @@ class CommandError(RuntimeError):
     """The emulator rejected a command; transport remains synchronized."""
 
 
+class FeatureUnavailable(RuntimeError):
+    """The connected build does not announce the capability being used.
+
+    Instrumentation is negotiated rather than assumed: a stock emulator answers
+    `status` without a capability list, and asking it for an instrumented field
+    must fail visibly instead of returning an invented value.
+    """
+
+
 class Client:
     """One serialized connection; finite timeouts and bounded JSON replies."""
 
@@ -53,6 +62,7 @@ class Client:
         self.sock = socket.create_connection((host, port), timeout=timeout)
         self.sock.settimeout(timeout)
         self.pending = bytearray()
+        self.last_key_seq = None
         try:
             self.sock.sendall(('auth ' + token + '\n').encode('ascii'))
             reply = self._read()
@@ -148,6 +158,77 @@ class Client:
 
     def info(self):
         return self._call('info')
+
+    def capabilities(self):
+        """Capabilities announced by this build; empty for a stock build."""
+        caps = self.status().get('caps', [])
+        if not isinstance(caps, list) or any(not isinstance(cap, str) for cap in caps):
+            self.close()
+            raise ProtocolError('invalid capability list')
+        return list(caps)
+
+    def supports(self, capability):
+        return capability in self.capabilities()
+
+    def input_state(self):
+        """Automation queue occupancy and event counters, or None if absent.
+
+        These counters belong to the automation interface. They never claim that
+        the BIOS ring or an application consumed an event.
+        """
+        state = self.status().get('input')
+        if state is None:
+            return None
+        expected = {'queue': int, 'capacity': int, 'seq': int,
+                    'accepted': int, 'forwarded': int, 'dropped': int}
+        if not isinstance(state, dict) or any(type(state.get(key)) is not kind
+                                              for key, kind in expected.items()):
+            self.close()
+            raise ProtocolError('invalid input state block')
+        if not 0 <= state['queue'] <= state['capacity'] or state['capacity'] < 1:
+            self.close()
+            raise ProtocolError('input queue occupancy outside capacity')
+        if state['forwarded'] > state['accepted'] or state['dropped'] > state['accepted']:
+            self.close()
+            raise ProtocolError('input counters are inconsistent')
+        return state
+
+    def wait_queue(self, timeout_ms):
+        """Wait, bounded, until the automation key queue has drained."""
+        if type(timeout_ms) is not int or not 1 <= timeout_ms <= 600000:
+            raise ValueError('timeout must be 1..600000 ms')
+        if not self.supports('wait_queue'):
+            raise FeatureUnavailable('this build does not implement wait queue')
+        result = self._call(f'wait queue {timeout_ms}')
+        if type(result.get('matched')) is not bool:
+            self.close()
+            raise ProtocolError('wait queue reply lacks a boolean matched field')
+        return result
+
+    def video(self):
+        """Video mode, text geometry and the BIOS cursor, in either mode."""
+        if not self.supports('video_meta'):
+            raise FeatureUnavailable('this build does not report video metadata')
+        result = self._call('video')
+        cursor = result.get('cursor')
+        if (type(result.get('bios_mode')) is not int or type(result.get('text')) is not bool
+                or type(result.get('cols')) is not int or type(result.get('rows')) is not int
+                or not isinstance(cursor, list) or len(cursor) != 2
+                or any(type(value) is not int for value in cursor)):
+            self.close()
+            raise ProtocolError('invalid video metadata reply')
+        return result
+
+    def mouse_state(self):
+        """What the interface has sent to the pointer device, cumulatively."""
+        if not self.supports('mouse_state'):
+            raise FeatureUnavailable('this build does not report mouse state')
+        result = self._call('mouse state')
+        if any(type(result.get(key)) is not int
+               for key in ('sent_dx', 'sent_dy', 'buttons', 'mode')):
+            self.close()
+            raise ProtocolError('invalid mouse state reply')
+        return result
 
     def hold(self):
         return self._call('hold')
@@ -286,7 +367,31 @@ class Client:
         if (action not in ('down', 'up') or not 1 <= len(codes) <= 8
                 or any(type(c) is not int or not 1 <= c <= 0x1ff for c in codes)):
             raise ValueError('invalid key action/scancode')
-        return self._call('key ' + action + ' ' + ' '.join(hex(c) for c in codes))
+        reply = self._call('key ' + action + ' ' + ' '.join(hex(c) for c in codes))
+        self._check_completion(reply, len(codes))
+        return reply
+
+    def _check_completion(self, reply, events):
+        """Verify an instrumented key reply's explicit completion semantics.
+
+        A stock build reports neither field, and nothing is assumed about it.
+        An instrumented build states how many events the request carried, gives
+        the request a monotonic sequence number and reports the queue empty at
+        completion: anything else is a partial delivery, not a finished one.
+        """
+        if 'seq' not in reply:
+            return
+        seq, queue, reported = reply.get('seq'), reply.get('queue'), reply.get('events')
+        if (type(seq) is not int or type(queue) is not int or type(reported) is not int):
+            self.close()
+            raise ProtocolError('malformed key completion reply')
+        if queue != 0 or reported != events:
+            self.close()
+            raise ProtocolError('key request completed with events still queued')
+        if self.last_key_seq is not None and seq != self.last_key_seq + 1:
+            self.close()
+            raise ProtocolError('input event sequence gap')
+        self.last_key_seq = seq
 
     def tap(self, code):
         with self.lock:
@@ -324,6 +429,42 @@ class Client:
                     self.key('up', 42)
                 if pace_ms is not None:
                     self.step(pace_ms)
+
+    def wait_text(self, text, timeout_ms):
+        """Run the guest until one text row contains `text`, or the timeout ends.
+
+        The emulator compares against live text-mode memory at the current video
+        base, one row at a time. It cannot see a graphics-mode screen, and a
+        match proves the string is on screen, not which window or field holds it.
+        """
+        if not isinstance(text, str) or not text or any(c in text for c in '\r\n\0'):
+            raise ValueError('wait text needs one non-empty screen line')
+        if type(timeout_ms) is not int or not 1 <= timeout_ms <= 600000:
+            raise ValueError('invalid wait timeout')
+        result = self._call(f'wait text {timeout_ms} {text}')
+        return dict(result, matched=result.get('matched') is True)
+
+    def wait_memory(self, address, expected, timeout_ms):
+        """Run until physical memory equals `expected`, or the timeout ends."""
+        if (type(address) is not int or address < 0 or address + len(expected) > 2**32
+                or not isinstance(expected, (bytes, bytearray)) or not 1 <= len(expected) <= 256):
+            raise ValueError('invalid wait memory span')
+        if type(timeout_ms) is not int or not 1 <= timeout_ms <= 600000:
+            raise ValueError('invalid wait timeout')
+        result = self._call(f'wait mem {timeout_ms} {address} {bytes(expected).hex()}')
+        return dict(result, matched=result.get('matched') is True)
+
+    def mouse(self, dx, dy, buttons=0):
+        """Relative pointer motion and button state; the guest driver decides what it means.
+
+        `buttons` is a bit mask (1 left, 2 right, 4 middle). Motion is passed to
+        the configured mouse device without changing the host pointer capture a
+        visible window uses, so the operator's display keeps working normally.
+        """
+        values = (dx, dy, buttons)
+        if any(type(v) is not int or not -32768 <= v <= 32767 for v in values) or buttons < 0:
+            raise ValueError('invalid mouse motion or button mask')
+        return self._call(f'mouse {dx} {dy} {buttons}')
 
     def floppy(self, drive, path=None):
         if type(drive) is not int or drive not in (0, 1):

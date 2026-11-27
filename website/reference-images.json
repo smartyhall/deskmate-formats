@@ -1793,6 +1793,22 @@
       "section_heading": "Native application survey"
     },
     {
+      "id": "ui.desktop.accessories-menu",
+      "path": "collection-01/ui.desktop.accessories-menu.png",
+      "sha256": "2d0b16f4ebf7e819f7dedca67a0cef866306e4ca344d747ba44171c6a90db620",
+      "source_sha256": "2d0b16f4ebf7e819f7dedca67a0cef866306e4ca344d747ba44171c6a90db620",
+      "size": 19662,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "freebuff-input-delivery-20261126-menu",
+      "caption": "The DeskMate 03.04.04 F10 Accessories menu lists setup utilities and accessories available on the RSX hard-disk installation.",
+      "alt": "DeskMate desktop with the F10 menu-bar slot highlighted and the Accessories menu open below it, listing Setup, Spell Checker, Calculator, Phone List, Corkboard, Month, Alarm, To Do List, Clipboard and Task Switch.",
+      "rights_note": "Historical UI documentation under the operator's 2026-11-21 documentary-image authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+      "page_id": "applications.note-pad-corkboard",
+      "section_heading": "Three ways to leave a note"
+    },
+    {
       "id": "ui.corkboard.freebuff-note-created",
       "path": "native-emulator-20261126/ui.corkboard.freebuff-note-created.png",
       "sha256": "feaf47e2a18451b0acbb5336fd0674c2703f997e6f9a2b69e018591bcb511e5c",
