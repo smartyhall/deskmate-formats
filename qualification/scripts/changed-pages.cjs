@@ -36,6 +36,11 @@ function main(argv) {
   if (!routes.length) {
     routes = ["/"].concat(map.pages.filter((page) => page.is_hub).map((page) => `/${page.slug}/`));
   }
+  for (const route of routes) {
+    if (!/^\/(?:[a-z0-9]+(?:-[a-z0-9]+)*\/)*$/.test(route)) {
+      throw new Error("Invalid page-map route");
+    }
+  }
   process.stdout.write(routes.join(","));
 }
 
