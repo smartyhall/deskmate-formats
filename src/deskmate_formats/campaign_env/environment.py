@@ -26,7 +26,13 @@ Replacement is staged and provisional rather than in-place:
 * if final verification or the receipt write fails, the previous environment is
   restored; if that restoration cannot be established, the provision says so
   explicitly (``replacement-recovery-uncertain``) and keeps the retired
-  environment and the previous receipt in place for a human.
+  environment and the previous receipt in place for a human;
+* if the staged environment cannot be moved into place *and* the retired one
+  cannot be moved back, both copies are still on disk and neither is known to be
+  usable in place.  That is reported the same way —
+  ``replacement-recovery-uncertain``, with a private recovery receipt naming both
+  paths — and nothing is deleted, because deleting the copy that turns out to be
+  the only intact one is the one mistake this path must not make.
 
 Deliberate limits:
 
@@ -64,6 +70,8 @@ DEFAULT_ROOT_PARTS = ("local-results", "campaign-envs")
 DEFAULT_TIMEOUT_SECONDS = 900
 RECORD_NAME = "environment.json"
 VENV_NAME = "venv"
+RECOVERY_KIND = "campaign-environment-recovery"
+RECOVERY_PREFIX = ".recovery-"
 
 REPARSE_POINT = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0)
 JUNCTION_TAG = getattr(stat, "IO_REPARSE_TAG_MOUNT_POINT", None)
@@ -328,12 +336,36 @@ def _release_lock(lock: Path) -> None:
         pass
 
 
+def _discard_empty_directory(target: "dict[str, object]") -> None:
+    """Remove the target directory a failed fresh provision created and left empty.
+
+    Only an empty directory is removed: anything at all inside it is somebody's
+    evidence, and a record-bearing directory is owned by another provision.
+    """
+    directory = Path(str(target["directory"]))
+    try:
+        if path_kind(directory) == "directory" and not any(directory.iterdir()):
+            directory.rmdir()
+    except OSError:
+        pass
+
+
 def _staging_directory(root: Path, campaign: str) -> Path:
     staging = root / f".staging-{campaign}-{uuid4().hex[:12]}"
     if path_kind(staging) != "absent":
         raise CampaignEnvironmentError("staging-path-already-exists")
     staging.mkdir(parents=True)
     return staging
+
+
+def _rename(source: "str | os.PathLike[str]", destination: "str | os.PathLike[str]") -> None:
+    """One directory rename: the only way an environment at the target changes.
+
+    Named rather than called as ``os.replace`` inline so that each step of a
+    deliberate sequence of renames can be exercised on its own, including the
+    steps that are supposed to fail.
+    """
+    os.replace(source, destination)
 
 
 def _swap_precondition(target: "dict[str, object]", campaign: str, checkout: Path, package: str,
@@ -361,13 +393,81 @@ def _swap_precondition(target: "dict[str, object]", campaign: str, checkout: Pat
                                        "record-changed-during-provisioning")
 
 
+def _uncertain_swap(target: "dict[str, object]", *, campaign: str, checkout: Path, package: str,
+                    staging: Path, retired: Path, venv: Path, swap_error: OSError,
+                    restore_error: OSError,
+                    expected_record_sha256: "str | None") -> CampaignEnvironmentError:
+    """Report a swap that moved the old environment out and nothing back.
+
+    Both the previous environment and the staged one are still on disk, and which
+    of them is usable in place is exactly what this path cannot establish.  So
+    nothing is deleted: a private recovery receipt records where each copy is and
+    what failed, and the raised error carries the same paths so the evidence does
+    not depend on that one file.
+    """
+    staged = staging / VENV_NAME
+    record = {
+        "schema_version": SCHEMA_VERSION,
+        "kind": RECOVERY_KIND,
+        "state": "uncertain",
+        "created_utc": identity.utc_now(),
+        "campaign": campaign,
+        "package": package,
+        "checkout": str(checkout),
+        "root": str(target["root"]),
+        "directory": str(target["directory"]),
+        "venv": str(venv),
+        "venv_kind": path_kind(venv),
+        "retired_path": str(retired),
+        "retired_kind": path_kind(retired),
+        "staged_venv": str(staged),
+        "staged_kind": path_kind(staged),
+        "staging_path": str(staging),
+        "record_path": str(target["record"]),
+        "expected_record_sha256": expected_record_sha256,
+        "failures": {"swap": type(swap_error).__name__, "restore": type(restore_error).__name__},
+        "recovery": [
+            "Nothing was deleted: check retired_kind and staged_kind before touching either path.",
+            "A directory at retired_path is the previous environment; a directory at "
+            "staged_venv is the new one, which was never verified in place.",
+            "Move the copy you intend to keep to venv, or delete the target directory "
+            "deliberately; a target without its venv is refused by design.",
+            "record_path was never rewritten, so this campaign still owns the directory "
+            "under the record it had before this provision ran.",
+        ],
+    }
+    receipt: "dict[str, object] | None" = None
+    try:
+        receipt = receipts.write(Path(str(target["root"])) / (RECOVERY_PREFIX + campaign + "-"
+                                                             + uuid4().hex[:12] + ".json"),
+                                 record)
+    except (OSError, ValueError, TypeError):
+        receipt = None
+    detail = {
+        "reason": "swap-and-restore-both-failed",
+        "error": "environment-swap-failed",
+        "retired_path": str(retired),
+        "retired_present": path_kind(retired) != "absent",
+        "staged_path": str(staged),
+        "staged_present": path_kind(staged) != "absent",
+        "venv_path": str(venv),
+        "venv_present": path_kind(venv) != "absent",
+        "recovery_receipt": str(receipt["path"]) if receipt else None,
+    }
+    return CampaignEnvironmentError("replacement-recovery-uncertain",
+                                    json.dumps(detail, sort_keys=True))
+
+
 def _swap_into_place(staging: Path, target: "dict[str, object]", *, replace: bool,
                      campaign: str, checkout: Path, package: str,
                      expected_record_sha256: "str | None") -> "Path | None":
     """Move a validated staging environment into place, retiring the old one.
 
     The old environment is renamed aside, not deleted, and the old receipt is
-    left untouched until a new one is written durably.
+    left untouched until a new one is written durably.  Every rename either
+    completes or leaves a state this function can still describe: a failure of
+    the first leaves the target completely untouched, and a failure of the second
+    is undone by the restore or reported as uncertain with both copies kept.
     """
     _swap_precondition(target, campaign, checkout, package, expected_record_sha256)
     directory = Path(str(target["directory"]))
@@ -379,16 +479,30 @@ def _swap_into_place(staging: Path, target: "dict[str, object]", *, replace: boo
         if not replace:
             raise CampaignEnvironmentError("existing-environment-not-replaceable")
         retired = directory.parent / f".retired-{campaign}-{uuid4().hex[:12]}"
-        os.replace(venv, retired)
+        try:
+            _rename(venv, retired)
+        except OSError as error:
+            # Nothing moved: the environment is still in place and the staged copy
+            # is still whole, so this is an ordinary failure, not an uncertainty.
+            raise CampaignEnvironmentError("environment-retirement-failed",
+                                           type(error).__name__) from error
     try:
-        os.replace(staging / VENV_NAME, venv)
-    except OSError:
-        if retired is not None:
-            try:
-                os.replace(retired, venv)
-            except OSError:
-                pass
-        raise
+        _rename(staging / VENV_NAME, venv)
+    except OSError as swap_error:
+        if retired is None:
+            raise CampaignEnvironmentError("environment-swap-failed",
+                                           type(swap_error).__name__) from swap_error
+        try:
+            _rename(retired, venv)
+        except OSError as restore_error:
+            raise _uncertain_swap(target, campaign=campaign, checkout=checkout, package=package,
+                                  staging=staging, retired=retired, venv=venv,
+                                  swap_error=swap_error, restore_error=restore_error,
+                                  expected_record_sha256=expected_record_sha256) from swap_error
+        raise CampaignEnvironmentError(
+            "environment-swap-failed",
+            json.dumps({"reason": type(swap_error).__name__, "retired_path": str(retired),
+                        "restored": True}, sort_keys=True)) from swap_error
     return retired
 
 
@@ -554,8 +668,18 @@ def _provision_locked(checkout_path: Path, campaign: str, target: "dict[str, obj
         retired = _swap_into_place(staging, target, replace=replace, campaign=campaign,
                                    checkout=checkout_path, package=package,
                                    expected_record_sha256=owned["record_sha256"])
+    except CampaignEnvironmentError as error:
+        if error.code == "replacement-recovery-uncertain":
+            # The retired environment, the staged environment and the previous
+            # receipt are the only record of what happened.  Removing either copy
+            # here would turn a recoverable state into an unrecoverable one.
+            raise
+        shutil.rmtree(staging, ignore_errors=True)
+        _discard_empty_directory(target)
+        raise
     except BaseException:
         shutil.rmtree(staging, ignore_errors=True)
+        _discard_empty_directory(target)
         raise
     shutil.rmtree(staging, ignore_errors=True)
     try:

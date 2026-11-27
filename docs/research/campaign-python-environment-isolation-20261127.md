@@ -24,7 +24,7 @@ This campaign adds a reusable mechanism rather than a document:
   durable receipts, with a redacted publication projection;
 * `deskmate-campaign-env` — `inventory`, `provision`, `preflight`, `probe`,
   `identity` and `launch`;
-* `tests/portable/test_campaign_env.py` — 85 portable tests, including a
+* `tests/portable/test_campaign_env.py` — 88 portable tests, including a
   controlled two-checkout experiment, POSIX symlink-environment identity,
   ownership, lock and replacement-recovery controls, and package-content
   matching that does not depend on where the package was found;
@@ -200,6 +200,52 @@ environment and previous receipt are kept for a human rather than deleted.
 `--no-build-isolation` alone never did. Only the explicit opt-in attempt may use
 an index, and every attempt records `install_mode` (`offline` or
 `build-isolation`) and `index_access`.
+
+### Third review: the swap's own failure path, and integration after #191
+
+A third review of `69c630b` found one remaining recovery gap and one integration
+task. The interpreter-identity, ownership, locking, offline-installation and
+post-swap-recovery corrections were accepted as they stood, and no new native run
+was needed for either item.
+
+**The gap.** `_swap_into_place` caught a failure to move the staged environment
+in, swallowed the failure to move the retired environment back, and propagated
+the original `OSError`. `_provision_locked` reads an ordinary exception as "this
+provision failed" and deletes the staging directory, so the one state the
+mechanism promises never to guess about — the previous environment displaced and
+nothing in its place — was reported as a routine failure and lost its staged copy
+on the way out.
+
+* the renames are a named seam, `_rename`, so each step of the sequence can be
+  exercised on its own; a retirement failure (`environment-retirement-failed`)
+  leaves the target untouched and discards only the staging copy, and a move
+  failure whose restore succeeds (`environment-swap-failed`) puts the previous
+  environment back and leaves the target consistent;
+* when both renames fail, the provision raises
+  `replacement-recovery-uncertain` with `retired_path`, `retired_present`,
+  `staged_path`, `staged_present`, `venv_path`, `venv_present` and the path of a
+  private recovery receipt in its detail, and `_provision_locked` keeps the
+  staging directory instead of deleting it;
+* the recovery receipt (`.recovery-<campaign>-<uuid>.json` in the environment
+  root; kind `campaign-environment-recovery`, state `uncertain`) records what
+  each of the three paths is now, the two failed operations, the record digest
+  that was expected, and the four steps an operator can take. If the receipt
+  cannot be written the raised error still carries the same paths;
+* three regressions inject failures into the renames: both failing, the move
+  failing with a working restore, and the retirement failing.
+
+**Integration.** PR #191 merged while this was under review and added four
+entry points (`deskmate-supervisor-deterministic`,
+`deskmate-supervisor-campaigns`, `deskmate-observer-campaigns`,
+`deskmate-observer-snapshot`). `origin/main` was merged in as an ordinary
+ancestry-preserving merge — no rebase, squash or force-push — and
+`pyproject.toml` now declares all twenty-one entry points with
+`deskmate-campaign-env` among them. The contract #207 may rely on is written down
+in the procedure's
+[adoption contract](campaign-environment-procedure.md#adoption-contract-for-issue-207):
+invocation and exit statuses, ownership and lock discipline, the three-part
+interpreter identity, the provisioning boundary, and the preflight verdicts,
+followed by the limitations that are #207's to resolve.
 
 ### 5. Evidence and licensing
 
@@ -385,6 +431,12 @@ cannot pass them.
 * **Staging needs the same filesystem.** The swap is a directory rename inside
   the campaign root, so `--root` must not span filesystems; otherwise the
   replacement fails and the previous environment is restored.
+* **An interrupted swap is recovered by a person.** If the previous environment
+  is moved aside and the staged one cannot be moved in, the move back is
+  attempted; if that also fails, the state is reported as uncertain with a
+  private recovery receipt naming both copies, and the next provision refuses
+  that directory (`existing-directory-without-valid-record`) until an operator
+  resolves it. The mechanism deliberately does not guess which copy is intact.
 * **`pip --target` installation.** The environment is created without
   `ensurepip` and populated through the bootstrap interpreter's `pip`. That is
   fast and deterministic but does not create console scripts inside the

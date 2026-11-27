@@ -52,14 +52,14 @@ change a program, and does not create a project when one is missing.
 | Bounded decode | `tools/inspect_dosimage.py disasm` | image, span, max instructions | instruction bytes and text from an independent decoder | qualified when Capstone is installed; refuses otherwise |
 | Project reopen | `ghidra_dos_import.py --reopen-only` | project dir, project, program path, attempt id | program summary, project file listing | qualified |
 | Program fingerprint | inside `--summary` | program | `content_sha256` over block geometry and bytes | qualified |
-| Memory-block inventory | `ghidra_program_report.py --summary` | project, program | block names, ranges, sizes, flags | qualified |
+| Memory-block inventory | `ghidra_program_report.py --summary` | project, program | program path, content digest, block names, ranges, sizes, flags | qualified |
 | Function enumeration | `--functions` | limit | entry, name, size, thunk/external flags, calling convention | qualified |
 | Symbol inspection | `--symbols` | limit | address, name, type, namespace, primary, source | qualified (2026-11-27) |
 | Cross-reference enumeration | `--xrefs` | target address | from-address, reference type, source | qualified |
 | Bounded disassembly | `--disassemble` | function name or address, max instructions | address, bytes, mnemonic, operands, flow type | qualified (2026-11-27) |
 | P-code extraction | `--pcode` | function name or address, max instructions | address, sequence, mnemonic, output and input varnodes | qualified (2026-11-27) |
 | Bounded decompilation | `--decompile` | function name or address, private text path | digest, line and character counts, signature, elapsed ms | qualified |
-| Annotation verification | `--verify-annotation` | project, program | plate comment, bookmarks, symbols, persisted flag | qualified |
+| Annotation verification | `--verify-annotation` | project, program, annotate receipt | per-component checks for address, plate comment, bookmark and label, each with expected and observed value, plus a persisted flag | qualified (contract strengthened 2026-11-27) |
 
 ### Measurement notes for the read-only set
 
@@ -91,6 +91,40 @@ each varnode. Without a decompiler that is unset, so every operand printed as
 reports address space, offset and size of the raw varnode, and the note above
 is the corrected measurement, not the original one.
 
+### Annotation verification is a comparison, not a presence test
+
+A nonempty plate comment and a `probe_label` at the image base do not show that
+the annotation being verified is the one an attempt asked for: an older probe
+at the same address satisfies both. Since 2026-11-27 the contract is:
+
+* `--annotate` writes a plate comment and bookmark comment of the form
+  `campaign probe (<attempt id>): <text>`, a bookmark of type `Note` in category
+  `campaign-probe`, and the label `probe_label`. Its receipt records the attempt,
+  the address, the plate, the bookmark and the label it actually wrote.
+* `--verify-annotation --annotation-receipt RECEIPT` reads that receipt before a
+  JVM starts and refuses it, exit 2, unless it is this tool's receipt for a
+  succeeded annotate attempt that claims persisted annotations and names this
+  project, this project directory and this program path. A receipt for another
+  attempt, project or program is a request error, not an inconclusive run.
+* Verification then resolves the receipt's address in the reopened program and
+  compares four components separately: the address, the exact plate comment, a
+  bookmark with the exact type, category and comment, and the exact label. The
+  receipt carries `expected`, `observed` and `ok` for each component.
+* `persisted` is the conjunction of those four. A missing, stale, mismatched or
+  partial annotation is `not_persisted`, exit 6, and the failing component is
+  named in the receipt.
+
+The attempt identifier is what separates this probe from an earlier one at the
+same address: two attempts never write the same plate text. Text equality alone
+would only distinguish probes whose callers chose different words.
+
+The 2026-11-26 native observation recorded in
+[the static qualification note](ghidra-static-qualification-20261126.md#annotations-and-transactions-in-an-owned-project)
+was made under the earlier, weaker contract, where a nonempty plate and the
+label were enough. It is preserved as the record of that experiment and is not
+re-described: it does not demonstrate the strengthened comparison, which is
+covered by synthetic tests only.
+
 ## Procedures that write
 
 Writing procedures operate only on projects this campaign owns. They take an
@@ -99,7 +133,7 @@ explicit project directory and never create a project implicitly.
 | Procedure | Tool and mode | Effect | Status |
 | --- | --- | --- | --- |
 | Bounded executable import | `ghidra_dos_import.py` | creates or opens an owned project, imports one image, optionally analyses | qualified (2 images, 2 Ghidra releases) |
-| Annotation creation | `ghidra_program_report.py --annotate` | one transaction writing a plate comment, a bookmark and a label; saves | qualified |
+| Annotation creation | `ghidra_program_report.py --annotate` | one transaction writing an attempt-stamped plate comment, a bookmark and a label; saves | qualified |
 
 Both publish a receipt whose `persistence` section records `save` and `close`
 separately. A committed but unsaved annotation is reported as
@@ -149,10 +183,17 @@ analysis results that no form-level comparison covers.
 | Stage exceeded its timeout | `import_timeout` or `reopen_failed`/`timeout`, exit 4 |
 | Autoanalysis raised | `analysis_failed`, exit 5 |
 | Reopen could not open or identify the program | `reopen_failed`, exit 6 |
-| Reopened program differs | `reopen_mismatch`, exit 7 |
+| Reopened program differs | `reopen_mismatch`, exit 7, with the differing field named |
+| Reopened payload names no attempt, a foreign attempt or another project | `reopen_malformed`, reported as `receipt_malformed`, exit 8 |
+| Reopened payload's `ok` is not the literal boolean true | `reopen_malformed`, as above |
+| Reopened payload carries no program identity or fingerprint | `reopen_malformed`, as above |
+| Reopened payload is unreadable | `reopen_failed`, reason `payload_unreadable` |
+| Reopen worker reports failure but exits zero | `reopen_failed` with `worker_exit_disagrees: true` |
 | Receipt failed validation, or claimed success with a nonzero exit | `receipt_malformed` / `receipt_inconsistent`, exit 8 |
 | Analysis finished but was not stored | `persistence_failed`, exit 9 |
 | Annotation committed but not saved | `not_persisted`, exit 6 |
+| Annotation receipt missing, unreadable, not this tool's, unsaved, or for another attempt, project or program | `invalid_request`, exit 2, before any JVM starts |
+| Verified annotation missing, stale, mismatched or partial | `not_persisted`, exit 6, with the failing component named |
 
 ## Evidence boundaries
 

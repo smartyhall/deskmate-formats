@@ -1,0 +1,136 @@
+{
+  "schema": "deskmate-corkboard-handoff/1",
+  "prepared": "2026-11-26",
+  "from_campaign": "fb-ghidra-20261126",
+  "to_campaign": "native emulator and observation",
+  "subject": "Corkboard note buffer and shared note store (DMCORKBD)",
+  "artifacts_private": true,
+  "constraints": [
+    "The receiving campaign operates its own emulator; this campaign did not start or reserve one.",
+    "The note store is shared with Note Pad and Information Center; an edit through one application is evidence about the store, not about another application's view.",
+    "Framebuffer agreement is not persistence agreement; check the store as well as the screen."
+  ],
+  "static_findings": {
+    "module": "DMNOTEPD.ACC",
+    "module_size": 14295,
+    "module_sha256_prefix": "74fc7073cb1680fa",
+    "store": "DMCORKBD",
+    "store_size": 2864,
+    "store_blank_sha256": "35ea3bc020cf509336e438b06974ec7aea3736f4d0fd3db23a741fa98bd3bb30",
+    "text_offset_in_store": 4,
+    "module_dos_io": "no INT 21h AH=3Dh or AH=3Fh; persistence reaches the file through Desktop service far calls",
+    "service_call_sites": ["0x1332 -> BBDA:8C18", "0x1324", "0x133A", "0x1415", "0x15A7", "0x15E4", "0x171E", "0x1908", "0x1969", "0x19A0", "0x1A21"],
+    "candidate_header": {"0x0000": "insertion position (strong)", "0x0002": "unknown, zero in every observed file"},
+    "unresolved": "the live buffer's runtime location and owner"
+  },
+  "experiments": [
+    {
+      "id": "CB-01",
+      "priority": 1,
+      "title": "Locate the live text buffer",
+      "hypothesis": "The live note text exists in guest memory, in the accessory's segment or in a Desktop-owned buffer.",
+      "method": "Start from a blank note, type a distinctive 24-character string, save with Escape, then scan guest memory for the ASCII bytes.",
+      "expected": "The string appears in one contiguous region; its segment tells whether the accessory or the Desktop owns it.",
+      "refutes": "No copy outside the disk image, which would mean the editor writes through a service per keystroke.",
+      "preserve": ["segment:offset of every hit", "surrounding 64 bytes", "the file bytes after save"]
+    },
+    {
+      "id": "CB-02",
+      "priority": 1,
+      "title": "Calibrate the header word against the cursor",
+      "hypothesis": "The 16-bit word at store offset 0x0000 is the insertion position, not the text length.",
+      "method": "With a known 20-character text, press Home, then End, then move right one character at a time, saving and reading the file after each step.",
+      "expected": "Word = 0 at Home, = 20 at End, and = position after each move, while the text bytes are unchanged.",
+      "refutes": "A value that follows the text length rather than the cursor.",
+      "preserve": ["word at 0x0000 for each step", "full 2,864-byte file for each step"]
+    },
+    {
+      "id": "CB-03",
+      "priority": 1,
+      "title": "Clear: buffer or store?",
+      "hypothesis": "Clear empties the live buffer and the store write is what makes it permanent.",
+      "method": "Type text, save, Clear, then Escape without a further save and reopen the accessory.",
+      "expected": "If the note returns, Clear touched only the buffer; if it stays empty, Clear wrote through.",
+      "refutes": "A result that depends on how Escape is pressed rather than on whether a write occurred.",
+      "preserve": ["file bytes after Clear", "file bytes after reopen", "screenshot of the editor"]
+    },
+    {
+      "id": "CB-04",
+      "priority": 2,
+      "title": "Insertion and deletion semantics",
+      "hypothesis": "Insertion shifts the tail right and deletion shifts it left, with the header following the caret.",
+      "method": "At a known offset k, insert one character, save, restore, then Backspace and Delete at the same k.",
+      "expected": "A one-byte shift of the tail in each direction and a header equal to k or k-1.",
+      "refutes": "Overwrite instead of insert, or a header that does not move.",
+      "preserve": ["file bytes before and after", "caret position from the framebuffer"]
+    },
+    {
+      "id": "CB-05",
+      "priority": 2,
+      "title": "Capacity boundary",
+      "hypothesis": "The text area holds 2,860 bytes (2,864 minus the 4-byte header).",
+      "method": "Paste or type progressively longer text and save at intervals around the boundary.",
+      "expected": "Either a refusal message or truncation at a fixed byte count, with the file staying 2,864 bytes.",
+      "refutes": "A file that grows, which would mean the store is not a fixed record.",
+      "preserve": ["file size and hash at each step", "any refusal text"]
+    },
+    {
+      "id": "CB-06",
+      "priority": 2,
+      "title": "Where the file is actually opened",
+      "hypothesis": "The Desktop, not the accessory, performs the DOS open/read/write for DMCORKBD.",
+      "method": "Break on INT 21h AH=3Dh/3Fh/40h in the whole guest and on the far call to BBDA:8C18 from the accessory.",
+      "expected": "The DOS calls occur in a different code segment from the accessory's, reached from the service call.",
+      "refutes": "An open/read issued from the accessory's own segment.",
+      "preserve": ["caller CS:IP for each hit", "file handle", "buffer address and length"]
+    },
+    {
+      "id": "CB-07",
+      "priority": 3,
+      "title": "Shared store, separate views",
+      "hypothesis": "Corkboard, Note Pad and Information Center read the same store but keep independent views.",
+      "method": "Edit in Information Center, leave it running, open Corkboard, and compare its text with the file.",
+      "expected": "Either the same text (shared buffer) or the pre-edit text (per-application load).",
+      "refutes": "A result that changes without an intervening save.",
+      "preserve": ["file hash before and after", "both screens"]
+    },
+    {
+      "id": "CB-08",
+      "priority": 3,
+      "title": "The unknown header word",
+      "hypothesis": "The word at 0x0002 is a scroll offset or reserved space.",
+      "method": "Type more lines than fit on screen, scroll to the end, save, and read the word.",
+      "expected": "A non-zero value that tracks the first visible line, or zero if it is reserved.",
+      "refutes": "A value that tracks the cursor, which would duplicate 0x0000.",
+      "preserve": ["word at 0x0002", "first visible line from the framebuffer"]
+    },
+    {
+      "id": "CB-09",
+      "priority": 3,
+      "title": "Save timing",
+      "hypothesis": "The store is written on close, not on every keystroke.",
+      "method": "Type without closing, inspect the file, then close and inspect again.",
+      "expected": "Unchanged file while editing; changed file after close.",
+      "refutes": "A file that changes per keystroke.",
+      "preserve": ["file hash at each checkpoint", "elapsed emulated time"]
+    },
+    {
+      "id": "CB-10",
+      "priority": 3,
+      "title": "Corrupted-note reproduction",
+      "hypothesis": "The earlier corrupted note came from driving input without checking the store, not from the application.",
+      "method": "Repeat the earlier failed sequence exactly, capturing the store before and after each input step.",
+      "expected": "The divergence first appears at a store write, not at a screen update.",
+      "refutes": "A divergence with no store write, which would move the fault into the application or the input path.",
+      "preserve": ["full store bytes per step", "input sequence with timings", "screen captures"]
+    }
+  ],
+  "reporting": {
+    "separate": ["static file offsets", "image offsets", "synthetic analysis addresses", "relocated words", "observed guest addresses"],
+    "do_not": [
+      "treat a static location as the runtime buffer without an observed address",
+      "publish guest memory dumps or full listings",
+      "modify the reserved worktree or emulator of the receiving campaign"
+    ]
+  }
+}
