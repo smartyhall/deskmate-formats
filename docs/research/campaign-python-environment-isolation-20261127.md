@@ -33,11 +33,11 @@ This campaign adds a reusable mechanism rather than a document:
 * [campaign environment procedure](campaign-environment-procedure.md) — the
   reusable procedure and the Codex/Freebuff migration guide.
 
-**Measured result (one run; elapsed recorded in the receipt):** a campaign
-environment's isolated child imports the campaign's own installation (source
-code digest identical to the checkout) even when `PYTHONPATH` names a
-conflicting implementation; a preflight inside the campaign returns `qualified`
-with exit status 0 and eleven passing checks. Every refusal below returns a
+**Measured result (one run, 174.6 s host wall, at revision `4446276…` from a
+clean worktree):** a campaign environment's isolated child imports the
+campaign's own installation (source code digest identical to the checkout) even
+when `PYTHONPATH` names a conflicting implementation; a preflight inside the
+campaign returns `qualified` with exit status 0 and eleven passing checks. Every refusal below returns a
 non-zero status and never `qualified`: a shared parent that merely *names* the
 campaign interpreter, a conflicting `PYTHONPATH`, the shared interpreter as
 parent, a checkout whose Git metadata cannot be read (`unknown`, exit 2), and a
@@ -122,9 +122,11 @@ stale installed modules cannot survive a replacement. The site-packages of the
 new environment must lie inside it, in the staged copy and after the swap.
 
 Measured, on disposable synthetic directories only: the unowned directory is
-refused and its content is preserved; the junction is refused; an owned
-replacement reports `replaced-owned` and the stale file planted in the old
-environment is absent from the new one.
+refused (`existing-directory-without-valid-record`) and its content is
+preserved intact; the Windows junction is refused
+(`existing-redirect-at-target`); an owned replacement reports `replaced-owned`
+and the stale file planted in the old environment is absent from the new one,
+which itself qualifies.
 
 ### 4. Installation boundaries
 
@@ -136,9 +138,11 @@ records its mode plus `build_isolation_explicitly_enabled`. The historical run's
 `install_mode: build-isolation` was produced that way deliberately and is
 reproduced explicitly in the new experiment; it is not presented as the default.
 The default provision on this host is measured as refusing
-(`installation-failed`) with nothing created at the target path. The mechanism
-still writes only below its own root: never the bootstrap interpreter's
-site-packages, and never another campaign's environment.
+(`installation-failed`) with nothing created at the target path, while both
+campaign provisions carry `install_mode: build-isolation` and
+`build_isolation_explicitly_enabled: true`. The mechanism still writes only
+below its own root: never the bootstrap interpreter's site-packages, and never
+another campaign's environment.
 
 ### 5. Evidence and licensing
 
