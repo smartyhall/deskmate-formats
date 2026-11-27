@@ -12,6 +12,7 @@ from deskmate_formats.supervisor.bridge import grant as text_grant
 from deskmate_formats.supervisor.driver import DriverError, load_plan, read_record
 from deskmate_formats.supervisor.task_manifest import TaskError, validate_manifest
 from deskmate_formats.supervisor.task_queue import open_queue
+import execution_fixture
 from task_fixture import TaskRepo, TASK_PATH, manifest
 
 LICENSE = b'SPDX-FileCopyrightText: 2026 DeskMate Formats contributors\nSPDX-License-Identifier: GPL-3.0-or-later\n'
@@ -21,6 +22,14 @@ def make_repository(path):
     repo = TaskRepo(path)
     files = {
         'src/sample.py': b'def answer():\n    return 1\n',
+        'src/deskmate_formats/__init__.py': b'"""Synthetic workspace package."""\n',
+        'src/deskmate_formats/supervisor/__init__.py': b'',
+        'src/deskmate_formats/supervisor/repository_audit.py':
+            (Path(__file__).resolve().parents[2] /
+             'src/deskmate_formats/supervisor/repository_audit.py').read_bytes(),
+        'src/deskmate_formats/supervisor/draw_comparison_audit.py':
+            (Path(__file__).resolve().parents[2] /
+             'src/deskmate_formats/supervisor/draw_comparison_audit.py').read_bytes(),
         'tests/portable/test_s3_sample.py': b'import unittest\nfrom src.sample import answer\nclass Sample(unittest.TestCase):\n    def test_answer(self):\n        self.assertEqual(answer(), 1)\n',
         'tests/fixtures/application-generated/manifest.json': b'{"fixtures":[]}',
     }
@@ -43,6 +52,11 @@ class EditingTests(unittest.TestCase):
         self.repo, self.source, self.commit = make_repository(self.root / 'git')
         self.queue = self.root / 'queue'
         self.state = self.root / 'state'
+        # A qualified campaign environment at the accepted source revision is a
+        # precondition of the checkpoint, not something it may invent.
+        self.environment, self.environment_target, _ = execution_fixture.make_environment(
+            root=self.root / 'envs', checkout=self.repo.path,
+            campaign='synthetic-campaign', revision=self.source)
         with open_queue(self.queue, source=self.repo.source()) as queue:
             self.candidate = queue.discover(self.commit, TASK_PATH)
 
@@ -52,7 +66,8 @@ class EditingTests(unittest.TestCase):
 
     def prepare(self, mode='success'):
         return editing.grant(self.queue, self.state, 'sample', 1, self.candidate.review_token,
-                             task_class='source-edit-v1', authorize_checkpoint=True, mode=mode, timeout=2, deadline=4)
+                             task_class='source-edit-v1', authorize_checkpoint=True, mode=mode,
+                             timeout=2, deadline=4, environment=self.environment)
 
     def send(self, grant):
         return editing.dispatch(self.queue, self.state, grant['claim'], grant['plan_sha256'],
@@ -81,7 +96,24 @@ class EditingTests(unittest.TestCase):
         self.assertEqual(before, (run_root / 'checkpoint-outcome.json').read_bytes())
         plan, token = load_plan(run_root)
         with self.assertRaises(DriverError):
-            workspace.checkpoint(run_root, plan['edit_workspace'], token, token, {'state':'completed'})
+            workspace.checkpoint(run_root, plan['edit_workspace'], token, token,
+                                 {'state':'completed'}, execution=plan['execution'])
+
+    def test_a_checkpoint_without_a_qualified_environment_is_refused(self):
+        self.accept()
+        with self.assertRaises(DriverError):
+            editing.grant(self.queue, self.state, 'sample', 1, self.candidate.review_token,
+                          task_class='source-edit-v1', authorize_checkpoint=True, timeout=2,
+                          deadline=4)
+        # The refusal happens before a disposable workspace is cloned.
+        self.assertFalse((self.state / 'workspaces').exists())
+        with self.assertRaises(DriverError):
+            editing.grant(self.queue, self.state, 'sample', 1, self.candidate.review_token,
+                          task_class='source-edit-v1', authorize_checkpoint=True, timeout=2,
+                          deadline=4, environment={'campaign': 'absent',
+                                                   'checkout': str(self.repo.path),
+                                                   'root': str(self.root / 'absent')})
+        self.assertFalse((self.state / 'workspaces').exists())
 
     def test_unaccepted_and_text_bridge_refuse(self):
         with self.assertRaises(DriverError): self.prepare()
@@ -193,7 +225,7 @@ class EditingTests(unittest.TestCase):
                               # The synthetic peer answers in milliseconds of CPU, but this
                               # test asserts the grant matrix, not latency. A tight window
                               # turns a saturated host into a false "worker incomplete".
-                              timeout=10, deadline=30)
+                              timeout=10, deadline=30, environment=self.environment)
             run_root = self.state / g['claim']
             token = g['plan_sha256']
             for dispatch, checkpoint, model, risk in [(None,token,token,token),(token,None,token,token),

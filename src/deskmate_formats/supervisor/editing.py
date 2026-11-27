@@ -6,6 +6,7 @@ from hashlib import sha256
 from deskmate_formats.observer._private_storage import journal_lock, storage_directory
 from deskmate_formats.observer.events import encode_json
 from deskmate_formats.observer.journal import publish_event
+from . import execution_source
 from .bridge import accepted, _claim, _state
 from .driver import (DriverError, S3_MAX_OBSERVATION_SECONDS, implementation_hashes, load_plan,
                      prepare, run, valid_observation_bounds, write_record)
@@ -94,7 +95,8 @@ def material(queue, binding):
 
 def grant(queue_directory, state_directory, identifier, revision, review_token, *, task_class,
           authorize_checkpoint=False, mode="success", executable=None, model=None, effort=None,
-          profile=None, auth_file=None, windows_sandbox=None, timeout=10, deadline=S3_MAX_OBSERVATION_SECONDS):
+          profile=None, auth_file=None, windows_sandbox=None, timeout=10,
+          deadline=S3_MAX_OBSERVATION_SECONDS, environment=None):
     if task_class != "source-edit-v1" or authorize_checkpoint is not True:
         raise DriverError("explicit editing class and local checkpoint plan selection required")
     if not valid_observation_bounds(timeout, deadline, editing=True):
@@ -110,6 +112,10 @@ def grant(queue_directory, state_directory, identifier, revision, review_token, 
             if run_root.exists():
                 raise DriverError("task claim already prepared; no replacement or retry")
             source, manifest, context = material(queue, binding)
+            # Select the owned interpreter before anything is cloned: a missing
+            # or stale environment must fail preparation without leaving a
+            # disposable workspace behind.
+            selection = _selection(environment, manifest["development"]["source_revision"])
             if executable is not None:
                 if profile != "experimental-lab":
                     raise DriverError("live editing requires experimental-lab")
@@ -122,12 +128,46 @@ def grant(queue_directory, state_directory, identifier, revision, review_token, 
                                          root / "workspaces", binding, manifest["development"])
             workspace.update(execution_generation=workspace["identity"], private_output=str(run_root),
                              evidence=str(run_root / "evidence"))
+            execution = _execution(selection, workspace, run_root)
             token = prepare(run_root, binding=binding, task_context=context, edit_workspace=workspace,
                             mode=mode, executable=executable, model=model if executable else "synthetic",
                             effort=effort if executable else "low", profile=profile, auth_file=auth_file,
-                            timeout=timeout, deadline=deadline, windows_sandbox=windows_sandbox)
+                            timeout=timeout, deadline=deadline, windows_sandbox=windows_sandbox,
+                            execution=execution)
             return {"claim": run_root.name, "plan_sha256": token, "binding": binding,
                     "workspace": workspace["path"], "dispatched": False}
+
+
+def _selection(environment, revision):
+    """Read and prove the campaign environment named for this task.
+
+    The selection is refused unless the environment's own record is qualified
+    for this revision, so an unprepared or stale environment cannot be adopted
+    silently at the moment a checkpoint would run.
+    """
+    if environment is None:
+        raise DriverError("source-bound checkpoint requires --environment-campaign and "
+                          "--environment-checkout")
+    if (type(environment) is not dict
+            or set(environment) - {"campaign", "checkout", "root"}
+            or not environment.get("campaign") or not environment.get("checkout")):
+        raise DriverError("invalid campaign environment selection")
+    try:
+        return execution_source.select_environment(
+            str(environment["campaign"]), str(environment["checkout"]),
+            root=environment.get("root"), revision=revision)
+    except execution_source.ExecutionSourceError as error:
+        raise DriverError("campaign environment refused: " + error.code) from None
+
+
+def _execution(selection, workspace, run_root):
+    """Bind the disposable workspace to the already-qualified interpreter."""
+    try:
+        return execution_source.workspace_execution(
+            workspace["path"], environment=selection, revision=workspace["initial_head"],
+            report_path=run_root / "execution-child.json")
+    except execution_source.ExecutionSourceError as error:
+        raise DriverError("bound workspace refused: " + error.code) from None
 
 
 def dispatch(queue_directory, state_directory, claim, authorization, *, checkpoint_authorization,
@@ -165,7 +205,8 @@ def dispatch(queue_directory, state_directory, claim, authorization, *, checkpoi
             worker = run(run_root, authorization=model_authorization if live else authorization,
                          accepted_binding=binding, lab_risk_ack=lab_risk_ack, dispatch_authorization=authorization,
                          checkpoint_authorization=checkpoint_authorization)
-            result = checkpoint(run_root, plan["edit_workspace"], checkpoint_authorization, token, worker)
+            result = checkpoint(run_root, plan["edit_workspace"], checkpoint_authorization, token, worker,
+                                execution=plan["execution"])
             try:
                 publish_event(run_root / "spool", {
                     "schema_version": 1, "source": "supervisor-s3", "agent_id": "supervisor-s3",

@@ -1,0 +1,50 @@
+{
+  "agent_label": "Freebuff Desktop native session (local shell and file tools)",
+  "attribution_limitations": [
+    "A shared account meter cannot be attributed to one campaign.",
+    "Token counts, context utilization and allowance hours are distinct units with no verified exchange relationship."
+  ],
+  "campaign_id": "freebuff-supervisor-observatory-20261126",
+  "checkpoint": "source-bound-execution-completion",
+  "checkpoint_status": "complete: the production launch inventory is classified, workspace-bound procedures require a qualified campaign environment, the isolated bootstrap binds and verifies the accepted checkout before the reviewed target runs, the original -I/PYTHONPATH defect is reproduced with synthetic checkouts, and focused local checks plus exact-head CI passed. The pull request remains open for independent review; no merge, no live task and no #204 canary were performed.",
+  "coverage": "this campaign only; shared account state is not attributable",
+  "evidence": [
+    "docs/research/source-bound-execution-20261127.md",
+    "docs/research/source-bound-execution-procedure.md",
+    "src/deskmate_formats/supervisor/execution_source.py",
+    "tests/portable/test_supervisor_execution_source.py",
+    "docs/evidence/agent-usage/freebuff-source-bound-execution-20261127.json"
+  ],
+  "execution_mode": "interactive local desktop session; no unattended dispatch, no model API call, no provider endpoint contacted",
+  "git_revision": null,
+  "git_revision_note": "The exact head, its CI results and the verification comment are recorded in the pull request; no revision is guessed here.",
+  "measurement_note": "No measurement was observed. A missing measurement is recorded as absent, never as zero.",
+  "measurements": [],
+  "model": {
+    "note": "The client model selector and runtime model identity were not observed at any checkpoint.",
+    "reasoning_effort": null,
+    "runtime_identity": null,
+    "selected_label": null
+  },
+  "observed_at_utc": "2026-11-27T14:12:18Z",
+  "privacy": "No transcript, credential, account identifier or private path is included.",
+  "provider": "freebuff",
+  "receipt_written_utc": "2026-11-27T14:12:18Z",
+  "schema_version": 1,
+  "source": {
+    "detail": "No programmatic usage interface is available to this session; the desktop context tooltip was not read.",
+    "kind": "unavailable",
+    "version": "Freebuff Desktop, native local session; build identifier not observed"
+  },
+  "verification": {
+    "ci": "required matrix passed on the reviewed head in the pull request",
+    "local": "focused suites, ruff, reuse lint, repository audit, wheel build",
+    "not_performed": [
+      "live or unattended task dispatch",
+      "GitHub-to-laboratory canary for issue #204",
+      "emulator or native experiment",
+      "paid provider call",
+      "merge of this pull request"
+    ]
+  }
+}

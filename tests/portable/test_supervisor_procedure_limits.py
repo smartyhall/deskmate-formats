@@ -7,6 +7,7 @@ import unittest
 from unittest.mock import patch
 
 from deskmate_formats.supervisor import deterministic, procedures
+from execution_fixture import binding_stub
 
 
 class ProcedureContractTests(unittest.TestCase):
@@ -29,7 +30,7 @@ class ProcedureContractTests(unittest.TestCase):
 
     def test_package_build_refuses_isolation_and_offline_variables_are_set(self):
         argv = procedures.build("package-build", {}, artifacts="/tmp/out",
-                                working_directory="/tmp")
+                                working_directory="/tmp", execution=binding_stub())
         self.assertIn("--no-isolation", argv)
         self.assertEqual(procedures.descriptor("package-build")["network"], "no-isolation")
         env = deterministic.environment("/tmp/out", "/tmp")

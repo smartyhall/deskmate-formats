@@ -10,7 +10,8 @@ import unittest
 from unittest.mock import patch
 
 from deskmate_formats.observer.events import encode_json
-from deskmate_formats.supervisor import driver
+from deskmate_formats.supervisor import driver, execution_source
+import execution_fixture
 
 
 class WindowsBackendTests(unittest.TestCase):
@@ -18,15 +19,31 @@ class WindowsBackendTests(unittest.TestCase):
         self.root = Path(self.enterContext(TemporaryDirectory()))
         self.auth = self.root / 'auth.json'
         self.auth.write_text('{"OPENAI_API_KEY":"synthetic-not-a-key"}')
+        # An editing plan must name a real bound checkout, so this suite uses a
+        # tiny synthetic repository and a qualified disposable environment
+        # rather than asserting the backend policy against an unbound path.
+        self.checkout, self.head = execution_fixture.make_checkout(
+            self.root / 'checkout', marker='backend')
+        self.environment, _, _ = execution_fixture.make_environment(
+            root=self.root / 'envs', checkout=self.checkout,
+            campaign='synthetic-backend', revision=self.head)
         self.enterContext(patch.object(driver, 'verify_native', return_value=str(Path(sys.executable).resolve())))
         self.enterContext(patch.object(driver, 'task_prompt', return_value='offline synthetic context'))
         self.enterContext(patch.object(driver, 'AppServer', side_effect=AssertionError('native launch forbidden')))
 
     def prepare(self, **kw):
         root = self.root / 'run'
+        selection = execution_source.select_environment(
+            self.environment['campaign'], self.environment['checkout'],
+            root=self.environment['root'], revision=self.head)
+        execution = execution_source.workspace_execution(
+            self.checkout, environment=selection, revision=self.head,
+            report_path=self.root / 'execution-child.json')
         driver.prepare(root, executable=sys.executable, model='synthetic-selected', effort='low',
                        profile='experimental-lab', auth_file=self.auth, binding={},
-                       task_context={'class':'source-edit-v1'}, edit_workspace={'path':str(self.root)}, **kw)
+                       task_context={'class':'source-edit-v1'},
+                       edit_workspace={'path':str(self.checkout.resolve()), 'initial_head': self.head},
+                       execution=execution, **kw)
         return root, driver.load_plan(root)
 
     def test_disabled_or_unsupported_backend_refused_without_staging(self):

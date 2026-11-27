@@ -1,0 +1,41 @@
+{
+  "agent_label": "Freebuff Desktop native session (local shell and file tools)",
+  "attribution_limitations": [
+    "A shared account meter cannot be attributed to one campaign.",
+    "Token counts, context utilization and allowance hours are distinct units with no verified exchange relationship.",
+    "Cumulative thread usage reported by the desktop UI is not a per-campaign charge."
+  ],
+  "campaign_id": "freebuff-supervisor-observatory-20261126",
+  "checkpoint": "source-bound-execution",
+  "checkpoint_status": "workspace publication audits and isolated child launches bound to the accepted checkout and a qualified campaign environment; production launch sites inventoried and classified; the pre-correction defect reproduced with synthetic checkouts and a conflicting disposable installation; focused local checks recorded; exact-head CI pending at the time this receipt was written",
+  "coverage": "this campaign only; shared account state is not attributable",
+  "evidence": [
+    "docs/research/source-bound-execution-20261127.md",
+    "docs/research/source-bound-execution-procedure.md",
+    "src/deskmate_formats/supervisor/execution_source.py",
+    "src/deskmate_formats/supervisor/deterministic.py",
+    "src/deskmate_formats/supervisor/workspace.py",
+    "tests/portable/test_supervisor_execution_source.py"
+  ],
+  "execution_mode": "interactive local desktop session; no unattended dispatch, no model API call, no provider endpoint contacted",
+  "git_revision": null,
+  "git_revision_note": "The receipt was written before the checkpoint commit was created; the commit is recorded in the pull request, not guessed here.",
+  "measurement_note": "No measurement was observed. A missing measurement is recorded as absent, never as zero.",
+  "measurements": [],
+  "model": {
+    "note": "The client model selector and runtime model identity were not observed at any checkpoint.",
+    "reasoning_effort": null,
+    "runtime_identity": null,
+    "selected_label": null
+  },
+  "observed_at_utc": "2026-11-27T13:15:09Z",
+  "privacy": "No transcript, credential, account identifier or private path is included.",
+  "provider": "freebuff",
+  "receipt_written_utc": "2026-11-27T13:15:09Z",
+  "schema_version": 1,
+  "source": {
+    "detail": "No programmatic usage interface is available to this session; the desktop context tooltip was not read.",
+    "kind": "unavailable",
+    "version": "Freebuff Desktop, native local session; build identifier not observed"
+  }
+}

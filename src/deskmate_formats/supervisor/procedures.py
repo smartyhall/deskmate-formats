@@ -20,6 +20,8 @@ import re
 import sys
 from pathlib import Path
 
+from . import execution_source
+
 MAX_ARGUMENTS = 8
 MAX_PATHS = 64
 MAX_FILE_BYTES = 64 * 1024 * 1024
@@ -136,6 +138,7 @@ class Procedure:
     inputs: tuple[str, ...] = ()
     modules: tuple[str, ...] = ()
     network: str = "none"
+    source: str = execution_source.CONTROLLER
 
     def normalize(self, arguments):
         if type(arguments) is not dict:
@@ -144,10 +147,21 @@ class Procedure:
             raise ProcedureError("unexpected procedure argument")
         return self.validate(arguments)
 
-    def argv(self, arguments, *, interpreter, artifacts, working_directory):
-        """Return the exact argument vector for normalized arguments."""
-        return [str(interpreter), *self.build(self.normalize(arguments), artifacts,
-                                              str(working_directory))]
+    def argv(self, arguments, *, interpreter, artifacts, working_directory, execution=None):
+        """Return the exact argument vector for normalized arguments.
+
+        A workspace procedure cannot be built without the binding that names
+        which checkout the child will import, so the binding is a required
+        argument for those procedures rather than an optional annotation.
+        """
+        step = self.build(self.normalize(arguments), artifacts, str(working_directory))
+        if self.source != execution_source.WORKSPACE:
+            return [str(interpreter), *step]
+        if execution is None:
+            raise ProcedureError("a workspace procedure requires a bound execution source")
+        mode, target, arguments = _workspace_step(step)
+        return execution_source.bound_argv(execution, mode=mode, target=target,
+                                           arguments=arguments)
 
 
 def _interpreter():
@@ -155,6 +169,21 @@ def _interpreter():
     if not path.is_file():
         raise ProcedureError("the running Python interpreter is unavailable")
     return path
+
+
+def _workspace_step(step):
+    """Split a repository-code step into the target the bootstrap may run.
+
+    Only two reviewed shapes exist: ``-m <module> [arguments]`` and
+    ``-I -c <reviewed code>``.  Anything else is refused instead of being
+    passed through as an unbound vector, so a future workspace procedure cannot
+    silently regress to launching without a binding.
+    """
+    if len(step) >= 2 and step[0] == "-m":
+        return "module", step[1], list(step[2:])
+    if len(step) == 3 and step[0] == "-I" and step[1] == "-c":
+        return "code", step[2], []
+    raise ProcedureError("workspace procedure did not declare a runnable target")
 
 
 def _safe_path(value, label="path"):
@@ -243,23 +272,23 @@ def _build_package(arguments, artifacts, working):
 
 
 _PROCEDURES = {
-    "portable-tests": Procedure(
-        "portable-tests", "Run a reviewed portable unittest discovery scope.",
+    "portable-tests": Procedure        ("portable-tests", "Run a reviewed portable unittest discovery scope.",
         ("portable-tests",), 1800, ("scope",), _portable_tests, _build_portable_tests,
         executes=REPOSITORY_CODE,
         inputs=("src/**/*.py", "tests/portable/**/*", "pyproject.toml"),
-        modules=("unittest",)),
+        modules=("unittest",), source=execution_source.WORKSPACE),
     "repository-audit": Procedure(
         "repository-audit", "Run the portable repository content audit.",
         ("source-read",), 600, (), _no_arguments, _build_audit,
         executes=REPOSITORY_CODE,
         inputs=("src/**/*", "tests/**/*", "docs/**/*", "tools/**/*", "*.md", "*.toml"),
-        modules=("deskmate_formats.supervisor.repository_audit",)),
+        modules=("deskmate_formats.supervisor.repository_audit",),
+        source=execution_source.WORKSPACE),
     "reuse-lint": Procedure(
         "reuse-lint", "Run the REUSE/SPDX licensing declaration check.",
         ("source-read",), 600, (), _no_arguments, _build_reuse,
         executes=THIRD_PARTY_TOOL,
-        inputs=("**/*",), modules=("reuse",)),
+        inputs=("**/*",), modules=("reuse",), source=execution_source.EXTERNAL),
     "hash-files": Procedure(
         "hash-files", "Hash named tracked files and print a structured receipt.",
         ("source-read",), 300, ("paths",), _paths_only, _build_hash),
@@ -271,7 +300,7 @@ _PROCEDURES = {
         ("portable-tests",), 900, (), _no_arguments, _build_package,
         executes=REPOSITORY_CODE,
         inputs=("pyproject.toml", "README.md", "src/**/*", "LICENSES/**/*"),
-        modules=("build",), network="no-isolation"),
+        modules=("build",), network="no-isolation", source=execution_source.WORKSPACE),
 }
 
 
@@ -292,6 +321,7 @@ def descriptor(name):
     return {"name": spec.name, "summary": spec.summary,
             "resources": list(spec.resources), "timeout_seconds": spec.timeout_seconds,
             "arguments": list(spec.arguments), "executes": spec.executes,
+            "execution_source": spec.source,
             "inputs": list(spec.inputs), "modules": list(spec.modules),
             "network": spec.network,
             "limits": {"file_bytes": MAX_FILE_BYTES, "total_bytes": MAX_TOTAL_BYTES,
@@ -307,12 +337,12 @@ def validate(name, arguments):
     return get(name).normalize(arguments)
 
 
-def build(name, arguments, *, artifacts, working_directory, interpreter=None):
+def build(name, arguments, *, artifacts, working_directory, interpreter=None, execution=None):
     """Assemble the reviewed argument vector for one procedure invocation."""
     spec = get(name)
     interpreter = _interpreter() if interpreter is None else Path(interpreter)
     return spec.argv(arguments, interpreter=interpreter, artifacts=artifacts,
-                     working_directory=working_directory)
+                     working_directory=working_directory, execution=execution)
 
 
 def resources(name):

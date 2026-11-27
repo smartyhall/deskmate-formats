@@ -14,7 +14,8 @@ from unittest.mock import patch
 
 from deskmate_formats.observer._private_storage import storage_directory
 from deskmate_formats.observer.events import encode_json
-from deskmate_formats.supervisor import driver, editing, workspace
+from deskmate_formats.supervisor import driver, editing, execution_source, workspace
+from execution_fixture import binding_stub
 from deskmate_formats.supervisor.editing_cli import main
 from deskmate_formats.supervisor.task_queue import open_queue
 from task_fixture import TASK_PATH, manifest
@@ -45,19 +46,30 @@ class TimeoutPolicyTests(unittest.TestCase):
     def test_validation_profile_limits_and_partial_output_timeout_receipts(self):
         base = Path(self.enterContext(TemporaryDirectory()))
         root = storage_directory(base / "receipts", create=True)
-        cases = (("test-portable-full", workspace.TEST_PROFILES["portable-full"], 1800),
-                 ("test-synthetic-unit", workspace.TEST_PROFILES["synthetic-unit"], 600),
-                 ("publication-audit", ["-I", "-c", workspace.AUDIT], 600),
-                 ("reuse", ["-m", "reuse", "lint"], 600))
-        for label, args, limit in cases:
+        binding = binding_stub()
+        cases = (("test-portable-full",
+                  ("module", *workspace.TEST_PROFILES["portable-full"]), 1800),
+                 ("test-synthetic-unit",
+                  ("module", *workspace.TEST_PROFILES["synthetic-unit"]), 600),
+                 ("publication-audit", ("code", workspace.AUDIT), 600),
+                 ("reuse", ("tool", "-m", "reuse", "lint"), 600))
+        for label, step, limit in cases:
             with self.subTest(label=label):
                 def timeout(argv, **kwargs):
-                    self.assertEqual(argv, [str(Path(sys.executable).resolve()), *args])
+                    if step[0] == "tool":
+                        self.assertEqual(argv, [str(Path(sys.executable).resolve()),
+                                                *step[1:]])
+                    else:
+                        self.assertEqual(argv[:4], [str(Path(sys.executable).resolve()),
+                                                    "-I", "-c",
+                                                    execution_source.BOOTSTRAP])
+                        self.assertEqual(argv[7:9], [step[0], step[1]])
                     self.assertEqual(kwargs["timeout"], limit)
                     kwargs["stdout"].write(b"partial validation output\n")
                     raise subprocess.TimeoutExpired(argv, kwargs["timeout"])
                 with patch.object(workspace.subprocess, "run", side_effect=timeout):
-                    receipt = workspace.command(root, base, label, args)
+                    receipt = workspace.command(root, base, label, step,
+                                                execution=binding)
                 self.assertEqual(receipt, driver.read_record(root / (label + ".json")))
                 self.assertEqual(receipt["exit_status"], "timeout")
                 self.assertEqual(receipt["timeout_seconds"], limit)
@@ -73,13 +85,17 @@ class EditingTimeoutTests(unittest.TestCase):
     def prepare(self, *, deadline=300, mode="success"):
         return editing.grant(self.queue, self.state, "sample", 1, self.candidate.review_token,
                              task_class="source-edit-v1", authorize_checkpoint=True,
-                             deadline=deadline, mode=mode, timeout=2)
+                             deadline=deadline, mode=mode, timeout=2,
+                             environment=self.environment)
 
     def cli_prepare(self, seconds):
         with redirect_stdout(StringIO()) as out, redirect_stderr(StringIO()) as err:
             code = main(["--state", str(self.state), "prepare-synthetic", "--queue", str(self.queue),
                          "sample", "1", "--accepted-review-token", self.candidate.review_token,
                          "--task-class", "source-edit-v1", "--plan-local-checkpoint",
+                         "--environment-campaign", self.environment["campaign"],
+                         "--environment-checkout", self.environment["checkout"],
+                         "--environment-root", self.environment["root"],
                          "--observation-seconds", str(seconds)])
         return code, json.loads(out.getvalue()) if out.getvalue() else err.getvalue()
 
@@ -159,7 +175,8 @@ class EditingTimeoutTests(unittest.TestCase):
         grant = self.prepare()
         real_run = subprocess.run
         def timeout(argv, **kwargs):
-            if argv[1:] == workspace.TEST_PROFILES["portable-full"]:
+            if (len(argv) > 9 and argv[7] == "module" and argv[8] == "unittest"
+                    and argv[9:] == list(workspace.TEST_PROFILES["portable-full"][1])):
                 self.assertEqual(kwargs["timeout"], 1800)
                 kwargs["stdout"].write(b"portable-full partial output\n")
                 raise subprocess.TimeoutExpired(argv, kwargs["timeout"])
@@ -177,4 +194,28 @@ class EditingTimeoutTests(unittest.TestCase):
         with self.assertRaises(driver.DriverError): self.send(grant)
         plan, token = driver.load_plan(root)
         with self.assertRaises(driver.DriverError):
-            workspace.checkpoint(root, plan["edit_workspace"], token, token, {"state": "completed"})
+            workspace.checkpoint(root, plan["edit_workspace"], token, token,
+                                 {"state": "completed"}, execution=plan["execution"])
+
+    def test_a_later_step_cannot_inherit_an_earlier_steps_child_report(self):
+        self.accept()
+        grant = self.prepare()
+        real_run = subprocess.run
+        def silent_audit(argv, **kwargs):
+            if len(argv) > 7 and argv[7] == "code":
+                kwargs["stdout"].write(b"")
+                return subprocess.CompletedProcess(argv, 0)
+            return real_run(argv, **kwargs)
+        with patch.object(subprocess, "run", side_effect=silent_audit):
+            result = self.send(grant)
+        self.assertEqual(result["state"], "blocked", result)
+        steps = {item["step"]: item for item in result["validation"]}
+        earlier = next(item for name, item in steps.items() if name.startswith("test-"))
+        self.assertTrue(earlier["execution_verified"], earlier)
+        audit = steps["publication-audit"]
+        self.assertEqual((audit["exit_status"], audit["state"]), (0, "failed"))
+        self.assertFalse(audit["execution_verified"], audit)
+        self.assertEqual(audit["child"]["state"], "report-missing")
+        self.assertNotEqual(audit["child"]["path"], earlier["child"]["path"])
+        self.assertTrue(Path(earlier["child"]["path"]).is_file())
+        self.assertFalse(Path(audit["child"]["path"]).exists())
