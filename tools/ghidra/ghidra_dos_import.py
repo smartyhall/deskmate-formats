@@ -293,6 +293,27 @@ def _missing_fields(mapping, keys: tuple[str, ...], prefix: str) -> list[str]:
     ]
 
 
+def _mapping(value) -> dict:
+    """Read a nested section of a document as a mapping.
+
+    A section that is present but is a string, list or number is a malformed
+    document, not an object with absent fields. Reading it as empty keeps the
+    identity comparisons that follow from raising: a receipt must be rejected
+    with reported problems, never crash the validator that is meant to reject
+    it. The wrong type is reported separately by ``_shape_problems``.
+    """
+    return value if isinstance(value, dict) else {}
+
+
+def _shape_problems(document: dict, names: tuple[str, ...]) -> list[str]:
+    """Report nested sections that are present but are not JSON objects."""
+    return [
+        f"{name} is {type(document[name]).__name__}, not a JSON object"
+        for name in names
+        if document.get(name) is not None and not isinstance(document[name], dict)
+    ]
+
+
 def validate_receipt(
     receipt: dict,
     *,
@@ -311,6 +332,19 @@ def validate_receipt(
         return ["receipt is not a JSON object"]
 
     problems += _missing_fields(receipt, REQUIRED_FIELDS["always"], "")
+    problems += _shape_problems(
+        receipt,
+        (
+            "attempt",
+            "input",
+            "requested",
+            "project",
+            "program",
+            "persistence",
+            "resolved_language",
+            "reopen",
+        ),
+    )
 
     schema = receipt.get("schema")
     if schema is not None and schema != RECEIPT_SCHEMA:
@@ -336,14 +370,14 @@ def validate_receipt(
         problems.append(f"outcome {outcome!r} is not a recognised terminal outcome")
 
     if input_sha256 is not None:
-        found = (receipt.get("input") or {}).get("sha256")
+        found = _mapping(receipt.get("input")).get("sha256")
         if found is not None and found != input_sha256:
             problems.append(
                 "input.sha256 does not describe the file this attempt was given "
                 f"({found!r} != {input_sha256!r})"
             )
 
-    requested = receipt.get("requested") or {}
+    requested = _mapping(receipt.get("requested"))
     if project is not None and requested.get("project") != project:
         problems.append(
             f"requested.project is {requested.get('project')!r}, expected {project!r}"
@@ -365,16 +399,16 @@ def validate_receipt(
             problems += _missing_fields(
                 receipt.get(section), REQUIRED_FIELDS[section], f"{section}."
             )
-        program = receipt.get("program") or {}
+        program = _mapping(receipt.get("program"))
         content = program.get("content_sha256")
         if content is not None and not SHA256_RE.match(str(content)):
             problems.append("program.content_sha256 is not a SHA-256 digest")
-        recorded = receipt.get("project") or {}
+        recorded = _mapping(receipt.get("project"))
         if project is not None and recorded.get("name") != project:
             problems.append(
                 f"project.name is {recorded.get('name')!r}, expected {project!r}"
             )
-        persistence = receipt.get("persistence") or {}
+        persistence = _mapping(receipt.get("persistence"))
         for stage in ("save", "close"):
             if persistence.get(stage) not in (None, "ok"):
                 problems.append(
