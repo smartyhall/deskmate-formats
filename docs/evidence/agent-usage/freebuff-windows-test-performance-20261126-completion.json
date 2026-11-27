@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "provider": "Freebuff",
+  "agent": "Freebuff desktop agent",
+  "campaign_id": "freebuff-windows-test-performance-20261126",
+  "checkpoint": "completion",
+  "observed_at_utc": "2026-11-27T02:50:00Z",
+  "git_revision": null,
+  "git_revision_note": "The receipt ships with the commit it describes, so it cannot contain that commit's own identity. The branch freebuff/windows-test-performance-under-concurrent-load and pull request #199 carry it.",
+  "execution_mode": "local desktop agent in one dedicated worktree on the shared laboratory VM; measurement commands run against this checkout only; no other campaign's worktree, branch or process was modified",
+  "model": null,
+  "reasoning_effort": null,
+  "model_note": "Not exposed to agent tools. No paid provider was connected, no credits purchased, no additional AI worker launched, and no other campaign's agent was altered.",
+  "source": {
+    "kind": "local allowlisted collector",
+    "version": "deskmate_formats.perf report schema 1",
+    "detail": "Instrumented test runs and microbenchmark reports written by this campaign's own harness, plus the home-directory campaign registry."
+  },
+  "coverage": "Two full portable suite executions on 2026-11-26 and 2026-11-27 (727 and 799 tests), one controlled two-arm fixture comparison, one bounded microbenchmark session of 8 iterations across 12 benchmarks, and a before/after comparison pass. Host conditions recorded by the harness for every run.",
+  "attribution_limits": "Host CPU, memory, process and thread counts describe a shared VM and are not provider consumption. Suite wall-clock is test execution time, not agent session time. Microbenchmark durations are host observations. No per-campaign or account-level provider allowance is observable to the agent.",
+  "status": "complete: reusable harness published, two-run structural analysis, one import defect corrected (recovering 72 tests), one cross-campaign version-skew hazard documented, one test-synchronization finding handed to the branch that already fixes it",
+  "measurements": [
+    {
+      "name": "instrumented_suite_runs",
+      "value": 5,
+      "unit": "runs",
+      "scope": "campaign",
+      "semantics": "cumulative",
+      "observed_at": "completion",
+      "reset_boundary": null
+    },
+    {
+      "name": "full_portable_suite_runs",
+      "value": 2,
+      "unit": "runs",
+      "scope": "campaign",
+      "semantics": "cumulative",
+      "observed_at": "completion",
+      "reset_boundary": null
+    },
+    {
+      "name": "measured_test_wall_clock",
+      "value": 2249,
+      "unit": "seconds",
+      "scope": "campaign",
+      "semantics": "cumulative",
+      "observed_at": "completion",
+      "reset_boundary": null
+    },
+    {
+      "name": "traced_process_spawns",
+      "value": 16765,
+      "unit": "spawns",
+      "scope": "campaign",
+      "semantics": "cumulative",
+      "observed_at": "completion",
+      "reset_boundary": null
+    },
+    {
+      "name": "microbenchmark_iterations",
+      "value": 96,
+      "unit": "iterations",
+      "scope": "campaign",
+      "semantics": "cumulative",
+      "observed_at": "completion",
+      "reset_boundary": null
+    }
+  ],
+  "measurement_note": "Provider allowance, tokens, context size and quota remain unobservable to the agent; no figure is estimated or inferred from a shared account meter. measured_test_wall_clock sums instrumented test execution only and excludes agent session time: 1284.3 s + 918.6 s for the two full runs, plus 45.8 s across the smoke run and the two-arm fixture comparison. Campaign activity counts are reported as activity, not as provider consumption.",
+  "private_evidence": "Raw run JSON, host timelines, logs, comparison artifacts and the campaign registry are retained outside Git under the laboratory private-evidence directory; only the harness, the analysis and these reviewed receipts are published."
+}

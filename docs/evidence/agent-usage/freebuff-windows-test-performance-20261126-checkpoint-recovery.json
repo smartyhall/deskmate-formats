@@ -22,7 +22,7 @@
   "measurements": [
     {
       "name": "instrumented_suite_runs",
-      "value": 5,
+      "value": 4,
       "unit": "runs",
       "scope": "campaign",
       "semantics": "cumulative",
@@ -40,7 +40,7 @@
     },
     {
       "name": "measured_test_wall_clock",
-      "value": 1312,
+      "value": 1330,
       "unit": "seconds",
       "scope": "campaign",
       "semantics": "cumulative",
@@ -49,7 +49,7 @@
     },
     {
       "name": "traced_process_spawns",
-      "value": 8304,
+      "value": 8748,
       "unit": "spawns",
       "scope": "campaign",
       "semantics": "cumulative",
@@ -57,6 +57,6 @@
       "reset_boundary": null
     }
   ],
-  "measurement_note": "Provider allowance, tokens, context size and quota remain unobservable to the agent; no figure is estimated or inferred from a shared account meter. measured_test_wall_clock sums instrumented test execution only and excludes agent session time. Campaign activity counts are reported as activity, not as provider consumption.",
+  "measurement_note": "Provider allowance, tokens, context size and quota remain unobservable to the agent; no figure is estimated or inferred from a shared account meter. measured_test_wall_clock sums instrumented test execution only and excludes agent session time: 1284.3 s for the full baseline plus 45.8 s across the smoke run and the two-arm fixture comparison. The second full run was still executing at checkpoint time and is not included. Campaign activity counts are reported as activity, not as provider consumption.",
   "private_evidence": "Raw run JSON, host timelines, logs and the campaign registry are retained outside Git under the laboratory private-evidence directory; only the harness, the analysis and this reviewed receipt are published."
 }

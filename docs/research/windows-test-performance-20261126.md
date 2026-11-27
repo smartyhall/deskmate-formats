@@ -1,8 +1,9 @@
 # Windows portable-suite performance under concurrent laboratory load
 
-**Status:** baseline recovered and analysed; one measurement defect corrected,
-one test-synchronization defect confirmed (fixed on PR #191, not duplicated
-here); remaining items listed as open
+**Status:** two full runs analysed (concurrent load, less contended); an import
+defect corrected, which recovers 72 tests that never ran; one genuine failure
+confirmed in both runs as a race and already fixed on PR #191; a cross-campaign
+wheel-skew hazard documented; remaining items listed as open
 **Date:** 2026-11-26 (baseline), 2026-11-27 (recovery and comparison)
 **Host:** Windows 10 Pro 10.0.19045, 6 vCPU, 8 GiB RAM, shared laboratory VM
 **Base revision:** `b5e525002b150352a8995de1bcddfbc5dc18a838`
@@ -29,18 +30,25 @@ comparable, so every run records its own host timeline and its own revision.
 Absolute durations below are *observations under stated conditions*, not
 constants.
 
-| | Baseline (concurrent load) | Recovery window (lower contention) |
+| | Baseline (concurrent load) | Second run (less contended) |
 | --- | --- | --- |
-| Window (UTC) | 2026-11-26 09:29:02 – 09:50:27 | 2026-11-27 02:25:58 – 02:26:06 (sample) |
-| CPU total, mean / max | **82.9 % / 99.8 %** | **50.5 % / 51.3 %** |
-| Available memory, mean | 2.8 GiB (min 1.9 GiB) | 3.25 GiB |
-| Processes, mean / max | 228.9 / 253 | 207 |
-| Threads, mean | 1983.7 | 1932 |
-| Samples | 252 (5 s interval) | 9 (1 s interval) |
+| Window (UTC) | 2026-11-26 09:29:02 – 09:50:27 | 2026-11-27 02:27:43 – 02:43:02 |
+| CPU total, mean / max | **82.9 % / 99.8 %** | **60.5 % / 92.0 %** |
+| Available memory, mean / min | 2.8 GiB / 1.9 GiB | 3.1 GiB / 2.3 GiB |
+| Processes, mean / max | 228.9 / 253 | 209.2 / 235 |
+| Threads, mean | 1983.7 | 1920.9 |
+| Samples (5 s interval) | 252 | 183 |
 
 The baseline was taken while other campaigns were executing on the same VM. That
 workload is not reproducible on demand, so those numbers are preserved as the
 recorded concurrent-load condition rather than replaced by a quieter one.
+
+The second run was labelled "lower contention" on the strength of a sample taken
+just before it (50.5 % CPU, 207 processes). Its own timeline tells a more honest
+story: the mean was 60.5 % with peaks at 92 %, because another campaign started
+work while it was running. It is therefore a *less* contended window than the
+baseline and a *not idle* one — the comparison below is between two loaded
+windows, not between load and quiet.
 
 ## 3. Where the time goes (measured)
 
@@ -91,6 +99,67 @@ Five Supervisor modules hold 77.3 % of the suite. The non-Supervisor modules are
 small: `test_draw_writer` 19.8 s (16 tests) and `test_calendar_multicalendar`
 11.5 s (19 tests) together cost less than one Git-heavy Supervisor test.
 
+### 3.1 The same suite in a less contended window
+
+The second run is not a before/after: it also fixes the import defect in §5.1,
+so it *discovers 72 more tests* than the baseline. It does, however, give a
+second observation of the same structure under different load:
+
+| | Baseline | Second run |
+| --- | --- | --- |
+| Tests discovered | 727 | **799** |
+| Suite wall | 1284.3 s | 918.6 s |
+| Process CPU | 197.1 s (ratio 0.154) | 136.6 s (ratio 0.149) |
+| Git spawns, slowest test | 1 281 | 1 275 |
+| Tests holding 80 % of wall | 46 of 727 (6.33 %) | 46 of 799 (5.76 %) |
+| Top module share | 29.6 % | 28.7 % |
+
+Three things are stable across both windows and do not depend on load:
+
+- **The same 46 tests hold 80 % of the time.** The concentration is a property
+  of the suite, not of the host.
+- **Spawn counts barely move** (1 281 → 1 275 for the slowest test). Spawn count
+  is a load-independent metric and the right one to compare; wall time is not.
+- **The CPU ratio is unchanged** (0.154 vs 0.149). The suite waits for the same
+  proportion of its time when the host is less busy; the wait shrinks but does
+  not disappear.
+
+`deskmate-test-perf compare` reports these two runs as **not comparable** —
+different test counts and a 22-point CPU difference — and declines to state a
+speedup. That is the intended behaviour, and the reason the 1284.3 s → 918.6 s
+difference is *not* claimed as an improvement anywhere in this document. The
+four slowest tests fall from 128.9/127.0/116.8/91.5 s to
+100.8/92.4/74.5/69.8 s, which is consistent with less contention and with
+nothing else.
+
+### 3.2 What a process round-trip actually costs here
+
+Bounded microbenchmarks, 8 iterations, taken at 79 % host CPU:
+
+| Benchmark | median | p90 | max |
+| --- | --- | --- | --- |
+| `git_rev_parse` | 80.1 ms | 83.7 ms | 84.1 ms |
+| `git_version` | 73.3 ms | 75.5 ms | 75.8 ms |
+| `git_init` | 126.0 ms | 292.8 ms | 389.6 ms |
+| `git_commit` | 191.4 ms | 465.1 ms | 473.4 ms |
+| `python_startup` | 72.7 ms | 76.1 ms | 149.1 ms |
+| `python_import_supervisor` | 322.8 ms | 418.5 ms | 499.5 ms |
+| `file_write_4k` | 0.6 ms | 0.6 ms | 0.6 ms |
+| `sqlite_create` | 23.4 ms | 33.2 ms | 71.9 ms |
+| `thread_start_join` | 0.3 ms | 0.3 ms | 0.4 ms |
+
+A bare `git rev-parse` costs about 80 ms and carries almost no work; the 98 ms
+per call seen inside the suite is that plus the pipes, arguments and cwd of a
+real query. This is why 8 045 invocations cost 931 s: the suite is paying a
+process-creation tax roughly a thousand times over, and filesystem work
+(`file_write_4k`, 0.6 ms) is three orders of magnitude cheaper than a process.
+
+The same table answers the margin question for the short handshake budgets: a
+child interpreter that imports the supervisor protocol alone costs
+**287–500 ms**, before process creation, identity query and the two JSON
+round-trips of the handshake. Against a `timeout=1` budget that is at best a
+factor of two, and less when the host is busier than this microbenchmark's 79 %.
+
 ## 4. Ranked bottlenecks
 
 Ranked by measured wall time that a change could actually reclaim.
@@ -107,10 +176,14 @@ Ranked by measured wall time that a change could actually reclaim.
    `sleep(0.02)`-style loops under an absolute deadline. Under contention those
    loops consume real seconds; their cost is a function of host responsiveness,
    not of the behaviour under test.
-4. **Short absolute deadlines (open question).** `timeout=1, deadline=0.1` and
-   `timeout=5, deadline=0.3` cases exist in `test_supervisor_driver.py` and
-   `test_supervisor_s2_live.py`. They passed in the baseline, but no margin
-   measurement has been made, so their headroom is unknown rather than proven.
+4. **Short handshake budgets (measured, thin).** `timeout=1` and
+   `deadline=0.1`/`0.3` cases exist in `test_supervisor_driver.py` (3 sites) and
+   `test_supervisor_s2_live.py` (1 site). They passed in both runs, but §3.2
+   shows the child interpreter and protocol import alone consume 287–500 ms of
+   a 1 000 ms budget. Headroom is therefore about a factor of two at 79 % CPU,
+   and it shrinks as the host busies. This is the most likely candidate for a
+   future contention-induced failure that is *not* a product defect, and the
+   remedy is a stated hang guard, not a hidden deadline increase.
 
 ## 5. Defects found, classified
 
@@ -169,9 +242,18 @@ condition for the wait, only the deadline is — and replaces this loop with it,
 plus a regression test that writes the record from an already-exited process.
 No competing fix is carried here: the fix belongs to that branch, a duplicate
 in this one would only create a conflict on the same lines. What this campaign
-adds is independent evidence that the failure is real and reproducible under
-contention (one occurrence in 727 tests at 83 % CPU, in the one module that
-already carries a handshake-margin comment for the same reason).
+adds is independent evidence that the failure is real: it occurred in **both**
+full runs — once at 82.9 % mean CPU and again at 60.5 % mean CPU — in the one
+module that already carries a handshake-margin comment for the same reason. Two
+occurrences in two runs, including a run at materially lower load, argue against
+a pure contention threshold and for a genuine ordering defect of the kind #191
+corrects.
+
+One caveat on attribution: the owner process in this test is launched with
+`-I` and therefore ran the installed wheel, not this checkout (§7.1).
+`driver.py`, `driver_cli.py` and `protocol.py` were verified byte-identical, so
+the race analysis stands, but the failure cannot be attributed to base-revision
+code by this run alone.
 
 ### 5.3 Not our defect
 
@@ -219,8 +301,8 @@ bound around `_run_git`; no behaviour depends on which hunk is kept first.
 ## 7. What is measured, and what is not
 
 **Measured:** the spawn counts, wall and CPU splits, module shares, Pareto
-concentration, the fixture A/B, the two failure classes in §5.1 and §5.2, and
-the host conditions in §2.
+concentration, the fixture A/B, the resolved module origin of child processes
+(§7.1), the two failure classes in §5.1 and §5.2, and the host conditions in §2.
 
 **Hypothesis, not measured:**
 
@@ -228,12 +310,53 @@ the host conditions in §2.
   most of the 931 s. The call counts support it; no alternative implementation
   has been written or timed, and the saving depends on how many distinct queries
   the tests issue.
-- That the `timeout=1, deadline=0.1` cases have adequate margin. They passed
-  once under 83 % CPU; one pass is not a margin measurement.
+- That the `timeout=1` handshake sites will stay within budget. They passed in
+  both runs, and §3.2 bounds the cost they must cover at 287–500 ms of a
+  1 000 ms budget — a headroom estimate from components, not an end-to-end
+  measurement of the handshake itself. Measuring the handshake directly would
+  require replicating the test's child environment (`CODEX_HOME`, policy file,
+  synthetic peer argv), which was judged a bigger fixture commitment than the
+  finding warrants.
 - That parallel test execution would help. The suite is idle-waiting 85 % of the
   time, which suggests it might, but process spawn cost would then be contended
   with the other campaign and the Supervisor tests bind fixed-ish resources.
   Deliberately not implemented during a concurrent campaign.
+
+### 7.1 Which code do the child processes execute?
+
+A measurement defect of a different kind, found while trying to time a protocol
+handshake. Four spawn sites in the three slowest modules —
+`test_supervisor_driver` (2), `test_supervisor_editing` (1) and
+`test_supervisor_s2_live` (1), together 65 % of suite wall time — start children
+as `python -I -m deskmate_formats…`. The `-I` flag ignores `PYTHONPATH`, so
+those children import `deskmate_formats` from **site-packages**, not from the
+checkout being measured:
+
+```
+parent (src first)  …\786ea03e\deskmate-formats\src\deskmate_formats\__init__.py
+child  (python -I)  …\Python313\Lib\site-packages\deskmate_formats\__init__.py
+```
+
+On this VM the installed wheel is a **PR #191-era build**: it contains
+`supervisor/process_tree.py`, `deterministic.py`, `procedures.py`,
+`campaigns.py`, `scheduling.py`, `snapshot.py` and `workers.py`, none of which
+exist at base revision `b5e5250`. Another campaign installed its wheel globally,
+and that silently changed what every `-I` child on this host executes.
+
+Verified for this campaign: the modules those children actually run are
+byte-identical between the wheel and this checkout (`driver.py`, `driver_cli.py`,
+`protocol.py`, `synthetic_peer.py`, `task_git.py`). Three differ —
+`task_manifest.py` by 29 lines, `task_queue.py` by 4, `repository_audit.py` by 1
+— so a test that builds a plan inside a child is not guaranteed to have
+exercised base-revision code. The performance numbers in §3 are unaffected: they
+are wall-clock and spawn counts, not assertions about that code.
+
+The hazard is general and worth stating plainly: a report records the *parent's*
+revision and cannot see the child's. A campaign that reinstalls the shared
+package changes every other campaign's subprocess behaviour with no signal in
+any report. Two remedies, neither applied here because both change test or
+product code owned elsewhere: have children execute the checkout under test, or
+have the harness record each child's resolved module origin.
 
 ## 8. Integration with the Supervisor and Observatory work
 
@@ -241,6 +364,21 @@ the host conditions in §2.
   pure local command with a deterministic JSON artifact, so it fits the reviewed
   procedure model as a `fixed-script` / `reviewed-repository-code` entry whose
   report is hashed as an artifact. Its report is evidence, never an approval.
+  Sketch only — the procedure registry lives on PR #191 and nothing here assumes
+  its schema:
+
+  ```json
+  {"id": "portable-test-perf",
+   "executes": "reviewed-repository-code",
+   "network": false,
+   "argv": ["python", "tools/test_performance.py", "run",
+            "--profile", "portable", "--json-out", "perf/report.json"],
+   "artifacts": ["perf/report.json"],
+   "refuses_on": ["nonzero exit", "missing report", "report revision != planned revision"]}
+  ```
+
+  The revision refusal matters: a report whose recorded revision differs from the
+  planned one describes different code, which §7.1 shows is not hypothetical.
 - **Observatory projection.** The report's `host.summary` fields (CPU, available
   memory, process count) and per-module totals are the natural read-only
   projection: suite in progress, elapsed, and the expensive tests. Measured host
@@ -250,6 +388,12 @@ the host conditions in §2.
   baseline itself is the evidence: the same suite moved between 1 284 s under
   83 % CPU and materially different conditions at 50 % CPU, so a fixed timeout
   cannot be correct for both.
+- **Concurrency of the suite itself.** Because the suite is idle-waiting most of
+  its wall time, running modules concurrently would raise throughput without
+  adding CPU pressure — but it would add process-creation pressure, which is the
+  resource actually scarce here, and the Supervisor tests bind ports and
+  temporary roots. Recommended as a separate, measured experiment rather than a
+  change made during a concurrent campaign.
 
 ## 9. Handoff and open questions
 
@@ -278,5 +422,8 @@ the host conditions in §2.
   the per-test numbers.
 - Endpoint-security interference was not measured. Windows Defender was
   deliberately left unmodified.
+- Child processes started with `python -I` execute the installed wheel rather
+  than this checkout (§7.1). This campaign verified that the modules in question
+  were byte-identical, but that verification is manual and does not generalise.
 - Raw measurement files, logs and the campaign registry are retained outside
   Git; only this analysis and the harness are published.
