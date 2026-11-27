@@ -10,6 +10,7 @@ const { parseProfileList, contextOptions, PROFILES } = require("../lib/profiles.
 const { normalizeRoute, pagesFromMap, validateRoute, parsePages, renderingState, slug } = require("../lib/qualify.cjs");
 const { contactSheet, markdownSummary, escape } = require("../lib/report.cjs");
 const { serve, resolveTarget } = require("../lib/serve.cjs");
+const { qualificationExitCode } = require("../cli.cjs");
 
 test("engine lists reject unknown names and remove duplicates", () => {
   assert.deepEqual(parseEngineList("chromium, firefox,chromium"), ["chromium", "firefox"]);
@@ -137,4 +138,24 @@ test("navigation failures without screenshots remain reportable", () => {
     problems: ["navigation failed"], checks: [] };
   const summary = { base: "http://x", generated_at: "now", totals: { renderings: 1, passed: 0, failed: 1 } };
   assert.match(contactSheet([result], summary), /No screenshot available/);
+});
+
+test("qualification status distinguishes incomplete and inconclusive results", () => {
+  const strict = { requireMatrix: true, allowFindings: false };
+  const exploratory = { requireMatrix: true, allowFindings: true };
+  assert.equal(qualificationExitCode({ requested: 2, renderings: 2, passed: 2 }, strict), 0);
+  assert.equal(qualificationExitCode({ requested: 2, renderings: 2, passed: 1, inconclusive: 1 }, strict), 1);
+  assert.equal(qualificationExitCode({ requested: 2, renderings: 2, passed: 1, inconclusive: 1 }, exploratory), 0);
+  assert.equal(qualificationExitCode({ requested: 2, renderings: 1, passed: 1 }, exploratory), 1);
+  assert.equal(qualificationExitCode({ requested: 2, renderings: 0, passed: 0 }, { allowFindings: true }), 1);
+});
+
+test("inconclusive rendering has visible outcome and escaped reason", () => {
+  const result = { engine: "webkit", profile: "keyboard", page: { route: "/" }, status: 200,
+    problems: [], checks: [{ name: "keyboard", inconclusive: true, detail: "<focus unknown>" }] };
+  const summary = { base: "http://x", generated_at: "now", totals: { renderings: 1, passed: 0, failed: 0, inconclusive: 1 } };
+  const html = contactSheet([result], summary);
+  assert.match(html, /figure class="inconclusive"/);
+  assert.match(html, / — Inconclusive<\/strong>/);
+  assert.match(html, /Inconclusive: keyboard: &lt;focus unknown&gt;/);
 });

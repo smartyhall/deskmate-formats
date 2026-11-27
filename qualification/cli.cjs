@@ -57,6 +57,13 @@ function parseArgs(argv) {
   return options;
 }
 
+function qualificationExitCode(totals, options) {
+  if (!totals.renderings) return 1;
+  if (options.requireMatrix && totals.renderings !== totals.requested) return 1;
+  if (!options.allowFindings && totals.passed !== totals.renderings) return 1;
+  return 0;
+}
+
 async function main(argv) {
   const options = parseArgs(argv);
   let server = null;
@@ -73,9 +80,7 @@ async function main(argv) {
       console.log(`axe reported ${report.summary.totals.axeViolations} violation type(s)`);
     }
     console.log(`artifacts: ${path.resolve(options.out)}`);
-    if (options.requireMatrix && report.summary.totals.renderings !== report.summary.totals.requested) return 1;
-    if (report.summary.totals.failed && !options.allowFindings) return 1;
-    return 0;
+    return qualificationExitCode(report.summary.totals, options);
   } finally {
     if (server) await server.close();
   }
@@ -91,4 +96,4 @@ if (require.main === module) {
   );
 }
 
-module.exports = { parseArgs, main };
+module.exports = { parseArgs, qualificationExitCode, main };

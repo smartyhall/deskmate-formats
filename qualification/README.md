@@ -28,8 +28,12 @@ node cli.cjs --base https://deskmate.retroconnect.org \
   --pages /,/research/ --axe --out local-results/qualification
 ```
 
-Exit status is `0` when every rendering passed, `1` when a rendering had a
-finding, and `2` for a usage error. `--allow-findings` reports without failing.
+Exit status is `0` when every executed rendering passed, `1` when a rendering
+failed or was inconclusive, when no rendering ran, or when the matrix is
+incomplete with `--require-matrix`, and `2` for a usage error.
+`--allow-findings` explicitly permits failed or inconclusive renderings for
+exploratory reporting; it does not permit an empty run or override
+`--require-matrix`. CI uses `--require-matrix` without this override.
 
 ## Engines
 

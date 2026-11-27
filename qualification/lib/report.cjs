@@ -30,12 +30,17 @@ function contactSheet(results, summary) {
         `status ${result.status}`,
         result.screenshot ? `${Math.round(result.screenshot.bytes / 1024)} KB` : "no screenshot",
       ].join(" · ");
-      const findings = result.problems.length
-        ? `<ul>${result.problems.map((problem) => `<li>${escape(problem)}</li>`).join("")}</ul>`
+      const notes = [
+        ...result.problems,
+        ...(result.checks || []).filter((check) => check.inconclusive)
+          .map((check) => `Inconclusive: ${check.name}: ${check.detail || "no further detail"}`),
+      ];
+      const findings = notes.length
+        ? `<ul>${notes.map((note) => `<li>${escape(note)}</li>`).join("")}</ul>`
         : "";
       return `<figure class="${state}">
   ${result.screenshot ? `<a href="${escape(result.screenshot.file)}"><img src="${escape(result.screenshot.file)}" alt="${escape(result.page.route)} rendered in ${escape(result.engine)} at ${escape(result.profile)}"></a>` : "<p>No screenshot available</p>"}
-  <figcaption><strong>${escape(result.page.route)}</strong><br>${escape(details)}${findings}</figcaption>
+  <figcaption><strong>${escape(result.page.route)} — ${escape(state === "fail" ? "Failed" : state === "inconclusive" ? "Inconclusive" : "Passed")}</strong><br>${escape(details)}${findings}</figcaption>
 </figure>`;
     }).join("\n");
     sections.push(`<section><h2>${escape(key)}</h2><div class="grid">${cards}</div></section>`);
