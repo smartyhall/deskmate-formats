@@ -93,6 +93,15 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 
+/* The theme sets text-decoration: none on every link, so links inside prose
+   were distinguished from surrounding text by color alone. Underline them for
+   readers who cannot rely on that color difference. */
+main a:not(.btn):not(.nav-link),
+footer a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* The theme zeroes the outline on .nav-link:focus-visible; match that
    specificity so the primary navigation keeps an indicator too. */
 nav.navbar a.nav-link:focus-visible {

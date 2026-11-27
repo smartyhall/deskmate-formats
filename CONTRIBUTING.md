@@ -95,8 +95,12 @@ merge its own PR. A different model's review is useful corroboration, not
 automatic authority to merge. The operator or a separately authorized,
 independent reviewer checks the diff, provenance, licenses, publication
 eligibility, actual test/CI results and scope before merging. The standing
-ChatGPT housekeeping grant for Codex PRs is unchanged; other merges require
-applicable explicit authorization. Changes to governance or merge authority
+ChatGPT housekeeping grant was extended by the operator on 2026-11-26 to
+completed PRs from any other producing agent, including Codex and Freebuff,
+after independent review of the exact head and passing required checks.
+Escalate matters requiring additional operator oversight. This does not
+permit self-merging (including delegated work) or confer authority on other
+agents. Other reviewers require applicable explicit authorization. Changes to governance or merge authority
 require explicit operator approval and independent review, outside standing
 grants. Keep tests portable and AI-independent.
 Report skipped checks and unavailable telemetry accurately.

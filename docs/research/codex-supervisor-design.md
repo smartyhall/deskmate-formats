@@ -18,6 +18,13 @@ describes implemented trusted Git intake and a manual decision queue. A real
 S0 model canary, production dispatch, approval and resource leases are still
 unverified or unimplemented. The [orchestrator reuse ADR](agent-orchestrator-reuse-assessment.md)
 now informs future S2–S5 design; see [project status](../../PROJECT_STATUS.md).
+**Revised planning direction (2026-11-25):** See the
+[Supervisor revisit and heterogeneous worker roadmap](supervisor-next-campaign-20261125.md).
+Prioritize a state audit and useful deterministic no-model execution backend,
+then generalize worker adapters for Codex, Freebuff (subject to qualification),
+and conventional automation. The existing Codex-specific protocol and live
+authorization gates remain intact. The later status and evidence documents,
+not the early status snapshot above, determine which milestones are proven.
 **Companion:** [DeskMate Observatory v2 functional specification](observatory-v2-spec.md).
 **Deferred successor:** [Headless and reproducible research appliance roadmap](headless-research-appliance-roadmap.md) (only after validated Windows observer/supervisor).
 **Scope:** Local Windows 10 research workstation and multiple isolated Codex/86Box
