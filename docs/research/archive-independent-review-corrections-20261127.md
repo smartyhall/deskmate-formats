@@ -128,6 +128,28 @@ against. The standard library never selects the 2.5-bytes-per-block-byte `-s`
 decoder, so the normal figures apply. These are vendor estimates, not
 measurements taken here.
 
+## Second follow-up review: member versus aggregate extraction budgets
+
+Review `pullrequestreview-6085615058` confirmed the per-member bzip2 memory
+check and the bounded input read, and named one remaining limit: `_compressed`
+passed `output_bytes=limits.member_bytes` to the decoder and then built its
+`Member` directly, bypassing the shared remaining-budget gate in `_members`.
+With an aggregate cap (`total_bytes`) below the member cap but large enough for
+the decoder, a compress(1) or bzip2 payload could exceed the aggregate.
+
+| Finding | Resolution | Guard |
+| --- | --- | --- |
+| Standalone compression ignored the aggregate budget | The decoder receives `min(member_bytes, total_bytes)`, and the payload is checked against that same figure again before the member is built | `test_the_aggregate_budget_caps_a_standalone_stream`, `test_the_aggregate_budget_caps_a_bzip2_member_that_fits_the_decoder` |
+| Whether other paths had the same gap | Audited every handler: `_members` already gates each member on `min(member_bytes, remaining)` and decrements `remaining`, and ZIP, TAR, gzip, FAT, ARC, lhasa and 7-Zip entries all pass through it; `_sector_image` derives its container and LBA bounds from `total_bytes`; `_text` and the PDF readers use `text_bytes` for one document stream, where the member and aggregate budgets are the same figure. `_compressed` was the only path outside that gate. | `_members` call sites |
+| Partial recovery had to survive the new gate | A concatenated bzip2 stream with a damaged later member still returns the verified first member as `partial` inside the aggregate | `test_partial_recovery_stays_inside_the_aggregate_budget` |
+
+The regressions keep the aggregate below the member cap. A 9 KiB `.Z` payload
+under a 4 KiB aggregate is refused, one byte under its own size is refused, and
+the exact payload is accepted. A 700 KiB bzip2 payload whose 100 kB-block
+decoder fits a 600 KiB aggregate is refused by the output budget, while a
+64 KiB aggregate is refused by the decoder budget first, so the two limits stay
+independent. Nothing here allocates more than 700 KiB.
+
 ## Resource bounds, layer by layer
 
 `disk_images.Bounds` now carries one limit per layer and every one is enforced
@@ -142,6 +164,7 @@ before allocation:
 | Declared geometry | `geometry_sectors` | before any coordinate is used |
 | Logical image | `lba_bytes` | before `bytearray(total * size)` |
 | Decoder memory | `decoder_bytes` | xz `memlimit` per member, bzip2 documented requirement per member |
+| Aggregate extraction | `total_bytes` | `_members` remaining budget for every listed member; the smaller of it and `member_bytes` for a standalone stream |
 
 `intelligence_extract._sector_image` derives each of these from the caller's
 `Limits`, so a container header cannot enlarge a caller's bound. The tests use
