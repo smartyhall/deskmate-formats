@@ -9,6 +9,11 @@ Entry points:
 - ``python -m deskmate_formats.perf run``       instrumented test run
 - ``python -m deskmate_formats.perf microbench`` bounded host microbenchmarks
 - ``python -m deskmate_formats.perf compare``   before/after report comparison
+
+The module invocation, the ``deskmate-test-perf`` console script and
+``tools/test_performance.py`` all reach the same :mod:`deskmate_formats.perf.cli`.
+Reports record host and path detail, so ``run --public-out`` writes the
+sanitized projection from :mod:`deskmate_formats.perf.sanitize` instead.
 """
 
 from .hostload import HostSample, HostSampler, process_memory, summarize_samples

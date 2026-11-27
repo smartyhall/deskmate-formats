@@ -45,6 +45,21 @@ def _python(*arguments: str) -> list[str]:
     return [sys.executable, *arguments]
 
 
+def _source_environment() -> dict[str, str]:
+    """Child environment that resolves this checkout's package first.
+
+    A benchmark that imports ``deskmate_formats`` must measure the tree being
+    measured, not whichever wheel another campaign installed.  ``python -I``
+    would ignore ``PYTHONPATH``, so the import benchmark deliberately does not
+    use it and sets the path explicitly instead.
+    """
+    env = dict(os.environ)
+    source = str(Path(__file__).resolve().parents[1])
+    existing = env.get("PYTHONPATH")
+    env["PYTHONPATH"] = source + (os.pathsep + existing if existing else "")
+    return env
+
+
 @dataclass
 class Benchmark:
     name: str
@@ -65,6 +80,7 @@ def _bench_python_import(_index: int) -> float:
     start = time.perf_counter()
     subprocess.run(_python("-c", "import deskmate_formats.supervisor.protocol"),
                    check=True, timeout=BENCHMARK_TIMEOUT, stdin=subprocess.DEVNULL,
+                   env=_source_environment(),
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return time.perf_counter() - start
 
@@ -220,7 +236,7 @@ def _measure(benchmark: Benchmark, iterations: int) -> dict[str, Any]:
     for index in range(iterations):
         try:
             samples.append(benchmark.run(index))
-        except (OSError, subprocess.SubprocessError) as failure:
+        except (OSError, sqlite3.Error, subprocess.SubprocessError) as failure:
             error = f"{type(failure).__name__}: {failure}"
             break
     if not samples:
@@ -246,8 +262,20 @@ def run_microbenchmarks(
     sample_interval: float = 5.0,
 ) -> dict[str, Any]:
     """Run bounded microbenchmarks and return a serializable report."""
+    if not isinstance(iterations, int) or isinstance(iterations, bool) or iterations < 1:
+        raise ValueError(f"iterations must be a positive integer, not {iterations!r}")
+    requested = None if names is None else list(dict.fromkeys(names))
+    if requested is not None:
+        unknown = sorted(set(requested) - {benchmark.name for benchmark in BENCHMARKS})
+        if unknown:
+            # A silently empty report looks like a successful measurement of
+            # nothing, which is the worst possible outcome of a typo.
+            raise ValueError(
+                "unknown benchmark name(s): " + ", ".join(unknown)
+                + "; available: " + ", ".join(benchmark.name for benchmark in BENCHMARKS)
+            )
     selected = [benchmark for benchmark in BENCHMARKS
-                if names is None or benchmark.name in set(names)]
+                if requested is None or benchmark.name in set(requested)]
     results = []
     started = time.perf_counter()
     with HostTimeline(interval=sample_interval) as timeline:
@@ -299,6 +327,14 @@ def to_markdown(report: dict[str, Any]) -> str:
             f" | {entry['p90_seconds'] * 1000:.1f} ms"
             f" | {entry['max_seconds'] * 1000:.1f} ms |"
         )
+    problems = [entry for entry in report.get("benchmarks", []) if entry.get("error")]
+    if problems:
+        lines += ["", "Incomplete benchmarks:", ""]
+        for entry in problems:
+            lines.append(
+                f"- `{entry['name']}`: {entry['error']}"
+                f" after {entry.get('iterations') or 0} completed iteration(s)"
+            )
     lines.append("")
     return "\n".join(lines)
 

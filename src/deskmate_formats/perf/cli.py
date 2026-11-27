@@ -5,11 +5,16 @@ Subcommands:
 ``run``        instrumented test execution with a machine-readable report
 ``microbench`` bounded host microbenchmarks
 ``compare``    before/after comparison that states whether conditions matched
+
+Every numeric option is validated here as well as in the library: a negative
+repetition count or a zero sampling interval is a configuration error, not a
+measurement, and must not be silently replaced by a default or a clamp.
 """
 
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 from datetime import datetime, timezone
 import json
 from pathlib import Path
@@ -18,6 +23,7 @@ import unittest
 
 from . import microbench, report
 from .runner import RunResult, run_suite
+from .sanitize import public_projection
 
 
 PROFILES: dict[str, dict[str, object]] = {
@@ -58,6 +64,13 @@ def _utc_stamp() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
 
+def _positive_int(value: int | None, default: int, flag: str) -> int:
+    resolved = default if value is None else value
+    if not isinstance(resolved, int) or isinstance(resolved, bool) or resolved < 1:
+        raise SystemExit(f"{flag} must be a positive integer (got {value!r})")
+    return resolved
+
+
 def build_suite(*, profile: str, patterns: tuple[str, ...], start: str,
                 module: str | None = None, test: str | None = None) -> unittest.TestSuite:
     loader = unittest.TestLoader()
@@ -83,20 +96,82 @@ def build_suite(*, profile: str, patterns: tuple[str, ...], start: str,
 
 
 def _merge(results: list[RunResult]) -> RunResult:
-    merged = results[0]
+    """Combine repeated iterations without editing any of them.
+
+    Editing the first result made its own per-iteration fields describe the
+    whole run, and the measurements that had already been taken could not be
+    recovered afterwards.  The merged result is built from the collected
+    records instead, so every iteration stays inspectable on its own.
+    """
+    if not results:
+        raise ValueError("nothing to merge: no iteration produced a result")
     if len(results) == 1:
-        return merged
-    records = [record for result in results for record in result.records]
+        return results[0]
+
+    first, last = results[0], results[-1]
+    # Renumber records that a caller ran without an iteration, so the merged
+    # report never carries two records under one identity.  Copies are used:
+    # each input result stays exactly as it was measured.
+    records = []
+    for index, result in enumerate(results):
+        for record in result.records:
+            records.append(record if record.iteration == index
+                           else replace(record, iteration=index))
     samples = [sample for result in results for sample in result.samples]
-    merged.records = records
-    merged.samples = samples
-    merged.wall_seconds = sum(result.wall_seconds for result in results)
-    merged.successful = all(result.successful for result in results)
-    merged.finished_utc = results[-1].finished_utc
-    merged.meta["iterations"] = len(results)
-    merged.meta["iteration_wall_seconds"] = [round(result.wall_seconds, 3) for result in results]
-    merged.meta["iteration_outcomes"] = [result.outcomes for result in results]
-    return merged
+    issues = [issue for result in results for issue in result.suite_errors]
+    sources = [result.meta.get("source") or {} for result in results]
+    identities = {
+        (source.get("revision"), source.get("worktree_digest"), source.get("state"))
+        for source in sources
+    }
+    stable = (
+        len(identities) == 1
+        and all(source.get("state") == "stable" and source.get("revision") for source in sources)
+    )
+    if stable:
+        source = sources[0]
+    else:
+        source = {
+            "revision": None,
+            "branch": None,
+            "dirty": None,
+            "worktree_digest": None,
+            "observed_utc": (last.meta.get("source_after") or {}).get("observed_utc"),
+            "complete": False,
+            "state": "changed",
+            "failed_commands": [
+                failure
+                for result in results
+                for failure in (result.meta.get("source") or {}).get("failed_commands", [])
+            ],
+        }
+
+    meta = dict(first.meta)
+    meta.update({
+        "iterations": len(results),
+        "iteration_wall_seconds": [round(result.wall_seconds, 3) for result in results],
+        "iteration_outcomes": [result.outcomes for result in results],
+        "iteration_discovered_tests": [result.meta.get("discovered_tests") for result in results],
+        "iteration_suite_errors": [len(result.suite_errors) for result in results],
+        "executed_tests": len(records),
+        "discovered_tests": sum(int(result.meta.get("discovered_tests") or 0)
+                                for result in results),
+        "source_before": first.meta.get("source_before"),
+        "source_after": last.meta.get("source_after"),
+        "source": source,
+        "source_changed": not stable,
+        "package": last.meta.get("package"),
+    })
+    return RunResult(
+        records=records,
+        samples=samples,
+        suite_errors=issues,
+        started_utc=first.started_utc,
+        finished_utc=last.finished_utc,
+        wall_seconds=sum(result.wall_seconds for result in results),
+        successful=all(result.successful for result in results),
+        meta=meta,
+    )
 
 
 def _write(path: Path | None, text: str) -> None:
@@ -107,34 +182,48 @@ def _write(path: Path | None, text: str) -> None:
 
 
 def _command_run(arguments: argparse.Namespace) -> int:
-    profile = PROFILES[arguments.profile]
-    patterns = tuple(profile["patterns"])  # type: ignore[arg-type]
-    repeat = arguments.repeat or int(profile.get("repeat", 1))  # type: ignore[arg-type]
-    start = arguments.start
-
     if arguments.list_profiles:
         for name, entry in PROFILES.items():
             print(f"{name:12s} {entry['description']}")
         return 0
 
+    profile = PROFILES[arguments.profile]
+    patterns = tuple(profile["patterns"])  # type: ignore[arg-type]
+    repeat = _positive_int(arguments.repeat, int(profile.get("repeat", 1)), "--repeat")  # type: ignore[arg-type]
+    top = _positive_int(arguments.top, 25, "--top")
+    start = arguments.start
     source = Path(arguments.source).resolve()
+
     results: list[RunResult] = []
     for iteration in range(repeat):
         suite = build_suite(profile=arguments.profile, patterns=patterns, start=start,
                             module=arguments.module, test=arguments.test)
-        result = run_suite(
-            suite,
-            label=arguments.label,
-            profile=arguments.profile,
-            trace_processes=arguments.trace_processes,
-            trace_git_commands=arguments.trace_git_commands,
-            sample_interval=arguments.sample_interval,
-            sample_tests=arguments.sample_tests,
-            verbosity=arguments.verbosity,
-            stream=sys.stderr,
-            source_directory=source,
-            iteration=iteration,
-        )
+        discovered = suite.countTestCases()
+        if discovered == 0:
+            raise SystemExit(
+                f"no tests were discovered for profile '{arguments.profile}' in '{start}';"
+                " refusing to record an empty run as a successful measurement"
+            )
+        try:
+            result = run_suite(
+                suite,
+                label=arguments.label,
+                profile=arguments.profile,
+                trace_processes=arguments.trace_processes,
+                trace_git_commands=arguments.trace_git_commands,
+                sample_interval=arguments.sample_interval,
+                sample_tests=arguments.sample_tests,
+                verbosity=arguments.verbosity,
+                stream=sys.stderr,
+                source_directory=source,
+                iteration=iteration,
+            )
+        except ValueError as error:
+            raise SystemExit(f"invalid measurement configuration: {error}") from None
+        missing = discovered - len(result.records) - len(result.suite_errors)
+        if missing > 0:
+            print(f"warning: {missing} of {discovered} discovered tests produced no record"
+                  f" (suite-level errors: {len(result.suite_errors)})", file=sys.stderr)
         results.append(result)
         if repeat > 1:
             print(f"iteration {iteration + 1}/{repeat}: {result.wall_seconds:.1f} s,"
@@ -142,11 +231,13 @@ def _command_run(arguments: argparse.Namespace) -> int:
 
     combined = _merge(results)
     payload = combined.as_dict()
-    summary = report.summarize(payload, top=arguments.top)
+    summary = report.summarize(payload, top=top)
     markdown = report.to_markdown(summary)
 
     _write(Path(arguments.json_out) if arguments.json_out else None,
            json.dumps(payload, indent=2))
+    _write(Path(arguments.public_out) if arguments.public_out else None,
+           json.dumps(public_projection(payload), indent=2))
     _write(Path(arguments.summary_out) if arguments.summary_out else None,
            json.dumps(summary, indent=2))
     _write(Path(arguments.md_out) if arguments.md_out else None, markdown)
@@ -156,11 +247,21 @@ def _command_run(arguments: argparse.Namespace) -> int:
 
 
 def _command_microbench(arguments: argparse.Namespace) -> int:
-    result = microbench.run_microbenchmarks(
-        iterations=arguments.iterations,
-        names=arguments.name,
-        sample_interval=arguments.sample_interval,
-    )
+    known = {benchmark.name for benchmark in microbench.BENCHMARKS}
+    unknown = sorted(set(arguments.name or ()) - known)
+    if unknown:
+        raise SystemExit(
+            f"unknown benchmark name(s): {', '.join(unknown)};"
+            f" available: {', '.join(sorted(known))}"
+        )
+    try:
+        result = microbench.run_microbenchmarks(
+            iterations=arguments.iterations,
+            names=arguments.name,
+            sample_interval=arguments.sample_interval,
+        )
+    except ValueError as error:
+        raise SystemExit(f"invalid measurement configuration: {error}") from None
     markdown = microbench.to_markdown(result)
     _write(Path(arguments.json_out) if arguments.json_out else None,
            json.dumps(result, indent=2))
@@ -195,9 +296,11 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--module", help="single test module (focused profile)")
     run.add_argument("--test", help="single dotted test id")
     run.add_argument("--start", default=DEFAULT_START, help="discovery directory")
-    run.add_argument("--source", default=".", help="repository root for revision metadata")
+    run.add_argument("--source", default=".",
+                     help="checkout whose revision and import origin describe this run")
     run.add_argument("--label", default="", help="free-form label for this measurement")
-    run.add_argument("--repeat", type=int, default=0, help="override profile repetitions")
+    run.add_argument("--repeat", type=int, default=None,
+                     help="override profile repetitions (positive integer)")
     run.add_argument("--top", type=int, default=25, help="rows in the ranking")
     run.add_argument("--trace-git-commands", action="store_true",
                      help="count the Git subcommand of every spawn (implies tracing)")
@@ -206,9 +309,11 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--sample-tests", action="store_true",
                      help="record a host sample per test (adds a few milliseconds each)")
     run.add_argument("--sample-interval", type=float, default=5.0,
-                     help="seconds between background host samples")
+                     help="seconds between background host samples (positive)")
     run.add_argument("--verbosity", type=int, default=1, choices=(0, 1, 2))
-    run.add_argument("--json-out", help="write the machine-readable run report")
+    run.add_argument("--json-out", help="write the machine-readable run report (private)")
+    run.add_argument("--public-out",
+                     help="write the sanitized projection of the run report (publishable)")
     run.add_argument("--summary-out", help="write the derived summary as JSON")
     run.add_argument("--md-out", help="write the markdown summary")
     run.add_argument("--print-markdown", action="store_true", help="print the markdown summary")

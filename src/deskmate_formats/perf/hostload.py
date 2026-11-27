@@ -15,6 +15,7 @@ from __future__ import annotations
 import ctypes
 from dataclasses import dataclass
 from datetime import datetime, timezone
+import math
 import os
 import platform
 import sys
@@ -63,13 +64,18 @@ class HostSample:
 
 @dataclass(frozen=True)
 class ProcessMemory:
-    """Process-wide memory counters; peaks are high-water marks for the process."""
+    """Process-wide memory counters; peaks are high-water marks for the process.
 
-    working_set_bytes: int
-    peak_working_set_bytes: int
-    private_bytes: int
+    A field the platform cannot observe is ``None``.  Reporting a peak as if it
+    were the current value, or zero as if it were a measurement, would be worse
+    than reporting nothing.
+    """
 
-    def as_dict(self) -> dict[str, int]:
+    working_set_bytes: int | None
+    peak_working_set_bytes: int | None
+    private_bytes: int | None
+
+    def as_dict(self) -> dict[str, int | None]:
         return {
             "working_set_bytes": self.working_set_bytes,
             "peak_working_set_bytes": self.peak_working_set_bytes,
@@ -125,8 +131,32 @@ class _PROCESS_MEMORY_COUNTERS(ctypes.Structure):
     ]
 
 
+class _PERFORMANCE_INFORMATION(ctypes.Structure):
+    """``PERFORMANCE_INFORMATION``: host-wide totals, in pages."""
+
+    _fields_ = [
+        ("cb", ctypes.c_uint32),
+        ("CommitTotal", ctypes.c_size_t),
+        ("CommitLimit", ctypes.c_size_t),
+        ("CommitPeak", ctypes.c_size_t),
+        ("PhysicalTotal", ctypes.c_size_t),
+        ("PhysicalAvailable", ctypes.c_size_t),
+        ("SystemCache", ctypes.c_size_t),
+        ("KernelTotal", ctypes.c_size_t),
+        ("KernelPaged", ctypes.c_size_t),
+        ("KernelNonpaged", ctypes.c_size_t),
+        ("PageSize", ctypes.c_size_t),
+        ("HandleCount", ctypes.c_uint32),
+        ("ProcessCount", ctypes.c_uint32),
+        ("ThreadCount", ctypes.c_uint32),
+    ]
+
+
 _TH32CS_SNAPPROCESS = 0x00000002
 _INVALID_HANDLE = ctypes.c_void_p(-1).value
+# ``Process32NextW`` reports normal exhaustion this way; any other error means
+# the enumeration was cut short.
+_ERROR_NO_MORE_FILES = 18
 
 
 def _windows_times(idle_ticks: int, kernel_ticks: int, user_ticks: int) -> tuple[int, int, int]:
@@ -170,20 +200,44 @@ class _WindowsCounters:
                 ctypes.c_void_p, ctypes.POINTER(_PROCESS_MEMORY_COUNTERS), ctypes.c_uint32,
             ]
             self.psapi.GetProcessMemoryInfo.restype = ctypes.c_int
+            self.psapi.GetPerformanceInfo.argtypes = [
+                ctypes.POINTER(_PERFORMANCE_INFORMATION), ctypes.c_uint32,
+            ]
+            self.psapi.GetPerformanceInfo.restype = ctypes.c_int
         except (OSError, AttributeError) as error:  # pragma: no cover - non-Windows
             self.error = f"{type(error).__name__}: {error}"
 
-    def memory(self) -> tuple[int, int, int, int] | None:
+    def memory(self) -> tuple[int, int] | None:
+        """Total and available physical memory.
+
+        The page-file fields of ``MEMORYSTATUSEX`` describe this process's
+        commit allowance, not the host's, so they are deliberately not returned
+        as commit headroom.  ``performance()`` supplies the system-wide values.
+        """
         status = _MEMORYSTATUSEX()
         status.dwLength = ctypes.sizeof(_MEMORYSTATUSEX)
         if not self.kernel32.GlobalMemoryStatusEx(ctypes.byref(status)):
             return None
-        return (
-            status.ullTotalPhys,
-            status.ullAvailPhys,
-            status.ullTotalPageFile,
-            status.ullAvailPageFile,
-        )
+        return status.ullTotalPhys, status.ullAvailPhys
+
+    def performance(self) -> dict[str, int] | None:
+        """Host-wide commit headroom and process/thread counts.
+
+        ``GetPerformanceInfo`` reports system-wide totals in pages.  It also
+        gives the counts in the same call, so the toolhelp enumeration below is
+        only a fallback.
+        """
+        info = _PERFORMANCE_INFORMATION()
+        info.cb = ctypes.sizeof(_PERFORMANCE_INFORMATION)
+        if not self.psapi.GetPerformanceInfo(ctypes.byref(info), info.cb):
+            return None
+        page = int(info.PageSize) or 4096
+        return {
+            "commit_total_bytes": int(info.CommitLimit) * page,
+            "commit_available_bytes": max(0, int(info.CommitLimit) - int(info.CommitTotal)) * page,
+            "process_count": int(info.ProcessCount),
+            "thread_count": int(info.ThreadCount),
+        }
 
     def system_times(self) -> tuple[int, int, int] | None:
         """Return non-overlapping ``(idle, user, busy_system)`` counters.
@@ -206,6 +260,12 @@ class _WindowsCounters:
         )
 
     def process_totals(self) -> tuple[int, int] | None:
+        """Count processes and threads, or report that the count is unknown.
+
+        A failed enumeration must not read as an exhausted host: only
+        ``ERROR_NO_MORE_FILES`` means the walk finished normally, and anything
+        else returns ``None`` instead of a partial total.
+        """
         snapshot = self.kernel32.CreateToolhelp32Snapshot(_TH32CS_SNAPPROCESS, 0)
         if snapshot in (None, _INVALID_HANDLE):
             return None
@@ -213,14 +273,18 @@ class _WindowsCounters:
         entry.dwSize = ctypes.sizeof(_PROCESSENTRY32W)
         processes = threads = 0
         try:
-            present = self.kernel32.Process32FirstW(snapshot, ctypes.byref(entry))
-            while present:
+            if not self.kernel32.Process32FirstW(snapshot, ctypes.byref(entry)):
+                return (0, 0) if ctypes.get_last_error() == _ERROR_NO_MORE_FILES else None
+            while True:
                 processes += 1
                 threads += entry.cntThreads
-                present = self.kernel32.Process32NextW(snapshot, ctypes.byref(entry))
+                if not self.kernel32.Process32NextW(snapshot, ctypes.byref(entry)):
+                    break
+            if ctypes.get_last_error() != _ERROR_NO_MORE_FILES:
+                return None
+            return processes, threads
         finally:
             self.kernel32.CloseHandle(snapshot)
-        return processes, threads
 
     def own_memory(self) -> ProcessMemory | None:
         counters = _PROCESS_MEMORY_COUNTERS()
@@ -303,8 +367,13 @@ class _PosixCounters:
         except ImportError:  # pragma: no cover - exotic platform
             return None
         usage = resource.getrusage(resource.RUSAGE_SELF)
-        peak = int(usage.ru_maxrss) * 1024
-        return ProcessMemory(working_set_bytes=peak, peak_working_set_bytes=peak, private_bytes=0)
+        peak = int(usage.ru_maxrss)
+        # ``ru_maxrss`` is bytes on Darwin and kibibytes everywhere else; only
+        # the peak is available here, so the current values stay unknown.
+        if sys.platform != "darwin":
+            peak *= 1024
+        return ProcessMemory(working_set_bytes=None, peak_working_set_bytes=peak,
+                              private_bytes=None)
 
 
 class HostSampler:
@@ -338,7 +407,8 @@ class HostSampler:
         if times is not None:
             total, user, system = self._deltas(times)
         memory = counters.memory()
-        totals = counters.process_totals()
+        performance = counters.performance()
+        totals = counters.process_totals() if performance is None else None
         return HostSample(
             at_utc=_utc_now(),
             cpu_total_percent=total,
@@ -346,10 +416,13 @@ class HostSampler:
             cpu_system_percent=system,
             memory_total_bytes=memory[0] if memory else None,
             memory_available_bytes=memory[1] if memory else None,
-            commit_total_bytes=memory[2] if memory else None,
-            commit_available_bytes=memory[3] if memory else None,
-            process_count=totals[0] if totals else None,
-            thread_count=totals[1] if totals else None,
+            commit_total_bytes=performance["commit_total_bytes"] if performance else None,
+            commit_available_bytes=(performance["commit_available_bytes"]
+                                    if performance else None),
+            process_count=(performance["process_count"] if performance
+                           else (totals[0] if totals else None)),
+            thread_count=(performance["thread_count"] if performance
+                          else (totals[1] if totals else None)),
         )
 
     def _sample_posix(self, counters: _PosixCounters) -> HostSample:
@@ -383,6 +456,12 @@ class HostSampler:
         idle_delta = times[0] - previous[0]
         user_delta = times[1] - previous[1]
         system_delta = times[2] - previous[2]
+        if idle_delta < 0 or user_delta < 0 or system_delta < 0:
+            # One component moved backwards, so the interval cannot be turned
+            # into percentages even if the overall delta stayed positive.  The
+            # new values remain the baseline, so the next interval is
+            # measurable rather than lost for the rest of the run.
+            return None, None, None
         total_delta = idle_delta + user_delta + system_delta
         if total_delta <= 0:
             return None, None, None
@@ -425,7 +504,12 @@ class HostTimeline:
     """
 
     def __init__(self, interval: float = 5.0, sampler: HostSampler | None = None) -> None:
-        self.interval = max(0.5, float(interval))
+        interval = float(interval)
+        if not math.isfinite(interval) or interval <= 0:
+            # Clamping would silently measure at a different interval than the
+            # one the report records.
+            raise ValueError(f"host sampling interval must be positive and finite, not {interval!r}")
+        self.interval = interval
         # A timeline owns its baseline: sharing the process-wide sampler lets an
         # unrelated sample (a per-test one, or a previous run) consume the
         # interval this timeline meant to measure.
@@ -434,6 +518,17 @@ class HostTimeline:
         self._stop = threading.Event()
         self._thread: threading.Thread | None = None
         self._error: str | None = None
+        self._failures = 0
+
+    @property
+    def error(self) -> str | None:
+        """Why sampling stopped or degraded, if it did."""
+        return self._error
+
+    @property
+    def failures(self) -> int:
+        """Number of samples that raised, so partial coverage is visible."""
+        return self._failures
 
     def __enter__(self) -> "HostTimeline":
         self.samples.append(self.sampler.sample())
@@ -452,8 +547,11 @@ class HostTimeline:
             try:
                 self.samples.append(self.sampler.sample())
             except Exception as error:  # pragma: no cover - defensive
-                self._error = f"{type(error).__name__}: {error}"
-                return
+                # Keep sampling: one bad interval should not end the timeline,
+                # but the report must say coverage was imperfect.  Only the
+                # exception class is kept, never its message.
+                self._failures += 1
+                self._error = type(error).__name__
 
 
 def _median(values: list[float]) -> float | None:

@@ -6,6 +6,7 @@ the cases are only executed by the harness tests that load them explicitly.
 
 from __future__ import annotations
 
+from pathlib import Path
 import shutil
 import subprocess
 import sys
@@ -53,3 +54,36 @@ class GitCase(unittest.TestCase):
 class FailureCase(unittest.TestCase):
     def test_reports_failure(self):
         self.fail("synthetic failure for the harness")
+
+
+class BrokenSetupCase(unittest.TestCase):
+    """A class fixture that fails: the error happens outside any test."""
+
+    @classmethod
+    def setUpClass(cls):
+        raise RuntimeError("synthetic class fixture failure")
+
+    def test_first(self):
+        pass
+
+    def test_second(self):
+        pass
+
+
+class SubtestFailureCase(unittest.TestCase):
+    def test_subtests(self):
+        for value in (1, 2):
+            with self.subTest(value=value):
+                if value == 2:
+                    self.fail("synthetic subtest failure")
+
+
+class SubtestErrorCase(unittest.TestCase):
+    def test_subtests(self):
+        with self.subTest(value=1):
+            raise RuntimeError("synthetic subtest error")
+
+
+class PathMessageCase(unittest.TestCase):
+    def test_mentions_a_path(self):
+        self.fail(f"could not open {Path.cwd() / 'private' / 'evidence.json'}")
