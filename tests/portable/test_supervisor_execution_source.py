@@ -7,16 +7,20 @@ modifies the laboratory's shared interpreter.
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import os
 from pathlib import Path
+import py_compile
 import subprocess
 import sys
 from tempfile import TemporaryDirectory
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
 from deskmate_formats.campaign_env import receipts
+from deskmate_formats.observer._private_storage import storage_directory
 from deskmate_formats.supervisor import deterministic, execution_source, procedures, workspace
 from execution_fixture import (git, install_conflict, make_checkout, make_environment,
                                write_package)
@@ -283,6 +287,124 @@ class BootstrapRefusalTests(unittest.TestCase):
         self.assertEqual(completed.stdout, "")
         self.assertEqual(json.loads(report.read_text(encoding="utf-8"))["state"],
                          "content-mismatch")
+
+
+class StaleBytecodeTests(unittest.TestCase):
+    """A cached .pyc is not source, and must not be able to stand in for it."""
+
+    def setUp(self):
+        self.root = Path(self.enterContext(TemporaryDirectory()))
+        self.checkout, self.revision = make_checkout(self.root / "checkout", marker="alpha")
+        self.selection, self.target, _ = make_environment(
+            root=self.root / "envs", checkout=self.checkout,
+            campaign="alpha-campaign", revision=self.revision)
+        install_conflict(self.target["interpreter"], marker="shared-preinstalled")
+        self.module = (self.checkout / "src" / "deskmate_formats" / "supervisor"
+                       / "repository_audit.py")
+        self.bound = self.module.read_bytes()
+
+    def plant_stale_cache(self):
+        """A cache compiled from other code whose stored size and mtime still match.
+
+        This is the condition the content digest cannot see: the source files
+        are the bound ones, but a cache that Python would accept describes
+        different code.
+        """
+        stale = self.bound.replace(b'return "audit:" + MARKER', b'return "audit:" + "stal"')
+        self.assertEqual(len(stale), len(self.bound))
+        self.assertNotEqual(stale, self.bound)
+        stamp = 1700000000
+        self.module.write_bytes(stale)
+        os.utime(self.module, (stamp, stamp))
+        cache = Path(importlib.util.cache_from_source(str(self.module)))
+        py_compile.compile(str(self.module), cfile=str(cache), doraise=True,
+                           invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP)
+        self.module.write_bytes(self.bound)
+        os.utime(self.module, (stamp, stamp))
+        return cache
+
+    def run_audit(self):
+        attempt = deterministic.prepare(
+            self.root / "attempt", campaign="alpha-campaign", procedure="repository-audit",
+            arguments={}, working_directory=str(self.checkout), environment=self.selection)
+        return deterministic.run(attempt.directory, authorization=attempt.plan_sha256)
+
+    def test_a_stale_cache_cannot_stand_in_for_the_bound_source(self):
+        cache = self.plant_stale_cache()
+        outcome = self.run_audit()
+        self.assertEqual(outcome["state"], "completed", outcome["stderr"]["excerpt"])
+        self.assertEqual(outcome["stdout"]["excerpt"].strip(), "audit:alpha")
+        child = outcome["execution"]["child"]
+        self.assertTrue(child["verified"], child)
+        self.assertTrue(child["checks"]["bytecode_caches_bypassed"], child)
+        self.assertTrue(child["checks"]["bytecode_prefix_outside_source"], child)
+        self.assertTrue(child["checks"]["sourceless_bytecode_absent"], child)
+        self.assertGreaterEqual(child["bytecode_caches"], 1)
+        # The checkout was not cleaned up to pass: the cache is intact, and a
+        # launch without the redirect still executes the code it describes.
+        self.assertTrue(cache.is_file())
+        legacy = subprocess.run(
+            [self.target["interpreter"], "-I", "-c",
+             "import sys; sys.path.insert(0, sys.argv[1]); "
+             "from deskmate_formats.supervisor import repository_audit as a; print(a.audit())",
+             str(self.checkout / "src")],
+            cwd=str(self.checkout), capture_output=True, text=True, timeout=120)
+        self.assertEqual(legacy.returncode, 0, legacy.stderr)
+        self.assertEqual(legacy.stdout.strip(), "audit:stal")
+
+    def test_sourceless_bytecode_in_the_bound_source_is_refused(self):
+        loose = self.checkout / "src" / "deskmate_formats" / "supervisor" / "planted.pyc"
+        source = loose.with_suffix(".py")
+        source.write_bytes(b"VALUE = 1\n")
+        py_compile.compile(str(source), cfile=str(loose), doraise=True)
+        source.unlink()
+        outcome = self.run_audit()
+        self.assertEqual(outcome["state"], "failed")
+        self.assertEqual(outcome["exit_status"], execution_source.REFUSED_EXIT)
+        self.assertEqual(outcome["reason"], "bound-source-refused")
+        self.assertEqual(outcome["stdout"]["excerpt"], "")
+        self.assertFalse(outcome["execution"]["verified"])
+        report = json.loads((self.root / "attempt" / "execution-child.json")
+                           .read_text(encoding="utf-8"))
+        self.assertEqual(report["state"], "sourceless-bytecode")
+        self.assertIn("planted.pyc",
+                      [Path(item).name for item in report["sourceless_bytecode"]])
+
+
+class FreshChildReportTests(unittest.TestCase):
+    """Each checkpoint step's evidence must come from that step's child."""
+
+    def setUp(self):
+        self.root = Path(self.enterContext(TemporaryDirectory()))
+        self.checkout, revision = make_checkout(self.root / "checkout", marker="alpha")
+        self.run_root = storage_directory(self.root / "run", create=True)
+        self.execution = execution_source.workspace_execution(
+            self.checkout, environment={"interpreter": PYTHON},
+            revision=revision, report_path=self.run_root / "plan-child.json")
+
+    def test_a_step_without_its_own_child_report_cannot_pass(self):
+        first = workspace.command(self.run_root, self.checkout, "publication-audit",
+                                  ("code", workspace.AUDIT), execution=self.execution)
+        self.assertEqual(first["exit_status"], 0, first["child"])
+        self.assertTrue(first["execution_verified"], first["child"])
+        verified = Path(first["child_report_path"])
+        self.assertTrue(verified.is_file())
+        # A verified report still sitting at the binding's own path — the one
+        # path the pre-correction command read for every step — is not inherited.
+        shared = Path(self.execution["bootstrap"]["report_path"])
+        shared.write_bytes(verified.read_bytes())
+        silent = SimpleNamespace(returncode=0)
+        with patch.object(workspace.subprocess, "run", return_value=silent):
+            second = workspace.command(self.run_root, self.checkout, "test-portable-full",
+                                       ("module", *workspace.TEST_PROFILES["portable-full"]),
+                                       execution=self.execution)
+        self.assertNotEqual(second["child_report_path"], first["child_report_path"])
+        self.assertEqual(second["exit_status"], 0)
+        self.assertFalse(second["execution_verified"])
+        self.assertEqual(second["child"]["state"], "report-missing")
+        self.assertEqual(second["child"]["path"], second["child_report_path"])
+        self.assertFalse(Path(second["child_report_path"]).exists())
+        self.assertTrue(shared.is_file())
 
 
 if __name__ == "__main__":

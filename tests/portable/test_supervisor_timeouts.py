@@ -196,3 +196,26 @@ class EditingTimeoutTests(unittest.TestCase):
         with self.assertRaises(driver.DriverError):
             workspace.checkpoint(root, plan["edit_workspace"], token, token,
                                  {"state": "completed"}, execution=plan["execution"])
+
+    def test_a_later_step_cannot_inherit_an_earlier_steps_child_report(self):
+        self.accept()
+        grant = self.prepare()
+        real_run = subprocess.run
+        def silent_audit(argv, **kwargs):
+            if len(argv) > 7 and argv[7] == "code":
+                kwargs["stdout"].write(b"")
+                return subprocess.CompletedProcess(argv, 0)
+            return real_run(argv, **kwargs)
+        with patch.object(subprocess, "run", side_effect=silent_audit):
+            result = self.send(grant)
+        self.assertEqual(result["state"], "blocked", result)
+        steps = {item["step"]: item for item in result["validation"]}
+        earlier = next(item for name, item in steps.items() if name.startswith("test-"))
+        self.assertTrue(earlier["execution_verified"], earlier)
+        audit = steps["publication-audit"]
+        self.assertEqual((audit["exit_status"], audit["state"]), (0, "failed"))
+        self.assertFalse(audit["execution_verified"], audit)
+        self.assertEqual(audit["child"]["state"], "report-missing")
+        self.assertNotEqual(audit["child"]["path"], earlier["child"]["path"])
+        self.assertTrue(Path(earlier["child"]["path"]).is_file())
+        self.assertFalse(Path(audit["child"]["path"]).exists())

@@ -169,8 +169,27 @@ def command(root, workspace, label, step, *, execution):
     """Fixed supervisor-selected Python argv. Actual output retained, never agent claims."""
     timeout = COMMAND_TIMEOUTS.get(label, DEFAULT_COMMAND_TIMEOUT)
     output = root / (label + ".output")
+    launched = execution
+    report_path = None
+    if type(step) is tuple and step and step[0] != "tool":
+        # Each step launches with its own report path, and any file left at that
+        # path by an earlier attempt is removed first: a step whose child wrote
+        # nothing must read as missing evidence, never as a preceding step's
+        # verified report.
+        report_path = root / (label + ".child.json")
+        try:
+            launched = execution_source.step_execution(execution, report_path)
+        except execution_source.ExecutionSourceError as error:
+            raise DriverError("validation step could not be bound: " + error.code) from None
+        try:
+            os.unlink(report_path)
+        except FileNotFoundError:
+            pass
+        except OSError:
+            raise DriverError(
+                "a child report from an earlier attempt could not be cleared") from None
     try:
-        argv = _step_argv(execution, step)
+        argv = _step_argv(launched, step)
     except execution_source.ExecutionSourceError as error:
         raise DriverError("validation step could not be bound: " + error.code) from None
     from deskmate_formats.observer._private_storage import private_file
@@ -183,10 +202,11 @@ def command(root, workspace, label, step, *, execution):
             code = "timeout"
     child = None
     if step[0] != "tool":
-        child = execution_source.read_child_report(execution)
+        child = execution_source.read_child_report(launched)
     receipt = {"argv": argv, "interpreter_sha256": digest(argv[0]), "cwd": str(workspace),
                "source": "workspace" if step[0] != "tool" else execution_source.EXTERNAL,
-               "execution_binding": execution, "child": child,
+               "execution_binding": launched, "child": child,
+               "child_report_path": None if report_path is None else str(report_path),
                "execution_verified": True if child is None else child["verified"],
                "exit_status": code, "timeout_seconds": timeout,
                "output_sha256": digest(output), "output_path": str(output)}

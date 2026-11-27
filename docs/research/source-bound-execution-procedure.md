@@ -97,7 +97,10 @@ interpreter and the base revision are still verified, while the *content* digest
 are re-derived from the edited tree. Each validation step is a bound child:
 `test-*` and `publication-audit` import the workspace package and prove it; the
 `reuse` step is an installed tool and makes no workspace claim. A step passes
-only if it exits zero **and** its child report verifies.
+only if it exits zero **and** its child report verifies. Each step's report is
+its own file, cleared before that step launches, so a step whose child wrote
+nothing reads as `report-missing` instead of inheriting an earlier step's
+verified report.
 
 ## Migration notes
 
@@ -113,7 +116,11 @@ only if it exits zero **and** its child report verifies.
 Bytecode is not written into the bound checkout: `-I` discards
 `PYTHONDONTWRITEBYTECODE`, so the bootstrap sets `sys.dont_write_bytecode`
 before importing. A validation run therefore cannot dirty the tree it is
-validating.
+validating. Not writing is not the same as not reading: before the package is
+imported the bootstrap redirects its own bytecode cache to a fresh, empty,
+private `sys.pycache_prefix`, and it refuses sourceless `.pyc`/`.pyo` files in
+the bound tree. A cached module therefore cannot stand in for the source whose
+digest was checked.
 
 ## Public receipts
 

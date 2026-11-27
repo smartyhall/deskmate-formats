@@ -29,6 +29,11 @@ So there are two mechanisms here, and they are deliberately separate:
     alternative to an ignored ``PYTHONPATH``), imports the package, and checks
     both the import origin and the Python content digest *before* running the
     reviewed target.  A mismatch exits ``78`` and the procedure never runs.
+    It also redirects that launch's bytecode cache to a fresh private
+    directory and refuses sourceless bytecode in the bound tree: ``-I`` does
+    not stop the import system from *reading* a ``.pyc``, and the content
+    digest covers source only, so a stale cache could otherwise execute old
+    code while the digest of the new source passed.
 
 The bootstrap is controller code: it is fixed here, digested into the plan, and
 contains no caller-supplied behaviour.  The target it runs is workspace code,
@@ -78,7 +83,9 @@ import hashlib
 import json
 import os
 import runpy
+import shutil
 import sys
+import tempfile
 
 
 def _write(path, value):
@@ -110,20 +117,75 @@ def _python_digest(directory):
     return digest.hexdigest()
 
 
+def _outside(path, root):
+    if not path:
+        return False
+    try:
+        real = os.path.realpath(path)
+        return os.path.commonpath([real, os.path.realpath(root)]) != os.path.realpath(root)
+    except ValueError:
+        # Different drives: provably not inside the bound source.
+        return True
+
+
+def _bytecode(root, checkout):
+    """Count ignored caches and name bytecode that no source can account for."""
+    caches, sourceless = 0, []
+    for current, names, files in os.walk(root):
+        for name in list(names):
+            if name == "__pycache__":
+                names.remove(name)
+                try:
+                    caches += len(os.listdir(os.path.join(current, name)))
+                except OSError:
+                    pass
+        for name in sorted(files):
+            if not name.endswith((".pyc", ".pyo")):
+                continue
+            source = os.path.join(current, name.rsplit(".", 1)[0] + ".py")
+            if not os.path.exists(source):
+                sourceless.append(os.path.relpath(os.path.join(current, name), root))
+    # The checkout root is also on sys.path, for ``src.*`` imports. Only a
+    # top-level bytecode file can shadow a module there, so it alone is checked.
+    try:
+        top = sorted(os.listdir(checkout))
+    except OSError:
+        top = []
+    for name in top:
+        if name.endswith((".pyc", ".pyo")) and not os.path.exists(
+                os.path.join(checkout, name.rsplit(".", 1)[0] + ".py")):
+            sourceless.append(name)
+    return caches, sourceless
+
+
 root = os.path.abspath(sys.argv[1])
 expected = sys.argv[2]
 report_path = sys.argv[3]
 mode = sys.argv[4]
 target = sys.argv[5]
 arguments = sys.argv[6:]
+checkout = os.path.dirname(root)
 # ``-I`` ignores PYTHON* variables, including PYTHONDONTWRITEBYTECODE, so the
 # checkout must be protected from bytecode caches explicitly. A checkpoint that
 # dirtied the tree it was validating would be a different attempt.
 sys.dont_write_bytecode = True
+# ``-I`` does not stop the import system from *reading* a .pyc, and the content
+# digest covers source files only. A cache whose stored size and timestamp still
+# match can therefore execute old code while the digest of the new source
+# passes. A fresh, empty, private cache prefix makes every import in this launch
+# compile from the bound source, and nothing is written back.
+try:
+    private_cache = tempfile.mkdtemp(prefix="deskmate-source-")
+    cache_empty = not os.listdir(private_cache)
+except OSError:
+    private_cache, cache_empty = None, False
+if cache_empty:
+    sys.pycache_prefix = private_cache
 # The package tree, and the checkout root that repository tests import as
 # ``src.*``. Both are the bound checkout; neither is ambient.
 sys.path.insert(0, root)
-sys.path.insert(1, os.path.dirname(root))
+sys.path.insert(1, checkout)
+caches, sourceless = _bytecode(root, checkout)
 report = {
     "schema_version": 1,
     "role": "workspace-child",
@@ -133,34 +195,49 @@ report = {
     "interpreter": os.path.abspath(sys.executable) if sys.executable else None,
     "prefix": sys.prefix,
     "bound_root": root,
-    "bound_checkout": os.path.dirname(root),
+    "bound_checkout": checkout,
     "expected_python_digest": expected,
     "dont_write_bytecode": bool(sys.dont_write_bytecode),
+    "pycache_prefix": private_cache,
+    "pycache_empty": bool(cache_empty),
+    "pycache_redirected": bool(cache_empty) and sys.pycache_prefix == private_cache,
+    "pycache_outside_root": _outside(private_cache, root),
+    "bytecode_caches": caches,
+    "sourceless_bytecode": sourceless,
 }
 try:
-    import deskmate_formats
-    origin = os.path.realpath(os.path.dirname(deskmate_formats.__file__))
-    inside = os.path.commonpath([origin, os.path.realpath(root)]) == os.path.realpath(root)
-    observed = _python_digest(origin)
-    report.update(origin=origin, python_digest=observed, origin_inside_root=inside)
-    if not inside:
-        report["state"] = "origin-outside-bound-source"
-    elif observed != expected:
-        report["state"] = "content-mismatch"
+    if not report["pycache_redirected"] or not report["pycache_outside_root"]:
+        report["state"] = "bytecode-cache-unavailable"
+    elif sourceless:
+        report["state"] = "sourceless-bytecode"
     else:
-        report["state"] = "bound"
-except (ImportError, OSError, ValueError):
-    report["state"] = "package-not-importable"
-_write(report_path, report)
-if report["state"] != "bound":
-    raise SystemExit(78)
-sys.argv = [target, *arguments]
-if mode == "module":
-    runpy.run_module(target, run_name="__main__", alter_sys=True)
-elif mode == "code":
-    exec(compile(target, "<bound-workspace-code>", "exec"), {"__name__": "__main__"})
-else:
-    raise SystemExit(79)
+        try:
+            import deskmate_formats
+            origin = os.path.realpath(os.path.dirname(deskmate_formats.__file__))
+            inside = os.path.commonpath([origin, os.path.realpath(root)]) == os.path.realpath(root)
+            observed = _python_digest(origin)
+            report.update(origin=origin, python_digest=observed, origin_inside_root=inside)
+            if not inside:
+                report["state"] = "origin-outside-bound-source"
+            elif observed != expected:
+                report["state"] = "content-mismatch"
+            else:
+                report["state"] = "bound"
+        except (ImportError, OSError, ValueError):
+            report["state"] = "package-not-importable"
+    _write(report_path, report)
+    if report["state"] != "bound":
+        raise SystemExit(78)
+    sys.argv = [target, *arguments]
+    if mode == "module":
+        runpy.run_module(target, run_name="__main__", alter_sys=True)
+    elif mode == "code":
+        exec(compile(target, "<bound-workspace-code>", "exec"), {"__name__": "__main__"})
+    else:
+        raise SystemExit(79)
+finally:
+    if private_cache:
+        shutil.rmtree(private_cache, ignore_errors=True)
 '''
 
 
@@ -259,14 +336,14 @@ LAUNCH_SITES = (
         "campaign interpreter + -I -c <bootstrap> ... module unittest <profile arguments>",
         WORKSPACE,
         "bootstrap binds and verifies the disposable S3 workspace before discovery starts",
-        "validation[] step receipt (argv, interpreter identity, child report)",
+        "validation[] step receipt (argv, interpreter identity, fresh per-step child report)",
         "checkpoint records a failed step and blocks; never retried"),
     LaunchSite(
         "workspace.publication-audit", "workspace._step_argv",
         "campaign interpreter + -I -c <bootstrap> ... code <AUDIT>",
         WORKSPACE,
         "bootstrap binds and verifies the S3 workspace, then the audit runs against Path.cwd()",
-        "validation[] step receipt",
+        "validation[] step receipt (fresh per-step child report)",
         "exit 78 is a failed validation step and blocks the checkpoint",
         "was [sys.executable, -I, -c, AUDIT] with PYTHONPATH: the shared wheel was audited and the "
         "receipt named the workspace"),
@@ -596,6 +673,26 @@ def rebind_workspace(execution: dict[str, object],
     return updated
 
 
+def step_execution(execution: dict[str, object],
+                   report_path: "str | os.PathLike[str]") -> dict[str, object]:
+    """A per-launch view of a workspace binding with its own child report path.
+
+    A checkpoint runs several steps against one frozen binding.  Sharing one
+    report path meant a step whose child wrote nothing read the preceding step's
+    report and inherited its verification.  Each step therefore launches with a
+    path no earlier step used, and the caller removes any file left there by an
+    earlier attempt before the child starts.
+    """
+    if execution.get("source") != WORKSPACE:
+        raise ExecutionSourceError("workspace-binding-required", str(execution.get("source")))
+    if not str(report_path):
+        raise ExecutionSourceError("child-report-path-required")
+    updated = dict(execution)
+    updated["bootstrap"] = dict(execution.get("bootstrap") or {},
+                                report_path=str(report_path))
+    return updated
+
+
 def bound_argv(execution: dict[str, object], *, mode: str, target: str,
                arguments: "list[str] | tuple[str, ...]" = ()) -> list[str]:
     """Assemble ``interpreter -I -c bootstrap ... mode target``."""
@@ -634,6 +731,11 @@ def read_child_report(execution: dict[str, object]) -> dict[str, object]:
                                   == (workspace.get("package") or {}).get("python_digest")),
         "interpreter_matches": campaign_identity.same_invocation_path(
             report.get("interpreter"), environment.get("interpreter")),
+        # A cached .pyc is not covered by the source digest, so a launch that
+        # could have read one has not proven which code ran.
+        "bytecode_caches_bypassed": report.get("pycache_redirected") is True,
+        "bytecode_prefix_outside_source": report.get("pycache_outside_root") is True,
+        "sourceless_bytecode_absent": report.get("sourceless_bytecode") == [],
     }
     return {
         "verified": all(value is True for value in checks.values()),
@@ -646,6 +748,8 @@ def read_child_report(execution: dict[str, object]) -> dict[str, object]:
         "python_digest": report.get("python_digest"),
         "interpreter": report.get("interpreter"),
         "prefix": report.get("prefix"),
+        "bytecode_caches": report.get("bytecode_caches"),
+        "sourceless_bytecode": report.get("sourceless_bytecode"),
     }
 
 

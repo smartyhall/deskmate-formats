@@ -99,6 +99,17 @@ preserved, and because `-I` also discards `PYTHONDONTWRITEBYTECODE` the
 bootstrap sets `sys.dont_write_bytecode` itself — otherwise validation would
 dirty the tree it is validating.
 
+Not writing a cache is only half of it, and independent review found the other
+half. `-I` does not stop the import system from *reading* a `__pycache__` entry,
+and the content digest covers `.py` files only, so a cache whose stored size and
+modification time still match can execute old code while the digest of the new
+source passes. Before importing, the bootstrap now creates a fresh, empty,
+private `sys.pycache_prefix` for its own process, so every import in that launch
+compiles from the bound source and nothing is written back; it also refuses a
+`.pyc`/`.pyo` in the bound tree that no source beside it accounts for, because
+the sourceless loader is not redirected by a cache prefix. Both facts are in the
+child report and are required for `verified`.
+
 `deterministic.prepare` now requires an `environment` for a workspace procedure,
 binds the execution block into the plan, and refuses a plan whose vector does
 not launch the bound workspace. `_verify_plan` re-establishes the environment
@@ -114,7 +125,10 @@ failed environment check dispatches no task; and `workspace.checkpoint`
 re-verifies it with `allow_workspace_change=True`, which relaxes *content only*
 because the checkpoint runs after authorized edits. It then re-derives the
 content digests from the edited tree and requires every step's child report to
-be verified before a step can pass.
+be verified before a step can pass. Each step launches with its own child report
+path and clears any file left at that path before the child starts, so a step
+whose child wrote nothing fails as `report-missing` instead of inheriting the
+preceding step's verification.
 
 ## 4. Reproduction
 
@@ -136,6 +150,13 @@ imported nor mentioned. The same contention through the production path prints
 `audit:alpha`, with the child report showing `isolated: true`,
 `pythonpath_present: true` (a deliberately hostile `PYTHONPATH` was set) and
 `origin_inside_root: true`.
+
+A second reproduction covers bytecode. A cache is compiled from a variant of
+`repository_audit` that returns `audit:stal` and is planted at the cache path
+with the bound source's size and modification time. A launch without the
+redirect prints `audit:stal`; the production path prints `audit:alpha`, reports
+`bytecode_caches_bypassed: true` and leaves the planted cache in place, so the
+test cannot pass by deleting the condition it is testing.
 
 ## 5. Lifecycle boundaries
 
@@ -161,17 +182,21 @@ Local, at the head that adds this document:
 
 | Check | Result |
 | --- | --- |
-| `tests/portable/test_supervisor_execution_source.py` | 14 tests OK |
+| `tests/portable/test_supervisor_execution_source.py` | 17 tests OK |
 | `test_supervisor_procedures.py` / `test_supervisor_procedure_limits.py` | 6 / 9 tests OK |
 | `test_supervisor_deterministic.py` | 25 tests OK (2 Windows skips) |
 | `test_supervisor_task_deterministic.py` | 7 tests OK |
 | `test_supervisor_editing.py` | 13 tests OK (364 s) |
-| `test_supervisor_timeouts.py` | 7 tests OK (89 s) |
+| `test_supervisor_timeouts.py` | 8 tests OK (107 s) |
 | `test_supervisor_workers.py` / `test_supervisor_windows_backend.py` | 7 / 4 tests OK |
 | `ruff check src tests/portable tools` | clean |
 | `reuse lint` | 2005/2005 files |
 | `tools/audit_repository.py` | exit 0 |
 | `python -m build --wheel` | wheel built; contains `execution_source.py` and its license |
+
+The two new regressions are the stale-cache/sourceless-bytecode pair and the
+per-step report test in the checkpoint suite, both added for the independent
+review corrections.
 
 The POSIX-only paths (symlinked environments, `pidfd`) are exercised by the
 Ubuntu legs of exact-head CI; this host is Windows. CI results for this head are
@@ -191,6 +216,11 @@ modified.
   not by the environment.
 * Console entry points remain class D: the operator's interpreter decides what
   starts the process. The plan binds from that point on.
+* The bytecode redirect is a property of the bound child process, not a
+  filesystem prohibition, and an interpreter that ignored `sys.pycache_prefix`
+  is out of scope. Loose bytecode elsewhere in the checkout (under `tests/`, for
+  example) is covered by the plan's input digests and, for S3, by the authorized
+  change set rather than by this scan.
 * No live task, native experiment, emulator or provider call was performed.
 
 ## 8. Authorization observed
