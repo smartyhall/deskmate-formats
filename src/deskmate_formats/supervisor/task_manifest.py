@@ -17,6 +17,7 @@ _REQUIRED = set("schema_version id revision idempotency_key title description ca
                 "resources dependencies".split())
 _OPTIONAL = {"expires_at", "instructions"}
 _EDIT_FIELDS = {"development"}
+_DETERMINISTIC_FIELDS = {"deterministic"}
 _RESOURCES = {"source-read", "synthetic-fixtures", "portable-tests"}
 
 
@@ -107,9 +108,11 @@ def validate_manifest(data):
         value = decode_json(data, MAX_MANIFEST_BYTES)
     except EventError as error:
         raise TaskError(str(error)) from None
-    if type(value) is not dict or not _REQUIRED <= value.keys() <= _REQUIRED | _OPTIONAL | (_EDIT_FIELDS if value.get("schema_version") == 2 else set()):
+    extras = {2: _EDIT_FIELDS, 3: _DETERMINISTIC_FIELDS}.get(
+        value.get("schema_version") if type(value) is dict else None, set())
+    if type(value) is not dict or not _REQUIRED <= value.keys() <= _REQUIRED | _OPTIONAL | extras:
         raise TaskError("missing or unexpected manifest fields")
-    if type(value["schema_version"]) is not int or value["schema_version"] not in (1, 2):
+    if type(value["schema_version"]) is not int or value["schema_version"] not in (1, 2, 3):
         raise TaskError("unsupported manifest schema version")
     identifier = task_id(value["id"])
     revision(value["revision"])
@@ -118,13 +121,16 @@ def validate_manifest(data):
     plain_text(value["description"], 2048, "description", multiline=True)
     if value["category"] not in ("research", "verification") or value["profile"] != "offline":
         raise TaskError("unsupported category or execution profile")
-    allowed = _RESOURCES if value["schema_version"] == 1 else {"source-read", "source-edit", "portable-tests"}
+    allowed = (_RESOURCES if value["schema_version"] in (1, 3)
+               else {"source-read", "source-edit", "portable-tests"})
     resources = _array(value["resources"], len(allowed), "resources")
     if not resources or any(type(item) is not str or item not in allowed for item in resources):
         raise TaskError("unsupported resource requirement")
     _distinct(resources, "resource")
     if value["schema_version"] == 2:
         validate_development(value)
+    elif value["schema_version"] == 3:
+        validate_deterministic(value)
     dependencies = _array(value["dependencies"], 16, "dependencies")
     _distinct([_dependency(item, identifier)[0] for item in dependencies], "dependency")
     instructions = _array(value.get("instructions", []), 4, "instruction references")
@@ -138,6 +144,23 @@ def validate_manifest(data):
         except ValueError:
             raise TaskError("invalid expiry date or time") from None
     return value
+
+
+def validate_deterministic(manifest):
+    """Validate a no-model task against the reviewed procedure registry."""
+    block = manifest.get("deterministic")
+    _members(block, {"procedure", "arguments"}, "deterministic")
+    from . import procedures
+    try:
+        spec = procedures.get(block["procedure"])
+        arguments = spec.normalize(block["arguments"])
+    except procedures.ProcedureError as error:
+        raise TaskError(str(error)) from None
+    if arguments != block["arguments"]:
+        raise TaskError("deterministic arguments must already be normalized")
+    if list(manifest["resources"]) != list(spec.resources):
+        raise TaskError("deterministic resources must equal the reviewed procedure requirements")
+    return spec
 
 
 def canonical_manifest(data):

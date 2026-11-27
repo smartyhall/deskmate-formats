@@ -1,0 +1,38 @@
+{
+  "agent_label": "Freebuff Desktop native session (local shell and file tools)",
+  "attribution_limitations": [
+    "A shared account meter cannot be attributed to one campaign.",
+    "Token counts, context utilization and allowance hours are distinct units with no verified exchange relationship.",
+    "Cumulative thread usage reported by the desktop UI is not a per-campaign charge."
+  ],
+  "campaign_id": "freebuff-supervisor-observatory-20261126",
+  "checkpoint": "integrity",
+  "checkpoint_status": "execution-integrity corrections, canonical lease identities, tree-aware recovery, snapshot collector and upstream integration research implemented and qualified",
+  "coverage": "this campaign only; shared account state is not attributable",
+  "evidence": [
+    "docs/research/execution-integrity-20261126.md",
+    "docs/research/freebuff-upstream-integration-20261126.md",
+    "docs/research/deterministic-procedure-candidates-20261126.md",
+    "docs/research/observatory-visual-qualification-20261126.md"
+  ],
+  "execution_mode": "interactive local desktop session; no unattended dispatch, no model API call, no provider endpoint contacted",
+  "git_revision": "573f479",
+  "measurement_note": "No measurement was observed. A missing measurement is recorded as absent, never as zero.",
+  "measurements": [],
+  "model": {
+    "note": "The client model selector and runtime model identity were not observed at any checkpoint.",
+    "reasoning_effort": null,
+    "runtime_identity": null,
+    "selected_label": null
+  },
+  "observed_at_utc": "2026-11-26T09:40:00Z",
+  "privacy": "No transcript, credential, account identifier or private path is included.",
+  "provider": "freebuff",
+  "receipt_written_utc": "2026-11-26T09:40:00Z",
+  "schema_version": 1,
+  "source": {
+    "detail": "No programmatic usage interface is available to this session; the desktop context tooltip was not read.",
+    "kind": "unavailable",
+    "version": "Freebuff Desktop orchestrator build f1641d8af2a035dfb8a1b107d7f256ce9172276c (2026-11-23)"
+  }
+}

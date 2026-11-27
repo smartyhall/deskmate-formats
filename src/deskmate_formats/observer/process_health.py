@@ -69,6 +69,63 @@ def process_claim(pid=None):
     return {"pid": pid, "identity": identity} if status == "alive" else None
 
 
+def process_status(pid):
+    """Public liveness probe: ``alive``, ``stopped``, ``not-found`` or ``unknown``."""
+    return _sample(pid)[1]
+
+
+def start_stamp(identity):
+    """The creation stamp encoded in an identity, for PID-reuse checks.
+
+    The units are platform-local (Linux clock ticks since boot, Windows
+    ``FILETIME``), so stamps are comparable only within one platform, which is
+    the only place they are used. ``None`` means the instance is unknown.
+
+    The Linux stamp is a **creation tick**, not a global instance identifier:
+    two processes created within the same clock tick carry the same stamp, so a
+    stamp identifies an instance only together with the PID. That is sufficient
+    for the reuse check, which always compares one PID against itself: a later
+    holder of a recycled number is necessarily created later and so carries a
+    strictly greater stamp.
+    """
+    if type(identity) is not str:
+        return None
+    prefix, _, value = identity.partition("-")
+    if prefix == "win":
+        try:
+            return int(value, 16)
+        except ValueError:
+            return None
+    if prefix == "linux":
+        _, _, start = identity.rpartition("-")
+        try:
+            return int(start)
+        except ValueError:
+            return None
+    return None
+
+
+def identity_boot(identity):
+    """The boot identity embedded in a Linux process identity, if any.
+
+    Start times are relative to a boot, so an observation bound to one boot is
+    meaningless on another. The identity string already carries that binding,
+    which lets a recorded lease inherit the guard without a new field.
+    """
+    if type(identity) is not str:
+        return None
+    prefix, _, value = identity.partition("-")
+    if prefix != "linux":
+        return None
+    boot, _, _ = value.rpartition("-")
+    return boot or None
+
+
+def process_health_identity(pid):
+    """The identity of whatever currently holds ``pid``, or ``None``."""
+    return _sample(pid)[0]
+
+
 def verify_process(pid, expected_identity):
     identity, status = _sample(pid)
     if identity is not None and identity != expected_identity:

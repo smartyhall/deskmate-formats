@@ -100,6 +100,18 @@ The probe never annotates a project it did not create for the purpose. Comments
 and labels change stored state, and a research project that is also evidence
 must not be mutated to demonstrate that mutation works.
 
+**Later contract change, recorded rather than applied to the observation.** The
+run above used the plate text `campaign annotation probe 2026-11-26` and judged
+persistence from a nonempty plate plus the label. Since 2026-11-27 the tool
+stamps the plate and bookmark comment with the annotate attempt identifier,
+records the values it wrote, and requires `--verify-annotation` to be bound to
+that receipt, comparing address, plate, bookmark category and content, and
+label separately; see
+[the procedure contracts](ghidra-procedure-contracts.md#annotation-verification-is-a-comparison-not-a-presence-test).
+The paragraph above is the historical record of the earlier contract. It was not
+re-run, and it is not evidence that the strengthened comparison was exercised
+natively.
+
 ## Two independent imports at once
 
 Two imports of different images into **different** projects in the same
@@ -171,9 +183,11 @@ python tools/ghidra/ghidra_program_report.py --project-dir PRIVATE/projects \
   --decompile FUN_1000_0009 --text-output PRIVATE/exports/dec.txt \
   --output PRIVATE/exports/report.json
 python tools/ghidra/ghidra_program_report.py --project-dir PRIVATE/projects \
-  --project probe --program DESK.EXE --annotate "note"
+  --project probe --program DESK.EXE --annotate "note" \
+  --output PRIVATE/exports/annotate.json
 python tools/ghidra/ghidra_program_report.py --project-dir PRIVATE/projects \
-  --project probe --program DESK.EXE --verify-annotation
+  --project probe --program DESK.EXE --verify-annotation \
+  --annotation-receipt PRIVATE/exports/annotate.json
 ```
 
 `--program` takes the project path without a leading slash; on Git Bash a
