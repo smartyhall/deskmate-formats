@@ -48,12 +48,32 @@ function pagesFromMap(mapPath) {
 }
 
 function parsePages(value, mapPath) {
-  if (!value || value === "all") {
-    if (!mapPath) throw new Error("--pages all needs --page-map");
-    return pagesFromMap(mapPath);
+  if (!mapPath) throw new Error("qualification needs --page-map");
+  const pages = pagesFromMap(mapPath);
+  const byRoute = new Map(pages.map((page) => [page.route, page]));
+  if (byRoute.size !== pages.length) throw new Error("duplicate page-map route");
+  for (const route of byRoute.keys()) validateRoute(route);
+  if (!value || value === "all") return pages;
+  const routes = String(value).split(",").map((route) => route.trim());
+  if (!routes.length || routes.some((route) => !route)) throw new Error("empty route");
+  return [...new Set(routes.map(validateRoute))].map((route) => {
+    const page = byRoute.get(route);
+    if (!page) throw new Error(`unknown page-map route: ${route}`);
+    return page;
+  });
+}
+
+function validateRoute(value) {
+  if (typeof value !== "string" || !/^\/(?:[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*\/?)?$/.test(value)) {
+    throw new Error("invalid qualification route");
   }
-  return String(value).split(",").map((route) => route.trim()).filter(Boolean)
-    .map((route) => ({ route: normalizeRoute(route), title: null }));
+  return value.endsWith("/") ? value : value + "/";
+}
+
+function renderingState(result) {
+  if (result.problems.length) return "failed";
+  if (result.checks?.some((check) => check.inconclusive)) return "inconclusive";
+  return "passed";
 }
 
 async function qualifyPage(context, page, options, engine, profile) {
@@ -79,7 +99,7 @@ async function qualifyPage(context, page, options, engine, profile) {
   let response = null;
   try {
     response = await tab.goto(url, { waitUntil: "load", timeout: options.timeout });
-    await tab.waitForLoadState("networkidle", { timeout: Math.min(options.timeout, 10000) }).catch(() => {});
+    await tab.waitForLoadState("networkidle", { timeout: Math.min(options.timeout, 10000) });
   } catch (error) {
     const result = {
       engine, engineVersion: null, profile: profile.name, page,
@@ -109,7 +129,7 @@ async function qualifyPage(context, page, options, engine, profile) {
     problems.push(`rendered ${observed.path}, expected ${page.route}`);
   }
   const canonical = normalizeRoute(observed.canonical);
-  if (canonical && canonical !== page.route) problems.push(`canonical ${observed.canonical} names ${canonical}`);
+  if (!canonical || canonical !== page.route) problems.push(`canonical ${observed.canonical} does not establish ${page.route}`);
   if (page.title && !observed.title.includes(page.title)) {
     problems.push(`title ${JSON.stringify(observed.title)} lacks ${JSON.stringify(page.title)}`);
   }
@@ -209,7 +229,7 @@ async function qualify(options) {
             const result = await qualifyPage(context, page, options, engine.name, profile);
             result.engineVersion = version;
             results.push(result);
-            const state = result.problems.length ? `FAIL ${result.problems.length}` : "ok";
+            const state = renderingState(result);
             console.log(`${engine.name} ${profileName} ${page.route}: ${state}`);
           } finally {
             await context.close();
@@ -230,9 +250,11 @@ async function qualify(options) {
     profiles: profileNames,
     pages: pages.map((page) => page.route),
     totals: {
+      requested: engineNames.length * profileNames.length * pages.length,
       renderings: results.length,
-      passed: results.filter((result) => result.problems.length === 0).length,
-      failed: results.filter((result) => result.problems.length > 0).length,
+      passed: results.filter((result) => renderingState(result) === "passed").length,
+      failed: results.filter((result) => renderingState(result) === "failed").length,
+      inconclusive: results.filter((result) => renderingState(result) === "inconclusive").length,
       axeViolations: results.reduce((total, result) => total + (result.axe?.violations?.length || 0), 0),
     },
   };
@@ -241,4 +263,4 @@ async function qualify(options) {
   return { summary, results };
 }
 
-module.exports = { qualify, pagesFromMap, normalizeRoute, slug, DEFAULT_TIMEOUT, SERIOUS };
+module.exports = { qualify, pagesFromMap, normalizeRoute, validateRoute, parsePages, renderingState, slug, DEFAULT_TIMEOUT, SERIOUS };
