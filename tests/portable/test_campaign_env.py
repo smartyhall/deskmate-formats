@@ -14,8 +14,9 @@ editable install is resolved; the Windows laboratory experiment uses real
 The regression tests answer the independent review of PR #206, one finding at a
 time: parent versus requested interpreter identity, symlinked POSIX
 environments, positive package-content matching, receipt binding, exact Git
-checkout root, ownership and replacement of the target directory, and the
-installation boundary that keeps the network-capable build backend opt-in.
+checkout root, ownership and replacement of the target directory, the failure
+paths of a staged replacement in which a rename does not do what was asked, and
+the installation boundary that keeps the network-capable build backend opt-in.
 """
 
 from __future__ import annotations
@@ -1018,6 +1019,117 @@ class ReplacementRecoveryTest(unittest.TestCase):
         self.assertEqual(environment.path_kind(
             environment.layout(self.repository, "recovery", root=self.root / "fresh-envs")["directory"]),
             "absent")
+
+    def _provision_through(self, rename) -> environment.CampaignEnvironmentError:
+        """Provision a replacement whose renames are the given step function."""
+        with self._patches():
+            with mock.patch.object(environment, "_rename", side_effect=rename):
+                with self.assertRaises(environment.CampaignEnvironmentError) as caught:
+                    environment.provision(self.repository, "recovery", root=self.root / "envs",
+                                          package="isolation_probe", replace=True)
+        return caught.exception
+
+    def test_both_rename_failures_are_uncertain_and_keep_both_copies(self) -> None:
+        """A swap that moves nothing back must not look like an ordinary failure.
+
+        The previous environment has been retired, the staged one could not be
+        moved in, and the restore failed too.  Neither copy is known to be usable
+        in place, so both are kept and the state is reported as uncertain rather
+        than raised as an `OSError` that the caller's handlers would treat as one
+        more failed provision.
+        """
+        before = receipts.file_digest(str(self.target["record"]))
+        real = environment._rename
+        calls = {"retire": 0, "swap": 0, "restore": 0}
+
+        def failing_rename(source, destination):
+            if Path(destination).name.startswith(".retired-"):
+                calls["retire"] += 1
+                return real(source, destination)
+            if calls["swap"] == 0:
+                calls["swap"] += 1
+            else:
+                calls["restore"] += 1
+            raise OSError("synthetic rename failure")
+
+        error = self._provision_through(failing_rename)
+        self.assertEqual(error.code, "replacement-recovery-uncertain")
+        self.assertEqual(calls, {"retire": 1, "swap": 1, "restore": 1})
+
+        detail = json.loads(error.detail)
+        self.assertEqual(detail["error"], "environment-swap-failed")
+        self.assertEqual(detail["reason"], "swap-and-restore-both-failed")
+        self.assertIs(detail["retired_present"], True)
+        self.assertIs(detail["staged_present"], True)
+        self.assertIs(detail["venv_present"], False)
+
+        # Both copies survive, and each still holds what it held before.
+        retired = Path(detail["retired_path"])
+        self.assertTrue((retired / "installed-marker.txt").is_file())
+        staged = Path(detail["staged_path"])
+        self.assertEqual(environment.path_kind(staged), "directory")
+        self.assertEqual(environment.path_kind(staged.parent), "directory")
+        self.assertEqual(environment.path_kind(Path(str(self.target["venv"]))), "absent")
+        self.assertEqual(receipts.file_digest(str(self.target["record"])), before)
+        self.assertEqual([path.name for path in Path(str(self.target["root"])).iterdir()
+                          if path.name.startswith(".failed-")], [])
+
+        # The private recovery receipt is the operator's map of that state.
+        receipt_path = Path(detail["recovery_receipt"])
+        self.assertEqual(receipt_path.parent, Path(str(self.target["root"])))
+        self.assertTrue(receipt_path.name.startswith(environment.RECOVERY_PREFIX))
+        recovery = receipts.read(receipt_path)
+        self.assertEqual(recovery["kind"], environment.RECOVERY_KIND)
+        self.assertEqual(recovery["state"], "uncertain")
+        self.assertEqual(recovery["campaign"], "recovery")
+        self.assertEqual(recovery["retired_path"], str(retired))
+        self.assertEqual(recovery["retired_kind"], "directory")
+        self.assertEqual(recovery["staged_venv"], str(staged))
+        self.assertEqual(recovery["staged_kind"], "directory")
+        self.assertEqual(recovery["venv"], str(self.target["venv"]))
+        self.assertEqual(recovery["venv_kind"], "absent")
+        self.assertEqual(recovery["record_path"], str(self.target["record"]))
+        self.assertEqual(recovery["failures"], {"restore": "OSError", "swap": "OSError"})
+        self.assertTrue(recovery["recovery"])
+
+    def test_a_failed_move_into_place_restores_the_previous_environment(self) -> None:
+        """When the restore works the failure is ordinary, and the staging copy goes."""
+        before = receipts.file_digest(str(self.target["record"]))
+        real = environment._rename
+
+        def failing_rename(source, destination):
+            if Path(destination).name.startswith(".retired-"):
+                return real(source, destination)
+            if Path(source).parent.name.startswith(".staging-"):
+                raise OSError("synthetic move failure")
+            return real(source, destination)
+
+        error = self._provision_through(failing_rename)
+        self.assertEqual(error.code, "environment-swap-failed")
+        self.assertEqual(json.loads(error.detail)["restored"], True)
+        venue = Path(str(self.target["venv"]))
+        self.assertTrue((venue / "installed-marker.txt").is_file())
+        self.assertEqual(receipts.file_digest(str(self.target["record"])), before)
+        names = [path.name for path in Path(str(self.target["root"])).iterdir()]
+        self.assertEqual([name for name in names if name.startswith(".staging-")], [])
+        self.assertEqual([name for name in names if name.startswith(".retired-")], [])
+        self.assertEqual([name for name in names if name.startswith(".recovery-")], [])
+
+    def test_a_failed_retirement_leaves_the_environment_untouched(self) -> None:
+        """The first rename failing means nothing moved and the target is intact."""
+        before = receipts.file_digest(str(self.target["record"]))
+
+        def failing_rename(_source, _destination):
+            raise OSError("synthetic retirement failure")
+
+        error = self._provision_through(failing_rename)
+        self.assertEqual(error.code, "environment-retirement-failed")
+        venue = Path(str(self.target["venv"]))
+        self.assertTrue((venue / "installed-marker.txt").is_file())
+        self.assertEqual(receipts.file_digest(str(self.target["record"])), before)
+        names = [path.name for path in Path(str(self.target["root"])).iterdir()]
+        self.assertEqual([name for name in names if name.startswith(".staging-")], [])
+        self.assertEqual([name for name in names if name.startswith(".retired-")], [])
 
 
 class BootstrapInvocationTest(unittest.TestCase):

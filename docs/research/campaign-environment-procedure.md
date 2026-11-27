@@ -115,6 +115,24 @@ receipt is untouched. If the restore itself cannot be established, the command
 fails with `replacement-recovery-uncertain`, whose detail names the retired
 environment: nothing is deleted, and the operator decides what to do next.
 
+The swap itself is three renames, and each way one of them can fail has its own
+answer:
+
+| Failure | What is left | Code |
+| --- | --- | --- |
+| the previous environment cannot be moved aside | nothing moved; target intact; staging removed | `environment-retirement-failed` |
+| the staged environment cannot be moved in, and the restore succeeds | previous environment back in place; staging removed | `environment-swap-failed` |
+| the staged environment cannot be moved in, and the restore fails too | both copies kept; private recovery receipt written | `replacement-recovery-uncertain` |
+
+On the third, `.recovery-<campaign>-<uuid>.json` in the environment root records
+what the retired path, the staged path and the target's `venv` path are *now*,
+the two failed operations, the record digest that was expected, and four
+recovery steps. The error's `detail` carries the same paths, so the evidence
+does not depend on that one file. Nothing is deleted on that path: inspect both
+copies, move the one you intend to keep to `venv`, or delete the environment
+deliberately. A target whose `venv` is missing is refused by design, so a
+half-recovered directory is not silently adopted by the next provision.
+
 Re-provision after any source change you intend to measure; a stale installation
 is reported, not silently used.
 
@@ -185,6 +203,99 @@ receipt = launch.run_isolated(campaign_interpreter, "deskmate_formats.some_cli",
 refuses a vector whose identity cannot be attributed. `launch.probe` runs the
 campaign probe in that child and returns its own resolution as JSON.
 
+## Adoption contract for issue #207
+
+#207 adopts campaign environments in production Supervisor procedures. This is
+the interface those callers may depend on; implementing the adoption is #207's
+work, not this procedure's.
+
+### Invocation
+
+* `python -m deskmate_formats.campaign_env.cli <command>` and the installed
+  `deskmate-campaign-env` console script are one entry point.
+* Commands: `inventory`, `provision`, `preflight`, `probe`, `identity`,
+  `launch`. Exit status is part of the contract: `preflight` returns 0, 1 or 2
+  for `qualified`, `unqualified` and `unknown`; `provision` returns 0 only for a
+  `qualified` receipt, and 1 with a JSON `{"verdict": "failed", "reason": …}`
+  document otherwise.
+* A failure the mechanism understands is a short publishable `reason` code, not
+  an exception text. Treat an unrecognised code as a hard stop.
+* The module is standard-library only and takes the package name as a parameter,
+  so a Supervisor can import it without the campaign's own dependencies.
+
+### Ownership
+
+* One campaign owns each environment directory, its `environment.json`, its
+  `venv` and the `.lock-<campaign>` beside it. A directory this campaign cannot
+  prove it owns is refused, never adopted: `existing-directory-without-valid-record`,
+  `existing-directory-with-foreign-record`, `existing-record-without-interpreter`,
+  `existing-directory-with-unreadable-record`, `existing-redirect-at-target`,
+  `unexpected-entry-at-target`, `redirected-environment-root`.
+* Provisioning holds the lock for the whole run; a second provision of the same
+  campaign fails `provisioning-in-progress`. A Supervisor must not remove that
+  lock while a provision could be running, and must not write into the
+  environment root, rename its contents, or edit a record or receipt in place.
+
+### Identity
+
+* An interpreter is identified by `sys.prefix`, its **invocation path**, and the
+  SHA-256 of its executable. `identity.same_invocation_path()` compares named
+  paths without resolving; `identity.same_environment()` compares prefixes.
+  Neither `resolve` nor `samefile` may be substituted: on POSIX two environments
+  share one executable through symbolic links.
+* Each receipt records `bootstrap_interpreter` and `bootstrap_identity` for the
+  interpreter that built the environment, and `environment_identity` for the
+  environment's own interpreter.
+* A Supervisor launching a child passes the environment interpreter explicitly
+  and keeps `-I`. `sys.executable` is the parent's interpreter, which is exactly
+  the fact a preflight is meant to disprove.
+
+### Provisioning
+
+* `provision(checkout, campaign, root=…, python=…)` returns a receipt whose
+  `verdict` is `qualified`; any other outcome is a failed provision. It is
+  offline by default (`--no-index --no-build-isolation`, `install_mode:
+  "offline"`, `index_access: false`); only an explicit `--allow-build-isolation`
+  may reach an index, and every attempt records which mode ran.
+* It refuses a checkout that is not the root of its own Git repository
+  (`source-identity-not-established`) and one that changes while it installs
+  (`source-changed-during-provisioning`).
+* The replacement is built and validated under `.staging-<campaign>-<uuid>`; the
+  previous environment is deleted only after final verification and a durable
+  receipt write.
+* The environment holds this project and nothing else. Shared immutable tools
+  stay in one read-only tools environment; a dependency a campaign installs into
+  its environment is not reproduced by another campaign's provision.
+
+### Preflight
+
+* `preflight(checkout, campaign=…, interpreter=…)` evaluates eleven checks and
+  sets `measurement_allowed` only when all of them pass. `verdict` is
+  `qualified`, `unqualified` or `unknown`, and `reasons` names the failing
+  checks.
+* Run it *with* the campaign interpreter. `--interpreter` is a child selection;
+  it is never evidence about the parent.
+* Run it before each measured or published step, keep the receipt beside the
+  numbers, and publish only the redacted projection (`--public`).
+
+### Remaining limitations for #207
+
+* The mechanism proves identity, not isolation: it is not an OS sandbox.
+* A preflight is point-in-time evidence. A long procedure must re-run it at its
+  checkpoint.
+* `--replace` requires a complete owned environment. A directory whose `venv` is
+  missing — including one left by an uncertain swap — must be repaired or
+  deleted deliberately.
+* The lock is not self-expiring, and staging must share a filesystem with the
+  target.
+* `pip --target` installs no console scripts inside the environment, so children
+  are launched as `-I -m module`, which is what the Supervisor already does.
+* The Supervisor still passes `sys.executable` in `workspace.command()` and
+  resolves its own interpreter in `procedures._interpreter()`; binding those to
+  the campaign interpreter, refusing a campaign lease granted under a stale
+  environment, and adding `environment_verdict` to the Observatory projection
+  are #207's changes.
+
 ## Migration checklist
 
 For a Codex or Freebuff campaign starting on this host:
@@ -227,6 +338,10 @@ Raw receipts, pip logs and the synthetic checkouts stay private.
   statuses.
 * Ownership beats convenience: a lost `environment.json` means the environment
   is not adoptable. Delete that directory deliberately and provision again.
+* Do not clean up a `replacement-recovery-uncertain` state by hand until you have
+  read its recovery receipt: the copy at `.retired-…` is the previous
+  environment and the copy at `.staging-…` is the new, never-verified one, and
+  neither is known to be usable in place.
 * On POSIX, two virtual environments share one executable inode through
   symbolic links; identify environments by `sys.prefix`, and compare
   interpreter paths as they were *named* (`same_invocation_path`), never after
