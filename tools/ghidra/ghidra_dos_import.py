@@ -344,7 +344,7 @@ def validate_receipt(
             )
 
     requested = receipt.get("requested") or {}
-    if project is not None and requested.get("project") not in (None, project):
+    if project is not None and requested.get("project") != project:
         problems.append(
             f"requested.project is {requested.get('project')!r}, expected {project!r}"
         )
@@ -370,7 +370,7 @@ def validate_receipt(
         if content is not None and not SHA256_RE.match(str(content)):
             problems.append("program.content_sha256 is not a SHA-256 digest")
         recorded = receipt.get("project") or {}
-        if project is not None and recorded.get("name") not in (None, project):
+        if project is not None and recorded.get("name") != project:
             problems.append(
                 f"project.name is {recorded.get('name')!r}, expected {project!r}"
             )
@@ -463,10 +463,7 @@ def validate_reopen_payload(
     recorded_project = payload.get("project")
     problems += _missing_fields(recorded_project, ("name", "dir"), "project.")
     if isinstance(recorded_project, dict):
-        if project is not None and recorded_project.get("name") not in (
-            None,
-            project,
-        ):
+        if project is not None and recorded_project.get("name") != project:
             problems.append(
                 f"project.name is {recorded_project.get('name')!r}, expected "
                 f"{project!r}"
