@@ -1,8 +1,8 @@
 # Bounded, verified guest input for 86Box automation
 
-2026-11-26, revised after independent review of PR #187. Provider-independent
-improvement to the automation layer, qualified with portable tests and six
-authorized native sessions on disposable clones.
+2026-11-26, revised after two independent reviews of PR #187 (the second on
+2026-11-27). Provider-independent improvement to the automation layer, qualified
+with portable tests and six authorized native sessions on disposable clones.
 
 The question was not "can we send keys". It was: after a key is sent, what can
 the emulator, the guest BIOS, and the application each prove, and what should an
@@ -20,6 +20,32 @@ automation layer do when those proofs disagree?
 | Trailing whitespace is stripped | Confirmed, corrected | Rows are read raw; the cursor decides how much of the row is typed input |
 | A changed framebuffer does not prove the operation succeeded | Confirmed, implemented | Evidence is recorded per layer; a press without an expectation can never report success |
 
+## Second independent review, 2026-11-27
+
+| Finding | Disposition | Basis |
+| --- | --- | --- |
+| An empty region after the anchor does not establish the initial cursor position | Confirmed, corrected | `type_text` now reads the row and the BIOS cursor twice, requires the cursor exactly at the anchor's end, and withholds every burst otherwise |
+| An invalid or unknown ring (`depth: null`) silently satisfies the pre-send prerequisite | Confirmed, corrected | `readiness()` returns `ok: false` for an unreadable ring and the report is `withheld`; a bypassing guest must select the explicit `bypass` profile |
+| The automation queue is not rechecked immediately before a resend | Confirmed, corrected | `_recovery_gate` settles, waits for the automation queue, then re-reads ring, queue, anchor row/column, row content and cursor |
+| A complete burst is accepted without a fresh queue/cursor guard, and text equality is tested before pending input | Confirmed, corrected | `_completion` re-reads the ring, the automation queue, the anchor location, the row and the cursor at the instant success is claimed |
+| `_recovery_gate` does not check the original anchor position | Confirmed, corrected | The gate refuses when the anchor's row or column changed, and refuses an ambiguous (duplicated) anchor |
+| `confirmed` is not advanced on partial retry, so a later regression can authorise replay | Confirmed, corrected | A gated partial observation becomes the new verified floor; anything shorter is `ambiguous: previously verified text regressed` |
+| `DosPrompt.submit` captures `before_rows` before typing, so the command's own echo can be credited as output | Confirmed, corrected | The output reference is captured after entry verification and immediately before Enter, and its digest and cursor are recorded |
+| `fresh_text` common prefix/suffix is not scrolling-aware | Confirmed, corrected | `fresh_region` fits the smallest vertical shift that explains the screen and counts only unexplained rows and rows revealed below it |
+| Ring occupancy/drainage is described as acceptance by the application | Confirmed as terminology, corrected | The field is also reported as `translated`, with a limitation list; neither name claims application consumption |
+
+Three behaviours changed rather than being repaired:
+
+- a failure to establish the insertion point is now a `withheld` report, not an
+exception: an absent or ambiguous anchor still raises, because that is a caller
+or screen-selection error, but a cursor parked elsewhere is a guest state the
+operator must see;
+- `DosPrompt.await_new_prompt` returns `null` when the guest leaves text mode,
+which is recorded as `left_text` and "execution state unknown" rather than as a
+failed prompt return;
+- `DosPrompt` records a quiet-screen corroboration (`settled`) after the prompt
+returns. Quiet is weaker than completion and is labelled as such.
+
 One proposal was not adopted as stated. The review suggested that the synthetic
 peer "appears to reproduce the same assumption" about the ring. It did: the peer
 advanced HEAD on insert, so it agreed with the bug instead of exposing it. The
@@ -33,13 +59,16 @@ is now caught by the tests rather than confirmed by them.
 | --- | --- | --- | --- |
 | Acknowledged | socket reply | the emulator received the request | anything about the guest |
 | Delivered | `key` reply after the last event's `KEY_GAP_MS` gap | the emulated keyboard device was handed every event | BIOS translation, queueing or application action |
-| Accepted | BIOS ring head/tail, read through `memr` | translated keystrokes were consumed as of that sample | which program consumed them, or that any did |
+| Translated (`accepted`) | BIOS ring head/tail, read through `memr` | translated keystrokes were consumed as of that sample | which program consumed them, or that any did |
 | Observed | caller-supplied expectation met | the intended state is now visible | which code path produced it |
 
 These are separate attributes on every report
-(`acknowledged`, `delivered`, `accepted`, `observed`), not a single level. A
-press has `accepted: null` because scan codes may never become keystroke words; a
-text entry on an unreadable ring has `accepted: null` and cannot recover.
+(`acknowledged`, `delivered`, `accepted`/`translated`, `observed`), not a single
+level. A press has `accepted: null` because scan codes may never become keystroke
+words. A text entry on an unreadable ring is withheld, not attempted; a guest
+that bypasses the ring must use the `bypass` profile, which records
+`bios_keyboard_ring_bypassed`, leaves acceptance `null`, and refuses recovery on
+any build that cannot show its own queue drained.
 
 The delivery claim remains source-verified: `src/automation.c` treats `key` as a
 timed command, forwards the first event, emits the rest two emulated milliseconds
@@ -67,8 +96,9 @@ A guest that trims trailing spaces cannot be verified this way, and is reported
 ## Recovery and its bounds
 
 Recovery happens only when the observation is a strict prefix that stopped
-growing, the ring is provably empty, and the cursor sits at the end of that
-prefix. Bursts that keep making progress are normal operation and do not consume
+growing, the ring is provably empty, the automation queue (on an instrumented
+build) has drained, the anchor is still at its original row and column, and the
+cursor sits at the end of that prefix. Bursts that keep making progress are normal operation and do not consume
 the recovery budget; a burst that produces nothing new does. If the ring is
 non-empty the facility sends nothing and reports `pending`, because queued input
 can still arrive and a quiet screen proves nothing yet.
@@ -78,9 +108,19 @@ can still arrive and a quiet screen proves nothing yet.
 `profiles.py` keeps application knowledge out of the generic layer.
 
 - `DosPrompt.submit` separates entry from execution: it types the command,
-  refuses to press Enter unless the line and cursor are verified, then reports
-  `prompt_returned` and `output_matched` independently. It never replays a
-  command whose execution is unknown.
+  refuses to press Enter unless the line and cursor are verified and no input is
+  still pending, then reports `prompt_returned` and `output_matched`
+  independently. Expected output is matched only in rows that the pre-Enter
+  screenshot cannot explain, so neither the command's own echo nor history that
+  merely scrolled is credited. It never replays a command whose execution is
+  unknown, and a guest that leaves text mode is reported as unknown rather than
+  as a failure.
+- The output region uses a vertical-scroll model (`fresh_region`): the smallest
+  shift that leaves the fewest unexplained rows is chosen, and only those rows
+  plus rows revealed below the old screen count as fresh. The model is
+  conservative by construction: a genuine output row that duplicates an old row
+  in the same place can be missed, which is reported as no match rather than as
+  success.
 - `ScreenStates` recognises named graphics states by frame digest captured in the
   same session, and reports a transition as ambiguous when the screen lands on
   neither the expected nor the starting state. Digests are guest-specific, so
@@ -88,7 +128,7 @@ can still arrive and a quiet screen proves nothing yet.
 
 ## Synthetic verification
 
-`tests/portable/test_input_delivery.py` (41 tests) and
+`tests/portable/test_input_delivery.py` (79 tests) and
 `tests/portable/test_draw_disk_names.py` (3 tests) run without an emulator. The
 peer speaks the real authenticated protocol over loopback and models a 25x80
 screen, a BIOS cursor, and the ring.
@@ -108,6 +148,16 @@ screen, a BIOS cursor, and the ring.
 | cursor lagging or leading | unchanged or ambiguous, no resend |
 | stale characters after the cursor | refused |
 | ring wrapped, malformed, full | depth 3, invalid, 15 with overflow refused |
+| wrong initial cursor, text beside the anchor | withheld, nothing sent |
+| malformed ring under the ring profile | withheld, nothing sent |
+| malformed ring under the bypass profile | observed, acceptance null, recovery refused |
+| pending ring at completion with matching text | pending, not observed |
+| verified prefix regresses | ambiguous, no replay |
+| duplicated anchor or pending input at the gate | recovery refused |
+| command echo only, scrolled history | output not matched |
+| cleared screen with new output | output matched |
+| command that leaves text mode | prompt return null, execution unknown |
+| instrumented build discards an accepted event | ambiguous, not observed |
 | menu open/restore, blink, render gate | observed, unchanged, false |
 
 ## Native qualification
