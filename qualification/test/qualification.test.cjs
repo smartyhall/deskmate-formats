@@ -7,7 +7,7 @@ const test = require("node:test");
 
 const { parseEngineList, LINUX_ENGINES, WINDOWS_ENGINES, MACOS_ENGINES } = require("../lib/engines.cjs");
 const { parseProfileList, contextOptions, PROFILES } = require("../lib/profiles.cjs");
-const { normalizeRoute, pagesFromMap, slug } = require("../lib/qualify.cjs");
+const { normalizeRoute, pagesFromMap, validateRoute, parsePages, renderingState, slug } = require("../lib/qualify.cjs");
 const { contactSheet, markdownSummary, escape } = require("../lib/report.cjs");
 const { serve, resolveTarget } = require("../lib/serve.cjs");
 
@@ -103,4 +103,38 @@ test("static server serves pages and refuses traversal", async () => {
     await server.close();
     fs.rmSync(directory, { recursive: true, force: true });
   }
+});
+
+test("focused routes use reviewed titles and reject untrusted route syntax", () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "qualification-map-"));
+  try {
+    const mapPath = path.join(directory, "map.json");
+    fs.writeFileSync(mapPath, JSON.stringify({
+      pages: [{ id: "research.hub", slug: "research", title: "Research" }],
+    }));
+    assert.deepEqual(parsePages("/research,/research/", mapPath), [
+      { route: "/research/", title: "Research", id: "research.hub" },
+    ]);
+    assert.equal(validateRoute("/"), "/");
+    for (const value of ["//example.test/", "/../", "/foo?query=1", "/foo#bar", "/foo;id", "/foo\nbar", "https://example.test/"]) {
+      assert.throws(() => validateRoute(value), /invalid qualification route/);
+    }
+    assert.throws(() => parsePages("/unknown/", mapPath), /unknown page-map route/);
+    assert.throws(() => parsePages("/research/,", mapPath), /empty route/);
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test("inconclusive checks are not successful renderings", () => {
+  assert.equal(renderingState({ problems: [], checks: [] }), "passed");
+  assert.equal(renderingState({ problems: [], checks: [{ inconclusive: true }] }), "inconclusive");
+  assert.equal(renderingState({ problems: ["failure"], checks: [{ inconclusive: true }] }), "failed");
+});
+
+test("navigation failures without screenshots remain reportable", () => {
+  const result = { engine: "webkit", profile: "desktop", page: { route: "/" }, status: null,
+    problems: ["navigation failed"], checks: [] };
+  const summary = { base: "http://x", generated_at: "now", totals: { renderings: 1, passed: 0, failed: 1 } };
+  assert.match(contactSheet([result], summary), /No screenshot available/);
 });
