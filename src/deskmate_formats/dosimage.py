@@ -21,6 +21,15 @@ conflating:
 Nothing here infers a runtime load segment, an initial DS (MZ has no DS
 field), a function boundary, or the semantics of an indirect call. Those
 require execution observation or reviewed instruction evidence.
+
+Both historical executable signatures are accepted: ``MZ`` and its mirror
+image ``ZM`` (some linkers emitted the two bytes reversed). The signature is
+reported so a reader can see which one the stored bytes carry; it does not
+change any arithmetic.
+
+A COM reading loads at ``segment:0100h``, so at most ``0xFF00`` bytes are
+representable at 16-bit offsets. That bound is enforced for an explicit COM
+interpretation instead of silently accepting an image it cannot address.
 """
 from __future__ import annotations
 
@@ -30,6 +39,9 @@ from dataclasses import dataclass, field
 
 __all__ = [
     "DEFAULT_LOAD_PARAGRAPH",
+    "MAX_COM_BYTES",
+    "MZ_SIGNATURES",
+    "ComImage",
     "DosImageError",
     "FarPointer",
     "MzImage",
@@ -49,6 +61,13 @@ class DosImageError(ValueError):
 DEFAULT_LOAD_PARAGRAPH = 0x1000
 
 _MZ_HEADER_MIN = 28
+
+#: Executable signatures that begin a standard DOS relocatable image. ``ZM``
+#: is the same 14-word header with the two signature bytes reversed.
+MZ_SIGNATURES = (b"MZ", b"ZM")
+
+#: Largest load image a COM program can address: offsets 0100h-FFFFh.
+MAX_COM_BYTES = 0x10000 - 0x100
 
 
 def segment_offset_to_linear(segment: int, offset: int) -> int:
@@ -85,8 +104,12 @@ class Relocation:
     original_word: int
 
     @property
-    def linear_offset(self) -> int:
-        """Linear offset from the start of the load image of the adjusted word."""
+    def image_relative_offset(self) -> int:
+        """Offset of the stored word from the start of the *load image*.
+
+        Deliberately not called a linear address: this is an image offset, and
+        it becomes a linear address only after a load paragraph is chosen.
+        """
         return self.image_offset
 
 
@@ -126,6 +149,7 @@ class MzImage:
     entry_cs: int
     entry_ip: int
     relocation_table_offset: int
+    signature: bytes = b"MZ"
     relocations: tuple[Relocation, ...] = field(default_factory=tuple)
 
     # -- construction ----------------------------------------------------
@@ -133,8 +157,12 @@ class MzImage:
     def parse(cls, data: bytes) -> "MzImage":
         if len(data) < _MZ_HEADER_MIN:
             raise DosImageError("input is shorter than a DOS MZ header")
-        if data[:2] != b"MZ":
-            raise DosImageError("expected an MZ signature")
+        if data[:2] not in MZ_SIGNATURES:
+            raise DosImageError(
+                "expected an MZ or ZM signature; neither is present, so the "
+                "input carries no DOS executable header"
+            )
+        signature = data[:2]
         (
             _sig,
             last_page,
@@ -212,6 +240,7 @@ class MzImage:
             entry_cs=entry_cs,
             entry_ip=entry_ip,
             relocation_table_offset=reloc_table,
+            signature=signature,
             relocations=tuple(relocations),
         )
 
@@ -224,6 +253,70 @@ class MzImage:
     def trailing_bytes(self) -> int:
         """Bytes after the declared load image; an overlay is plausible, not proved."""
         return self.size - self.declared_file_bytes
+
+    @property
+    def overlay(self) -> dict:
+        """Classify the bytes past the declared load image without naming them.
+
+        Header arithmetic alone cannot distinguish an appended overlay, an
+        embedded archive, alignment padding or a truncated/garbage tail. This
+        reports the count and the uncertainty rather than a verdict.
+        """
+        if self.trailing_bytes == 0:
+            return {
+                "status": "none",
+                "trailing_bytes": 0,
+                "note": "the stored file ends at the declared load image",
+            }
+        return {
+            "status": "possible",
+            "trailing_bytes": self.trailing_bytes,
+            "note": (
+                "bytes follow the declared load image. An appended overlay, an "
+                "embedded archive, linker padding and a corrupt tail all look "
+                "identical here; identifying one requires separate evidence"
+            ),
+        }
+
+    def header_warnings(self) -> list[str]:
+        """Report internally contradictory or unusual header values.
+
+        These are observations about the header words, not loader verdicts.
+        A warning marks a value a reader should look at; it does not mean DOS
+        refuses the image, and several historical linkers emitted them.
+        """
+        warnings: list[str] = []
+        if self.image_bytes <= 0:
+            warnings.append("the declared load image is empty")
+        if self.entry_image_offset >= max(self.image_bytes, 1):
+            warnings.append(
+                "the declared entry point lies outside the declared load image"
+            )
+        if self.min_alloc_paragraphs > self.max_alloc_paragraphs:
+            warnings.append(
+                "declared minimum allocation exceeds declared maximum allocation"
+            )
+        if self.max_alloc_paragraphs == 0:
+            warnings.append(
+                "declared maximum allocation is zero, which contradicts a "
+                "loadable image"
+            )
+        sites = sorted(r.image_offset for r in self.relocations)
+        for earlier, later in zip(sites, sites[1:]):
+            if later - earlier < 2:
+                warnings.append(
+                    "relocation sites "
+                    f"{earlier:#06x} and {later:#06x} name overlapping words"
+                )
+                break
+        stack_top = (self.initial_ss << 4) + self.initial_sp
+        if self.initial_ss and stack_top > self.image_bytes:
+            warnings.append(
+                "initial SS:SP lies beyond the initialized image, so the stack "
+                "is expected in uninitialized memory allocated at load time "
+                "(common; not a contradiction)"
+            )
+        return warnings
 
     @property
     def entry_image_offset(self) -> int:
@@ -247,8 +340,17 @@ class MzImage:
     # -- coordinate conversion -------------------------------------------
     def file_to_image(self, file_offset: int) -> int:
         if not self.header_bytes <= file_offset < self.declared_file_bytes:
+            if 0 <= file_offset < self.header_bytes:
+                raise DosImageError(
+                    f"file offset {file_offset:#x} is inside the MZ header "
+                    f"(0..{self.header_bytes - 1:#x}), not the load image. Image "
+                    "offsets start at 0, which is file offset "
+                    f"{self.header_bytes:#x}"
+                )
             raise DosImageError(
-                f"file offset {file_offset:#x} is outside the stored image"
+                f"file offset {file_offset:#x} is outside the declared image "
+                f"(file offsets {self.header_bytes:#x}.."
+                f"{self.declared_file_bytes - 1:#x})"
             )
         return file_offset - self.header_bytes
 
@@ -403,7 +505,7 @@ class MzImage:
 
     def far_pointer_at(self, data: bytes, file_offset: int) -> FarPointer:
         """Read an explicit 4-byte off16:seg16 candidate and classify it."""
-        if not 0 <= file_offset or file_offset + 4 > len(data):
+        if file_offset < 0 or file_offset + 4 > len(data):
             raise DosImageError("far-pointer candidate extends past the input")
         within, segment = struct.unpack_from("<HH", data, file_offset)
         relocated = any(r.file_offset == file_offset + 2 for r in self.relocations)
@@ -433,6 +535,7 @@ class MzImage:
     def describe(self) -> dict:
         return {
             "format": "mz",
+            "signature": self.signature.decode("ascii", "replace"),
             "size": self.size,
             "sha256": self.sha256,
             "header_bytes": self.header_bytes,
@@ -454,6 +557,8 @@ class MzImage:
             "relocation_count": len(self.relocations),
             "relocation_site_segments": list(self.relocation_site_segments),
             "relocated_segments": list(self.relocated_segments),
+            "overlay": self.overlay,
+            "header_warnings": self.header_warnings(),
             "relocations": [
                 {
                     "index": r.index,
@@ -466,9 +571,11 @@ class MzImage:
                 for r in self.relocations
             ],
             "scope": (
-                "standard DOS MZ arithmetic and declared sizes only; no runtime "
+                "standard DOS MZ/ZM arithmetic and declared sizes only; no runtime "
                 "load segment, initial DS, overlay identity, function boundary or "
-                "API semantics are implied"
+                "API semantics are implied. A relocation site is where a word is "
+                "stored; the relocated value is the segment that word names, and "
+                "those are different facts"
             ),
         }
 
@@ -484,13 +591,27 @@ class ComImage:
     def parse(cls, data: bytes) -> "ComImage":
         if not data:
             raise DosImageError("empty input")
-        if data[:2] in (b"MZ", b"ZM"):
-            raise DosImageError("input carries an MZ signature")
+        if data[:2] in MZ_SIGNATURES:
+            raise DosImageError(
+                "input carries an MZ/ZM signature, so the COM reading is not "
+                "available; parse it as a relocatable image instead"
+            )
+        if len(data) > MAX_COM_BYTES:
+            raise DosImageError(
+                f"a COM image loads at offset 0100h, so at most "
+                f"{MAX_COM_BYTES} bytes ({MAX_COM_BYTES:#06x}) are addressable "
+                f"at 16-bit offsets; this input holds {len(data)}"
+            )
         return cls(size=len(data), sha256=hashlib.sha256(data).hexdigest())
 
     @property
     def image_bytes(self) -> int:
         return self.size
+
+    @property
+    def max_representable_bytes(self) -> int:
+        """Addressable extent of a COM load image: 0100h..FFFFh."""
+        return MAX_COM_BYTES
 
     @property
     def entry_ip(self) -> int:
@@ -549,6 +670,7 @@ class ComImage:
             "declared_file_bytes": self.size,
             "trailing_bytes": 0,
             "image_bytes": self.size,
+            "max_representable_bytes": self.max_representable_bytes,
             "entry_ip": self.entry_ip,
             "entry_image_offset": self.entry_image_offset,
             "initial_ss": None,
@@ -560,7 +682,8 @@ class ComImage:
             "scope": (
                 "COM images have no header or relocation table; a COM program may "
                 "still be a DOS 3 EXE-format carrier, which this parser does not claim "
-                "to detect"
+                "to detect. The load extent is the representable 16-bit one, not a "
+                "statement about the stack or about free memory at run time"
             ),
         }
 
@@ -574,7 +697,7 @@ def identify(data: bytes, interpretation: str | None = None) -> dict:
     observation. Without ``interpretation="com"`` the result is an
     unqualified candidate and callers should not map addresses through it.
     """
-    if len(data) >= 2 and data[:2] in (b"MZ", b"ZM"):
+    if len(data) >= 2 and data[:2] in MZ_SIGNATURES:
         return MzImage.parse(data).describe()
     if interpretation == "com":
         result = ComImage.parse(data).describe()

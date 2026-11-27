@@ -3,31 +3,41 @@
 Provider-neutral command-line tool: it calls no model service and needs no
 emulator. It imports one stored DOS image into an owned Ghidra project with an
 explicit processor language, optionally applies Ghidra autoanalysis, optionally
-verifies a fresh-process reopen, and writes a machine-readable receipt.
+verifies a fresh-process reopen, and publishes a machine-readable receipt.
 
-Design rules (see docs/research/ghidra-dos-binary-analysis.md):
+Design rules (see docs/research/ghidra-dos-import-receipts.md):
 
 * The processor language is always explicit; the resolved language is read
-  back from the imported program rather than echoed from the request.
+  back from the imported program and compared with the request.
 * Every stage runs under a timeout. The import itself always runs in a
   separate worker process, so a hung JVM cannot outlive the driver.
-* Result states are explicit. A failed analysis or a failed reopen is a
-  non-success exit, never a receipt that merely mentions the failure.
-* Reopen verification compares the original and reopened program, including a
-  content fingerprint, not only their summaries.
-* Project locks are never deleted. A clean process exit releases Ghidra's
-  lock; a lock that outlives the process is reported, and may only be
-  quarantined on explicit request.
+* One invocation is one *attempt*. Each attempt has a unique identifier and
+  its own private working directory, so a receipt written by an earlier
+  attempt can never be read as this attempt's result.
+* The worker's receipt is validated against the schema, the attempt identity,
+  the input digest and the project identity, and is reconciled with the
+  worker's exit status. A receipt that claims success cannot outrank a failed
+  worker process, and a receipt missing required fields is rejected rather
+  than treated as a success with blanks.
+* Receipts are published atomically, so a reader never sees a half-written
+  file.
+* Reopen verification runs in a fresh process and carries the originating
+  attempt's identity, so a reopen from a different attempt is detectable.
+* Project locks are observed, never moved. A lock file's presence does not
+  establish ownership or staleness, and no automatic recovery is attempted
+  here.
 
 Exit codes::
 
     0  success
-    2  usage or validation error
+    2  usage, validation or input-identity error
     3  import failed
     4  timed out
     5  autoanalysis failed
-    6  reopen or reopen-comparison failed
+    6  reopen failed
     7  reopened program does not match the imported program
+    8  receipt rejected (malformed, or inconsistent with the worker exit)
+    9  analysis completed but persistence failed
 
 Example::
 
@@ -46,6 +56,8 @@ import re
 import subprocess
 import sys
 import time
+import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 
 DEFAULT_LANGUAGE = "x86:LE:16:Real Mode"
@@ -57,12 +69,66 @@ EXIT_TIMEOUT = 4
 EXIT_ANALYSIS_FAILED = 5
 EXIT_REOPEN_FAILED = 6
 EXIT_REOPEN_MISMATCH = 7
+EXIT_RECEIPT_REJECTED = 8
+EXIT_PERSISTENCE_FAILED = 9
 
 PROJECT_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 ._-]{0,63}$")
 LANGUAGE_RE = re.compile(r"^[A-Za-z0-9_]+:[A-Za-z0-9_]+:[A-Za-z0-9_]+.*$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+ATTEMPT_ID_RE = re.compile(r"^[0-9a-f]{32}$")
 
-RECEIPT_SCHEMA = "ghidra-dos-import/2"
+RECEIPT_SCHEMA = "ghidra-dos-import/3"
+
+#: Every terminal outcome this tool can report. Nothing else is a result.
+OUTCOMES = (
+    "succeeded",
+    "import_failed",
+    "analysis_failed",
+    "import_timeout",
+    "persistence_failed",
+    "reopen_failed",
+    "reopen_mismatch",
+    "invalid_request",
+    "input_mismatch",
+    "receipt_malformed",
+    "receipt_inconsistent",
+)
+
+#: Fields a receipt must carry to be considered meaningful for its outcome.
+#: A receipt missing any of these is rejected instead of being read as a
+#: success whose blanks happen to look equal to another receipt's blanks.
+REQUIRED_FIELDS = {
+    "always": ("schema", "tool", "attempt", "input", "requested", "outcome"),
+    "attempt": ("id", "started_utc"),
+    "input": ("name", "size", "sha256"),
+    "requested": ("language", "analyze", "project", "project_dir"),
+    "project": ("name", "dir"),
+    "resolved_language": ("language_id",),
+    "program": ("project_path", "content_sha256", "block_count"),
+    "persistence": ("save", "close"),
+    "succeeded": (
+        "project",
+        "resolved_language",
+        "program",
+        "persistence",
+        "toolchain",
+    ),
+    "reopen": ("attempt_id", "status"),
+}
+
+EXIT_FOR_OUTCOME = {
+    "succeeded": EXIT_OK,
+    "import_failed": EXIT_IMPORT_FAILED,
+    "analysis_failed": EXIT_ANALYSIS_FAILED,
+    "import_timeout": EXIT_TIMEOUT,
+    "persistence_failed": EXIT_PERSISTENCE_FAILED,
+    "reopen_failed": EXIT_REOPEN_FAILED,
+    "reopen_mismatch": EXIT_REOPEN_MISMATCH,
+    "invalid_request": EXIT_USAGE,
+    "input_mismatch": EXIT_USAGE,
+    "receipt_malformed": EXIT_RECEIPT_REJECTED,
+    "receipt_inconsistent": EXIT_RECEIPT_REJECTED,
+}
 
 
 # --------------------------------------------------------------------------
@@ -95,11 +161,22 @@ def validate_args(args) -> list[str]:
         errors.append("--expect-sha256 must be 64 hexadecimal characters")
 
     if args.reopen_only:
+        if not args.input:
+            errors.append("--input must name the stored program path to reopen")
         return errors
 
     if not args.input:
         errors.append("--input is required")
         return errors
+
+    if not args.import_worker and not args.output:
+        # A shared default such as ``receipt.json.import.json`` in the current
+        # directory is how one attempt's receipt gets read as another's.
+        errors.append(
+            "--output is required: each attempt publishes its receipt to an "
+            "explicit path, and a default name in the working directory is not "
+            "attempt-specific"
+        )
 
     source = Path(args.input)
     if not source.exists():
@@ -127,6 +204,10 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def _application_properties() -> dict:
     """Read the installed Ghidra version record instead of assuming one."""
     install = os.environ.get("GHIDRA_INSTALL_DIR")
@@ -135,6 +216,10 @@ def _application_properties() -> dict:
     path = Path(install) / "Ghidra" / "application.properties"
     if not path.is_file():
         return {}
+    return _parse_properties(path)
+
+
+def _parse_properties(path: Path) -> dict:
     wanted = {
         "application.version",
         "application.release.name",
@@ -144,13 +229,153 @@ def _application_properties() -> dict:
         "application.revision.ghidra",
     }
     values = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
         if "=" not in line or line.lstrip().startswith("#"):
             continue
         key, value = line.split("=", 1)
-        if key in wanted:
-            values[key] = value
+        if key.strip() in wanted:
+            values[key.strip()] = value.strip()
     return values
+
+
+# --------------------------------------------------------------------------
+# receipt publication and schema
+# --------------------------------------------------------------------------
+def publish_json(path: Path, payload: dict) -> str:
+    """Write ``payload`` to ``path`` atomically; return the published digest.
+
+    The temporary file lives beside the target so ``os.replace`` is a rename
+    on the same filesystem, and a reader either sees the previous complete
+    file or this complete one.
+    """
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    text = json.dumps(payload, indent=2, sort_keys=False) + "\n"
+    digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    temporary = path.with_name(f"{path.name}.tmp-{os.getpid()}-{uuid.uuid4().hex[:8]}")
+    # Bytes, not text: platform newline translation would make the published
+    # file differ from the digest recorded for it.
+    temporary.write_bytes(text.encode("utf-8"))
+    os.replace(temporary, path)
+    return digest
+
+
+def _same_path(left: str | None, right: str | None) -> bool:
+    """Compare two path spellings without depending on case or short names.
+
+    Windows reports the same directory as ``C:\\Users\\DeskMateLab`` or
+    ``C:\\Users\\DESKMA~1`` depending on the API, so a literal comparison
+    would reject a truthful receipt.
+    """
+    if left is None or right is None:
+        return left == right
+    try:
+        return os.path.normcase(os.path.realpath(str(left))) == os.path.normcase(
+            os.path.realpath(str(right))
+        )
+    except (OSError, ValueError):
+        return str(left) == str(right)
+
+
+def _missing_fields(mapping, keys: tuple[str, ...], prefix: str) -> list[str]:
+    if not isinstance(mapping, dict):
+        return [f"{prefix}{key}" for key in keys]
+    return [
+        f"{prefix}{key}"
+        for key in keys
+        if key not in mapping or mapping[key] is None
+    ]
+
+
+def validate_receipt(
+    receipt: dict,
+    *,
+    attempt_id: str | None = None,
+    input_sha256: str | None = None,
+    project: str | None = None,
+    project_dir: str | None = None,
+) -> list[str]:
+    """Return schema and identity problems with a worker receipt.
+
+    Empty means the receipt is well formed, belongs to this attempt, describes
+    this input and this project, and carries every field its outcome requires.
+    """
+    problems: list[str] = []
+    if not isinstance(receipt, dict):
+        return ["receipt is not a JSON object"]
+
+    problems += _missing_fields(receipt, REQUIRED_FIELDS["always"], "")
+
+    schema = receipt.get("schema")
+    if schema is not None and schema != RECEIPT_SCHEMA:
+        problems.append(f"schema is {schema!r}, expected {RECEIPT_SCHEMA!r}")
+
+    attempt = receipt.get("attempt")
+    problems += _missing_fields(attempt, REQUIRED_FIELDS["attempt"], "attempt.")
+    if attempt_id is not None:
+        found = attempt.get("id") if isinstance(attempt, dict) else None
+        if found is not None and found != attempt_id:
+            problems.append(
+                f"attempt.id is {found!r}, so this receipt belongs to a "
+                f"different attempt than {attempt_id!r}"
+            )
+
+    for section in ("input", "requested"):
+        problems += _missing_fields(
+            receipt.get(section), REQUIRED_FIELDS[section], f"{section}."
+        )
+
+    outcome = receipt.get("outcome")
+    if outcome is not None and outcome not in OUTCOMES:
+        problems.append(f"outcome {outcome!r} is not a recognised terminal outcome")
+
+    if input_sha256 is not None:
+        found = (receipt.get("input") or {}).get("sha256")
+        if found is not None and found != input_sha256:
+            problems.append(
+                "input.sha256 does not describe the file this attempt was given "
+                f"({found!r} != {input_sha256!r})"
+            )
+
+    requested = receipt.get("requested") or {}
+    if project is not None and requested.get("project") not in (None, project):
+        problems.append(
+            f"requested.project is {requested.get('project')!r}, expected {project!r}"
+        )
+    recorded_dir = requested.get("project_dir")
+    if (
+        project_dir is not None
+        and recorded_dir is not None
+        and not _same_path(recorded_dir, project_dir)
+    ):
+        problems.append(
+            f"requested.project_dir is {recorded_dir!r}, which is not the "
+            f"project directory this attempt used ({project_dir!r})"
+        )
+
+    if outcome == "succeeded":
+        problems += _missing_fields(receipt, REQUIRED_FIELDS["succeeded"], "")
+        for section in ("project", "program", "persistence", "resolved_language"):
+            problems += _missing_fields(
+                receipt.get(section), REQUIRED_FIELDS[section], f"{section}."
+            )
+        program = receipt.get("program") or {}
+        content = program.get("content_sha256")
+        if content is not None and not SHA256_RE.match(str(content)):
+            problems.append("program.content_sha256 is not a SHA-256 digest")
+        recorded = receipt.get("project") or {}
+        if project is not None and recorded.get("name") not in (None, project):
+            problems.append(
+                f"project.name is {recorded.get('name')!r}, expected {project!r}"
+            )
+        persistence = receipt.get("persistence") or {}
+        for stage in ("save", "close"):
+            if persistence.get(stage) not in (None, "ok"):
+                problems.append(
+                    f"persistence.{stage} is {persistence.get(stage)!r}, so this "
+                    "analysis was not persisted"
+                )
+    return problems
 
 
 # --------------------------------------------------------------------------
@@ -227,17 +452,44 @@ COMPARED_FIELDS = (
 
 
 def compare_programs(original: dict, reopened: dict) -> dict:
-    """Compare the compared fields and report every difference."""
+    """Compare the required fields and report every difference.
+
+    A field absent from either side counts as a difference, and two summaries
+    that both omit the same fields do not compare equal: an incomplete summary
+    cannot corroborate anything.
+    """
+    original = original if isinstance(original, dict) else {}
+    reopened = reopened if isinstance(reopened, dict) else {}
     differences = []
+    missing = []
     for field in COMPARED_FIELDS:
-        before = original.get(field)
-        after = reopened.get(field)
-        if before != after:
-            differences.append({"field": field, "before": before, "after": after})
+        before_present = field in original and original[field] is not None
+        after_present = field in reopened and reopened[field] is not None
+        if not before_present or not after_present:
+            missing.append(
+                {
+                    "field": field,
+                    "missing_in": [
+                        side
+                        for side, present in (
+                            ("original", before_present),
+                            ("reopened", after_present),
+                        )
+                        if not present
+                    ],
+                }
+            )
+            continue
+        if original[field] != reopened[field]:
+            differences.append(
+                {"field": field, "before": original[field], "after": reopened[field]}
+            )
     return {
-        "match": not differences,
+        "match": not differences and not missing,
+        "complete": not missing,
         "compared": list(COMPARED_FIELDS),
         "differences": differences,
+        "missing": missing,
     }
 
 
@@ -254,14 +506,18 @@ def project_lock_state(project_dir: Path, name: str) -> dict:
     A lock file that a JVM releases during shutdown can still be visible for a
     moment after ``wait()`` returns, and Ghidra removes it when the next JVM
     closes the project cleanly. Presence is therefore a diagnostic sample, not
-    proof that another process owns the project; nothing here acts on it.
+    proof that another process owns the project, and never a licence to move
+    it: the owner may be a live worker whose run this sample merely raced.
     """
     result = {
         "present": False,
         "files": [],
+        "ownership_established": False,
+        "action_taken": "none",
         "note": (
             "sampled at one instant; a lock released by JVM shutdown may still "
-            "be visible. Presence alone does not establish ownership"
+            "be visible. Presence alone does not establish ownership or "
+            "staleness, so nothing is renamed, deleted or otherwise reclaimed"
         ),
     }
     for suffix in (".lock", ".lock~"):
@@ -288,7 +544,12 @@ def _lock_owner_record(text: str) -> dict:
     Ghidra versions differ here, so absent fields stay None rather than being
     guessed. No field is used to justify deleting anything automatically.
     """
-    record: dict = {"host": None, "user": None, "port": None, "raw_length": len(text)}
+    record: dict = {
+        "host": None,
+        "user": None,
+        "port": None,
+        "raw_length": len(text),
+    }
     for key, pattern in (
         ("host", r"<host>([^<]*)</host>"),
         ("user", r"<user>([^<]*)</user>"),
@@ -300,24 +561,27 @@ def _lock_owner_record(text: str) -> dict:
     return record
 
 
-def quarantine_lock(project_dir: Path, name: str) -> dict:
-    """Move a lock file aside instead of deleting it.
+def _project_manager():
+    from ghidra.framework.model import ProjectLocator  # noqa: PLC0415
+    from ghidra.pyghidra import PyGhidraProjectManager  # noqa: PLC0415
 
-    Only meaningful when the caller has established that no live process owns
-    the project. The file is renamed, never removed, so the evidence survives.
+    return PyGhidraProjectManager(), ProjectLocator
+
+
+def _open_existing(project_dir: Path, name: str):
+    """Open a stored project for reading or writing, never creating one.
+
+    A reopen-only operation that silently creates the project it was asked to
+    verify would report success about a project that never existed.
     """
-    moved = []
-    stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
-    for suffix in (".lock", ".lock~"):
-        candidate = project_dir / f"{name}{suffix}"
-        if not candidate.exists():
-            continue
-        target = project_dir / f"{name}{suffix}.stale-{stamp}"
-        if target.exists():
-            continue
-        candidate.rename(target)
-        moved.append({"from": candidate.name, "to": target.name})
-    return {"moved": moved}
+    manager, locator_type = _project_manager()
+    locator = locator_type(str(project_dir), name)
+    if not locator.exists():
+        raise FileNotFoundError(
+            f"project {name} does not exist in {project_dir}; reopening does not "
+            "create projects"
+        )
+    return manager.openProject(locator, False, False)
 
 
 def _open_or_create(project_dir: Path, name: str, allow_existing: bool):
@@ -327,24 +591,29 @@ def _open_or_create(project_dir: Path, name: str, allow_existing: bool):
     cannot persist an analysed program, so the project manager is used
     directly.
     """
-    from ghidra.framework.model import ProjectLocator  # noqa: PLC0415
-    from ghidra.pyghidra import PyGhidraProjectManager  # noqa: PLC0415
-
-    manager = PyGhidraProjectManager()
-    locator = ProjectLocator(str(project_dir), name)
+    manager, locator_type = _project_manager()
+    locator = locator_type(str(project_dir), name)
     if locator.exists():
         if not allow_existing:
             raise RuntimeError(
                 f"project {name} already exists in {project_dir}; refusing to open it"
             )
-        return manager.openProject(locator, False, False)
-    return manager.createProject(locator, None, False)
+        return manager.openProject(locator, False, False), True
+    return manager.createProject(locator, None, False), False
 
 
 # --------------------------------------------------------------------------
 # import (runs inside a JVM)
 # --------------------------------------------------------------------------
-def run_import(args) -> dict:
+def _attempt_block(args, started_utc: str) -> dict:
+    return {
+        "id": getattr(args, "attempt_id", None) or uuid.uuid4().hex,
+        "started_utc": started_utc,
+        "worker_pid": os.getpid(),
+    }
+
+
+def run_import(args, started_utc: str | None = None) -> dict:
     """Import one image in this process and return the receipt body."""
     source = Path(args.input).resolve()
     project_dir = Path(args.project_dir).resolve()
@@ -354,10 +623,15 @@ def run_import(args) -> dict:
     receipt: dict = {
         "schema": RECEIPT_SCHEMA,
         "tool": "tools/ghidra/ghidra_dos_import.py",
+        "attempt": _attempt_block(args, started_utc or _utc_now()),
         "host": {
             "system": platform.system(),
             "release": platform.release(),
             "python": platform.python_version(),
+        },
+        "python": {
+            "executable": sys.executable,
+            "version": platform.python_version(),
         },
         "input": {
             "name": source.name,
@@ -373,22 +647,28 @@ def run_import(args) -> dict:
         "requested": {
             "language": args.language,
             "analyze": bool(args.analyze),
+            "project": args.project,
+            "project_dir": str(project_dir),
             "allow_existing_project": bool(args.allow_existing_project),
         },
         "stages": [],
-        "status": "started",
+        "outcome": "import_failed",
     }
 
     if receipt["input"]["matches_expected"] is False:
-        receipt["status"] = "import_failed"
+        receipt["outcome"] = "input_mismatch"
         receipt["error"] = "input SHA-256 does not match --expect-sha256"
         return receipt
 
     import pyghidra  # noqa: PLC0415 - imported late so --help needs no JVM
 
-    receipt["ghidra"] = {
-        "pyghidra": getattr(pyghidra, "__version__", None),
-        "install_dir": os.environ.get("GHIDRA_INSTALL_DIR"),
+    receipt["toolchain"] = {
+        "requested": {
+            "language": args.language,
+            "ghidra_install_dir": os.environ.get("GHIDRA_INSTALL_DIR"),
+            "python": sys.executable,
+        },
+        "resolved": {"pyghidra": getattr(pyghidra, "__version__", None)},
     }
 
     started = time.time()
@@ -403,7 +683,7 @@ def run_import(args) -> dict:
     from java.lang import Object  # noqa: PLC0415
     from java.lang import System as JavaSystem  # noqa: PLC0415
 
-    receipt["ghidra"].update(
+    receipt["toolchain"]["resolved"].update(
         {
             "application_properties": _application_properties(),
             "java_runtime": str(JavaSystem.getProperty("java.runtime.version")),
@@ -415,12 +695,20 @@ def run_import(args) -> dict:
         LanguageID(args.language)
     )
     if language is None:
-        receipt["status"] = "import_failed"
+        receipt["outcome"] = "import_failed"
         receipt["error"] = f"unknown processor language: {args.language}"
         return receipt
 
-    project = _open_or_create(project_dir, args.project, args.allow_existing_project)
+    project = None
+    outcome = "import_failed"
+    persistence = {"save": "not_attempted", "close": "not_attempted"}
     try:
+        project, existed = _open_or_create(
+            project_dir, args.project, args.allow_existing_project
+        )
+        receipt["project"] = {"name": args.project, "dir": str(project_dir),
+                              "existed_before": bool(existed)}
+
         builder = pyghidra.program_loader()
         builder.source(File(str(source)))
         builder.project(project)
@@ -439,11 +727,12 @@ def run_import(args) -> dict:
             "language_id": str(program.getLanguageID()),
             "processor": str(program.getLanguage().getProcessor()),
             "compiler_spec": str(program.getCompilerSpec().getCompilerSpecID()),
+            "matches_request": str(program.getLanguageID()) == args.language,
         }
         receipt["program"] = {"project_path": program.getDomainFile().getPathname()}
         receipt["program"].update(_program_summary(program))
 
-        status = "ok"
+        outcome = "succeeded"
         if args.analyze:
             stage = time.time()
             try:
@@ -455,13 +744,18 @@ def run_import(args) -> dict:
                     "ok": False,
                     "error": f"{type(exc).__name__}: {exc}",
                 }
-                status = "analysis_failed"
+                outcome = "analysis_failed"
             receipt["stages"].append(
                 {"stage": "autoanalysis", "seconds": round(time.time() - stage, 2)}
             )
             refreshed = _program_summary(program)
-            for key in ("instruction_count", "function_count", "blocks",
-                        "content_sha256", "block_count"):
+            for key in (
+                "instruction_count",
+                "function_count",
+                "blocks",
+                "content_sha256",
+                "block_count",
+            ):
                 receipt["program"][key] = refreshed[key]
         else:
             receipt["analysis"] = {"requested": False, "ok": None}
@@ -470,33 +764,78 @@ def run_import(args) -> dict:
         # release. Program.save() would raise ReadOnlyException on an
         # unmodified program, so persistence goes through the load results.
         stage = time.time()
-        results.save(pyghidra.task_monitor())
-        results.release(consumer)
+        try:
+            results.save(pyghidra.task_monitor())
+            persistence["save"] = "ok"
+        except Exception as exc:  # noqa: BLE001 - a save failure is a result
+            persistence["save"] = "failed"
+            persistence["save_error"] = f"{type(exc).__name__}: {exc}"
+            if outcome == "succeeded":
+                outcome = "persistence_failed"
+        finally:
+            try:
+                results.release(consumer)
+            except Exception as exc:  # noqa: BLE001
+                persistence.setdefault(
+                    "release_error", f"{type(exc).__name__}: {exc}"
+                )
         receipt["stages"].append(
             {"stage": "save", "seconds": round(time.time() - stage, 2)}
         )
-        receipt["status"] = status
+        receipt["outcome"] = outcome
     except Exception as exc:  # noqa: BLE001 - a failed import is a result, not a crash
-        receipt["status"] = "import_failed"
+        receipt["outcome"] = "import_failed"
         receipt["error"] = f"{type(exc).__name__}: {exc}"
     finally:
-        try:
-            project.save()
-            project.close()
-        except Exception as exc:  # noqa: BLE001
-            receipt.setdefault("close_error", f"{type(exc).__name__}: {exc}")
+        if project is not None:
+            try:
+                project.save()
+                persistence["save"] = (
+                    "ok" if persistence["save"] in ("ok", "not_attempted")
+                    else persistence["save"]
+                )
+            except Exception as exc:  # noqa: BLE001
+                persistence["save"] = "failed"
+                persistence["save_error"] = f"{type(exc).__name__}: {exc}"
+                if receipt.get("outcome") == "succeeded":
+                    receipt["outcome"] = "persistence_failed"
+            try:
+                project.close()
+                persistence["close"] = "ok"
+            except Exception as exc:  # noqa: BLE001
+                persistence["close"] = "failed"
+                persistence["close_error"] = f"{type(exc).__name__}: {exc}"
+                if receipt.get("outcome") == "succeeded":
+                    receipt["outcome"] = "persistence_failed"
+    receipt["persistence"] = persistence
     return receipt
 
 
-def reopen_only(project_dir: Path, name: str, program_name: str) -> tuple[int, dict]:
+def reopen_only(
+    project_dir: Path,
+    name: str,
+    program_name: str,
+    attempt_id: str | None = None,
+    expect_content_sha256: str | None = None,
+) -> tuple[int, dict]:
     """Describe a stored program after reopening the project from disk."""
     import pyghidra  # noqa: PLC0415
 
     program_path = program_name if program_name.startswith("/") else "/" + program_name
-    payload: dict = {"ok": False, "project_files": []}
+    payload: dict = {
+        "schema": RECEIPT_SCHEMA,
+        "mode": "reopen_only",
+        "attempt_id": attempt_id,
+        "ok": False,
+        "project_files": [],
+    }
     pyghidra.start()
     try:
-        project = _open_or_create(project_dir, name, allow_existing=True)
+        project = _open_existing(project_dir, name)
+    except FileNotFoundError as exc:
+        payload["error"] = str(exc)
+        payload["reason"] = "project_missing"
+        return EXIT_REOPEN_FAILED, payload
     except Exception as exc:  # noqa: BLE001
         payload["error"] = f"{type(exc).__name__}: {exc}"
         payload["reason"] = "project_locked_or_unopenable"
@@ -517,16 +856,27 @@ def reopen_only(project_dir: Path, name: str, program_name: str) -> tuple[int, d
             return EXIT_REOPEN_FAILED, payload
         with pyghidra.program_context(project, program_path) as program:
             payload["program"] = _program_summary(program)
+        if (
+            expect_content_sha256
+            and payload["program"]["content_sha256"] != expect_content_sha256
+        ):
+            payload["error"] = (
+                "the reopened program's content digest differs from the digest "
+                "this attempt recorded"
+            )
+            payload["reason"] = "program_content_mismatch"
+            return EXIT_REOPEN_FAILED, payload
         payload["ok"] = True
         return EXIT_OK, payload
     except Exception as exc:  # noqa: BLE001
         payload["error"] = f"{type(exc).__name__}: {exc}"
+        payload["reason"] = "reopen_error"
         return EXIT_REOPEN_FAILED, payload
     finally:
         try:
             project.close()
-        except Exception:  # noqa: BLE001
-            pass
+        except Exception as exc:  # noqa: BLE001
+            payload["close_error"] = f"{type(exc).__name__}: {exc}"
 
 
 # --------------------------------------------------------------------------
@@ -555,31 +905,58 @@ def _spawn(
         return exc, True
 
 
-def _read_receipt(path: Path) -> dict | None:
+def _read_receipt(path: Path) -> tuple[dict | None, str | None]:
+    """Read a receipt and return (payload, digest) without trusting either.
+
+    The digest is taken over the stored bytes, so it matches what was
+    published rather than a re-encoded copy of it.
+    """
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return None
+        raw = path.read_bytes()
+    except OSError:
+        return None, None
+    digest = hashlib.sha256(raw).hexdigest()
+    try:
+        return json.loads(raw.decode("utf-8")), digest
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return None, digest
 
 
-def _failure_receipt(args, status: str, error: str, stage: str) -> dict:
+def _attempt_directory(output: Path, attempt_id: str) -> Path:
+    """Private working directory for one attempt.
+
+    Kept beside the receipt so a failed or interrupted attempt leaves its
+    worker receipt and logs for inspection instead of being overwritten by the
+    next run.
+    """
+    directory = Path(output).parent / f"{Path(output).name}.attempts" / attempt_id
+    directory.mkdir(parents=True, exist_ok=False)
+    return directory
+
+
+def _failure_receipt(args, outcome: str, error: str, stage: str, attempt: dict) -> dict:
+    source = Path(args.input) if args.input else None
     return {
         "schema": RECEIPT_SCHEMA,
         "tool": "tools/ghidra/ghidra_dos_import.py",
+        "attempt": attempt,
         "input": {
-            "name": Path(args.input).name if args.input else None,
-            "size": Path(args.input).stat().st_size
-            if args.input and Path(args.input).is_file()
-            else None,
-            "sha256": _sha256(Path(args.input))
-            if args.input and Path(args.input).is_file()
-            else None,
+            "name": source.name if source else None,
+            "size": source.stat().st_size if source and source.is_file() else None,
+            "sha256": _sha256(source) if source and source.is_file() else None,
             "expected_sha256": (args.expect_sha256 or "").lower() or None,
             "matches_expected": None,
         },
-        "requested": {"language": args.language, "analyze": bool(args.analyze)},
+        "requested": {
+            "language": args.language,
+            "analyze": bool(args.analyze),
+            "project": args.project,
+            "project_dir": str(Path(args.project_dir).resolve())
+            if args.project_dir
+            else None,
+        },
         "stages": [{"stage": stage, "failed": True}],
-        "status": status,
+        "outcome": outcome,
         "error": error,
     }
 
@@ -587,39 +964,72 @@ def _failure_receipt(args, status: str, error: str, stage: str) -> dict:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     project_dir = Path(args.project_dir).resolve() if args.project_dir else None
+    started_utc = _utc_now()
+    attempt = _attempt_block(args, started_utc)
 
     errors = validate_args(args)
     if errors:
-        payload = {"schema": RECEIPT_SCHEMA, "status": "usage_error", "errors": errors}
+        payload = {
+            "schema": RECEIPT_SCHEMA,
+            "tool": "tools/ghidra/ghidra_dos_import.py",
+            "attempt": attempt,
+            "outcome": "invalid_request",
+            "errors": errors,
+        }
         if args.output:
-            Path(args.output).write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+            publish_json(Path(args.output), payload)
         sys.stderr.write("\n".join(errors) + "\n")
         return EXIT_USAGE
 
     if args.reopen_only:
-        code, payload = reopen_only(project_dir, args.project, args.input)
+        code, payload = reopen_only(
+            project_dir,
+            args.project,
+            args.input,
+            attempt_id=args.attempt_id,
+            expect_content_sha256=args.expect_program_sha256,
+        )
         sys.stdout.write(json.dumps(payload, indent=2) + "\n")
         return code
 
     if args.import_worker:
-        receipt = run_import(args)
-        text = json.dumps(receipt, indent=2)
+        receipt = run_import(args, started_utc)
         if args.output:
-            Path(args.output).write_text(text + "\n", encoding="utf-8")
+            publish_json(Path(args.output), receipt)
         else:
-            sys.stdout.write(text + "\n")
-        return EXIT_OK if receipt.get("status") == "ok" else EXIT_IMPORT_FAILED
+            sys.stdout.write(json.dumps(receipt, indent=2) + "\n")
+        return EXIT_OK if receipt.get("outcome") == "succeeded" else EXIT_IMPORT_FAILED
 
     # Supervisor mode never starts a JVM in this process, so every stage is
     # bounded by the driver's own timeout.
-    worker_output = Path(str(args.output or "receipt.json") + ".import.json")
+    output = Path(args.output)
+    actual_sha256 = _sha256(Path(args.input))
+    if args.expect_sha256 and actual_sha256 != args.expect_sha256.lower():
+        receipt = _failure_receipt(
+            args,
+            "input_mismatch",
+            "input SHA-256 does not match --expect-sha256; the worker was not "
+            "started",
+            "validate",
+            attempt,
+        )
+        receipt["input"]["matches_expected"] = False
+        receipt["input"]["sha256"] = actual_sha256
+        receipt["worker_started"] = False
+        publish_json(output, receipt)
+        return EXIT_USAGE
+
+    attempt_dir = _attempt_directory(output, attempt["id"])
+    worker_receipt = attempt_dir / "import-worker.json"
     worker_args = [
         "--import-worker",
+        "--attempt-id",
+        attempt["id"],
         "--project-dir", str(project_dir),
         "--project", args.project,
         "--input", args.input,
         "--language", args.language,
-        "--output", str(worker_output),
+        "--output", str(worker_receipt),
         "--timeout", str(args.timeout),
     ]
     if args.analyze:
@@ -639,82 +1049,149 @@ def main(argv: list[str] | None = None) -> int:
             "import_timeout",
             f"import did not finish within {args.timeout}s and was terminated",
             "import",
+            attempt,
         )
         receipt["elapsed_seconds"] = elapsed
+        receipt["attempt"]["work_dir"] = str(attempt_dir)
+        # Preserve whatever the worker managed to write, but never read a
+        # status out of it: a partial receipt is evidence, not a result.
+        partial, partial_digest = _read_receipt(worker_receipt)
+        receipt["partial_worker_receipt"] = {
+            "present": partial is not None or partial_digest is not None,
+            "path": str(worker_receipt),
+            "sha256": partial_digest,
+            "used_as_result": False,
+        }
         receipt["lock_after_failure"] = project_lock_state(project_dir, args.project)
         receipt["guidance"] = (
             "The project is in an unknown state after termination. Treat it as "
-            "unusable and remove it deliberately; do not reopen it as evidence."
+            "unusable and remove it deliberately; do not reopen it as evidence. "
+            "Nothing was renamed or deleted, because a lock or partial project "
+            "may still belong to a live process."
         )
-        _write(args, receipt)
+        publish_json(output, receipt)
         return EXIT_TIMEOUT
 
-    receipt = _read_receipt(worker_output)
+    receipt, receipt_digest = _read_receipt(worker_receipt)
     if receipt is None:
         receipt = _failure_receipt(
             args,
             "import_failed",
             f"import worker exited {completed.returncode} without a readable receipt",
             "import",
+            attempt,
         )
         receipt["worker_stderr"] = (completed.stderr or "")[-4000:]
-        receipt["worker_exit_code"] = completed.returncode
+        receipt["worker_stdout"] = (completed.stdout or "")[-2000:]
+        receipt["worker"] = {
+            "exit_code": completed.returncode,
+            "receipt_path": str(worker_receipt),
+            "receipt_sha256": receipt_digest,
+            "readable": False,
+        }
         receipt["elapsed_seconds"] = elapsed
-        _write(args, receipt)
+        receipt["attempt"]["work_dir"] = str(attempt_dir)
+        publish_json(output, receipt)
         return EXIT_IMPORT_FAILED
 
+    problems = validate_receipt(
+        receipt,
+        attempt_id=attempt["id"],
+        input_sha256=actual_sha256,
+        project=args.project,
+        project_dir=str(project_dir),
+    )
+    if not isinstance(receipt.get("attempt"), dict):
+        receipt["attempt"] = {"id": attempt["id"], "started_utc": started_utc}
+    receipt["attempt"]["work_dir"] = str(attempt_dir)
+    receipt["worker"] = {
+        "exit_code": completed.returncode,
+        "receipt_path": str(worker_receipt),
+        "receipt_sha256": receipt_digest,
+        "readable": True,
+    }
     receipt["elapsed_seconds"] = elapsed
-    receipt["worker_exit_code"] = completed.returncode
     receipt["lock_after_exit"] = project_lock_state(project_dir, args.project)
 
-    status = receipt.get("status")
-    if status != "ok":
-        code = EXIT_ANALYSIS_FAILED if status == "analysis_failed" else EXIT_IMPORT_FAILED
-        _write(args, receipt)
-        return code
+    claimed = receipt.get("outcome")
+    if problems:
+        receipt["schema_problems"] = problems
+        receipt["claimed_outcome"] = claimed
+        receipt["outcome"] = "receipt_malformed"
+        publish_json(output, receipt)
+        sys.stderr.write(
+            "worker receipt rejected: " + "; ".join(problems) + "\n"
+        )
+        return EXIT_RECEIPT_REJECTED
+
+    if claimed == "succeeded" and completed.returncode != 0:
+        # A successful-looking receipt never outranks a failed worker process.
+        receipt["claimed_outcome"] = claimed
+        receipt["outcome"] = "receipt_inconsistent"
+        receipt["error"] = (
+            f"the worker reported success but exited {completed.returncode}"
+        )
+        receipt["worker_stderr"] = (completed.stderr or "")[-4000:]
+        publish_json(output, receipt)
+        return EXIT_RECEIPT_REJECTED
+
+    if claimed != "succeeded":
+        if completed.returncode == 0:
+            receipt["worker_exit_disagrees"] = True
+        publish_json(output, receipt)
+        return EXIT_FOR_OUTCOME.get(claimed, EXIT_IMPORT_FAILED)
 
     if args.reopen_check:
-        receipt["reopen"] = _run_reopen(args, receipt, project_dir)
-        if receipt["reopen"]["status"] != "ok":
-            status = receipt["reopen"]["status"]
-        receipt["status"] = status
+        reopen = _run_reopen(args, receipt, project_dir, attempt, attempt_dir)
+        receipt["reopen"] = reopen
+        if reopen["status"] != "ok":
+            receipt["outcome"] = (
+                "reopen_mismatch" if reopen["status"] == "reopen_mismatch"
+                else "reopen_failed"
+            )
+        publish_json(output, receipt)
+        if reopen["status"] == "ok":
+            return EXIT_OK
+        return EXIT_FOR_OUTCOME.get(receipt["outcome"], EXIT_REOPEN_FAILED)
 
-    _write(args, receipt)
-    if status == "ok":
-        return EXIT_OK
-    if status == "reopen_mismatch":
-        return EXIT_REOPEN_MISMATCH
-    if status.startswith("reopen"):
-        return EXIT_REOPEN_FAILED
-    return EXIT_IMPORT_FAILED
+    publish_json(output, receipt)
+    return EXIT_OK
 
 
-def _run_reopen(args, receipt: dict, project_dir: Path) -> dict:
+def _run_reopen(args, receipt: dict, project_dir: Path, attempt: dict,
+                attempt_dir: Path) -> dict:
     program_path = receipt.get("program", {}).get("project_path")
     if not program_path:
         return {
             "status": "reopen_failed",
+            "attempt_id": attempt["id"],
             "error": "the import receipt recorded no project path",
             "attempts": 0,
         }
 
+    expected_content = receipt.get("program", {}).get("content_sha256")
     attempts = []
     deadline = time.time() + min(args.timeout, args.lock_wait)
-    result: dict = {"status": "reopen_failed", "attempts": 0}
+    result: dict = {"status": "reopen_failed", "attempt_id": attempt["id"],
+                    "attempts": 0}
     while True:
-        result = {"attempts": len(attempts) + 1, "status": "started"}
+        result = {
+            "status": "started",
+            "attempt_id": attempt["id"],
+            "attempts": len(attempts) + 1,
+        }
         started = time.time()
-        completed, timed_out = _spawn(
-            [
-                "--reopen-only",
-                "--project-dir", str(project_dir),
-                "--project", args.project,
-                "--input", program_path,
-                "--timeout", str(args.timeout),
-            ],
-            args.timeout,
-            args.python,
-        )
+        reopen_args = [
+            "--reopen-only",
+            "--attempt-id", attempt["id"],
+            "--project-dir", str(project_dir),
+            "--project", args.project,
+            "--input", program_path,
+            "--timeout", str(args.timeout),
+        ]
+        if expected_content:
+            reopen_args.extend(["--expect-program-sha256", expected_content])
+        completed, timed_out = _spawn(reopen_args, args.timeout, args.python)
         attempts.append(
             {
                 "attempt": len(attempts) + 1,
@@ -726,6 +1203,7 @@ def _run_reopen(args, receipt: dict, project_dir: Path) -> dict:
         if timed_out:
             result = {
                 "status": "reopen_failed",
+                "attempt_id": attempt["id"],
                 "reason": "timeout",
                 "error": f"reopen did not finish within {args.timeout}s",
                 "attempts": len(attempts),
@@ -737,10 +1215,36 @@ def _run_reopen(args, receipt: dict, project_dir: Path) -> dict:
             payload = json.loads(completed.stdout)
         except json.JSONDecodeError:
             payload = None
-        if payload is not None and payload.get("ok"):
-            comparison = compare_programs(receipt.get("program", {}), payload.get("program", {}))
+
+        identity_problem = None
+        if payload is not None:
+            if payload.get("attempt_id") not in (None, attempt["id"]):
+                identity_problem = (
+                    "the reopen payload belongs to attempt "
+                    f"{payload.get('attempt_id')!r}, not {attempt['id']!r}"
+                )
+            elif completed.returncode != 0 and payload.get("ok"):
+                identity_problem = (
+                    f"the reopen worker reported success but exited "
+                    f"{completed.returncode}"
+                )
+        if identity_problem:
+            result = {
+                "status": "reopen_failed",
+                "attempt_id": attempt["id"],
+                "reason": "attempt_identity",
+                "error": identity_problem,
+                "attempts": len(attempts),
+                "history": attempts,
+            }
+            break
+        if payload is not None and payload.get("ok") and completed.returncode == 0:
+            comparison = compare_programs(
+                receipt.get("program", {}), payload.get("program", {})
+            )
             result = {
                 "status": "ok" if comparison["match"] else "reopen_mismatch",
+                "attempt_id": attempt["id"],
                 "attempts": len(attempts),
                 "history": attempts,
                 "program": payload.get("program"),
@@ -754,9 +1258,9 @@ def _run_reopen(args, receipt: dict, project_dir: Path) -> dict:
             continue
         result = {
             "status": "reopen_failed",
+            "attempt_id": attempt["id"],
             "reason": reason or "reopen_error",
-            "error": (payload or {}).get("error")
-            or (completed.stderr or "")[-2000:],
+            "error": (payload or {}).get("error") or (completed.stderr or "")[-2000:],
             "attempts": len(attempts),
             "history": attempts,
             "project_files": (payload or {}).get("project_files"),
@@ -764,61 +1268,15 @@ def _run_reopen(args, receipt: dict, project_dir: Path) -> dict:
         break
 
     result["lock_after"] = project_lock_state(project_dir, args.project)
-    if args.quarantine_stale_lock and result["lock_after"]["present"]:
-        result["quarantine"] = quarantine_lock(project_dir, args.project)
-        if result["status"] != "ok":
-            retry = _run_reopen_single(args, project_dir, program_path)
-            result["retry_after_quarantine"] = retry
-            if retry.get("status") == "ok":
-                comparison = compare_programs(
-                    receipt.get("program", {}), retry.get("program", {})
-                )
-                result.update(
-                    {
-                        "status": "ok" if comparison["match"] else "reopen_mismatch",
-                        "program": retry.get("program"),
-                        "comparison": comparison,
-                    }
-                )
     return result
-
-
-def _run_reopen_single(args, project_dir: Path, program_path: str) -> dict:
-    completed, timed_out = _spawn(
-        [
-            "--reopen-only",
-            "--project-dir", str(project_dir),
-            "--project", args.project,
-            "--input", program_path,
-            "--timeout", str(args.timeout),
-        ],
-        args.timeout,
-        args.python,
-    )
-    if timed_out:
-        return {"status": "reopen_failed", "reason": "timeout"}
-    try:
-        payload = json.loads(completed.stdout)
-    except json.JSONDecodeError:
-        return {"status": "reopen_failed", "error": (completed.stderr or "")[-2000:]}
-    if not payload.get("ok"):
-        return {"status": "reopen_failed", "error": payload.get("error")}
-    return {"status": "ok", "program": payload.get("program")}
-
-
-def _write(args, receipt: dict) -> None:
-    text = json.dumps(receipt, indent=2)
-    if args.output:
-        Path(args.output).write_text(text + "\n", encoding="utf-8")
-    else:
-        sys.stdout.write(text + "\n")
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Import a DOS image into an owned Ghidra project and write a receipt.",
         epilog="Exit codes: 0 ok, 2 usage, 3 import failed, 4 timeout, "
-        "5 analysis failed, 6 reopen failed, 7 reopen mismatch.",
+        "5 analysis failed, 6 reopen failed, 7 reopen mismatch, "
+        "8 receipt rejected, 9 persistence failed.",
     )
     parser.add_argument("--project-dir", required=True, help="owned project directory")
     parser.add_argument("--project", required=True, help="project name")
@@ -842,7 +1300,11 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="open an existing project instead of refusing it",
     )
-    parser.add_argument("--output", help="write the receipt JSON here")
+    parser.add_argument(
+        "--output",
+        help="write the receipt here (required in supervisor mode; each attempt "
+        "publishes to an explicit path)",
+    )
     parser.add_argument(
         "--python",
         help="interpreter for worker stages (default: this interpreter); point this "
@@ -866,9 +1328,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="seconds to keep retrying a locked project during reopen (default 30)",
     )
     parser.add_argument(
-        "--quarantine-stale-lock",
-        action="store_true",
-        help="rename an outliving lock file aside instead of failing (never deletes)",
+        "--attempt-id",
+        default=None,
+        help=argparse.SUPPRESS,
+    )
+    parser.add_argument(
+        "--expect-program-sha256",
+        default=None,
+        help=argparse.SUPPRESS,
     )
     parser.add_argument("--import-worker", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--reopen-only", action="store_true", help=argparse.SUPPRESS)

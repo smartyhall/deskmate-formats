@@ -238,8 +238,11 @@ first opens a listener. After installing Ghidra and Temurin,
 Provision-Lab.ps1 runs Configure-LabGhidraFirewall.ps1. This helper creates
 idempotent inbound TCP rules for Ghidra's selected JDK java.exe and javaw.exe,
 restricted to 127.0.0.1 and ::1 as both the local and remote addresses.
-It does not grant incoming LAN access. The helper checks the launcher
-JAVA_HOME_OVERRIDE setting, then JAVA_HOME and the installed JDK.
+It does not grant incoming LAN access. The helper reads the Ghidra release's
+own `Ghidra/application.properties` to learn which Java major it requires,
+then chooses a JDK that **records** a sufficient major in its own `release`
+file. A JDK whose directory name merely looks new enough is rejected, and
+every rejected candidate is printed with its reason.
 
 This is a best-effort optional stage, not evidence that Ghidra binds only to
 loopback, nor a guarantee that Windows will suppress all prompts. The helper
@@ -272,6 +275,56 @@ Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue |
 A listener on 0.0.0.0 or :: needs further investigation. Do not widen
 the exception to non-loopback traffic merely to suppress a prompt.
 
+### Ghidra toolchain verification and selection
+
+The lab deliberately keeps more than one Ghidra release and more than one JDK:
+historical receipts must stay reproducible while new work uses the current
+release. Neither the presence of `analyzeHeadless.bat` nor a directory name is
+treated as evidence that an installation works.
+
+Two implementations apply the same rules:
+
+* `deployment/windows10/GhidraToolchain.ps1` (dot-sourced by `Verify-Lab.ps1`,
+  `Configure-LabGhidraFirewall.ps1` and `Provision-Lab.ps1`) for the lab
+  scripts.
+* `tools/ghidra/ghidra_toolchain.py` in the repository, for research runs and
+  for a caller that wants a machine-readable selection record.
+
+Ghidra identity comes from `Ghidra/application.properties` (version, build
+date, revision, minimum Java). JDK identity comes from `<java-home>/release`
+(`JAVA_VERSION`), falling back to `java -version` under a timeout only when the
+release file is absent; a JDK whose major cannot be determined is rejected
+rather than assumed.
+
+Candidate precedence, highest first — declared candidates keep this order,
+while discovered installations rank by the version each one proves:
+
+1. An explicit argument (`-JavaHome`, `--java-home`, `--ghidra-dir`).
+2. A toolchain profile (`ops/toolchains/*.json`), the portable way to pin a
+   historical release without changing any machine setting.
+3. Environment values of the current process: `GHIDRA_INSTALL_DIR`,
+   `GHIDRA_JAVA_HOME`, `JAVA_HOME`, then the machine `JAVA_HOME`.
+4. Ghidra's own `support/launch.properties` `JAVA_HOME_OVERRIDE`, which its
+   launcher obeys, validated rather than trusted.
+5. Discovered installations under `C:\Tools` and Program Files, including
+   unpacked archives such as `C:\Tools\jdk-25.0.5.1+2`.
+
+The `minimum` Java strategy (default) picks the oldest major satisfying the
+release's own requirement, so Ghidra 12.1.4 stays on Java 21 even when Java 25
+is installed beside it; `newest` opts into the newest compatible runtime.
+
+`Verify-Lab.ps1` now reports, as JSON, every installed Ghidra release with its
+version and build date, the selected release and JDK, the JDK's major version,
+the required minimum, and a `compatible` flag — plus the Python version and the
+PyGhidra version when the default interpreter provides one. It no longer
+reports a bare boolean for a launcher file.
+
+Note that `Provision-Lab.ps1` sets the machine `GHIDRA_INSTALL_DIR` to the
+release it installs. On a host where that variable still names an older
+release, an unqualified selection will resolve to the older release, which is
+correct precedence and should be resolved by pinning a profile, not by editing
+shared configuration from a research run.
+
 ## First-boot provisioning
 
 `$OEM$` copies the setup files into `C:\DeskMateLab`. Early provisioning
@@ -285,7 +338,9 @@ logon task under SYSTEM (where WinGet may not be available). Provisioning create
 installs Google Chrome Enterprise from its official URL (or a signed MSI
 provided with the build); installs Git, GitHub CLI, Python 3.13, Temurin
 JDK 25, 7-Zip, MSYS2 and Node.js LTS if WinGet is present; checks the
-Ghidra 12.2 SHA-256 and extracts it (12.2 needs Java 25); installs the Codex CLI (without
+Ghidra 12.2 SHA-256 and extracts it, then proves the extracted release from its
+own version record and requires an installed JDK whose `release` file reports
+Java 25 or newer before anything is recorded as provisioned; installs the Codex CLI (without
 authentication); and clones the public deskmate-formats repository. It writes the
 completion marker **only if these steps succeeded**. It does not fake success
 on missing WinGet or install errors.

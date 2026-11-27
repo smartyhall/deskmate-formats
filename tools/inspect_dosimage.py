@@ -25,6 +25,8 @@ import sys
 
 from deskmate_formats.dosimage import (
     DEFAULT_LOAD_PARAGRAPH,
+    MAX_COM_BYTES,
+    MZ_SIGNATURES,
     ComImage,
     DosImageError,
     MzImage,
@@ -59,7 +61,7 @@ def _segment(value: int, label: str, allow_none: bool = False) -> int | None:
 
 def _image(data: bytes, args):
     """Return a parsed image, requiring an explicit claim for a headerless file."""
-    if len(data) >= 2 and data[:2] in (b"MZ", b"ZM"):
+    if len(data) >= 2 and data[:2] in MZ_SIGNATURES:
         return MzImage.parse(data)
     interpretation = getattr(args, "interpretation", None)
     if interpretation != "com":
@@ -69,6 +71,17 @@ def _image(data: bytes, args):
             "finding; re-run with --interpretation com to adopt IP=0100h"
         )
     return ComImage.parse(data)
+
+
+def _label_segment(args) -> int:
+    """Segment to label a linear address with.
+
+    ``--segment 0`` is a real choice: segment 0000h is a valid real-mode
+    segment. A truthiness test would silently replace it with the load
+    paragraph, so only an absent value falls back.
+    """
+    segment = getattr(args, "segment", None)
+    return args.load_paragraph if segment is None else segment
 
 
 def _input_record(args, data: bytes) -> dict:
@@ -124,7 +137,7 @@ def command_map(args) -> dict:
         if f < 0:
             raise DosImageError("--file-offset must not be negative")
         linear = image.file_to_linear(f, args.load_paragraph)
-        segment, offset = linear_to_segment_offset(linear, args.segment or args.load_paragraph)
+        segment, offset = linear_to_segment_offset(linear, _label_segment(args))
         result["coordinates"].append(
             {
                 "kind": "file_offset",
@@ -143,7 +156,7 @@ def command_map(args) -> dict:
 
     if args.linear is not None:
         f = image.linear_to_file(args.linear, args.load_paragraph)
-        segment, offset = linear_to_segment_offset(args.linear, args.segment or args.load_paragraph)
+        segment, offset = linear_to_segment_offset(args.linear, _label_segment(args))
         result["coordinates"].append(
             {
                 "kind": "linear",
@@ -259,9 +272,7 @@ def command_disasm(args) -> dict:
 
     for ins in md.disasm(data[first:first + args.length], first):
         linear = image.file_to_linear(ins.address, args.load_paragraph)
-        segment, offset = linear_to_segment_offset(
-            linear, args.segment or args.load_paragraph
-        )
+        segment, offset = linear_to_segment_offset(linear, _label_segment(args))
         instructions.append(
             {
                 "file_offset": ins.address,
@@ -322,7 +333,9 @@ def main(argv: list[str] | None = None) -> int:
                 help="adopt the COM load convention for a headerless input",
             )
 
-    identify_parser = sub.add_parser("identify", help="classify COM or MZ by header evidence")
+    identify_parser = sub.add_parser(
+        "identify", help="classify COM or MZ/ZM by header evidence"
+    )
     identify_parser.add_argument("path")
     shared(identify_parser, interpretation=True)
     identify_parser.set_defaults(handler=command_identify)
@@ -345,7 +358,11 @@ def main(argv: list[str] | None = None) -> int:
         nargs=2,
         metavar=("SEGMENT", "OFFSET"),
     )
-    map_parser.add_argument("--segment", type=number, help="segment label to apply")
+    map_parser.add_argument(
+        "--segment",
+        type=number,
+        help="segment label to apply (0000h is a real choice, not a default)",
+    )
     map_parser.add_argument("--load-paragraph", type=number, default=DEFAULT_LOAD_PARAGRAPH)
     shared(map_parser, interpretation=True)
     map_parser.set_defaults(handler=command_map)

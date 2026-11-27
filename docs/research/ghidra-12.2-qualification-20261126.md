@@ -262,6 +262,63 @@ New work should use 12.2. 12.1.4 stays installed for reproducing the earlier
 receipts and for the historical record in
 [`ghidra-segment-register-display-20261126.md`](ghidra-segment-register-display-20261126.md).
 
+## Toolchain selection
+
+A follow-up review asked that provisioning verify the selected JDK major and
+the actual Ghidra version instead of inferring an installation from an
+executable, and that the loose `jdk-2*` fallback not select a mismatched
+runtime. Three mechanisms now do that:
+
+* `tools/ghidra/ghidra_toolchain.py` — provider-neutral discovery and selection.
+* `deployment/windows10/GhidraToolchain.ps1` — the same rules for the lab
+  scripts (`Verify-Lab.ps1`, `Configure-LabGhidraFirewall.ps1`,
+  `Provision-Lab.ps1`).
+* `ops/toolchains/*.json` — portable profiles that pin a release without
+  naming an absolute path.
+
+Selection reads `Ghidra/application.properties` for the release identity and
+`<java-home>/release` for `JAVA_VERSION`; a directory name is never evidence.
+Precedence, highest first: explicit argument, profile, environment
+(`GHIDRA_INSTALL_DIR`, `GHIDRA_JAVA_HOME`, `JAVA_HOME`), Ghidra's
+`launch.properties` override, discovery. Declared candidates keep their order;
+discovered ones rank by the version they prove, so `12.2` outranks `12.1.4`
+instead of whichever name sorts first.
+
+The Java strategy decides among compatible discovered runtimes. `minimum` — the
+default — takes the oldest major that satisfies the release's own
+`application.java.min`, which keeps a historical release in its own era;
+`newest` opts into the newest compatible one.
+
+Measured on the lab host on 2026-11-27:
+
+| Profile | Release selected | Java selected | Rejected |
+| --- | --- | --- | --- |
+| `ghidra-12.2.json` | 12.2, build `2026-Oct-16 1220 UTC`, revision `8ca9077…`, java.min 25 | `C:\Tools\jdk-25.0.5.1+2`, major 25 | `…\jdk-21.0.13.9-hotspot`: "major 21 is below the 25 required" |
+| `ghidra-12.1.4-historical.json` | 12.1.4, build `2026-Sep-21 1613 UTC` | `…\jdk-21.0.13.9-hotspot`, major 21 | none |
+
+The same rules were exercised through PowerShell: `Verify-Lab.ps1` now reports
+both installations with their recorded versions and builds, the selected JDK
+with its major, and `compatible`, instead of a boolean for the presence of a
+launcher. `Configure-LabGhidraFirewall.ps1` refuses to guess a runtime and
+names every rejected candidate with its reason.
+
+**Remaining discrepancy, recorded rather than papered over.** The machine-level
+`GHIDRA_INSTALL_DIR` on this host is still `C:\Tools\ghidra_12.1.4_PUBLIC`, so a
+default selection (no profile, no requirement) resolves to 12.1.4 — correctly,
+because the environment layer outranks discovery and 12.1.4 is compatible with
+the Java 21 that `JAVA_HOME` names. New work therefore selects through a
+profile or `--require-ghidra-version 12.2`. The variable was deliberately left
+alone: it is shared machine configuration, and changing it belongs to
+provisioning rather than to this campaign.
+
+## Read-only procedures added for the campaign
+
+`--symbols`, `--disassemble` and `--pcode` were added to
+`ghidra_program_report.py` and exercised against `/DESK.EXE` on 12.2. Measured
+output, the correction to the first p-code rendering, and the full contract
+table with per-procedure status are in
+[the procedure contracts note](ghidra-procedure-contracts.md).
+
 ## Limitations
 
 * Two images were re-imported under 12.2 (`DESK.EXE`, `CALENDAR.PDM`).
@@ -288,5 +345,8 @@ Private, under the campaign evidence root
 | Decompiled text comparison | `exports/dec-1214-fn9.txt`, `exports/dec-122-fn9.txt` |
 | Annotation persistence | `exports/annot-122.json`, `exports/annot-verify-122.json` |
 | Java scripts | `logs/122-bounded.txt`, `logs/122-calendarbinding.txt` |
+| Symbol, disassembly and p-code procedures | `exports/proc-122.json`, `exports/proc-pcode-122.json` |
+| Toolchain selection, preferred release | `exports/toolchain-12.2.json` |
+| Toolchain selection, historical release | `exports/toolchain-12.1.4.json` |
 
 The probe itself is [`ghidra_x86_segment_compare.py`](../../tools/ghidra/ghidra_x86_segment_compare.py).
