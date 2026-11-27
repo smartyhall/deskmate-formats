@@ -315,19 +315,3 @@ apparently redundant Win 98 VMs are not proof of disposability. Preserve
 commercial inputs and private paths outside Git; publish only reviewed,
 sanitized summaries, eligible tooling and synthetic tests. Filler work must
 not dispatch extra turns, launch emulators or displace higher-priority research.
-
-## Historical utility validation — operator direction 2026-11-23
-
-Follow the [historical utilities and independent format validation workstream](docs/historical-utility-validation.md)
-and [initial qualification campaign #178](https://github.com/smartyhall/deskmate-formats/issues/178).
-First survey the recovered tools and establish reproducible, private, reusable
-compatibility environments; prioritize DBrepair and Fil2dbf smoke tests.
-After qualification, prefer small utility-based comparisons alongside active
-format research and as spare-capacity work following primary deliverables and
-required checks. Record per-version and per-operation qualifications and
-limitations, including silent loss and false acceptance; do not assume tool
-acceptance proves format validity or shared code implies independence. Use
-synthetic working copies and retain raw evidence privately. Follow existing
-storage, visible-emulator, licensing, provenance and publication rules. This
-standing workstream does not authorize new emulator starts solely for filler,
-extra dispatch, credits, resets, unattended execution, or destructive cleanup.
