@@ -583,6 +583,11 @@ coherent review unit:
 - [Archive index migration proposal](archive-index-migration-20261126.md): a
   rehearsed, additive schema version 2 for identity axes, derived artifacts and
   selective reprocessing.
+- [Independent review corrections](archive-independent-review-corrections-20261127.md):
+  the disposition of both independent reviews, one resource bound per processing
+  layer, the compress(1) eight-code group correction with a gzip 1.15 decode
+  matrix, VFAT slot and ownership hardening, the per-axis identification
+  identifiers, ARC provenance, and the reconciliation of schema version 2.
 - [Candidate Supervisor procedures](supervisor-archive-procedures-20261126.md):
   a handoff of deterministic archival operations with their authorization and
   bounds, none registered for unattended execution.

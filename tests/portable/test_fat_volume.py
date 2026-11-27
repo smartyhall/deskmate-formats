@@ -220,5 +220,243 @@ class FatVolumeTests(unittest.TestCase):
         self.assertEqual(result.status, 'unsupported')
 
 
+def vfat_slot(ordinal, units, checksum, *, last=False, order_extra=0,
+              reserved=0, first_cluster=0, pad=True):
+    """One long-name slot laid out exactly as VFAT stores it."""
+    text = list(units)
+    if pad:
+        text = text + [0x0000] + [0xFFFF] * (13 - len(text) - 1)
+    text += [0xFFFF] * (13 - len(text))
+    raw = b''.join(struct.pack('<H', unit) for unit in text[:13])
+    order = ordinal | (0x40 if last else 0) | order_extra
+    return (bytes([order]) + raw[0:10] + bytes([0x0F, reserved, checksum])
+            + raw[10:22] + struct.pack('<H', first_cluster) + raw[22:26])
+
+
+def vfat_slots(name, checksum, **options):
+    """A complete descending slot chain for one long name."""
+    units = [struct.unpack('<H', name.encode('utf-16-le')[index:index + 2])[0]
+             for index in range(0, len(name) * 2, 2)]
+    chunks = [units[index:index + 13] for index in range(0, len(units), 13)]
+    out = b''
+    for ordinal in range(len(chunks), 0, -1):
+        out += vfat_slot(ordinal, chunks[ordinal - 1], checksum,
+                         last=ordinal == len(chunks), **options)
+    return out
+
+
+def checksum_of(short_name):
+    return short_checksum(short_entry(short_name, 0, 0)[:11])
+
+
+class _VolumeCase(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.root = Path(directory.name)
+
+    def extract(self, entries, name='volume.img', **options):
+        target = self.root / name
+        build(target, entries, **options)
+        return extractor.extract(target, name, extractor.identify(target, name))
+
+
+class VFatSlotTests(_VolumeCase):
+    """Every malformed long-name chain must leave the short name intact."""
+
+    def test_a_checksum_mismatch_falls_back_to_the_short_name(self):
+        entries = vfat_slots('Synthetic report.txt', checksum_of('OTHER~1.TXT'))
+        result = self.extract(entries + short_entry('PLAIN.TXT', 3, 4), files={3: b'data'})
+        self.assertEqual([m.name for m in result.members], ['PLAIN.TXT'])
+        self.assertEqual(result.members[0].data, b'data')
+        self.assertIn('vfat-checksum-mismatch', result.detail)
+
+    def test_ascending_slot_ordinals_are_rejected(self):
+        checksum = checksum_of('PLAIN.TXT')
+        units = [ord(char) for char in 'Synthetic report.txt']
+        entries = (vfat_slot(1, units[:13], checksum)
+                   + vfat_slot(2, units[13:], checksum, last=True)
+                   + short_entry('PLAIN.TXT', 3, 4))
+        result = self.extract(entries, files={3: b'data'})
+        self.assertEqual([m.name for m in result.members], ['PLAIN.TXT'])
+        self.assertIn('vfat-orphan-slot', result.detail)
+
+    def test_a_missing_last_marker_leaves_the_short_name(self):
+        checksum = checksum_of('PLAIN.TXT')
+        result = self.extract(vfat_slot(1, [ord('X')], checksum)
+                              + short_entry('PLAIN.TXT', 3, 1), files={3: b'x'})
+        self.assertEqual([m.name for m in result.members], ['PLAIN.TXT'])
+
+    def test_a_reserved_order_bit_or_reserved_field_is_rejected(self):
+        checksum = checksum_of('PLAIN.TXT')
+        for options, expected in (({'order_extra': 0x80}, 'vfat-slot-reserved-bit'),
+                                  ({'reserved': 1}, 'vfat-slot-reserved-field'),
+                                  ({'first_cluster': 7}, 'vfat-slot-reserved-field')):
+            with self.subTest(**options):
+                entries = (vfat_slot(1, [ord('X')], checksum, last=True, **options)
+                           + short_entry('PLAIN.TXT', 3, 1))
+                result = self.extract(entries, name=f'reserved-{expected}.img', files={3: b'x'})
+                self.assertEqual([m.name for m in result.members], ['PLAIN.TXT'])
+                self.assertIn(expected, result.detail)
+
+    def test_invalid_utf16_content_is_rejected(self):
+        checksum = checksum_of('PLAIN.TXT')
+        for units in ([0xD800, 0x41], [0x41, 0xFFFF, 0x42], [0xDC00, 0x41]):
+            with self.subTest(units=units):
+                entries = (vfat_slot(1, units, checksum, last=True)
+                           + short_entry('PLAIN.TXT', 3, 1))
+                result = self.extract(entries, name='utf16.img', files={3: b'x'})
+                self.assertEqual([m.name for m in result.members], ['PLAIN.TXT'])
+                self.assertIn('vfat-slot-text', result.detail)
+
+    def test_padding_after_the_terminator_must_be_ffff(self):
+        checksum = checksum_of('PLAIN.TXT')
+        slot = bytearray(vfat_slot(1, [ord('X')], checksum, last=True))
+        # Unit 0 is the character at bytes 1-2, unit 1 the terminator at bytes
+        # 3-4, so bytes 5-6 are the first padding unit after it.
+        struct.pack_into('<H', slot, 5, 0x1234)
+        result = self.extract(bytes(slot) + short_entry('PLAIN.TXT', 3, 1), files={3: b'x'})
+        self.assertEqual([m.name for m in result.members], ['PLAIN.TXT'])
+        self.assertIn('vfat-slot-text', result.detail)
+
+    def test_a_stale_chain_does_not_shadow_the_next_valid_one(self):
+        checksum = checksum_of('GOOD~1.TXT')
+        entries = (vfat_slot(5, [ord('X')], checksum, last=True)
+                   + vfat_slots('Good name.txt', checksum)
+                   + short_entry('GOOD~1.TXT', 3, 1))
+        result = self.extract(entries, files={3: b'x'})
+        self.assertEqual([m.name for m in result.members], ['Good name.txt'])
+        self.assertIn('vfat-chain-interrupted', result.detail)
+
+    def test_an_interleaved_chain_between_two_short_entries_is_discarded(self):
+        first = checksum_of('ONE.TXT')
+        second = checksum_of('TWO.TXT')
+        entries = (vfat_slot(2, [ord('A')], first, last=True)
+                   + short_entry('ONE.TXT', 3, 1)
+                   + vfat_slot(1, [ord('B')], second)
+                   + short_entry('TWO.TXT', 4, 1))
+        result = self.extract(entries, files={3: b'a', 4: b'b'})
+        self.assertEqual([m.name for m in result.members], ['ONE.TXT', 'TWO.TXT'])
+        self.assertEqual([m.data for m in result.members], [b'a', b'b'])
+
+
+class FatOwnershipTests(_VolumeCase):
+    """Ownership is per directory entry, so equal names stay distinct."""
+
+    def test_duplicate_names_remain_distinct_objects(self):
+        entries = short_entry('SAME.BIN', 3, 4) + short_entry('SAME.BIN', 4, 4)
+        result = self.extract(entries, files={3: b'aaaa', 4: b'bbbb'})
+        self.assertEqual([m.name for m in result.members], ['SAME.BIN', 'SAME.BIN'])
+        self.assertEqual([m.data for m in result.members], [b'aaaa', b'bbbb'])
+        self.assertEqual(result.status, 'ok')
+
+    def test_a_file_aliasing_a_directory_chain_is_a_cross_link(self):
+        entries = (short_entry('SUB', 3, 0, attr=0x10)
+                   + short_entry('ALIAS.BIN', 3, 4))
+        result = self.extract(entries, files={3: bytes(32), 4: b'data'})
+        self.assertEqual([(m.name, m.status) for m in result.members],
+                         [('SUB', 'directory'), ('ALIAS.BIN', 'read-error')])
+
+    def test_a_file_aliasing_the_fat32_root_chain_is_a_cross_link(self):
+        result = self.extract(short_entry('ROOTALIAS.BIN', 2, 4))
+        self.assertEqual(result.members[0].status, 'read-error')
+
+    def test_a_directory_pointing_at_itself_is_invalid(self):
+        entries = short_entry('SUB', 3, 0, attr=0x10)
+        result = self.extract(entries, files={3: short_entry('LOOP', 3, 0, attr=0x10)})
+        self.assertIn(('SUB/LOOP', 'invalid-directory'),
+                      [(m.name, m.status) for m in result.members])
+
+    def test_a_directory_cluster_reused_by_two_entries_is_invalid(self):
+        entries = (short_entry('ONE', 3, 0, attr=0x10)
+                   + short_entry('TWO', 3, 0, attr=0x10))
+        result = self.extract(entries, files={3: bytes(32)})
+        self.assertEqual([(m.name, m.status) for m in result.members],
+                         [('ONE', 'directory'), ('TWO', 'invalid-directory')])
+
+    def test_a_cyclic_directory_chain_is_reported(self):
+        # The directory block is filled with label entries so the walk asks for
+        # a second cluster and meets the loop instead of stopping early.
+        inner = short_entry('LABEL', 0, 0, attr=0x08) * 16
+        entries = short_entry('SUB', 3, 0, attr=0x10)
+        result = self.extract(entries, files={3: inner}, links={3: 3})
+        self.assertIn(('SUB', 'invalid-directory-chain'),
+                      [(m.name, m.status) for m in result.members])
+
+
+FAT12_SECTOR = 512
+FAT12_RESERVED = 1
+FAT12_FATS = 2
+FAT12_FAT_SECTORS = 9
+FAT12_ROOT_SECTORS = 14
+FAT12_TOTAL = 2880
+FAT12_FIRST_DATA = FAT12_RESERVED + FAT12_FATS * FAT12_FAT_SECTORS + FAT12_ROOT_SECTORS
+
+
+def _set_fat12(fat, cluster, value):
+    offset = cluster + cluster // 2
+    if cluster & 1:
+        fat[offset] = (fat[offset] & 0x0F) | ((value << 4) & 0xF0)
+        fat[offset + 1] = (value >> 4) & 0xFF
+    else:
+        fat[offset] = value & 0xFF
+        fat[offset + 1] = (fat[offset + 1] & 0xF0) | ((value >> 8) & 0x0F)
+
+
+def build_fat12(path, entries, *, files=None, links=None):
+    """A 1.44 MB FAT12 volume with a two-copy FAT and a fixed root region."""
+    boot = bytearray(FAT12_SECTOR)
+    boot[0:3] = b'\xeb\x3c\x90'
+    boot[3:11] = b'MSDOS5.0'
+    struct.pack_into('<HBHBHHBHHH', boot, 11, FAT12_SECTOR, 1, FAT12_RESERVED, FAT12_FATS,
+                     224, FAT12_TOTAL, 0xF0, FAT12_FAT_SECTORS, 18, 2)
+    boot[510:512] = b'\x55\xaa'
+    fat = bytearray(FAT12_FAT_SECTORS * FAT12_SECTOR)
+    fat[0:3] = b'\xf0\xff\xff'
+    for cluster, value in (links or {}).items():
+        _set_fat12(fat, cluster, value)
+    with path.open('wb') as stream:
+        stream.truncate(FAT12_TOTAL * FAT12_SECTOR)
+        stream.write(boot)
+        for index in range(FAT12_FATS):
+            stream.seek((FAT12_RESERVED + index * FAT12_FAT_SECTORS) * FAT12_SECTOR)
+            stream.write(fat)
+        stream.seek((FAT12_RESERVED + FAT12_FATS * FAT12_FAT_SECTORS) * FAT12_SECTOR)
+        stream.write(entries)
+        for cluster, payload in (files or {}).items():
+            stream.seek((FAT12_FIRST_DATA + cluster - 2) * FAT12_SECTOR)
+            stream.write(payload)
+
+
+class Fat12ChainTests(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.root = Path(directory.name)
+
+    def test_a_two_cluster_chain_is_read_through_the_fixed_root(self):
+        target = self.root / 'floppy.img'
+        build_fat12(target, short_entry('CHAIN.BIN', 2, 1024),
+                    files={2: b'A' * 512, 3: b'B' * 512}, links={2: 3, 3: 0xFFF})
+        self.assertEqual(extractor.identify(target, 'floppy.img'), 'fat')
+        result = extractor.extract(target, 'floppy.img', 'fat')
+        self.assertEqual([(m.name, m.status) for m in result.members], [('CHAIN.BIN', 'ok')])
+        self.assertEqual(result.members[0].data, b'A' * 512 + b'B' * 512)
+
+    def test_a_fat12_bad_cluster_marker_ends_the_read(self):
+        target = self.root / 'bad.img'
+        build_fat12(target, short_entry('BAD.BIN', 2, 512),
+                    files={2: b'A' * 512}, links={2: 0xFF7})
+        result = extractor.extract(target, 'bad.img', 'fat')
+        self.assertEqual(result.members[0].status, 'read-error')
+
+    def test_a_fat12_chain_cycle_is_rejected(self):
+        target = self.root / 'loop.img'
+        build_fat12(target, short_entry('LOOP.BIN', 2, 2048),
+                    files={2: b'A' * 512}, links={2: 2})
+        result = extractor.extract(target, 'loop.img', 'fat')
+        self.assertEqual(result.members[0].status, 'read-error')
+
+
 if __name__ == '__main__':
     unittest.main()
