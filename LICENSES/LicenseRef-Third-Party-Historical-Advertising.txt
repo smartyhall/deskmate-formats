@@ -1,0 +1,21 @@
+Third-party historical advertising and sales material
+
+This file reproduces a limited excerpt of a historical advertisement, catalog,
+sales brochure or comparable promotional publication. It is included in the
+DeskMate reference for historical, technical, educational and documentary
+purposes under the project operator's standing publication authorization of
+2026-11-27.
+
+No license to the underlying advertisement, catalog, artwork, text, trademarks
+or trade dress is granted by this notice. Copyright and other rights remain
+with the original publisher and any other rights holders. The material is not
+declared to be in the public domain by this notice, and this notice is not a
+determination that any particular use is a fair use.
+
+The project's GPL-3.0-or-later and CC-BY-SA-4.0 offers apply only to the
+project's own contributions: the crop selection, captions, alternative text,
+provenance metadata and preparation tooling. They do not apply to the
+reproduced historical material.
+
+Publishers and other rights holders may request correction or removal of a
+reproduction; the project will honor documented requests.
