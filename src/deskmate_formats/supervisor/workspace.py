@@ -13,12 +13,16 @@ import sys
 from uuid import uuid4
 
 from deskmate_formats.observer._private_storage import _is_redirect, storage_directory
+from . import execution_source
 from .driver import DriverError, digest, write_record
 from .task_manifest import development_path
 
+#: ``(module, arguments)`` for one reviewed discovery scope. The module is run by
+#: the bound source bootstrap, never by an ambient interpreter search path.
 TEST_PROFILES = {
-    "portable-full": ["-m", "unittest", "discover", "-s", "tests/portable", "-v"],
-    "synthetic-unit": ["-m", "unittest", "discover", "-s", "tests/portable", "-p", "test_s3_sample.py", "-v"],
+    "portable-full": ("unittest", ["discover", "-s", "tests/portable", "-v"]),
+    "synthetic-unit": ("unittest", ["discover", "-s", "tests/portable", "-p",
+                                    "test_s3_sample.py", "-v"]),
 }
 # Supervisor-owned limits, pinned by the exact plan's implementation hashes.
 COMMAND_TIMEOUTS = {"test-portable-full": 1800}
@@ -35,6 +39,9 @@ def environment():
                GIT_AUTHOR_NAME="DeskMate Supervisor", GIT_AUTHOR_EMAIL="supervisor@example.invalid",
                GIT_COMMITTER_NAME="DeskMate Supervisor", GIT_COMMITTER_EMAIL="supervisor@example.invalid",
                PYTHONDONTWRITEBYTECODE="1")
+    # No PYTHONPATH: an isolated workspace launch inserts and verifies the bound
+    # checkout explicitly. Exporting a search path that -I discards was the
+    # defect, and exporting one that -I honours would be an ambient source.
     return env
 
 
@@ -142,35 +149,79 @@ def changes(record):
     return {name: files[name] for name in changed}
 
 
-def command(root, workspace, label, args):
+def _step_argv(execution, step):
+    """Assemble one validation step from the bound source, never from ambient state."""
+    if type(step) is not tuple or not step:
+        raise DriverError("unsupported validation step")
+    if step[0] == "module":
+        return execution_source.bound_argv(execution, mode="module", target=step[1],
+                                           arguments=step[2])
+    if step[0] == "code":
+        return execution_source.bound_argv(execution, mode="code", target=step[1])
+    if step[0] == "tool":
+        # An immutable third-party tool from the controller's installation. No
+        # repository code executes, so no workspace claim is made for this step.
+        return [str(Path(sys.executable).resolve()), *step[1:]]
+    raise DriverError("unsupported validation step")
+
+
+def command(root, workspace, label, step, *, execution):
     """Fixed supervisor-selected Python argv. Actual output retained, never agent claims."""
     timeout = COMMAND_TIMEOUTS.get(label, DEFAULT_COMMAND_TIMEOUT)
     output = root / (label + ".output")
-    argv = [str(Path(sys.executable).resolve()), *args]
+    try:
+        argv = _step_argv(execution, step)
+    except execution_source.ExecutionSourceError as error:
+        raise DriverError("validation step could not be bound: " + error.code) from None
     from deskmate_formats.observer._private_storage import private_file
-    env = environment()
-    env["PYTHONPATH"] = str(Path(workspace) / "src")
     with private_file(output, write=True) as stream:
         try:
-            result = subprocess.run(argv, cwd=workspace, env=env, stdout=stream,
+            result = subprocess.run(argv, cwd=workspace, env=environment(), stdout=stream,
                                     stderr=subprocess.STDOUT, timeout=timeout)
             code = result.returncode
         except subprocess.TimeoutExpired:
             code = "timeout"
+    child = None
+    if step[0] != "tool":
+        child = execution_source.read_child_report(execution)
     receipt = {"argv": argv, "interpreter_sha256": digest(argv[0]), "cwd": str(workspace),
+               "source": "workspace" if step[0] != "tool" else execution_source.EXTERNAL,
+               "execution_binding": execution, "child": child,
+               "execution_verified": True if child is None else child["verified"],
                "exit_status": code, "timeout_seconds": timeout,
                "output_sha256": digest(output), "output_path": str(output)}
     write_record(root / (label + ".json"), receipt)
     return receipt
 
 
-def checkpoint(root, record, authorization, plan_digest, worker_outcome):
-    """One checkpoint attempt, including failed/interrupted validation; no automatic retry."""
+def checkpoint(root, record, authorization, plan_digest, worker_outcome, *, execution):
+    """One checkpoint attempt, including failed/interrupted validation; no automatic retry.
+
+    Every validation step is bound to the accepted source through an explicit
+    campaign environment, so a step can never execute another installation and
+    still be recorded against this workspace.
+    """
     if authorization != plan_digest:
         raise DriverError("separate exact-plan checkpoint authorization required")
+    if execution is None:
+        raise DriverError("source-bound validation requires an explicit execution binding")
+    workspace_path = Path(record["path"]).resolve()
+    try:
+        # The checkpoint runs *after* authorized edits, so workspace content is
+        # expected to differ from the pristine plan; the interpreter, the
+        # environment record and the base revision may not.
+        execution_source.verify_execution(execution, allow_workspace_change=True)
+    except execution_source.ExecutionSourceError as error:
+        raise DriverError("bound execution source changed: " + error.code) from None
+    if (execution.get("workspace") or {}).get("path") != str(workspace_path):
+        raise DriverError("the execution binding names another workspace")
+    if (execution.get("workspace") or {}).get("revision") != record["initial_head"]:
+        raise DriverError("the execution binding names another source revision")
     write_record(root / "checkpoint-intent.json", {"plan_sha256": plan_digest, "workspace": record["identity"]})
-    steps = [("test-" + name, TEST_PROFILES[name]) for name in record["development"]["test_profiles"]]
-    steps += [("publication-audit", ["-I", "-c", AUDIT]), ("reuse", ["-m", "reuse", "lint"])]
+    steps = [("test-" + name, ("module", *TEST_PROFILES[name]))
+             for name in record["development"]["test_profiles"]]
+    steps += [("publication-audit", ("code", AUDIT)),
+              ("reuse", ("tool", "-m", "reuse", "lint"))]
     outcome = {"state": "blocked", "reason": "checkpoint-interrupted",
                "validation": [{"step": label, "state": "not-run", "reason": "validation-not-reached"} for label, _ in steps],
                "workspace": record["identity"], "binding": record["binding"], "parent": record["initial_head"]}
@@ -181,11 +232,17 @@ def checkpoint(root, record, authorization, plan_digest, worker_outcome):
         workspace = Path(record["path"])
         diff = git(workspace, "diff", "--binary", record["initial_head"], "--").decode("utf-8")
         write_record(root / "diff.json", {"tracked_diff": diff, "files": identities})
+        # Re-derive the content half of the binding from the authorized changed
+        # files; the environment and revision halves were verified above.
+        execution = execution_source.rebind_workspace(execution, workspace)
+        outcome["execution"] = execution
         failed = False
-        for index, (label, args) in enumerate(steps):
-            receipt = command(root, workspace, label, args)
-            outcome["validation"][index] = {"step": label, "state": "passed" if receipt["exit_status"] == 0 else "failed", **receipt}
-            failed |= receipt["exit_status"] != 0
+        for index, (label, step) in enumerate(steps):
+            receipt = command(root, workspace, label, step, execution=execution)
+            passed = receipt["exit_status"] == 0 and receipt["execution_verified"]
+            outcome["validation"][index] = {
+                "step": label, "state": "passed" if passed else "failed", **receipt}
+            failed |= not passed
         if failed:
             raise DriverError("validation failed; changes and diagnostics retained")
         if changes(record) != identities:

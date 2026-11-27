@@ -28,7 +28,7 @@ from deskmate_formats.observer._private_storage import (LockBusy, journal_lock, 
 from deskmate_formats.observer.events import EventError, decode_json, encode_json
 from deskmate_formats.observer.process_health import verify_process
 
-from . import procedures, process_control, process_tree
+from . import execution_source, procedures, process_control, process_tree
 from .task_manifest import utc_now
 
 SCHEMA_VERSION = 2
@@ -303,12 +303,9 @@ def environment(artifacts, working_directory=None):
         "PIP_NO_INDEX": "1", "PIP_NO_INPUT": "1", "PIP_DISABLE_PIP_VERSION_CHECK": "1",
         "PIP_CONFIG_FILE": os.devnull, "UV_OFFLINE": "1", "UV_NO_INDEX": "1",
     })
-    # A disposable checkout carries its own sources; do not import the installed
-    # package when the owned worktree has one.
-    if working_directory is not None:
-        source_tree = Path(working_directory) / "src"
-        if source_tree.is_dir():
-            env["PYTHONPATH"] = str(source_tree)
+    # No PYTHONPATH is exported. A workspace launch inserts the bound checkout
+    # explicitly under ``-I`` and verifies it; an ambient search path is exactly
+    # the mechanism that let an installed wheel stand in for an accepted source.
     return env
 
 
@@ -360,8 +357,55 @@ def _acceptance(value, spec, normalized):
     return dict(value)
 
 
+def _execution_binding(spec, working, observed, source_commit, interpreter, environment,
+                       implementation, report_path):
+    """Select the interpreter and bind the source the child will execute.
+
+    A repository-code procedure cannot be prepared without a qualified
+    campaign environment, because the launch would otherwise be attributable to
+    no owned interpreter. Controller and tool launches may select an explicit
+    interpreter; they execute reviewed script text or an installed tool rather
+    than the task's source.
+    """
+    selected = None
+    if environment is not None:
+        if (type(environment) is not dict
+                or set(environment) - {"campaign", "checkout", "root"}
+                or not environment.get("campaign") or not environment.get("checkout")):
+            raise DeterministicError("invalid campaign environment selection")
+        expected = source_commit or observed
+        try:
+            selection = execution_source.select_environment(
+                str(environment["campaign"]), str(environment["checkout"]),
+                root=environment.get("root"), revision=expected)
+        except execution_source.ExecutionSourceError as error:
+            raise DeterministicError("campaign environment refused: " + error.code) from None
+        if interpreter is not None and not execution_source.campaign_identity.same_invocation_path(
+                interpreter, selection["interpreter"]):
+            raise DeterministicError("the selected interpreter is not the recorded environment")
+        selected = selection["interpreter"]
+    if spec.source == execution_source.WORKSPACE:
+        if environment is None:
+            raise DeterministicError(
+                "a workspace procedure requires a qualified campaign environment")
+        try:
+            return execution_source.workspace_execution(
+                working, environment=selection, revision=source_commit or observed,
+                report_path=report_path)
+        except execution_source.ExecutionSourceError as error:
+            raise DeterministicError("bound workspace refused: " + error.code) from None
+    path = selected or str(Path(interpreter).resolve() if interpreter else Path(sys.executable).resolve())
+    try:
+        if spec.source == execution_source.EXTERNAL:
+            return execution_source.tool_execution(interpreter=path, tool=spec.modules[0] if spec.modules else None)
+        return execution_source.controller_execution(interpreter=path, implementation=implementation)
+    except execution_source.ExecutionSourceError as error:
+        raise DeterministicError("interpreter refused: " + error.code) from None
+
+
 def prepare(directory, *, campaign, procedure, arguments, working_directory,
-            source_commit=None, timeout_seconds=None, interpreter=None, acceptance=None):
+            source_commit=None, timeout_seconds=None, interpreter=None, acceptance=None,
+            environment=None):
     """Freeze a new private attempt plan. No process is started."""
     root = Path(directory).absolute()
     if root.exists():
@@ -387,9 +431,22 @@ def prepare(directory, *, campaign, procedure, arguments, working_directory,
     if source_commit is not None and observed != source_commit:
         raise DeterministicError("working directory revision differs from the requested source")
     inputs = _input_binding(working, procedures.input_patterns(procedure, normalized))
-    modules = module_bindings(procedures.module_origins(procedure))
+    names = procedures.module_origins(procedure)
+    if spec.source == execution_source.WORKSPACE:
+        # Repository imports are bound by the accepted package digest below, not
+        # by the controller's resolution of the same module name.
+        names = [name for name in names if not name.startswith(execution_source.PACKAGE)]
+    modules = module_bindings(names)
     status = _git(working, "status", "--porcelain", "--untracked-files=all")
     implementation = implementation_binding()
+    execution = _execution_binding(spec, working, observed, source_commit, interpreter, environment,
+                                   implementation, root / "execution-child.json")
+    if execution["source"] == execution_source.WORKSPACE:
+        selected = execution["environment"]["interpreter"]
+        described = execution["environment"]
+    else:
+        selected = execution["interpreter"]["path"]
+        described = execution["interpreter"]
     # One level of owned private parent may be created, so an attempt can live
     # under a campaign subdirectory without a caller bypassing private storage.
     if not root.parent.exists():
@@ -400,8 +457,8 @@ def prepare(directory, *, campaign, procedure, arguments, working_directory,
                       ("spool", root / "spool"), ("scratch", root / "scratch")):
         storage_directory(sub, create=True)
     argv = procedures.build(procedure, normalized, artifacts=artifacts,
-                            working_directory=working,
-                            interpreter=Path(interpreter) if interpreter else None)
+                            working_directory=working, interpreter=Path(selected),
+                            execution=execution)
     interpreter_digest = _digest(argv[0])
     plan = {
         "schema_version": SCHEMA_VERSION,
@@ -414,9 +471,10 @@ def prepare(directory, *, campaign, procedure, arguments, working_directory,
         "arguments": normalized,
         "argv": argv,
         "interpreter": {"path": argv[0], "sha256": interpreter_digest,
-                        "version": sys.version,
-                        "implementation": platform.python_implementation()},
+                        "version": described.get("version"),
+                        "implementation": described.get("implementation")},
         "interpreter_sha256": interpreter_digest,
+        "execution": execution,
         "working_directory": working,
         "source": {
             "requested_commit": source_commit,
@@ -722,6 +780,21 @@ def _verify_plan(plan):
     implementation = implementation_binding()
     if plan["implementation"]["sha256"] != implementation["sha256"]:
         raise DeterministicError("supervisor implementation changed after preparation")
+    execution = plan.get("execution")
+    try:
+        execution_source.verify_execution(execution)
+    except execution_source.ExecutionSourceError as error:
+        raise DeterministicError(
+            "the bound execution source changed after preparation: " + error.code) from None
+    if execution["source"] == execution_source.WORKSPACE:
+        # The plan must not merely *claim* a workspace: the frozen vector has to
+        # be the one that inserts and verifies that checkout with ``-I``.
+        workspace = execution["workspace"]
+        if (plan["argv"][:4] != [execution["environment"]["interpreter"], "-I", "-c",
+                                 execution_source.BOOTSTRAP]
+                or plan["argv"][4:7] != [workspace["src"], workspace["package"]["python_digest"],
+                                         execution["bootstrap"]["report_path"]]):
+            raise DeterministicError("the plan does not launch the bound workspace")
     interpreter = plan["interpreter"]
     if _digest(interpreter["path"]) != interpreter["sha256"]:
         raise DeterministicError("interpreter changed after preparation")
@@ -796,22 +869,24 @@ def run(directory, *, authorization, reservation=None, revalidate=None):
             release()
 
 
-def _child_import_limitation(plan):
-    """Disclose an isolated child whose imports the plan did not bind.
+def _execution_receipt(plan, state):
+    """Record what the child proved about its own source, and refuse to overstate it.
 
-    ``-I`` ignores ``PYTHONPATH``, so a procedure that imports this package
-    resolves it from the installation rather than from the prepared working tree,
-    while the plan records the parent's module origin. Issue #201 tracks the
-    campaign-owned environment and child source identity that would close this.
+    A workspace launch is only a measurement of the accepted checkout if the
+    child reported that it imported that checkout's package content.  A missing
+    or contradictory report turns a zero exit into a failed attempt: unknown
+    provenance must not become a qualified result.
     """
-    if "-I" not in plan["argv"]:
-        return None
-    if not any(str(item.get("module", "")).startswith("deskmate_formats")
-               for item in plan.get("modules", ())):
-        return None
-    return ("the child runs with -I, so it imports this package from the installation "
-            "rather than the prepared working tree; the plan binds the parent's module "
-            "origin (issue #201)")
+    execution = plan.get("execution") or {}
+    if execution.get("source") != execution_source.WORKSPACE:
+        return {"binding": execution, "child": None, "verified": True,
+                "note": "the child executed reviewed controller or installed-tool code, "
+                        "not the task workspace"}
+    report = execution_source.read_child_report(execution)
+    receipt = {"binding": execution, "child": report, "verified": report["verified"]}
+    if not report["verified"] and state == "completed":
+        receipt["refusal"] = "a zero exit does not establish that the bound workspace ran"
+    return receipt
 
 
 def _execute(root, plan, token):
@@ -841,7 +916,7 @@ def _execute(root, plan, token):
     termination = None
     try:
         process = _limited_subprocess(plan["argv"], cwd=plan["working_directory"],
-                                      env=environment(artifacts, plan["working_directory"]))
+                                      env=environment(artifacts))
         # A degraded claim is still written: "the tree handle was lost" must be
         # visible to recovery instead of looking like "nothing was started".
         claim = process_tree.tree_claim(process.pid) or process_tree.unclaimed(process.pid)
@@ -931,9 +1006,21 @@ def _execute(root, plan, token):
         if outcome["custody"] != "clean":
             outcome["limitations"].append(
                 "the attempt's process tree could not be shown empty after it ended")
-        isolated = _child_import_limitation(plan)
-        if isolated is not None:
-            outcome["limitations"].append(isolated)
+        outcome["execution"] = _execution_receipt(plan, outcome["state"])
+        if outcome["execution"]["binding"].get("source") == execution_source.WORKSPACE:
+            child = outcome["execution"]["child"]
+            outcome["limitations"].append(
+                "the child reports its own import origin; it is evidence about this launch, "
+                "not an operating system proof that no other code ran")
+            if not outcome["execution"]["verified"]:
+                outcome["limitations"].append(
+                    "the child did not prove it imported the bound workspace, so the result "
+                    "is not a measurement of that source")
+                if outcome["state"] == "completed":
+                    outcome.update(state="failed", reason="bound-source-not-verified")
+                elif (outcome.get("exit_status") == execution_source.REFUSED_EXIT
+                      and child.get("state") != "report-missing"):
+                    outcome["reason"] = "bound-source-refused"
         _progress(root, "finished", outcome_state=outcome["state"],
                   exit_status=outcome["exit_status"])
         with journal_lock(root):
@@ -1001,6 +1088,7 @@ def status(directory):
             "process": process,
             "descendants": tree["descendants"],
             "observation": {key: tree.get(key) for key in ("scope", "enumeration", "reason")},
+            "execution_source": (plan.get("execution") or {}).get("source"),
             "outcome": outcome,
             "requires_inspection": attempt is not None and outcome is None,
             "implementation_unchanged": plan["implementation_sha256"] == implementation_hashes(),

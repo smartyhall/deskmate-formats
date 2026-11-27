@@ -1,5 +1,19 @@
 # Project status — DeskMate formats
 
+## Source-bound Supervisor execution — 2026-11-27
+
+The [source-binding campaign](docs/research/source-bound-execution-20261127.md)
+closed the publication-audit defect #206 measured: the workspace checkpoint set
+`PYTHONPATH` and then launched `-I`, so the audit imported the shared
+installation while the receipt named the accepted checkout. Production launches
+are now inventoried and classified, workspace-bound procedures require a
+qualified campaign environment from #206, and an isolated bootstrap inserts and
+verifies the bound checkout before the reviewed target runs. A child that cannot
+prove its import makes the attempt fail rather than producing a measurement of
+unknown provenance. The
+[procedure guide](docs/research/source-bound-execution-procedure.md) covers
+migration and the bounded #204 handoff; no live task was dispatched.
+
 ## Heterogeneous worker infrastructure — 2026-11-26
 
 The [Supervisor and Observatory campaign](docs/research/heterogeneous-worker-infrastructure-20261126.md)

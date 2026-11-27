@@ -32,6 +32,11 @@ The initial supplemental receipt contract (schema version 1) includes:
 
 ## Receipts
 
+- [Source-bound Supervisor execution](freebuff-source-bound-execution-20261127.json)
+  — checkpoint receipt for the
+  [source-binding report](../../research/source-bound-execution-20261127.md).
+  Usage measurements are unknown and recorded as an empty list; the commit is
+  recorded in the pull request rather than guessed.
 - [Campaign Python environment review corrections](freebuff-campaign-python-environment-20261127-review-corrections.json)
   — checkpoint receipt for the
   [campaign report](../../research/campaign-python-environment-isolation-20261127.md).

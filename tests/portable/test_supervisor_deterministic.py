@@ -281,12 +281,25 @@ class IntegrityTests(unittest.TestCase):
         self.assertFalse((self.state / "attempt.json").exists())
 
     def test_untracked_executable_input_appearing_after_authorization_is_refused(self):
-        attempt = self.prepare(procedure="repository-audit", arguments={})
-        (self.root / "notes-appearing-later.md").write_text("new\n", encoding="utf-8")
+        import execution_fixture
+        # The attempt journal must live outside the Git working tree, and the
+        # workspace procedure needs a checkout plus a qualified environment.
+        checkout, revision = execution_fixture.make_checkout(self.root / "checkout",
+                                                             marker="synthetic")
+        selection, _, _ = execution_fixture.make_environment(
+            root=self.root / "envs", checkout=checkout,
+            campaign="synthetic-campaign", revision=revision)
+        state = self.root / "audit-attempt"
+        attempt = deterministic.prepare(
+            state, campaign="synthetic-campaign", procedure="repository-audit",
+            arguments={}, working_directory=str(checkout), environment=selection)
+        (checkout / "notes-appearing-later.md").write_text("new\n", encoding="utf-8")
         with patch.object(deterministic, "_execute",
                           side_effect=AssertionError("must not execute")):
-            with self.assertRaisesRegex(deterministic.DeterministicError, "inputs changed"):
-                deterministic.run(self.state, authorization=attempt.plan_sha256)
+            with self.assertRaisesRegex(deterministic.DeterministicError,
+                                        "inputs changed|changed after preparation"):
+                deterministic.run(state, authorization=attempt.plan_sha256)
+        self.assertFalse((state / "attempt.json").exists())
 
     def test_plan_binds_acceptance_and_refuses_without_revalidation(self):
         acceptance = {"queue_id": "queue", "sequence": 1, "id": "sample", "revision": 1,

@@ -4,7 +4,8 @@ from pathlib import Path
 import sys
 import unittest
 
-from deskmate_formats.supervisor import procedures
+from deskmate_formats.supervisor import execution_source, procedures
+from execution_fixture import binding_stub
 
 RESOURCE_NAMES = {"source-read", "portable-tests", "synthetic-fixtures"}
 EXECUTION_CLASSES = {"fixed-script", "reviewed-repository-code",
@@ -23,8 +24,9 @@ class ProcedureTests(unittest.TestCase):
                 # describes what will run, and no key that does not.
                 self.assertEqual(set(entry), {"name", "summary", "resources",
                                               "timeout_seconds", "arguments",
-                                              "executes", "inputs", "modules",
-                                              "network", "limits"})
+                                              "executes", "execution_source",
+                                              "inputs", "modules", "network",
+                                              "limits"})
                 self.assertTrue(set(entry["resources"]) <= RESOURCE_NAMES)
                 self.assertTrue(entry["resources"])
                 self.assertGreater(entry["timeout_seconds"], 0)
@@ -73,14 +75,22 @@ class ProcedureTests(unittest.TestCase):
                                      str(procedures.MAX_TOTAL_BYTES)])
         self.assertEqual(argv[6:], ["README.md", "AGENTS.md"])
 
+        binding = binding_stub()
         audit = procedures.build("repository-audit", {}, artifacts=Path("a"),
-                                 working_directory=Path("."))
-        self.assertEqual(audit[1:], ["-I", "-c", procedures.AUDIT_SCRIPT])
+                                 working_directory=Path("."), execution=binding)
+        # The workspace procedures launch the reviewed bootstrap, not an ambient
+        # search path: the first four entries name the interpreter and isolation.
+        self.assertEqual(audit[:4], [binding["environment"]["interpreter"], "-I", "-c",
+                                     execution_source.BOOTSTRAP])
+        self.assertEqual(audit[4:7], ["/bound/src", "b" * 64, "/bound/report.json"])
+        self.assertEqual(audit[7:], ["code", procedures.AUDIT_SCRIPT])
 
         tests = procedures.build("portable-tests", {"scope": "supervisor"},
-                                 artifacts=Path("a"), working_directory=Path("."))
-        self.assertEqual(tests[1:], ["-m", "unittest", "discover", "-s", "tests/portable",
-                                     "-v", "-p", "test_supervisor*.py"])
+                                 artifacts=Path("a"), working_directory=Path("."),
+                                 execution=binding)
+        self.assertEqual(tests[7:], ["module", "unittest", "discover", "-s",
+                                     "tests/portable", "-v", "-p",
+                                     "test_supervisor*.py"])
 
         compare = procedures.build("fixture-compare", {"expected": "a", "actual": "b"},
                                    artifacts=Path("a"), working_directory=Path("."))
@@ -90,13 +100,22 @@ class ProcedureTests(unittest.TestCase):
         self.assertEqual(compare[6:], ["a", "b"])
 
         package = procedures.build("package-build", {}, artifacts=Path("out/artifacts"),
-                                   working_directory=Path("."))
-        self.assertEqual(package[1:4], ["-m", "build", "--wheel"])
+                                   working_directory=Path("."), execution=binding)
+        self.assertEqual(package[7:10], ["module", "build", "--wheel"])
         # Isolation builds a fresh environment from an index; the reviewed
         # build must use the installed toolchain instead.
-        self.assertEqual(package[4], "--no-isolation")
-        self.assertEqual(package[5], "--outdir")
-        self.assertEqual(package[6].replace("\\", "/"), "out/artifacts")
+        self.assertEqual(package[10], "--no-isolation")
+        self.assertEqual(package[11], "--outdir")
+        self.assertEqual(package[12].replace("\\", "/"), "out/artifacts")
+
+    def test_workspace_procedures_refuse_to_build_without_a_binding(self):
+        for name, arguments in (("repository-audit", {}),
+                                ("portable-tests", {"scope": "all"}),
+                                ("package-build", {})):
+            with self.subTest(procedure=name):
+                with self.assertRaises(procedures.ProcedureError):
+                    procedures.build(name, arguments, artifacts=Path("a"),
+                                     working_directory=Path("."))
 
     def test_procedure_resources_match_their_task_declarations(self):
         self.assertEqual(procedures.resources("portable-tests"), ("portable-tests",))

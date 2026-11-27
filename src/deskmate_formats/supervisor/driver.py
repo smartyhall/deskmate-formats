@@ -19,6 +19,7 @@ from deskmate_formats.observer._private_storage import journal_lock, private_fil
 from deskmate_formats.observer.events import decode_json, encode_json
 from deskmate_formats.observer.process_health import verify_process
 
+from . import execution_source
 from .ledger import LedgerError, open_ledger
 from .operations import Operations
 from .protocol import AppServer, Approval, Notification, PROFILE_SHA256, ProtocolError, RemoteError, Schema, TransportError, VERSION
@@ -100,7 +101,8 @@ def valid_observation_bounds(timeout, deadline, *, editing=False):
 
 
 def prepare(directory, *, executable=None, model=None, effort=None, mode="success", timeout=10, deadline=60,
-            binding=None, profile=None, auth_file=None, task_context=None, dependencies=None, edit_workspace=None, windows_sandbox=None):
+            binding=None, profile=None, auth_file=None, task_context=None, dependencies=None, edit_workspace=None,
+            windows_sandbox=None, execution=None):
     """Freeze a fresh private plan. No app-server or model operation occurs."""
     root = Path(directory).absolute()
     if root.exists():
@@ -114,6 +116,20 @@ def prepare(directory, *, executable=None, model=None, effort=None, mode="succes
         raise DriverError("editing requires explicit source-edit-v1 task")
     if editing and executable is not None and windows_sandbox != "unelevated":
         raise DriverError("live S3 requires explicit Windows sandbox unelevated; setup/write access must be reviewed separately")
+    if editing and execution is None:
+        raise DriverError("source-edit checkpoints require a bound workspace execution source")
+    if execution is not None and not editing:
+        raise DriverError("only a source-edit plan may bind a workspace execution source")
+    if editing:
+        try:
+            execution_source.verify_execution(execution)
+        except execution_source.ExecutionSourceError as error:
+            raise DriverError("bound execution source refused: " + error.code) from None
+        bound = execution.get("workspace") or {}
+        if (execution.get("source") != execution_source.WORKSPACE
+                or bound.get("path") != edit_workspace["path"]
+                or bound.get("revision") != edit_workspace["initial_head"]):
+            raise DriverError("the execution binding names another workspace or revision")
     if windows_sandbox is not None and (not editing or executable is None):
         raise DriverError("Windows backend selection is only supported for live S3")
     prompt = task_prompt(task_context) if task_context is not None else PROMPT
@@ -196,6 +212,7 @@ def prepare(directory, *, executable=None, model=None, effort=None, mode="succes
         "profile_sha256": PROFILE_SHA256, "codex_version": VERSION,
         "config_sha256": digest(config_path), "env": env, "model": model, "effort": effort,
         "timeout": timeout, "deadline": deadline, "prompt": prompt, "binding": binding,
+        "execution": execution,
         "prepared_at_utc": utc_now(),
         "runtime": {"python": sys.version, "platform": platform.platform(),
                     "sqlite": sqlite3.sqlite_version, "jsonschema": version("jsonschema")},
@@ -363,6 +380,21 @@ def _validate_plan(root, plan, token, authorization, isolation_reviewed, lab_ris
             or any(plan["env"].get(key) != str(root / "codex-home") for key in ("CODEX_HOME", "HOME", "USERPROFILE"))
             or any(plan["env"].get(key) != str(root / "scratch") for key in ("TEMP", "TMP"))):
         raise DriverError("unreviewed prompt, environment or observation bounds")
+    if "edit_workspace" in plan:
+        # A workspace-bound plan must still name its accepted checkout, its
+        # revision and its qualified interpreter.  This runs before the attempt
+        # fence, so a failed environment check dispatches no task at all.
+        execution = plan.get("execution")
+        if execution is None or execution.get("source") != execution_source.WORKSPACE:
+            raise DriverError("source-edit plan lacks a bound workspace execution source")
+        try:
+            execution_source.verify_execution(execution)
+        except execution_source.ExecutionSourceError as error:
+            raise DriverError("bound execution source changed: " + error.code) from None
+        bound = execution.get("workspace") or {}
+        if (bound.get("path") != plan["edit_workspace"]["path"]
+                or bound.get("revision") != plan["edit_workspace"]["initial_head"]):
+            raise DriverError("the execution binding names another workspace or revision")
     if digest(plan["argv"][0]) != plan["executable_sha256"]:
         raise DriverError("executable changed since preparation")
     if digest(root / "codex-home" / "config.toml") != plan["config_sha256"]:
