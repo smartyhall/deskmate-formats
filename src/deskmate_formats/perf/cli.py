@@ -127,6 +127,7 @@ def _command_run(arguments: argparse.Namespace) -> int:
             label=arguments.label,
             profile=arguments.profile,
             trace_processes=arguments.trace_processes,
+            trace_git_commands=arguments.trace_git_commands,
             sample_interval=arguments.sample_interval,
             sample_tests=arguments.sample_tests,
             verbosity=arguments.verbosity,
@@ -198,6 +199,8 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--label", default="", help="free-form label for this measurement")
     run.add_argument("--repeat", type=int, default=0, help="override profile repetitions")
     run.add_argument("--top", type=int, default=25, help="rows in the ranking")
+    run.add_argument("--trace-git-commands", action="store_true",
+                     help="count the Git subcommand of every spawn (implies tracing)")
     run.add_argument("--trace-processes", action="store_true",
                      help="record subprocess spawn latency and Git calls per test")
     run.add_argument("--sample-tests", action="store_true",

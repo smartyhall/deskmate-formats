@@ -6,8 +6,10 @@ the cases are only executed by the harness tests that load them explicitly.
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
+import tempfile
 import time
 import unittest
 
@@ -33,6 +35,19 @@ class SpawnCase(unittest.TestCase):
         subprocess.run([sys.executable, "-c", "pass"], check=True,
                        stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                        stderr=subprocess.DEVNULL)
+
+
+class GitCase(unittest.TestCase):
+    def test_spawns_named_git_subcommands(self):
+        if shutil.which("git") is None:
+            self.skipTest("git is not available")
+        with tempfile.TemporaryDirectory() as directory:
+            quiet = {"cwd": directory, "stdin": subprocess.DEVNULL,
+                     "stdout": subprocess.DEVNULL, "stderr": subprocess.DEVNULL}
+            subprocess.run(["git", "init", "-q", "-b", "main", "--object-format=sha1"],
+                           check=True, **quiet)
+            # Fails in an empty repository; the spawn is what is being counted.
+            subprocess.run(["git", "rev-parse", "HEAD"], check=False, **quiet)
 
 
 class FailureCase(unittest.TestCase):

@@ -35,6 +35,12 @@ time, process spawn count and latency (total and maximum), Git call count and
 time, Python spawn count, working-set before/after and an approximate peak
 delta.
 
+With `--trace-git-commands` it also counts the Git *subcommand* of every spawn,
+so a report can say whether time goes into `cat-file`, `ls-tree`, `config` or
+plumbing writes instead of merely how many processes ran. It is off by default
+because it retains a short string per spawn; it changes no argument, pipe or
+environment either way.
+
 Per run: exact Git revision and dirty flag, interpreter identity and version,
 platform, CPU count, UTF-8 mode, profile, label, repetitions, and a host
 timeline sampled off the test thread (default every 5 s) with CPU, available
@@ -67,6 +73,11 @@ python tools/test_performance.py run --profile portable --trace-processes \
 # One module while iterating
 python tools/test_performance.py run --profile focused --module test_supervisor_task_git \
     --trace-processes --print-markdown
+
+# Which Git subcommands dominate a slow test
+python tools/test_performance.py run --profile focused --test \
+    test_supervisor_s2_live.LiveBridgeTests.test_live_cli_gates_and_installed_source_pin_with_synthetic_image \
+    --trace-git-commands --print-markdown
 
 # Bounded host microbenchmarks
 python tools/test_performance.py microbench --iterations 8 \

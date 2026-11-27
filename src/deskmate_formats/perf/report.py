@@ -96,6 +96,13 @@ def summarize(report: dict[str, Any], *, top: int = 25, pareto_target: float = 0
     traced = any(test.get("spawn_count") is not None for test in tests) and bool(
         (report.get("meta") or {}).get("trace_processes")
     )
+    command_counts: dict[str, int] = {}
+    for test in tests:
+        for command, count in (test.get("git_commands") or {}).items():
+            command_counts[command] = command_counts.get(command, 0) + int(count)
+    git_commands = [{"command": command, "calls": count}
+                    for command, count in sorted(command_counts.items(),
+                                                 key=lambda item: (-item[1], item[0]))]
 
     return {
         "schema_version": SCHEMA_VERSION,
@@ -121,6 +128,7 @@ def summarize(report: dict[str, Any], *, top: int = 25, pareto_target: float = 0
             "wall_seconds": round(subprocess_seconds, 3),
             "spawn_seconds": round(spawn_seconds, 3),
         },
+        "git_commands": git_commands,
         "modules": ordered_modules,
         "ranking": ranking,
         "pareto": {
@@ -249,6 +257,12 @@ def to_markdown(summary: dict[str, Any]) -> str:
         f"- Spawn latency total: {_format_seconds(subprocess.get('spawn_seconds'))}",
         f"- Subprocess wall total: {_format_seconds(subprocess.get('wall_seconds'))}",
     ]
+
+    if summary.get("git_commands"):
+        lines += ["", "## Git command mix", "",
+                  "| Subcommand | Calls |", "| --- | --- |"]
+        for entry in summary["git_commands"][:15]:
+            lines.append(f"| `git {entry['command']}` | {entry['calls']} |")
 
     if summary.get("failures"):
         lines += ["", "## Failures", ""]

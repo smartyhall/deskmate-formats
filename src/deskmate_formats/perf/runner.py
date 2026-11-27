@@ -7,7 +7,7 @@ because a shared laboratory VM does not produce repeatable wall-clock times.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, field
 from datetime import datetime, timezone
 import os
 from pathlib import Path
@@ -60,6 +60,7 @@ class TestRecord:
     git_calls: int = 0
     git_seconds: float = 0.0
     python_spawns: int = 0
+    git_commands: dict[str, int] = field(default_factory=dict)
     working_set_before: int | None = None
     working_set_after: int | None = None
     peak_working_set_delta: int | None = None
@@ -86,6 +87,7 @@ class TestRecord:
             "git_calls": self.git_calls,
             "git_seconds": round(self.git_seconds, 6),
             "python_spawns": self.python_spawns,
+            "git_commands": dict(sorted(self.git_commands.items(), key=lambda item: (-item[1], item[0]))),
             "working_set_before": self.working_set_before,
             "working_set_after": self.working_set_after,
             "peak_working_set_delta": self.peak_working_set_delta,
@@ -94,19 +96,53 @@ class TestRecord:
         }
 
 
+def _git_subcommand(command: object) -> str:
+    """Return the Git subcommand of an argument vector, best effort.
+
+    Global options are skipped so that ``git -c a=b rev-parse`` and
+    ``git rev-parse`` are reported together.  An argument vector this cannot
+    interpret is reported as ``unknown`` rather than guessed at.
+    """
+    if isinstance(command, (str, bytes)):
+        parts = (command.decode("utf-8", "replace") if isinstance(command, bytes)
+                 else command).split()
+    else:
+        try:
+            parts = [part.decode("utf-8", "replace") if isinstance(part, bytes) else str(part)
+                     for part in command]  # type: ignore[union-attr]
+        except TypeError:
+            return "unknown"
+    index = 1  # element 0 is the program itself
+    while index < len(parts):
+        token = parts[index]
+        if token in ("-c", "-C", "--git-dir", "--work-tree", "--exec-path"):
+            index += 2
+            continue
+        if token.startswith("-"):
+            index += 1
+            continue
+        return token
+    return "unknown"
+
+
 class SubprocessTracer:
     """Record spawn latency and total subprocess wall time, per test.
 
     Both ``Popen.__init__`` and ``subprocess.run`` are wrapped, so ``run``
     contributes one *call* and one *spawn*.  The wrapper is observation only:
     arguments, environment, pipes and exit status pass through untouched.
+
+    With ``sample_commands`` the Git subcommand of each spawn is counted as
+    well.  It is off by default because it keeps a string per spawn; it changes
+    no argument, pipe or environment either way.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, *, sample_commands: bool = False) -> None:
         self._lock = threading.Lock()
         self._events: list[dict[str, Any]] = []
         self._installed = False
         self._originals: list[tuple[object, str, object]] = []
+        self._sample_commands = sample_commands
 
     def install(self) -> None:
         if self._installed:
@@ -143,8 +179,11 @@ class SubprocessTracer:
 
     def _record(self, kind: str, command: object, seconds: float) -> None:
         executable = _basename(command)
+        event: dict[str, Any] = {"kind": kind, "exe": executable, "seconds": seconds}
+        if kind == "spawn" and self._sample_commands and executable in ("git", "git.exe"):
+            event["git_subcommand"] = _git_subcommand(command)
         with self._lock:
-            self._events.append({"kind": kind, "exe": executable, "seconds": seconds})
+            self._events.append(event)
 
     def drain(self) -> list[dict[str, Any]]:
         with self._lock:
@@ -227,6 +266,9 @@ class _TimedResult(unittest.TextTestResult):
                     if event["exe"] in ("git", "git.exe"):
                         record.git_calls += 1
                         record.git_seconds += event["seconds"]
+                        subcommand = event.get("git_subcommand")
+                        if subcommand:
+                            record.git_commands[subcommand] = record.git_commands.get(subcommand, 0) + 1
                     elif event["exe"].startswith("python"):
                         record.python_spawns += 1
                 else:
@@ -393,6 +435,7 @@ def run_suite(
     label: str = "",
     profile: str = "",
     trace_processes: bool = False,
+    trace_git_commands: bool = False,
     sample_interval: float = 5.0,
     sample_tests: bool = False,
     verbosity: int = 1,
@@ -402,7 +445,8 @@ def run_suite(
 ) -> RunResult:
     """Run ``suite`` under instrumentation and return a serializable result."""
     records: list[TestRecord] = []
-    tracer = SubprocessTracer() if trace_processes else None
+    tracer = (SubprocessTracer(sample_commands=trace_git_commands)
+              if (trace_processes or trace_git_commands) else None)
     timer = _FixtureTimer()
     stream = stream if stream is not None else sys.stderr
 
@@ -441,6 +485,7 @@ def run_suite(
             "label": label,
             "profile": profile,
             "trace_processes": trace_processes,
+            "trace_git_commands": trace_git_commands,
             "sample_interval": sample_interval,
             "sample_tests": sample_tests,
             "iteration": iteration,

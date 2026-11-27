@@ -2,8 +2,9 @@
 
 **Status:** two full runs analysed (concurrent load, less contended); an import
 defect corrected, which recovers 72 tests that never ran; one genuine failure
-confirmed in both runs as a race and already fixed on PR #191; a cross-campaign
-wheel-skew hazard documented; remaining items listed as open
+confirmed in both runs as a race and already fixed on PR #191; the dominant
+bottleneck located down to Git subcommand; a cross-campaign wheel-skew hazard
+documented; remaining items listed as open
 **Date:** 2026-11-26 (baseline), 2026-11-27 (recovery and comparison)
 **Host:** Windows 10 Pro 10.0.19045, 6 vCPU, 8 GiB RAM, shared laboratory VM
 **Base revision:** `b5e525002b150352a8995de1bcddfbc5dc18a838`
@@ -160,15 +161,50 @@ child interpreter that imports the supervisor protocol alone costs
 round-trips of the handshake. Against a `timeout=1` budget that is at best a
 factor of two, and less when the host is busier than this microbenchmark's 79 %.
 
+### 3.3 Which Git commands dominate
+
+`--trace-git-commands` counts the subcommand of every Git spawn. Sampled on the
+two heaviest tests (1 985 calls, 197 s of the suite):
+
+| Subcommand | Calls | Share |
+| --- | --- | --- |
+| `git cat-file` | 862 | 43.4 % |
+| `git ls-tree` | 393 | 19.8 % |
+| `git symbolic-ref` | 128 | 6.4 % |
+| `git hash-object` | 111 | 5.6 % |
+| `git update-index` | 111 | 5.6 % |
+| `git show-ref` | 107 | 5.4 % |
+| `git config` | 88 | 4.4 % |
+| `git merge-base` | 56 | 2.8 % |
+| `git rev-parse` | 36 | 1.8 % |
+| other (13 commands) | 93 | 4.7 % |
+
+**The top two commands are 63.2 % of all invocations and both have a batch mode**
+(`cat-file --batch`, `ls-tree -r`). At the ~99 ms per call measured in these two
+tests, those 1 255 calls account for roughly 124 s of their 197 s. That is an
+upper bound on what batching could recover, not a prediction: a batched call
+does more work per process, and some queries genuinely need their own process.
+It is enough to say the bottleneck is *query shape*, not filesystem speed — and
+`git config` being called 88 times shows that even trivially cacheable lookups
+are being re-run.
+
+This is where the biggest measured win sits, and it is deliberately **not**
+carried in this PR: the calls are issued by `supervisor/task_git.py`, product
+code in the Supervisor campaign's area, and a half-implemented batching layer in
+a competing branch would be worse than a measured handoff.
+
 ## 4. Ranked bottlenecks
 
 Ranked by measured wall time that a change could actually reclaim.
 
 1. **Product-side Git invocation count (8 045 calls, ~931 s of waiting).**
    `supervisor/task_git.py` runs one Git process per query; `discover()` alone
-   makes roughly ten to thirteen. This is the dominant cost and it is a property
-   of the product, not the tests. Not addressed here — PR #191 owns this file,
-   and duplicating a refactor would collide with the Supervisor campaign.
+   makes roughly ten to thirteen. §3.3 shows the shape of the problem:
+   `cat-file` and `ls-tree` are 63 % of calls and both are batchable. This is the
+   dominant cost and it is a property of the product, not the tests. Not
+   addressed here — the file belongs to the Supervisor campaign's area, and a
+   partial batching layer in a competing branch would be worse than this
+   measured handoff.
 2. **Test-side fixture construction (fixed, see §6).** The synthetic task
    repository was rebuilt with Git for every test even though it is
    byte-identical each time.
@@ -307,9 +343,9 @@ concentration, the fixture A/B, the resolved module origin of child processes
 **Hypothesis, not measured:**
 
 - That batching or caching Git queries in `supervisor/task_git.py` would reclaim
-  most of the 931 s. The call counts support it; no alternative implementation
-  has been written or timed, and the saving depends on how many distinct queries
-  the tests issue.
+  a large share of the 931 s. §3.3 measures *which* calls dominate (63 % are
+  `cat-file`/`ls-tree`, both batchable) and bounds the opportunity at ~124 s for
+  two tests, but no batched implementation has been written or timed.
 - That the `timeout=1` handshake sites will stay within budget. They passed in
   both runs, and §3.2 bounds the cost they must cover at 287–500 ms of a
   1 000 ms budget — a headroom estimate from components, not an end-to-end
@@ -402,6 +438,11 @@ have the harness record each child's resolved module origin.
   `test_owner_termination…` race from §5.2 is already fixed on that branch, so
   nothing is carried here. The remaining overlap is the `timeout` hunk in
   `tests/portable/task_fixture.py` described in §6.
+- **To whoever owns `supervisor/task_git.py`:** §3.3 is the actionable finding.
+  `cat-file` (43.4 %) and `ls-tree` (19.8 %) dominate and both have batch modes;
+  `config` is queried 88 times in two tests. A batched read path is where the
+  measured win is, and it needs a benchmark before/after with this harness so the
+  claim is measured rather than inferred from call counts.
 - **Open:** how much of the 931 s a batched Git query interface would reclaim;
   the actual margin of the sub-second deadline cases; whether the venue for
   parallel execution is the harness or CI.

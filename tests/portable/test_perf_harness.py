@@ -12,10 +12,11 @@ from deskmate_formats.perf.runner import run_suite
 import perf_harness_cases as cases
 
 
-def _run(cases_to_run, *, trace=False):
+def _run(cases_to_run, *, trace=False, trace_git_commands=False):
     loader = unittest.TestLoader()
     suite = unittest.TestSuite(loader.loadTestsFromTestCase(case) for case in cases_to_run)
     return run_suite(suite, label="harness", profile="test", trace_processes=trace,
+                     trace_git_commands=trace_git_commands,
                      sample_interval=60.0, verbosity=0, stream=io.StringIO())
 
 
@@ -82,6 +83,26 @@ class RunnerTests(unittest.TestCase):
     def test_untraced_runs_report_zero_spawns(self):
         result = _run([cases.SpawnCase], trace=False)
         self.assertEqual(result.records[0].spawn_count, 0)
+
+    def test_git_subcommands_are_counted_when_sampled(self):
+        result = _run([cases.GitCase], trace_git_commands=True)
+        record = result.records[0]
+        self.assertEqual(record.git_commands.get("init"), 1)
+        self.assertEqual(record.git_commands.get("rev-parse"), 1)
+        self.assertEqual(sum(record.git_commands.values()), record.git_calls)
+
+    def test_git_subcommands_are_not_sampled_by_default(self):
+        result = _run([cases.GitCase], trace=True)
+        record = result.records[0]
+        self.assertGreaterEqual(record.git_calls, 2)
+        self.assertEqual(record.git_commands, {})
+
+    def test_git_subcommand_parsing_skips_global_options(self):
+        from deskmate_formats.perf.runner import _git_subcommand
+        self.assertEqual(_git_subcommand(["git", "-c", "core.autocrlf=false", "rev-parse", "HEAD"]),
+                         "rev-parse")
+        self.assertEqual(_git_subcommand("git log -1 --oneline"), "log")
+        self.assertEqual(_git_subcommand(["git"]), "unknown")
 
 
 class ReportTests(unittest.TestCase):
