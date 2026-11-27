@@ -1,15 +1,31 @@
-"""Disposable, deterministic Git input for offline supervisor tests."""
+"""Disposable, deterministic Git input for offline supervisor tests.
 
+Every fixture repository is byte-identical: the same empty tree, the same
+frozen author and committer dates and the same remote.  Building it with seven
+Git invocations per test therefore repeats work that cannot change, and on a
+contended Windows host each invocation costs far more than the repository it
+creates.  One template repository is built per process and copied for each
+test, which keeps isolation (every test owns its own directory and objects)
+while removing the repeated process creation.
+"""
+
+import atexit
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
+import tempfile
+import threading
 
 from deskmate_formats.supervisor.task_git import TrustedSource
 
 
 REPOSITORY = "https://example.invalid/lab/synthetic.git"
 TASK_PATH = "ops/tasks/sample.json"
+
+_TEMPLATE_LOCK = threading.Lock()
+_TEMPLATE: tuple[Path, str] | None = None
 
 
 def manifest(**changes):
@@ -21,25 +37,52 @@ def manifest(**changes):
     } | changes
 
 
+def git_environment():
+    """Host-independent Git environment shared by the fixture and its template."""
+    env = {key: value for key, value in os.environ.items() if not key.upper().startswith("GIT_")}
+    env.update(GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull,
+               GIT_AUTHOR_NAME="Synthetic Fixture", GIT_AUTHOR_EMAIL="fixture@example.invalid",
+               GIT_COMMITTER_NAME="Synthetic Fixture", GIT_COMMITTER_EMAIL="fixture@example.invalid",
+               GIT_AUTHOR_DATE="2026-01-01T00:00:00Z", GIT_COMMITTER_DATE="2026-01-01T00:00:00Z")
+    return env
+
+
+def _run_git(directory, *args, data=None):
+    return subprocess.run(["git", *args], cwd=directory, check=True, input=data,
+                          capture_output=True, env=git_environment(), timeout=60).stdout
+
+
+def _build_template(directory: Path) -> str:
+    directory.mkdir()
+    _run_git(directory, "init", "-q", "-b", "main", "--object-format=sha1")
+    _run_git(directory, "config", "core.autocrlf", "false")
+    _run_git(directory, "config", "commit.gpgsign", "false")
+    _run_git(directory, "remote", "add", "origin", REPOSITORY)
+    _run_git(directory, "commit", "-q", "--allow-empty", "-m", "Synthetic trust anchor")
+    return _run_git(directory, "rev-parse", "HEAD").decode("ascii").strip()
+
+
+def _template() -> tuple[Path, str]:
+    """Build the shared template once per process; every test copies it."""
+    global _TEMPLATE
+    with _TEMPLATE_LOCK:
+        if _TEMPLATE is None:
+            root = Path(tempfile.mkdtemp(prefix="deskmate-task-template-"))
+            atexit.register(shutil.rmtree, root, True)
+            template = root / "repo"
+            _TEMPLATE = (template, _build_template(template))
+        return _TEMPLATE
+
+
 class TaskRepo:
     def __init__(self, path):
+        template, anchor = _template()
         self.path = Path(path)
-        self.path.mkdir()
-        self.git("init", "-q", "-b", "main", "--object-format=sha1")
-        self.git("config", "core.autocrlf", "false")
-        self.git("config", "commit.gpgsign", "false")
-        self.git("remote", "add", "origin", REPOSITORY)
-        self.git("commit", "-q", "--allow-empty", "-m", "Synthetic trust anchor")
-        self.anchor = self.head()
+        shutil.copytree(template, self.path)
+        self.anchor = anchor
 
     def git(self, *args, data=None):
-        env = {key: value for key, value in os.environ.items() if not key.upper().startswith("GIT_")}
-        env.update(GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull,
-                   GIT_AUTHOR_NAME="Synthetic Fixture", GIT_AUTHOR_EMAIL="fixture@example.invalid",
-                   GIT_COMMITTER_NAME="Synthetic Fixture", GIT_COMMITTER_EMAIL="fixture@example.invalid",
-                   GIT_AUTHOR_DATE="2026-01-01T00:00:00Z", GIT_COMMITTER_DATE="2026-01-01T00:00:00Z")
-        return subprocess.run(["git", *args], cwd=self.path, check=True, input=data,
-                              capture_output=True, env=env, timeout=10).stdout
+        return _run_git(self.path, *args, data=data)
 
     def head(self):
         return self.git("rev-parse", "HEAD").decode("ascii").strip()
