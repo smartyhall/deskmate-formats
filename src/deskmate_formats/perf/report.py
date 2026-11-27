@@ -474,6 +474,8 @@ def _run_identity(report: dict[str, Any]) -> dict[str, Any]:
         "branch": source.get("branch"),
         "dirty": source.get("dirty"),
         "worktree_digest": source.get("worktree_digest"),
+        "untracked_digest": source.get("untracked_digest"),
+        "untracked_files": source.get("untracked_files"),
         "source_state": source.get("state") or (
             "stable" if source.get("complete") and source.get("revision") else "unknown"
         ),
@@ -647,10 +649,18 @@ def compare(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
                                   " the checkout stayed unchanged for the whole run")
         elif ident["source_changed"]:
             source_unknown.append(f"{label}: the checkout changed during the run")
+        elif ident["untracked_digest"] is None:
+            source_unknown.append(
+                f"{label}: untracked file contents were not bound to a digest, so"
+                " a change in an already-untracked file could not be detected"
+            )
     if source_unknown:
         note("source", "unknown", "; ".join(source_unknown))
     else:
-        same_content = before_ident["worktree_digest"] == after_ident["worktree_digest"]
+        same_content = (
+            before_ident["worktree_digest"] == after_ident["worktree_digest"]
+            and before_ident["untracked_digest"] == after_ident["untracked_digest"]
+        )
         note("source", "matched",
              f"{str(before_ident['revision'])[:12]} and"
              f" {str(after_ident['revision'])[:12]},"

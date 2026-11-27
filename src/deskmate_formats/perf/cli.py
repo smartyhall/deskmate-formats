@@ -121,7 +121,8 @@ def _merge(results: list[RunResult]) -> RunResult:
     issues = [issue for result in results for issue in result.suite_errors]
     sources = [result.meta.get("source") or {} for result in results]
     identities = {
-        (source.get("revision"), source.get("worktree_digest"), source.get("state"))
+        (source.get("revision"), source.get("worktree_digest"),
+         source.get("untracked_digest"), source.get("state"))
         for source in sources
     }
     stable = (
@@ -136,6 +137,7 @@ def _merge(results: list[RunResult]) -> RunResult:
             "branch": None,
             "dirty": None,
             "worktree_digest": None,
+            "untracked_digest": None,
             "observed_utc": (last.meta.get("source_after") or {}).get("observed_utc"),
             "complete": False,
             "state": "changed",
@@ -146,10 +148,29 @@ def _merge(results: list[RunResult]) -> RunResult:
             ],
         }
 
+    # Provenance overhead is summed rather than dropped: an iteration whose
+    # identity queries took longer is still comparable, but the report should
+    # let a reader see what the harness itself cost.
+    timings = [result.meta.get("timing") or {} for result in results]
+    timing = {
+        "iterations": len(results),
+        "harness_started_utc": timings[0].get("harness_started_utc"),
+        "execution_seconds": round(sum(result.wall_seconds for result in results), 6),
+        "harness_seconds": round(
+            sum(float(entry.get("harness_seconds") or 0.0) for entry in timings), 6
+        ),
+        "execution_boundary": timings[0].get("execution_boundary"),
+    }
+    for key in ("pre_source_seconds", "pre_package_seconds", "post_source_seconds"):
+        timing[key] = round(
+            sum(float(entry.get(key) or 0.0) for entry in timings), 6
+        )
+
     meta = dict(first.meta)
     meta.update({
         "iterations": len(results),
         "iteration_wall_seconds": [round(result.wall_seconds, 3) for result in results],
+        "timing": timing,
         "iteration_outcomes": [result.outcomes for result in results],
         "iteration_discovered_tests": [result.meta.get("discovered_tests") for result in results],
         "iteration_suite_errors": [len(result.suite_errors) for result in results],

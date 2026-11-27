@@ -45,6 +45,16 @@ that would read as "clean at no revision". If the two observations differ, the
 report records **no** revision and sets `source.changed`, because a tree that
 moved during the run cannot be attributed to what `HEAD` said afterwards.
 
+Untracked files are the part of that digest `git diff` cannot describe: rewriting
+the bytes of an already-untracked file changes neither its pathname nor its `??`
+status, so the digest stayed the same while the code under measurement changed.
+The harness therefore hashes the contents of every file
+`git ls-files --others --exclude-standard` names, under a fixed budget (400
+files, 1 MiB per file, 8 MiB in total). A tree that exceeds the budget is
+recorded as an **incomplete** identity rather than a partly hashed one, and an
+incomplete identity cannot qualify a comparison. Files Git is told to ignore are
+excluded: they are not part of the measured source.
+
 **Imported package identity.** `--source` names a checkout; it does not prove
 that the interpreter imported code from it. The report records the resolved
 `deskmate_formats` package directory, whether it is the `src/` directory of the
@@ -54,6 +64,15 @@ wheel sits in site-packages, so the two can differ without any visible symptom.
 
 **Invocation.** The program name, the argument count and the argument string
 with path-like tokens redacted. The raw working directory is not recorded.
+
+**Measurement boundary.** The suite duration is instrumented execution only.
+Source qualification before the run and provenance queries after it are timed
+separately in `meta.timing`: `pre_source_seconds`, `pre_package_seconds`,
+`execution_seconds` (the value `wall_seconds` carries), `post_source_seconds`,
+and `harness_seconds` for the whole call. The finish timestamp is taken when the
+last test returns and the host timeline closes, before the post-run Git queries,
+so a slow `git status` cannot be reported as test time. Repeated runs sum each
+phase across their iterations.
 
 **Per test:** identity (`test_id` and the `iteration` it belongs to), module,
 case, name, outcome, message, wall seconds, parent-process CPU seconds, setup
@@ -201,6 +220,9 @@ That is deliberate: the fields needed to qualify them were not recorded.
 | `git_spawn_seconds` / `git_run_seconds` | creation latency / whole call duration for Git | one shared "Git time" number |
 | `peak_working_set_delta` | growth of a process-wide high-water mark during the test | the memory the test itself allocated |
 | `share_percent` | fraction of attributed test wall time | fraction of the process's wall time or of host CPU |
+| `wall_seconds` (suite) | instrumented test execution, from the first test to the last | the whole command; source qualification before and after is excluded |
+| `post_source_seconds` | provenance queries run after the suite finished | test time, or time any test spent |
+| `harness_seconds` | the whole harness call, provenance included | what the tests took |
 
 Low parent CPU therefore does not show an idle host, and a large summed call
 duration does not show that the same wall time is reclaimable.
@@ -232,9 +254,23 @@ duration does not show that the same wall time is reclaimable.
 - Disk latency and queue depth are not sampled by default.
 - Endpoint-security scanning is reported only where the host exposes it; a
   missing value is `null`, never zero.
+- The suite duration excludes source qualification. A command's real cost is
+  `harness_seconds`, which is larger by `pre_source_seconds`,
+  `pre_package_seconds` and `post_source_seconds`.
+- Untracked-file binding stops at a fixed budget. More than 400 untracked files,
+  a single file above 1 MiB, or more than 8 MiB in total is recorded as an
+  incomplete identity rather than a partial digest, so the bound is visible and
+  such a run cannot qualify a comparison.
+- Reports written before this correction included the post-run Git queries in
+  `wall_seconds`. They are preserved as recorded; their suite durations are
+  upper bounds by a few tenths of a second, and they are not restated as if they
+  had been collected with the corrected boundary.
 - Child processes started with `python -I` ignore `PYTHONPATH` and resolve the
   package from site-packages. The report records the *parent's* import origin,
-  not each child's; per-spawn child identity is issue #201's job.
+  not each child's, so a measurement involving an unqualified child source
+  identity is a characterization, not a fully qualified optimization result.
+  [PR #206](https://github.com/smartyhall/deskmate-formats/pull/206) qualifies
+  campaign-owned environments and issue #207 tracks their adoption.
 
 ## 9. Private evidence and the publication projection
 

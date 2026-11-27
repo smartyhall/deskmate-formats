@@ -62,6 +62,7 @@ PUBLIC_META_KEYS: tuple[str, ...] = (
     "source_after",
     "source_changed",
     "package",
+    "timing",
 )
 
 #: ``environment`` keys that may be published.  The executable is reduced to
@@ -80,7 +81,11 @@ PUBLIC_ENVIRONMENT_KEYS: tuple[str, ...] = (
     "python_dont_write_bytecode",
 )
 
-_SOURCE_KEYS = ("revision", "branch", "dirty", "complete", "worktree_digest", "state", "observed_utc")
+_SOURCE_KEYS = (
+    "revision", "branch", "dirty", "complete", "worktree_digest",
+    "untracked_digest", "untracked_files", "untracked_bytes",
+    "untracked_truncated", "state", "observed_utc",
+)
 
 
 def redact_text(text: object, *, roots: tuple[str, ...] = ()) -> str:

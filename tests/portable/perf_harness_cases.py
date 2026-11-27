@@ -6,6 +6,7 @@ the cases are only executed by the harness tests that load them explicitly.
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -82,6 +83,14 @@ class SubtestErrorCase(unittest.TestCase):
     def test_subtests(self):
         with self.subTest(value=1):
             raise RuntimeError("synthetic subtest error")
+
+
+class UntrackedMutationCase(unittest.TestCase):
+    """Rewrites an untracked file mid-run, leaving its path and status alone."""
+
+    def test_rewrites_the_untracked_file(self):
+        target = Path(os.environ["DESKMATE_PERF_UNTRACKED"])
+        target.write_text("VALUE = 2\n", encoding="utf-8")
 
 
 class PathMessageCase(unittest.TestCase):

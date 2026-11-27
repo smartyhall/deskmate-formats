@@ -557,7 +557,64 @@ class RunResult:
         }
 
 
-_IDENTITY_FIELDS = ("revision", "branch", "dirty", "worktree_digest")
+_IDENTITY_FIELDS = ("revision", "branch", "dirty", "worktree_digest", "untracked_digest")
+
+#: Budget for binding untracked file contents.  A tree that exceeds it is
+#: reported as unqualified rather than partly hashed: a digest over some of the
+#: bytes cannot say the source stayed the same.
+_UNTRACKED_MAX_FILES = 400
+_UNTRACKED_MAX_FILE_BYTES = 1_048_576
+_UNTRACKED_MAX_TOTAL_BYTES = 8_388_608
+
+
+def _untracked_identity(directory: Path, listing: bytes) -> dict[str, Any]:
+    """Bind the contents of untracked files, within a fixed budget.
+
+    ``git status --porcelain`` only says that untracked files exist, and
+    ``git diff`` cannot describe them, so a digest built from those two alone
+    does not change when the bytes of an already-untracked file change.  A run
+    qualified from such a digest would claim an identity it does not have.
+
+    ``git ls-files --others --exclude-standard`` names the files; their sizes
+    and SHA-256 digests are folded into one digest.  Files Git is told to ignore
+    are deliberately excluded, because they are not part of the measured source.
+    """
+    names = sorted(name for name in listing.split(b"\0") if name)
+    digest = hashlib.sha256()
+    hashed = 0
+    total = 0
+    truncated = bool(names) and len(names) > _UNTRACKED_MAX_FILES
+    for name in names[:_UNTRACKED_MAX_FILES]:
+        if total >= _UNTRACKED_MAX_TOTAL_BYTES:
+            truncated = True
+            break
+        try:
+            path = directory / name.decode("utf-8", "surrogateescape")
+            size = path.stat().st_size
+        except (OSError, UnicodeError):
+            truncated = True
+            break
+        if size > _UNTRACKED_MAX_FILE_BYTES:
+            truncated = True
+            break
+        try:
+            content = path.read_bytes()
+        except OSError:
+            truncated = True
+            break
+        digest.update(name)
+        digest.update(b"\0")
+        digest.update(str(len(content)).encode("ascii"))
+        digest.update(b"\0")
+        digest.update(hashlib.sha256(content).digest())
+        hashed += 1
+        total += len(content)
+    return {
+        "untracked_files": hashed,
+        "untracked_bytes": total,
+        "untracked_digest": None if truncated else digest.hexdigest(),
+        "untracked_truncated": truncated,
+    }
 
 
 def _source_revision(directory: Path) -> dict[str, Any]:
@@ -570,7 +627,8 @@ def _source_revision(directory: Path) -> dict[str, Any]:
     A digest of the status output and of ``git diff --binary HEAD`` pins the
     working tree's uncommitted difference from ``HEAD``.  Without it, two runs
     that both say "dirty at revision X" cannot be told apart from two different
-    trees.
+    trees.  ``git diff`` does not cover untracked files, so their contents are
+    bound separately by ``_untracked_identity``.
 
     Only argument names and a failure class are retained.  Git's stderr quotes
     paths, and a measurement report is not the place for them.
@@ -581,6 +639,10 @@ def _source_revision(directory: Path) -> dict[str, Any]:
         "branch": None,
         "dirty": None,
         "worktree_digest": None,
+        "untracked_files": None,
+        "untracked_bytes": None,
+        "untracked_digest": None,
+        "untracked_truncated": None,
         "observed_utc": _utc_now(),
         "complete": False,
         "failed_commands": [],
@@ -620,8 +682,13 @@ def _source_revision(directory: Path) -> dict[str, Any]:
         digest.update(b"\0")
         digest.update(diff)
         info["worktree_digest"] = digest.hexdigest()
-    info["complete"] = all(
-        info[field] is not None for field in ("revision", "branch", "dirty", "worktree_digest")
+    if status is not None:
+        untracked = git("ls-files", "--others", "--exclude-standard", "-z")
+        if untracked is not None:
+            info.update(_untracked_identity(directory, untracked))
+    info["complete"] = (
+        all(info[field] is not None for field in _IDENTITY_FIELDS)
+        and not info["untracked_truncated"]
     )
     return info
 
@@ -731,8 +798,13 @@ def run_suite(
     runner = unittest.TextTestRunner(stream=stream, verbosity=verbosity, resultclass=Result)
     # Identity first: a checkout that is already unreadable must not be
     # attributed to whatever it says after the run.
+    harness_start = time.perf_counter()
+    harness_started = _utc_now()
     source_before = _source_revision(directory)
+    pre_source_seconds = time.perf_counter() - harness_start
+    package_start = time.perf_counter()
     package = _package_identity(directory)
+    pre_package_seconds = time.perf_counter() - package_start
     started = _utc_now()
     clock = time.perf_counter()
     samples: list[HostSample] = []
@@ -752,7 +824,13 @@ def run_suite(
         if tracer is not None:
             tracer.uninstall()
 
+    # The suite is over at this point.  Everything below describes provenance,
+    # and a slow Git command there must not be reported as time the tests took.
+    execution_seconds = time.perf_counter() - clock
+    finished = _utc_now()
+    post_start = time.perf_counter()
     source_after = _source_revision(directory)
+    post_source_seconds = time.perf_counter() - post_start
     stable = bool(
         source_before["complete"]
         and source_after["complete"]
@@ -779,8 +857,8 @@ def run_suite(
         samples=samples,
         suite_errors=issues,
         started_utc=started,
-        finished_utc=_utc_now(),
-        wall_seconds=time.perf_counter() - clock,
+        finished_utc=finished,
+        wall_seconds=execution_seconds,
         successful=result.wasSuccessful(),
         meta={
             "label": label,
@@ -794,6 +872,16 @@ def run_suite(
             "discovered_tests": discovered,
             "executed_tests": len(records),
             "invocation": _invocation(),
+            "timing": {
+                "harness_started_utc": harness_started,
+                "pre_source_seconds": round(pre_source_seconds, 6),
+                "pre_package_seconds": round(pre_package_seconds, 6),
+                "execution_seconds": round(execution_seconds, 6),
+                "post_source_seconds": round(post_source_seconds, 6),
+                "harness_seconds": round(time.perf_counter() - harness_start, 6),
+                "execution_boundary": "instrumented test execution; source"
+                                       " qualification before and after is excluded",
+            },
             "source_before": source_before,
             "source_after": source_after,
             "source": source,

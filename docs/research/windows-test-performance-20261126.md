@@ -580,10 +580,15 @@ are wall-clock and spawn counts, not assertions about that code.
 The harness now records the *parent's* resolved package origin and whether it is
 the named checkout, and `compare` refuses to qualify a run whose package came
 from elsewhere. It still cannot see each child's origin; per-spawn child
-identity, campaign-owned interpreters and preflight receipts are issue #201's
-scope. Two remedies remain open, neither applied here because both change test or
-product code owned elsewhere: have children execute the checkout under test, or
-have the harness observe each child's resolved module origin.
+identity, campaign-owned interpreters and preflight receipts were recorded by
+issue #201, implemented by
+[PR #206](https://github.com/smartyhall/deskmate-formats/pull/206) and tracked for
+adoption in issue #207. Two remedies remain open, neither applied here because
+both change test or product code owned elsewhere: have children execute the
+checkout under test, or have the harness observe each child's resolved module
+origin. Until one of them lands, a measurement whose child source identity is
+unqualified is a characterization of this host, not a fully qualified
+optimization result.
 
 ## 8. Integration with the Supervisor and Observatory work
 
@@ -643,9 +648,12 @@ have the harness observe each child's resolved module origin.
   qualified quiet-host baseline from this harness. Then implement batching with
   a before/after comparison that names the call counts, so the claim is measured
   rather than inferred from call counts.
-- **Issue #201:** the wheel skew in §7.1 is the cross-campaign environment
-  contamination it records. The harness now detects an imported package that is
-  not the named source, which is a detection, not an isolation mechanism.
+- **Issues #201 and #207, PR #206:** the wheel skew in §7.1 is the
+  cross-campaign environment contamination #201 records. The harness detects an
+  imported package that is not the named source, which is a detection, not an
+  isolation mechanism. #206 qualifies campaign-owned environments and source
+  identity; #207 tracks their adoption in production procedures. Nothing in this
+  branch duplicates that implementation or claims its result.
 - **Open:** how much of the summed call duration a batched Git query interface
   would reclaim; the actual margin of the sub-second deadline cases; whether the
   venue for parallel execution is the harness or CI; and whether the six
@@ -662,6 +670,15 @@ have the harness observe each child's resolved module origin.
 - Host CPU percentages for the two full runs are reconstructions from stored
   per-sample percentages, not direct measurements, and should be read as a band
   of roughly ±2 points (§2, §5.4).
+- The suite durations in §3 and §6 were recorded before the measurement boundary
+  was corrected, so each includes the post-run Git identity queries (four calls,
+  well under a second) that the harness now times as `post_source_seconds`. They
+  are preserved as recorded and are upper bounds on instrumented execution; they
+  are not restated as if collected with the corrected boundary.
+- Source identity for those runs binds tracked changes and, since this
+  correction, untracked file contents. Reports written before the correction
+  carry no untracked digest, so `compare` reports their source dimension as
+  unknown rather than assuming it.
 - CPU seconds are parent-process deltas and exclude work performed by child
   processes, so a Git-heavy test shows low CPU by construction. The 931.7 s
   figure is a sum of call durations, not exclusive blocked time, and not a

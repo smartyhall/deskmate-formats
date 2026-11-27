@@ -16,9 +16,12 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
+from unittest import mock
 
 from deskmate_formats.perf import cli, hostload, microbench, report, sanitize
+from deskmate_formats.perf import runner as runner_module
 from deskmate_formats.perf.runner import SubprocessTracer, _source_revision, run_suite
 
 import perf_harness_cases as cases
@@ -31,6 +34,27 @@ def _run(case_types, *, trace=None, trace_git=False, interval=60.0):
     return run_suite(suite, label="harness", profile="test", trace_processes=trace,
                      trace_git_commands=trace_git, sample_interval=interval,
                      verbosity=0, stream=io.StringIO())
+
+
+def _git_environment():
+    env = {key: value for key, value in os.environ.items()
+           if not key.upper().startswith("GIT_")}
+    env.update(GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull,
+               GIT_AUTHOR_NAME="Synthetic", GIT_AUTHOR_EMAIL="source@example.invalid",
+               GIT_COMMITTER_NAME="Synthetic", GIT_COMMITTER_EMAIL="source@example.invalid")
+    return env
+
+
+def _init_repository(directory):
+    """A repository with one commit, and one tracked file to make dirty later."""
+    def git(*arguments):
+        return subprocess.run(["git", *arguments], cwd=directory, check=True,
+                              env=_git_environment(), capture_output=True)
+
+    git("init", "-q", "-b", "main")
+    (Path(directory) / "tracked.txt").write_text("one\n", encoding="utf-8")
+    git("add", "tracked.txt")
+    git("commit", "-q", "-m", "one")
 
 
 def _record(identifier, seconds, *, outcome="success", iteration=0, message=""):
@@ -60,7 +84,7 @@ def _report(tests, *, revision="a" * 40, digest="digest-1", dirty=False,
             python=("CPython", "3.13.17"), platform_name="Windows-10-10.0.19045-SP0",
             cpu=10.0, memory=3_000_000_000, interval=5.0, iterations=1, schema=2,
             wall=100.0, matches_source=True, trace=True, discovered=None,
-            suite_errors=None):
+            suite_errors=None, untracked="untracked-1"):
     suite_errors = list(suite_errors or ())
     cpu_max = None if cpu is None else cpu + 5
     cpu_min = None if cpu is None else cpu - 5
@@ -86,6 +110,8 @@ def _report(tests, *, revision="a" * 40, digest="digest-1", dirty=False,
                 "branch": "synthetic",
                 "dirty": dirty,
                 "worktree_digest": digest,
+                "untracked_digest": untracked,
+                "untracked_files": 0 if untracked is None else 1,
                 "complete": revision is not None,
                 "state": "stable" if revision is not None else "unknown",
             },
@@ -201,12 +227,7 @@ class SourceIdentityTests(unittest.TestCase):
         self.addCleanup(shutil.rmtree, self.directory, True)
 
     def _environment(self):
-        env = {key: value for key, value in os.environ.items()
-               if not key.upper().startswith("GIT_")}
-        env.update(GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull,
-                   GIT_AUTHOR_NAME="Synthetic", GIT_AUTHOR_EMAIL="source@example.invalid",
-                   GIT_COMMITTER_NAME="Synthetic", GIT_COMMITTER_EMAIL="source@example.invalid")
-        return env
+        return _git_environment()
 
     def _git(self, *arguments):
         return subprocess.run(["git", *arguments], cwd=self.directory, check=True,
@@ -239,6 +260,38 @@ class SourceIdentityTests(unittest.TestCase):
         self.assertTrue(dirty["dirty"])
         self.assertTrue(dirty["complete"])
         self.assertNotEqual(clean["worktree_digest"], dirty["worktree_digest"])
+
+    def test_untracked_file_contents_are_bound(self):
+        if shutil.which("git") is None:
+            self.skipTest("git is not available")
+        _init_repository(self.directory)
+        untracked = self.directory / "extra_case.py"
+        untracked.write_text("VALUE = 1\n", encoding="utf-8")
+        first = _source_revision(self.directory)
+        self.assertTrue(first["dirty"])
+        self.assertTrue(first["complete"])
+        self.assertEqual(first["untracked_files"], 1)
+        self.assertRegex(first["untracked_digest"], r"^[0-9a-f]{64}$")
+
+        # Same pathname, same ``??`` classification, different bytes.  The
+        # tracked-file digest cannot see this; the untracked digest must.
+        untracked.write_text("VALUE = 2\n", encoding="utf-8")
+        second = _source_revision(self.directory)
+        self.assertEqual(second["dirty"], first["dirty"])
+        self.assertEqual(second["worktree_digest"], first["worktree_digest"])
+        self.assertNotEqual(second["untracked_digest"], first["untracked_digest"])
+        self.assertTrue(second["complete"])
+
+    def test_untracked_files_beyond_the_budget_are_not_qualified(self):
+        if shutil.which("git") is None:
+            self.skipTest("git is not available")
+        _init_repository(self.directory)
+        (self.directory / "large_untracked.bin").write_bytes(b"x" * (1_048_576 + 1))
+        info = _source_revision(self.directory)
+        self.assertTrue(info["untracked_truncated"])
+        self.assertIsNone(info["untracked_digest"])
+        # Unbound bytes must not read as a qualified identity.
+        self.assertFalse(info["complete"])
 
 
 class RunnerTests(unittest.TestCase):
@@ -326,6 +379,54 @@ class RunnerTests(unittest.TestCase):
         # A call contains its own process creation, so the call sum cannot be
         # smaller than the creation sum.
         self.assertGreaterEqual(record.git_run_seconds + 1e-6, record.git_spawn_seconds)
+
+    def test_post_execution_source_query_cannot_inflate_suite_duration(self):
+        real = runner_module._source_revision
+        calls = []
+
+        def delayed(directory):
+            calls.append(directory)
+            if len(calls) == 2:  # the post-execution qualification only
+                time.sleep(0.4)
+            return real(directory)
+
+        with mock.patch.object(runner_module, "_source_revision", delayed):
+            result = _run([cases.FastCase])
+
+        timing = result.meta["timing"]
+        self.assertEqual(len(calls), 2)
+        self.assertGreaterEqual(timing["post_source_seconds"], 0.35)
+        # The suite took milliseconds; the deliberately slow provenance query
+        # must not appear in its duration.
+        self.assertLess(result.wall_seconds, 1.0)
+        self.assertAlmostEqual(result.wall_seconds, timing["execution_seconds"], places=3)
+        self.assertGreater(timing["harness_seconds"], result.wall_seconds)
+        self.assertGreaterEqual(
+            timing["harness_seconds"],
+            timing["pre_source_seconds"] + timing["execution_seconds"]
+            + timing["post_source_seconds"],
+        )
+
+    def test_untracked_content_change_during_a_run_breaks_source_identity(self):
+        if shutil.which("git") is None:
+            self.skipTest("git is not available")
+        repository = Path(tempfile.mkdtemp(prefix="deskmate-run-identity-"))
+        self.addCleanup(shutil.rmtree, repository, True)
+        _init_repository(repository)
+        target = repository / "untracked_case.py"
+        target.write_text("VALUE = 1\n", encoding="utf-8")
+        os.environ["DESKMATE_PERF_UNTRACKED"] = str(target)
+        self.addCleanup(os.environ.pop, "DESKMATE_PERF_UNTRACKED", None)
+
+        suite = unittest.TestSuite(
+            [unittest.TestLoader().loadTestsFromTestCase(cases.UntrackedMutationCase)]
+        )
+        result = run_suite(suite, source_directory=repository, sample_interval=60.0,
+                           verbosity=0, stream=io.StringIO())
+        self.assertTrue(result.successful)
+        self.assertTrue(result.meta["source_changed"])
+        self.assertIsNone(result.meta["source"]["revision"])
+        self.assertEqual(result.meta["source"]["state"], "changed")
 
     def test_git_subcommand_parsing_skips_global_options(self):
         from deskmate_formats.perf.runner import _git_subcommand
@@ -622,6 +723,25 @@ class ComparisonTests(unittest.TestCase):
         self.assertTrue(comparison["comparable"])
         self.assertEqual(comparison["delta_label"], "regression")
         self.assertIn("Most regressed tests", report.compare_markdown(comparison))
+
+    def test_unbound_untracked_source_cannot_be_qualified(self):
+        before = _report([_record("m.C.test_a", 1.0)], untracked=None)
+        after = _report([_record("m.C.test_a", 1.0)], untracked=None)
+        comparison = report.compare(before, after)
+        source = [entry for entry in comparison["qualification"]
+                  if entry["dimension"] == "source"][0]
+        self.assertEqual(source["status"], "unknown")
+        self.assertIn("untracked", source["detail"])
+        self.assertFalse(comparison["comparable"])
+        self.assertEqual(comparison["delta_label"], "observation")
+
+    def test_differing_untracked_content_is_reported_not_hidden(self):
+        before = _report([_record("m.C.test_a", 1.0)], untracked="u1")
+        after = _report([_record("m.C.test_a", 0.5)], untracked="u2")
+        source = [entry for entry in report.compare(before, after)["qualification"]
+                  if entry["dimension"] == "source"][0]
+        self.assertEqual(source["status"], "matched")
+        self.assertIn("different uncommitted changes", source["detail"])
 
     def test_qualification_names_every_dimension(self):
         comparison = report.compare(_report([_record("m.C.test_a", 1.0)]),
