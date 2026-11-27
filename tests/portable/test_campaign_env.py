@@ -527,7 +527,9 @@ class LayoutTest(unittest.TestCase):
         make_repository(repository)
         described = environment.layout(repository, "existing", root=root / "envs")
         Path(str(described["record"])).parent.mkdir(parents=True)
-        (Path(str(described["venv"])) / "Scripts").mkdir(parents=True)
+        # The script directory differs by platform (``Scripts`` or ``bin``); the
+        # layout already knows which one this host uses.
+        Path(str(described["interpreter"])).parent.mkdir(parents=True)
         Path(str(described["interpreter"])).write_text("", encoding="utf-8")
         receipts.write(str(described["record"]),
                        make_record(repository, described, campaign="existing"))
@@ -550,7 +552,7 @@ class TargetOwnershipTest(unittest.TestCase):
         directory = Path(str(self.target["directory"]))
         directory.mkdir(parents=True, exist_ok=True)
         venue = Path(str(self.target["venv"]))
-        (venue / "Scripts").mkdir(parents=True, exist_ok=True)
+        Path(str(self.target["interpreter"])).parent.mkdir(parents=True, exist_ok=True)
         (venue / "pyvenv.cfg").write_text("home = synthetic\n", encoding="utf-8")
         Path(str(self.target["interpreter"])).write_text("", encoding="utf-8")
         receipts.write(str(self.target["record"]),
