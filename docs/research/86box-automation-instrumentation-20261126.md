@@ -20,8 +20,9 @@ its own path and hash throughout.
 | Build directory | `C:/DeskMateLab/builds/86box-automation-idq` (production build left untouched at `builds/86box-automation`) |
 | Configuration | Ninja, `CMAKE_BUILD_TYPE=Release`, `AUTOMATION=ON`, `QT=ON`, Qt 5.15.19 static prefix |
 | Compiler | `cc.exe (Rev6, Built by MSYS2 project) 16.2.0` |
-| Executable | `builds/86box-automation-idq/src/86Box.exe`, SHA-256 `23feae30018f97c341adb41ff64969c9aa54e3204d8c3fa290bbaf23979f5845` |
-| Patch | 99 added lines across `src/automation.c`, `src/device/keyboard.c`, `src/include/86box/keyboard.h`; SHA-256 `9f75ad0e1162352d3ec0ed511e3120c683b407a32fa21a83d53a02c12a38ba0b` |
+| Executable | `builds/86box-automation-idq/src/86Box.exe`, SHA-256 `3e56b6e9b89ac95a555b88ba875614359d63cf432d17a3dd33d2ab5520035fe1` (second revision; the first was `23feae30…5845`) |
+| Patch | 164 added lines across `src/automation.c`, `src/device/keyboard.c`, `src/include/86box/keyboard.h`; SHA-256 `213d668cb1862973a5397966f5bd00f751a8a2ebc2024d3aff1624b7c494a133` |
+| Build note | `cc1.exe` needs MSYS2's `ucrt64/bin` on `PATH`; without it the compiler exits 1 with no diagnostic |
 | Patch copy for review | [`tools/experimental/86box-instrumentation.patch`](../../tools/experimental/86box-instrumentation.patch) |
 
 The patch applies to the pinned revision only and is not installed into the
@@ -65,8 +66,34 @@ A defect was found while counting: the `key` handler reset `key_head`/`key_count
 on every request, so a second `key` issued while events of the previous one were
 still pending silently discarded the remainder. It still does that - replacing
 input mid-delivery is the caller's decision - but the discarded events are now
-counted in `dropped`, and a fresh `key` after `wait queue` cannot lose them
-unnoticed.
+counted in `dropped` and reported as `replaced` in the new request's reply, so a
+fresh `key` after `wait queue` cannot lose them unnoticed.
+
+## Second revision, after the independent draft review
+
+The review asked for an explicit accounting identity, a queue wait that can
+actually drain an interrupted command, and a distinction between an empty queue
+and complete delivery. The second revision adds:
+
+* `accepted = forwarded + dropped + pending` as a reported identity
+  (`accounting: true`) and as a client-side check. Every report also carries
+  `pending` and `generation`.
+* Per-request receipts: `key` replies carry `events`, `seq`, `replaced` and, at
+  completion, the cumulative `accepted`, `forwarded`, `dropped`, `pending` and
+  `generation`. The client compares consecutive replies, so a request that
+  accepted *n* events must account for *n* forwards or discards. A reply ended by
+  the debugger (`stopped`) is an interrupted delivery, not a completion.
+* `wait queue` now **pumps** orphaned events at the normal emulated gap instead
+  of only observing them. A key command can be ended by the debugger stop path
+  with events still pending, and nothing else would ever forward them.
+* `key cancel` discards pending events and counts them as `dropped`, which is the
+  explicit-cancellation alternative to replacing them.
+* A reset during delivery now discards and counts pending events and bumps
+  `generation`, so a reboot cannot inherit keystrokes from before it.
+
+The build announces `input_accounting`, `queue_pump` and `key_cancel` as
+capabilities, so a client negotiates them rather than inferring them from a
+version.
 
 ## Native results
 
@@ -86,28 +113,53 @@ after. Visible window, exclusive port 8765, private raw evidence under
 | Live buffer (differential) | absent before typing, then the full note at `0x4DC78` (`318584`), stable across repeated reads, line 2 at `+12` |
 | Saved document | `DESKMATE/DMCORKBD`, 2,864 bytes, header `1f000000` then `FF INPUT 01\rALPHA BRAVO CHARLIE`, SHA-256 `97747bf7…0c41` |
 | Cold reopen | note rendered again; whole-frame diff 12 of 307,200 pixels, all inside `[600,16]-[606,21]` |
+| Accounting, second revision | `accounting: true` at boot and at the end of every run; `accepted == forwarded + dropped + pending` |
+| 21-character burst | 76 accepted, 76 forwarded, 0 dropped, ring peak 15 of 15, one character lost |
+| Persisted header | offset 0 is the insertion position (12-byte text, word 7; 11-byte text after Backspace, word 3), restored as a caret on cold load |
 
 The 12-pixel difference sits in the top-right corner, outside the note text.
 Everything the note occupies is pixel-identical after a cold boot.
 
 ### Why the earlier run lost characters
 
-The failed campaign typed whole lines as one request
+The earlier campaign typed whole lines as one request
 (`client.type_ascii('FF INPUT 01')`) and lost the first character and the tail of
-line 2. With instrumentation:
+line 2. A controlled burst run on a fresh clone now names the layer.
 
-* Every accepted event was forwarded (`accepted == forwarded`, `dropped == 0`),
-  so nothing was lost inside the automation interface.
-* The BIOS ring advanced by 2 for every keystroke and drained, so the BIOS saw
-  and consumed every one.
-* The application's buffer holds the complete note when each character is its
-  own request followed by a 30-40 ms step.
+One line of 21 characters is one automation request of 76 events (each character
+is a make and a break). The interface forwarded all 76; the guest BIOS ring
+reached **peak occupancy 15**, which is its capacity, and the saved note lost
+exactly one character at the end of that line:
 
-The loss therefore happened between the device and the application, under burst
-delivery, not in the transport, the ring, or the application's buffer handling.
-The dependable recipe is per-character requests with a short settled step, which
-is exactly what the verified facility now does when `chunk` is 1 and a settle
-step is used.
+| Observation | Value |
+| --- | --- |
+| Events accepted for the 21-character line | 76 |
+| Events forwarded | 76 |
+| Events dropped by the interface | 0 |
+| Automation queue at completion | 0, `accounting: true`, `matched: true` |
+| BIOS ring peak during the burst | **15 of 15** |
+| Persisted text | `FF INPUT 01` CR `ALPHA BRAVO CHARLI` (30 bytes, expected 31) |
+
+The 11-character first line reached a peak of 9 and lost nothing. The interface,
+the socket and the automation queue are therefore not where the character went:
+`accepted == forwarded == 76` and the queue drained. The loss is at **`INT 09h`
+buffer-full**: the interface forwards one event every 2 emulated milliseconds,
+the application polls `INT 16h` more slowly, the 15-word ring fills, and the BIOS
+discards what does not fit. An empty ring afterwards is equally consistent with
+this: the application consumed what it was given.
+
+This is why the dependable recipe is per-character requests with a short settled
+step, and why the facility's `chunk=1` with a settle step is the qualified path.
+It also explains why the packet counters cannot predict the loss on their own:
+they describe the interface, not the ring or the application.
+
+### Controlled header experiment
+
+The same instrumented build was used for a separate native experiment that
+separates Corkboard's persisted insertion position from its text length. It is
+reported in
+[Corkboard's persisted header](deskmate-corkboard-header-20261127.md), and it
+resolves the first word of the document header.
 
 ### Buffer location, and what it does not prove
 
@@ -128,8 +180,9 @@ starts at offset 4.
 
 These are offered to the Ghidra work; nothing here was changed in its worktree.
 
-1. Does `DMNOTEPD.ACC` write `DMCORKBD` through one routine, and is the
-   4-byte header at offset 0 a length or a flags/version pair plus length?
+1. Does `DMNOTEPD.ACC` write `DMCORKBD` through one routine? The native run now
+   shows offset 0 is the insertion position, not a length (see the header
+   experiment); the second word has not been explained.
 2. What bound applies to the note text (offset 4, CR-delimited) and what happens
    at the limit - truncation, refusal, or a second block?
 3. Which path copies the live buffer at `0x4DC78` (session-dependent) to the
@@ -140,7 +193,17 @@ These are offered to the Ghidra work; nothing here was changed in its worktree.
 
 ## Limits
 
-One guest, one machine configuration, one compiler, two runs of the same
-scenario. The counters are interface-side by construction. The buffer address is
-session-specific. Cold reopen was compared by frame content, not by a second
-independent extraction after the reopen.
+Several guests of one machine configuration, one compiler. The counters are
+interface-side by construction: they show what the interface forwarded, not what
+the BIOS or the application consumed, and the burst result depends on the guest
+BIOS ring rather than on them. The buffer address is session-specific. Cold
+reopen was compared by frame content, not by a second independent extraction
+after the reopen.
+
+The `wait queue` pump and `key cancel` are implemented and covered by portable
+tests, but this build has no GDB stub compiled in, so the debugger-stop path that
+leaves events pending cannot be induced from the automation socket. Native
+`key cancel` was exercised only with an empty queue (a no-op); the non-empty case
+is covered by the synthetic peer. The pump is therefore reviewed and portable-
+tested, not natively exercised. `generation` was observed at 2 after two guest
+resets and did not change within a run.

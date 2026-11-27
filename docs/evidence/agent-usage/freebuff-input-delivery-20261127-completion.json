@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "provider": "Freebuff",
+  "agent": "Freebuff native desktop agent",
+  "campaign_id": "freebuff-input-delivery-20261126",
+  "checkpoint": "native-corkboard-and-instrumentation",
+  "observed_at_utc": null,
+  "observed_at_note": "Host date 2026-11-27; exact UTC instant unknown to agent tools.",
+  "git_revision": null,
+  "git_revision_note": "Recorded in the pull request after this receipt; the branch tip carries the report.",
+  "execution_mode": "native desktop agent driving the separately built instrumented 86Box over the authenticated loopback socket, held-step execution, visible window, one process at a time",
+  "model": null,
+  "reasoning_effort": null,
+  "model_note": "Not exposed to agent tools.",
+  "source": {
+    "kind": "local allowlisted collector",
+    "version": "deskmate_formats.automation.client protocol 1 with caps negotiation; tools/86box_launch.py",
+    "detail": "Every request and reply is validated by the repository client; captures and documents are written to the private lab."
+  },
+  "coverage": "Eight cold-boot steps of the Corkboard header matrix, one settled burst comparison, and one unsettled burst attempt on disposable clones of the sealed baseline.",
+  "attribution_limits": "Emulated milliseconds are measured by the emulator and are not host wall-clock or provider usage. No quota, token or allowance figure is available.",
+  "status": "header semantics resolved for word 0; burst loss localised to BIOS ring overflow; instrumentation second revision qualified",
+  "measurements": [
+    {
+      "name": "native_emulator_launches",
+      "value": 11,
+      "unit": "sessions",
+      "scope": "campaign",
+      "semantics": "cumulative",
+      "observed_at": "completion",
+      "reset_boundary": null
+    },
+    {
+      "name": "burst_scenario_guest_time",
+      "value": 27698,
+      "unit": "ms",
+      "scope": "session",
+      "semantics": "cumulative",
+      "observed_at": "end of the settled burst run",
+      "reset_boundary": "each launch starts at 0"
+    },
+    {
+      "name": "focused_portable_tests",
+      "value": 82,
+      "unit": "tests",
+      "scope": "campaign",
+      "semantics": "cumulative",
+      "observed_at": "completion",
+      "reset_boundary": null
+    }
+  ],
+  "measurement_note": "Guest resets inside a run are counted by the emulator's generation counter; they do not reset emulated ms.",
+  "private_evidence": "private-evidence/input-delivery-20261126/corkboard-header-01, corkboard-burst-01, corkboard-burst-02; guests guest-idq-03 and guest-idq-04."
+}
