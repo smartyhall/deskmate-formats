@@ -317,7 +317,7 @@ class PreparationTests(unittest.TestCase):
     def test_manifest_records_provenance_and_review_status(self):
         manifest = self.prepare()
         entry = manifest["generated"][0]
-        self.assertIn("PRIVATE REVIEW", manifest["status"])
+        self.assertIn("SOURCE SCANS", manifest["status"])
         self.assertNotIn("published", entry)
         self.assertEqual(entry["source_sha256"], DIGEST_A)
         self.assertEqual(entry["source_page_count"], 3)

@@ -126,6 +126,37 @@ archives remain private. Where an image is substantially a third-party work
 rather than a small documentary UI excerpt, review its permission or other
 rights basis separately before posting.
 
+### Historical advertising and sales material
+
+Operator decision, 2026-11-27: publicly available period advertising and sales
+material may be reproduced for the project's historical, technical, educational
+and documentary commentary without a separate operator approval for each
+ordinary illustration. Eligible material covers advertisements, product catalogs
+and sales brochures, promotional flyers and product announcements, dealer sales
+sheets, commercial product listings and comparable promotional material.
+
+This is an editorial publication authorization, not a license from the original
+rights holders, not a public-domain determination and not an unconditional
+fair-use ruling. Apply the case-specific historical-excerpt assessment: prefer
+reproductions proportionate to their documentary purpose; a complete individual
+advertisement or sales illustration may be appropriate when its composition or
+complete content is historically relevant; do not publish complete magazines,
+catalogs, commercial scan collections or archival libraries. Each reproduction
+needs publisher attribution, publication title and date, page reference, source
+link, verified provenance and a notice that the third-party material remains its
+rights holders' property and is not offered under this project's licenses.
+Honor documented correction or removal requests.
+
+Manifest-listed historical excerpts use origin
+`historical-advertising-excerpt` and the REUSE classification
+`LicenseRef-Third-Party-Historical-Advertising`, defined in
+`LICENSES/LicenseRef-Third-Party-Historical-Advertising.txt`. That
+classification covers the reproduced historical material only. The project's
+crop selection, captions, alternative text, provenance metadata and preparation
+tooling remain under their stated GPL/CC licenses. This decision does not cover
+modern third-party photography, commercial software distributions, extracted
+proprietary assets, complete manuals or unrelated copyrighted works.
+
 The [typography comparison](examples/typography-comparison/v1/README.md)
 covers independently authored specimens rendered with project and
 separately licensed outlines. The project licenses its own specimens and

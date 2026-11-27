@@ -1,8 +1,29 @@
 # Publication-rights assessment: period figures for the DeskMate chronology
 
-*Prepared for operator review, 27 November 2026. No historical image is published, committed, or linked from the website by this assessment.*
+*Prepared for operator review, 27 November 2026. The operator's decision of the same date is recorded below; figures 1–3 are published as limited, attributed excerpts, and figure 4 remains an external link.*
 
 [PR #155](https://github.com/smartyhall/deskmate-formats/pull/155) proposes four period figures for the chronology. Three would be local crops from commercial publications; the fourth is a modern photograph that stays an external link. This document records, for each one, who holds the original rights, where the copy came from, what permission exists, why the excerpt is proposed, and what remains unresolved.
+
+## Operator decision — 27 November 2026
+
+The operator authorized reproducing publicly available historical advertising and
+sales material for historical, technical, educational and documentary purposes
+without separate approval for each ordinary illustration. The decision is recorded
+in [PR #209](https://github.com/smartyhall/deskmate-formats/pull/209#issuecomment-7218089375)
+and [PR #155](https://github.com/smartyhall/deskmate-formats/pull/155#issuecomment-7218090129).
+
+For this chronology, the decision approves figures 1–3 as limited, attributed
+excerpts. Figure 4 remains an attributed external link: the authorization does not
+cover modern third-party photography. The authorization is an editorial
+publication decision by the project operator. It is not a copyright license from
+Tandy, Radio Shack, COMPUTE!, the Color Computer Archive or any other rights
+holder, not a public-domain determination, and not an unconditional fair-use
+ruling. Publisher rights remain with their holders, and the project licenses only
+its crop selection, captions, alternative text, provenance metadata and tooling.
+See [LICENSING.md](../../LICENSING.md#historical-advertising-and-sales-material)
+and the [visual-asset workflow](../site/visual-assets.md#historical-advertising-and-sales-material).
+
+The assessment below is retained as the pre-decision record.
 
 ## The standard being applied
 

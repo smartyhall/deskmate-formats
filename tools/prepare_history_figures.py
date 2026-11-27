@@ -43,8 +43,9 @@ SCHEMA_VERSION = 1
 DIGEST = re.compile(r"[0-9a-f]{64}")
 FIGURE_ID = re.compile(r"history\.[a-z0-9]+(?:[.-][a-z0-9]+)*")
 CROP_STATUS = "proposed-crop-private-review"
+PUBLISHED_STATUS = "published-limited-excerpt"
 LINK_STATUS = "external-link-only"
-STATUSES = {CROP_STATUS, LINK_STATUS}
+STATUSES = {CROP_STATUS, PUBLISHED_STATUS, LINK_STATUS}
 LIMIT_KEYS = ("max_output_bytes", "max_output_pixels", "max_dimension", "panel_gap_px")
 SOURCE_KEYS = ("title", "publisher", "url", "sha256", "size_bytes", "page_count",
                "attribution", "rights_status", "printed_page_convention")
@@ -53,7 +54,7 @@ FIGURE_TEXT_KEYS = ("caption", "alt", "attribution", "rights_status", "purpose",
 CAPTION_LIMIT = 500
 MANIFEST_NAME = "figure-manifest.json"
 CONTACT_SHEET_NAME = "contact-sheet.png"
-MANIFEST_STATUS = "PRIVATE REVIEW ONLY - NOT AUTHORIZED FOR PUBLICATION"
+MANIFEST_STATUS = ("APPROVED LIMITED PUBLICATION - SOURCE SCANS AND FULL PAGES REMAIN PRIVATE")
 
 
 class RecordError(ValueError):

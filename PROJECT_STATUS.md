@@ -1,5 +1,21 @@
 # Project status — DeskMate formats
 
+## Historical chronology and advertising publication — 2026-11-27
+
+The [DeskMate historical chronology](docs/history/timeline.md) is now a mapped
+reference page at `history/chronology`, with three published historical
+excerpts: the 1988 Tandy 1000 HX catalog offer, the 1988 catalog's overlapping
+DeskMate software listings, and the October 1988 Tandy 1000 SL advertisement.
+The operator's standing authorization for publicly available historical
+advertising and sales material is recorded in [AGENTS.md](AGENTS.md) and
+[LICENSING.md](LICENSING.md); it is an editorial publication decision, not a
+copyright license or public-domain finding. Each image is manifest-listed with
+origin `historical-advertising-excerpt`, verified source and derivative hashes,
+publisher/page/source metadata and the
+`LicenseRef-Third-Party-Historical-Advertising` classification. The modern
+VintageComputer.net photograph of Personal DeskMate 2 manuals remains an
+attributed external link. Source scans and full pages are not published.
+
 ## TVDog archive intelligence — 2026-11-19
 
 The first [mirror verification](docs/ecosystem/tvdog-mirror-verification.md)

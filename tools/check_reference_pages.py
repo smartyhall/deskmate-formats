@@ -10,7 +10,7 @@ import sys
 ID = re.compile(r"^[a-z][a-z0-9]*(?:\.[a-z][a-z0-9-]*)+$")
 SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*(?:/[a-z0-9]+(?:-[a-z0-9]+)*)*$")
 SECTIONS = {
-    "planning", "system", "formats", "applications", "research",
+    "history", "planning", "system", "formats", "applications", "research",
     "evidence", "recovery",
 }
 ROLES = {

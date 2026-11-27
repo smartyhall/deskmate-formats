@@ -2,6 +2,14 @@
   "schema_version": 1,
   "pages": [
     {
+      "id": "history.chronology",
+      "slug": "history/chronology",
+      "title": "DeskMate historical chronology",
+      "section": "history",
+      "role": "current-guide",
+      "source": "docs/history/timeline.md"
+    },
+    {
       "id": "site.overview",
       "slug": "planning/overview",
       "title": "Reference-site preparation",
