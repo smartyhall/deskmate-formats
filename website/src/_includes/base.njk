@@ -96,5 +96,14 @@
   </div>
   <script defer src="{{ '/assets/vendor/bootstra386/js/bootstrap.bundle.min.js' | siteurl }}"></script>
   <script defer src="{{ '/assets/vendor/bootstra386/js/bootstrap-386.js' | siteurl }}"></script>
+  <script>
+    // The theme injects a decorative cursor element (#cursor386) directly into
+    // the body, outside every landmark. It is purely visual, so it is hidden
+    // from assistive technology rather than moved or removed.
+    window.addEventListener('load', function () {
+      var cursor = document.getElementById('cursor386');
+      if (cursor) cursor.setAttribute('aria-hidden', 'true');
+    });
+  </script>
 </body>
 </html>
