@@ -5,12 +5,8 @@ name: Publish DeskMate reference
 on:
   push:
     branches: [main]
-    paths:
-      - "website/**"
-      - "docs/**"
-      - "tools/check_reference_pages.py"
-      - "tools/reference_route_baseline.py"
-      - ".github/workflows/reference-publish.yml"
+    # Every main push must enqueue a replacement if the current-main guard
+    # rejects an older publication. A path filter can strand the site.
   workflow_dispatch:
 
 permissions:
@@ -23,7 +19,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     permissions:
       contents: read
       actions: read
@@ -73,7 +69,7 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Upload static site
         id: upload
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:
           path: website/_site
       # The REST artifact index is not the runtime artifact-service index used
@@ -108,13 +104,18 @@ jobs:
           test "$current" = "$GITHUB_SHA"
       - name: Deploy
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
       - name: Verify published critical routes against this build
+        timeout-minutes: 14
         run: |
           base="https://deskmate.retroconnect.org"
           scratch="$(mktemp -d)"
           trap 'rm -rf "$scratch"' EXIT
-          for poll in {1..12}; do
+          # Observed public max-age=600; permit revalidation past that TTL.
+          deadline=$((SECONDS + 720))
+          poll=0
+          while (( SECONDS < deadline )); do
+            poll=$((poll + 1))
             mismatch=0
             for file in index.html research/index.html sitemap.xml; do
               route="/$file"
@@ -135,7 +136,7 @@ jobs:
               echo "Critical routes match the reviewed build $GITHUB_SHA."
               exit 0
             fi
-            sleep 10
+            if (( SECONDS < deadline )); then sleep 15; fi
           done
           echo "::error::Deployment reported success but critical public bytes did not match."
           exit 1

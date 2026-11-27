@@ -59,13 +59,12 @@ old-run retries, and performs a bounded byte comparison of the three critical
 public responses after deployment. It does not introduce automatic deployment
 retries, modify permissions, or claim to eliminate the upstream race. The
 current-main check is a sample, not an atomic lock against a subsequent merge.
-The post-deploy check detects but does not roll back a bad or stale publication.
+The post-deploy check detects but does not roll back a bad or stale publication. The independent review observed Cache-Control: max-age=600 on the public origin. The verifier polls for up to 720 seconds (with bounded per-request timeout and a 14-minute step cap), rather than assuming a two-minute freshness window; no-cache is a revalidation hint, not a CDN guarantee. A mismatch means verification failed, not that deployment necessarily failed. The 45-minute job budget accommodates this observation window. The fresh-run-only rule also rejects legitimate retries of failures before deployment; use a fresh dispatch instead. The upload and deployment actions are pinned to the investigated revisions.
 Only a real reviewed deployment can qualify the end-to-end behavior. No
 production deployment was initiated during this investigation.
 
 The earlier worker's 58-file byte comparison is reported in
-[visual qualification report in PR #197](https://github.com/smartyhall/deskmate-formats/blob/5aee34c413ece85fd5ef62bfb2e5485d1d5afd47/docs/research/visual-qualification-20261126.md). Independent inspection here is limited to logs and source, not
-downloaded archive bytes or the live site.
+[visual qualification report in PR #197](https://github.com/smartyhall/deskmate-formats/blob/5aee34c413ece85fd5ef62bfb2e5485d1d5afd47/docs/research/visual-qualification-20261126.md). The independent review corroborated the incident logs and pinned action source, observed live response headers, and retrieved the #187 preview artifact; it did not verify the historic production archives byte-for-byte against the live site.
 
 ## Artifact byte access for independent review
 
