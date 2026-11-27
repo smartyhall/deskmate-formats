@@ -67,7 +67,9 @@ the claim, with the owner positively gone.
 | `PermissionError`, `EIO`, other `OSError` | unobservable | `degraded`; absence is not proven |
 | Short or non-numeric `stat` fields | malformed | `degraded`; absence is not proven |
 | `Z`, `X`, `x` state | terminated, awaiting reaping | counted as terminated, not absent-and-alive |
-| session matches, start time before the owner | session id reused, not a descendant | excluded; reason `session-id-reused` |
+| session matches, start time before the owner | cannot be a descendant of this instance | excluded; a complete scan degrades to `member-predates-owner` |
+| session leader record carries another stamp | the session number was issued again | findings kept, `continuity: "leader-reused"`, reason `session-leader-reused`; no absence claimed |
+| no session leader record | the identifier is no longer bound to the claim | findings kept, `continuity: "leader-absent"`, reason `session-continuity-unproven` |
 | count above `MAX_PROCESSES` | truncated | `unknown`: the walk never finished |
 | deadline passed | timed out | `unknown` |
 
@@ -80,6 +82,19 @@ attempt leads its own session, and every descendant inherits it unless it delibe
 positive evidence of termination. `tree_claim` records `scope: "session"` only when the
 process leads its own session; recording the shared session of an ordinary process would make
 every sibling look like a descendant.
+
+**Session continuity.** A session identifier is the leader's *number*, and the number alone
+outlives the session it named, so membership is read only after the binding is established:
+`_session_continuity` compares the leader record's creation stamp with the recorded owner's.
+`leader-current` means no reuse is possible and the members are genuinely this attempt's;
+`leader-reused` means another instance holds the number, which proves the original session
+was emptied and that these are a stranger's processes; `leader-absent` means the identifier
+is only digits. The verdict says which: `leader-reused` reports `descendants: "unknown"`
+because those processes are not this tree's, while `leader-absent` keeps them as a finding
+(`descendants: "alive"`) with reason `session-continuity-unproven`. Absence does not depend
+on continuity at all: a session always contains its own leader, so an empty scan of the
+number is sound whichever session last held it, and reclamation after a completed cleanup
+still reports `stopped`.
 
 **Process scope.** A non-leader has no durable handle: POSIX reparents orphans to init, so a
 parent-chain walk loses members. It is still performed and its findings are reported, but
@@ -94,9 +109,11 @@ the same canonical form the process identity embeds (`linux-<boot>-<start>`), so
 lease inherits the same guard without a new registry field; a mismatch is `unknown` with
 reason `boot-changed`.
 
-**PID reuse.** Two independent checks: the owner's own number is compared by stamp
-(`identity-mismatch`), and session members that started before the owner are excluded. A
-member at the owner's pid that carries another stamp is never treated as the owner.
+**PID reuse.** Three independent checks: the owner's own number is compared by stamp
+(`identity-mismatch`), the session's leader record is compared by stamp (continuity), and
+session members that started before the owner are excluded. A member at the owner's pid that
+carries another stamp is never treated as the owner, and a member of a session whose leader
+is not the recorded instance is never treated as a descendant.
 
 **Not claimed.** `hidepid` mounts, containers that rewrite `/proc`, and kernel threads with
 unreadable records are handled as `degraded`/`unavailable`, not as empty sessions. A process
@@ -158,7 +175,7 @@ Every consumer was traced and tightened:
 | `deterministic._execute` | wrote `child.json` only when a claim succeeded | always writes a claim; a lost handle is written as `scope: "unclaimed"` and is visible to recovery instead of looking like "nothing was started" |
 | `live_pids` | returned `[]` for an incomplete scan | returns a `Scan(pids, complete, enumeration, scope, reason)`; `[]` with `complete=True` is the only empty tree |
 | `_stop_tree` | requested termination and returned nothing | requests, re-scans up to 20 rounds, kills only positively observed PIDs, and returns an observation recorded as `termination` in the outcome |
-| Outcome receipt | no custody field | `custody`: `clean`, `descendants-alive` or `unobserved`, plus a limitation line when not clean |
+| Outcome receipt | no custody field | `custody`: `clean`, `descendants-alive`, `uncertain` (live processes observed but not bound to the attempt) or `unobserved`, plus a limitation line when not clean |
 
 A clean exit no longer implies an empty tree: the normal-exit path observes the tree too, so a
 procedure that leaves a background process is recorded as `custody: "descendants-alive"`
@@ -250,6 +267,12 @@ the Linux contract holds.
   a process that ignores `SIGKILL` cannot exist, but one blocked in an uninterruptible kernel
   wait can outlive the rounds and is then recorded as `descendants: "alive"` rather than
   assumed gone.
+* Session membership is reported even when the session's leader record no longer binds it,
+  so a verdict may say `descendants: "alive"` for processes no part of this project may
+  signal. That is the honest state: observation is not authority, and `continuity` names the
+  gap.
+* An empty session whose leader is gone is still `stopped`, because a session cannot exist
+  without a leader; the converse — inferring life from a recycled number — is refused.
 * This document fences *observation*. Which observed member may be signalled, and with what
   identity evidence, is a separate contract recorded in the
   [termination-authority report](termination-authority-20261127.md); nothing in `live_pids`

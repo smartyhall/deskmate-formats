@@ -505,11 +505,30 @@ def _signals(records):
             "refused": refused[:8]}
 
 
+#: Reasons that mean live processes were observed in the recorded scope but could
+#: not be bound to this attempt. Neither "clean" nor "still running" describes
+#: that, so custody is reported as uncertain.
+_UNCERTAIN_REASONS = frozenset(("session-continuity-unproven", "session-leader-reused",
+                                "boot-changed", "boot-identity-unavailable"))
+
+
+def _custody(termination):
+    """Name what the observation supports: clean, still running, or neither."""
+    if termination["descendants"] == "stopped":
+        return "clean"
+    if termination["descendants"] == "alive":
+        return "descendants-alive"
+    if termination.get("reason") in _UNCERTAIN_REASONS:
+        return "uncertain"
+    return "unobserved"
+
+
 def _termination(state, authorization, signals, *, requested=True):
     """One termination observation: what was attempted, and what remains."""
     return {"requested": requested, "owner": state["owner"],
             "descendants": state["descendants"], "enumeration": state["enumeration"],
-            "remaining": state["live"], "reason": state["reason"],
+            "continuity": state.get("continuity"), "remaining": state["live"],
+            "reason": state["reason"],
             "scope": state.get("scope"),
             "authority": {"scope": authorization.scope,
                           "members": len(authorization.members),
@@ -530,9 +549,11 @@ def _kill_owned_child(process):
 
     Windows holds the child's process handle and POSIX cannot recycle its number
     until this attempt reaps it, so both name one instance rather than a number
-    that may since have been reused.
+    that may since have been reused. ``returncode`` is read instead of ``poll``:
+    polling would reap an already-exited child and release its identifier, which
+    the subsequent scans rely on to keep the session provable.
     """
-    if process.poll() is not None:
+    if process.returncode is not None:
         return {"pid": process.pid, "result": "gone", "mechanism": "owned-child-handle",
                 "identity_matched": None, "group": False}
     try:
@@ -550,19 +571,28 @@ def _stop_tree(process, claim=None):
     Authority is established separately from observation: the direct child is
     terminated through the handle this attempt owns, and a descendant is
     signalled only through an identity-bound handle after a fresh scan binds it
-    to a creation identity inside a scope the kernel holds. Every signal records
-    its outcome, so a refused or impossible termination is reported as such
-    instead of being read as a successful cleanup.
+    to a creation identity inside a scope the kernel still attributes to the
+    claim. Every signal records its outcome, so a refused or impossible
+    termination is reported as such instead of being read as a successful
+    cleanup.
+
+    The child is reaped only after the rounds. An unreaped child's identifier is
+    still reserved by the kernel, which is what lets each round re-prove that the
+    recorded session is still this attempt's; reaping first would free the number
+    and leave the session identified only by its digits.
     """
     deadline = monotonic() + _STOP_SECONDS
     signals = []
     authorization = (process_control.NO_AUTHORITY if claim is None
                      else process_control.authorize(claim))
     owner = authorization.owner
-    if owner is not None and owner.group and os.name != "nt":
+    # Custody of the unreaped child is what makes a numeric group signal more
+    # than an observation of leadership.
+    proof = process_control.custody(process, claim)
+    if owner is not None and owner.group and proof is not None and os.name != "nt":
         # Issued before ``wait``: while the leader is unreaped its number cannot
-        # be recycled, so the numeric group identifier still names this group.
-        group = process_control.signal(owner, group=True)
+        # be recycled, so the group identifier still names this group.
+        group = process_control.signal(owner, group=True, custody=proof)
         signals.append(group)
         if group["result"] != "signalled":
             # The group is optional authority; the handle this attempt owns is
@@ -570,14 +600,6 @@ def _stop_tree(process, claim=None):
             signals.append(_kill_owned_child(process))
     else:
         signals.append(_kill_owned_child(process))
-    try:
-        process.wait(timeout=max(1.0, min(15.0, deadline - monotonic())))
-    except subprocess.TimeoutExpired:
-        try:
-            process.kill()
-            process.wait(timeout=5)
-        except (OSError, subprocess.TimeoutExpired):
-            pass
     if claim is not None:
         for _ in range(_STOP_ROUNDS):
             if monotonic() >= deadline:
@@ -597,6 +619,14 @@ def _stop_tree(process, claim=None):
                 # retried into a claim of cleanup.
                 break
             sleep(_STOP_PAUSE)
+    try:
+        process.wait(timeout=max(1.0, min(15.0, deadline - monotonic())))
+    except subprocess.TimeoutExpired:
+        try:
+            process.kill()
+            process.wait(timeout=5)
+        except (OSError, subprocess.TimeoutExpired):
+            pass
     return _termination(process_tree.tree_state(claim) if claim is not None
                         else {"owner": "unknown", "descendants": "unknown", "live": None,
                               "enumeration": "unavailable", "reason": "no-tree-handle",
@@ -859,9 +889,7 @@ def _execute(root, plan, token):
             {"owner": "unknown", "descendants": "unknown", "live": None,
              "enumeration": "unavailable", "reason": "no-process-was-spawned",
              "scope": "none"}, process_control.NO_AUTHORITY, (), requested=False)
-        outcome["custody"] = ("clean" if outcome["termination"]["descendants"] == "stopped"
-                              else "descendants-alive" if outcome["termination"]["descendants"] == "alive"
-                              else "unobserved")
+        outcome["custody"] = _custody(outcome["termination"])
         for stream in getattr(process, "stdout", None), getattr(process, "stderr", None):
             if stream is not None:
                 try:
@@ -889,6 +917,10 @@ def _execute(root, plan, token):
             "host kill cannot prove a descendant completed no external effect",
             "captured output is a bounded prefix; the full stream was drained and discarded",
         ]
+        if outcome["custody"] == "uncertain":
+            outcome["limitations"].append(
+                "live processes were observed in the recorded scope but could not be "
+                "bound to this attempt, so no signal was derived from them")
         if outcome["custody"] != "clean":
             outcome["limitations"].append(
                 "the attempt's process tree could not be shown empty after it ended")

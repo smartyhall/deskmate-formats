@@ -45,10 +45,23 @@ observation scope
     chain only, never proof) and ``none``/``unclaimed`` (no handle was ever
     taken).
 
+session continuity
+    A session identifier is the leader's *number*, so membership may only be read
+    from it once the number is shown to still name the recorded session
+    (:func:`_session_continuity`). ``leader-current`` means the number is held by
+    the recorded instance, which cannot be recycled while the session exists, so
+    membership is exact. ``leader-reused`` means a different instance holds the
+    number: that is proof the original session ended and this one is someone
+    else's. ``leader-absent`` means the leader has exited; the session may well be
+    the original one, since its identifier stays reserved while a member survives,
+    but only the number says so, so it is an observation and never authority.
+
 termination proof
     ``stopped(claim)`` is true only when the owner is positively gone *and* a
     complete enumeration of a non-lossy scope found no live member on the same
-    boot as the claim. Nothing weaker is reported as termination.
+    boot as the claim. Nothing weaker is reported as termination. Absence does
+    not depend on continuity: a session always contains its own leader, so an
+    empty scan of a session number is sound whichever session last held it.
 
 authority
     This module is read-only. A PID it reports is a finding, not permission to
@@ -89,10 +102,18 @@ OWNER_GONE = ("stopped", "not-found", "identity-mismatch")
 #: proves nothing. A job object would qualify; a static chain does not.
 DURABLE_SCOPES = ("session",)
 
-#: ``pids`` are positively observed live members and never include the owner;
-#: ``complete`` says whether their absence may be read as termination. A PID here
-#: is not authorisation to signal it: see :mod:`process_control`.
-Scan = namedtuple("Scan", "pids complete enumeration scope reason")
+#: ``pids`` are positively observed live processes in the recorded scope and
+#: never include the owner; ``complete`` says whether their absence may be read as
+#: termination. A PID here is not authorisation to signal it: see
+#: :mod:`process_control`.
+#:
+#: ``continuity`` says whether those observations are *bound* to the claim:
+#: ``leader-current`` (the scope identifier still names the recorded instance),
+#: ``leader-reused``, ``leader-absent``, ``unknown``, or ``n/a`` for a scope with
+#: no leader record. Anything but ``leader-current`` means the PIDs were observed
+#: and not attributed, so they carry no authority and no absence.
+Scan = namedtuple("Scan", "pids complete enumeration scope reason continuity",
+                  defaults=("n/a",))
 
 
 if sys.platform == "win32":
@@ -244,6 +265,43 @@ else:
         except (OSError, AttributeError):
             return None
 
+    def _session_continuity(claim):
+        """Does the recorded session number still name the original session?
+
+        A session identifier is the leader's number, so the leader's own record is
+        the only observable binding. Three outcomes are distinguishable:
+
+        ``leader-current``
+            The number is held by the recorded instance. The kernel reserves a
+            session's identifier while the session exists, so no reuse is
+            possible and every process in the session is genuinely a member.
+        ``leader-reused``
+            A different instance holds the number. The original session had to be
+            empty for that number to be issued again, so this is a stranger's
+            session, not this attempt's.
+        ``leader-absent``
+            There is no leader record. The session may still be the original one
+            and its identifier may still be reserved, but nothing observable binds
+            it any more: the number matches and the owner does not.
+
+        Returns ``(continuity, leader_stamp)``. ``unknown`` means the record could
+        not be read or the claim carries no comparable stamp, which is refused the
+        same way an absent leader is.
+        """
+        session = claim.get("session")
+        owner_stamp = start_stamp(claim.get("identity"))
+        if type(session) is not int or owner_stamp is None:
+            return "unknown", None
+        try:
+            _, _, member_of, stamp = _stat_fields(session)
+        except FileNotFoundError:
+            return "leader-absent", None
+        except (OSError, ValueError):
+            return "unknown", None
+        if member_of != session or stamp != owner_stamp:
+            return "leader-reused", stamp
+        return "leader-current", stamp
+
     def _session_scan(claim, deadline):
         session = claim["session"]
         # A recorded lease carries its boot binding inside the process identity
@@ -262,9 +320,12 @@ else:
             names = os.listdir("/proc")
         except OSError:
             return Scan((), False, "unavailable", "session", "proc-unavailable")
+        # Read before the walk so a session number that already names another
+        # instance cannot lend its members the claim's identity.
+        continuity, _ = _session_continuity(claim)
         owner_start = start_stamp(claim.get("identity"))
-        found, scanned, unobservable = [], 0, 0
-        truncated = timed_out = reused = False
+        found, scanned, unobservable, pre_owner = [], 0, 0, 0
+        truncated = timed_out = False
         for name in names:
             if not name.isdigit():
                 continue
@@ -288,7 +349,7 @@ else:
             if state in (b"Z", b"X", b"x"):
                 continue  # terminated, awaiting reaping
             if owner_start is not None and start < owner_start:
-                reused = True  # predates the owner: not its descendant
+                pre_owner += 1  # predates the owner: not its descendant
                 continue
             found.append(pid)
         enumeration = ("truncated" if truncated else "timed-out" if timed_out
@@ -296,10 +357,22 @@ else:
         reason = {"truncated": "process-count-limit", "timed-out": "scan-deadline",
                   "degraded": "unobservable-process-records",
                   "complete": "session-scan-complete"}[enumeration]
-        if enumeration == "complete" and reused:
-            reason = "session-id-reused"
+        if enumeration == "complete" and pre_owner:
+            # A member created before the owner contradicts the recorded lease,
+            # so the walk is not a complete picture of this session.
+            enumeration, reason = "degraded", "member-predates-owner"
+        if continuity != "leader-current":
+            if found:
+                # The number names *a* session, but nothing proves it is this
+                # attempt's. The finding is kept as a finding; `continuity` says
+                # it is not attributed to the claim.
+                return Scan(tuple(found), False, "ambiguous", "session",
+                            "session-leader-reused" if continuity == "leader-reused"
+                            else "session-continuity-unproven", continuity)
+            if enumeration != "complete":
+                return Scan((), False, enumeration, "session", reason, continuity)
         return Scan(tuple(found), enumeration == "complete", enumeration,
-                    "session", reason)
+                    "session", reason, continuity)
 
     def _chain_scan(claim, deadline):
         """Best-effort parent walk for a process with no durable session.
@@ -382,6 +455,12 @@ else:
         session = claim.get("session")
         boot = claim.get("boot") or identity_boot(claim.get("identity"))
         if type(session) is not int or boot is None or pid == claim.get("pid"):
+            return None
+        continuity, _ = _session_continuity(claim)
+        if continuity != "leader-current":
+            # The session number is not bound to the recorded leader, so a member
+            # of it cannot be bound to this attempt either. The observation is
+            # kept by the scan; it is never turned into permission here.
             return None
         try:
             state, _, member_of, start = _stat_fields(pid)
@@ -471,6 +550,10 @@ def live_pids(claim, *, deadline_seconds=SCAN_DEADLINE_SECONDS):
     A member whose liveness cannot be sampled is neither alive nor absent. It is
     left out of ``pids`` and the scan is marked ``degraded``, because its absence
     from that tuple must never be read as an empty tree.
+
+    A PID may also be reported while the scope identifier is not provably the
+    recorded one; ``continuity`` says so, and neither :mod:`process_control` nor
+    :func:`tree_state` treats the finding as this tree's (see ``leader-reused``).
     """
     if not _valid(claim):
         return Scan((), False, "unavailable", "none", "invalid-claim")
@@ -492,20 +575,30 @@ def tree_state(claim, *, deadline_seconds=SCAN_DEADLINE_SECONDS):
     if not _valid(claim):
         return {"owner": "unknown", "descendants": "unknown", "live": None,
                 "scope": "unclaimed" if type(claim) is dict else "none",
-                "enumeration": "unavailable", "reason": "no-tree-handle"}
+                "enumeration": "unavailable", "reason": "no-tree-handle",
+                "continuity": "n/a"}
     deadline = monotonic() + deadline_seconds
     owner = verify_process(claim["pid"], claim.get("identity"))
     scan = _scan(claim, deadline)
     alive, problem = _live(scan.pids, deadline)
     if problem is not None and scan.enumeration == "complete":
         scan = scan._replace(complete=False, enumeration="degraded", reason=problem)
-    base = {"owner": owner, "scope": scan.scope, "enumeration": scan.enumeration}
+    base = {"owner": owner, "scope": scan.scope, "enumeration": scan.enumeration,
+            "continuity": scan.continuity}
     if owner == "identity-mismatch" and scan.scope == "parent-chain":
         # The number belongs to another process now, and a static parent chain
         # cannot separate the original children from the new process's.
         return dict(base, descendants="unknown", live=None, reason="owner-pid-reused")
     if alive:
-        return dict(base, descendants="alive", live=len(alive), reason="live-descendants")
+        if scan.continuity == "leader-reused":
+            # The session number was issued again, so these processes belong to
+            # someone else's session: neither this tree's life nor its emptiness
+            # may be inferred from them.
+            return dict(base, descendants="unknown", live=None,
+                        reason="session-leader-reused")
+        return dict(base, descendants="alive", live=len(alive),
+                    reason=("live-descendants" if scan.continuity in ("leader-current", "n/a")
+                            else scan.reason))
     if scan.complete and scan.scope in DURABLE_SCOPES:
         return dict(base, descendants="stopped", live=0, reason=scan.reason)
     return dict(base, descendants="unknown", live=None, reason=scan.reason)

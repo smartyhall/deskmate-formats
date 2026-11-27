@@ -45,6 +45,8 @@ process this attempt does not own.
 | Authorised owner | Only while `verify_process(pid, claim_identity) == "alive"`. `identity-mismatch` is evidence the owner is gone and never authority over the new holder. |
 | Authorised descendants | Only for a scope whose membership the kernel holds. A parent chain, on either platform, grants none. |
 | Signal | A descendant is signalled only through an identity-bound OS handle, after a verification that must return literally `alive`; the mechanism and every refusal are recorded with the outcome. |
+| Session continuity | A session identifier is only the leader's number, so `authorize` requires the leader's own record to carry the recorded stamp (`continuity: "leader-current"`). A different instance on that number proves the original session ended; no record at all proves nothing. Either way the finding is kept and the authority withheld. |
+| Group custody | `signal(..., group=True)` requires a `Custody(pid, identity)` proof for that very member: the direct child is unreaped and still verifies as the recorded instance. A leader that was merely observed — any descendant, or any process the caller never spawned — has none. |
 | Refusal is reported | `identity-mismatch`, `gone`, `unknown`, `refused` and `failed` are results. None is a successful cleanup. |
 
 ### Why a POSIX session is authority and a Windows parent chain is not
@@ -82,18 +84,25 @@ boundary, so `process_tree` keeps its documented read-only contract:
   numeric PID fallback for a descendant.
 * `group_leader(pid)` — a group signal is honoured only for a member authorised as
   its own group leader.
+* `custody(process, claim)` — the proof a group signal additionally needs: the claim names
+  that PID, the child has not been reaped (`returncode is None`, so the kernel still
+  reserves its number), and `verify_process` returns `alive` for the recorded identity.
+  Without it `_signal_group` refuses `group-without-custody`.
 
 `deterministic._stop_tree` now:
 
-1. authorises the owner by identity; a verified group leader is signalled as a group
-   **before** `wait`, while the unreaped leader's number still names its group;
+1. authorises the owner by identity and takes custody of the direct child; a verified
+   group leader is signalled as a group only with that custody, **before** `wait`, while
+   the unreaped leader's number still names its group;
 2. otherwise terminates the direct child through the `Popen` object, which is an
    identity-bound handle on both platforms (Windows holds the handle; POSIX cannot
    recycle the number until this attempt reaps it);
 3. re-authorises and signals identity-bound members in bounded rounds inside a 15 s
-   budget, recording every result;
-4. re-observes the tree and reports `owner`, `descendants`, `enumeration`, `scope`,
-   the authority it had and the signals it sent, including refusals.
+   budget, recording every result — while the child is still unreaped, so each round can
+   re-prove that the recorded session is this attempt's;
+4. reaps the child, then re-observes the tree and reports `owner`, `descendants`,
+   `enumeration`, `continuity`, `scope`, the authority it had and the signals it sent,
+   including refusals.
 
 `taskkill` is no longer used at all: neither `/T` (which walks a replaceable field)
 nor `/PID` (which re-resolves the number after any check).
@@ -145,6 +154,20 @@ left in the error slot is an early stop, not a complete enumeration.
 | Numeric kill standing in for a missing handle | `test_no_identity_bound_handle_means_no_signal` |
 | Reuse between enumeration and authorisation | `test_only_the_exact_stamp_of_this_number_is_an_identity_match` (earlier and later holder), `test_membership_and_identity_come_from_the_same_record` |
 | A stalled termination round retried into a claim | `test_an_unavailable_handle_ends_the_rounds_instead_of_spinning` |
+
+Added by the third follow-up correction (§10), on synthetic session records rather than on
+host PID reuse:
+
+| Defect | Test |
+| --- | --- |
+| A recycled session number authorised strangers | `test_a_leader_held_by_another_instance_revokes_the_session`, `test_a_newer_member_stamp_is_not_continuity` |
+| An absent leader's number treated as authority | `test_an_absent_leader_keeps_the_observation_and_withholds_authority` |
+| Absence made to depend on continuity | `test_an_empty_session_is_absence_whether_or_not_a_leader_remains` |
+| A group leader merely observed | `test_a_group_signal_without_custody_is_refused`, `test_a_leader_this_attempt_never_spawned_has_no_custody` |
+| A reaped child's freed number taken as custody | `test_a_reaped_child_can_no_longer_confer_group_custody` |
+| Cleanup attempted once the session was only digits | `test_the_group_signal_is_issued_before_the_child_is_reaped` |
+| An unbound observation reaching the signal loop | `test_an_unbound_observation_never_reaches_the_signal_loop` |
+| Uncertain custody reported as clean | `test_uncertain_custody_is_not_reported_as_clean` |
 
 The test that matters most for the review's concern is the pair of real-process
 tests: one proves a mismatched identity is refused and the process keeps running, the
@@ -198,6 +221,13 @@ while the report names the parent's checkout. Inspection of this branch:
   a missing code path.
 * A `TerminateProcess`/`pidfd_send_signal` call that fails after the identity matched
   is reported as `failed`; the outcome then stays `unobserved`.
+* A session is authorised only while its leader record still carries the recorded
+  identity. If the child was reaped by another route, the session can be identified only
+  by its digits: live members are then reported as `descendants: "alive"` and never
+  signalled, and custody is `uncertain` rather than clean.
+* A group signal needs the unreaped direct child. Where custody is gone — the child
+  already reaped, or a leader only observed — the group is not signalled and the
+  per-member path is used instead.
 * Job-backed execution (`CREATE_SUSPENDED` → assign → resume) is still the only path
   to a Windows `stopped` verdict, and remains a separate change.
 
@@ -255,3 +285,84 @@ and the test constructs an earlier and a later stamp for the *same* number inste
 grants or to PR #199 or the issue #201 campaign's files. The local Windows host cannot
 exercise the pidfd branch, so that half is settled by the ubuntu CI jobs; the Windows
 half by the windows jobs.
+
+## 10. Correction after the third follow-up review (2026-11-27)
+
+Review `pullrequestreview-6086218760` accepted the pidfd selection, the positive
+verification and the removal of numeric descendant signalling, and found that authority
+could still be derived from an identifier without custody. Both findings were correct.
+
+### A recycled session number authorised strangers
+
+`_session_scan` admitted every process whose `sid` field equalled the recorded session
+number and whose creation stamp was at or after the owner's. The stamp establishes only
+that the member was created later; it says nothing about *which* session it joined. Once
+the original session was completely gone the kernel could issue its number again, and a
+new session's members would satisfy both conditions.
+
+The identifier's own binding is the leader's record, and that is now read
+(`process_tree._session_continuity`):
+
+| Outcome | Meaning | Authority |
+| --- | --- | --- |
+| `leader-current` | the number is held by the recorded instance | members are bound and may be authorised |
+| `leader-reused` | a different instance holds the number | the original session was destroyed; findings kept, nothing claimed |
+| `leader-absent` | there is no leader record | the session may be the original one, but only its number says so |
+| `unknown` | the record is unreadable, or the claim carries no comparable stamp | refused |
+
+`authorize` refuses every member unless the continuity is `leader-current`, with reason
+`session-continuity-unproven`; `member_identity` applies the same rule, so the two paths
+cannot disagree. The finding is not discarded: `Scan.pids` keeps the observed PIDs,
+`Scan.continuity` says they are unattributed, `tree_state` reports `continuity` beside its
+verdict (`descendants: "unknown"` for `leader-reused`, whose processes belong to someone
+else's session), and the outcome records `custody: "uncertain"` instead of a cleanup it
+cannot demonstrate.
+
+Absence deliberately does not depend on continuity, which preserves reclamation: a session
+always contains its own leader, so an empty scan of the session number is sound whichever
+session last held it. `stopped()` therefore still reports `stopped` after a completed
+cleanup whose leader has since been reaped.
+
+### A group signal needed custody, not leadership
+
+`_signal_group` verified the leader's identity, checked that the number still led its own
+group, and called `killpg(number)`. For the direct child that is sound only while it is
+unreaped, and nothing in the signature said the caller held one: any `Member` marked
+`group` was accepted, including a leader a scan had merely observed.
+
+`signal(member, group=True, custody=...)` now requires a `Custody(pid, identity)` proof
+from `custody(process, claim)`, returned only when the claim names this PID, the child has
+not been reaped (`returncode is None`, so the kernel still reserves the number) and
+`verify_process` returns literally `alive` for the recorded identity. Without it the
+signal is refused as `group-without-custody` and the owned-child handle is used instead. A
+leader that exits between authorisation and the signal opens no window onto another group:
+it becomes a zombie the kernel keeps until reaped, and `verify_process` then returns
+`stopped`, which is refused.
+
+### The reap moved after the rounds
+
+`_stop_tree` used to `wait` for the child and only then scan for survivors. By then the
+child's number was free — exactly the state in which a session can be identified only by
+its digits. The rounds now run between the signals and the reap, while the child is
+unreaped (alive or zombie), so each round re-proves `leader-current` and can still signal
+the survivors that broke out of the group. `_kill_owned_child` reads `process.returncode`
+instead of calling `poll`, because polling reaps and would release the identifier the
+rounds rely on.
+
+### Licensing
+
+Every general-documentation file this campaign authored — the eight research reports and
+the five use receipts under `docs/evidence/agent-usage/` — carried a GPL-only sidecar.
+`LICENSING.md` assigns general documentation and provenance metadata
+`GPL-3.0-or-later OR CC-BY-SA-4.0`, and those sidecars now carry that dual offer. Software
+stays GPL-only, the formal specifications keep their own category, and no third-party
+notice changed.
+
+### Coordination and scope
+
+PR #206 (campaign-owned Python environments) and issue #207 (production launch
+integration) are not absorbed here. PR #199's shared fixture and `pyproject.toml` are
+untouched, so its 60-second fixture timeout and performance evidence are unchanged. No new
+service, emulator, dispatch or execution authority was added; the tests build session
+records instead of asking the host to recycle a PID, and the four-platform matrix at the
+resulting head decides whether the POSIX branches hold.
