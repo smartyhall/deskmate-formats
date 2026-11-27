@@ -50,7 +50,9 @@ function renderFigureSet(items, siteUrl, assets = assetRoot) {
     const url = siteUrl("/assets/reference/" + item.path);
     const label = item.origin === "historical-advertising-excerpt"
       ? "View full-size historical excerpt" : "View full-size screenshot";
-    return '<figure class="reference-figure">' +
+    const className = item.origin === "historical-advertising-excerpt"
+      ? "reference-figure reference-figure-historical" : "reference-figure";
+    return '<figure class="' + className + '">' +
       '<a href="' + escapeHtml(url) + '" aria-label="' + label + '">' +
       '<img src="' + escapeHtml(url) + '" alt="' + escapeHtml(item.alt) +
       '" width="' + item.width + '" height="' + item.height +

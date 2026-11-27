@@ -87,6 +87,7 @@ test("historical advertising renders attribution, source link and rights note", 
   const html = renderFigureSet([historicalImage()], (x) => x, dir);
   assert.match(html, /Tandy Corporation, 1988 catalog, printed p\. 9\./);
   assert.match(html, /aria-label="View full-size historical excerpt"/);
+  assert.match(html, /class="reference-figure reference-figure-historical"/);
   assert.match(html, /href="https:\/\/example\.org\/catalog\.pdf#page=9"/);
   assert.match(html, /Source: Tandy Corporation \/ Radio Shack, 1988 Tandy Computer Catalog, printed p\. 9/);
   assert.match(html, /Third-party historical advertising; publisher rights retained\./);
