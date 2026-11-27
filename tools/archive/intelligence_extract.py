@@ -19,6 +19,13 @@ from time import monotonic
 import zipfile
 import zlib
 
+try:
+    from . import compression_streams
+    from . import disk_images
+except ImportError:
+    import compression_streams
+    import disk_images
+
 
 EXTENSIONS = {
     **dict.fromkeys(('txt', 'nfo', 'asc', 'me', 'diz', 'lst', 'log', 'ini', 'cfg', 'bat',
@@ -39,7 +46,9 @@ NATIVE_SIGNATURES = {
 LEGACY_KINDS = {'arj': 'Arj', 'cab': 'Cab', 'lzh': 'Lzh', '7z': '7z', 'rar': 'Rar', 'iso9660': 'Iso', 'udf': 'Udf', 'mz': None}
 OPTICAL_KINDS = frozenset({'iso9660', 'udf', 'cd-raw', 'optical-image'})
 SEVEN_OPTIONS = ('-sccUTF-8', '-spd', '-bsp0', '-p-')
-CONTAINER_KINDS = frozenset({'zip', 'tar', 'gz', 'tgz', 'fat', 'disk-image', 'arc', *OPTICAL_KINDS, *LEGACY_KINDS})
+CONTAINER_KINDS = frozenset({'zip', 'tar', 'gz', 'tgz', 'fat', 'disk-image', 'arc',
+                            *OPTICAL_KINDS, *LEGACY_KINDS,
+                            *disk_images.READERS, *compression_streams.DECODERS})
 TEXT_KINDS = frozenset({'text', 'html', 'pdf', 'native-doc', 'doc', 'rtf'})
 TEXT_CONTROL = re.compile(rb'[\x00-\x07\x0e-\x19\x1b-\x1f]')
 
@@ -142,6 +151,12 @@ def identify(path: Path, name: str) -> str:
     with path.open('rb') as stream:
         data = stream.read(4096)
     if kind := NATIVE_SIGNATURES.get(data[:4]):
+        return kind
+    # Sector containers and compression streams carry mandatory structural
+    # invariants, so they are recognised without trusting the filename.
+    if kind := disk_images.identify(data):
+        return kind
+    if kind := compression_streams.identify_stream(data):
         return kind
     if data[:5] in (b'\xbd\x7a\0\x01\x01', b'\xbd\x7a\x01\x01\x01') and data[32:34] == b'\x2e\0':
         return 'ff1'
@@ -467,6 +482,128 @@ def _fat(path, limits):
                 yield from _FATVolume(stream, offset, layout).entries(f'partition-{index}/')
 
         return _members(entries(), limits)
+
+
+def _sector_image(path, kind, limits):
+    """Normalise a sector container, then read its filesystem if it has one.
+
+    The normalised logical-block image is a derivative written to a private
+    scratch path; only its member listing and geometry summary are retained.
+    Every caller limit survives into the container decoder and into the
+    normalisation separately: input file, one sector, all decoded sectors, the
+    declared geometry, one track and the logical image each have a bound, so a
+    container header can never enlarge one the caller set.
+    """
+    bounds = disk_images.Bounds(
+        input_bytes=limits.input_bytes,
+        sectors=min(limits.members, 200_000),
+        sector_bytes=min(limits.member_bytes, 65536),
+        total_bytes=limits.total_bytes,
+        geometry_sectors=max(1, min(limits.total_bytes // 512, 4_194_304)),
+        lba_bytes=limits.total_bytes,
+        track_bytes=min(limits.total_bytes, 8 * 1024 * 1024))
+    volume = disk_images.read(path, kind, bounds)
+    geometry = volume.geometry
+    summary = (f'{volume.container}; {geometry.cylinders}c/{geometry.heads}h/'
+               f'{geometry.sectors_per_track}spt x {geometry.sector_size}B; '
+               f'{len(volume.sectors)} sectors')
+    if volume.detail:
+        summary += f'; {volume.detail}'
+    if volume.warnings:
+        summary += '; ' + ', '.join(volume.warnings)
+    if volume.status in ('failed', 'unsupported', 'limited'):
+        return Extraction(status=volume.status, detail=summary)
+    normalised = disk_images.to_lba(volume, bounds=bounds)
+    if normalised.status in ('unknown-geometry', 'invalid-geometry'):
+        return Extraction(status='unsupported', detail=summary + f'; {normalised.status}')
+    if normalised.status == 'lba-byte-limit':
+        return Extraction(status='limited', detail=summary + '; lba-byte-limit')
+    if normalised.status == 'implausible-sector-count':
+        return Extraction(status='failed', detail=summary + '; implausible-sector-count')
+    summary += (f'; lba {normalised.status} {normalised.written}/{normalised.total_sectors}')
+    if normalised.missing:
+        summary += f'; {len(normalised.missing)} missing'
+    if normalised.conflicts:
+        summary += f'; {len(normalised.conflicts)} conflicting'
+    if normalised.degraded:
+        summary += f'; {len(normalised.degraded)} read-error-or-deleted'
+    if normalised.rejected:
+        summary += f'; {normalised.rejected} out-of-geometry'
+    with TemporaryDirectory(prefix='deskmate-sector-') as scratch:
+        staged = Path(scratch) / 'normalised.img'
+        staged.write_bytes(normalised.data)
+        result = _fat(staged, limits)
+    # A clean filesystem read of an incomplete, degraded or rejected volume is
+    # still not a verified recovery: the container and the normalisation decide
+    # that, not the filesystem. A container whose sectors were recovered but
+    # whose filesystem is unrecognised is likewise a partial recovery, not an
+    # unsupported format.
+    recovered = volume.status != 'ok' or normalised.status != 'complete'
+    if recovered and result.status in ('ok', 'unsupported'):
+        result.status = 'partial'
+    result.detail = summary + ('; ' + result.detail if result.detail else '')
+    return result
+
+
+def _compressed(path, name, kind, limits):
+    """Decode one standalone compression stream into a single opaque member.
+
+    Complete decoding, partial recovery, a resource limit and malformed input
+    stay distinguishable here: a partially decoded payload is returned with a
+    ``partial`` status, never presented as a complete member. The caller's
+    input bound is enforced by the read that feeds the decoder, not by a
+    separate size inspection that a growing file could outrun.
+
+    The payload is gated the way ``_members`` gates an archive member: the
+    decoder is told the smaller of the member and aggregate budgets, and the
+    result is checked against that same figure again afterwards. A caller that
+    sets an aggregate cap below the member cap therefore still receives no more
+    than the extraction as a whole promised, even though this member is built
+    here rather than by ``_members``.
+    """
+    budget = min(limits.member_bytes, limits.total_bytes)
+    try:
+        data = _read(lambda: path.open('rb'), limits.input_bytes)
+    except OSError as exc:
+        return Extraction(status='failed', detail=type(exc).__name__)
+    if len(data) > limits.input_bytes:
+        return Extraction(status='limited', detail='input-byte-limit')
+    decoded = compression_streams.decode(
+        data, kind,
+        compression_streams.Bounds(output_bytes=budget,
+                                   codes=max(4096, budget),
+                                   decoder_bytes=limits.total_bytes))
+    if decoded.status in ('failed', 'limited', 'unsupported'):
+        status = 'failed' if decoded.status in ('failed', 'unsupported') else 'limited'
+        return Extraction(status=status, detail=f'{kind}; {decoded.detail}')
+    basename = PurePosixPath(name.replace('\\', '/')).name
+    suffix = compression_streams.SUFFIXES[kind]
+    if basename.casefold().endswith(suffix):
+        child = basename[:-len(suffix)]
+    elif '.' in basename:
+        child = basename.rsplit('.', 1)[0]
+    else:
+        child = basename
+    detail = kind
+    if decoded.warnings:
+        detail += '; ' + ', '.join(decoded.warnings)
+    if decoded.status == 'partial':
+        detail += f'; {decoded.detail}'
+    payload = decoded.data or b''
+    if len(payload) > budget:
+        # The decoder stops at the budget, so this is a second gate rather than
+        # a reachable path: the member is built outside _members, and the
+        # aggregate promise is enforced here as well as there.
+        return Extraction(status='limited', detail=f'{kind}; output-byte-limit')
+    # The member carries the same qualifier as the extraction: bytes recovered
+    # from a damaged concatenated stream are useful, but they are not a
+    # complete member and are not labelled as one.
+    status = 'partial' if decoded.status == 'partial' else 'ok'
+    result = Extraction(members=[Member(0, child or 'payload', len(payload), payload, status)],
+                        detail=detail)
+    if decoded.status == 'partial':
+        result.status = 'partial'
+    return result
 
 
 def _arc(path, limits, nomarch=None):
@@ -872,6 +1009,10 @@ def extract(path: Path, name: str, kind: str, limits: Limits = Limits(), *,
             return _gzip(path, name, kind, limits)
         if kind in ('fat', 'disk-image'):
             return _fat(path, limits)
+        if kind in disk_images.READERS:
+            return _sector_image(path, kind, limits)
+        if kind in compression_streams.DECODERS:
+            return _compressed(path, name, kind, limits)
         if kind == 'arc':
             return _arc(path, limits, nomarch)
         if kind == 'lzh' and lhasa is not None:
