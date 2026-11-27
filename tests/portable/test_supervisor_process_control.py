@@ -256,11 +256,9 @@ class SignalRefusalTests(unittest.TestCase):
         claim = process_tree.tree_claim(process.pid)
         self.assertIsNotNone(claim)
         self.assertTrue(process_control.group_leader(process.pid))
-        proof = process_control.custody(process, claim)
-        self.assertIsNotNone(proof)
         member = process_control.Member(process.pid, claim["identity"], True)
         with mock.patch.object(process_control, "verify_process", return_value="unknown"):
-            result = process_control.signal(member, group=True, custody=proof)
+            result = process_control.signal_group(process, member, claim)
         self.assertEqual(result["result"], "unknown")
         self.assertIsNone(result["identity_matched"])
         self.assertEqual(process_health.process_status(process.pid), "alive")
@@ -367,9 +365,10 @@ class SignalRefusalTests(unittest.TestCase):
         """Signalling the wrong group would reach this attempt's own tree."""
         process = sleeper()
         self.addCleanup(stop, process)
+        claim = process_tree.tree_claim(process.pid)
         identity = process_health.process_health_identity(process.pid)
-        result = process_control.signal(
-            process_control.Member(process.pid, identity, False), group=True)
+        result = process_control.signal_group(
+            process, process_control.Member(process.pid, identity, False), claim)
         self.assertEqual(result["result"], "refused")
         self.assertEqual(result["mechanism"], "group-not-owned")
         self.assertEqual(process_health.process_status(process.pid), "alive")
@@ -433,15 +432,33 @@ class SessionContinuityTests(unittest.TestCase):
             self.assertTrue(process_tree.stopped(self.claim()))
         self.assertEqual((state["descendants"], state["live"]), ("stopped", 0))
 
-    def test_uncertain_custody_is_not_reported_as_clean(self):
-        termination = deterministic._termination(
-            {"owner": "not-found", "descendants": "unknown", "live": None,
-             "enumeration": "ambiguous", "reason": "session-continuity-unproven",
-             "scope": "session", "continuity": "leader-absent"},
-            process_control.NO_AUTHORITY, ())
+    def test_an_ambiguous_live_observation_is_uncertain_custody(self):
+        """The real shape: alive descendants with an unproven session.
+
+        Reporting this as ``descendants-alive`` would present an unattributed
+        finding as custody of a tree this attempt can no longer prove it made.
+        """
+        state, authorization, _ = self.observe(self.AMBIGUOUS)
+        self.assertEqual(state["descendants"], "alive")
+        self.assertEqual(state["reason"], "session-continuity-unproven")
+        self.assertEqual(state["continuity"], "leader-absent")
+        self.assertEqual(authorization.members, ())
+        termination = deterministic._termination(state, authorization, ())
+        self.assertEqual(termination["descendants"], "alive")
+        self.assertEqual(termination["reason"], "session-continuity-unproven")
         self.assertEqual(deterministic._custody(termination), "uncertain")
-        self.assertEqual(termination["continuity"], "leader-absent")
-        self.assertIsNone(termination["remaining"])
+
+    def test_a_proven_live_descendant_is_still_reported_as_such(self):
+        """The ordering correction must not swallow the ordinary case."""
+        live = process_tree.Scan((424243,), False, "complete", "session",
+                                 "live-descendants", "leader-current")
+        with mock.patch.object(process_tree, "_scan", return_value=live), \
+                mock.patch.object(process_tree, "process_status", return_value="alive"), \
+                mock.patch.object(process_control, "verify_process", return_value="not-found"):
+            state = process_tree.tree_state(self.claim())
+        termination = deterministic._termination(state, process_control.NO_AUTHORITY, ())
+        self.assertEqual(state["reason"], "live-descendants")
+        self.assertEqual(deterministic._custody(termination), "descendants-alive")
 
     def test_a_proven_session_is_still_authorised(self):
         with mock.patch.object(process_tree, "_scan", return_value=ONE_MEMBER), \
@@ -504,6 +521,51 @@ class SyntheticSessionScanTests(unittest.TestCase):
         self.assertEqual(scan.pids, (424243,))
         self.assertFalse(scan.complete)
 
+    def test_a_session_that_changes_during_the_candidate_read_is_refused(self):
+        """leader-current, candidate read, leader-reused: nothing is bound.
+
+        The old check ran only before the walk, so the candidate's own later start
+        stamp was enough. The closing observation is what decides.
+        """
+        claim = self.claim()
+        leader_current = (b"S", 1, 424242, 100)
+        leader_reused = (b"S", 1, 424242, 900)
+        candidate = (b"S", 424242, 424242, 200)
+        seen = {"member": False}
+        calls = []
+
+        def read(pid):
+            calls.append(pid)
+            if pid == 424242:
+                return leader_reused if seen["member"] else leader_current
+            seen["member"] = True
+            return candidate
+
+        with mock.patch.object(process_tree.os, "listdir",
+                              return_value=["424242", "424243"]), \
+                mock.patch.object(process_tree, "_stat_fields", side_effect=read), \
+                mock.patch.object(process_tree, "process_status", return_value="alive"):
+            scan = process_tree._scan(claim, time.monotonic() + 5)
+            self.assertEqual(calls, [424242, 424242, 424243, 424242])
+            self.assertEqual(scan.continuity, "leader-reused")
+            self.assertEqual(scan.reason, "session-leader-reused")
+            self.assertEqual(scan.pids, (424243,))
+            self.assertFalse(scan.complete)
+            seen["member"] = False
+            authorization = process_control.authorize(claim)
+        self.assertEqual(authorization.members, ())
+        self.assertEqual(authorization.reason, "session-continuity-unproven")
+
+    def test_a_member_record_from_another_boot_is_never_bound(self):
+        """A start stamp is a tick since one boot, so the boot is part of the bind."""
+        claim = self.claim()
+        records = {424242: (b"S", 1, 424242, 100),
+                   424243: (b"S", 424242, 424242, 200)}
+        stale = dict(claim, boot="00" * 16, identity="linux-" + "00" * 16 + "-100")
+        with mock.patch.object(process_tree, "_stat_fields", side_effect=self.read(records)):
+            self.assertIsNone(process_tree.member_identity(stale, 424243))
+        self.assertEqual(process_tree._session_continuity(stale)[0], "boot-changed")
+
     def test_the_recorded_leader_record_binds_the_session(self):
         claim = self.claim()
         records = {424242: (b"S", 1, 424242, 100),
@@ -543,16 +605,22 @@ class SyntheticSessionScanTests(unittest.TestCase):
 
 
 class GroupCustodyTests(unittest.TestCase):
-    """A group signal needs custody of the child, not just an observed leader."""
+    """A group signal needs the held child itself, never a custody value.
+
+    There is no token to hold: ``signal_group`` takes the live process object and
+    re-derives every condition at the moment of the signal, so an observation made
+    earlier cannot be stored, carried or replayed as authority.
+    """
 
     @POSIX
-    def test_a_group_signal_without_custody_is_refused(self):
+    def test_only_the_held_child_is_a_group_signal_target(self):
         process = sleeper()
         self.addCleanup(stop, process)
         identity = process_health.process_health_identity(process.pid)
         self.assertTrue(process_control.group_leader(process.pid))
-        result = process_control.signal(process_control.Member(process.pid, identity, True),
-                                        group=True)
+        member = process_control.Member(process.pid, identity, True)
+        # No process object at all: leadership alone is an observation.
+        result = process_control.signal_group(None, member, None)
         self.assertEqual(result["result"], "refused")
         self.assertEqual(result["mechanism"], "group-without-custody")
         self.assertEqual(process_health.process_status(process.pid), "alive")
@@ -564,33 +632,42 @@ class GroupCustodyTests(unittest.TestCase):
         self.addCleanup(stop, owned)
         claim = process_tree.tree_claim(owned.pid)
         self.assertIsNotNone(claim)
-        proof = process_control.custody(owned, claim)
-        self.assertIsNotNone(proof)
-        result = process_control.signal(
-            process_control.Member(observed.pid,
-                                   process_health.process_health_identity(observed.pid), True),
-            group=True, custody=proof)
+        member = process_control.Member(observed.pid,
+                                        process_health.process_health_identity(observed.pid),
+                                        True)
+        # A held child is offered for an observed leader's group.
+        result = process_control.signal_group(owned, member, claim)
         self.assertEqual(result["result"], "refused")
         self.assertEqual(result["mechanism"], "group-without-custody")
         self.assertEqual(process_health.process_status(observed.pid), "alive")
 
     @POSIX
-    def test_a_reaped_child_can_no_longer_confer_group_custody(self):
+    def test_a_reaped_child_can_no_longer_be_used_to_signal_its_group(self):
         process = subprocess.Popen([sys.executable, "-I", "-c", "import time; time.sleep(0.2)"],
                                    start_new_session=True)
         claim = process_tree.tree_claim(process.pid)
         self.assertIsNotNone(claim)
+        member = process_control.Member(process.pid, claim["identity"], True)
         process.wait(timeout=30)
         self.assertIsNotNone(process.returncode)
-        self.assertIsNone(process_control.custody(process, claim))
-        # A proof offered over the freed identifier is still re-verified against
-        # the instance, so it cannot end whatever holds that number now.
-        forged = process_control.Custody(claim["pid"], claim["identity"])
-        result = process_control.signal(
-            process_control.Member(claim["pid"], claim["identity"], True),
-            group=True, custody=forged)
-        self.assertNotEqual(result["result"], "signalled")
-        self.assertEqual(result["mechanism"], "group")
+        # The number is free again, so the group it names need not be this one.
+        result = process_control.signal_group(process, member, claim)
+        self.assertEqual(result["result"], "refused")
+        self.assertEqual(result["mechanism"], "child-reaped")
+
+    @POSIX
+    def test_an_identity_the_claim_does_not_record_confers_nothing(self):
+        process = sleeper()
+        self.addCleanup(stop, process)
+        claim = process_tree.tree_claim(process.pid)
+        self.assertIsNotNone(claim)
+        # A synthetic identity: two real ones may share a creation tick.
+        member = process_control.Member(
+            process.pid, "win-1" if os.name == "nt" else "linux-deadbeef-1", True)
+        result = process_control.signal_group(process, member, claim)
+        self.assertEqual(result["result"], "refused")
+        self.assertEqual(result["mechanism"], "unrecorded-identity")
+        self.assertEqual(process_health.process_status(process.pid), "alive")
 
     @POSIX
     def test_the_group_signal_is_issued_before_the_child_is_reaped(self):
@@ -616,9 +693,11 @@ class GroupCustodyTests(unittest.TestCase):
         with mock.patch.object(process_tree, "_scan", return_value=ambiguous), \
                 mock.patch.object(process_tree, "process_status", return_value="alive"), \
                 mock.patch.object(process_control, "verify_process", return_value="not-found"), \
-                mock.patch.object(process_control, "signal") as signalled:
+                mock.patch.object(process_control, "signal") as signalled, \
+                mock.patch.object(process_control, "signal_group") as group:
             result = deterministic._stop_tree(process, claim)
         signalled.assert_not_called()
+        group.assert_not_called()
         self.assertEqual(result["authority"]["members"], 0)
         self.assertEqual(result["authority"]["reason"], "session-continuity-unproven")
         self.assertIsNotNone(process.returncode)

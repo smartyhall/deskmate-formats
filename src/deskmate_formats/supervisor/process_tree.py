@@ -284,14 +284,21 @@ else:
             and its identifier may still be reserved, but nothing observable binds
             it any more: the number matches and the owner does not.
 
-        Returns ``(continuity, leader_stamp)``. ``unknown`` means the record could
-        not be read or the claim carries no comparable stamp, which is refused the
-        same way an absent leader is.
+        Returns ``(continuity, leader_stamp)``. ``boot-changed`` means the
+        identifier is from another boot, so its start stamps are not comparable at
+        all; ``unknown`` means the record could not be read or the claim carries
+        no comparable stamp. Both are refused the same way an absent leader is.
         """
         session = claim.get("session")
         owner_stamp = start_stamp(claim.get("identity"))
-        if type(session) is not int or owner_stamp is None:
+        recorded_boot = claim.get("boot") or identity_boot(claim.get("identity"))
+        if type(session) is not int or owner_stamp is None or recorded_boot is None:
             return "unknown", None
+        if _boot_id() != recorded_boot:
+            # A start stamp is a tick since *this* boot. Comparing one recorded on
+            # another boot would silently accept an unrelated instance, so the
+            # boot identity is part of the binding, not only of the identity string.
+            return "boot-changed", None
         try:
             _, _, member_of, stamp = _stat_fields(session)
         except FileNotFoundError:
@@ -311,18 +318,20 @@ else:
             boot = _boot_id()
             if boot is None:
                 return Scan((), False, "unavailable", "session",
-                            "boot-identity-unavailable")
+                            "boot-identity-unavailable", "boot-changed")
             if boot != recorded_boot:
                 # Process start times are relative to a boot. Comparing them
                 # across a reboot would silently exclude the real tree.
-                return Scan((), False, "unavailable", "session", "boot-changed")
+                return Scan((), False, "unavailable", "session", "boot-changed",
+                            "boot-changed")
         try:
             names = os.listdir("/proc")
         except OSError:
             return Scan((), False, "unavailable", "session", "proc-unavailable")
         # Read before the walk so a session number that already names another
-        # instance cannot lend its members the claim's identity.
-        continuity, _ = _session_continuity(claim)
+        # instance cannot lend its members the claim's identity. It is read again
+        # afterwards, which is the observation that actually decides the matter.
+        continuity, before_stamp = _session_continuity(claim)
         owner_start = start_stamp(claim.get("identity"))
         found, scanned, unobservable, pre_owner = [], 0, 0, 0
         truncated = timed_out = False
@@ -361,16 +370,26 @@ else:
             # A member created before the owner contradicts the recorded lease,
             # so the walk is not a complete picture of this session.
             enumeration, reason = "degraded", "member-predates-owner"
-        if continuity != "leader-current":
+        # The candidates were read while the leader record was in some state; the
+        # state that decides whether they are bound is the one *after* the last
+        # candidate read. A session that ended mid-walk can have had its number
+        # reissued before the walk finished, and only the closing observation
+        # rules that out.
+        after, after_stamp = _session_continuity(claim)
+        bound = (continuity == "leader-current" and after == "leader-current"
+                 and before_stamp is not None and after_stamp == before_stamp)
+        observed = continuity if after == "leader-current" else after
+        if not bound:
             if found:
                 # The number names *a* session, but nothing proves it is this
                 # attempt's. The finding is kept as a finding; `continuity` says
                 # it is not attributed to the claim.
                 return Scan(tuple(found), False, "ambiguous", "session",
-                            "session-leader-reused" if continuity == "leader-reused"
-                            else "session-continuity-unproven", continuity)
+                            "session-leader-reused"
+                            if "leader-reused" in (continuity, after)
+                            else "session-continuity-unproven", observed)
             if enumeration != "complete":
-                return Scan((), False, enumeration, "session", reason, continuity)
+                return Scan((), False, enumeration, "session", reason, observed)
         return Scan(tuple(found), enumeration == "complete", enumeration,
                     "session", reason, continuity)
 
@@ -449,6 +468,11 @@ else:
         number reused between two reads cannot satisfy the scope check with an
         identity that belongs to a different process. ``None`` means the process
         cannot be bound to this tree, and is never authority to signal it.
+
+        The leader is revalidated *after* the candidate record is read. Checking it
+        first would leave a window: a session whose leader has exited can end and
+        have its number reissued before the candidate is read, and the candidate
+        would then carry a later stamp in a session this attempt never created.
         """
         if type(claim) is not dict or claim.get("scope") not in DURABLE_SCOPES:
             return None
@@ -456,17 +480,17 @@ else:
         boot = claim.get("boot") or identity_boot(claim.get("identity"))
         if type(session) is not int or boot is None or pid == claim.get("pid"):
             return None
-        continuity, _ = _session_continuity(claim)
-        if continuity != "leader-current":
-            # The session number is not bound to the recorded leader, so a member
-            # of it cannot be bound to this attempt either. The observation is
-            # kept by the scan; it is never turned into permission here.
-            return None
         try:
             state, _, member_of, start = _stat_fields(pid)
         except (OSError, ValueError):
             return None
         if member_of != session or state in (b"Z", b"X", b"x"):
+            return None
+        continuity, _ = _session_continuity(claim)
+        if continuity != "leader-current":
+            # The closing observation is what binds the candidate: anything but the
+            # recorded leader still holding the identifier makes the session
+            # number, not the membership, the thing that matched.
             return None
         return f"linux-{boot}-{start}"
 

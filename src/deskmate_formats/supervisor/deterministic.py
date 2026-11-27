@@ -513,13 +513,21 @@ _UNCERTAIN_REASONS = frozenset(("session-continuity-unproven", "session-leader-r
 
 
 def _custody(termination):
-    """Name what the observation supports: clean, still running, or neither."""
+    """Name what the observation supports: clean, still running, or neither.
+
+    An unbound observation outranks "still running" on purpose. ``descendants:
+    "alive"`` with an unproven session says processes remain in the recorded
+    session, not that they are this attempt's; calling that ``descendants-alive``
+    would present an unattributed finding as custody. Only a proven empty scope is
+    clean, and it stays clean without continuity, because absence does not depend
+    on it.
+    """
     if termination["descendants"] == "stopped":
         return "clean"
-    if termination["descendants"] == "alive":
-        return "descendants-alive"
     if termination.get("reason") in _UNCERTAIN_REASONS:
         return "uncertain"
+    if termination["descendants"] == "alive":
+        return "descendants-alive"
     return "unobserved"
 
 
@@ -586,13 +594,12 @@ def _stop_tree(process, claim=None):
     authorization = (process_control.NO_AUTHORITY if claim is None
                      else process_control.authorize(claim))
     owner = authorization.owner
-    # Custody of the unreaped child is what makes a numeric group signal more
-    # than an observation of leadership.
-    proof = process_control.custody(process, claim)
-    if owner is not None and owner.group and proof is not None and os.name != "nt":
-        # Issued before ``wait``: while the leader is unreaped its number cannot
-        # be recycled, so the group identifier still names this group.
-        group = process_control.signal(owner, group=True, custody=proof)
+    if owner is not None and owner.group:
+        # The group path takes this live object, not a custody value sampled
+        # earlier, and re-checks the unreaped child, the recorded identity and
+        # liveness at the moment of the signal. Issued before ``wait``, while the
+        # leader's number still names this group.
+        group = process_control.signal_group(process, owner, claim)
         signals.append(group)
         if group["result"] != "signalled":
             # The group is optional authority; the handle this attempt owns is

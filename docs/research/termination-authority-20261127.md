@@ -46,7 +46,7 @@ process this attempt does not own.
 | Authorised descendants | Only for a scope whose membership the kernel holds. A parent chain, on either platform, grants none. |
 | Signal | A descendant is signalled only through an identity-bound OS handle, after a verification that must return literally `alive`; the mechanism and every refusal are recorded with the outcome. |
 | Session continuity | A session identifier is only the leader's number, so `authorize` requires the leader's own record to carry the recorded stamp (`continuity: "leader-current"`). A different instance on that number proves the original session ended; no record at all proves nothing. Either way the finding is kept and the authority withheld. |
-| Group custody | `signal(..., group=True)` requires a `Custody(pid, identity)` proof for that very member: the direct child is unreaped and still verifies as the recorded instance. A leader that was merely observed — any descendant, or any process the caller never spawned — has none. |
+| Group custody | `signal_group(process, member, claim)` takes the live process object and re-derives every condition at the moment of the signal: that object's child is the member, has not been reaped, carries the recorded identity, and still verifies as alive and as its own group leader. There is no custody value to hold, so a leader that was merely observed — any descendant, or any process the caller never spawned — cannot supply one. |
 | Refusal is reported | `identity-mismatch`, `gone`, `unknown`, `refused` and `failed` are results. None is a successful cleanup. |
 
 ### Why a POSIX session is authority and a Windows parent chain is not
@@ -84,16 +84,17 @@ boundary, so `process_tree` keeps its documented read-only contract:
   numeric PID fallback for a descendant.
 * `group_leader(pid)` — a group signal is honoured only for a member authorised as
   its own group leader.
-* `custody(process, claim)` — the proof a group signal additionally needs: the claim names
-  that PID, the child has not been reaped (`returncode is None`, so the kernel still
-  reserves its number), and `verify_process` returns `alive` for the recorded identity.
-  Without it `_signal_group` refuses `group-without-custody`.
+* `signal_group(process, member, claim)` — the only numeric group signal, kept out of
+  `signal(member)` so it cannot be requested with a value. It requires the live child, an
+  unreaped one (`returncode is None`, so the kernel still reserves its number), the claim's
+  own identity, a literal `alive` and current group leadership; otherwise it refuses
+  `group-without-custody`, `child-reaped` or `unrecorded-identity`.
 
 `deterministic._stop_tree` now:
 
-1. authorises the owner by identity and takes custody of the direct child; a verified
-   group leader is signalled as a group only with that custody, **before** `wait`, while
-   the unreaped leader's number still names its group;
+1. authorises the owner by identity and, for a verified group leader, hands the live
+   child to `signal_group`, which re-derives custody synchronously **before** `wait`,
+   while the unreaped leader's number still names its group;
 2. otherwise terminates the direct child through the `Popen` object, which is an
    identity-bound handle on both platforms (Windows holds the handle; POSIX cannot
    recycle the number until this attempt reaps it);
@@ -330,14 +331,15 @@ group, and called `killpg(number)`. For the direct child that is sound only whil
 unreaped, and nothing in the signature said the caller held one: any `Member` marked
 `group` was accepted, including a leader a scan had merely observed.
 
-`signal(member, group=True, custody=...)` now requires a `Custody(pid, identity)` proof
-from `custody(process, claim)`, returned only when the claim names this PID, the child has
-not been reaped (`returncode is None`, so the kernel still reserves the number) and
-`verify_process` returns literally `alive` for the recorded identity. Without it the
-signal is refused as `group-without-custody` and the owned-child handle is used instead. A
-leader that exits between authorisation and the signal opens no window onto another group:
-it becomes a zombie the kernel keeps until reaped, and `verify_process` then returns
-`stopped`, which is refused.
+The first correction required a `Custody(pid, identity)` proof from
+`custody(process, claim)`, returned only when the claim named this PID, the child had not
+been reaped and `verify_process` returned literally `alive`. That closed the case the
+review named, but it made the proof a value: it could be sampled once, stored and offered
+later, and §11 removes it for that reason. Without a proof the signal is refused as
+`group-without-custody` and the owned-child handle is used instead. A leader that exits
+between authorisation and the signal opens no window onto another group: it becomes a
+zombie the kernel keeps until reaped, and `verify_process` then returns `stopped`, which is
+refused.
 
 ### The reap moved after the rounds
 
@@ -366,3 +368,101 @@ untouched, so its 60-second fixture timeout and performance evidence are unchang
 service, emulator, dispatch or execution authority was added; the tests build session
 records instead of asking the host to recycle a PID, and the four-platform matrix at the
 resulting head decides whether the POSIX branches hold.
+
+## 11. Correction after the fourth follow-up review (2026-11-27)
+
+Review `pullrequestreview-6087229332` accepted the continuity guard and the group
+restriction and found four narrow defects. All four were correct.
+
+### 11.1 Continuity was checked only before the candidate read
+
+`member_identity` validated `_session_continuity` first and read the candidate record
+second. For a leader that is observed rather than held, the session can end and its number
+be reissued between those two reads, and the candidate — carrying a later start stamp in
+what is now someone else's session — passed.
+
+The order is inverted: the candidate record is read first, then the leader is revalidated,
+and anything but `leader-current` returns `None`. `authorize` calls this for every
+candidate, so each candidate read is followed by a continuity observation. `_session_scan`
+likewise brackets its whole walk, requiring `leader-current` with an unchanged stamp both
+before and after; a change during the walk yields `ambiguous` / `session-leader-reused` with
+the findings retained and unbound.
+
+The boot identity is now part of the binding rather than only of the identity string.
+`_session_continuity` compares the live boot id with the recorded one and returns
+`boot-changed` on a mismatch; a start stamp is a tick since one boot, so a record from
+another boot cannot be compared at all.
+
+Regression: `test_a_session_that_changes_during_the_candidate_read_is_refused` synthesises
+the exact sequence — leader-current, candidate read, leader-reused — and asserts the record
+sequence, `ambiguous`/`session-leader-reused`, an unbound finding and zero authorised
+members. `test_a_member_record_from_another_boot_is_never_bound` pins the boot requirement.
+
+### 11.2 Custody was a value, so it was durable and transferable
+
+`Custody(pid, identity)` was a namedtuple returned by an earlier check and accepted later
+by `signal(..., group=True, custody=...)`. A caller could hold one, store it, or construct
+one, and the authority it represented outlived the state that made it true.
+
+The type and the function are gone. `signal(member)` no longer accepts a group request at
+all; the only route is `signal_group(process, member, claim)`, which takes the live process
+object this attempt holds and re-derives every condition at the moment of the signal: the
+object's child is the member, `returncode is None`, the claim carries that identity,
+`verify_process` returns `alive`, and the number still leads its own group. Nothing is
+returned that could be reused, so an earlier observation cannot become authority and a
+reaped child cannot lend its freed number to one.
+
+Regression: `test_only_the_held_child_is_a_group_signal_target`,
+`test_a_leader_this_attempt_never_spawned_has_no_custody`,
+`test_a_reaped_child_can_no_longer_be_used_to_signal_its_group` and
+`test_an_identity_the_claim_does_not_record_confers_nothing`.
+
+### 11.3 Uncertain custody was outranked by "alive"
+
+`_custody` tested `descendants == "alive"` before the continuity reasons, so the real
+leader-absent case — `tree_state` reporting `descendants: "alive"` with reason
+`session-continuity-unproven` — was recorded as `descendants-alive`. The earlier evidential
+test had built its own dict with `descendants: "unknown"`, so it never exercised the shape
+production actually produces.
+
+The reason is now tested first, and only a proven empty scope reports `clean`:
+
+| Observation | Custody |
+| --- | --- |
+| `descendants: "stopped"` | `clean` |
+| continuity unproven or reused, whatever is still visible | `uncertain` |
+| `descendants: "alive"` with no continuity caveat | `descendants-alive` |
+
+Regression: `test_an_ambiguous_live_observation_is_uncertain_custody` calls the real
+`tree_state` and asserts `descendants == "alive"`, `reason ==
+"session-continuity-unproven"` and then `uncertain`; `test_a_proven_live_descendant_is_still_reported_as_such`
+keeps the ordinary case from being swallowed by the correction.
+
+### 11.4 Environment record: the wheel install was shared
+
+This is stated plainly because the question was asked, and with the user account portion
+of the path withheld (the repository audit refuses host user paths; the locator below
+resolves to the same interpreter without naming an account). The rebuild and install
+described at `4cc87a2` were **not campaign-local**. The observed interpreter was
+`%LOCALAPPDATA%\Programs\Python\Python313\python.exe`, Python 3.13.17, with `sys.prefix`
+equal to `sys.base_prefix` — that is, the per-user Python installation, not a virtual
+environment — and `tools/install_wheel.py` runs
+`sys.executable -m pip install --force-reinstall --no-deps <wheel>` with no `--user`,
+prefix or venv argument, so it has no campaign-specific target. The package identity
+afterwards is `deskmate-formats 0.1.0.dev0` with
+`License-Expression: GPL-3.0-or-later`, installed at
+`%LOCALAPPDATA%\Programs\Python\Python313\Lib\site-packages\deskmate_formats`, reporting
+version `0.1.0.dev0`.
+
+So the install replaced the shared interpreter's copy of a package other local work also
+imports. It was a diagnostic step taken because an `-I` child in a test imported a stale
+build; it changed nothing in the repository, but it did change shared state. No further
+installation was performed for this checkpoint, and this checkpoint's tests run against
+`PYTHONPATH=src` with no install. Campaign-owned environments are PR #206's assignment and
+launch-time integration is #207's; neither is absorbed here.
+
+### Scope held
+
+No full local Supervisor suite was repeated, no native experiment was run, no shared
+installation was made, and nothing outside this PR was modified. Exact-head CI remains the
+verification for the Windows and Linux branches.

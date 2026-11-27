@@ -55,13 +55,17 @@ signal
     authority for one.
 
 group signal
-    A group signal names the group by the leader's number, so it needs a second
-    proof on top of the member's identity: :func:`custody`, returned only for a
-    direct child this attempt has not yet reaped that still verifies as the
-    recorded instance. A member that is merely *observed* to lead a group (any
-    descendant, or any leader the caller never spawned) has no such custody, and a
-    leader that has been reaped cannot reserve its number any more, so both are
-    refused and the caller falls back to per-member handles.
+    A group signal names the group by the leader's number, so it is not part of
+    :func:`signal` and cannot be requested with a value. :func:`signal_group` takes
+    the live process object this attempt holds and re-derives the proof at the
+    moment of the signal: the object must be the member's own child, that child's
+    number must not have been reaped, the recorded claim must carry exactly that
+    identity, and the instance must still verify as alive and as its own group
+    leader. A member that was merely *observed* to lead a group — any descendant,
+    or any leader this attempt never spawned — cannot be passed as the held child,
+    and a reaped child no longer reserves its number, so both are refused and the
+    caller falls back to per-member handles. An earlier observation of custody is
+    never authority: nothing here can be recorded, stored or handed on.
 
 refusal
     ``identity-mismatch``, ``unknown``, ``gone``, ``refused``, ``unavailable``
@@ -97,11 +101,6 @@ REFUSED_RESULTS = frozenset(("identity-mismatch", "unknown", "refused", "unavail
 #: :func:`process_health.start_stamp`).
 Member = namedtuple("Member", "pid identity group")
 
-#: Proof that this attempt holds the direct child: the child has not been reaped,
-#: so the kernel still reserves its number, and the number still carries the
-#: identity recorded for it. Only a group signal requires one.
-Custody = namedtuple("Custody", "pid identity")
-
 #: ``owner``/``members`` are what may be signalled; ``scope`` and ``enumeration``
 #: say how strong that permission is; ``reason`` names the outcome for a record.
 Authorization = namedtuple("Authorization", "owner members scope enumeration reason")
@@ -133,41 +132,6 @@ def group_leader(pid):
         return os.getpgid(pid) == pid
     except (OSError, AttributeError):
         return False
-
-
-def _holds(proof, member):
-    """Whether ``proof`` is custody of exactly this member's instance."""
-    return (type(proof) is Custody and proof.pid == member.pid
-            and proof.identity == member.identity)
-
-
-def custody(process, claim=None):
-    """Proof that this attempt still holds the direct child, or ``None``.
-
-    A group signal uses the leader's number as the *group* identifier, so it needs
-    more than a verified identity: the number must still be reserved for this
-    attempt. That holds only while the child is unreaped, because the kernel does
-    not issue the number of a child that has not been waited for to another
-    process. Once ``wait``/``poll`` has reaped it the number is free, and a reading
-    of it afterwards describes whatever holds it next.
-
-    The instance must also still be alive: an already-terminated child is a zombie
-    the kernel keeps only until it is reaped, so it can no longer be verified, and
-    its group is then ended through per-member handles instead.
-    """
-    pid = getattr(process, "pid", None)
-    if type(pid) is not int or not 1 <= pid < 2 ** 31:
-        return None
-    if getattr(process, "returncode", None) is not None:
-        return None  # reaped: the number may name a different process now
-    if type(claim) is not dict or claim.get("pid") != pid:
-        return None
-    identity = claim.get("identity")
-    if type(identity) is not str:
-        return None
-    if verify_process(pid, identity) != "alive":
-        return None
-    return Custody(pid, identity)
 
 
 def authorize(claim, *, deadline_seconds=process_tree.SCAN_DEADLINE_SECONDS):
@@ -231,34 +195,54 @@ def authorize(claim, *, deadline_seconds=process_tree.SCAN_DEADLINE_SECONDS):
                          "identity-bound-members")
 
 
-def signal(member, *, group=False, custody=None):
+def signal(member):
     """Signal one authorised member, or refuse it.
 
-    ``group`` asks for the member's whole process group, and is honoured only for
-    a member authorised as its own group leader *and* accompanied by the custody
-    proof that this attempt still holds the direct child.
+    This never takes a group request: see :func:`signal_group`, which needs the
+    live child rather than a member record.
     """
     if type(member) is not Member or type(member.pid) is not int or not 1 <= member.pid < 2 ** 31:
         return _report(None, "refused", "invalid-member", None)
     if type(member.identity) is not str:
         return _report(member.pid, "refused", "unrecorded-identity", None)
-    if group:
-        return _signal_group(member, custody)
     if os.name == "nt":
         return _signal_handle(member)
     return _signal_pidfd(member)
 
 
-def _signal_group(member, proof):
+def signal_group(process, member, claim=None):
+    """Terminate the direct child's process group, or refuse.
+
+    The group identifier is the leader's number, so this is the one place a number
+    is used as a name. It is therefore a separate entry point rather than a flag on
+    :func:`signal`: it takes the live process object this attempt holds, because the
+    proof it needs is not a value that can be observed earlier, recorded, stored or
+    handed to another call. The identifier must be one the kernel cannot reissue,
+    which is true only while that object's child is unreaped, and every condition is
+    re-checked here, at the moment of the signal.
+    """
+    if type(member) is not Member or type(member.pid) is not int or not 1 <= member.pid < 2 ** 31:
+        return _report(None, "refused", "invalid-member", None, group=True)
+    if type(member.identity) is not str:
+        return _report(member.pid, "refused", "unrecorded-identity", None, group=True)
     if os.name == "nt" or not member.group:
         # Windows has no group signal, and any other caller has not shown that
         # the member leads a group this attempt created.
         return _report(member.pid, "refused", "group-not-owned", False, group=True)
-    if not _holds(proof, member):
-        # Leadership is an observation. Without custody of the unreaped child the
-        # number may already name a different group, and an unrelated one would be
-        # ended instead of this attempt's.
+    pid = getattr(process, "pid", None)
+    if type(pid) is not int or pid != member.pid:
+        # A leader observed elsewhere is not a child this attempt holds, so the
+        # number is all that would be signalled.
         return _report(member.pid, "refused", "group-without-custody", None, group=True)
+    if getattr(process, "returncode", None) is not None:
+        # Reaped: the kernel may already have issued this number again, so the
+        # group it names need not be the one this attempt created.
+        return _report(member.pid, "refused", "child-reaped", None, group=True)
+    if (type(claim) is not dict or claim.get("pid") != pid
+            or claim.get("identity") != member.identity):
+        # The identity must be the one recorded for this child, not one supplied
+        # next to it.
+        return _report(member.pid, "refused", "unrecorded-identity", None, group=True)
     status = verify_process(member.pid, member.identity)
     if status == "identity-mismatch":
         return _report(member.pid, "identity-mismatch", "group", False, group=True)

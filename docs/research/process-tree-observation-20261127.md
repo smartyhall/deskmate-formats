@@ -96,6 +96,14 @@ on continuity at all: a session always contains its own leader, so an empty scan
 number is sound whichever session last held it, and reclamation after a completed cleanup
 still reports `stopped`.
 
+Membership is revalidated *after* the candidate record is read, not only before it. A leader
+that is observed rather than held can exit and have its session number reissued between the
+two reads, so a member read first is the only order in which the closing leader check
+covers the member's own record; anything but `leader-current` afterwards leaves it
+unbound. The boot identity is part of that check as well, because a start stamp is a tick
+since one boot and a record from another boot is not comparable at all
+(`boot-changed`).
+
 **Process scope.** A non-leader has no durable handle: POSIX reparents orphans to init, so a
 parent-chain walk loses members. It is still performed and its findings are reported, but
 `descendants` stays `unknown` and `stopped()` stays false. `live_pids` reports
