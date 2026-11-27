@@ -242,8 +242,11 @@ change is proposed here.
 - ARC methods 3, 4, 5, 6 and 7 remain unsupported; method 9 still has no genuine
   specimen.
 - TeleDisk advanced (LZSS/Huffman) is recognised but not decoded.
-- No CopyQM, TeleDisk, ImageDisk, DMK, JV3 or XDF specimens were found in the
-  accessible mirror, so those cases stay unresolved.
+- No CopyQM, DMK, JV3 or XDF specimens were found in the accessible mirror, so
+  those cases remain unresolved. TeleDisk and ImageDisk were subsequently
+  qualified from genuine specimens outside that mirror (see the capability
+  inventory); the earlier mirror search does not leave those two families
+  unresolved.
 - No volume formatted by an independent FAT implementation (dosfstools, mtools,
   Windows) has been qualified; the FAT tests qualify the reader against the
   on-disk specification. This is the largest outstanding evidence gap.
