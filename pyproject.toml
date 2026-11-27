@@ -42,6 +42,7 @@ deskmate-supervisor-task = "deskmate_formats.supervisor.task_cli:main"
 deskmate-supervisor-s0 = "deskmate_formats.supervisor.driver_cli:main"
 deskmate-supervisor-s3 = "deskmate_formats.supervisor.editing_cli:main"
 deskmate-supervisor-s2 = "deskmate_formats.supervisor.bridge_cli:main"
+deskmate-campaign-env = "deskmate_formats.campaign_env.cli:main"
 
 [tool.setuptools.package-data]
 "*" = ["*.license"]

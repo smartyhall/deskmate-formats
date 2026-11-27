@@ -233,6 +233,9 @@ The [no-edit controls](docs/research/calendar-index-trigger-20261117.md) show th
 full first index group splitting during native open/display/close, without an
 event edit or explicit save.
 
+* [Campaign Python environments](docs/research/campaign-environment-procedure.md) —
+  per-campaign `venv`, isolated-child launch and a fail-closed preflight receipt,
+  with the [isolation campaign findings](docs/research/campaign-python-environment-isolation-20261127.md)
 * [Format inventory](docs/inventory.md) and [architecture](docs/architecture.md)
 * [Observed container structures](docs/containers/README.md)
 * [Cross-application architecture and comparison matrix](docs/research/cross-application-db.md),
