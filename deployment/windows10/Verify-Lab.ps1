@@ -29,6 +29,18 @@ function Get-OptionalSysMainStartMode {
     } catch { return 'Unknown' }
 }
 . (Join-Path $PSScriptRoot 'Get-LabCompatibilityAppraiserState.ps1')
+. (Join-Path $PSScriptRoot 'GhidraToolchain.ps1')
+# Report the toolchain the machine actually holds: each installation's own
+# version record and each JDK's own release metadata. The presence of a
+# launcher script is not evidence that a compatible pair exists.
+$ghidraToolchain=Get-LabGhidraToolchain -PreferredVersion '12.2' -Roots @('C:\Tools',$env:ProgramFiles)
+$pythonVersion=$null
+try { $pythonVersion=((& python.exe --version 2>&1) | Out-String).Trim() } catch { $pythonVersion=$null }
+$pyGhidraVersion=$null
+try {
+    $reported=& python.exe -c "import importlib.metadata as m; print(m.version('pyghidra'))" 2>$null
+    if ($LASTEXITCODE -eq 0) { $pyGhidraVersion=([string]$reported).Trim() }
+} catch { $pyGhidraVersion=$null }
 $report=[ordered]@{
     os=(Get-CimInstance Win32_OperatingSystem).Caption
     build=(Get-CimInstance Win32_OperatingSystem).BuildNumber
@@ -37,9 +49,12 @@ $report=[ordered]@{
     deliveryOptimizationPolicy=(Get-OptionalRegistryValue -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization' -Name 'DODownloadMode')
     git=[bool](Get-Command git.exe -ErrorAction SilentlyContinue)
     python=[bool](Get-Command python.exe -ErrorAction SilentlyContinue)
+    pythonVersion=$pythonVersion
+    pyGhidraVersion=$pyGhidraVersion
     chrome=(Test-Path 'C:\Program Files\Google\Chrome\Application\chrome.exe')
     msys2=(Test-Path 'C:\msys64\ucrt64.exe')
-    ghidra=[bool](Test-Path 'C:\Tools\ghidra_12.1.4_PUBLIC\support\analyzeHeadless.bat')
+    ghidra=[bool]$ghidraToolchain.selected
+    ghidraToolchain=$ghidraToolchain
     sshd=(Get-OptionalServiceStatus -Name 'sshd')
     sysMainService=(Get-OptionalServiceStatus -Name 'SysMain')
     sysMainStartMode=(Get-OptionalSysMainStartMode)
@@ -53,4 +68,4 @@ $report=[ordered]@{
     guestAdditionsStageRecorded=(Test-Path (Join-Path $root 'setup-logs\guest-additions-installed.txt'))
     guestAdditionsDeferred=(Test-Path (Join-Path $root 'setup-logs\guest-additions-deferred.txt'))
 }
-$report|ConvertTo-Json -Depth 3
+$report|ConvertTo-Json -Depth 6

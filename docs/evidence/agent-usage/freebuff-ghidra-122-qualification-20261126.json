@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "provider": "freebuff",
+  "agent_label": "Freebuff Desktop agent (Buffy)",
+  "campaign_id": "fb-ghidra-122-qualification-20261126",
+  "checkpoint": "completion",
+  "observed_at_utc": "2026-11-26T00:00:00Z",
+  "observed_at_utc_note": "Date-level precision only; the agent runtime exposed no clock reading to the tool surface.",
+  "git_revision": "0e507318abe871e6a74f8e4975e68b233a11251a",
+  "git_revision_kind": "parent commit of this checkpoint on the preceding campaign branch (Ghidra static observation); the checkpoint commit is created after this receipt and is identifiable by branch and date",
+  "execution_mode": "interactive, single agent, native local shell and filesystem tools",
+  "model": {
+    "identity": null,
+    "reasoning_setting": null,
+    "note": "The client exposes no model identity, effort setting or context-size reading to the agent's tools."
+  },
+  "collection": {
+    "source_kind": "unavailable",
+    "source_version": null,
+    "coverage": "No token, quota, credit or wall-clock allowance was observable. Tool calls executed and files created are recorded below as activity, not as provider consumption.",
+    "attribution_limits": "Any measurement would belong to the operator's account, not to this campaign. Nothing is inferred from a shared account meter.",
+    "status": "partially observed"
+  },
+  "measurements": [],
+  "measurements_note": "No usage measurement was observed, so none is reported. Values are omitted rather than set to zero.",
+  "activity": {
+    "processes_started": {
+      "ghidra_headless_batch": 2,
+      "pyghidra_jvm_sessions": 23,
+      "note": "Approximate lifecycle count taken from the campaign run log, not from a process meter. Includes repeat comparison runs after fixing the enumerator in the new probe and two short API-discovery sessions."
+    },
+    "emulator_use": "none",
+    "network_use": "one Ghidra release download and one Adoptium JDK download, both verified against published digests; no package index or model provider",
+    "inference_calls_beyond_this_session": "none"
+  },
+  "artifacts": {
+    "published_commit": "see branch freebuff/ghidra-12.2-qualification-20261126",
+    "private_evidence": "ghidra 12.2 package, JDK, projects and comparison exports kept outside Git under the laboratory private-evidence tree; locators omitted from this public receipt"
+  }
+}

@@ -19,7 +19,10 @@ Tools: [`ghidra_dos_import.py`](../../tools/ghidra/ghidra_dos_import.py) and
 [`ghidra_program_report.py`](../../tools/ghidra/ghidra_program_report.py).
 Configuration: Ghidra 12.1.4 (build 2026-Sep-21, revision
 `8b6bbb857accdfa20dc5b2f5dea471178c2e9fbc`), Temurin 21.0.13, PyGhidra 3.2.0,
-`x86:LE:16:Real Mode`.
+`x86:LE:16:Real Mode`. The same surface was re-qualified under Ghidra 12.2 and
+Temurin 25, with identical counts, fingerprints and decompiled text; see
+[`ghidra-12.2-qualification-20261126.md`](ghidra-12.2-qualification-20261126.md).
+The measurements below are the 12.1.4 baseline and are kept as such.
 
 ## Real historical executables
 

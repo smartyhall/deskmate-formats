@@ -110,8 +110,9 @@ The defect is already reported and already fixed upstream:
 
 So a new bug report would be a duplicate, and no new report was filed. What
 this campaign adds is an independent reproduction on a self-authored specimen,
-the full scope table above, and a validated trial of the correction in an
-isolated installation.
+the full scope table above, a validated trial of the correction in an isolated
+installation, and — after the release shipped — verification against the stock
+12.2 build (see below).
 
 ## Trial correction in a separate installation
 
@@ -169,16 +170,39 @@ portable specimen and can be re-run against any Ghidra build:
 8. A `CS`-loading encoding still decodes, still prints segment-first, and is
    still recognisable as a reserved encoding (the language does not reject it).
 
+## Verified in the shipped 12.2 release
+
+Ghidra 12.2 (build 2026-Oct-16, revision `8ca90770…`) was installed beside
+12.1.4 and reproduces the trial table exactly: `8E D8` prints `MOV DS,AX`,
+`8E C8` prints `MOV CS,AX`, `66 8E D8` prints `MOV DS,EAX`, `48 8E D8` prints
+`MOV DS,RAX` and `4D 8E C0` prints `MOV ES,R8`, while every `8C` form and both
+memory forms are unchanged and p-code is identical everywhere.
+
+Two consequences the trial could not measure were confirmed on the release:
+operand indexing now returns the segment register first (`['DS','AX']` for
+`8E D8`), and the assembler accepts and correctly encodes the forms it
+previously rejected (`MOV DS,AX` → `8E D8`, `MOV ES,DI` → `8E C7`,
+`MOV DS,EAX` → `66 8E D8`). In 12.1.4 the reversed text round-tripped through
+that same assembler as the opposite instruction: `MOV AX,DS` from `8E D8`
+re-encoded as `8C D8`.
+
+Full measurements, loader and analysis equivalence, and the API differences
+found while testing are in
+[`ghidra-12.2-qualification-20261126.md`](ghidra-12.2-qualification-20261126.md).
+
 ## Consequence for this project
 
-The pinned 12.1.4 build keeps the reversed text, so:
+12.2 is now the preferred release for new research; 12.1.4 stays installed to
+reproduce the earlier receipts and this reproduction. The reasoning that the
+defect forced:
 
 * every segment-register instruction cited in a campaign report is quoted from
   the original bytes, not from a listing;
 * semantic claims about such an instruction are supported by p-code or by an
   independent decoder;
-* when the project moves to 12.2 or later, previously captured listings must be
-  re-read rather than compared textually, because this exact text changes.
+* the defect also reversed operand *indexing*, so older listings and any
+  script that classified by operand position must be re-read rather than
+  compared textually against 12.2 output.
 
 The trial installation is retained only for reproducing the table above. It is
 not used for campaign evidence, and its projects are separate from the shared

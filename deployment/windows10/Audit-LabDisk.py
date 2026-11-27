@@ -43,7 +43,7 @@ APP_FILES = {
     "git": ("Program Files", "Git", "cmd", "git.exe"),
     "nodejs": ("Program Files", "nodejs", "npm.cmd"),
     "msys2": ("msys64", "ucrt64.exe"),
-    "ghidra_12_1_4": ("Tools", "ghidra_12.1.4_PUBLIC", "support", "analyzeHeadless.bat"),
+    "ghidra_12_2": ("Tools", "ghidra_12.2_PUBLIC", "support", "analyzeHeadless.bat"),
 }
 ERROR_CLASSES = {
     "winget_unavailable": re.compile(r"winget\s+(?:missing|is not installed|not found)", re.I),

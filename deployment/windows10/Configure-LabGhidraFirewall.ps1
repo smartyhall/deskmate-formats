@@ -13,55 +13,53 @@
 [CmdletBinding(SupportsShouldProcess=$true)]
 param(
     [string]$JavaHome,
-    [string]$GhidraInstallDir = 'C:\Tools\ghidra_12.1.4_PUBLIC'
+    [string]$GhidraInstallDir = 'C:\Tools\ghidra_12.2_PUBLIC'
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-if (-not (Test-Path -LiteralPath (Join-Path $GhidraInstallDir 'support\analyzeHeadless.bat'))) {
-    throw 'The expected Ghidra installation is missing. Install it before adding firewall rules.'
+. (Join-Path $PSScriptRoot 'GhidraToolchain.ps1')
+
+# The installation's own record decides which Java it needs. A launcher's
+# presence says nothing about the release, and a directory name says nothing
+# about a JDK's major version.
+$ghidra = Get-LabGhidraInstall -InstallDir $GhidraInstallDir
+if ($ghidra.error) {
+    throw ("Cannot use the Ghidra installation at {0}: {1}" -f $GhidraInstallDir, $ghidra.error)
+}
+if ($null -eq $ghidra.java_min) {
+    throw ('Ghidra {0} records no application.java.min, so a compatible JDK cannot be proven.' -f $ghidra.version)
 }
 
 $candidates = New-Object System.Collections.Generic.List[string]
-if ($JavaHome) {
-    $candidates.Add($JavaHome)
-} else {
-    # Ghidra documents this override as taking precedence over autodetection.
-    $launchProperties = Join-Path $GhidraInstallDir 'support\launch.properties'
-    if (Test-Path -LiteralPath $launchProperties) {
-        $line = @(Get-Content -LiteralPath $launchProperties |
-            Where-Object { $_ -match '^\s*JAVA_HOME_OVERRIDE\s*=' } |
-            Select-Object -First 1)
-        if ($line.Count -gt 0) {
-            $override = (($line[0] -split '=',2)[1]).Trim().Trim('"')
-            if ($override) { $candidates.Add($override) }
-        }
-    }
-    if ($env:JAVA_HOME) { $candidates.Add($env:JAVA_HOME) }
-    $machineHome = [Environment]::GetEnvironmentVariable('JAVA_HOME','Machine')
-    if ($machineHome) { $candidates.Add($machineHome) }
-    $javaOnPath = Get-Command java.exe -ErrorAction SilentlyContinue
-    if ($null -ne $javaOnPath -and $javaOnPath.Source) {
-        $candidates.Add((Split-Path -Parent (Split-Path -Parent $javaOnPath.Source)))
-    }
-    $adoptium = Join-Path $env:ProgramFiles 'Eclipse Adoptium'
-    if (Test-Path -LiteralPath $adoptium) {
-        Get-ChildItem -LiteralPath $adoptium -Directory -Filter 'jdk-21*' |
-            Sort-Object Name -Descending | ForEach-Object { $candidates.Add($_.FullName) }
-    }
+if ($JavaHome) { $candidates.Add($JavaHome) }
+if ($env:GHIDRA_JAVA_HOME) { $candidates.Add($env:GHIDRA_JAVA_HOME) }
+if ($env:JAVA_HOME) { $candidates.Add($env:JAVA_HOME) }
+$machineHome = [Environment]::GetEnvironmentVariable('JAVA_HOME','Machine')
+if ($machineHome) { $candidates.Add($machineHome) }
+# Ghidra documents this override as winning over autodetection, so it is
+# validated rather than assumed to be the right runtime.
+$launch = Read-LabKeyValueFile -Path (Join-Path $GhidraInstallDir 'support\launch.properties')
+if ($launch.ContainsKey('JAVA_HOME_OVERRIDE')) { $candidates.Add($launch['JAVA_HOME_OVERRIDE']) }
+$javaOnPath = Get-Command java.exe -ErrorAction SilentlyContinue
+if ($null -ne $javaOnPath -and $javaOnPath.Source) {
+    $candidates.Add((Split-Path -Parent (Split-Path -Parent $javaOnPath.Source)))
+}
+foreach ($discoveredHome in (Find-LabJavaHomes -Roots @('C:\Tools', $env:ProgramFiles))) {
+    $candidates.Add($discoveredHome)
 }
 
-$selected = $null
-foreach ($candidateHome in $candidates) {
-    $exe = Join-Path $candidateHome 'bin\java.exe'
-    if (Test-Path -LiteralPath $exe -PathType Leaf) {
-        $selected = (Resolve-Path -LiteralPath $candidateHome).Path
-        break
-    }
+$selection = Select-LabJavaHome -JavaMin $ghidra.java_min -Candidates $candidates
+if (-not $selection.selected) {
+    $reasons = ($selection.rejected | ForEach-Object { "{0}: {1}" -f $_.home, $_.reason }) -join '; '
+    throw ('No usable Java home for Ghidra {0}, which requires Java {1} or newer. {2}' -f `
+            $ghidra.version, $ghidra.java_min, $reasons)
 }
-if (-not $selected) {
-    throw 'No usable Java home found. Provide -JavaHome with the Ghidra JDK installation directory.'
+if ($JavaHome -and $selection.selected -ne $JavaHome) {
+    throw ('The requested Java home {0} is not compatible with Ghidra {1} (Java {2}+).' -f `
+            $JavaHome, $ghidra.version, $ghidra.java_min)
 }
+$selected = (Resolve-Path -LiteralPath $selection.selected).Path
 
 $principal = [Security.Principal.WindowsPrincipal]::new(
     [Security.Principal.WindowsIdentity]::GetCurrent())
@@ -74,7 +72,8 @@ function Test-OnlyAddress([object]$values,[string]$expected) {
     return ($addresses.Count -eq 1 -and [string]$addresses[0] -eq $expected)
 }
 
-Write-Host "Ghidra JDK: $selected"
+Write-Host ("Ghidra {0} (build {1}) JDK: {2} (major {3}, requires {4}+)" -f `
+        $ghidra.version, $ghidra.build_date, $selected, $selection.major, $ghidra.java_min)
 foreach ($leaf in @('java.exe','javaw.exe')) {
     $program = Join-Path $selected ("bin\" + $leaf)
     if (-not (Test-Path -LiteralPath $program -PathType Leaf)) { continue }
