@@ -194,6 +194,58 @@ modified; the trial is a separately identified directory. The pinned 12.1.4
 build keeps the reversed text, so this campaign reads segment-register
 instructions from bytes and reports semantics from p-code.
 
+## Signature, extent and header evidence
+
+Four interpretations the portable reader now states explicitly, because each
+was previously either missing or silently permissive.
+
+**Both executable signatures.** `MZ` and `ZM` begin the same fourteen-word
+header; some historical linkers emitted the two bytes reversed. The reader
+accepts both and reports which one the stored bytes carry (`signature`), so a
+reader can see the difference without any arithmetic changing. A file whose
+first two bytes are neither is still refused, because it carries no DOS
+executable header at all.
+
+**The COM load extent.** A COM image loads at `segment:0100h`, so offsets
+`0100h`–`FFFFh` are addressable: at most `FF00h` bytes. An image larger than
+that cannot be a COM program at those offsets, so an explicit COM
+interpretation now refuses it instead of accepting bytes it could never
+address. The bound is about addressability, not about free memory: the stack
+and the PSP mean the usable program area is smaller still, and nothing here
+claims otherwise.
+
+**Overlay is a classification, not a count.** Bytes past the declared load
+image (`overlay.status: "possible"`, with the count) are reported as
+indistinguishable at this level: an appended overlay, an embedded archive,
+linker padding and a corrupt tail all look identical to header arithmetic, so
+identifying one requires separate evidence. A file that ends at its declared
+image reports `status: "none"`.
+
+**Contradictory header words are warnings, not verdicts.** `header_warnings`
+reports a declared entry point outside the declared image, a minimum
+allocation above the maximum, a zero maximum allocation, relocation sites that
+name overlapping words, and an initial `SS:SP` beyond the initialized image
+(marked *common, not contradictory*, because that is where a stack normally
+lives). A warning says a header word deserves a look; it does not claim DOS
+refuses the image, and several historical linkers emitted the first two.
+
+Two coordinate-boundary fixes belong here as well:
+
+* `Relocation.linear_offset` was renamed `image_relative_offset`. It was never
+a linear address: it becomes one only after a load paragraph is chosen, and the
+old name invited exactly the conflation this note exists to prevent.
+* A file offset inside the MZ header now raises an error that names the header
+  range and the first image offset, instead of a generic "outside the stored
+  image". Mapping header bytes as program bytes is the most common way the two
+  coordinate systems get mixed up.
+
+One interface bug is also fixed: `inspect_dosimage.py map` wrote
+`args.segment or args.load_paragraph`, so `--segment 0` — a real real-mode
+segment — was silently replaced by the load paragraph. The label is now chosen
+only when the argument is absent. Asking for segment `0000h` at a `1000h`-based
+address is refused, because segment `0000h` has no window over it; answering
+with `1000h` would answer a question nobody asked.
+
 ## Synthetic specimens
 
 `tests/fixtures/synthetic/dos_images.py` builds deterministic MZ and COM images

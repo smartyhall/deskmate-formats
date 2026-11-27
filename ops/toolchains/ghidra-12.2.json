@@ -1,0 +1,11 @@
+{
+  "schema": "ghidra-toolchain-profile/1",
+  "name": "ghidra-12.2-preferred",
+  "description": "Preferred release for new static analysis. Pins the Ghidra version and lets the minimum Java strategy pick the oldest JDK that satisfies that release's own requirement, which for 12.2 is Java 25.",
+  "ghidra": {
+    "version": "12.2"
+  },
+  "java": {
+    "strategy": "minimum"
+  }
+}

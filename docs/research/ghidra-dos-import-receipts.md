@@ -12,34 +12,56 @@ The loader model and the qualification runs behind it are in
 
 ## Result states
 
-A run ends in exactly one state, and each state maps to its own process exit
-code. Failure is never folded into a success record.
+A run ends in exactly one terminal outcome, recorded in `outcome`, and each
+outcome maps to its own process exit code. Failure is never folded into a
+success record.
 
-| Status | Exit | Meaning |
+| Outcome | Exit | Meaning |
 | --- | --- | --- |
-| `ok` | 0 | Import, optional analysis and optional reopen verification all passed |
-| `usage_error` | 2 | The request itself was refused before any JVM started |
-| `import_failed` | 3 | The program was not loaded, or did not match its expected digest |
+| `succeeded` | 0 | Import, optional analysis and optional reopen verification all passed |
+| `invalid_request` | 2 | The request itself was refused before any JVM started |
+| `input_mismatch` | 2 | The input digest did not match `--expect-sha256`; no worker was started |
+| `import_failed` | 3 | The program was not loaded, or the worker produced no readable receipt |
 | `import_timeout` | 4 | A worker stage exceeded its timeout and was terminated |
 | `analysis_failed` | 5 | The program imported, but Ghidra autoanalysis raised |
 | `reopen_failed` | 6 | The stored program could not be reopened or identified |
 | `reopen_mismatch` | 7 | The reopened program differs from the imported one |
+| `receipt_malformed` | 8 | The worker's receipt failed schema or identity validation |
+| `receipt_inconsistent` | 8 | The receipt claimed success while the worker process exited nonzero |
+| `persistence_failed` | 9 | Analysis finished but the program was not durably stored |
 
 `reopen_mismatch` is deliberately separate from `reopen_failed`: "I could not
 check" and "I checked and it is different" are different facts about the
-artifact.
+artifact. `receipt_malformed` and `receipt_inconsistent` are separate from
+`import_failed` for the same reason: a receipt that cannot be trusted is not
+an import that failed, and the two need different investigation.
 
 ## What the receipt records
 
+* The **attempt**: a 32-hex identifier chosen per invocation, the start time in
+  UTC, the worker PID, and the attempt's private working directory. A receipt
+  that does not carry this attempt's identifier is rejected, so a file left by
+  an earlier run cannot stand in for this one.
 * Input name, size and SHA-256, the requested digest and whether it matched.
-* Requested language and the **resolved** language read back from the imported
-  program, with processor and compiler spec.
-* Ghidra application version, build date, revision, Java runtime and PyGhidra
-  version, read from the installation rather than assumed.
+* The request as received (language, analyze, project name and directory) and
+  the **resolved** language read back from the imported program, with processor
+  and compiler spec plus whether it matched the request.
+* The toolchain as requested and as resolved: Ghidra install directory,
+  application version, build date, revision, minimum Java, Java runtime, Java
+  VM and PyGhidra version, read from the installation rather than assumed.
+* Project identity (name, directory, and whether it existed before this
+  attempt) and program identity (project path and content fingerprint).
+* Persistence: `save` and `close` recorded separately, each `ok` or `failed`
+  with the error text.
+* The worker record: exit code, receipt path and the SHA-256 of the receipt
+  bytes as published.
 * Per-stage wall-clock timings.
 * Block geometry, instruction and function counts, and a content fingerprint.
-* For reopen: every attempt, the reopened summary, the comparison, and the
-  project file listing.
+* For reopen: every attempt, the originating attempt identifier, the reopened
+  summary, the comparison, and the project file listing.
+* Lock samples (`lock_after_exit`, `lock_after_failure`, `reopen.lock_after`),
+  each stating that presence alone establishes no ownership and that no action
+  was taken.
 
 The **content fingerprint** is a SHA-256 over each memory block's name, range,
 size, initialization flag, and its bytes (or the literal `uninitialized`).
@@ -54,7 +76,7 @@ The earlier driver deleted `NAME.lock` when its own `created_project` flag was
 set. That flag says nothing about ownership at the moment of deletion, and
 Ghidra may still be releasing the lock in its shutdown sequence.
 
-Measured behaviour on the qualification host (Ghidra 12.1.4, Windows):
+Measured behaviour on the qualification host (Ghidra 12.1.4 and 12.2, Windows):
 
 * a clean import worker exit leaves `desk3.lock` visible for a moment —
   `lock_after_exit.present` was `true` in the run recorded at
@@ -62,18 +84,44 @@ Measured behaviour on the qualification host (Ghidra 12.1.4, Windows):
 * the next JVM that opens the project closes it cleanly and the lock is gone —
   `reopen.lock_after.present` was `false` in the same receipt;
 * reopen succeeded on its **first** attempt in both full runs, with no lock
-  file touched.
+  file touched;
+* the same held under 12.2: `DESK.EXE` and `CALENDAR.PDM` each imported with
+  `--analyze` and reopened on the first attempt (`receipts-122/desk.json`,
+  `receipts-122/cal.json`, both exit 0).
 
 So no deletion is needed for the normal lifecycle, and deletion would be
 actively harmful: if another worker did own the project, removing the lock
 would disable the only protection against concurrent writers.
 
-The driver now never deletes a lock. It samples lock state as a diagnostic
-(`lock_after_exit`, `reopen.lock_after`), retries a locked reopen with bounded
-backoff, and offers `--quarantine-stale-lock`, which **renames** a lock aside
-for the operator who has independently established that no process owns it.
-An existing project is refused unless `--allow-existing-project` is passed,
-because opening someone else's project may adopt their program or their lock.
+**The quarantine flag is gone.** A follow-up review observed that
+`--quarantine-stale-lock` renamed a lock on *presence*, which an explicit flag
+does not turn into proof of staleness: the owner could be a live worker whose
+run this sample merely raced, and moving its lock would corrupt its project.
+Nothing in the reference temperature, timestamp or owner record of a lock file
+establishes that no process holds the project, so the driver now offers no
+reclamation at all. It samples lock state as a diagnostic
+(`lock_after_exit`, `lock_after_failure`, `reopen.lock_after`) with
+`ownership_established: false` and `action_taken: "none"`, and retries a locked
+reopen with bounded backoff. A test asserts both that the function is absent
+and that the flag is rejected by the parser.
+
+Recovery, if it is ever wanted, has to be a separately reviewed operation whose
+prerequisites positively establish that the project is unowned — for example a
+recorded owning PID that no longer exists plus an operator assertion about the
+same host — and it must not share a code path with ordinary import or reopen.
+
+An existing project is still refused unless `--allow-existing-project` is
+passed, because opening someone else's project may adopt their program or their
+lock. A **reopen-only operation never creates a project**: `_open_existing`
+raises `project_missing` instead of falling through to `createProject`, so a
+verification cannot report success about a project that did not exist.
+
+One real lock outlives its JVM in the campaign's own evidence:
+`private-evidence/ghidra-integration-20261126/projects-122/` still holds
+`segforms122.lock` and `segforms122.lock~`. It is left exactly where it is. Its
+presence is consistent with an interrupted or terminated probe, and nothing in
+it proves the probe's process is gone; treating it as reclaimable would be the
+same unfounded inference the review objected to.
 
 ### 2. Failed autoanalysis became a successful receipt
 
@@ -163,9 +211,78 @@ Each of these is covered by a portable test.
 `tests/portable/test_ghidra_driver.py` exercises the supervisor without a JVM:
 usage refusal, digest mismatch, worker crash without a receipt, timeout and its
 guidance, failed analysis, failed reopen, reopen timeout, locked-project retry,
-mismatched identity, byte drift, missing program, lock reporting and
-quarantine. `tests/portable/test_dosimage.py` adds the headerless-input,
-far-pointer, block-size and range-validation cases.
+mismatched identity, byte drift, missing program and lock reporting.
+`tests/portable/test_dosimage.py` adds the headerless-input, far-pointer,
+block-size and range-validation cases.
+
+### 10. A predictable intermediate receipt could be inherited
+
+The supervisor wrote its worker receipt to `<output>.import.json`, or to
+`receipt.json.import.json` in the current directory when `--output` was absent.
+Both names are fixed, so a worker that crashed before writing left the previous
+invocation's successful receipt in place, and the supervisor read it as this
+run's result. Nothing in the code proved the file had been written by *this*
+worker.
+
+Each invocation is now an attempt with a 32-hex identifier and its own private
+working directory:
+
+```text
+<output>.attempts/<attempt-id>/import-worker.json
+```
+
+The directory is created with `exist_ok=False`, the identifier is passed to the
+worker and echoed in the receipt, and the supervisor rejects a receipt whose
+`attempt.id` differs. It also rejects a receipt whose `input.sha256` is not the
+digest it computed itself, whose `requested.project` or `requested.project_dir`
+is another project (compared with `realpath` and `normcase`, because Windows
+can report one directory as either its long or its 8.3 short spelling),
+and any receipt missing a field its outcome requires. Attempt directories are
+left in place after failure, timeout and interruption: the partial receipt is
+recorded as `partial_worker_receipt` with `used_as_result: false`, so the
+evidence survives without being mistaken for an outcome. Nothing is deleted.
+
+`--output` is now **required** in supervisor mode. A default name in the
+working directory is shared state between invocations, which is exactly the
+failure being removed.
+
+### 11. Malformed receipts, and empties that compared equal
+
+`compare_programs` compared whatever it was given. Two summaries that both
+lacked the required fields agreed on nothing and reported `match: true`, so an
+incomplete reopen payload could corroborate an incomplete import.
+
+Validation is now explicit and per outcome (`REQUIRED_FIELDS`,
+`validate_receipt`), and the comparison reports missing fields separately:
+`complete` is false and `match` is false when any compared field is absent on
+either side. A test asserts that `compare_programs({}, {})` is not a match.
+
+### 12. Exit status, persistence and reopen identity are reconciled
+
+Three separate gaps, all about a claim outranking the evidence for it:
+
+* **Worker exit.** A receipt saying `succeeded` was accepted even when the
+  worker exited nonzero. Success now requires both, and disagreement between a
+  success claim and a nonzero exit is `receipt_inconsistent` (exit 8). The
+  reverse direction is handled conservatively: a nonzero claim with a zero exit
+  keeps its failure outcome and records `worker_exit_disagrees: true`. A test
+  covers each direction.
+* **Persistence.** `project.save()` and `project.close()` ran in a `finally`
+  that recorded a `close_error` while leaving the outcome `ok`. Each stage is
+  now recorded separately, and a failed save or close turns a successful import
+  into `persistence_failed` (exit 9) whose receipt still says exactly what was
+  and was not stored. A successful analysis followed by a failed save is not a
+  stored analysis.
+* **Reopen identity.** The reopen worker now receives the originating attempt
+  identifier and the expected content digest, and echoes the identifier. A
+  payload from another attempt, or a success payload from a worker that exited
+  nonzero, is `reopen_failed` with `reason: attempt_identity` rather than a
+  restart of the comparison.
+
+Receipts are published with `os.replace` after writing sibling temporary bytes,
+so a reader sees either the previous complete file or this complete one. The
+digest is computed over the published **bytes**: `write_text` would translate
+newlines on Windows and the recorded digest would not describe the file.
 
 ## Qualification as a deterministic procedure
 
@@ -204,6 +321,11 @@ the host and the image, not guarantees.
 
 ```text
 python -m unittest tests.portable.test_ghidra_driver tests.portable.test_dosimage
+# Toolchain selection and the program-report driver have their own suites:
+# tests.portable.test_ghidra_toolchain and tests.portable.test_ghidra_report.
+
+# Pick the toolchain from evidence, then run the import with it.
+python tools/ghidra/ghidra_toolchain.py --profile ops/toolchains/ghidra-12.2.json
 python tools/ghidra/ghidra_dos_import.py --project-dir PRIVATE/projects \
   --project cal --input CALENDAR.PDM --expect-sha256 <digest> --analyze \
   --reopen-check --timeout 600 --python <venv-python> \
@@ -212,4 +334,7 @@ python tools/ghidra/ghidra_dos_import.py --project-dir PRIVATE/projects \
 
 `--python` names the interpreter for worker stages and defaults to the current
 one, so a run is reproducible from a single environment unless PyGhidra lives
-in a dedicated one.
+in a dedicated one. On this host the lab interpreter has no PyGhidra and the
+campaign venv reports `pyghidra 3.2.0`, so `--python` was pointed at the venv
+for every measured run; both facts are recorded in the toolchain selection
+record rather than inferred.

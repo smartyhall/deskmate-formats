@@ -1,0 +1,12 @@
+{
+  "schema": "ghidra-toolchain-profile/1",
+  "name": "ghidra-12.1.4-historical",
+  "description": "Reproduces the 2026-11-26 receipts. Pins Ghidra 12.1.4 and Java 21, the release and runtime those receipts were measured on, so a re-run selects the same toolchain even when a newer JDK is installed beside it.",
+  "ghidra": {
+    "version": "12.1.4"
+  },
+  "java": {
+    "major": 21,
+    "strategy": "minimum"
+  }
+}
