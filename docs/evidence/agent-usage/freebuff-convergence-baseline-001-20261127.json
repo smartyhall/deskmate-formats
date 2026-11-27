@@ -1,0 +1,54 @@
+{
+  "agent_label": "Freebuff Desktop native session (local shell and file tools)",
+  "attribution_limitations": [
+    "A shared account meter cannot be attributed to one campaign.",
+    "Token counts, context utilization and allowance hours are distinct units with no verified exchange relationship."
+  ],
+  "campaign_id": "convergence-01",
+  "checkpoint": "convergence-baseline-001-evidence-publication",
+  "checkpoint_status": "complete for the documentation and evidence portion: the sanitized characterization-baseline record and the harness public projection are prepared, the status and campaign-inventory documents are reconciled to the integrated infrastructure campaigns, and the deferred performance and process-tree findings are tracked. The measured baseline is a characterization, not an optimization-qualified baseline; issue #204 remains unexecuted and research-baseline-001 is proposed but not created. The pull request remains open for independent review.",
+  "coverage": "this campaign only; shared account state is not attributable",
+  "evidence": [
+    "docs/research/convergence-baseline-001-20261127.md",
+    "docs/evidence/convergence-baseline-001-20261127.public.json",
+    "docs/research/quiet-baseline-qualification-plan-20261127.md",
+    "docs/research/portable-test-performance-harness.md",
+    "docs/research/process-tree-observation-20261127.md",
+    "docs/research/source-bound-execution-procedure.md",
+    "PROJECT_STATUS.md",
+    "docs/research/campaign-inventory.json"
+  ],
+  "execution_mode": "interactive local desktop session; no unattended dispatch, no model API call, no provider endpoint contacted, no emulator use",
+  "git_revision": null,
+  "git_revision_note": "The measured revision of the baseline is 2b3113c15b333f8a0718e353698e427404b2c31b. The documentation revision that publishes this receipt is recorded in the pull request; no revision is guessed here.",
+  "measurement_note": "Laboratory measurements belong to the baseline record and its published projection. No provider usage measurement was observed; a missing measurement is recorded as absent, never as zero.",
+  "measurements": [],
+  "model": {
+    "note": "The client model selector and runtime model identity were not observed at any checkpoint.",
+    "reasoning_effort": null,
+    "runtime_identity": null,
+    "selected_label": null
+  },
+  "observed_at_utc": "2026-11-27T20:50:17Z",
+  "privacy": "No transcript, credential, account identifier, private path or raw process identity is included.",
+  "provider": "freebuff",
+  "receipt_written_utc": "2026-11-27T20:50:17Z",
+  "schema_version": 1,
+  "source": {
+    "detail": "No programmatic usage interface is available to this session; the desktop context tooltip was not read.",
+    "kind": "unavailable",
+    "version": "Freebuff Desktop, native local session; build identifier not observed"
+  },
+  "verification": {
+    "ci": "recorded in the pull request for the exact head",
+    "local": "campaign-inventory validation and report, repository audit, REUSE lint, ruff, portable checks as applicable to documentation changes",
+    "not_performed": [
+      "laboratory performance measurement (the published numbers are the preserved measurement, not a re-run)",
+      "deterministic hash canary for issue #204",
+      "emulator or native experiment",
+      "paid provider call",
+      "creation of the research-baseline-001 tag",
+      "merge of this pull request"
+    ]
+  }
+}
