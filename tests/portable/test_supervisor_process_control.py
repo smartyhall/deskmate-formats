@@ -506,13 +506,18 @@ class SyntheticSessionScanTests(unittest.TestCase):
 
     def test_the_recorded_leader_record_binds_the_session(self):
         claim = self.claim()
-        scan = self.scan({424242: (b"S", 1, 424242, 100),
-                          424243: (b"S", 424242, 424242, 200)}, claim)
-        self.assertEqual(scan.continuity, "leader-current")
-        self.assertEqual(scan.pids, (424243,))
-        self.assertTrue(scan.complete)
-        self.assertEqual(process_tree.member_identity(claim, 424243),
-                         f"linux-{claim['boot']}-200")
+        records = {424242: (b"S", 1, 424242, 100),
+                   424243: (b"S", 424242, 424242, 200)}
+        listing, records_of, liveness = self.patch(records)
+        with listing, records_of, liveness:
+            scan = process_tree._scan(claim, time.monotonic() + 5)
+            self.assertEqual(scan.continuity, "leader-current")
+            self.assertEqual(scan.pids, (424243,))
+            self.assertTrue(scan.complete)
+            # The same record that places the member in the session yields its
+            # stamp, so the binding does not need a second read.
+            self.assertEqual(process_tree.member_identity(claim, 424243),
+                             f"linux-{claim['boot']}-200")
 
     def test_an_empty_session_is_absence_whether_or_not_a_leader_remains(self):
         for records, continuity in (({}, "leader-absent"),
@@ -609,6 +614,7 @@ class GroupCustodyTests(unittest.TestCase):
         ambiguous = process_tree.Scan((process.pid + 1,), False, "ambiguous", "session",
                                       "session-continuity-unproven", "leader-absent")
         with mock.patch.object(process_tree, "_scan", return_value=ambiguous), \
+                mock.patch.object(process_tree, "process_status", return_value="alive"), \
                 mock.patch.object(process_control, "verify_process", return_value="not-found"), \
                 mock.patch.object(process_control, "signal") as signalled:
             result = deterministic._stop_tree(process, claim)
