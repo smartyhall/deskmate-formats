@@ -1,7 +1,7 @@
 # Bounded, verified guest input for 86Box automation
 
-2026-11-26, revised after three independent reviews of PR #187 (the second and
-third on 2026-11-27). Provider-independent improvement to the automation layer,
+2026-11-26, revised after four independent reviews of PR #187 (the second,
+third and fourth on 2026-11-27). Provider-independent improvement to the automation layer,
 qualified with portable tests and six authorized native sessions on disposable
 clones.
 
@@ -84,6 +84,22 @@ same-row duplicate anchor at the unit and `type_text` level, and a bypass-profil
 continuation. No native session was repeated: the corrected paths are
 deterministic state-machine logic, and the existing native DOS, ring and
 Corkboard evidence still stands.
+
+## Fourth independent review, 2026-11-27
+
+This review read the published screenshot's pixels from the exact-head preview
+artifact instead of trusting its caption, and raised publication housekeeping
+only; no implementation change followed.
+
+| Finding | Disposition | Basis |
+| --- | --- | --- |
+| The image captioned as the F10 Applications menu depicts the F10 Accessories menu | Confirmed, corrected | The desktop's menu bar labels Applications at F8 and leaves it unopened; the popup hangs below the highlighted F10 slot and lists Setup, Spell Checker, Calculator, Phone List, Corkboard, Month, Alarm, To Do List, Clipboard and Task Switch. Caption and alternative text now name Accessories, and the alternative text lists the ten visible rows |
+| Two new authored Markdown sidecars offered only `GPL-3.0-or-later` | Confirmed, corrected | This report and the instrumentation proposal are general documentation under LICENSING.md, so each sidecar now offers `GPL-3.0-or-later OR CC-BY-SA-4.0`. The screenshot keeps its documentary-capture sidecar and Tandy attribution |
+| Five pre-existing manifest captions had been re-encoded as mojibake by this branch | Confirmed, corrected | The branch rewrote `website/reference-images.json` through a non-UTF-8 round trip; the en dash, apostrophes and multiplication sign in five unrelated entries are restored. The manifest now differs from its base only by the added entry |
+
+The published image itself is unchanged: 640 × 480, 19,662 bytes, SHA-256
+`2d0b16f4…db620`, Git blob `6ad8d0b…cb19`. The correction is editorial, so the
+screenshot was not recaptured and no emulator was launched.
 
 ## Four evidence layers
 
@@ -211,10 +227,15 @@ failures.
 | type-ahead during `TYPE COMMAND.COM` | 10,652 | ring head 36, tail 42, depth 3 — producer leads |
 | type-ahead consumed | 11,652 | arrived once, ring empty, no duplicate |
 | DeskMate desktop | 23,696 | digest `ca6a32f1…18c4`, three redraws |
-| F10 Applications menu | 24,060 | observed, digest `f307d0bb…6863` |
+| F10 Accessories menu | 24,060 | observed, digest `f307d0bb…6863` |
 | Escape | 24,304 | observed restore to the desktop digest |
 | Corkboard note typed | 29,792 | captured, no text-level verification possible |
 | Reopen | 76,984 | blank editor; 236 differing pixels from the typed frame |
+
+The menu bar labels its F8 entry Applications; the populated menu opened with
+F10 in this run is Accessories. Earlier revisions of this row and of the
+published caption called both Applications. The timestamp, digest and
+observation are unchanged.
 
 The type-ahead row is the decisive correction: the ring held three translated
 keystrokes while the guest was busy writing, TAIL led HEAD by six bytes, and the
