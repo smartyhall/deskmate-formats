@@ -1,0 +1,56 @@
+{
+  "agent_label": "Freebuff Desktop native session (local shell and file tools)",
+  "attribution_limitations": [
+    "A shared account meter cannot be attributed to one campaign.",
+    "Token counts, context utilization and allowance hours are distinct units with no verified exchange relationship.",
+    "The deterministic procedure duration reported here is a runtime measurement of one local child process, not provider usage."
+  ],
+  "campaign_id": "convergence-02",
+  "checkpoint": "convergence-checkpoint-05-authorized-single-canary-execution",
+  "checkpoint_status": "One operator-authorized execution of the frozen deterministic plan 5681fe8c8fa35d5425651e5fa0e7ee83299f617e6c97b9ab953390d2d3e7b0ba completed with exit status 0 and a structured result exactly matching the independently established README.md identity. The attempt ran under a registered campaign lease for worktree:convergence-02-trusted that was released; the transient lease was not sampled and post-exit process-tree emptiness was not proven. The attempt is consumed and replay is refused.",
+  "coverage": "this campaign only; shared account state is not attributable",
+  "evidence": [
+    "docs/research/convergence-checkpoint-05-canary-qualification-20261127.md",
+    "docs/research/convergence-checkpoint-02-canary-preparation-20261127.md",
+    "ops/tasks/github-hash-canary.json",
+    "src/deskmate_formats/supervisor/deterministic.py",
+    "src/deskmate_formats/supervisor/deterministic_cli.py",
+    "src/deskmate_formats/supervisor/procedures.py",
+    "src/deskmate_formats/supervisor/campaigns.py",
+    "src/deskmate_formats/supervisor/task_queue.py",
+    "src/deskmate_formats/supervisor/task_git.py"
+  ],
+  "execution_mode": "interactive local desktop session; one local deterministic procedure; no unattended dispatch, no model API call, no provider endpoint contacted, no emulator use",
+  "git_revision": null,
+  "git_revision_note": "The reviewed source revision is e72c97ca47720fe38e32a2b8a37dff6202cda4a3. The documentation revision that publishes this receipt is recorded in the pull request; no revision is guessed here.",
+  "measurement_note": "No provider usage measurement was observed; a missing measurement is recorded as absent, never as zero. The procedure ran for 0.345 seconds of child elapsed time inside a 1.4 second invocation; that is a runtime observation, not provider consumption.",
+  "measurements": [],
+  "model": {
+    "note": "The client model selector and runtime model identity were not observed at any checkpoint.",
+    "reasoning_effort": null,
+    "runtime_identity": null,
+    "selected_label": null
+  },
+  "observed_at_utc": "2026-11-27T23:33:00Z",
+  "privacy": "No transcript, credential, account identifier, review token, private path, private task-queue identifier or raw process identity is included.",
+  "provider": "freebuff",
+  "receipt_written_utc": "2026-11-27T23:33:00Z",
+  "schema_version": 1,
+  "source": {
+    "detail": "No programmatic usage interface is available to this session; the desktop context tooltip was not read.",
+    "kind": "unavailable",
+    "version": "Freebuff Desktop, native local session; build identifier not observed"
+  },
+  "verification": {
+    "ci": "documentation-only change; required portable matrix status and any advisory review state are reported in the pull request rather than asserted here",
+    "local": "plan digest recomputation, custody preflight including the controller's own lease-identity calculation, one authorized execution, durable outcome inspection, source and queue integrity re-derivation, registry final-state inspection",
+    "not_performed": [
+      "a second execution or replay",
+      "another deterministic task",
+      "workspace-bound procedure execution",
+      "emulator operation",
+      "model provider call",
+      "shared baseline tag creation"
+    ]
+  }
+}

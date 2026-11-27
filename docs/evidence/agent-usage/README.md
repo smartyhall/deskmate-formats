@@ -32,6 +32,11 @@ The initial supplemental receipt contract (schema version 1) includes:
 
 ## Receipts
 
+- [Convergence checkpoint 05 canary execution](freebuff-convergence-checkpoint-05-20261127.json)
+  — completion receipt for the
+  [canary qualification report](../../research/convergence-checkpoint-05-canary-qualification-20261127.md).
+  Usage measurements are unknown and recorded as an empty list; the commit is
+  recorded in the pull request rather than guessed.
 - [Source-bound Supervisor execution](freebuff-source-bound-execution-20261127.json)
   and its [completion receipt](freebuff-source-bound-execution-20261127-completion.json)
   — checkpoint receipt for the
