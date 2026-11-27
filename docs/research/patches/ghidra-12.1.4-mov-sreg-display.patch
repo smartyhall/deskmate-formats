@@ -1,0 +1,30 @@
+Correct the display order of the 8E /r register forms.
+
+Ghidra prints a constructor's operands from its name, so naming the register
+forms of MOV Sreg,r/m16 after the source operand prints "MOV AX,DS" for an
+instruction whose effect is DS := AX. Only the names change; the patterns,
+semantics and decoding are untouched.
+
+This is the correction merged upstream as PR #9637 (commit dc1e375) for the
+12.2 milestone, reproduced here for reference against a 12.1.4 installation.
+It applies to a separately identified copy of the installation, never to a
+shared one. Rebuild the compiled languages afterwards with
+  support/sleigh -a Ghidra/Processors/x86
+
+The patched file is part of Ghidra itself, distributed under the Apache
+License 2.0. This reproduction of the upstream change conveys no rights in
+Ghidra or its source; the project's license covers only this note and the
+enclosed diff against that third-party file.
+
+--- a/Ghidra/Processors/x86/data/languages/ia.sinc
++++ b/Ghidra/Processors/x86/data/languages/ia.sinc
+@@ -4012,10 +4012,10 @@
+ :MOV Sreg,m16       is vexMode=0 & byte=0x8e; (mod != 3 & Sreg) ... & m16                         { Sreg = m16; }
+-:MOV Rmr16,Sreg     is vexMode=0 & opsize=0 & byte=0x8e; mod=3 & Rmr16 & Sreg                     { Sreg = Rmr16; }
+-:MOV Rmr32,Sreg     is vexMode=0 & opsize=1 & byte=0x8e; mod=3 & Rmr32 & Sreg                     { Sreg = Rmr32(0); }
++:MOV Sreg,Rmr16     is vexMode=0 & opsize=0 & byte=0x8e; mod=3 & Rmr16 & Sreg                     { Sreg = Rmr16; }
++:MOV Sreg,Rmr32     is vexMode=0 & opsize=1 & byte=0x8e; mod=3 & Rmr32 & Sreg                     { Sreg = Rmr32(0); }
+ @ifdef IA64
+-:MOV Rmr64,Sreg     is $(LONGMODE_ON) & vexMode=0 & opsize=2 & byte=0x8e; mod=3 & Rmr64 & Sreg    { Sreg = Rmr64(0); }
++:MOV Sreg,Rmr64     is $(LONGMODE_ON) & vexMode=0 & opsize=2 & byte=0x8e; mod=3 & Rmr64 & Sreg    { Sreg = Rmr64(0); }
+ @endif
