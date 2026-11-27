@@ -33,6 +33,7 @@ The initial supplemental receipt contract (schema version 1) includes:
 ## Receipts
 
 - [Source-bound Supervisor execution](freebuff-source-bound-execution-20261127.json)
+  and its [completion receipt](freebuff-source-bound-execution-20261127-completion.json)
   — checkpoint receipt for the
   [source-binding report](../../research/source-bound-execution-20261127.md).
   Usage measurements are unknown and recorded as an empty list; the commit is

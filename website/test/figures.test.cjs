@@ -17,6 +17,26 @@ function oneImage() {
     caption: "Synthetic appointment and controls",
   };
 }
+function historicalImage() {
+  return {
+    id: "history.hx-1988-offer",
+    page_id: "history.chronology",
+    section_heading: "The 1988 HX catalog offer",
+    path: "calendar.png",
+    width: 742, height: 745,
+    origin: "historical-advertising-excerpt",
+    source_url: "https://example.org/catalog.pdf#page=9",
+    publisher: "Tandy Corporation / Radio Shack",
+    publication_title: "1988 Tandy Computer Catalog",
+    publication_date: "1988",
+    page_reference: "printed p. 9",
+    provenance: "Synthetic test provenance",
+    attribution: "Tandy Corporation, 1988 catalog, printed p. 9.",
+    alt: 'Catalog listing with a "$699" price <test>',
+    caption: "The catalog advertised the 1000 HX with Personal DeskMate 2 included.",
+    rights_note: "Third-party historical advertising; publisher rights retained.",
+  };
+}
 function withAsset(fn) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "deskmate-figures-"));
   fs.writeFileSync(path.join(dir, "calendar.png"), "test image stub");
@@ -61,6 +81,27 @@ test("missing/ambiguous placement is rejected instead of silently dropping image
   ];
   assert.throws(() => injectFigures(tokens, "formats.calendar", [oneImage()], (x) => x, dir),
     /Ambiguous/);
+}));
+
+test("historical advertising renders attribution, source link and rights note", () => withAsset((dir) => {
+  const html = renderFigureSet([historicalImage()], (x) => x, dir);
+  assert.match(html, /Tandy Corporation, 1988 catalog, printed p\. 9\./);
+  assert.match(html, /aria-label="View full-size historical excerpt"/);
+  assert.match(html, /class="reference-figure reference-figure-historical"/);
+  assert.match(html, /href="https:\/\/example\.org\/catalog\.pdf#page=9"/);
+  assert.match(html, /Source: Tandy Corporation \/ Radio Shack, 1988 Tandy Computer Catalog, printed p\. 9/);
+  assert.match(html, /Third-party historical advertising; publisher rights retained\./);
+  assert.match(html, /\$699&quot; price &lt;test&gt;/);
+}));
+
+test("incomplete or misclassified historical advertising is rejected", () => withAsset((dir) => {
+  const missing = historicalImage();
+  delete missing.publisher;
+  assert.throws(() => renderFigureSet([missing], (x) => x, dir), /Invalid historical advertising entry/);
+  assert.throws(() => renderFigureSet([{...historicalImage(), id: "ui.hx-1988-offer"}], (x) => x, dir),
+    /Invalid historical advertising entry/);
+  assert.throws(() => renderFigureSet([{...historicalImage(), origin: "documentary-software-ui-capture"}],
+    (x) => x, dir), /Invalid documentary capture entry/);
 }));
 
 test("unlisted path traversal and missing files do not render", () => withAsset((dir) => {

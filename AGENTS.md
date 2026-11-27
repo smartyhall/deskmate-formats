@@ -110,6 +110,44 @@ integration access or review gates to obtain a preferred review outcome.
 Existing campaign, publication and merge authority remains unchanged.
 V3 administrative restrictions are not all technically enforceable at present;
 observe these procedural boundaries regardless of the options the UI exposes.
+## Historical advertising and sales material — operator decision 2026-11-27
+
+The operator authorizes reproducing publicly available historical advertising
+and sales material for relevant historical, technical, educational and
+documentary purposes, without separate approval for each ordinary illustration.
+Eligible period material includes advertisements, product catalogs and sales
+brochures, promotional flyers and product announcements, dealer sales sheets,
+commercial product listings and comparable promotional material.
+
+This is an editorial publication authorization by the project operator. It is
+not a copyright license from any rights holder, not a declaration that the
+material is in the public domain, and not an unconditional fair-use
+determination. Apply the case-specific historical-excerpt assessment in
+[LICENSING.md](LICENSING.md) and the [visual-asset workflow](docs/site/visual-assets.md)
+to every reproduction. Keep reproductions proportionate: a complete individual
+advertisement or sales illustration may be appropriate when its composition or
+complete content is historically relevant, but this does not authorize
+publishing complete magazines, catalogs, commercial scan collections or
+archival libraries.
+
+Every published excerpt must retain publisher attribution, publication title and
+date, the page reference, the original source link, verified provenance and an
+explicit notice that the underlying third-party material remains the property of
+its rights holders and is not covered by the project's GPL or Creative Commons
+offers. Do not imply endorsement by Tandy, Radio Shack, COMPUTE!, a scan archive
+or any other publisher. Honor a documented rights-holder correction or removal
+request.
+
+Publish historical excerpts as manifest-listed PNGs under
+`website/src/assets/reference/` with origin `historical-advertising-excerpt`, the
+`LicenseRef-Third-Party-Historical-Advertising` classification, exact source and
+derivative hashes, and accurate REUSE sidecars. Source PDFs, complete scans and
+private review crops stay outside Git.
+
+This authorization does not extend to modern third-party photography,
+commercial software distributions, extracted proprietary assets, complete
+manuals or unrelated copyrighted works. The VintageComputer.net photograph of
+surviving Personal DeskMate 2 manuals remains an attributed external link.
 
 ## Accepted experimental laboratory risk — operator decision 2026-11-11
 

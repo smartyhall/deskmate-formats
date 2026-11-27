@@ -15,6 +15,19 @@
       "source": "docs/history/introduction.md"
     },
     {
+      "id": "history.chronology",
+      "slug": "history/chronology",
+      "title": "DeskMate historical chronology",
+      "section": "deskmate",
+      "subsection": "History and orientation",
+      "order": 15,
+      "summary": "Evidence-bounded chronology of DeskMate releases, editions and catalog offerings from 1984 onward.",
+      "date": null,
+      "is_hub": false,
+      "role": "current-guide",
+      "source": "docs/history/timeline.md"
+    },
+    {
       "id": "site.overview",
       "slug": "planning/overview",
       "title": "Reference-site preparation",

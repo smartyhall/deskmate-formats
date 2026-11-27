@@ -34,17 +34,26 @@ async function images(page) {
   const result = await page.evaluate(async () => {
     const observed = [...document.querySelectorAll("img")];
     // Bound the wait for outstanding resources, including deferred images.
-    // Do not change loading policy merely to force a passing observation.
+    // Do not change loading policy merely to force a passing observation:
+    // instead scroll each unsettled image into view as a reader would, which
+    // is what starts a lazy load, then restore the reading position. A page
+    // that still leaves an image pending after this is inconclusive.
     const unsettled = observed.filter((image) => !image.complete);
+    const restoreY = window.scrollY;
     if (unsettled.length) {
       let timer;
       try {
+        for (const image of unsettled) {
+          image.scrollIntoView({ block: "center" });
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+        }
         await Promise.race([
           Promise.allSettled(unsettled.map((image) => image.decode())),
           new Promise((resolve) => { timer = setTimeout(resolve, 2000); }),
         ]);
       } finally {
         clearTimeout(timer);
+        window.scrollTo(0, restoreY);
       }
     }
     const missingAlt = [];

@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "record": "DeskMate historical chronology — period figure sources and crop specifications",
+  "reviewed": "2026-11-27",
+  "operator_decision": {
+    "date": "2026-11-27",
+    "scope": "standing publication authorization for publicly available historical advertising and sales material",
+    "recorded_in": [
+      "https://github.com/smartyhall/deskmate-formats/pull/209#issuecomment-7218089375",
+      "https://github.com/smartyhall/deskmate-formats/pull/155#issuecomment-7218090129"
+    ],
+    "rights_classification": "LicenseRef-Third-Party-Historical-Advertising",
+    "limits": "editorial publication authorization only; not a copyright license, a public-domain determination or an unconditional fair-use ruling"
+  },
+  "coordinate_system": {
+    "units": "PDF points (1/72 inch)",
+    "origin": "top-left corner of the unrotated PDF page box",
+    "rectangle": "[x0, y0, x1, y1]; x1 must be greater than x0 and y1 greater than y0",
+    "conversion": "a page is rendered once at the recorded dpi and cropped with round(point * dpi / 72)"
+  },
+  "limits": {
+    "max_output_bytes": 6291456,
+    "max_output_pixels": 4000000,
+    "max_dimension": 4096,
+    "panel_gap_px": 24
+  },
+  "sources": {
+    "tandy-1988-catalog": {
+      "title": "Tandy Computer Catalog and Software Reference Guide (1988)",
+      "publisher": "Tandy Corporation / Radio Shack",
+      "repository": "Color Computer Archive, colorcomputerarchive.com",
+      "url": "https://colorcomputerarchive.com/repo/Documents/Catalogs/Radio%20Shack/Tandy%20Computer%20Catalog%20and%20Software%20Reference%20Guide%20%281988%29%28Tandy%29.pdf",
+      "sha256": "226af143d12b2a3aa1c56ae240b2aad14e83c77a93377b86a32e6d2f11bfca73",
+      "size_bytes": 9418857,
+      "page_count": 124,
+      "printed_page_convention": "printed page = zero-based PDF page index + 1 (verified against printed folios on pp. 9, 10, 102, and 103)",
+      "attribution": "Tandy Corporation, 1988 Tandy Computer Catalog and Software Reference Guide. Catalog scan hosted by the Color Computer Archive; the scan is not a project work.",
+      "rights_status": "third-party commercial publication; no permission or licence located; see docs/history/figure-rights-assessment.md"
+    },
+    "compute-1988-10": {
+      "title": "COMPUTE! Issue 101, October 1988 (Volume 10, Number 10)",
+      "publisher": "COMPUTE! Publications, Inc.",
+      "repository": "Color Computer Archive, colorcomputerarchive.com",
+      "url": "https://colorcomputerarchive.com/repo/Documents/Magazines/Compute%20%28Clean%29/Compute_Issue_101_1988_Oct.pdf",
+      "sha256": "3ed9b461da9940af8294235a807bc0254140faf96738cca504a6ca4861df055e",
+      "size_bytes": 24378415,
+      "page_count": 112,
+      "printed_page_convention": "printed page = zero-based PDF page index - 1 (verified from printed folios on surrounding pages); the full-page advertisement itself carries no folio",
+      "attribution": "Radio Shack advertisement in COMPUTE! Issue 101, October 1988. Issue scan hosted by the Color Computer Archive; the advertisement and issue are not project works.",
+      "rights_status": "third-party commercial publication; no permission or licence located; see docs/history/figure-rights-assessment.md"
+    }
+  },
+  "figures": [
+    {
+      "id": "history.hx-1988-offer",
+      "figure_number": "1",
+      "status": "published-limited-excerpt",
+      "publication_path": "website/src/assets/reference/history/history.hx-1988-offer.png",
+      "publication_sha256": "f428b3e534891fb097c04a87b9de799de6041ae48d01b2d93119643fb1cd82d9",
+      "publication_bytes": 332453,
+      "rights_classification": "LicenseRef-Third-Party-Historical-Advertising",
+      "source": "tandy-1988-catalog",
+      "source_url": "https://colorcomputerarchive.com/repo/Documents/Catalogs/Radio%20Shack/Tandy%20Computer%20Catalog%20and%20Software%20Reference%20Guide%20%281988%29%28Tandy%29.pdf#page=9",
+      "dpi": 200,
+      "panels": [
+        {
+          "page_index": 8,
+          "printed_page": "9",
+          "rect": [8, 385, 275, 653],
+          "label": "Tandy 1000 HX price block, feature bullets, and introduction",
+          "required_text": ["Personal DeskMate 2", "MS-DOS", "1000 HX"]
+        }
+      ],
+      "expected_width": 742,
+      "expected_height": 745,
+      "dimension_tolerance_px": 2,
+      "caption": "The 1988 Tandy catalog advertised the 1000 HX with Personal DeskMate 2 included. Its built-in ROM contained MS-DOS, not an explicitly advertised copy of DeskMate.",
+      "alt": "1988 Tandy 1000 HX catalog listing with a $699 price, feature bullets for MS-DOS in ROM and included Personal DeskMate 2, and introductory text.",
+      "attribution": "Tandy Corporation, 1988 Tandy Computer Catalog and Software Reference Guide, printed p. 9.",
+      "rights_status": "approved as a limited historical excerpt under the operator's 2026-11-27 standing authorization; publisher rights retained; classification LicenseRef-Third-Party-Historical-Advertising",
+      "purpose": "Shows that the HX offer paired an MS-DOS ROM with a separately supplied Personal DeskMate 2 package, which the chronology contrasts with the SL's DeskMate-in-ROM claim.",
+      "excerpt_rationale": "The price block, the MS-DOS and Personal DeskMate 2 bullets, and the introductory paragraph must appear together for the claim to be checkable; the product photograph and the specifications block on the same leaf add no further evidence and are omitted."
+    },
+    {
+      "id": "history.software-listing-1988",
+      "figure_number": "2",
+      "status": "published-limited-excerpt",
+      "publication_path": "website/src/assets/reference/history/history.software-listing-1988.png",
+      "publication_sha256": "b352ca29dddecbc009f9b70ed678757674698e2ab04ea64a2ce13abb50a866c8",
+      "publication_bytes": 1218532,
+      "rights_classification": "LicenseRef-Third-Party-Historical-Advertising",
+      "source": "tandy-1988-catalog",
+      "source_url": "https://colorcomputerarchive.com/repo/Documents/Catalogs/Radio%20Shack/Tandy%20Computer%20Catalog%20and%20Software%20Reference%20Guide%20%281988%29%28Tandy%29.pdf#page=102",
+      "dpi": 200,
+      "panels": [
+        {
+          "page_index": 101,
+          "printed_page": "102",
+          "rect": [44, 4, 297, 465.5],
+          "label": "Color Computer DeskMate, DeskMate II (PC-compatible/2000), and Color Computer 3 DeskMate 3 entries",
+          "required_text": ["Color Computer", "PC-Compatible", "DeskMate"]
+        },
+        {
+          "page_index": 102,
+          "printed_page": "103",
+          "rect": [24, 544, 279, 666],
+          "label": "Tandy Personal DeskMate for the 1000 EX/1000, complete entry with both price lines",
+          "required_text": ["Personal DeskMate", "25-1165"]
+        },
+        {
+          "page_index": 102,
+          "printed_page": "103",
+          "rect": [24, 666, 279, 727.5],
+          "label": "Tandy Personal DeskMate 2 heading, platform line, and opening lines (continues at the head of the right column)",
+          "required_text": ["Personal DeskMate 2", "1000 HX/1000 TX"]
+        },
+        {
+          "page_index": 102,
+          "printed_page": "103",
+          "rect": [286, 4, 561, 93],
+          "label": "Personal DeskMate 2 continuation, both prices, and bundle note",
+          "required_text": ["25-1177", "Tandy 1000 HX/1000 TX"]
+        },
+        {
+          "page_index": 102,
+          "printed_page": "103",
+          "rect": [286, 425, 545, 576.5],
+          "label": "Tandy Professional DeskMate (PC-compatible), complete entry with price",
+          "required_text": ["Professional DeskMate", "25-1178"]
+        }
+      ],
+      "expected_width": 764,
+      "expected_height": 2555,
+      "dimension_tolerance_px": 2,
+      "caption": "Radio Shack offered several distinct DeskMate products in its 1988 catalog; these five excerpts are reproduced in printed reading order. The separately listed Color Computer DeskMate 3 belonged to a different platform family.",
+      "alt": "Catalog clippings of Tandy's 1988 software listings: Color Computer DeskMate, DeskMate II, Color Computer 3 DeskMate 3, Personal DeskMate, Personal DeskMate 2, and Professional DeskMate, with prices and supported computer families.",
+      "attribution": "Tandy Corporation, 1988 Tandy Computer Catalog and Software Reference Guide, printed pp. 102–103.",
+      "rights_status": "approved as a limited historical excerpt under the operator's 2026-11-27 standing authorization; publisher rights retained; classification LicenseRef-Third-Party-Historical-Advertising",
+      "purpose": "Documents the overlapping 1988 retail editions and preserves each product's platform qualifier, catalog number, and price so that the Color Computer and PC-compatible lines are not collapsed into one version sequence.",
+      "excerpt_rationale": "Five excerpts keep every DeskMate heading, platform qualifier, catalog number, and both price lines while excluding the unrelated Offix, Open Access, PFS, GEM, and Framework entries printed on the same leaves. Each panel boundary was rechecked at 600 dpi against the rendered ink: panel 2 begins above the Personal DeskMate heading and ends after its second price line; panel 3 begins in the blank gap before Personal DeskMate 2 and ends after its opening lines; panel 4 ends after the Personal DeskMate 2 price lines and before the next publisher's logo; panel 5 ends after the Professional DeskMate price and before the next entry's logo. Panel 1 starts to the right of page 101's vertical “INTEGRATED PRODUCTS” tab so that tab is neither clipped nor included; panels 2–3 begin at page 102's left text margin. Personal DeskMate 2 flows from the foot of the left column to the head of the right column, so it is kept as two panels in printed reading order rather than retouched or reflowed."
+    },
+    {
+      "id": "history.sl-rom-ad-1988",
+      "figure_number": "3",
+      "status": "published-limited-excerpt",
+      "publication_path": "website/src/assets/reference/history/history.sl-rom-ad-1988.png",
+      "publication_sha256": "7455b444ed15de8807e7155f950dcd30536898a195becc39109d1e7304c11b29",
+      "publication_bytes": 2286346,
+      "rights_classification": "LicenseRef-Third-Party-Historical-Advertising",
+      "source": "compute-1988-10",
+      "source_url": "https://colorcomputerarchive.com/repo/Documents/Magazines/Compute%20%28Clean%29/Compute_Issue_101_1988_Oct.pdf#page=27",
+      "dpi": 200,
+      "panels": [
+        {
+          "page_index": 26,
+          "printed_page": "25",
+          "rect": [0, 0, 550.5, 512],
+          "label": "Complete upper advertisement composition: Tandy header, “The New Tandy 1000 SL” headline, the built-in MS-DOS and DeskMate claim, and the computer photograph",
+          "required_text": ["1000 SL", "DeskMate", "MS-DOS"]
+        },
+        {
+          "page_index": 26,
+          "printed_page": "25",
+          "rect": [0, 512, 185, 603.5],
+          "label": "Complete opening body paragraph naming MS-DOS and DeskMate in ROM",
+          "required_text": ["MS-DOS", "DeskMate", "ROM"]
+        }
+      ],
+      "expected_width": 1529,
+      "expected_height": 1700,
+      "dimension_tolerance_px": 2,
+      "caption": "In 1988, Tandy advertised the 1000 SL with both MS-DOS and DeskMate in ROM—a distinct arrangement from the HX's DOS-in-ROM bundle. This composed excerpt keeps the advertisement's upper composition and opening copy.",
+      "alt": "Composed two-panel excerpt of a Radio Shack advertisement. The upper panel is headed “The New Tandy 1000 SL,” carries the claim “Built-in MS-DOS and DeskMate for the ultimate in ease of use,” and shows the computer photograph. The lower panel is the opening body copy stating that the Tandy 1000 SL features MS-DOS and DeskMate in ROM.",
+      "attribution": "Radio Shack advertisement, COMPUTE! Issue 101, October 1988, printed p. 25 (an unnumbered full-page advertisement page).",
+      "rights_status": "approved as a limited historical excerpt under the operator's 2026-11-27 standing authorization; publisher rights retained; classification LicenseRef-Third-Party-Historical-Advertising",
+      "purpose": "Shows DeskMate itself advertised as built into the computer's ROM, the counterpoint to the HX's DOS-in-ROM bundle with Personal DeskMate 2 on a separate disk.",
+      "excerpt_rationale": "The headline claim, the complete machine photograph, and the opening paragraphs that state the ROM arrangement are the evidence. The upper panel runs from the page edge to the blank gap below the keyboard, so the full-page background photograph is not clipped at the top or through the product image; the lower panel keeps only the complete left-column opening paragraph, which contains the ROM claim. The middle and right columns' continuing copy, the catalogue-request coupon, and the lower part of the advertisement are omitted, and the lower panel is not cut mid-sentence. The two panels are a composed excerpt, not a page facsimile, and are not retouched."
+    },
+    {
+      "id": "history.pdm2-manuals-photo",
+      "figure_number": "4",
+      "status": "external-link-only",
+      "external_url": "https://www.vintagecomputer.net/tandy/1000_tx/Tandy_25-1600_sn-511576_docs2.jpg",
+      "context_url": "https://www.vintagecomputer.net/tandy/1000_tx/",
+      "caption": "A surviving Personal DeskMate 2 manual beside a Tandy 1000 TX guide, photographed in a modern collection.",
+      "alt": "Two spiral-bound Tandy manuals photographed side by side, including the Personal DeskMate 2 cover.",
+      "attribution": "Photograph by Bill Degnan, vintagecomputer.net; the site states “All Images Copyright Degnan, Co. 1949 – 2026”.",
+      "rights_status": "external linked reference only; no reproduction basis recorded; do not copy into the repository or the website",
+      "purpose": "Shows what a buyer received as printed documentation with the Personal DeskMate 2 bundle, which catalog copy alone cannot show.",
+      "excerpt_rationale": "No local derivative is prepared. The photographer retains copyright, no permission has been sought, and a link with a credit serves the same contextual purpose without reproducing the photograph.",
+      "external_inspection": {
+        "inspected_copy_bytes": 378614,
+        "inspected_copy_sha256": "f84d81f44255496dcec77362ed6f48e8f1a8ac765fb9bb0d86712e2b2e2e5aeb",
+        "dimensions": [1600, 1200],
+        "observed": "Colour photograph of two spiral-bound manuals; the Personal DeskMate 2 cover faces the camera beside a Tandy 1000 TX guide."
+      }
+    }
+  ]
+}
