@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Evidence-based Tandy DeskMate format and application reference">
+  <meta name="description" content="{% if summary %}{{ summary | escape }}{% else %}Evidence-based Tandy DeskMate format and application reference{% endif %}">
   <title>{{ title | default("Reference") | escape }} | DeskMate Reference</title>
+  {% if canonicalUrl %}<link rel="canonical" href="{{ canonicalUrl }}">{% endif %}
   <link rel="stylesheet" href="{{ '/assets/vendor/bootstra386/css/bootstrap.min.css' | siteurl }}">
   <link rel="stylesheet" href="{{ '/assets/site-layout.css' | siteurl }}">
 </head>
@@ -20,19 +21,30 @@
       <nav class="navbar navbar-expand bg-body-tertiary" aria-label="Primary">
         <div class="navbar-nav flex-row flex-wrap">
           <a class="nav-link px-2" href="{{ '/' | siteurl }}">Home</a>
-          <a class="nav-link px-2" href="{{ '/start/' | siteurl }}">Discover DeskMate</a>
+          {% for section in navigation %}
+          <a class="nav-link px-2" href="{{ ('/' + section.hub.slug + '/') | siteurl }}"
+             {% if currentSection and currentSection.id == section.id %}aria-current="true"{% endif %}>{{ section.shortTitle | escape }}</a>
+          {% endfor %}
           <a class="nav-link px-2" href="{{ '/search/' | siteurl }}">Search</a>
-          <a class="nav-link px-2" href="#reference-sections">Browse topics</a>
           <a class="nav-link px-2" href="https://github.com/smartyhall/deskmate-formats">Source repository</a>
         </div>
       </nav>
     </header>
     <div class="row g-4">
       <main id="content" class="col-12 col-lg-9 order-1 order-lg-2" tabindex="-1">
-        {% if sourceRole %}
-        <div class="alert alert-info" role="note">
-          <strong>{{ sourceRole }}</strong>
-          <span>— Interpret source claims in the context of their date and verified evidence.</span>
+        {% if breadcrumbs %}
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            {% for crumb in breadcrumbs %}
+            <li>{% if crumb.href %}<a href="{{ crumb.href }}">{{ crumb.label | escape }}</a>{% elif loop.last %}<span aria-current="page">{{ crumb.label | escape }}</span>{% else %}<span>{{ crumb.label | escape }}</span>{% endif %}</li>
+            {% endfor %}
+          </ol>
+        </nav>
+        {% endif %}
+        {% if sourceRoleLabel %}
+        <div class="alert alert-info source-role" role="note">
+          <strong>{{ sourceRoleLabel | escape }}</strong>{% if sourceDateLabel %} <time datetime="{{ sourceDateIso }}">{{ sourceDateLabel | escape }}</time>{% endif %}
+          <span>— Read the claims here in the context of the source's date and the evidence behind it.</span>
         </div>
         {% endif %}
         <article class="document">{{ content | safe }}</article>
@@ -40,21 +52,37 @@
         <p class="source-note"><a href="{{ sourceLink }}">Review the source Markdown and history</a></p>
         {% endif %}
       </main>
-      <aside class="col-12 col-lg-3 order-2 order-lg-1" id="reference-sections" aria-label="Documentation index">
-        <nav aria-label="Reference sections">
-        {% for section in navigation %}
-          {% if section.pages.length %}
+      <aside class="col-12 col-lg-3 order-2 order-lg-1" id="reference-sections" aria-label="Section navigation">
+        <nav aria-label="Section contents">
+        {% if currentSection %}
+          <p class="sidebar-hub"><a href="{{ ('/' + currentSection.hub.slug + '/') | siteurl }}">{{ currentSection.shortTitle | escape }}</a></p>
+          {% for group in currentSection.subsections %}
           <details open>
-            <summary>{{ section.title }}</summary>
+            <summary>{{ group.title | escape }}</summary>
             <ul>
-            {% for item in section.pages %}
+            {% for item in group.pages %}
               <li><a href="{{ ('/' + item.slug + '/') | siteurl }}"
                {% if currentId == item.id %}aria-current="page"{% endif %}>{{ item.title }}</a></li>
             {% endfor %}
             </ul>
           </details>
-          {% endif %}
-        {% endfor %}
+          {% endfor %}
+          <p class="sidebar-heading">Other sections</p>
+          <ul class="sidebar-hubs">
+          {% for section in navigation %}
+            {% if section.id != currentSection.id %}
+            <li><a href="{{ ('/' + section.hub.slug + '/') | siteurl }}">{{ section.shortTitle | escape }}</a></li>
+            {% endif %}
+          {% endfor %}
+          </ul>
+        {% else %}
+          <p class="sidebar-heading">Sections</p>
+          <ul class="sidebar-hubs">
+          {% for section in navigation %}
+            <li><a href="{{ ('/' + section.hub.slug + '/') | siteurl }}">{{ section.shortTitle | escape }}</a></li>
+          {% endfor %}
+          </ul>
+        {% endif %}
         </nav>
       </aside>
     </div>
