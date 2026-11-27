@@ -149,6 +149,88 @@ class PublicationTests(Case):
         )
 
 
+class FingerprintTests(unittest.TestCase):
+    """A report receipt has to name the bytes it describes."""
+
+    def program(self, *blocks):
+        return FakeProgram([FakeBlock(name, start, data, initialized)
+                            for name, start, data, initialized in blocks])
+
+    def test_the_same_bytes_and_geometry_hash_the_same(self):
+        first = report._content_sha256(self.program(('CODE', 0x1000, b'\x90\x90', True)))
+        second = report._content_sha256(self.program(('CODE', 0x1000, b'\x90\x90', True)))
+        self.assertEqual(first, second)
+        self.assertRegex(first, r'^[0-9a-f]{64}$')
+
+    def test_one_differing_byte_changes_the_fingerprint(self):
+        first = report._content_sha256(self.program(('CODE', 0x1000, b'\x90\x90', True)))
+        second = report._content_sha256(self.program(('CODE', 0x1000, b'\x90\x91', True)))
+        self.assertNotEqual(first, second)
+
+    def test_block_geometry_is_part_of_the_fingerprint(self):
+        first = report._content_sha256(self.program(('CODE', 0x1000, b'\x90', True)))
+        second = report._content_sha256(self.program(('CODE', 0x2000, b'\x90', True)))
+        self.assertNotEqual(first, second)
+
+    def test_uninitialized_block_contents_are_not_hashed(self):
+        # An uninitialized block has no stored bytes to describe, so only its
+        # geometry counts; the same block in two projects must compare equal.
+        first = report._content_sha256(
+            self.program(('BSS', 0x2000, b'\x00\x00', False))
+        )
+        second = report._content_sha256(
+            self.program(('BSS', 0x2000, b'\xff\xff', False))
+        )
+        self.assertEqual(first, second)
+
+
+class FakeBlock:
+    def __init__(self, name, start, data, initialized=True):
+        self.name = name
+        self.start = start
+        self.data = data
+        self.initialized = initialized
+        self.size = len(data)
+
+    def getName(self):
+        return self.name
+
+    def getStart(self):
+        return self.start
+
+    def getEnd(self):
+        return self.start + self.size - 1
+
+    def getSize(self):
+        return self.size
+
+    def isInitialized(self):
+        return self.initialized
+
+
+class FakeMemory:
+    def __init__(self, blocks):
+        self.blocks = blocks
+
+    def getBlocks(self):
+        return list(self.blocks)
+
+    def getBytes(self, start, buffer):
+        for block in self.blocks:
+            if block.start == start:
+                buffer[:] = block.data
+                return len(block.data)
+        raise KeyError(start)
+
+
+class FakeProgram:
+    def __init__(self, blocks):
+        self.memory = FakeMemory(blocks)
+
+    def getMemory(self):
+        return self.memory
+
+
 class ParserTests(unittest.TestCase):
     def test_exit_codes_are_distinct(self):
         codes = [report.EXIT_OK, report.EXIT_USAGE, report.EXIT_NOT_FOUND,

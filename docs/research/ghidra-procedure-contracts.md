@@ -52,7 +52,7 @@ change a program, and does not create a project when one is missing.
 | Bounded decode | `tools/inspect_dosimage.py disasm` | image, span, max instructions | instruction bytes and text from an independent decoder | qualified when Capstone is installed; refuses otherwise |
 | Project reopen | `ghidra_dos_import.py --reopen-only` | project dir, project, program path, attempt id | program summary, project file listing | qualified |
 | Program fingerprint | inside `--summary` | program | `content_sha256` over block geometry and bytes | qualified |
-| Memory-block inventory | `ghidra_program_report.py --summary` | project, program | block names, ranges, sizes, flags | qualified |
+| Memory-block inventory | `ghidra_program_report.py --summary` | project, program | program path, content digest, block names, ranges, sizes, flags | qualified |
 | Function enumeration | `--functions` | limit | entry, name, size, thunk/external flags, calling convention | qualified |
 | Symbol inspection | `--symbols` | limit | address, name, type, namespace, primary, source | qualified (2026-11-27) |
 | Cross-reference enumeration | `--xrefs` | target address | from-address, reference type, source | qualified |
@@ -149,7 +149,12 @@ analysis results that no form-level comparison covers.
 | Stage exceeded its timeout | `import_timeout` or `reopen_failed`/`timeout`, exit 4 |
 | Autoanalysis raised | `analysis_failed`, exit 5 |
 | Reopen could not open or identify the program | `reopen_failed`, exit 6 |
-| Reopened program differs | `reopen_mismatch`, exit 7 |
+| Reopened program differs | `reopen_mismatch`, exit 7, with the differing field named |
+| Reopened payload names no attempt, a foreign attempt or another project | `reopen_malformed`, reported as `receipt_malformed`, exit 8 |
+| Reopened payload's `ok` is not the literal boolean true | `reopen_malformed`, as above |
+| Reopened payload carries no program identity or fingerprint | `reopen_malformed`, as above |
+| Reopened payload is unreadable | `reopen_failed`, reason `payload_unreadable` |
+| Reopen worker reports failure but exits zero | `reopen_failed` with `worker_exit_disagrees: true` |
 | Receipt failed validation, or claimed success with a nonzero exit | `receipt_malformed` / `receipt_inconsistent`, exit 8 |
 | Analysis finished but was not stored | `persistence_failed`, exit 9 |
 | Annotation committed but not saved | `not_persisted`, exit 6 |

@@ -143,6 +143,37 @@ def _size_histogram(sizes: list[int]) -> dict:
     return buckets
 
 
+def _content_sha256(program) -> str:
+    """Hash the program's byte content and block geometry.
+
+    A report has to name the bytes it describes. Names and counts can match
+    while the stored bytes differ, so this digest is what ties an observation to
+    a specific program rather than to a similarly shaped one. Uninitialized
+    blocks contribute their geometry only.
+    """
+    digest = hashlib.sha256()
+    for block in program.getMemory().getBlocks():
+        digest.update(
+            f"{block.getName()}|{block.getStart()}|{block.getEnd()}|"
+            f"{block.getSize()}|{int(bool(block.isInitialized()))}|".encode()
+        )
+        if block.isInitialized():
+            data = bytearray(block.getSize())
+            program.getMemory().getBytes(block.getStart(), data)
+            digest.update(hashlib.sha256(bytes(data)).digest())
+        else:
+            digest.update(b"uninitialized")
+    return digest.hexdigest()
+
+
+def _project_path(program) -> str | None:
+    """The program's path inside its project, if the API will tell us."""
+    try:
+        return str(program.getDomainFile().getPathname())
+    except Exception:  # noqa: BLE001 - identity is best effort, never fatal
+        return None
+
+
 def _summary(program) -> dict:
     functions = list(program.getFunctionManager().getFunctions(True))
     sizes = []
@@ -158,6 +189,8 @@ def _summary(program) -> dict:
             external += 1
     return {
         "name": program.getName(),
+        "project_path": _project_path(program),
+        "content_sha256": _content_sha256(program),
         "language_id": str(program.getLanguageID()),
         "compiler_spec": str(program.getCompilerSpec().getCompilerSpecID()),
         "image_base": str(program.getImageBase()),
