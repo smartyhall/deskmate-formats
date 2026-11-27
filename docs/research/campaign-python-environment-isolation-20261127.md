@@ -24,20 +24,132 @@ This campaign adds a reusable mechanism rather than a document:
   durable receipts, with a redacted publication projection;
 * `deskmate-campaign-env` — `inventory`, `provision`, `preflight`, `probe`,
   `identity` and `launch`;
-* `tests/portable/test_campaign_env.py` — 29 portable tests, including a
-  controlled two-checkout experiment;
+* `tests/portable/test_campaign_env.py` — 60 portable tests, including a
+  controlled two-checkout experiment, POSIX symlink-environment identity,
+  ownership and replacement controls, and package-content matching that does
+  not depend on where the package was found;
 * `tools/campaign_environment_experiment.py` — the laboratory experiment whose
   receipts this report quotes;
 * [campaign environment procedure](campaign-environment-procedure.md) — the
   reusable procedure and the Codex/Freebuff migration guide.
 
-**Measured result (one run, 108.6 s host wall):** a campaign environment's
-isolated child imports the campaign's own installation (source code digest
-identical to the checkout) even when `PYTHONPATH` names a conflicting
-implementation; a preflight inside the campaign returns `qualified` with exit
-status 0; a preflight from the shared interpreter, from a conflicting
-`PYTHONPATH`, and from a checkout with unreadable Git metadata all return a
-non-zero status and never `qualified`.
+**Measured result (one run; elapsed recorded in the receipt):** a campaign
+environment's isolated child imports the campaign's own installation (source
+code digest identical to the checkout) even when `PYTHONPATH` names a
+conflicting implementation; a preflight inside the campaign returns `qualified`
+with exit status 0 and eleven passing checks. Every refusal below returns a
+non-zero status and never `qualified`: a shared parent that merely *names* the
+campaign interpreter, a conflicting `PYTHONPATH`, the shared interpreter as
+parent, a checkout whose Git metadata cannot be read (`unknown`, exit 2), and a
+target directory this campaign cannot prove it owns.
+
+## Review corrections and what changed
+
+The independent review of this PR found five reliability defects in the first
+version of the mechanism. Each is corrected in code, covered by a regression
+test, and re-measured in the laboratory experiment.
+
+### 1. Interpreter identity
+
+The first version let an explicitly supplied interpreter stand in for the
+parent's identity: `preflight --interpreter` could make a shared parent look
+like a campaign interpreter. It also compared executables, which cannot
+distinguish environments on POSIX because every virtual environment's
+`bin/python` is a link to the base interpreter.
+
+* the running parent is now described by `identity.describe_running_interpreter()`
+  from its own `sys.executable` (unresolved), `sys.prefix` and the digest of the
+  path it was invoked as;
+* `--interpreter` is recorded as a **selection** in its own check. It can pass or
+  fail that check and can still be refused on the parent check;
+* environment identity is `sys.prefix` equality (`same_environment`); executable
+  path identity is only ever used to compare paths (`same_path`);
+* the child's own report carries its invocation path, its resolved path, its
+  prefix and the digest of the invoked executable, and all four are compared
+  with the record.
+
+Measured: with the shared interpreter as parent and `--interpreter` naming the
+campaign interpreter, `requested-interpreter` passes while `parent-interpreter`
+fails with `parent_prefix` equal to the shared prefix, and the verdict is
+`unqualified`. Two symlink-based POSIX environments share one executable inode
+and one real path, and are still distinguished by prefix and site-packages
+(`SymlinkedEnvironmentIdentityTest`); that test runs on the Ubuntu CI legs and
+skips where the host refuses to create symbolic links, as this Windows guest
+does.
+
+### 2. Package and source identity
+
+`parent-origin` and `observed-origin` used to accept a package merely because it
+was found inside the expected `site-packages`. They now require a positive
+content match: the parent's and the child's Python digest must equal the digest
+the provisioning receipt recorded, whatever the location. Location is still
+recorded, as an observation.
+
+A receipt is now bound to its `schema_version`, `kind`, campaign, checkout,
+package, target layout and site-packages containment before any of it is
+believed; a bound record that was not `qualified` is refused outright. The
+checkout must be the root of its own Git repository: `source_identity` reports
+`enclosing-repository` for a subdirectory of another checkout and the
+`checkout-root` check fails, instead of silently inheriting the enclosing
+repository's `HEAD`. Provisioning compares the source revision and tree digest
+before and after installation and refuses if either changed, and
+`source_drift` distinguishes "changed" from "could not be established", so an
+unavailable digest can never be read as equality.
+
+Measured: an edited (uncommitted) campaign package is reported as
+`source-content`; committing it adds `source-revision`; hiding `.git` yields
+`unknown` with exit status 2, never `qualified`.
+
+### 3. Environment ownership and replacement
+
+The first version treated an existing directory without a record as scratch
+space. A missing record proves nothing about ownership, so the target path is now
+classified without following redirects: `absent`, `directory`, `symlink`,
+`junction`, `file` or `other`. An existing directory is used only when it holds
+an `environment.json` that binds to this campaign, checkout, package and layout,
+an interpreter file, and a `venv` directory; anything else is refused with a
+specific code (`existing-directory-without-valid-record`,
+`existing-directory-with-foreign-record`, `existing-record-without-interpreter`,
+`existing-redirect-at-target`). On Windows a junction is not reported by
+`os.path.islink`, so `FILE_ATTRIBUTE_REPARSE_POINT` and the reparse tag are read
+directly.
+
+Replacement is staged, never in place: the new environment is built under
+`.staging-<campaign>-<uuid>` inside the owned root, validated, and swapped in
+only after the previous environment has been renamed aside; the retired
+environment is deleted afterwards. An existing installation is never edited, so
+stale installed modules cannot survive a replacement. The site-packages of the
+new environment must lie inside it, in the staged copy and after the swap.
+
+Measured, on disposable synthetic directories only: the unowned directory is
+refused and its content is preserved; the junction is refused; an owned
+replacement reports `replaced-owned` and the stale file planted in the old
+environment is absent from the new one.
+
+### 4. Installation boundaries
+
+Build isolation downloads a build backend, so it is now opt-in:
+`install_source(..., allow_build_isolation=False)` makes exactly one attempt with
+`--no-build-isolation` and records the failure; only
+`provision --allow-build-isolation` reaches the network, and every attempt
+records its mode plus `build_isolation_explicitly_enabled`. The historical run's
+`install_mode: build-isolation` was produced that way deliberately and is
+reproduced explicitly in the new experiment; it is not presented as the default.
+The default provision on this host is measured as refusing
+(`installation-failed`) with nothing created at the target path. The mechanism
+still writes only below its own root: never the bootstrap interpreter's
+site-packages, and never another campaign's environment.
+
+### 5. Evidence and licensing
+
+`docs/evidence/agent-usage/` (provider-neutral) now carries this campaign's
+Freebuff receipts. Nothing is invented: the desktop agent exposes no model
+identity, context size or quota, so every such field is `null` with an explicit
+note and `measurements` is an empty list rather than a zero. Licensing was
+checked against [LICENSING.md](../../LICENSING.md): the new source and tests are
+`GPL-3.0-or-later`, the reports, procedure and evidence JSON are
+`GPL-3.0-or-later OR CC-BY-SA-4.0`, and every new file has a matching REUSE
+sidecar.
 
 ## Host inventory (measured, 2026-11-27)
 
@@ -132,31 +244,51 @@ Both refusals were measured on a provisioned campaign environment:
 | --- | --- | --- | --- |
 | Source file edited, not committed | `unqualified` | `source-content` | 1 |
 | Same edit committed | `unqualified` | `source-revision`, `source-content` | 1 |
-| `.git` hidden from the checkout | `unknown` | `source-revision` | 2 |
+| `.git` hidden from the checkout | `unknown` | `checkout-root`, `source-revision` | 2 |
 
 With the metadata hidden, `source_identity` returned `state: not-a-repository`,
-`failure: rev-parse-failed` and `revision: null`, the verdict was `unknown`, and
-`measurement_allowed` was false. Restoring `.git` restored `state: git`. An
-unreadable identity is never reported as a clean measurement.
+`failure: rev-parse-failed` and `revision: null`; the verdict was `unknown`,
+`measurement_allowed` was false, and the two unavailable-evidence checks were
+reported as `unknown` rather than as mismatches. Restoring `.git` restored
+`state: git`. An unreadable identity is never reported as a clean measurement,
+and it is not reported as a contradiction either: the exit statuses 1 and 2 mean
+different things to a caller.
+
+A subdirectory of this repository is refused the same way a second, independent
+campaign checkout is accepted: `state: enclosing-repository`,
+`failure: checkout-not-repository-root`, `revision: null`. `--accept-enclosing`
+exists only for a documented synthetic layout, and every synthetic checkout in
+the experiment therefore gets its own repository.
 
 ## End-to-end qualification of this repository
 
 | Preflight | Verdict | Reasons | Exit |
 | --- | --- | --- | --- |
-| Inside the campaign environment, clean environment | `qualified` | — (7 checks pass) | 0 |
-| Campaign interpreter, `PYTHONPATH` = conflicting copy | `unqualified` | `parent-origin` | 1 |
-| Shared interpreter | `unqualified` | `interpreter` | 1 |
+| Inside the campaign environment | `qualified` | — (11 checks pass) | 0 |
+| Campaign interpreter, `PYTHONPATH` = conflicting copy | `unqualified` | `parent-package` | 1 |
+| Shared interpreter as parent | `unqualified` | `parent-interpreter` | 1 |
+| Shared parent naming the campaign interpreter | `unqualified` | `parent-interpreter` (the selection passes) | 1 |
 
-The eight checks are `environment-record`, `interpreter`, `parent-origin`,
-`source-revision`, `source-content`, `observed-origin`, `observed-content` and
-`child-isolation`; all eight passed inside the campaign environment. Observed
-content matched the provisioning receipt exactly: `python_digest` and bundle
-digest identical for source and install.
+The eleven checks are `environment-record`, `checkout-root`,
+`parent-interpreter`, `requested-interpreter`, `parent-package`,
+`source-revision`, `source-content`, `child-interpreter`, `observed-origin`,
+`observed-content` and `child-isolation`; all eleven passed inside the campaign
+environment. Observed content matched the provisioning receipt exactly:
+`python_digest` and bundle digest identical for source and install.
 
-One rule changed because of a measurement: `parent-origin` compares **code
-content**, not only location. A parent running with `PYTHONPATH` pointing at the
-same checkout is running the campaign's bytes and is accepted; a parent
-importing the shared wheel is refused even when its interpreter is right.
+Two rules changed because of a measurement. `parent-package` and
+`observed-origin` compare **code content**, not only location: a parent running
+with `PYTHONPATH` pointing at the same checkout is running the campaign's bytes
+and is accepted, and a parent importing the shared wheel is refused even when
+its interpreter is right. And a requested interpreter is a selection: the last
+table row shows the exact case the review raised, where the shared parent names
+the campaign interpreter and is still refused on its own identity.
+
+The child checks are strict about the observed child as well: its prefix, its
+invocation path and its executable digest must all match the receipt, and its
+package content must match the digest the provisioning probe recorded. A child
+that quietly ran the base interpreter, or another environment's interpreter,
+cannot pass them.
 
 ## Limitations
 
@@ -168,11 +300,22 @@ importing the shared wheel is refused even when its interpreter is right.
   checkout when it runs. A long campaign must re-run it at its checkpoint; it
   cannot prove what an earlier step executed.
 * **Build backend availability.** `setuptools` and `wheel` are absent from the
-  shared interpreter, so the first provision falls back to build isolation,
-  which needs network for the declared backend. The measured cost of one real
-  provision on this host was 25.4 s cold; the mechanism records which mode was
-  used (`install_mode`) instead of hiding the difference. A shared tools
-  environment makes this offline; see the procedure.
+  shared interpreter, so the default offline provision fails here and the
+  network-capable mode has to be requested explicitly
+  (`provision --allow-build-isolation`). The measured cost of one real provision
+  on this host was 25.4 s cold. Every attempt records its mode (`install_mode`)
+  and whether the opt-in was given, so a receipt can never suggest that a
+  network fetch was the default. A shared tools environment makes provisioning
+  offline; see the procedure.
+* **Ownership is refused, not guessed.** An existing directory without a valid,
+  bound record is never reused or overwritten, and neither is a symbolic link or
+  a Windows junction at the target path. A replacement builds a complete new
+  environment under a staging path and swaps it in; the previous environment is
+  renamed aside and deleted. Recovering a campaign whose record was lost means
+  deleting that environment deliberately, not letting a provision adopt it.
+* **Staging needs the same filesystem.** The swap is a directory rename inside
+  the campaign root, so `--root` must not span filesystems; otherwise the
+  replacement fails and the previous environment is restored.
 * **`pip --target` installation.** The environment is created without
   `ensurepip` and populated through the bootstrap interpreter's `pip`. That is
   fast and deterministic but does not create console scripts inside the
@@ -186,11 +329,13 @@ importing the shared wheel is refused even when its interpreter is right.
   baseline; that belongs to issue #147.
 * **Linux coverage comes from CI.** The portable tests run on Windows and
   Ubuntu, Python 3.13 and 3.14, but the laboratory experiment above was executed
-  only on the Windows guest.
+  only on the Windows guest. The symlinked-environment identity test is the
+  exception in kind: it exercises real POSIX environments, on the Ubuntu legs.
 * **`local-results` inheritance.** A synthetic checkout created inside a Git
   checkout inherits the enclosing repository's `HEAD`; that was found here and
-  is why each synthetic checkout gets its own repository. Any campaign that
-  copies a tree into a worktree should expect the same.
+  is why each synthetic checkout gets its own repository. The mechanism now
+  refuses such a checkout (`enclosing-repository`) instead of attributing the
+  enclosing revision to it.
 
 ## Integration recommendations
 
@@ -234,20 +379,30 @@ python -m deskmate_formats.campaign_env.cli inventory --out local-results/invent
 python tools/campaign_environment_experiment.py --output local-results/experiment-20261127
 ```
 
-The experiment writes `01-inventory.json`, `02-isolation.json`,
-`03-qualification.json`, `04-summary.json`, `05-drift.json`,
-`06-metadata-failure.json`, `07-inventory-after.json` and a redacted
+The experiment writes `01-inventory.json`,
+`02-installation-boundary.json`, `03-isolation.json`, `04-qualification.json`,
+`05-ownership.json`, `06-drift.json`, `07-metadata-failure.json`,
+`08-inventory-after.json`, `09-summary.json` and a redacted
 `public-summary.json` under `local-results/` (Git-ignored). Only the redacted
 projection is published, as
-[`docs/evidence/campaign-python-environment-20261127.json`](../evidence/campaign-python-environment-20261127.json).
+[`docs/evidence/campaign-python-environment-20261127-corrections.json`](../evidence/campaign-python-environment-20261127-corrections.json).
 
 ## Evidence and provenance
 
-* [Redacted experiment receipt](../evidence/campaign-python-environment-20261127.json) —
-  inventory counts, launch-site audit, launch matrix, drift, metadata failure and
-  the three qualification verdicts.
+* [Redacted corrected-run receipt](../evidence/campaign-python-environment-20261127-corrections.json) —
+  inventory counts, launch-site audit, launch matrix, the installation boundary,
+  ownership refusals and replacement, drift, metadata failure, and the four
+  qualification verdicts.
+* [Redacted first-run receipt](../evidence/campaign-python-environment-20261127.json) —
+  preserved unchanged: it is the measurement that demonstrated the
+  source-attribution defect and the historical
+  `install_mode: build-isolation`. Its field names describe that earlier version
+  of the mechanism.
 * Private raw receipts (absolute paths, pip logs) remain under the campaign
-  checkout's `local-results/experiment-20261127/`, outside Git.
+  checkout's `local-results/experiment-20261127/` and
+  `local-results/experiment-corrections/`, outside Git.
+* Usage: [Freebuff receipts](../evidence/agent-usage/) in the provider-neutral
+  ledger — unknown model, context and quota are recorded as `null`, not zero.
 * Method: `tools/campaign_environment_experiment.py` on 2026-11-27, one run,
   CPython 3.13.17 on the Windows 10 laboratory guest; no emulator, model turn or
   unattended dispatch.

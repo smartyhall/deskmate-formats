@@ -1,6 +1,6 @@
 """Controlled experiment: campaign isolation with a conflicting installation.
 
-Three things are demonstrated on the laboratory host, using the shipped
+Five things are demonstrated on the laboratory host, using the shipped
 mechanism rather than a parallel copy of it:
 
 E1  the host picture — interpreters, the package each one resolves, virtual
@@ -14,8 +14,17 @@ E2  two synthetic source checkouts whose implementations carry distinguishable
     the experiment has not shown that isolation is what does the work;
 E3  this repository qualified end to end: one campaign environment, a preflight
     run inside it (qualified), a preflight run from the shared interpreter
-    (unqualified, interpreter and parent-origin mismatch), and a checkout whose
-    Git metadata cannot be read (unknown, never qualified).
+    (unqualified, interpreter mismatch), a preflight whose parent is the shared
+    interpreter and which merely *names* the campaign interpreter (unqualified:
+    a request is not evidence about the parent), and one with a conflicting
+    ``PYTHONPATH`` (unqualified on package identity);
+E4  environment ownership: an existing directory this campaign cannot prove it
+    owns, a Windows junction at the target path, and an owned replacement that
+    must not leave stale installed files behind;
+E5  the installation boundary: the default provision of a campaign on this host
+    has no build backend available and fails offline, and only an explicit
+    ``allow_build_isolation=True`` reaches the network for one.  The historical
+    run's build-isolation mode is reproduced that way and is never the default.
 
 Each synthetic checkout is a copy of ``src/deskmate_formats`` with a
 ``CAMPAIGN_MARKER`` line appended to the campaign package, so the marker travels
@@ -26,8 +35,8 @@ All raw output, including absolute paths and pip logs, is written under
 that is what the report and evidence file quote.
 
 No emulator, model turn or unattended dispatch is involved.  The only network
-access is pip fetching this project's declared build backend when the bootstrap
-interpreter cannot build offline.
+access is pip fetching this project's declared build backend, and only in the
+explicitly opted-in attempts.
 """
 
 from __future__ import annotations
@@ -124,7 +133,7 @@ def initialise_repository(checkout: Path, *, message: str = "synthetic campaign 
     A directory created inside a Git checkout inherits the enclosing
     repository's ``HEAD``, so a copy that is not a repository itself would be
     provisioned against the experiment's own revision.  That is a real provenance
-    hazard, not only an experiment detail.
+    hazard, not only an experiment detail, and the mechanism now refuses it.
     """
     _git(checkout, "init", "-q")
     _git(checkout, "add", "--", ".")
@@ -171,6 +180,29 @@ def host_inventory(repo: Path, root: Path) -> dict:
     return record
 
 
+def offline_attempt(repo: Path, root: Path, bootstrap: Path) -> dict:
+    """The default provision on a host without a build backend must fail, not fetch."""
+    checkout = marked_copy(repo, root / "offline", "offline-checkout-0", "0.0.0")
+    try:
+        record = environment.provision(checkout, "offline", root=root / "envs", python=bootstrap)
+    except environment.CampaignEnvironmentError as error:
+        return {
+            "outcome": "refused",
+            "reason": error.code,
+            "detail": error.detail,
+            "build_isolation_enabled": False,
+            "target_created": environment.path_kind(
+                environment.layout(checkout, "offline", root=root / "envs")["directory"]),
+        }
+    return {
+        "outcome": "installed-offline",
+        "reason": None,
+        "detail": None,
+        "build_isolation_enabled": record["installation"]["build_isolation_explicitly_enabled"],
+        "install_mode": record["installation"]["install_mode"],
+    }
+
+
 def isolation_experiment(repo: Path, root: Path, bootstrap: Path) -> dict:
     """Two marked checkouts, one conflicting installation, the full launch matrix."""
     neutral = root / "neutral"
@@ -179,9 +211,14 @@ def isolation_experiment(repo: Path, root: Path, bootstrap: Path) -> dict:
     campaigns: dict[str, dict] = {}
     for label in ("alpha", "beta"):
         checkout = marked_copy(repo, root / label, MARKERS[label], f"0.0.{1 if label == 'alpha' else 2}")
-        record = environment.provision(checkout, label, root=root / "envs", python=bootstrap)
+        # Explicitly opted in: this host has no build backend for the default
+        # offline mode, and the historical run used the network-capable mode.
+        record = environment.provision(checkout, label, root=root / "envs", python=bootstrap,
+                                       allow_build_isolation=True)
         if record["verdict"] != "qualified":
             raise ExperimentError(f"{label} environment is not qualified: {record['reasons']}")
+        if record["installation"]["build_isolation_explicitly_enabled"] is not True:
+            raise ExperimentError(f"{label} provision does not record the explicit opt-in")
         campaigns[label] = {"checkout": checkout, "record": record,
                             "interpreter": Path(str(record["interpreter"]))}
 
@@ -231,7 +268,8 @@ def isolation_experiment(repo: Path, root: Path, bootstrap: Path) -> dict:
 
 
 def campaign_preflight(interpreter: Path, repo: Path, root: Path, *, campaign: str = CAMPAIGN,
-                       pythonpath: "Path | None" = None) -> "tuple[dict, int]":
+                       pythonpath: "Path | None" = None,
+                       requested_interpreter: "Path | None" = None) -> "tuple[dict, int]":
     """Run the shipped preflight as a child of one explicit interpreter."""
     env = dict(os.environ) | {"PYTHONDONTWRITEBYTECODE": "1"}
     env.pop("PYTHONPATH", None)
@@ -239,36 +277,122 @@ def campaign_preflight(interpreter: Path, repo: Path, root: Path, *, campaign: s
         env["PYTHONPATH"] = str(pythonpath)
     argv = [str(interpreter), "-m", "deskmate_formats.campaign_env.cli", "preflight",
             "--campaign", campaign, "--root", str(root)]
-    completed = subprocess.run(argv, cwd=str(repo), capture_output=True, text=True, env=env, timeout=600)
+    if requested_interpreter is not None:
+        argv += ["--interpreter", str(requested_interpreter)]
+    completed = subprocess.run(argv, cwd=str(repo), capture_output=True, text=True, env=env, timeout=900)
     if not completed.stdout:
         raise ExperimentError(f"campaign preflight did not run: {completed.stderr[-400:]}")
     return json.loads(completed.stdout), completed.returncode
 
 
 def qualification_experiment(repo: Path, root: Path, bootstrap: Path, shared: Path) -> dict:
-    """Qualify this repository, then show three independent ways it is refused."""
-    record = environment.provision(repo, CAMPAIGN, root=root, python=bootstrap)
+    """Qualify this repository, then show four independent ways it is refused."""
+    # This campaign's own environment may already exist from an earlier run of
+    # this experiment; replacing it is explicit and staged.
+    record = environment.provision(repo, CAMPAIGN, root=root, python=bootstrap,
+                                   allow_build_isolation=True, replace=True)
     interpreter = Path(str(record["interpreter"]))
     qualified, qualified_status = campaign_preflight(interpreter, repo, root)
     conflicted, conflicted_status = campaign_preflight(interpreter, repo, root,
                                                        pythonpath=shared / "src")
     # The shared interpreter is whichever interpreter runs this experiment.
     from_shared = preflight.preflight(repo, campaign=CAMPAIGN, root=root)
+    # A request naming the campaign interpreter, made by the shared parent: the
+    # review's exact case, and the reason a request is never parent evidence.
+    selection, selection_status = campaign_preflight(
+        bootstrap, repo, root, pythonpath=repo / "src", requested_interpreter=interpreter)
     if qualified["verdict"] != preflight.QUALIFIED or qualified_status != 0:
         raise ExperimentError(f"campaign preflight is {qualified['verdict']}: {qualified['reasons']}")
-    if conflicted["verdict"] != preflight.UNQUALIFIED or "parent-origin" not in conflicted["reasons"]:
-        raise ExperimentError("a conflicting PYTHONPATH was not refused on parent identity")
-    if from_shared["verdict"] != preflight.UNQUALIFIED or "interpreter" not in from_shared["reasons"]:
+    if conflicted["verdict"] != preflight.UNQUALIFIED or "parent-package" not in conflicted["reasons"]:
+        raise ExperimentError("a conflicting PYTHONPATH was not refused on package identity")
+    if from_shared["verdict"] != preflight.UNQUALIFIED or "parent-interpreter" not in from_shared["reasons"]:
         raise ExperimentError("preflight from the shared interpreter did not fail on the interpreter")
+    selection_checks = {entry["check"]: entry for entry in selection["checks"]}
+    if selection["verdict"] != preflight.UNQUALIFIED:
+        raise ExperimentError("a shared parent that merely named the campaign interpreter qualified")
+    if "parent-interpreter" not in selection["reasons"]:
+        raise ExperimentError("the shared parent was accepted as the campaign interpreter")
+    if selection_checks.get("requested-interpreter", {}).get("state") != preflight._PASS:
+        raise ExperimentError("the requested interpreter was not recorded as an accepted selection")
     return {
         "kind": "campaign-env-qualification",
         "provision": record,
         "preflight_inside_environment": qualified,
         "preflight_with_conflicting_pythonpath": conflicted,
         "preflight_from_shared_interpreter": from_shared,
+        "preflight_shared_parent_naming_the_environment": selection,
         "exit_status_inside": qualified_status,
         "exit_status_conflicted": conflicted_status,
         "exit_status_from_shared": preflight.exit_code(from_shared["verdict"]),
+        "exit_status_selection": selection_status,
+    }
+
+
+def ownership_experiment(repo: Path, root: Path, bootstrap: Path) -> dict:
+    """Refuse what cannot be proven owned; replace what can, without stale files."""
+    checkout = marked_copy(repo, root / "ownership", "ownership-checkout-3", "0.0.3")
+    envs = root / "envs"
+    unowned_target = environment.layout(checkout, "squatter", root=envs)
+    Path(str(unowned_target["directory"])).mkdir(parents=True)
+    (Path(str(unowned_target["directory"])) / "someone-elses-notes.txt").write_text(
+        "not this campaign's directory\n", encoding="utf-8")
+    try:
+        environment.provision(checkout, "squatter", root=envs, python=bootstrap,
+                              allow_build_isolation=True)
+    except environment.CampaignEnvironmentError as error:
+        unowned = {"reason": error.code, "detail": error.detail}
+    else:
+        raise ExperimentError("an existing directory without a record was accepted")
+    preserved = (Path(str(unowned_target["directory"])) / "someone-elses-notes.txt").is_file()
+
+    junction: dict[str, object] = {"applicable": False}
+    if os.name == "nt":
+        elsewhere = root / "junction-destination"
+        elsewhere.mkdir()
+        junction_target = environment.layout(checkout, "junction-campaign", root=envs)
+        Path(str(junction_target["root"])).mkdir(parents=True, exist_ok=True)
+        completed = subprocess.run(
+            ["cmd", "/c", "mklink", "/J", str(junction_target["directory"]), str(elsewhere)],
+            capture_output=True, text=True,
+        )
+        if completed.returncode == 0:
+            try:
+                environment.provision(checkout, "junction-campaign", root=envs, python=bootstrap,
+                                      allow_build_isolation=True)
+            except environment.CampaignEnvironmentError as error:
+                junction = {"applicable": True, "kind": environment.path_kind(junction_target["directory"]),
+                            "reason": error.code, "detail": error.detail}
+            else:
+                raise ExperimentError("a junction at the target path was accepted")
+        else:
+            junction = {"applicable": False, "detail": "junction creation was refused"}
+
+    first = environment.provision(checkout, "replaceable", root=envs, python=bootstrap,
+                                  allow_build_isolation=True)
+    stale = Path(str(first["venv"])) / "stale-installed-module.py"
+    stale.write_text("STALE = True\n", encoding="utf-8")
+    second = environment.provision(checkout, "replaceable", root=envs, python=bootstrap,
+                                   allow_build_isolation=True, replace=True)
+    replacement = {
+        "first_ownership": first["ownership"]["mode"],
+        "second_ownership": second["ownership"]["mode"],
+        "stale_file_present_before": True,
+        "stale_file_present_after": stale.is_file(),
+        "retired_path_recorded": bool(second["ownership"]["retired_path"]),
+        "verdict": second["verdict"],
+    }
+    if replacement["stale_file_present_after"]:
+        raise ExperimentError("a replacement left a stale file in the new environment")
+    if replacement["second_ownership"] != "replaced-owned":
+        raise ExperimentError("a replacement was not recorded as replacing an owned environment")
+    if replacement["verdict"] != "qualified":
+        raise ExperimentError("the replacement environment did not qualify")
+    return {
+        "kind": "campaign-env-ownership",
+        "unowned_directory": unowned,
+        "unowned_directory_content_preserved": preserved,
+        "junction": junction,
+        "replacement": replacement,
     }
 
 
@@ -337,8 +461,9 @@ def drift_experiment(campaigns: dict, root: Path, campaign: str = "alpha") -> di
     }
 
 
-def summarise(host: dict, isolation: dict, qualification: dict, drift: dict, metadata: dict,
-              elapsed: float) -> dict:
+def summarise(host: dict, isolation: dict, offline: dict, qualification: dict, ownership: dict,
+              drift: dict, metadata: dict, elapsed: float) -> dict:
+    record_of = lambda label: isolation["campaigns"][label]["record"]  # noqa: E731
     return {
         "kind": "campaign-env-experiment-summary",
         "conducted_utc": identity.utc_now(),
@@ -362,6 +487,18 @@ def summarise(host: dict, isolation: dict, qualification: dict, drift: dict, met
             "launch_sites": host["launch_sites"],
             "launcher": host["launcher"],
         },
+        "installation_boundary": {
+            "default_provision_outcome": offline["outcome"],
+            "default_provision_reason": offline["reason"],
+            "default_provision_detail": offline["detail"],
+            "default_provision_build_isolation": offline["build_isolation_enabled"],
+            "default_provision_target_kind": offline["target_created"],
+            "campaign_install_modes": {label: record_of(label)["installation"]["install_mode"]
+                                       for label in isolation["campaigns"]},
+            "campaign_build_isolation_explicit": {
+                label: record_of(label)["installation"]["build_isolation_explicitly_enabled"]
+                for label in isolation["campaigns"]},
+        },
         "isolation": {
             "markers": isolation["markers"],
             "shared_conflict_marker": isolation["shared_conflict_marker"],
@@ -382,19 +519,16 @@ def summarise(host: dict, isolation: dict, qualification: dict, drift: dict, met
                 }
                 for label, data in isolation["observations"].items()
             },
-            "environment_verdicts": {label: isolation["campaigns"][label]["record"]["verdict"]
+            "environment_verdicts": {label: record_of(label)["verdict"]
                                      for label in isolation["campaigns"]},
-            "install_modes": {label: isolation["campaigns"][label]["record"]["installation"]["install_mode"]
-                              for label in isolation["campaigns"]},
-            "source_tree_digests": {
-                label: isolation["campaigns"][label]["record"]["source_package"]["tree_digest"]
-                for label in isolation["campaigns"]
-            },
-            "source_revisions": {
-                label: isolation["campaigns"][label]["record"]["source"]["revision"]
-                for label in isolation["campaigns"]
-            },
+            "ownership_modes": {label: record_of(label)["ownership"]["mode"]
+                                for label in isolation["campaigns"]},
+            "source_tree_digests": {label: record_of(label)["source_package"]["tree_digest"]
+                                    for label in isolation["campaigns"]},
+            "source_revisions": {label: record_of(label)["source_before"]["revision"]
+                                 for label in isolation["campaigns"]},
         },
+        "ownership": ownership,
         "drift": {
             "campaign": drift["campaign"],
             "after_edit_verdict": drift["after_edit"]["verdict"],
@@ -425,12 +559,18 @@ def summarise(host: dict, isolation: dict, qualification: dict, drift: dict, met
             "conflicted_reasons": qualification["preflight_with_conflicting_pythonpath"]["reasons"],
             "outside_verdict": qualification["preflight_from_shared_interpreter"]["verdict"],
             "outside_reasons": qualification["preflight_from_shared_interpreter"]["reasons"],
+            "selection_verdict": qualification["preflight_shared_parent_naming_the_environment"]["verdict"],
+            "selection_reasons":
+                qualification["preflight_shared_parent_naming_the_environment"]["reasons"],
             "exit_statuses": {"inside": qualification["exit_status_inside"],
                               "conflicted": qualification["exit_status_conflicted"],
-                              "outside": qualification["exit_status_from_shared"]},
+                              "outside": qualification["exit_status_from_shared"],
+                              "selection": qualification["exit_status_selection"]},
             "checks_inside": qualification["preflight_inside_environment"]["checks"],
             "checks_conflicted": qualification["preflight_with_conflicting_pythonpath"]["checks"],
             "checks_outside": qualification["preflight_from_shared_interpreter"]["checks"],
+            "checks_selection":
+                qualification["preflight_shared_parent_naming_the_environment"]["checks"],
         },
     }
 
@@ -449,26 +589,31 @@ def run(repo: Path, output: Path, bootstrap: Path) -> dict:
 
     host = host_inventory(repo, experiment_root)
     receipts.write(output / "01-inventory.json", host)
+    offline = offline_attempt(repo, experiment_root, bootstrap)
+    receipts.write(output / "02-installation-boundary.json", offline)
     isolation = isolation_experiment(repo, experiment_root, bootstrap)
-    receipts.write(output / "02-isolation.json", isolation)
+    receipts.write(output / "03-isolation.json", isolation)
     qualification = qualification_experiment(repo, environment.default_root(repo), bootstrap,
                                              experiment_root / "shared")
-    receipts.write(output / "03-qualification.json", qualification)
+    receipts.write(output / "04-qualification.json", qualification)
+    ownership = ownership_experiment(repo, experiment_root, bootstrap)
+    receipts.write(output / "05-ownership.json", ownership)
     drift = drift_experiment(isolation["campaigns"], experiment_root / "envs")
-    receipts.write(output / "05-drift.json", drift)
+    receipts.write(output / "06-drift.json", drift)
     metadata = metadata_failure_experiment(isolation["campaigns"], experiment_root / "envs")
-    receipts.write(output / "06-metadata-failure.json", metadata)
+    receipts.write(output / "07-metadata-failure.json", metadata)
     after = host_inventory(repo, experiment_root)
-    receipts.write(output / "07-inventory-after.json", after)
+    receipts.write(output / "08-inventory-after.json", after)
 
-    summary = summarise(host, isolation, qualification, drift, metadata, time.time() - started)
+    summary = summarise(host, isolation, offline, qualification, ownership, drift, metadata,
+                        time.time() - started)
     summary["experiment_root"] = str(experiment_root)
     summary["host"]["after"] = {
         "counts": after["counts"],
         "environments": [{"path": entry.get("path"), "package_origin": entry.get("package_origin")}
                          for entry in after["environments"]],
     }
-    receipts.write(output / "04-summary.json", summary)
+    receipts.write(output / "09-summary.json", summary)
     public = receipts.public(summary, roots=(str(repo), str(output), str(environment.default_root(repo))))
     receipts.write(output / "public-summary.json", public)
     return {"output": str(output), "public": public}

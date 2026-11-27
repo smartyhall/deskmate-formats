@@ -70,9 +70,34 @@ python -m deskmate_formats.campaign_env.cli provision `
 
 This creates `local-results\campaign-envs\<campaign>\venv`, installs **this
 checkout** into it, runs the isolated probe inside the new environment, and
-writes `environment.json`. It refuses to run unless the checkout has a readable
-Git revision, and refuses to replace an existing environment without
-`--replace`.
+writes `environment.json`. It refuses to run unless the checkout is the root of
+its own Git repository with a readable revision, and refuses to replace an
+existing environment without `--replace`.
+
+**Installation is offline by default.** `setuptools` and `wheel` are absent from
+this host's system interpreter, so a provision of this project fails with
+`installation-failed` unless the build backend is available. Install the tools
+environment above, or opt into the network-capable fallback explicitly:
+
+```powershell
+python -m deskmate_formats.campaign_env.cli provision --campaign <campaign> --python $tools --allow-build-isolation
+```
+
+`--allow-build-isolation` is recorded in the receipt
+(`installation.install_mode`, `build_isolation_explicitly_enabled`), and it is
+never implied. Try the offline mode first; a network fetch should be a decision,
+not a surprise.
+
+**Ownership is checked before anything is written.** An existing directory at
+the target path is used only if it holds an `environment.json` that binds to
+this campaign, checkout, package and layout, with an interpreter and a `venv`
+inside. Otherwise the provision refuses with one of
+`existing-directory-without-valid-record`, `existing-directory-with-foreign-record`,
+`existing-record-without-interpreter` or `existing-redirect-at-target` — a
+symbolic link or Windows junction is never followed. Replacing an owned
+environment builds a complete new one under `.staging-<campaign>-<uuid>` and
+swaps it in, so no file from the old installation survives; the previous
+environment is renamed aside and then deleted.
 
 Re-provision after any source change you intend to measure; a stale installation
 is reported, not silently used.
@@ -96,14 +121,27 @@ $py = 'local-results\campaign-envs\<campaign>\venv\Scripts\python.exe'
 
 | Reason | Cause | Fix |
 | --- | --- | --- |
-| `environment-not-provisioned` | no `environment.json` for this checkout and campaign | provision |
-| `interpreter` | the parent is not the campaign interpreter | run the tool with `& $py -m …`, or pass `--interpreter` |
-| `parent-origin` | the parent imported different code (usually another campaign's wheel via `PYTHONPATH`) | clear `PYTHONPATH`, or point it at this checkout |
+| `environment-record` | no record, or a record bound to another campaign, checkout, package or layout | provision this checkout and campaign; do not adopt the directory |
+| `checkout-root` | the checkout is a subdirectory of another repository | provision from the repository root |
+| `parent-interpreter` | the parent is not the campaign interpreter | run the tool with `& $py -m …`; `--interpreter` does **not** fix this |
+| `requested-interpreter` | `--interpreter` names something other than the recorded interpreter | pass the campaign interpreter, or omit the option |
+| `parent-package` | the parent imported different code (usually another campaign's wheel via `PYTHONPATH`) | clear `PYTHONPATH`, or point it at this checkout |
 | `source-content` | the checkout changed after provisioning | re-provision |
-| `source-revision` | `HEAD` moved (or cannot be read) | re-provision, or fix the Git metadata |
-| `observed-origin` | the isolated child imported from outside the environment | the child was launched with another interpreter |
+| `source-revision` | `HEAD` moved (or could not be read) | re-provision, or fix the Git metadata |
+| `child-interpreter` | the child ran a different environment or executable than the record | launch with the recorded interpreter |
+| `observed-origin` | the isolated child imported package content that does not match the receipt | the child was launched with another interpreter, or the installation is stale |
 | `observed-content` | the installed copy changed after provisioning | re-provision |
 | `child-isolation` | the child ran without `-I` | use `deskmate-campaign-env launch` |
+
+`--interpreter` records a **selection** for the child. It is a separate check
+from `parent-interpreter`, which reads the running process's own prefix and
+invocation path. Naming the campaign interpreter from a shared parent therefore
+still fails: the request is not evidence about the parent. To qualify, run the
+preflight *with* the campaign interpreter:
+
+```powershell
+& $py -m deskmate_formats.campaign_env.cli preflight --campaign <campaign>
+```
 
 Keep `preflight.json` with the run's other receipts. It is the artifact that
 makes a later measurement attributable.
@@ -165,6 +203,14 @@ Raw receipts, pip logs and the synthetic checkouts stay private.
   cost a few seconds and need no network, ROMs or emulator.
 * Fail closed on purpose: if a check cannot be evaluated, the verdict is
   `unknown`. Do not add a "trusted" override; fix the identity instead.
+* The preflight has eleven checks, and `measurement_allowed` is true only when
+  all of them pass. Unavailable evidence (`unknown`) and disagreement
+  (`unqualified`) are deliberately different verdicts with different exit
+  statuses.
+* Ownership beats convenience: a lost `environment.json` means the environment
+  is not adoptable. Delete that directory deliberately and provision again.
+* On POSIX, two virtual environments share one executable inode through
+  symbolic links; identify environments by `sys.prefix`, never by executable.
 * If a future campaign needs a different package name, pass `--package`.
 * The procedure owns no production behaviour: Supervisor and Observatory changes
   that consume these receipts need their own reviewed PRs (see the
