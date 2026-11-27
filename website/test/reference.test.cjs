@@ -21,6 +21,7 @@ test("source-map entries resolve to existing, uniquely identified Markdown", () 
     assert.equal(fs.existsSync(path.join(ROOT, entry.source)), true);
   }
   assert.equal(sections.reduce((total, group) => total + group.pages.length, 0), pages.length);
+  assert.equal(pages.find((entry) => entry.id === "history.chronology").slug, "history/chronology");
 });
 
 test("installation references remain mapped with distinct IDs", () => {
