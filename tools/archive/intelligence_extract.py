@@ -553,7 +553,15 @@ def _compressed(path, name, kind, limits):
     ``partial`` status, never presented as a complete member. The caller's
     input bound is enforced by the read that feeds the decoder, not by a
     separate size inspection that a growing file could outrun.
+
+    The payload is gated the way ``_members`` gates an archive member: the
+    decoder is told the smaller of the member and aggregate budgets, and the
+    result is checked against that same figure again afterwards. A caller that
+    sets an aggregate cap below the member cap therefore still receives no more
+    than the extraction as a whole promised, even though this member is built
+    here rather than by ``_members``.
     """
+    budget = min(limits.member_bytes, limits.total_bytes)
     try:
         data = _read(lambda: path.open('rb'), limits.input_bytes)
     except OSError as exc:
@@ -562,8 +570,8 @@ def _compressed(path, name, kind, limits):
         return Extraction(status='limited', detail='input-byte-limit')
     decoded = compression_streams.decode(
         data, kind,
-        compression_streams.Bounds(output_bytes=limits.member_bytes,
-                                   codes=max(4096, limits.member_bytes),
+        compression_streams.Bounds(output_bytes=budget,
+                                   codes=max(4096, budget),
                                    decoder_bytes=limits.total_bytes))
     if decoded.status in ('failed', 'limited', 'unsupported'):
         status = 'failed' if decoded.status in ('failed', 'unsupported') else 'limited'
@@ -582,6 +590,11 @@ def _compressed(path, name, kind, limits):
     if decoded.status == 'partial':
         detail += f'; {decoded.detail}'
     payload = decoded.data or b''
+    if len(payload) > budget:
+        # The decoder stops at the budget, so this is a second gate rather than
+        # a reachable path: the member is built outside _members, and the
+        # aggregate promise is enforced here as well as there.
+        return Extraction(status='limited', detail=f'{kind}; output-byte-limit')
     # The member carries the same qualifier as the extraction: bytes recovered
     # from a damaged concatenated stream are useful, but they are not a
     # complete member and are not labelled as one.
