@@ -55,7 +55,7 @@ def make_jdk(root: Path, name: str, *, version: str | None,
              vendor: str = 'Eclipse Adoptium', release: bool = True) -> Path:
     home = root / 'Eclipse Adoptium' / name
     (home / 'bin').mkdir(parents=True, exist_ok=True)
-    (home / 'bin' / 'java.exe').write_bytes(b'')
+    (home / 'bin' / toolchain._JAVA_BIN).write_bytes(b'')
     if release:
         fields = ['IMPLEMENTOR="{0}"'.format(vendor)]
         if version is not None:
@@ -122,7 +122,7 @@ class DiscoveryTests(unittest.TestCase):
                         java_min=25)
             home = unpacked_root / 'jdk-25.0.5.1+2'
             (home / 'bin').mkdir(parents=True)
-            (home / 'bin' / 'java.exe').write_bytes(b'')
+            (home / 'bin' / toolchain._JAVA_BIN).write_bytes(b'')
             (home / 'release').write_text('JAVA_VERSION="25.0.5.1"\n',
                                           encoding='utf-8')
             result = toolchain.select(search_roots=[unpacked_root], environment={})
