@@ -14,7 +14,10 @@ dictionary that the stream header declares, bzip2 allocates several block-sized
 tables (its remembered block size is bounded by the header digit), and the
 compress(1) state machine keeps two ``2**maxbits`` tables. Bounding output
 alone therefore does not bound memory, so each decoder constrains its own
-structure and the number of concatenated streams it will open.
+structure and the number of concatenated streams it will open. A concatenated
+file is a *sequence* of decoders, so each member's header is validated against
+the caller's budget before that member's decoder is constructed: otherwise a
+small first member would authorise an arbitrarily large later one.
 
 The module is deliberately not named ``compression``. Python 3.14 added a
 standard-library ``compression`` package (``compression.bz2``, ``.gzip``,
@@ -39,6 +42,14 @@ INITIAL_BITS = 9
 MAX_BITS = 16
 # compress(1) packs codes into groups of eight so a reader can resynchronise.
 GROUP_CODES = 8
+# Peak decompression memory bzip2(1) documents for each block size, in KiB,
+# indexed by the header digit. libbzip2 allocates ``tt`` as
+# ``blockSize100k * 100000 * sizeof(Int32)`` as soon as it reads the header and
+# keeps fixed tables besides; the documented figure is therefore larger than
+# four block bytes and is what a caller's budget is compared against. The
+# standard library's decompressor never selects the 2.5-bytes-per-block-byte
+# ``-s`` mode, so the normal figures apply.
+BZIP2_DECOMPRESS_KIB = (0, 500, 900, 1300, 1700, 2100, 2500, 2900, 3300, 3700)
 
 
 @dataclass(frozen=True)
@@ -281,33 +292,79 @@ def _drain(decompressor, data, bounds, budget):
             pending = b''
 
 
-def _bounded_streams(factory, data, bounds, magic, malformed_detail):
-    """Decode one or more concatenated streams under a shared output budget.
+def _stream_stop(status, detail, output, warnings, streams):
+    """Report a stop, keeping members that already verified.
+
+    A member's bytes are only joined once the library has reached its end of
+    stream, which for bzip2 and xz means its stored CRC has matched. A later
+    member's damage therefore does not invalidate the members before it, so
+    their payload is returned as ``partial`` and the detail names the member
+    that stopped the join. Resource limits return no payload: the caller asked
+    the decoder to stop, and a truncated view of the file is not recovery.
+    """
+    if output and status == 'failed':
+        return Decoded(bytes(output), 'partial', f'member-{streams}-{detail}',
+                       tuple(warnings), streams)
+    return Decoded(None, status, detail, tuple(warnings), streams)
+
+
+def _bzip2_member(pending, bounds):
+    """Validate one bzip2 member header before its decoder is constructed.
+
+    Returns ``None`` when the member may be decoded, or the ``Decoded`` stop
+    that describes why it may not. The caller's decoder-memory budget applies
+    to every member, not to the first one that happens to satisfy it.
+    """
+    if len(pending) < 4:
+        return Decoded(None, 'failed', 'truncated-member-header')
+    level = pending[3] - 0x30
+    if not 1 <= level <= 9:
+        return Decoded(None, 'failed', 'unsupported-block-size')
+    if BZIP2_DECOMPRESS_KIB[level] * 1024 > bounds.decoder_bytes:
+        return Decoded(None, 'limited', 'decoder-memory-limit')
+    return None
+
+
+def _bounded_streams(factory, data, bounds, magic, malformed_detail, member_check=None):
+    """Decode one or more concatenated streams under shared bounds.
 
     Concatenated streams are a real-world shape (``cat a.xz b.xz``) and each
     new stream allocates a fresh decoder, so the count is bounded independently
-    of the output budget.
+    of the output budget and every member is validated by ``member_check``
+    before its decoder exists. Only one decoder is live at a time: the previous
+    member's is dropped before the next is constructed, so peak working memory
+    is the largest member's requirement rather than the sum of all of them.
     """
     output = bytearray()
     warnings = []
     pending = data
     streams = 0
+    decompressor = None
     while True:
         streams += 1
         if streams > bounds.streams:
-            return Decoded(None, 'limited', 'stream-count-limit', tuple(warnings), streams - 1)
+            return _stream_stop('limited', 'stream-count-limit', output, warnings,
+                                streams - 1)
+        if len(output) >= bounds.output_bytes:
+            return _stream_stop('limited', 'output-byte-limit', output, warnings, streams)
+        if member_check is not None:
+            refused = member_check(pending, bounds)
+            if refused is not None:
+                return _stream_stop(refused.status, refused.detail, output, warnings, streams)
+        # Release the previous member's decoder before allocating the next one.
+        decompressor = None
         try:
             decompressor = factory(bounds)
             chunk, problem, unused = _drain(
                 decompressor, pending, bounds, bounds.output_bytes - len(output))
         except (OSError, ValueError, EOFError, lzma.LZMAError) as exc:
-            detail = malformed_detail
             if 'memory usage limit' in str(exc).lower():
-                return Decoded(None, 'limited', 'decoder-memory-limit', tuple(warnings), streams)
-            return Decoded(None, 'failed', detail, tuple(warnings), streams)
+                return _stream_stop('limited', 'decoder-memory-limit', output,
+                                    warnings, streams)
+            return _stream_stop('failed', malformed_detail, output, warnings, streams)
         if problem:
             status = 'limited' if problem == 'output-byte-limit' else 'failed'
-            return Decoded(None, status, problem, tuple(warnings), streams)
+            return _stream_stop(status, problem, output, warnings, streams)
         output.extend(chunk)
         if unused[:len(magic)] == magic:
             pending = unused
@@ -325,17 +382,15 @@ def decode_bzip2(data: bytes, bounds: Bounds = Bounds()) -> Decoded:
 
     bzip2 remembers a block size of 100 kB to 900 kB and keeps several
     block-sized tables, so its working set is fixed by the header digit and does
-    not follow the output. The digit is therefore checked against
-    ``bounds.decoder_bytes``, and concatenated streams are counted.
+    not follow the output. Each member's digit is checked against
+    ``bounds.decoder_bytes`` through bzip2(1)'s documented requirement before
+    that member's decoder is constructed, and concatenated streams are counted.
     """
     if data[:3] != BZIP2_MAGIC or len(data) < 4 or not 0x31 <= data[3] <= 0x39:
         return Decoded(None, 'failed', 'not-a-bzip2-stream')
-    block_bytes = (data[3] - 0x30) * 100_000
-    # The reference decoder keeps roughly four block-sized arrays live.
-    if block_bytes * 4 > bounds.decoder_bytes:
-        return Decoded(None, 'limited', 'decoder-memory-limit')
     return _bounded_streams(lambda _bounds: bz2.BZ2Decompressor(), data, bounds,
-                            BZIP2_MAGIC, 'bzip2-integrity-or-structure')
+                            BZIP2_MAGIC, 'bzip2-integrity-or-structure',
+                            member_check=_bzip2_member)
 
 
 def decode_xz(data: bytes, bounds: Bounds = Bounds()) -> Decoded:
@@ -343,7 +398,9 @@ def decode_xz(data: bytes, bounds: Bounds = Bounds()) -> Decoded:
 
     ``memlimit`` caps the dictionary the block header declares, which the
     output budget cannot do: a small .xz stream may request a multi-gigabyte
-    dictionary and allocate it before emitting anything.
+    dictionary and allocate it before emitting anything. Each member gets its
+    own decoder with the same ``memlimit``, so a concatenated file cannot raise
+    the budget either.
     """
     if data[:6] != XZ_MAGIC:
         return Decoded(None, 'failed', 'not-an-xz-stream')
