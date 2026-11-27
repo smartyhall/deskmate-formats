@@ -4,6 +4,11 @@ Operator direction, 2026-11-23. [Initial qualification campaign #178](https://gi
 
 The objective is to use original diagnostic, conversion, playback, printing, and companion utilities as independently observable implementations, not to assume that their behavior defines a universal DeskMate specification. Some tools may share Tandy libraries or code, others are independent implementations, and a utility may normalize, discard, or silently accept unsupported data. Keep these distinctions explicit.
 
+
+## Static-analysis handoff — 2026-11-27
+
+The initial static survey has advanced in the Ghidra stack [#190](https://github.com/smartyhall/deskmate-formats/pull/190), [#196](https://github.com/smartyhall/deskmate-formats/pull/196), and [#198](https://github.com/smartyhall/deskmate-formats/pull/198), pending integration. The [utility analysis report](https://github.com/smartyhall/deskmate-formats/blob/5260ee442dc1f1b844bbe26e18a3a752949b2d97/docs/research/historical-utility-analysis-20261126.md) records matching service-call patterns and compiled shared skeletons in DBREPAIR.PDM and FIL2DBF.PDM, with distinct standalone FIL2DBF.EXE behavior. The reported treatment of DBCOLS as reserved internal state is a useful static cross-check. These observations do not qualify native conversion or repair. Keep the initial native known-good control, one controlled defect, independently predicted DBF records and schema, and native cold-reopen matrix below. Reuse qualified static reports rather than repeating the survey; distinguish the historical Ghidra 12.1.4 observations from the proposed 12.2 default. No legacy executable or private disassembly is to be published.
+
 ## Evidence and starting points
 
 - [TVDog descriptive index review](ecosystem/tvdog-directory-index-review.md), [ecosystem catalog](ecosystem/catalog.json), [acquisition gaps](ecosystem/acquisition-gaps.md), and [earlier software acquisitions](ecosystem/tvdog-reference.md): identify exact packages, versions, descriptions, available source, and compatible releases. Read the preserved descriptive indexes and package documentation first, then inspect actual bytes. Do not acquire another copy merely because an old catalog entry was incomplete.
