@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "provider": "Freebuff",
+  "agent": "Freebuff desktop agent",
+  "campaign_id": "freebuff-windows-test-performance-20261126",
+  "checkpoint": "recovery-checkpoint",
+  "observed_at_utc": "2026-11-27T02:29:11Z",
+  "git_revision": null,
+  "git_revision_note": "The receipt ships with the commit it describes, so it cannot contain that commit's own identity. The branch freebuff/windows-test-performance-under-concurrent-load and its pull request carry it.",
+  "execution_mode": "local desktop agent in one dedicated worktree on the shared laboratory VM; measurement commands run against this checkout only; no other campaign's worktree, branch or process was modified",
+  "model": null,
+  "reasoning_effort": null,
+  "model_note": "Not exposed to agent tools. No paid provider was connected, no credits purchased, no additional AI worker launched, and no other campaign's agent was altered.",
+  "source": {
+    "kind": "local allowlisted collector",
+    "version": "deskmate_formats.perf report schema 1",
+    "detail": "Instrumented test runs and home-directory campaign registry written by this campaign's own harness."
+  },
+  "coverage": "One full portable suite execution under concurrent campaign load (727 tests, 2026-11-26 09:29-09:50 UTC), one controlled two-arm fixture comparison on a single module, and one full portable suite execution in a lower-contention window (in progress at checkpoint time). Host conditions recorded by the harness for each run.",
+  "attribution_limits": "Host CPU, memory, process and thread counts describe a shared VM and are not provider consumption. Suite wall-clock is test execution time, not agent session time. No per-campaign or account-level provider allowance is observable to the agent.",
+  "status": "checkpoint: concurrent-load baseline recovered and analysed; harness sys.path defect corrected; synthetic task fixture reuse measured; test-synchronization finding handed to the branch that already fixes it",
+  "measurements": [
+    {
+      "name": "instrumented_suite_runs",
+      "value": 4,
+      "unit": "runs",
+      "scope": "campaign",
+      "semantics": "cumulative",
+      "observed_at": "checkpoint",
+      "reset_boundary": null
+    },
+    {
+      "name": "full_portable_suite_runs",
+      "value": 2,
+      "unit": "runs",
+      "scope": "campaign",
+      "semantics": "cumulative",
+      "observed_at": "checkpoint",
+      "reset_boundary": null
+    },
+    {
+      "name": "measured_test_wall_clock",
+      "value": 1330,
+      "unit": "seconds",
+      "scope": "campaign",
+      "semantics": "cumulative",
+      "observed_at": "checkpoint",
+      "reset_boundary": null
+    },
+    {
+      "name": "traced_process_spawns",
+      "value": 8748,
+      "unit": "spawns",
+      "scope": "campaign",
+      "semantics": "cumulative",
+      "observed_at": "checkpoint",
+      "reset_boundary": null
+    }
+  ],
+  "measurement_note": "Provider allowance, tokens, context size and quota remain unobservable to the agent; no figure is estimated or inferred from a shared account meter. measured_test_wall_clock sums instrumented test execution only and excludes agent session time: 1284.3 s for the full baseline plus 45.8 s across the smoke run and the two-arm fixture comparison. The second full run was still executing at checkpoint time and is not included. Campaign activity counts are reported as activity, not as provider consumption.",
+  "private_evidence": "Raw run JSON, host timelines, logs and the campaign registry are retained outside Git under the laboratory private-evidence directory; only the harness, the analysis and this reviewed receipt are published."
+}

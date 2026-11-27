@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "provider": "Freebuff",
+  "agent": "Freebuff desktop agent",
+  "campaign_id": "freebuff-windows-test-performance-20261126",
+  "checkpoint": "measurement-boundary-and-untracked-identity",
+  "observed_at_utc": "2026-11-27T09:59:12Z",
+  "git_revision": null,
+  "git_revision_note": "The receipt ships with the commit it describes, so it cannot contain that commit's own identity. The branch freebuff/windows-test-performance-under-concurrent-load and pull request #199 carry it.",
+  "execution_mode": "local desktop agent in one dedicated worktree on the shared laboratory VM; only this checkout, its own temporary directories and its private evidence directory were written; no other campaign's worktree, branch, interpreter or process was modified",
+  "model": null,
+  "reasoning_effort": null,
+  "model_note": "Not exposed to agent tools. No paid provider was connected, no credits purchased, no additional AI worker launched, and no runtime was reinstalled globally.",
+  "source": {
+    "kind": "local allowlisted collector",
+    "version": "deskmate_formats.perf report schema 2",
+    "detail": "The focused regression suite, including a patched provenance query that proves a delayed post-execution source query cannot inflate the suite duration, and temporary repositories whose untracked file contents are rewritten mid-run."
+  },
+  "coverage": "Measurement-boundary checkpoint only: the suite duration was separated from pre- and post-execution source qualification, untracked file contents were bound to the source identity, and the documentation and public projection were updated. 82 focused tests were executed (79 harness, 3 fixture isolation). No portable suite run, no controlled A/B re-run and no microbenchmark session were performed, by instruction.",
+  "attribution_limits": "No host measurement is claimed in this checkpoint: the numbers here are test counts, not performance. The historical suite durations are preserved as recorded and are upper bounds on instrumented execution because they included the post-run Git queries. Host CPU, memory and process counts describe a shared VM and are not provider consumption.",
+  "status": "boundary checkpoint: suite duration now covers instrumented execution only, provenance queries are timed separately, untracked file contents are bound within a fixed budget or reported as an incomplete identity, and historical measurements are preserved with their original limitations",
+  "measurements": [
+    {
+      "name": "instrumented_suite_runs",
+      "value": 0,
+      "unit": "runs",
+      "scope": "checkpoint",
+      "semantics": "delta",
+      "observed_at": "measurement-boundary checkpoint",
+      "reset_boundary": null
+    },
+    {
+      "name": "suite_iterations",
+      "value": 0,
+      "unit": "iterations",
+      "scope": "checkpoint",
+      "semantics": "delta",
+      "observed_at": "measurement-boundary checkpoint",
+      "reset_boundary": null
+    },
+    {
+      "name": "measured_test_wall_clock",
+      "value": 0.0,
+      "unit": "seconds",
+      "scope": "checkpoint",
+      "semantics": "delta",
+      "observed_at": "measurement-boundary checkpoint",
+      "reset_boundary": null
+    },
+    {
+      "name": "traced_process_spawns",
+      "value": 0,
+      "unit": "spawns",
+      "scope": "checkpoint",
+      "semantics": "delta",
+      "observed_at": "measurement-boundary checkpoint",
+      "reset_boundary": null
+    },
+    {
+      "name": "regression_tests_executed",
+      "value": 82,
+      "unit": "tests",
+      "scope": "checkpoint",
+      "semantics": "delta",
+      "observed_at": "measurement-boundary checkpoint",
+      "reset_boundary": null
+    },
+    {
+      "name": "microbenchmark_iterations",
+      "value": 0,
+      "unit": "iterations",
+      "scope": "checkpoint",
+      "semantics": "delta",
+      "observed_at": "measurement-boundary checkpoint",
+      "reset_boundary": null
+    }
+  ],
+  "measurement_note": "regression_tests_executed is 79 harness tests plus 3 fixture-isolation tests. The zero-valued measurements record that this checkpoint deliberately measured no performance: the two full baseline runs, the controlled fixture A/B and the microbenchmark session from earlier checkpoints are preserved unchanged and were not repeated.",
+  "private_evidence": "Raw run JSON, host timelines, comparison artifacts and the campaign registry are retained outside Git under the laboratory private-evidence directory; only the harness, the analysis and these reviewed receipts are published. The sanitized projection written by --public-out is the publishable form of a run report."
+}

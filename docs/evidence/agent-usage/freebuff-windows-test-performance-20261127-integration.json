@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "provider": "Freebuff",
+  "agent": "Freebuff desktop agent",
+  "campaign_id": "freebuff-windows-test-performance-20261126",
+  "checkpoint": "integration-and-bounded-source-checkpoint",
+  "observed_at_utc": "2026-11-27T12:30:00Z",
+  "git_revision": null,
+  "git_revision_note": "The receipt ships with the commit it describes, so it cannot contain that commit's own identity. The branch freebuff/windows-test-performance-under-concurrent-load and pull request #199 carry it.",
+  "execution_mode": "local desktop agent in one dedicated worktree on the shared laboratory VM; only this checkout, its own temporary directories and its private evidence directory were written; no other campaign's worktree, branch, interpreter or process was modified",
+  "model": null,
+  "reasoning_effort": null,
+  "model_note": "Not exposed to agent tools. No paid provider was connected, no credits purchased, no additional AI worker launched, and no runtime was reinstalled or upgraded globally.",
+  "source": {
+    "kind": "local allowlisted collector",
+    "version": "deskmate_formats.perf report schema 2",
+    "detail": "The campaign's own harness and its focused regression suite, plus an ordinary merge of current main, the repository audit, REUSE and Ruff, and a wheel/sdist build inspected for entry points and package data."
+  },
+  "coverage": "Integration and source-bound integrity checkpoint only. Current main (including the merged Supervisor and Observatory work, 412835c) was incorporated with an ordinary merge commit; the untracked-file fingerprint was changed to refuse redirects and non-regular files and to enforce the per-file and aggregate byte budgets before and during bounded reads; two campaign-authored evidence sidecars were corrected from a GPL-only expression to the approved dual documentation/provenance licence; and a quiet-host baseline qualification plan for the next campaign was written. 84 harness tests and 4 fixture-isolation tests were discovered. No portable suite run, no controlled A/B re-run and no microbenchmark session were performed, by instruction.",
+  "attribution_limits": "Host CPU, memory, process and thread counts describe a shared VM and are not provider consumption. Suite wall-clock is test execution time, not agent session time. No per-campaign or account-level provider allowance is observable to the agent. The focused suite is a regression check, not a performance measurement.",
+  "status": "integration checkpoint: main merged with both fixture intents preserved, bounded source fingerprinting completed with regression tests, evidence licensing corrected, next-campaign qualification plan written, no baseline measured and no optimization implemented",
+  "measurements": [
+    {
+      "name": "instrumented_suite_runs",
+      "value": 0,
+      "unit": "runs",
+      "scope": "checkpoint",
+      "semantics": "delta",
+      "observed_at": "integration checkpoint",
+      "reset_boundary": null
+    },
+    {
+      "name": "microbenchmark_iterations",
+      "value": 0,
+      "unit": "iterations",
+      "scope": "checkpoint",
+      "semantics": "delta",
+      "observed_at": "integration checkpoint",
+      "reset_boundary": null
+    },
+    {
+      "name": "regression_tests_executed",
+      "value": 87,
+      "unit": "tests",
+      "scope": "checkpoint",
+      "semantics": "delta",
+      "observed_at": "integration checkpoint",
+      "reset_boundary": null
+    }
+  ],
+  "measurement_note": "regression_tests_executed counts 83 executed harness tests plus 4 fixture-isolation tests; one additional harness test for refusing a symbolic link was skipped because this unprivileged account cannot create symbolic links, so 84 harness tests were discovered. The zero-valued measurements record that this checkpoint deliberately measured no performance: the earlier full-suite observations, the controlled fixture A/B and the microbenchmark session are preserved unchanged and were not repeated.",
+  "private_evidence": "Raw run JSON, the private campaign registry and the unpublished reports remain outside Git under the laboratory private-evidence directory; only the harness, the documentation and these reviewed receipts are published. The sanitized projection written by --public-out is the publishable form of a run report."
+}
