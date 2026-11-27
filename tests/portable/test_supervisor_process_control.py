@@ -220,17 +220,33 @@ class SignalRefusalTests(unittest.TestCase):
         self.assertEqual(process_health.process_status(process.pid), "alive")
         self.assertIsNone(process.poll(), "an unrelated instance must not be signalled")
 
-    def test_a_live_foreign_identity_is_refused(self):
-        """The reuse case: another running instance's identity on this number."""
-        target, other = sleeper(), sleeper()
-        self.addCleanup(stop, target)
-        self.addCleanup(stop, other)
-        foreign = process_health.process_health_identity(other.pid)
-        self.assertIsNotNone(foreign)
-        self.assertNotEqual(foreign, process_health.process_health_identity(target.pid))
-        result = process_control.signal(process_control.Member(target.pid, foreign, False))
-        self.assertEqual(result["result"], "identity-mismatch")
-        self.assertEqual(process_health.process_status(target.pid), "alive")
+    def test_only_the_exact_stamp_of_this_number_is_an_identity_match(self):
+        """The reuse case: an earlier or later holder's stamp on this number.
+
+        The stamp is a creation tick, so it is compared only within one PID. A
+        recycled number always belongs to a later instance, whose stamp differs;
+        both directions are refused here.
+        """
+        if os.name != "nt" and not process_control._PIDFD_AVAILABLE:
+            self.skipTest("this host exposes no identity-bound handle")
+        process = sleeper()
+        self.addCleanup(stop, process)
+        current = process_health.process_health_identity(process.pid)
+        self.assertIsNotNone(current)
+        expected = process_health.start_stamp(current)
+        boot = process_health.identity_boot(current)
+
+        def stamped(delta):
+            value = expected + delta
+            return f"win-{value:x}" if boot is None else f"linux-{boot}-{value}"
+
+        for delta in (-1, 1):
+            with self.subTest(delta=delta):
+                result = process_control.signal(
+                    process_control.Member(process.pid, stamped(delta), False))
+                self.assertEqual(result["result"], "identity-mismatch")
+                self.assertFalse(result["identity_matched"])
+                self.assertEqual(process_health.process_status(process.pid), "alive")
 
     @POSIX
     def test_an_unknown_verification_is_not_an_identity_match_on_the_group_path(self):

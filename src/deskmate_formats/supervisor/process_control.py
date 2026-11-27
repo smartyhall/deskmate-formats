@@ -73,8 +73,10 @@ IDENTITY_SCOPES = process_tree.DURABLE_SCOPES
 #: Results that must never be read as "the tree was cleaned up".
 REFUSED_RESULTS = frozenset(("identity-mismatch", "unknown", "refused", "unavailable", "failed"))
 
-#: ``pid`` and ``identity`` name one process instance; ``group`` says a group
-#: signal is confined to a group this attempt created.
+#: ``pid`` and ``identity`` together name one process instance; ``group`` says a
+#: group signal is confined to a group this attempt created. The identity is a
+#: creation stamp, so it is only ever compared within one PID (see
+#: :func:`process_health.start_stamp`).
 Member = namedtuple("Member", "pid identity group")
 
 #: ``owner``/``members`` are what may be signalled; ``scope`` and ``enumeration``

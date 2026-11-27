@@ -143,7 +143,7 @@ left in the error slot is an early stop, not a complete enumeration.
 | The real Linux route is selected, not a fallback | `test_a_member_bound_to_its_observed_identity_is_signalled` asserts `mechanism == "pidfd"` on Linux |
 | `unknown` verification treated as a match | `test_an_unknown_verification_is_not_an_identity_match_on_the_pidfd_path`, `..._on_the_group_path` |
 | Numeric kill standing in for a missing handle | `test_no_identity_bound_handle_means_no_signal` |
-| Reuse between enumeration and authorisation | `test_a_live_foreign_identity_is_refused`, `test_membership_and_identity_come_from_the_same_record` |
+| Reuse between enumeration and authorisation | `test_only_the_exact_stamp_of_this_number_is_an_identity_match` (earlier and later holder), `test_membership_and_identity_come_from_the_same_record` |
 | A stalled termination round retried into a claim | `test_an_unavailable_handle_ends_the_rounds_instead_of_spinning` |
 
 The test that matters most for the review's concern is the pair of real-process
@@ -238,6 +238,18 @@ as a pass.
   it in place of a separate identity sample.
 * Group signalling re-checks both the identity and that the number still leads its own
   group immediately before `killpg`, and refuses if the leader is not positively alive.
+
+**What the Linux job then found.** With the corrected path actually running, the two
+ubuntu jobs failed one *test assumption*, not the implementation: a first version of the
+reuse test asserted that two independently spawned processes have different identities.
+On Linux the stamp is the creation **tick** (10 ms at the usual clock rate), so two
+processes started within one tick carry the same identity string. The implementation was
+right and the test was wrong, but the episode pins a property worth stating: the stamp
+identifies an instance only **together with the PID**, and identity equality across two
+different PIDs means nothing. The reuse check always compares one PID against itself,
+where a later holder is necessarily created later and so carries a strictly greater
+stamp. That invariant is now in `process_health.start_stamp` and the `Member` comment,
+and the test constructs an earlier and a later stamp for the *same* number instead.
 
 **Scope held.** No new service, no emulator, no agent dispatch, no change to live
 grants or to PR #199 or the issue #201 campaign's files. The local Windows host cannot

@@ -80,6 +80,13 @@ def start_stamp(identity):
     The units are platform-local (Linux clock ticks since boot, Windows
     ``FILETIME``), so stamps are comparable only within one platform, which is
     the only place they are used. ``None`` means the instance is unknown.
+
+    The Linux stamp is a **creation tick**, not a global instance identifier:
+    two processes created within the same clock tick carry the same stamp, so a
+    stamp identifies an instance only together with the PID. That is sufficient
+    for the reuse check, which always compares one PID against itself: a later
+    holder of a recycled number is necessarily created later and so carries a
+    strictly greater stamp.
     """
     if type(identity) is not str:
         return None
