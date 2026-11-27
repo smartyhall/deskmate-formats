@@ -60,6 +60,18 @@ the general rules below supplement them, not expand their grants.
   governance or authority, material unresolved regressions, or disputed
   publication boundaries. This does not authorize ChatGPT to merge its own
   work, including delegated work, or enlarge any other agent's authority.
+- Producer handoff rather than CI polling (operator decision 2026-11-27):
+  after local verification, push the exact checkpoint, open/update the PR,
+  confirm expected CI was triggered when observable, and provide the
+  [CI handoff](CONTRIBUTING.md#producer-handoff-and-ci-ownership). Pending CI
+  or advisory review is a valid producing-campaign handoff. End the turn;
+  do not keep a model session alive with repeated sleep/poll loops solely
+  for checks or external jobs. The assigned integration reviewer owns
+  subsequent CI inspection, review, correction routing and merge decisions.
+  Wait only when the result is materially necessary to the assigned work
+  (e.g. CI diagnosis, integration or publication recovery); checkpoint and
+  hand off lengthy waits rather than consume a turn solely observing them.
+  This changes scheduling, not verification requirements or authority.
 - Record provider, model/effort if known, execution mode, campaign and
   checkpoint identity, evidence origin, tests, limitations and usage receipts
   at startup, meaningful checkpoints and completion/safe stop. Keep existing
