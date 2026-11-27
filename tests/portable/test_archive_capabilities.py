@@ -188,6 +188,39 @@ class RegistryRejectionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'limitations statement'):
             capabilities.validate(self.modified(no_limits))
 
+    def test_missing_identification_block_is_rejected(self):
+        def no_identification(registry):
+            del registry['formats'][0]['identification']
+        with self.assertRaisesRegex(ValueError, 'identification block is required'):
+            capabilities.validate(self.modified(no_identification))
+
+    def test_unknown_completeness_and_method_are_rejected(self):
+        def bad_completeness(registry):
+            registry['formats'][0]['identification']['completeness'] = 'probably'
+        with self.assertRaisesRegex(ValueError, 'unknown completeness'):
+            capabilities.validate(self.modified(bad_completeness))
+
+        def bad_method(registry):
+            registry['formats'][0]['identification']['methods'] = ['telepathy']
+        with self.assertRaisesRegex(ValueError, 'unknown extraction method'):
+            capabilities.validate(self.modified(bad_method))
+
+        def bad_carrier(registry):
+            registry['formats'][0]['identification']['carrier'] = 'a.out'
+        with self.assertRaisesRegex(ValueError, 'unknown carrier'):
+            capabilities.validate(self.modified(bad_carrier))
+
+    def test_identification_axes_are_rendered_for_every_record(self):
+        rendered = capabilities.render_markdown(self.registry)
+        self.assertIn('## Identification axes', rendered)
+        self.assertEqual(rendered.count('- Structural identification: '),
+                         len(self.registry['formats']))
+        self.assertEqual(rendered.count('- Container completeness: '),
+                         len(self.registry['formats']))
+        # A carrier and an embedded archive appear together rather than one
+        # replacing the other.
+        self.assertIn('| ZIP archive | mz | zip |', rendered)
+
     def test_dangling_entry_point_is_rejected(self):
         def dangling(registry):
             registry['formats'][0]['implementation']['entry'] = 'not_a_real_function'
