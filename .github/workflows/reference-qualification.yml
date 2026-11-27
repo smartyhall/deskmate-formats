@@ -67,6 +67,9 @@ jobs:
       - name: Install qualification dependencies
         working-directory: qualification
         run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Test qualification harness
+        working-directory: qualification
+        run: npm test
       - name: Install browsers
         working-directory: qualification
         run: npx playwright install --with-deps chromium firefox webkit
@@ -88,12 +91,15 @@ jobs:
           fi
       - name: Qualify
         working-directory: qualification
+        env:
+          QUALIFICATION_ROUTES: ${{ steps.pages.outputs.routes }}
         run: |
           node cli.cjs \
             --serve-dir ../website/_site \
             --engines chromium,firefox,webkit \
             --profiles desktop,mobile,no-js \
-            --pages "${{ steps.pages.outputs.routes }}" \
+            --pages "$QUALIFICATION_ROUTES" \
+            --require-matrix \
             --axe \
             --out qualification-results
       - name: Upload qualification artifacts
@@ -134,6 +140,9 @@ jobs:
       - name: Install qualification dependencies
         working-directory: qualification
         run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Test qualification harness
+        working-directory: qualification
+        run: npm test
       - name: Install browsers (Linux)
         if: ${{ runner.os == 'Linux' }}
         working-directory: qualification
@@ -145,12 +154,15 @@ jobs:
       - name: Qualify
         working-directory: qualification
         shell: bash
+        env:
+          QUALIFICATION_ENGINES: ${{ matrix.engines }}
         run: |
           node cli.cjs \
             --serve-dir ../website/_site \
-            --engines "${{ matrix.engines }}" \
+            --engines "$QUALIFICATION_ENGINES" \
             --profiles desktop,tablet,mobile,no-js,reflow,forced-colors,reduced-motion,print \
             --pages "/,/deskmate/,/formats/,/recovery/,/research/,/project/,/search/" \
+            --require-matrix \
             --axe \
             --out qualification-results
       - name: Upload qualification artifacts
@@ -181,17 +193,25 @@ jobs:
       - name: Install qualification dependencies
         working-directory: qualification
         run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Test qualification harness
+        working-directory: qualification
+        run: npm test
       - name: Install browsers
         working-directory: qualification
         run: npx playwright install --with-deps chromium firefox webkit
       - name: Qualify
         working-directory: qualification
+        env:
+          QUALIFICATION_ENGINES: ${{ inputs.engines }}
+          QUALIFICATION_PROFILES: ${{ inputs.profiles }}
+          QUALIFICATION_ROUTES: ${{ inputs.pages }}
         run: |
           node cli.cjs \
             --serve-dir ../website/_site \
-            --engines "${{ inputs.engines }}" \
-            --profiles "${{ inputs.profiles }}" \
-            --pages "${{ inputs.pages }}" \
+            --engines "$QUALIFICATION_ENGINES" \
+            --profiles "$QUALIFICATION_PROFILES" \
+            --pages "$QUALIFICATION_ROUTES" \
+            --require-matrix \
             --axe \
             --out qualification-results
       - name: Upload qualification artifacts
