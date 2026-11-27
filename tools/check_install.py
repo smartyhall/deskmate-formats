@@ -41,6 +41,11 @@ for command in (
     "deskmate-supervisor-s0",
     "deskmate-supervisor-s2",
     "deskmate-supervisor-s3",
+    "deskmate-supervisor-deterministic",
+    "deskmate-supervisor-campaigns",
+    "deskmate-observer-campaigns",
+    "deskmate-observer-snapshot",
+    "deskmate-test-perf",
 ):
     matches = [entry for entry in dist.entry_points if entry.name == command]
     assert len(matches) == 1 and callable(matches[0].load())

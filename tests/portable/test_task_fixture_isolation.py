@@ -14,6 +14,7 @@ import shutil
 import tempfile
 import unittest
 
+from deskmate_formats.supervisor.task_git import TaskError
 from task_fixture import TaskRepo, manifest
 
 
@@ -42,6 +43,18 @@ class TaskFixtureIsolationTests(unittest.TestCase):
         self.assertEqual(third.head(), third.anchor)
         self.assertEqual(third.git("status", "--porcelain"), b"")
         third.git("cat-file", "-e", third.anchor)
+
+    def test_each_clone_is_a_trusted_source_for_its_own_history(self):
+        # The template is only a build source: every clone is independently
+        # verifiable by the Supervisor's source-identity check, and a commit
+        # made in one clone is not history in another.
+        first = TaskRepo(self.root / "first")
+        second = TaskRepo(self.root / "second")
+        first.source().verify()
+        advanced = first.commit(manifest(title="Mutated in one clone only"))
+        first.source(anchor=advanced).verify()
+        with self.assertRaises(TaskError):
+            second.source(anchor=advanced).verify()
 
     def test_removing_one_clone_object_store_leaves_others_intact(self):
         first = TaskRepo(self.root / "first")

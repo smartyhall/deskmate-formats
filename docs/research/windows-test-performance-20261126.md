@@ -493,17 +493,19 @@ the premise of the change: a commit in one clone does not reach another, the
 template still builds clean clones after a clone is mutated, and deleting one
 clone's object store leaves the others working.
 
-**Coordination note.** PR #191 also edits `tests/portable/task_fixture.py`,
+**Coordination note (resolved).** PR #191 also edited `tests/portable/task_fixture.py`,
 raising `TaskRepo.git`'s subprocess `timeout` from 10 s to 60 s as a hang guard
-rather than a latency assertion. The rewrite here moves that call into a
-module-level `_run_git` with the same 60 s bound, so the two intents agree but
-the hunks will collide textually. The intended resolution is to keep #191's
-60 s bound *and its comment* on the single `subprocess.run` inside `_run_git`,
-which therefore covers every fixture Git call, including the config calls the
-base version issued directly; no behaviour depends on which hunk is kept first.
-`pyproject.toml` also overlaps: #191 adds connector/procedure entries and this
-branch adds the `deskmate-test-perf` script, so the resolution is to keep both
-script tables merged rather than choosing a side.
+rather than a latency assertion. #191 merged as `412835c`, and this branch
+reconciled with it in an ordinary merge commit: the template-copy rewrite is
+kept, and #191's 60 s bound *and its comment* now sit on the single
+`subprocess.run` inside the shared `_run_git`, which therefore covers every
+fixture Git call, including the config calls the base version issued directly.
+`pyproject.toml` overlapped too: #191 added the deterministic/campaigns/snapshot
+entry points and this branch adds `deskmate-test-perf`, so the resolution keeps
+every script entry rather than choosing a side. The combined fixture is tested
+explicitly: the isolation tests in `tests/portable/test_task_fixture_isolation.py`
+cover clone independence and now also verify that each clone is a valid
+`TrustedSource` for its own history and not for another clone's commit.
 
 ## 7. What is measured, derived, estimated and hypothesised
 
@@ -631,14 +633,13 @@ optimization result.
 
 ## 9. Handoff and open questions
 
-- **To the Supervisor campaign (PR #191):** the `test_supervisor_process_tree`
-  failure is semantic and belongs there (§5.3). The
-  `test_owner_termination…` race from §5.2 is already fixed on that branch, so
-  nothing is carried here. The remaining overlap is the `timeout` hunk in
-  `tests/portable/task_fixture.py` and the script table in `pyproject.toml`,
-  both described in §6. This branch also adds
-  `tests/portable/test_task_fixture_isolation.py`, which is independent of
-  #191's change and should survive the merge unchanged.
+- **To the Supervisor campaign (PR #191, merged `412835c`):** the
+  `test_supervisor_process_tree` failure is semantic and belongs there (§5.3).
+  The `test_owner_termination…` race from §5.2 is already fixed there, so
+  nothing is carried here. The `timeout` hunk in `tests/portable/task_fixture.py`
+  and the script table in `pyproject.toml` were resolved as described in §6.
+  `tests/portable/test_task_fixture_isolation.py` survived the merge and was
+extended to cover `TrustedSource` verification of each clone.
 - **To whoever owns `supervisor/task_git.py`:** §3.3 is the actionable finding.
   `cat-file` (43.4 %) and `ls-tree` (19.8 %) dominate and both have batch modes;
   `config` is queried 88 times in two tests. A batched read path is where the
