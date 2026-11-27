@@ -16,7 +16,6 @@ from pathlib import Path
 import json
 import os
 import platform
-import signal
 import stat
 import subprocess
 import sys
@@ -29,7 +28,7 @@ from deskmate_formats.observer._private_storage import (LockBusy, journal_lock, 
 from deskmate_formats.observer.events import EventError, decode_json, encode_json
 from deskmate_formats.observer.process_health import verify_process
 
-from . import procedures, process_tree
+from . import procedures, process_control, process_tree
 from .task_manifest import utc_now
 
 SCHEMA_VERSION = 2
@@ -493,91 +492,106 @@ def _pump(stream, sink):
 
 _STOP_ROUNDS = 20
 _STOP_PAUSE = 0.05
+_STOP_SECONDS = 15.0
 
 
-def _kill_pid(pid):
-    """Kill exactly one positively observed process; never by name pattern."""
-    if os.name == "nt":
-        from shutil import which
+def _signals(records):
+    """Bound the evidence of what was signalled, and what was refused."""
+    results = {}
+    for record in records:
+        results[record["result"]] = results.get(record["result"], 0) + 1
+    refused = [record for record in records if record["result"] in process_control.REFUSED_RESULTS]
+    return {"count": len(records), "results": results, "sample": records[:8],
+            "refused": refused[:8]}
 
-        taskkill = which("taskkill")
-        if taskkill:
-            try:
-                subprocess.run([taskkill, "/F", "/PID", str(pid)],
-                               stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                               stderr=subprocess.DEVNULL, timeout=30)
-            except (OSError, subprocess.TimeoutExpired):
-                pass
-        return
-    try:
-        os.kill(pid, signal.SIGKILL)
-    except OSError:
-        pass
+
+def _termination(state, authorization, signals, *, requested=True):
+    """One termination observation: what was attempted, and what remains."""
+    return {"requested": requested, "owner": state["owner"],
+            "descendants": state["descendants"], "enumeration": state["enumeration"],
+            "remaining": state["live"], "reason": state["reason"],
+            "scope": state.get("scope"),
+            "authority": {"scope": authorization.scope,
+                          "members": len(authorization.members),
+                          "reason": authorization.reason},
+            "signals": _signals(signals)}
 
 
 def _observe_tree(claim):
     """Observe a tree without touching it: an exit is not an empty tree."""
-    if claim is None:
-        return {"requested": False, "descendants": "unknown",
-                "enumeration": "unavailable", "remaining": None,
-                "reason": "no-tree-handle"}
-    state = process_tree.tree_state(claim)
-    return {"requested": False, "descendants": state["descendants"],
-            "enumeration": state["enumeration"], "remaining": state["live"],
-            "reason": state["reason"]}
+    state = ({"owner": "unknown", "descendants": "unknown", "live": None,
+              "enumeration": "unavailable", "reason": "no-tree-handle", "scope": "none"}
+             if claim is None else process_tree.tree_state(claim))
+    return _termination(state, process_control.NO_AUTHORITY, (), requested=False)
+
+
+def _kill_owned_child(process):
+    """Terminate the direct child through the handle this attempt owns.
+
+    Windows holds the child's process handle and POSIX cannot recycle its number
+    until this attempt reaps it, so both name one instance rather than a number
+    that may since have been reused.
+    """
+    if process.poll() is not None:
+        return {"pid": process.pid, "result": "gone", "mechanism": "owned-child-handle",
+                "identity_matched": None, "group": False}
+    try:
+        process.kill()
+    except OSError:
+        return {"pid": process.pid, "result": "gone", "mechanism": "owned-child-handle",
+                "identity_matched": None, "group": False}
+    return {"pid": process.pid, "result": "signalled", "mechanism": "owned-child-handle",
+            "identity_matched": None, "group": False}
 
 
 def _stop_tree(process, claim=None):
-    """Terminate the process and its descendants, then observe the result.
+    """Terminate the observed tree, one identity-bound member at a time.
 
-    Termination is requested, never assumed: the returned observation records
-    what a bounded re-scan could still see, and an unobservable tree stays
-    ``unknown``.
+    Authority is established separately from observation: the direct child is
+    terminated through the handle this attempt owns, and a descendant is
+    signalled only when a fresh scan binds it to a creation identity inside a
+    scope the kernel holds. Every signal records its outcome, so a refused or
+    impossible termination is reported as such instead of being read as a
+    successful cleanup.
     """
-    if os.name == "nt":
-        from shutil import which
-
-        taskkill = which("taskkill")
-        if taskkill:
-            try:
-                subprocess.run([taskkill, "/F", "/T", "/PID", str(process.pid)],
-                               stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                               stderr=subprocess.DEVNULL, timeout=30)
-            except (OSError, subprocess.TimeoutExpired):
-                pass
+    deadline = monotonic() + _STOP_SECONDS
+    signals = []
+    authorization = (process_control.NO_AUTHORITY if claim is None
+                     else process_control.authorize(claim))
+    owner = authorization.owner
+    if owner is not None and owner.group and os.name != "nt":
+        # Issued before ``wait``: while the leader is unreaped its number cannot
+        # be recycled, so the numeric group identifier still names this group.
+        signals.append(process_control.signal(owner, group=True))
+    else:
+        signals.append(_kill_owned_child(process))
+    try:
+        process.wait(timeout=max(1.0, min(15.0, deadline - monotonic())))
+    except subprocess.TimeoutExpired:
         try:
             process.kill()
-        except OSError:
+            process.wait(timeout=5)
+        except (OSError, subprocess.TimeoutExpired):
             pass
-    else:
-        try:
-            os.killpg(os.getpgid(process.pid), signal.SIGKILL)
-        except (OSError, ProcessLookupError):
-            try:
-                process.kill()
-            except OSError:
-                pass
-    try:
-        process.wait(timeout=15)
-    except subprocess.TimeoutExpired:
-        process.kill()
-        process.wait(timeout=5)
-    if claim is None:
-        return {"requested": True, "descendants": "unknown", "enumeration": "unavailable",
-                "remaining": None, "reason": "no-tree-handle"}
-    for _ in range(_STOP_ROUNDS):
-        # A descendant that left the group or session survives the group kill,
-        # so the scan decides what is left instead of the kill call succeeding.
-        scan = process_tree.live_pids(claim)
-        for pid in scan.pids:
-            _kill_pid(pid)
-        if not scan.pids:
-            break
-        sleep(_STOP_PAUSE)
-    state = process_tree.tree_state(claim)
-    return {"requested": True, "descendants": state["descendants"],
-            "enumeration": state["enumeration"], "remaining": state["live"],
-            "reason": state["reason"]}
+    if claim is not None:
+        for _ in range(_STOP_ROUNDS):
+            if monotonic() >= deadline:
+                break
+            # A descendant that left the group or session survives the group
+            # kill, so a fresh scan decides what is left instead of the kill
+            # call succeeding.
+            authorization = process_control.authorize(
+                claim, deadline_seconds=max(0.25, deadline - monotonic()))
+            if not authorization.members:
+                break
+            for member in authorization.members:
+                signals.append(process_control.signal(member))
+            sleep(_STOP_PAUSE)
+    return _termination(process_tree.tree_state(claim) if claim is not None
+                        else {"owner": "unknown", "descendants": "unknown", "live": None,
+                              "enumeration": "unavailable", "reason": "no-tree-handle",
+                              "scope": "none"},
+                        authorization, signals)
 
 
 def _artifacts(directory):
@@ -735,6 +749,24 @@ def run(directory, *, authorization, reservation=None, revalidate=None):
             release()
 
 
+def _child_import_limitation(plan):
+    """Disclose an isolated child whose imports the plan did not bind.
+
+    ``-I`` ignores ``PYTHONPATH``, so a procedure that imports this package
+    resolves it from the installation rather than from the prepared working tree,
+    while the plan records the parent's module origin. Issue #201 tracks the
+    campaign-owned environment and child source identity that would close this.
+    """
+    if "-I" not in plan["argv"]:
+        return None
+    if not any(str(item.get("module", "")).startswith("deskmate_formats")
+               for item in plan.get("modules", ())):
+        return None
+    return ("the child runs with -I, so it imports this package from the installation "
+            "rather than the prepared working tree; the plan binds the parent's module "
+            "origin (issue #201)")
+
+
 def _execute(root, plan, token):
     artifacts = root / "artifacts"
     stdout, stderr = _Sink(MAX_STDOUT_BYTES), _Sink(MAX_STDERR_BYTES)
@@ -813,9 +845,10 @@ def _execute(root, plan, token):
             elif termination is None:
                 # A clean exit says nothing about what it started.
                 termination = _observe_tree(claim)
-        outcome["termination"] = termination or {
-            "requested": False, "descendants": "unknown", "enumeration": "unavailable",
-            "remaining": None, "reason": "no-process-was-spawned"}
+        outcome["termination"] = termination or _termination(
+            {"owner": "unknown", "descendants": "unknown", "live": None,
+             "enumeration": "unavailable", "reason": "no-process-was-spawned",
+             "scope": "none"}, process_control.NO_AUTHORITY, (), requested=False)
         outcome["custody"] = ("clean" if outcome["termination"]["descendants"] == "stopped"
                               else "descendants-alive" if outcome["termination"]["descendants"] == "alive"
                               else "unobserved")
@@ -849,6 +882,9 @@ def _execute(root, plan, token):
         if outcome["custody"] != "clean":
             outcome["limitations"].append(
                 "the attempt's process tree could not be shown empty after it ended")
+        isolated = _child_import_limitation(plan)
+        if isolated is not None:
+            outcome["limitations"].append(isolated)
         _progress(root, "finished", outcome_state=outcome["state"],
                   exit_status=outcome["exit_status"])
         with journal_lock(root):

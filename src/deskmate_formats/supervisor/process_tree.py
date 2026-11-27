@@ -50,9 +50,16 @@ termination proof
     complete enumeration of a non-lossy scope found no live member on the same
     boot as the claim. Nothing weaker is reported as termination.
 
-This module is read-only: it opens no process handle for control, sends no
-signal and starts nothing. Every scan is bounded by a process-count cap and a
-deadline.
+authority
+    This module is read-only. A PID it reports is a finding, not permission to
+    signal it: nothing here binds an observation to the instance that would be
+    terminated. :mod:`deskmate_formats.supervisor.process_control` establishes
+    that authority separately, and only for a scope whose membership the kernel
+    holds.
+
+This module opens no process handle for control, sends no signal and starts
+nothing. Every scan is bounded by a process-count cap and a deadline, and so is
+its traversal.
 """
 
 from collections import defaultdict, namedtuple
@@ -83,7 +90,8 @@ OWNER_GONE = ("stopped", "not-found", "identity-mismatch")
 DURABLE_SCOPES = ("session",)
 
 #: ``pids`` are positively observed live members and never include the owner;
-#: ``complete`` says whether their absence may be read as termination.
+#: ``complete`` says whether their absence may be read as termination. A PID here
+#: is not authorisation to signal it: see :mod:`process_control`.
 Scan = namedtuple("Scan", "pids complete enumeration scope reason")
 
 
@@ -135,7 +143,11 @@ if sys.platform == "win32":
                     return entries, "timed-out", "scan-deadline"
                 entries.append((int(entry.th32ProcessID), int(entry.th32ParentProcessID)))
                 if not _kernel.Process32NextW(snapshot, ct.byref(entry)):
-                    if ct.get_last_error() not in (0, _ERROR_NO_MORE_FILES):
+                    # Only ERROR_NO_MORE_FILES is the documented end of the
+                    # list. Any other status, including a zero left in the
+                    # thread's error slot, is an early stop and may never be
+                    # reported as a complete enumeration.
+                    if ct.get_last_error() != _ERROR_NO_MORE_FILES:
                         return entries, "degraded", "enumeration-ended-early"
                     return entries, "complete", "snapshot-complete"
         finally:
@@ -152,11 +164,16 @@ if sys.platform == "win32":
                 children[parent].append(child)
         owner_stamp = start_stamp(claim.get("identity"))
         found, frontier, unverified = [], [pid], 0
+        visited, timed_out = {pid}, False
         while frontier:
+            if monotonic() >= deadline:
+                timed_out = True
+                break
             current = frontier.pop()
             for child in children.get(current, ()):
-                if child == pid or child in found:
+                if child in visited:
                     continue
+                visited.add(child)
                 stamp = start_stamp(process_health_identity(child))
                 if owner_stamp is not None and stamp is not None and stamp < owner_stamp:
                     # Created before the owner: this number, not the tree, was
@@ -166,6 +183,10 @@ if sys.platform == "win32":
                     unverified += 1  # reuse cannot be ruled out; keep, but say so
                 found.append(child)
                 frontier.append(child)
+        if timed_out:
+            # A traversal cut short by its deadline is not a finished walk.
+            return Scan(tuple(found), False, "timed-out", "parent-chain",
+                        "traversal-deadline")
         if enumeration == "complete" and unverified:
             return Scan(tuple(found), False, "degraded", "parent-chain",
                         "unverified-child-identities")
@@ -305,19 +326,26 @@ else:
                 continue
             parents[pid] = (ppid, state, start)
         owner_start = start_stamp(claim.get("identity"))
-        found, frontier = [], [owner]
+        found, frontier, visited = [], [owner], {owner}
+        timed_out = False
         while frontier:
+            if monotonic() >= deadline:
+                timed_out = True
+                break
             current = frontier.pop()
             for pid, (ppid, state, start) in parents.items():
-                if ppid != current or pid == owner or pid in found:
+                if ppid != current or pid in visited:
                     continue
+                visited.add(pid)
                 if state in (b"Z", b"X", b"x"):
                     continue
                 if owner_start is not None and start < owner_start:
                     continue
                 found.append(pid)
                 frontier.append(pid)
-        if truncated:
+        if timed_out:
+            enumeration, reason = "timed-out", "traversal-deadline"
+        elif truncated:
             enumeration, reason = "truncated", "process-count-limit"
         elif timed_out:
             enumeration, reason = "timed-out", "scan-deadline"
@@ -382,17 +410,44 @@ def unclaimed(pid):
             "scope": "unclaimed", "reason": "owner-exited-before-claim"}
 
 
+def _live(pids, deadline):
+    """Split observed members into positively live PIDs and unobservable ones.
+
+    ``unknown`` liveness is neither evidence of life nor evidence of absence, so
+    it is counted and reported instead of being guessed either way. A PID is
+    only reported live when it was actually sampled alive.
+    """
+    alive, unobservable = [], 0
+    for pid in pids:
+        if monotonic() >= deadline:
+            return tuple(alive), "liveness-deadline"
+        status = process_status(pid)
+        if status == "alive":
+            alive.append(pid)
+        elif status == "unknown":
+            unobservable += 1
+    return tuple(alive), ("unknown-member-liveness" if unobservable else None)
+
+
 def live_pids(claim, *, deadline_seconds=SCAN_DEADLINE_SECONDS):
     """Positively observed live members of the recorded tree.
 
-    Returns a :data:`Scan`. Its ``pids`` are safe to pass to a kill; its
-    ``complete`` field is the only thing that may be read as "nothing is left".
-    An incomplete scan is reported as incomplete, never as an empty tree.
+    Returns a :data:`Scan` of PIDs that were sampled alive. A PID is a finding,
+    not a permission: this module does not carry the identity it observed, and
+    nothing here establishes the authority to signal one (see
+    :mod:`process_control`).
+
+    A member whose liveness cannot be sampled is neither alive nor absent. It is
+    left out of ``pids`` and the scan is marked ``degraded``, because its absence
+    from that tuple must never be read as an empty tree.
     """
     if not _valid(claim):
         return Scan((), False, "unavailable", "none", "invalid-claim")
-    scan = _scan(claim, monotonic() + deadline_seconds)
-    alive = tuple(pid for pid in scan.pids if process_status(pid) not in ("stopped", "not-found"))
+    deadline = monotonic() + deadline_seconds
+    scan = _scan(claim, deadline)
+    alive, problem = _live(scan.pids, deadline)
+    if problem is not None and scan.enumeration == "complete":
+        scan = scan._replace(complete=False, enumeration="degraded", reason=problem)
     return scan._replace(pids=alive)
 
 
@@ -407,14 +462,17 @@ def tree_state(claim, *, deadline_seconds=SCAN_DEADLINE_SECONDS):
         return {"owner": "unknown", "descendants": "unknown", "live": None,
                 "scope": "unclaimed" if type(claim) is dict else "none",
                 "enumeration": "unavailable", "reason": "no-tree-handle"}
+    deadline = monotonic() + deadline_seconds
     owner = verify_process(claim["pid"], claim.get("identity"))
-    scan = _scan(claim, monotonic() + deadline_seconds)
+    scan = _scan(claim, deadline)
+    alive, problem = _live(scan.pids, deadline)
+    if problem is not None and scan.enumeration == "complete":
+        scan = scan._replace(complete=False, enumeration="degraded", reason=problem)
     base = {"owner": owner, "scope": scan.scope, "enumeration": scan.enumeration}
     if owner == "identity-mismatch" and scan.scope == "parent-chain":
         # The number belongs to another process now, and a static parent chain
         # cannot separate the original children from the new process's.
         return dict(base, descendants="unknown", live=None, reason="owner-pid-reused")
-    alive = [pid for pid in scan.pids if process_status(pid) not in ("stopped", "not-found")]
     if alive:
         return dict(base, descendants="alive", live=len(alive), reason="live-descendants")
     if scan.complete and scan.scope in DURABLE_SCOPES:

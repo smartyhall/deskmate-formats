@@ -246,6 +246,11 @@ the Linux contract holds.
   and recovery there always take the explicit confirmation flag. That is the honest state, not
   a temporary test accommodation.
 * Job-object integration into execution, and suspended-create assignment, remain open.
-* Cancel and timeout termination is bounded by 20 rounds of 50 ms; a process that ignores
-  `SIGKILL` cannot exist, but one blocked in an uninterruptible kernel wait can outlive the
-  rounds and is then recorded as `descendants: "alive"` rather than assumed gone.
+* Cancel and timeout termination is bounded by 20 rounds of 50 ms inside a 15-second budget;
+  a process that ignores `SIGKILL` cannot exist, but one blocked in an uninterruptible kernel
+  wait can outlive the rounds and is then recorded as `descendants: "alive"` rather than
+  assumed gone.
+* This document fences *observation*. Which observed member may be signalled, and with what
+  identity evidence, is a separate contract recorded in the
+  [termination-authority report](termination-authority-20261127.md); nothing in `live_pids`
+  is authority to signal a PID.

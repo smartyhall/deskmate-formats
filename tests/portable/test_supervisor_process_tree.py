@@ -61,6 +61,13 @@ class ProcessTreeTests(unittest.TestCase):
         return process, claim
 
     def clean_tree(self, claim):
+        """Fixture cleanup only, not the production path.
+
+        This test created the tree and has not reaped the member below, so it may
+        end what it made. Production termination goes through
+        ``process_control``, which grants no authority over a Windows parent
+        chain precisely because that chain can name an unrelated process.
+        """
         for _ in range(5):
             scan = process_tree.live_pids(claim)
             for pid in scan.pids:
