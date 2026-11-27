@@ -33,7 +33,7 @@ failed or was inconclusive, when no rendering ran, or when the matrix is
 incomplete with `--require-matrix`, and `2` for a usage error.
 `--allow-findings` explicitly permits failed or inconclusive renderings for
 exploratory reporting; it does not permit an empty run or override
-`--require-matrix`. CI uses `--require-matrix` without this override.
+`--require-matrix`. Routine and comprehensive CI use `--require-matrix` without this override; focused dispatch has an explicit opt-in `allow_findings` input. Focused runs retain the full required matrix even with that opt-in.
 
 ## Engines
 
@@ -64,7 +64,7 @@ not a real high-contrast configuration.
 A rendering is accepted only when:
 
 - the document answered `200`;
-- the rendered path and canonical URL match the requested route;
+- the rendered origin/path match the requested base/route, and the canonical URL matches the expected canonical origin and route (local preview defaults to the published DeskMate domain; override with `--canonical-origin` for another site);
 - the title contains the page map's title;
 - the viewport matches the requested width and height;
 - loading settled (load event, then a quiet network);
@@ -99,7 +99,7 @@ run means the specific assertions above held in these engines at these sizes.
 
 Keyboard qualification distinguishes three outcomes: a pass, a failure, and
 *inconclusive* — WebKit moves Tab between form controls only, so a zero-stop
-result there is recorded as inconclusive rather than as a pass or a defect.
+result there is recorded as inconclusive rather than as a pass or a defect. Traversal reaching the 40-stop cap or a noninitial cycle is also inconclusive; repeated labels are not identity. Unsettled images receive a bounded wait and remain inconclusive if pending, while broken images and absent alt attributes are findings.
 
 ## Extending to other interfaces
 

@@ -32,6 +32,10 @@ on:
         description: "Focused only: comma-separated profiles"
         type: string
         default: desktop,mobile
+      allow_findings:
+        description: "Focused exploratory only: allow findings (never missing matrix entries)"
+        type: boolean
+        default: false
       pages:
         description: "Focused only: comma-separated routes, or 'all'"
         type: string
@@ -205,13 +209,17 @@ jobs:
           QUALIFICATION_ENGINES: ${{ inputs.engines }}
           QUALIFICATION_PROFILES: ${{ inputs.profiles }}
           QUALIFICATION_ROUTES: ${{ inputs.pages }}
+          QUALIFICATION_ALLOW_FINDINGS: ${{ inputs.allow_findings }}
         run: |
+          flags=()
+          if [[ "$QUALIFICATION_ALLOW_FINDINGS" == true ]]; then flags+=(--allow-findings); fi
           node cli.cjs \
             --serve-dir ../website/_site \
             --engines "$QUALIFICATION_ENGINES" \
             --profiles "$QUALIFICATION_PROFILES" \
             --pages "$QUALIFICATION_ROUTES" \
             --require-matrix \
+            "${flags[@]}" \
             --axe \
             --out qualification-results
       - name: Upload qualification artifacts

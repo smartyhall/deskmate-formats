@@ -7,9 +7,10 @@ const test = require("node:test");
 
 const { parseEngineList, LINUX_ENGINES, WINDOWS_ENGINES, MACOS_ENGINES } = require("../lib/engines.cjs");
 const { parseProfileList, contextOptions, PROFILES } = require("../lib/profiles.cjs");
-const { normalizeRoute, pagesFromMap, validateRoute, parsePages, renderingState, slug } = require("../lib/qualify.cjs");
+const { canonicalMatches, normalizeRoute, pagesFromMap, validateRoute, parsePages, renderingState, slug } = require("../lib/qualify.cjs");
 const { contactSheet, markdownSummary, escape } = require("../lib/report.cjs");
 const { serve, resolveTarget } = require("../lib/serve.cjs");
+const { CHECKS } = require("../lib/checks.cjs");
 const { qualificationExitCode } = require("../cli.cjs");
 
 test("engine lists reject unknown names and remove duplicates", () => {
@@ -158,4 +159,48 @@ test("inconclusive rendering has visible outcome and escaped reason", () => {
   assert.match(html, /figure class="inconclusive"/);
   assert.match(html, / — Inconclusive<\/strong>/);
   assert.match(html, /Inconclusive: keyboard: &lt;focus unknown&gt;/);
+});
+
+test("canonical origin is checked independently of normalized route", () => {
+  assert.equal(canonicalMatches("https://deskmate.retroconnect.org/research/", "https://deskmate.retroconnect.org", "/research/"), true);
+  assert.equal(canonicalMatches("https://mirror.example/research/", "https://deskmate.retroconnect.org", "/research/"), false);
+  assert.equal(canonicalMatches("https://deskmate.retroconnect.org/research/?x=1", "https://deskmate.retroconnect.org", "/research/"), false);
+  assert.equal(canonicalMatches(null, "https://deskmate.retroconnect.org", "/research/"), false);
+});
+
+function focusPage(sequence) {
+  let position = -1;
+  return {
+    keyboard: { press: async () => { position += 1; } },
+    evaluate: async () => position < 0 ? undefined : sequence[position] || null,
+  };
+}
+
+test("duplicate focus labels do not hide later invisible controls", async () => {
+  const sequence = [
+    { identity: 0, tag: "a", text: "Read more", visible: true },
+    { identity: 1, tag: "a", text: "Read more", visible: true },
+    { identity: 2, tag: "button", text: "Invisible", visible: false },
+  ];
+  const result = await CHECKS["focus-order"](focusPage(sequence));
+  assert.equal(result.ok, false);
+  assert.equal(result.stops.length, 3);
+  assert.deepEqual(result.invisible, ["button: Invisible"]);
+});
+
+test("bounded traversal is inconclusive rather than a pass", async () => {
+  const sequence = Array.from({ length: 40 }, (_, identity) => ({ identity, tag: "a", text: "Next", visible: true }));
+  const result = await CHECKS["focus-order"](focusPage(sequence));
+  assert.equal(result.truncated, true);
+  assert.equal(result.inconclusive, true);
+  assert.equal(renderingState({ problems: [], checks: [result] }), "inconclusive");
+});
+
+test("pending images are inconclusive, broken or missing-alt images fail", async () => {
+  const check = (data) => CHECKS.images({ evaluate: async () => data });
+  const pending = await check({ total: 1, missingAlt: [], broken: [], pending: ["lazy.png"] });
+  assert.equal(pending.ok, true);
+  assert.equal(pending.inconclusive, true);
+  const broken = await check({ total: 1, missingAlt: [], broken: ["bad.png"], pending: [] });
+  assert.equal(broken.ok, false);
 });

@@ -31,7 +31,22 @@ async function layout(page) {
 }
 
 async function images(page) {
-  const result = await page.evaluate(() => {
+  const result = await page.evaluate(async () => {
+    const observed = [...document.querySelectorAll("img")];
+    // Bound the wait for outstanding resources, including deferred images.
+    // Do not change loading policy merely to force a passing observation.
+    const unsettled = observed.filter((image) => !image.complete);
+    if (unsettled.length) {
+      let timer;
+      try {
+        await Promise.race([
+          Promise.allSettled(unsettled.map((image) => image.decode())),
+          new Promise((resolve) => { timer = setTimeout(resolve, 2000); }),
+        ]);
+      } finally {
+        clearTimeout(timer);
+      }
+    }
     const missingAlt = [];
     const broken = [];
     const pending = [];
@@ -42,11 +57,12 @@ async function images(page) {
     }
     return { total: document.querySelectorAll("img").length, missingAlt, broken, pending };
   });
-  const ok = result.missingAlt.length === 0 && result.broken.length === 0 && result.pending.length === 0;
-  const detail = ok
+  const ok = result.missingAlt.length === 0 && result.broken.length === 0;
+  const inconclusive = result.pending.length > 0;
+  const detail = ok && !inconclusive
     ? `${result.total} image(s) carry alt text and loaded`
     : `${result.missingAlt.length} without alt, ${result.broken.length} failed to load, ${result.pending.length} not loaded`;
-  return { name: "images", ok, detail, ...result };
+  return { name: "images", ok, inconclusive, detail, ...result };
 }
 
 async function navigation(page) {
@@ -117,14 +133,24 @@ async function tables(page) {
 
 async function focusOrder(page) {
   const stops = [];
-  await page.evaluate(() => document.body.focus());
+  await page.evaluate(() => {
+    document.body.focus();
+    // WeakMap keys identify actual DOM nodes, not their potentially repeated
+    // labels or current document position.
+    globalThis.__qualificationFocus = { seen: new WeakMap(), next: 0 };
+  });
+  let ended = false;
+  let cycle = false;
   for (let index = 0; index < MAX_TAB_STOPS; index += 1) {
     await page.keyboard.press("Tab");
     const stop = await page.evaluate(() => {
       const element = document.activeElement;
       if (!element || element === document.body) return null;
+      const state = globalThis.__qualificationFocus;
+      if (!state.seen.has(element)) state.seen.set(element, state.next++);
       const style = getComputedStyle(element);
       return {
+        identity: state.seen.get(element),
         tag: element.tagName.toLowerCase(),
         text: (element.innerText || element.getAttribute("aria-label") || element.getAttribute("href") || "")
           .trim().replace(/\s+/g, " ").slice(0, 60),
@@ -133,8 +159,12 @@ async function focusOrder(page) {
         visible: style.outlineStyle !== "none" && parseFloat(style.outlineWidth) > 0 || style.boxShadow !== "none",
       };
     });
-    if (!stop) break;
-    if (stops.some((entry) => entry.tag === stop.tag && entry.text === stop.text)) break;
+    if (!stop) { ended = true; break; }
+    if (stops.some((entry) => entry.identity === stop.identity)) {
+      cycle = stop.identity !== stops[0].identity;
+      ended = !cycle;
+      break;
+    }
     stops.push(stop);
   }
   if (stops.length === 0) {
@@ -152,12 +182,15 @@ async function focusOrder(page) {
   }
   const invisible = stops.filter((stop) => !stop.visible);
   const ok = invisible.length === 0;
+  const truncated = !ended && !cycle;
+  const inconclusive = truncated || cycle;
   return {
     name: "focus-order",
     ok,
-    detail: ok
-      ? `${stops.length} focus stop(s), all visibly indicated`
-      : `${stops.length} stop(s), ${invisible.length} without a visible indicator`,
+    inconclusive,
+    truncated,
+    detail: `${stops.length} stop(s), ${invisible.length} without a visible indicator` +
+      (truncated ? `; traversal capped at ${MAX_TAB_STOPS}` : cycle ? "; focus repeated before returning to first stop" : ""),
     stops,
     invisible: invisible.map((stop) => `${stop.tag}: ${stop.text}`),
   };

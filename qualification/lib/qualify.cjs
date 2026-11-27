@@ -39,6 +39,15 @@ function normalizeRoute(value) {
 }
 
 /** Load routes and titles from a reviewed page map, home and search included. */
+function canonicalMatches(value, expectedOrigin, route) {
+  try {
+    const url = new URL(value);
+    return url.origin === new URL(expectedOrigin).origin && !url.search && !url.hash && normalizeRoute(url.href) === route;
+  } catch {
+    return false;
+  }
+}
+
 function pagesFromMap(mapPath) {
   const map = JSON.parse(fs.readFileSync(mapPath, "utf8"));
   const pages = [{ route: "/", title: "DeskMate Reference" }];
@@ -104,7 +113,7 @@ async function qualifyPage(context, page, options, engine, profile) {
     const result = {
       engine, engineVersion: null, profile: profile.name, page,
       status: response ? response.status() : null,
-      problems: [`navigation failed: ${String(error.message || error).split("\n")[0]}`],
+      problems: [`${response ? "network settle failed" : "navigation failed"}: ${String(error.message || error).split("\n")[0]}`],
       checks: [], console: consoleMessages, failedRequests, pageErrors,
       durationMs: Date.now() - started,
     };
@@ -115,6 +124,7 @@ async function qualifyPage(context, page, options, engine, profile) {
   const status = response ? response.status() : null;
   const observed = await tab.evaluate(() => ({
     path: location.pathname,
+    origin: location.origin,
     title: document.title,
     canonical: (document.querySelector('link[rel="canonical"]') || {}).href || null,
     width: window.innerWidth,
@@ -125,11 +135,14 @@ async function qualifyPage(context, page, options, engine, profile) {
 
   const problems = [];
   if (status !== 200) problems.push(`document answered ${status}`);
+  if (observed.origin !== new URL(options.base).origin) problems.push(`rendered origin ${observed.origin}, expected ${new URL(options.base).origin}`);
   if (normalizeRoute(observed.path) !== page.route) {
     problems.push(`rendered ${observed.path}, expected ${page.route}`);
   }
-  const canonical = normalizeRoute(observed.canonical);
-  if (!canonical || canonical !== page.route) problems.push(`canonical ${observed.canonical} does not establish ${page.route}`);
+  const canonicalOrigin = options.canonicalOrigin || options.base;
+  if (!canonicalMatches(observed.canonical, canonicalOrigin, page.route)) {
+    problems.push(`canonical ${observed.canonical} does not establish ${new URL(canonicalOrigin).origin}${page.route}`);
+  }
   if (page.title && !observed.title.includes(page.title)) {
     problems.push(`title ${JSON.stringify(observed.title)} lacks ${JSON.stringify(page.title)}`);
   }
@@ -263,4 +276,4 @@ async function qualify(options) {
   return { summary, results };
 }
 
-module.exports = { qualify, pagesFromMap, normalizeRoute, validateRoute, parsePages, renderingState, slug, DEFAULT_TIMEOUT, SERIOUS };
+module.exports = { qualify, canonicalMatches, pagesFromMap, normalizeRoute, validateRoute, parsePages, renderingState, slug, DEFAULT_TIMEOUT, SERIOUS };

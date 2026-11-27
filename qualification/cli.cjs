@@ -18,6 +18,7 @@ const { DEFAULT_PROFILES } = require("./lib/profiles.cjs");
 function parseArgs(argv) {
   const options = {
     base: null,
+    canonicalOrigin: null,
     serveDir: null,
     pages: "all",
     pageMap: path.join(__dirname, "..", "docs", "site", "page-map.json"),
@@ -37,6 +38,7 @@ function parseArgs(argv) {
       return next;
     };
     if (flag === "--base") options.base = value();
+    else if (flag === "--canonical-origin") options.canonicalOrigin = value();
     else if (flag === "--serve-dir") options.serveDir = value();
     else if (flag === "--pages") options.pages = value();
     else if (flag === "--page-map") options.pageMap = value();
@@ -53,6 +55,13 @@ function parseArgs(argv) {
     throw new Error("pass --base <url> or --serve-dir <built site>");
   }
   if (options.base && options.serveDir) throw new Error("pass only one of --base and --serve-dir");
+  if (options.canonicalOrigin) {
+    const origin = new URL(options.canonicalOrigin);
+    if (!["http:", "https:"].includes(origin.protocol) || origin.username || origin.password || origin.pathname !== "/" || origin.search || origin.hash) {
+      throw new Error("--canonical-origin must be an HTTP(S) origin");
+    }
+    options.canonicalOrigin = origin.origin;
+  }
   if (!Number.isFinite(options.timeout) || options.timeout <= 0) throw new Error("--timeout must be positive");
   return options;
 }
@@ -70,6 +79,8 @@ async function main(argv) {
   if (options.serveDir) {
     server = await serve(options.serveDir);
     options.base = server.url;
+    // The built reference has production canonicals even when served locally.
+    options.canonicalOrigin ||= "https://deskmate.retroconnect.org";
     console.log(`serving ${path.resolve(options.serveDir)} at ${server.url}`);
   }
   try {
