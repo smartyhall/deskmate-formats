@@ -16,13 +16,13 @@
     "version": "deskmate_formats.perf report schema 1",
     "detail": "Instrumented test runs and microbenchmark reports written by this campaign's own harness, plus the home-directory campaign registry."
   },
-  "coverage": "Two full portable suite executions on 2026-11-26 and 2026-11-27 (727 and 799 tests), one controlled two-arm fixture comparison, one bounded microbenchmark session of 8 iterations across 12 benchmarks, and a before/after comparison pass. Host conditions recorded by the harness for every run.",
+  "coverage": "Two full portable suite executions on 2026-11-26 and 2026-11-27 (727 and 799 tests), one controlled two-arm fixture comparison, two focused Git-command-mix runs, one bounded microbenchmark session of 8 iterations across 12 benchmarks, and a before/after comparison pass. Host conditions recorded by the harness for every run.",
   "attribution_limits": "Host CPU, memory, process and thread counts describe a shared VM and are not provider consumption. Suite wall-clock is test execution time, not agent session time. Microbenchmark durations are host observations. No per-campaign or account-level provider allowance is observable to the agent.",
   "status": "complete: reusable harness published, two-run structural analysis, one import defect corrected (recovering 72 tests), one cross-campaign version-skew hazard documented, one test-synchronization finding handed to the branch that already fixes it",
   "measurements": [
     {
       "name": "instrumented_suite_runs",
-      "value": 5,
+      "value": 7,
       "unit": "runs",
       "scope": "campaign",
       "semantics": "cumulative",
@@ -40,7 +40,7 @@
     },
     {
       "name": "measured_test_wall_clock",
-      "value": 2249,
+      "value": 2446,
       "unit": "seconds",
       "scope": "campaign",
       "semantics": "cumulative",
@@ -49,7 +49,7 @@
     },
     {
       "name": "traced_process_spawns",
-      "value": 16765,
+      "value": 18766,
       "unit": "spawns",
       "scope": "campaign",
       "semantics": "cumulative",
@@ -66,6 +66,6 @@
       "reset_boundary": null
     }
   ],
-  "measurement_note": "Provider allowance, tokens, context size and quota remain unobservable to the agent; no figure is estimated or inferred from a shared account meter. measured_test_wall_clock sums instrumented test execution only and excludes agent session time: 1284.3 s + 918.6 s for the two full runs, plus 45.8 s across the smoke run and the two-arm fixture comparison. Campaign activity counts are reported as activity, not as provider consumption.",
+  "measurement_note": "Provider allowance, tokens, context size and quota remain unobservable to the agent; no figure is estimated or inferred from a shared account meter. measured_test_wall_clock sums instrumented test execution only and excludes agent session time: 1284.3 s + 918.6 s for the two full runs, plus 45.8 s across the smoke run and the two-arm fixture comparison, plus 197.1 s for the two Git-command-mix runs. Campaign activity counts are reported as activity, not as provider consumption.",
   "private_evidence": "Raw run JSON, host timelines, logs, comparison artifacts and the campaign registry are retained outside Git under the laboratory private-evidence directory; only the harness, the analysis and these reviewed receipts are published."
 }
