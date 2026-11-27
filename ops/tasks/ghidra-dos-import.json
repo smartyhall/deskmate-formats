@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "id": "ghidra-dos-import",
+  "revision": 1,
+  "idempotency_key": "ghidra-dos-import-1",
+  "title": "Import a preserved DOS image into an owned Ghidra project and emit a structural receipt",
+  "description": "Run the deterministic Ghidra import driver against one stored DOS executable with an explicit processor language, then emit the JSON receipt. Record the input SHA-256, resolved language, Ghidra and Java identity, memory-block model, per-stage timings and the reopen check. Do not analyse semantics, publish listings, or interpret function boundaries.",
+  "category": "analysis",
+  "profile": "offline",
+  "resources": [
+    "source-read",
+    "private-evidence-write",
+    "ghidra-project",
+    "subprocess",
+    "cpu-bound"
+  ],
+  "dependencies": [],
+  "candidate": true,
+  "candidate_note": "Prepared for coordination with the concurrent Supervisor campaign. Not registered for dispatch; this campaign does not own Supervisor resources.",
+  "requirements": {
+    "input": {
+      "path": "<preserved image>",
+      "sha256": "<expected digest, verified before import>"
+    },
+    "environment": {
+      "GHIDRA_INSTALL_DIR": "pinned installation path",
+      "ghidra_version": "12.1.4",
+      "ghidra_revision": "8b6bbb857accdfa20dc5b2f5dea471178c2e9fbc",
+      "java_major": 21,
+      "pyghidra": "3.2.0",
+      "python": "3.13"
+    },
+    "command": [
+      "python", "tools/ghidra/ghidra_dos_import.py",
+      "--project-dir", "<owned project directory>",
+      "--project", "<unique project name>",
+      "--input", "<preserved image>",
+      "--language", "x86:LE:16:Real Mode",
+      "--reopen-check",
+      "--output", "<private receipt path>"
+    ]
+  },
+  "limits": {
+    "stage_timeout_seconds": 900,
+    "analysis": "disabled by default; pass --analyze only when a task needs autoanalysis",
+    "cpu": "one core per import; the analyzer's -max-cpu applies only to analyzeHeadless",
+    "memory": "not bounded by the driver"
+  },
+  "cancellation": {
+    "mechanism": "terminate the process tree",
+    "resulting_state": "unknown; the owned project must be discarded and the receipt marked failed, never treated as partial success"
+  },
+  "cache": {
+    "key": ["input.sha256", "language_id", "ghidra.revision", "driver.sha256"],
+    "invalidate_on": "any key change; a receipt missing a key component is not cacheable"
+  },
+  "progress_events": [
+    "jvm_start",
+    "import",
+    "autoanalysis",
+    "save",
+    "reopen_check"
+  ],
+  "deliverables": [
+    "receipt-json",
+    "private-project-directory",
+    "sanitized-summary"
+  ],
+  "acceptance": [
+    "The receipt records the input size and SHA-256 and they match the request.",
+    "The resolved language id is read back from the imported program, not echoed from the request.",
+    "Memory-block records and stage timings are present.",
+    "When --reopen-check is requested, the reopen runs in a separate process and reports the same language and block count.",
+    "No original input file is modified; the project directory was created or exclusively owned by this run."
+  ],
+  "exclusions": [
+    "no emulator, guest or VMware resource",
+    "no network access during import",
+    "no publication of listings, decompiled output or proprietary bytes",
+    "no semantic conclusion: function names, xrefs and decompiler types are tool output, not evidence"
+  ]
+}

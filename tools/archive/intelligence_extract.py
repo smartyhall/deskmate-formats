@@ -9,7 +9,7 @@ import os
 from pathlib import Path, PurePosixPath
 import re
 import stat
-from struct import unpack_from
+from struct import pack, unpack_from
 import subprocess
 import sys
 import tarfile
@@ -18,6 +18,13 @@ from threading import Thread
 from time import monotonic
 import zipfile
 import zlib
+
+try:
+    from . import compression_streams
+    from . import disk_images
+except ImportError:
+    import compression_streams
+    import disk_images
 
 
 EXTENSIONS = {
@@ -28,7 +35,10 @@ EXTENSIONS = {
     **dict.fromkeys(('lha', 'lzh'), 'lzh'),
     **{ext: ext for ext in ('zip', 'tar', 'gz', 'tgz', '7z', 'rar', 'arc', 'arj', 'cab', 'pdf', 'rtf',
                             'ff1', 'sng', 'snd', 'fig', 'fil', 'cln', 'adr', 'wks', 'hds', 'mid', 'mod',
-                            'fnt', 'com', 'exe', 'dll', 'res', 'lib', 'obj', 'pif', 'doc')},
+                            'fnt', 'exe', 'dll', 'res', 'lib', 'obj', 'pif', 'doc')},
+    # One identifier per format everywhere: a headerless DOS COM program is
+    # ``dos-com``, never the generic short name of its suffix.
+    'com': 'dos-com',
 }
 NATIVE_SIGNATURES = {
     b'\x0cSNG': 'sng', b'\rDOC': 'native-doc', b'\x0eWKS': 'wks',
@@ -39,7 +49,9 @@ NATIVE_SIGNATURES = {
 LEGACY_KINDS = {'arj': 'Arj', 'cab': 'Cab', 'lzh': 'Lzh', '7z': '7z', 'rar': 'Rar', 'iso9660': 'Iso', 'udf': 'Udf', 'mz': None}
 OPTICAL_KINDS = frozenset({'iso9660', 'udf', 'cd-raw', 'optical-image'})
 SEVEN_OPTIONS = ('-sccUTF-8', '-spd', '-bsp0', '-p-')
-CONTAINER_KINDS = frozenset({'zip', 'tar', 'gz', 'tgz', 'fat', 'disk-image', 'arc', *OPTICAL_KINDS, *LEGACY_KINDS})
+CONTAINER_KINDS = frozenset({'zip', 'tar', 'gz', 'tgz', 'fat', 'disk-image', 'arc',
+                            *OPTICAL_KINDS, *LEGACY_KINDS,
+                            *disk_images.READERS, *compression_streams.DECODERS})
 TEXT_KINDS = frozenset({'text', 'html', 'pdf', 'native-doc', 'doc', 'rtf'})
 TEXT_CONTROL = re.compile(rb'[\x00-\x07\x0e-\x19\x1b-\x1f]')
 
@@ -134,74 +146,219 @@ def optical_descriptor(path):
     return None
 
 
-def identify(path: Path, name: str) -> str:
-    """Classify a file by header/geometry and then by filename or textual bytes."""
+# The name a suffix implies, using the same identifier the structural reader
+# reports so the two axes can be compared directly. A DOS ``.COM`` file has no
+# header of its own, so it is ``dos-com`` and never conflated with an ``MZ``
+# executable; a ``.Z`` file is ``unix-compress``, the identifier the decoder and
+# the capability registry both use.
+EXTENSION_FAMILIES = {
+    'exe': 'mz', 'com': 'dos-com', 'dll': 'mz', 'zip': 'zip', 'arc': 'arc', 'lzh': 'lzh',
+    'lha': 'lzh', 'tar': 'tar', 'gz': 'gz', 'tgz': 'tgz', 'z': 'unix-compress',
+    'bz2': 'bzip2', 'xz': 'xz', 'imd': 'imd', 'td0': 'td0', 'qm': 'copyqm',
+    'cqm': 'copyqm', 'dcf': 'dcf', 'img': 'disk-image', 'ima': 'disk-image',
+    'iso': 'iso9660', 'udf': 'udf', 'pdf': 'pdf', '7z': '7z', 'arj': 'arj',
+    'rar': 'rar', 'cab': 'cab', 'zoo': 'zoo', 'sqz': 'sqz', 'ha': 'ha', 'uc2': 'uc2',
+}
+
+# A suffix may name a family wider than the structural identity. A raw-image
+# name does not stop the bytes being a FAT volume, so both are acceptable and
+# the comparison stays about *this* file rather than about the suffix table.
+IDENTITY_FAMILIES = {
+    # A PE image is an MZ carrier with a later header, so an ``.exe`` name is
+    # honest for either; ``dos-com`` is deliberately absent, because a headerless
+    # COM program and an MZ executable are different formats.
+    'pe': 'mz',
+    'fat': 'disk-image',
+    **dict.fromkeys(disk_images.READERS, 'disk-image'),
+    **dict.fromkeys(OPTICAL_KINDS, 'optical-image'),
+}
+
+EXECUTABLE_SUFFIXES = frozenset({'exe', 'com', 'dll', 'pif', 'sys', 'drv', 'ovl'})
+
+
+@dataclass(frozen=True)
+class Classification:
+    """A file's identities, kept apart instead of collapsed into one.
+
+    A self-extracting archive is an MZ executable *and* a ZIP archive. Reporting
+    only the structural kind would lose the carrier; reporting only the
+    extension would lose the payload. Each axis is therefore recorded
+    separately, and a disagreement is evaluated against every identity the file
+    carries rather than being suppressed because a second identity exists.
+    """
+
+    kind: str
+    extension: str
+    extension_kind: str | None
+    carrier: str | None
+    embedded: tuple
+    evidence: str = 'fallback'
+
+    @property
+    def identities(self) -> tuple[str, ...]:
+        """Every distinct format identity the bytes genuinely carry."""
+        seen = []
+        for value in (self.kind, self.carrier, *self.embedded):
+            if value and value not in seen:
+                seen.append(value)
+        return tuple(seen)
+
+    @property
+    def confidence(self) -> str:
+        """How strongly the bytes themselves support ``kind``."""
+        return {'structure': 'certain', 'content': 'certain',
+                'extension': 'probable'}.get(self.evidence, 'unknown')
+
+    @property
+    def unexpected_extension(self) -> bool:
+        """True when the name implies a format none of the identities support."""
+        if self.extension_kind is None or self.evidence == 'extension':
+            # Nothing but the name decided the identity, so the name cannot
+            # contradict it; only a structural or content finding can.
+            return False
+        accepted = set()
+        for identity in self.identities:
+            accepted.add(identity)
+            if family := IDENTITY_FAMILIES.get(identity):
+                accepted.add(family)
+        return self.extension_kind not in accepted
+
+
+def _carrier(data):
+    """Name the executable container a body is wrapped in, if any."""
+    if data[:2] == b'MZ':
+        if len(data) >= 0x40:
+            offset = unpack_from('<I', data, 0x3C)[0]
+            if 0x40 <= offset <= len(data) - 4 and data[offset:offset + 4] == b'PE\0\0':
+                return 'pe'
+        return 'mz'
+    if data[:4] == b'\x7fELF':
+        return 'elf'
+    return None
+
+
+def classify(path, name=None) -> Classification:
+    """Report structural identity, name hint, carrier and embedded archive."""
+    path = Path(path)
+    name = name or path.name
+    with path.open('rb') as stream:
+        head = stream.read(0x100)
+    carrier = _carrier(head)
+    evidence = []
+    kind = identify(path, name, evidence)
+    # Only a ZIP payload inside an executable is detected structurally; other
+    # embedded archives are reached through the optional external adapter. The
+    # payload keeps its own identity even when it is also the extracted kind,
+    # so ``identities`` names the carrier and the payload separately.
+    embedded = ('zip',) if carrier is not None and kind == 'zip' else ()
+    label = PurePosixPath(name.replace('\\', '/')).name
+    extension = PurePosixPath(label).suffix[1:].casefold()
+    return Classification(kind, extension, EXTENSION_FAMILIES.get(extension), carrier,
+                          embedded, evidence[0] if evidence else 'fallback')
+
+
+def identify(path: Path, name: str, evidence: list | None = None) -> str:
+    """Classify a file by header/geometry and then by filename or textual bytes.
+
+    When ``evidence`` is supplied, the axis that decided the answer is appended
+    to it: ``structure`` (a magic or geometry invariant), ``content`` (text or
+    markup structure), ``extension`` (the name alone) or ``fallback``. Keeping
+    the axis explicit is what lets a name hint and a structural identity be
+    compared instead of silently collapsed.
+    """
     label = PurePosixPath(name.replace('\\', '/')).name.casefold()
     extension = PurePosixPath(label).suffix[1:]
     size = path.stat().st_size
     with path.open('rb') as stream:
         data = stream.read(4096)
-    if kind := NATIVE_SIGNATURES.get(data[:4]):
+    found = _structural(path, data, extension, size)
+    if found is not None:
+        kind, axis = found
+        if evidence is not None:
+            evidence.append(axis)
         return kind
+    if extension in EXTENSIONS:
+        if evidence is not None:
+            evidence.append('extension')
+        return EXTENSIONS[extension]
+    if _looks_text(data) or data.startswith((b'\xff\xfe', b'\xfe\xff')):
+        if evidence is not None:
+            evidence.append('content')
+        return 'text'
+    if evidence is not None:
+        evidence.append('fallback')
+    return 'binary'
+
+
+def _structural(path, data, extension, size):
+    """Return ``(kind, evidence)`` for a signature found in the bytes.
+
+    Every check here requires a structural invariant rather than a bare magic
+    string, so an ordinary text file cannot be mistaken for a container.
+    """
+    if kind := NATIVE_SIGNATURES.get(data[:4]):
+        return kind, 'structure'
+    # Sector containers and compression streams carry mandatory structural
+    # invariants, so they are recognised without trusting the filename.
+    if kind := disk_images.identify(data):
+        return kind, 'structure'
+    if kind := compression_streams.identify_stream(data):
+        return kind, 'structure'
     if data[:5] in (b'\xbd\x7a\0\x01\x01', b'\xbd\x7a\x01\x01\x01') and data[32:34] == b'\x2e\0':
-        return 'ff1'
+        return 'ff1', 'structure'
     if data.startswith(b'RIFF') and data[8:12] == b'WAVE':
-        return 'wav'
+        return 'wav', 'structure'
     if data.startswith(b'Creative Voice File\x1a'):
-        return 'voc'
+        return 'voc', 'structure'
     if data.startswith((b'II*\0', b'MM\0*')):
-        return 'tiff'
+        return 'tiff', 'structure'
     if data.startswith(b'%PDF-'):
-        return 'pdf'
+        return 'pdf', 'structure'
     if data.startswith(b'7z\xbc\xaf\x27\x1c'):
-        return '7z'
+        return '7z', 'structure'
     if data.startswith(b'Rar!\x1a\x07'):
-        return 'rar'
+        return 'rar', 'structure'
     if data.startswith(b'\x60\xea'):
-        return 'arj'
+        return 'arj', 'structure'
     if data[2:5] in (b'-lh', b'-lz') and data[6:7] == b'-':
-        return 'lzh'
+        return 'lzh', 'structure'
     if data.startswith(b'\x1f\x8b\x08'):
         # Preserve an explicit .tgz name so a decompressed opaque TAR can be named.
-        return 'tgz' if extension == 'tgz' else 'gz'
+        return ('tgz' if extension == 'tgz' else 'gz'), 'structure'
     if data[257:262] == b'ustar':
-        return 'tar'
+        return 'tar', 'structure'
     if data.startswith(bytes.fromhex('d0cf11e0a1b11ae1')):
-        return 'compound-document'
+        return 'compound-document', 'structure'
     if descriptor := optical_descriptor(path):
-        return descriptor['kind']
+        return descriptor['kind'], 'structure'
     if extension in ('iso', 'nrg', 'mdf', 'ccd', 'cue'):
-        return 'optical-image'
+        return 'optical-image', 'extension'
     if _fat_layout(data, size) is not None:
-        return 'fat'
+        return 'fat', 'structure'
     if any(_partitions(data, size)):
         with path.open('rb') as stream:
             for _, offset, length in _partitions(data, size):
                 stream.seek(offset)
                 if _fat_layout(stream.read(512), length):
-                    return 'fat'
+                    return 'fat', 'structure'
     if data.startswith(b'MZ'):
-        return 'zip' if zipfile.is_zipfile(path) else 'mz'
+        return ('zip' if zipfile.is_zipfile(path) else 'mz'), 'structure'
     if data[44:46] == b'\x1a\x80' and len(data) >= 114 and 0 < unpack_from('<H', data, 46)[0] <= 128:
-        return 'snd'
+        return 'snd', 'structure'
     if data.startswith(b'\x1a') and len(data) >= 29 and 1 <= data[1] <= 11:
         member_name, nul, _padding = data[2:15].partition(b'\0')
         if nul and b'.' in member_name and re.fullmatch(rb'[!-~]{1,12}', member_name):
-            return 'arc'
+            return 'arc', 'structure'
     if data.startswith(b'\x1a') and len(data) >= 44 and data[1] in (0, 1, 2) and data[2]:
         table_end = 16 + 28 * data[2]
         first_sample = unpack_from('<I', data, 20)[0]
         if (data[3] <= 32 or data[3] == 255) and table_end <= first_sample <= size:
-            return 'snd'
+            return 'snd', 'structure'
     if data[:4] == b'\x03\0\0\0' and extension == 'adr':
-        return 'adr'
+        return 'adr', 'structure'
     if re.match(rb'(?:\xef\xbb\xbf)?\s*<(?:!doctype\s+html|html|head|body)\b', data, re.I):
-        return 'html'
-    if extension in EXTENSIONS:
-        return EXTENSIONS[extension]
-    if _looks_text(data) or data.startswith((b'\xff\xfe', b'\xfe\xff')):
-        return 'text'
-    return 'binary'
+        return 'html', 'content'
+    return None
 
 
 def safe_member(name):
@@ -332,6 +489,16 @@ class _FATLayout:
     root_start: int
     root_bytes: int
     data_start: int
+    root_cluster: int | None = None
+    copies: int = 1
+    active: int = 0
+    fsinfo: int | None = None
+    backup_boot: int | None = None
+    media: int = 0xf8
+    total_sectors: int = 0
+    sector_bytes: int = 512
+    mirrored: bool = True
+    reserved: int = 0
 
 
 def _fat_layout(boot, size):
@@ -343,7 +510,7 @@ def _fat_layout(boot, size):
     if (sector not in (128, 256, 512, 1024, 2048, 4096) or
             sectors_per_cluster not in (1, 2, 4, 8, 16, 32, 64, 128) or
             copies not in (1, 2) or media not in (0xf0, *range(0xf8, 0x100)) or
-            not reserved or not root_entries or not fat):
+            not reserved or not fat):
         return None
     total = total or unpack_from('<I', boot, 32)[0]
     root = reserved + copies * fat
@@ -352,11 +519,38 @@ def _fat_layout(boot, size):
     if not first_data < total <= size // sector:
         return None
     cluster_count = (total - first_data) // sectors_per_cluster
-    bits = 12 if cluster_count < 4085 else 16
-    if not 0 < cluster_count < 65525 or (cluster_count + 2) * bits > fat * sector * 8:
+    if not 0 < cluster_count < 0x0FFFFFF5:
+        return None
+    fsinfo = backup = None
+    active = 0
+    mirrored = True
+    if cluster_count >= 65525:
+        # FAT32 keeps the root directory in the data area and has no fixed
+        # root region, so a non-zero root-entry count contradicts the layout.
+        if root_entries:
+            return None
+        bits, root_cluster = 32, unpack_from('<I', boot, 44)[0]
+        if not 2 <= root_cluster < cluster_count + 2:
+            return None
+        # BPB_ExtFlags: bit 7 disables FAT mirroring; the low nibble then names
+        # the active copy. A mirroring-enabled volume must use copy zero.
+        ext_flags = unpack_from('<H', boot, 40)[0]
+        active = ext_flags & 0x0f if ext_flags & 0x80 else 0
+        if active >= copies:
+            return None
+        fsinfo = unpack_from('<H', boot, 48)[0] or None
+        backup = unpack_from('<H', boot, 50)[0] or None
+        mirrored = not ext_flags & 0x80
+        root_bytes = 0
+    else:
+        bits, root_cluster = (12 if cluster_count < 4085 else 16), None
+        root_bytes = root_entries * 32
+    if (cluster_count + 2) * bits > fat * sector * 8:
         return None
     return _FATLayout(bits, sector * sectors_per_cluster, cluster_count,
-                      reserved * sector, fat * sector, root * sector, root_entries * 32, first_data * sector)
+                      reserved * sector, fat * sector, root * sector, root_bytes,
+                      first_data * sector, root_cluster, copies, active, fsinfo,
+                      backup, media, total, sector, mirrored, reserved)
 
 
 def _partitions(boot, size):
@@ -371,14 +565,187 @@ def _partitions(boot, size):
             yield index + 1, start * 512, count * 512
 
 
+def _short_checksum(entry):
+    """VFAT checksum binding a long-name chain to its 11-byte short name."""
+    checksum = 0
+    for byte in entry[:11]:
+        checksum = (((checksum & 1) << 7) + (checksum >> 1) + byte) & 0xFF
+    return checksum
+
+
+VFAT_SLOT_ATTR = 0x0F
+VFAT_LAST = 0x40
+VFAT_ORDINAL_BITS = 0x1F
+VFAT_RESERVED_ORDER = 0x80
+VFAT_MAX_ORDINAL = 20
+
+
+def _vfat_units(raw):
+    """Decode the thirteen UTF-16 code units of one slot, or None if malformed.
+
+    A zero unit terminates the name and every later unit must be 0xFFFF
+    padding; 0xFFFF before the terminator, an unpaired surrogate or a stray low
+    surrogate makes the slot unusable as text.
+    """
+    units = [unpack_from('<H', raw, index)[0] for index in range(0, len(raw), 2)]
+    name = []
+    for position, unit in enumerate(units):
+        if unit == 0x0000:
+            if not all(value == 0xFFFF for value in units[position + 1:]):
+                return None
+            break
+        if unit == 0xFFFF:
+            return None
+        name.append(unit)
+    for position, unit in enumerate(name):
+        if 0xD800 <= unit <= 0xDBFF:
+            if position + 1 >= len(name) or not 0xDC00 <= name[position + 1] <= 0xDFFF:
+                return None
+        elif 0xDC00 <= unit <= 0xDFFF:
+            if position == 0 or not 0xD800 <= name[position - 1] <= 0xDBFF:
+                return None
+    return name
+
+
+class _VFatNames:
+    """Assemble one VFAT long-name chain, rejecting anything malformed.
+
+    VFAT writes the slots in reverse: the highest ordinal first, carrying the
+    0x40 last-slot marker, then strictly descending to ordinal one immediately
+    before the short entry whose 11-byte checksum every slot repeats. A stale,
+    duplicated, out-of-order, interleaved or truncated chain is discarded rather
+    than supplying a name the short entry does not describe, and the short name
+    is then reported unchanged.
+    """
+
+    def __init__(self):
+        self.slots = {}
+        self.checksum = None
+        self.expected = 0
+        self.problem = None
+
+    def reset(self):
+        self.slots = {}
+        self.checksum = None
+        self.expected = 0
+
+    def _fail(self, detail):
+        self.problem = detail
+        self.reset()
+
+    def slot(self, entry):
+        order = entry[0]
+        if order & VFAT_RESERVED_ORDER:
+            return self._fail('vfat-slot-reserved-bit')
+        if entry[12] or entry[26:28] != b'\0\0':
+            return self._fail('vfat-slot-reserved-field')
+        ordinal = order & VFAT_ORDINAL_BITS
+        if not 1 <= ordinal <= VFAT_MAX_ORDINAL:
+            return self._fail('vfat-slot-ordinal')
+        units = _vfat_units(entry[1:11] + entry[14:26] + entry[28:32])
+        if units is None:
+            return self._fail('vfat-slot-text')
+        if order & VFAT_LAST:
+            # A new chain starts here; one still open was never completed.
+            if self.slots:
+                self.problem = 'vfat-chain-interrupted'
+            self.slots = {ordinal: units}
+            self.checksum = entry[13]
+            self.expected = ordinal
+            return
+        if not self.slots:
+            return self._fail('vfat-orphan-slot')
+        if ordinal != self.expected - 1 or entry[13] != self.checksum:
+            return self._fail('vfat-slot-order')
+        self.slots[ordinal] = units
+        self.expected = ordinal
+
+    def name(self, checksum):
+        """Return the assembled long name, or None when the chain does not vouch."""
+        if self.slots and self.expected == 1:
+            if self.checksum != checksum:
+                self.problem = 'vfat-checksum-mismatch'
+                return None
+            units = [unit for ordinal in range(1, max(self.slots) + 1)
+                     for unit in self.slots.get(ordinal, ())]
+            if units:
+                return b''.join(pack('<H', unit) for unit in units).decode('utf-16-le', 'replace')
+            self.problem = 'vfat-empty-name'
+        elif self.slots:
+            self.problem = 'vfat-incomplete-chain'
+        return None
+
+
 class _FATVolume:
-    def __init__(self, stream, offset, layout):
+    def __init__(self, stream, offset, layout, boot=b''):
         self.stream = stream
         self.offset = offset
         self.layout = layout
         link_bytes = ((layout.cluster_count + 2) * layout.bits + 7) // 8
-        self.fat = self.read(layout.fat_start, link_bytes)
+        self.fat = self.read(layout.fat_start + layout.active * layout.fat_bytes, link_bytes)
         self.directories = set()
+        # Cluster ownership is keyed by directory entry, never by name: two
+        # entries may legally share a name and still be distinct objects.
+        self.claimed = {}
+        self.serial = 0
+        self.observations = []
+        self._inspect_copies(link_bytes)
+        if self.fat[0] != layout.media & 0xFF:
+            self.observations.append('fat-media-byte-differs')
+        self._inspect_fsinfo()
+        self._inspect_backup_boot(boot)
+
+    def _inspect_copies(self, link_bytes):
+        """Compare mirrored copies and report the first divergence.
+
+        A volume with mirroring disabled may legitimately keep stale mirrors,
+        so only a mirrored volume is compared.
+        """
+        layout = self.layout
+        if layout.copies < 2 or not layout.mirrored:
+            return
+        for index in range(layout.copies):
+            if index == layout.active:
+                continue
+            other = self.read(layout.fat_start + index * layout.fat_bytes, link_bytes)
+            if other != self.fat:
+                self.observations.append(f'fat-copy-{index}-differs')
+                return
+
+    def _inspect_fsinfo(self):
+        """Check the FSInfo placement, signatures and plausibility, never its hints."""
+        layout = self.layout
+        if not layout.fsinfo:
+            return
+        # FSInfo lives in the reserved region, before the first FAT copy.
+        if layout.fsinfo >= layout.reserved:
+            self.observations.append('fsinfo-outside-reserved')
+            return
+        sector = self.read(layout.fsinfo * layout.sector_bytes, layout.sector_bytes)
+        if (unpack_from('<I', sector, 0)[0] != 0x41615252 or
+                unpack_from('<I', sector, 484)[0] != 0x61417272 or
+                unpack_from('<I', sector, 508)[0] != 0xAA550000):
+            self.observations.append('fsinfo-signature-invalid')
+            return
+        free, next_free = unpack_from('<II', sector, 488)
+        if ((free != 0xFFFFFFFF and free > layout.cluster_count) or
+                (next_free != 0xFFFFFFFF
+                 and not 2 <= next_free < layout.cluster_count + 2)):
+            self.observations.append('fsinfo-values-implausible')
+
+    def _inspect_backup_boot(self, boot):
+        layout = self.layout
+        if not layout.backup_boot or not boot:
+            return
+        if layout.backup_boot >= layout.reserved:
+            self.observations.append('backup-boot-outside-reserved')
+            return
+        offset = layout.backup_boot * layout.sector_bytes
+        if offset + len(boot) > layout.total_sectors * layout.sector_bytes:
+            self.observations.append('backup-boot-outside-volume')
+            return
+        if self.read(offset, len(boot)) != boot:
+            self.observations.append('backup-boot-differs')
 
     def read(self, offset, size):
         self.stream.seek(self.offset + offset)
@@ -390,53 +757,105 @@ class _FATVolume:
     def chain(self, cluster):
         seen = set()
         layout = self.layout
-        stop = 0xff8 if layout.bits == 12 else 0xfff8
-        reserved = 0xff0 if layout.bits == 12 else 0xfff0
-        while cluster < stop:
+        bits = layout.bits
+        stop = {12: 0xff8, 16: 0xfff8, 32: 0x0ffffff8}[bits]
+        reserved = {12: 0xff0, 16: 0xfff0, 32: 0x0ffffff0}[bits]
+        # A bad-cluster marker is a distinct end, not an end of chain.
+        bad = {12: 0xff7, 16: 0xfff7, 32: 0x0ffffff7}[bits]
+        while True:
+            if cluster >= stop:
+                return
+            if cluster == bad:
+                raise ValueError('bad FAT cluster in chain')
             if not 2 <= cluster < min(layout.cluster_count + 2, reserved) or cluster in seen:
                 raise ValueError('invalid FAT cluster chain')
             seen.add(cluster)
             yield layout.data_start + (cluster - 2) * layout.cluster_bytes
-            if layout.bits == 12:
+            if bits == 12:
                 value = unpack_from('<H', self.fat, cluster + cluster // 2)[0]
                 cluster = (value >> (4 * (cluster % 2))) & 0xfff
-            else:
+            elif bits == 16:
                 cluster = unpack_from('<H', self.fat, cluster * 2)[0]
+            else:
+                cluster = unpack_from('<I', self.fat, cluster * 4)[0] & 0x0fffffff
 
-    def _blocks(self, cluster):
+    def _claim(self, offset, kind, identity):
+        """Record that one directory entry owns this cluster."""
+        owner = self.claimed.get(offset)
+        if owner is not None and owner != identity:
+            raise ValueError(f'cross-linked FAT chain ({kind})')
+        self.claimed[offset] = identity
+
+    def _blocks(self, cluster, identity):
+        if cluster is None and self.layout.root_cluster is not None:
+            cluster = self.layout.root_cluster
         if cluster is None:
+            # FAT12/FAT16 only: the fixed root-directory region.
             yield self.read(self.layout.root_start, self.layout.root_bytes)
-        else:
-            for offset in self.chain(cluster):
-                yield self.read(offset, self.layout.cluster_bytes)
+            return
+        # A directory chain is claimed before it is walked, so a file entry
+        # that aliases a directory's clusters is caught at the directory too.
+        for offset in self.chain(cluster):
+            self._claim(offset, 'directory', identity)
+            yield self.read(offset, self.layout.cluster_bytes)
 
-    def file(self, cluster, size):
+    def file(self, cluster, size, identity, name=None):
         if not cluster and not size:
             return b''
+        chain = list(self.chain(cluster))
+        for offset in chain:
+            owner = self.claimed.get(offset)
+            if owner is not None and owner != identity:
+                raise ValueError('cross-linked FAT chain')
         data = bytearray()
-        for offset in self.chain(cluster):
+        for offset in chain:
             if len(data) >= size:
                 raise ValueError('extra FAT clusters beyond file extent')
             data.extend(self.read(offset, min(self.layout.cluster_bytes, size - len(data))))
         if len(data) != size:
             raise ValueError('FAT chain is shorter than file extent')
+        for offset in chain:
+            self.claimed[offset] = identity
         return bytes(data)
 
-    def entries(self, prefix='', cluster=None, depth=0):
-        for block in self._blocks(cluster):
+    def entries(self, prefix='', cluster=None, depth=0, identity=None):
+        if identity is None:
+            identity = 'root' if cluster is None else f'directory-{cluster}'
+        names = _VFatNames()
+        for block in self._blocks(cluster, identity):
             for cursor in range(0, len(block), 32):
                 entry = block[cursor:cursor + 32]
                 if not entry[0]:
                     return
+                if entry[11] == VFAT_SLOT_ATTR:
+                    names.slot(entry)
+                    if names.problem:
+                        self.observations.append(names.problem)
+                        names.problem = None
+                    continue
                 if entry[0] == 0xe5 or entry[11] & 8 or entry[:1] == b'.':
+                    names.reset()
                     continue
                 root = bytes([0xe5]) + entry[1:8] if entry[0] == 5 else entry[:8]
                 name = root.decode('cp437').rstrip(' ')
                 ext = entry[8:11].decode('cp437').rstrip(' ')
                 name = prefix + name + ('.' + ext if ext else '')
-                child, size = unpack_from('<HI', entry, 26)
+                long_name = names.name(_short_checksum(entry))
+                if names.problem:
+                    self.observations.append(names.problem)
+                names.reset()
+                if long_name and safe_member(prefix + long_name):
+                    name = prefix + long_name
+                high = unpack_from('<H', entry, 20)[0] if self.layout.bits == 32 else 0
+                child = unpack_from('<H', entry, 26)[0] | (high << 16)
+                size = unpack_from('<I', entry, 28)[0]
+                # One identity per physical directory entry, so duplicate names
+                # stay distinct objects and a repeated cluster is a cross-link.
+                self.serial += 1
+                entry_identity = f'entry-{self.serial}'
                 if entry[11] & 16:
-                    invalid = child in self.directories or depth >= 24 or not safe_member(name)
+                    invalid = (not child or child in self.directories or depth >= 24
+                               or not safe_member(name))
                     yield name, 0, 'invalid-directory' if invalid else 'directory', None
                     if not invalid:
                         self.directories.add(child)
@@ -445,7 +864,38 @@ class _FATVolume:
                         except ValueError:
                             yield name, None, 'invalid-directory-chain', None
                 else:
-                    yield name, size, None, lambda cap: self.file(child, size)
+                    yield name, size, None, lambda cap: self.file(child, size, entry_identity)
+
+
+# Observations that describe real structural damage, as distinct from
+# advisory inconsistencies a volume may legitimately show (stale free-cluster
+# hints, an unusual but readable reserved-region pointer).
+DAMAGE_OBSERVATIONS = frozenset({
+    'fat-media-byte-differs', 'fsinfo-signature-invalid', 'backup-boot-differs',
+    'backup-boot-outside-volume', 'backup-boot-outside-reserved',
+})
+
+
+def _volume_detail(result, volumes):
+    """Attach volume-level observations without hiding the member results.
+
+    Damage is reported apart from advice, and only damage can change a
+    successful member listing into a partial recovery.
+    """
+    notes = list(dict.fromkeys(note for volume in volumes for note in volume.observations))
+    if notes:
+        damage = [note for note in notes
+                  if note in DAMAGE_OBSERVATIONS or note.startswith('fat-copy-')]
+        advisory = [note for note in notes if note not in damage]
+        parts = []
+        if damage:
+            parts.append('damage: ' + ', '.join(damage))
+        if advisory:
+            parts.append('advisory: ' + ', '.join(advisory))
+        result.detail = '; '.join(parts) + ('; ' + result.detail if result.detail else '')
+        if damage and result.status == 'ok':
+            result.status = 'partial'
+    return result
 
 
 def _fat(path, limits):
@@ -453,20 +903,300 @@ def _fat(path, limits):
     with path.open('rb') as stream:
         boot = stream.read(512)
         if layout := _fat_layout(boot, size):
-            return _members(_FATVolume(stream, 0, layout).entries(), limits)
+            volume = _FATVolume(stream, 0, layout, boot)
+            return _volume_detail(_members(volume.entries(), limits), [volume])
         volumes = []
         for index, offset, length in _partitions(boot, size):
             stream.seek(offset)
-            if layout := _fat_layout(stream.read(512), length):
-                volumes.append((index, offset, layout))
+            partition_boot = stream.read(512)
+            if layout := _fat_layout(partition_boot, length):
+                volumes.append((index, _FATVolume(stream, offset, layout, partition_boot)))
         if not volumes:
             return Extraction(status='unsupported', detail='no-fat12-or-fat16-layout')
 
         def entries():
-            for index, offset, layout in volumes:
-                yield from _FATVolume(stream, offset, layout).entries(f'partition-{index}/')
+            for index, volume in volumes:
+                yield from volume.entries(f'partition-{index}/')
 
-        return _members(entries(), limits)
+        return _volume_detail(_members(entries(), limits), [volume for _, volume in volumes])
+
+
+def _sector_image(path, kind, limits):
+    """Normalise a sector container, then read its filesystem if it has one.
+
+    The normalised logical-block image is a derivative written to a private
+    scratch path; only its member listing and geometry summary are retained.
+    Every caller limit survives into the container decoder and into the
+    normalisation separately: input file, one sector, all decoded sectors, the
+    declared geometry, one track and the logical image each have a bound, so a
+    container header can never enlarge one the caller set.
+    """
+    bounds = disk_images.Bounds(
+        input_bytes=limits.input_bytes,
+        sectors=min(limits.members, 200_000),
+        sector_bytes=min(limits.member_bytes, 65536),
+        total_bytes=limits.total_bytes,
+        geometry_sectors=max(1, min(limits.total_bytes // 512, 4_194_304)),
+        lba_bytes=limits.total_bytes,
+        track_bytes=min(limits.total_bytes, 8 * 1024 * 1024))
+    volume = disk_images.read(path, kind, bounds)
+    geometry = volume.geometry
+    summary = (f'{volume.container}; {geometry.cylinders}c/{geometry.heads}h/'
+               f'{geometry.sectors_per_track}spt x {geometry.sector_size}B; '
+               f'{len(volume.sectors)} sectors')
+    if volume.detail:
+        summary += f'; {volume.detail}'
+    if volume.warnings:
+        summary += '; ' + ', '.join(volume.warnings)
+    if volume.status in ('failed', 'unsupported', 'limited'):
+        return Extraction(status=volume.status, detail=summary)
+    normalised = disk_images.to_lba(volume, bounds=bounds)
+    if normalised.status in ('unknown-geometry', 'invalid-geometry'):
+        return Extraction(status='unsupported', detail=summary + f'; {normalised.status}')
+    if normalised.status == 'lba-byte-limit':
+        return Extraction(status='limited', detail=summary + '; lba-byte-limit')
+    if normalised.status == 'implausible-sector-count':
+        return Extraction(status='failed', detail=summary + '; implausible-sector-count')
+    summary += (f'; lba {normalised.status} {normalised.written}/{normalised.total_sectors}')
+    if normalised.missing:
+        summary += f'; {len(normalised.missing)} missing'
+    if normalised.conflicts:
+        summary += f'; {len(normalised.conflicts)} conflicting'
+    if normalised.degraded:
+        summary += f'; {len(normalised.degraded)} read-error-or-deleted'
+    if normalised.rejected:
+        summary += f'; {normalised.rejected} out-of-geometry'
+    with TemporaryDirectory(prefix='deskmate-sector-') as scratch:
+        staged = Path(scratch) / 'normalised.img'
+        staged.write_bytes(normalised.data)
+        result = _fat(staged, limits)
+    # A clean filesystem read of an incomplete, degraded or rejected volume is
+    # still not a verified recovery: the container and the normalisation decide
+    # that, not the filesystem. A container whose sectors were recovered but
+    # whose filesystem is unrecognised is likewise a partial recovery, not an
+    # unsupported format.
+    recovered = volume.status != 'ok' or normalised.status != 'complete'
+    if recovered and result.status in ('ok', 'unsupported'):
+        result.status = 'partial'
+    result.detail = summary + ('; ' + result.detail if result.detail else '')
+    return result
+
+
+def _compressed(path, name, kind, limits):
+    """Decode one standalone compression stream into a single opaque member.
+
+    Complete decoding, partial recovery, a resource limit and malformed input
+    stay distinguishable here: a partially decoded payload is returned with a
+    ``partial`` status, never presented as a complete member. The caller's
+    input bound is enforced by the read that feeds the decoder, not by a
+    separate size inspection that a growing file could outrun.
+
+    The payload is gated the way ``_members`` gates an archive member: the
+    decoder is told the smaller of the member and aggregate budgets, and the
+    result is checked against that same figure again afterwards. A caller that
+    sets an aggregate cap below the member cap therefore still receives no more
+    than the extraction as a whole promised, even though this member is built
+    here rather than by ``_members``.
+    """
+    budget = min(limits.member_bytes, limits.total_bytes)
+    try:
+        data = _read(lambda: path.open('rb'), limits.input_bytes)
+    except OSError as exc:
+        return Extraction(status='failed', detail=type(exc).__name__)
+    if len(data) > limits.input_bytes:
+        return Extraction(status='limited', detail='input-byte-limit')
+    decoded = compression_streams.decode(
+        data, kind,
+        compression_streams.Bounds(output_bytes=budget,
+                                   codes=max(4096, budget),
+                                   decoder_bytes=limits.total_bytes))
+    if decoded.status in ('failed', 'limited', 'unsupported'):
+        status = 'failed' if decoded.status in ('failed', 'unsupported') else 'limited'
+        return Extraction(status=status, detail=f'{kind}; {decoded.detail}')
+    basename = PurePosixPath(name.replace('\\', '/')).name
+    suffix = compression_streams.SUFFIXES[kind]
+    if basename.casefold().endswith(suffix):
+        child = basename[:-len(suffix)]
+    elif '.' in basename:
+        child = basename.rsplit('.', 1)[0]
+    else:
+        child = basename
+    detail = kind
+    if decoded.warnings:
+        detail += '; ' + ', '.join(decoded.warnings)
+    if decoded.status == 'partial':
+        detail += f'; {decoded.detail}'
+    payload = decoded.data or b''
+    if len(payload) > budget:
+        # The decoder stops at the budget, so this is a second gate rather than
+        # a reachable path: the member is built outside _members, and the
+        # aggregate promise is enforced here as well as there.
+        return Extraction(status='limited', detail=f'{kind}; output-byte-limit')
+    # The member carries the same qualifier as the extraction: bytes recovered
+    # from a damaged concatenated stream are useful, but they are not a
+    # complete member and are not labelled as one.
+    status = 'partial' if decoded.status == 'partial' else 'ok'
+    result = Extraction(members=[Member(0, child or 'payload', len(payload), payload, status)],
+                        detail=detail)
+    if decoded.status == 'partial':
+        result.status = 'partial'
+    return result
+
+
+ARC_CRUNCH = {8: (12, True), 9: (13, False)}
+
+
+class _ArcBits:
+    """LSB-first bit reader that counts codes in groups of eight.
+
+    ARC's encoder wrote codes in groups of eight and padded a group before a
+    code-width change, so a decoder has to discard the rest of the current
+    group at the old width whenever the width changes.
+    """
+
+    def __init__(self, payload):
+        self.payload = payload
+        self.offset = 0
+        self.box = 0
+        self.left = 0
+        self.codeofs = 0
+
+    def read(self, width):
+        value = filled = 0
+        while filled < width:
+            if not self.left:
+                if self.offset >= len(self.payload):
+                    return None
+                self.box = self.payload[self.offset]
+                self.offset += 1
+                self.left = 8
+            take = min(self.left, width - filled)
+            value |= (self.box & ((1 << take) - 1)) << filled
+            self.box >>= take
+            self.left -= take
+            filled += take
+        self.codeofs = (self.codeofs + 1) & 7
+        return value
+
+    def resync(self, width):
+        while self.codeofs and self.read(width) is not None:
+            pass
+
+
+def _arc_crunch(payload, max_bits, rle, cap):
+    """Decode one ARC method 8 or 9 'crunched' member into original bytes.
+
+    Method 8 is 9-to-12-bit LZW followed by RLE90 and starts with one byte
+    holding the maximum code width, always 12. Method 9 is 9-to-13-bit LZW
+    with no RLE and no leading byte.
+
+    Code 256 does not clear the string table. It only drops the code width
+    back to nine bits and lets new strings overwrite the entries above 255,
+    so back-references to shorter codes keep resolving. All four method-8
+    members of the historical corpus reproduce their stored CRC with these
+    rules, and every one consumes its packed bytes exactly.
+
+    Provenance: the header layout, the method numbers and the eight-code group
+    convention were learned by reading nomarch 1.4 (GPL-2.0-or-later) while
+    studying ARC method 8. The code below is written independently in this
+    project from that format knowledge -- no nomarch expression was copied --
+    and it is verified against the stored CRC-16 of four genuine members, not
+    against nomarch's output. nomarch stays an optional backend for methods
+    5 and 6 and is never the oracle for methods 8 and 9.
+    """
+    limit = 1 << max_bits
+    prefix = [-1] * limit
+    suffix = [-1] * limit
+    first = [-1] * limit
+    for value in range(256):
+        suffix[value] = value
+    last = 255
+    width = base = 9
+    bits = _ArcBits(payload)
+    if max_bits == 12:
+        bits.offset = 1
+    out = bytearray()
+    state = {'last': 0, 'pending': False}
+
+    def emit(byte):
+        if not rle:
+            out.append(byte)
+            return
+        if state['pending']:
+            if byte == 0:
+                out.append(0x90)
+            else:
+                out.extend(bytes([state['last']]) * (byte - 1))
+            state['pending'] = False
+        elif byte == 0x90:
+            state['pending'] = True
+        else:
+            out.append(byte)
+            state['last'] = byte
+
+    def output(code):
+        stack = []
+        while prefix[code] != -1 and len(stack) < limit:
+            stack.append(suffix[code])
+            code = prefix[code]
+        emit(suffix[code])
+        while stack:
+            emit(stack.pop())
+
+    def add(oldcode, byte):
+        nonlocal last
+        last += 1
+        if last & limit:
+            last = limit - 1
+            return
+        suffix[last] = byte
+        if oldcode >= limit:
+            return
+        prefix[last] = oldcode
+        first[last] = oldcode if prefix[oldcode] == -1 else first[oldcode]
+
+    def first_byte(code):
+        if prefix[code] != -1:
+            code = first[code]
+        return suffix[code]
+
+    previous = current = lead = 0
+    started = False
+    while True:
+        code = bits.read(width)
+        if code is None:
+            break
+        current = code
+        if not started:
+            lead = current
+            started = True
+        if current == 256:
+            last = 255
+            bits.resync(width)
+            width = base
+            code = bits.read(width)
+            if code is None:
+                break
+            current = code
+        if current <= last:
+            output(current)
+            lead = first_byte(current)
+        else:
+            # The only valid code above the table is the one the decoder is
+            # about to create: the previous string plus its own first byte.
+            output(previous)
+            emit(lead)
+        if last != limit - 1:
+            add(previous, lead)
+            if last != limit - 1 and last == (1 << width) - 1:
+                width += 1
+                bits.resync(width - 1)
+        previous = current
+        if len(out) > cap:
+            raise ValueError('ARC member exceeds the output budget')
+    if bits.offset != len(payload):
+        raise ValueError('ARC member did not consume its packed bytes')
+    return bytes(out)
 
 
 def _arc(path, limits, nomarch=None):
@@ -495,6 +1225,8 @@ def _arc(path, limits, nomarch=None):
                 def load(cap):
                     if method in (1, 2):
                         data = stream.read(packed)
+                    elif method in ARC_CRUNCH:
+                        data = _arc_crunch(stream.read(packed), *ARC_CRUNCH[method], cap)
                     else:
                         # Isolate the exact ordinal without passing an archive-controlled
                         # path or a wildcard to the external decoder.
@@ -510,13 +1242,14 @@ def _arc(path, limits, nomarch=None):
                     return data
 
                 reason = None
-                if method in (8, 9) and nomarch is not None:
+                if method in (1, 2):
+                    if packed != unpacked:
+                        reason = 'size-mismatch'
+                elif method in ARC_CRUNCH or nomarch is not None:
                     if packed > limits.member_bytes:
                         reason = 'packed-byte-limit'
-                elif method not in (1, 2):
+                else:
                     reason = f'unsupported-arc-method-{method}'
-                elif packed != unpacked:
-                    reason = 'size-mismatch'
                 yield name, unpacked, reason, load
                 stream.seek(end)
             raise ValueError('missing ARC end marker')
@@ -872,6 +1605,10 @@ def extract(path: Path, name: str, kind: str, limits: Limits = Limits(), *,
             return _gzip(path, name, kind, limits)
         if kind in ('fat', 'disk-image'):
             return _fat(path, limits)
+        if kind in disk_images.READERS:
+            return _sector_image(path, kind, limits)
+        if kind in compression_streams.DECODERS:
+            return _compressed(path, name, kind, limits)
         if kind == 'arc':
             return _arc(path, limits, nomarch)
         if kind == 'lzh' and lhasa is not None:

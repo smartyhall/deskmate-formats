@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "provider": "freebuff",
+  "agent_label": "Freebuff Desktop agent (Buffy)",
+  "campaign_id": "fb-ghidra-integration-corrections-20261127",
+  "checkpoint": "completion",
+  "observed_at_utc": "2026-11-27T00:00:00Z",
+  "observed_at_utc_note": "Date-level precision only; the agent runtime exposed no clock reading to the tool surface.",
+  "git_revision": "6245a6b88718d310c5ee45d99372a4c998dee917",
+  "git_revision_kind": "parent commit of this checkpoint on branch freebuff/ghidra-integration-and-binary-analysis; the checkpoint commit is created after this receipt and is identifiable by branch and date",
+  "execution_mode": "interactive, single agent, native local shell, filesystem and browser-adapter tools",
+  "model": {
+    "identity": null,
+    "reasoning_setting": null,
+    "note": "The client exposes no model identity, effort setting or context-size reading to the agent's tools."
+  },
+  "collection": {
+    "source_kind": "unavailable",
+    "source_version": null,
+    "coverage": "No token, quota, credit or wall-clock allowance was observable. Tool calls executed and files created are recorded below as activity, not as provider consumption.",
+    "attribution_limits": "Any measurement would belong to the operator's account, not to this campaign. Nothing is inferred from a shared account meter.",
+    "status": "partially observed"
+  },
+  "measurements": [],
+  "measurements_note": "No usage measurement was observed, so none is reported. Values are omitted rather than set to zero.",
+  "activity": {
+    "processes_started": {
+      "python_unittest_runs": 14,
+      "powershell_verification_runs": 9,
+      "pyghidra_jvm_sessions": 4,
+      "note": "Approximate counts of invocations made from this session. The JVM sessions were two read-only report runs, one project-file listing and one p-code re-run after correcting the varnode rendering."
+    },
+    "emulator_use": "none",
+    "network_use": "none: no package index, release download or model provider was contacted",
+    "inference_calls_beyond_this_session": "none"
+  },
+  "artifacts": {
+    "published_branches": [
+      "freebuff/ghidra-integration-and-binary-analysis",
+      "freebuff/ghidra-static-observation-20261126",
+      "freebuff/ghidra-12.2-qualification-20261126"
+    ],
+    "private_evidence": "toolchain selection records, symbol/disassembly/p-code exports and the analysis projects stay outside Git under the laboratory private-evidence tree; locators omitted from this public receipt",
+    "native_analysis_rerun": "none: the recorded 12.1.4 and 12.2 qualification receipts were not repeated, because the corrections are portable logic and the analysis paths are unchanged",
+    "successor_heads_merged": [
+      "2567af2a4a259fa2db45ec5a852713c0e3960b0c",
+      "6945f85c75d79a34c0ef05c6cafe5c60ec13ebb4"
+    ]
+  }
+}

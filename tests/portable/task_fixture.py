@@ -48,6 +48,10 @@ def git_environment():
 
 
 def _run_git(directory, *args, data=None):
+    # The timeout is a hang guard, not a latency assertion: a local git command
+    # can exceed ten seconds on a saturated Windows host (for example while other
+    # campaigns run their own suites), which says nothing about the code under
+    # test.  Keep it generous so contention cannot masquerade as a defect.
     return subprocess.run(["git", *args], cwd=directory, check=True, input=data,
                           capture_output=True, env=git_environment(), timeout=60).stdout
 

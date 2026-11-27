@@ -1,0 +1,58 @@
+{
+  "schema": "supplementary-agent-receipt/1",
+  "provider": "Freebuff",
+  "agent_label": "Buffy (Freebuff coding agent)",
+  "campaign_id": "freebuff/archive-qualification-2",
+  "provider_prefix": "freebuff",
+  "checkpoint": "sequential-ci-corrections-and-arc-method-8",
+  "observed_at": "2026-11-26T00:00:00Z",
+  "observed_at_note": "Local observation date only. No wall-clock timestamp was captured at the time of the checkpoint; recorded as the campaign date rather than invented.",
+  "execution_mode": "interactive local session, filesystem and shell tools on the enrolled workstation",
+  "git": {
+    "base_revision": "cca20c2",
+    "working_branch": "freebuff/archive-qualification-2",
+    "predecessor_pull_request": 194,
+    "successor_pull_request": 195,
+    "merged": false,
+    "note": "The module rename was committed on the predecessor branch and merged into the successor so each PR stays reviewable on its own. No merge to main and no self-merge was performed by this agent."
+  },
+  "model": {
+    "label": null,
+    "reasoning_setting": null,
+    "verified_runtime_identity": false,
+    "note": "The agent tool surface did not expose model identity, context size or quota. The desktop model selector was not treated as an independently verified runtime identity."
+  },
+  "source": {
+    "kind": "manual-ui-observation",
+    "collector_version": null,
+    "coverage": "Campaign-level observations only.",
+    "attribution_limitations": "Usage is shared with a human-operated account and cannot be attributed per campaign from the client. No telemetry source exposes per-campaign consumption."
+  },
+  "measurements": [],
+  "measurements_note": "No token counters, quota windows or reset epochs were exposed to this agent. Measurements are an empty list with an explicit gap rather than zero values.",
+  "checkpoint_status": "complete-for-scope",
+  "scope_completed": [
+    "Renamed the stream decoder to compression_streams so it cannot shadow Python 3.14's compression package",
+    "Reproduced the 3.14 failure on the pre-fix commit with a temporary Python 3.14.0 runtime: 35 archive errors, 49 archive tests passing after the fix",
+    "Added an import-environment regression suite and a standard-library name audit for tools/archive",
+    "Added the missing REUSE sidecar for the successor usage receipt",
+    "Resolved the ARC method 8 bit conventions from nomarch 1.4 and confirmed them on four genuine members with matching stored CRCs",
+    "Implemented the native ARC methods 8 and 9 decoder and both archives now extract five members of five",
+    "Added a synthetic ARC crunch encoder and twelve regression tests, including method 9, table saturation and failure cases",
+    "Recorded the Linux and Windows 3.14 wall times from the failed PR runs as process observations"
+  ],
+  "scope_deferred": [
+    "ARC methods 3 to 7",
+    "TeleDisk advanced LZSS/Huffman payload decoding",
+    "CopyQM validation against a genuine specimen",
+    "FAT32 and VFAT hardening beyond the existing structural reader",
+    "Archive index schema migration and selective reprocessing",
+    "Tandy containers and filesystems"
+  ],
+  "blockers_recorded": [
+    "No genuine method-9 ARC member has been found, so that path is synthetically covered only",
+    "Methods 5 and 6 use a hashed 12-bit table that was not studied in this checkpoint",
+    "The TVDog mirror holds no TeleDisk, ImageDisk, CopyQM or Tandy disk images, so genuine specimens for those families must come from another source"
+  ],
+  "privacy_note": "No raw transcripts, prompts, private paths, archive contents, credentials or account identifiers are included. Specimens were held outside the repository; only derived structural facts such as member sizes and stored checksums are recorded."
+}

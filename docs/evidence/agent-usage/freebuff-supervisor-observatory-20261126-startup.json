@@ -1,0 +1,31 @@
+{
+  "agent_label": "Freebuff Desktop native session (local shell and file tools)",
+  "attribution_limitations": [
+    "A shared account meter cannot be attributed to one campaign.",
+    "Token counts, context utilization and allowance hours are distinct units with no verified exchange relationship."
+  ],
+  "campaign_id": "freebuff-supervisor-observatory-20261126",
+  "checkpoint": "startup",
+  "checkpoint_status": "campaign opened; audit and implementation in progress",
+  "coverage": "this campaign only; shared account state is not attributable",
+  "execution_mode": "interactive local desktop session; no unattended dispatch",
+  "git_revision": "3d3f78471ec8832f944baa4d12102fe1ed508305",
+  "measurement_note": "No measurement was observed. A missing measurement is recorded as absent, never as zero.",
+  "measurements": [],
+  "model": {
+    "note": "The client model selector and runtime model identity were not observed for this checkpoint.",
+    "reasoning_effort": null,
+    "runtime_identity": null,
+    "selected_label": null
+  },
+  "observed_at_utc": "2026-11-26T07:38:59Z",
+  "privacy": "No transcript, credential, account identifier or private path is included.",
+  "provider": "freebuff",
+  "receipt_written_utc": "2026-11-26T07:38:59Z",
+  "schema_version": 1,
+  "source": {
+    "detail": "No programmatic usage interface was used and the desktop context tooltip was not read at this checkpoint.",
+    "kind": "unavailable",
+    "version": "Freebuff Desktop orchestrator build f1641d8af2a035dfb8a1b107d7f256ce9172276c (2026-11-23)"
+  }
+}

@@ -55,9 +55,14 @@ operator boundaries](research/86box-observer-design.md#native-mcp-integration-an
 
 `observer` implements bounded private event storage and an explicitly read-only
 HTTP projection; optional Codex CLI telemetry reports only observable activity.
-The offline-tested `supervisor` S0 app-server protocol/ledger and S1 Git task
-queue are separate from that observer. S1 acceptance cannot launch a model turn.
-The real S0 canary, automatic dispatch, worktree/resource leases and unattended
-restart are not implemented or validated on this baseline. See the
-[supervisor design](research/codex-supervisor-design.md), [S0](research/codex-supervisor-s0.md),
-[S1](research/codex-supervisor-s1.md) and the [reuse assessment](research/agent-orchestrator-reuse-assessment.md).
+The `supervisor` provides the offline-tested S0 app-server protocol/ledger, the
+S1 Git task queue, a no-model deterministic backend with a closed procedure
+registry, a capability-based worker interface and a private campaign lease
+registry. A task acceptance still cannot launch a model turn, and the observer
+projects a frozen campaign snapshot without gaining any mutation path.
+Automatic dispatch, an unattended restart service and live model dispatch remain
+unimplemented or gated. See the [supervisor design](research/codex-supervisor-design.md),
+[S0](research/codex-supervisor-s0.md), [S1](research/codex-supervisor-s1.md),
+the [heterogeneous worker infrastructure](research/heterogeneous-worker-infrastructure-20261126.md),
+the [current-state audit](research/supervisor-observatory-state-audit-20261126.md)
+and the [reuse assessment](research/agent-orchestrator-reuse-assessment.md).

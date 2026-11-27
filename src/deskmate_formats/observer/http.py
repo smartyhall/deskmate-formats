@@ -10,6 +10,7 @@ import sys
 from threading import BoundedSemaphore
 from time import monotonic
 
+from . import campaigns as campaign_projection
 from .agent_http import MAX_PAGE, match_route, query_snapshot
 from .agent_publication import AgentPublication
 from .presentation import dashboard, frame_key, legacy_page, plain_status, status
@@ -25,6 +26,8 @@ _FRAME_QUERY = re.compile(r"frame=[0-9a-f]{32}\.(?:0|[1-9][0-9]{0,15})\.(?:0|[1-
 _POLICY = ("default-src 'none'; script-src 'self'; style-src 'self'; "
            "connect-src 'self'; img-src 'self'; base-uri 'none'; frame-ancestors 'none'")
 _PLAIN = "text/plain; charset=us-ascii"
+_CAMPAIGN_ROUTES = {"/campaigns": "html", "/campaigns.txt": "text",
+                    "/api/campaigns": "json"}
 _IMAGE_TYPES = {"/frame.png": "image/png", "/frame.gif": "image/gif"}
 _ROUTES = {"/", "/legacy/", "/api/status", "/status.txt", *_IMAGE_TYPES}
 _ASSETS = {
@@ -141,7 +144,8 @@ class ObserverServer(ThreadingMixIn, TCPServer):
     request_queue_size = 16
 
     def __init__(self, registry: ObservationRegistry, *, port=8086,
-                 agent_publication: AgentPublication | None = None, agent_page_limit=MAX_PAGE):
+                 agent_publication: AgentPublication | None = None, agent_page_limit=MAX_PAGE,
+                 campaign_snapshot=None):
         if type(registry) is not ObservationRegistry:
             raise ValueError("expected an observation registry")
         if type(port) is not int or not 0 <= port <= 65535:
@@ -154,6 +158,7 @@ class ObserverServer(ThreadingMixIn, TCPServer):
         self._agent_publication = agent_publication if agent_publication is not None else AgentPublication()
         self._agent_page_limit = agent_page_limit
         self._machines = registry.machines
+        self._campaign_snapshot = None if campaign_snapshot is None else campaign_snapshot
         self._slots = BoundedSemaphore(self.request_queue_size)
         assets = files(__package__)
         self._assets = {path: (mime, assets.joinpath(path[1:]).read_bytes())
@@ -180,12 +185,30 @@ class ObserverServer(ThreadingMixIn, TCPServer):
         finally:
             self._slots.release()
 
+    def _campaign_page(self, fmt):
+        """Read-only campaign projection. It cannot dispatch, steer or cancel."""
+        if self._campaign_snapshot is None:
+            raise _RequestError(404)
+        try:
+            snapshot = campaign_projection.load(self._campaign_snapshot)
+            view = campaign_projection.projection(snapshot)
+            content_type, body = campaign_projection.render(view, fmt)
+        except campaign_projection.CampaignSnapshotError:
+            raise _RequestError(503) from None
+        except OSError:
+            raise _RequestError(503) from None
+        return (content_type, _ascii_body(body) if fmt == "text" else body.encode("utf-8"))
+
     def resource(self, target):
         if not _TARGET.fullmatch(target):
             raise _RequestError(400)
         path, _, query = target.partition("?")
         if "//" in path or any(part in (".", "..") for part in path.split("/")):
             raise _RequestError(400)
+        if path in _CAMPAIGN_ROUTES:
+            if query:
+                raise _RequestError(400)
+            return self._campaign_page(_CAMPAIGN_ROUTES[path])
         agent_route = match_route(path)
         if agent_route is not None:
             try:

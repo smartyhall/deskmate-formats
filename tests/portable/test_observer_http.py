@@ -4,9 +4,11 @@ from concurrent.futures import ThreadPoolExecutor
 from http.client import HTTPConnection
 from io import BytesIO
 import json
+from pathlib import Path
 from random import Random
 import re
 import socket
+from tempfile import TemporaryDirectory
 from threading import Barrier, Event, Thread
 import unittest
 from unittest.mock import patch
@@ -15,6 +17,7 @@ from deskmate_formats.observer.demo import MACHINES, publish_scene
 from deskmate_formats.observer.frames import Frame
 from deskmate_formats.observer.http import ObserverServer
 from deskmate_formats.observer.publication import Machine, ObservationRegistry, decode_cp437, host_time_ms
+from test_observer_campaigns import snapshot as campaign_snapshot
 from test_observer_publication import PILLOW, observation, png_fixture
 
 
@@ -423,3 +426,47 @@ class SyntheticLabTests(LocalObserver):
             self.assertIn(f'href="/i/{machine.instance_id}/"'.encode(), self.request("/")[2])
         self.assertIn(b"DIAGNOSTIC PASS", self.request("/i/synthetic-at/legacy/")[2])
         self.assertEqual(json.loads(self.request("/api/status")[2])["machine"]["id"], "synthetic-rsx")
+
+
+class CampaignRouteTests(LocalObserver):
+    """The campaign projection is served read-only, or not at all."""
+
+    def setUp(self):
+        self.directory = TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        self.path = Path(self.directory.name) / "campaigns.json"
+        self.path.write_text(json.dumps(campaign_snapshot()), encoding="utf-8")
+        super().setUp()
+
+    def make_server(self):
+        return ObserverServer(self.registry, port=0, campaign_snapshot=self.path)
+
+    def test_campaign_routes_are_read_only_projections(self):
+        for target, content_type in (
+                ("/campaigns", "text/html"),
+                ("/campaigns.txt", "text/plain"),
+                ("/api/campaigns", "application/json")):
+            status, headers, body = self.request(target)
+            self.assertEqual(status, 200, target)
+            self.assertIn(content_type, headers["content-type"])
+            self.assertEqual(headers["cache-control"], "no-store")
+            self.assertIn(b"supervisor-audit", body)
+            self.assertNotIn(b"<script>alert", body)
+        text = self.request("/campaigns.txt")[2].decode("ascii")
+        self.assertIn("unknown", text)
+        self.assertEqual(json.loads(self.request("/api/campaigns")[2])["campaign_count"], 2)
+        # A query string cannot become a control channel, and nothing here mutates.
+        self.assertEqual(self.request("/api/campaigns?dispatch=1")[0], 400)
+        self.assertEqual(self.request("/api/campaigns", method="POST")[0], 405)
+
+    def test_broken_or_missing_snapshot_is_not_a_partial_page(self):
+        self.path.write_text("{", encoding="utf-8")
+        self.assertEqual(self.request("/campaigns")[0], 503)
+        self.path.unlink()
+        self.assertEqual(self.request("/api/campaigns")[0], 503)
+
+
+class NoCampaignRouteTests(LocalObserver):
+    def test_unconfigured_campaign_routes_do_not_exist(self):
+        for target in ("/campaigns", "/campaigns.txt", "/api/campaigns"):
+            self.assertEqual(self.request(target)[0], 404, target)
