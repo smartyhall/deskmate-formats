@@ -1,4 +1,4 @@
-"""Bounded read-only process-tree inspection.
+"""Bounded read-only process-tree observation.
 
 Killing an owner process does not kill what it started. On POSIX an orphan is
 reparented to init, so the parent chain is useless after death; the runner puts
@@ -6,27 +6,94 @@ each attempt in its own session, so the session identifier is the durable
 handle. On Windows ``ParentProcessId`` is a static field that survives the
 parent, so the chain itself is the handle.
 
+The contracts this module implements, and the limits of each, are:
+
+owner identity
+    A claim is ``(pid, identity)`` where the identity is a creation stamp
+    (Linux start time bound to a boot id, Windows creation ``FILETIME``). A live
+    number carrying a different stamp is ``identity-mismatch``: the recorded
+    owner is gone and the number now belongs to something else. It is evidence
+    the owner is gone, not evidence its descendants are.
+
+owner liveness
+    ``alive``, ``stopped`` (terminated, still sampled), ``not-found``,
+    ``identity-mismatch`` or ``unknown``. A missing owner never establishes
+    descendant termination.
+
+descendant identity
+    Descendants are never claimed individually. They are recognised only by
+    membership of an observation scope: the recorded POSIX session, or the
+    Windows parent chain. Membership is therefore only as strong as the scope.
+
+descendant liveness
+    ``alive`` (a positively observed live member), ``stopped`` (a complete scan
+    of a scope that cannot lose members found none) or ``unknown``.
+
+enumeration
+    ``complete``, ``truncated`` (process-count limit), ``timed-out``,
+    ``degraded`` (a record could not be read or parsed), ``unavailable`` (no
+    enumeration at all) or ``incomplete`` (the scope itself is lossy).
+
+    An unreadable or malformed record is never treated as an absent process.
+    Absence is conclusive only under ``complete``.
+
+observation scope
+    ``session`` (POSIX session leader: membership survives reparenting, so an
+    empty session is termination), ``parent-chain`` (Windows: a static chain
+    finds members, but loses a grandchild when the parent between them exits,
+    so it never proves absence), ``process`` (POSIX non-leader: a display of the
+    chain only, never proof) and ``none``/``unclaimed`` (no handle was ever
+    taken).
+
+termination proof
+    ``stopped(claim)`` is true only when the owner is positively gone *and* a
+    complete enumeration of a non-lossy scope found no live member on the same
+    boot as the claim. Nothing weaker is reported as termination.
+
 This module is read-only: it opens no process handle for control, sends no
 signal and starts nothing. Every scan is bounded by a process-count cap and a
-deadline, and an incomplete scan is reported as ``unknown`` rather than
-``stopped``: not finding a descendant is not proof that none exists.
+deadline.
 """
 
+from collections import defaultdict, namedtuple
 import os
 from pathlib import Path
 import sys
 from time import monotonic
 
-from deskmate_formats.observer.process_health import process_status, verify_process
+from deskmate_formats.observer.process_health import (identity_boot,
+                                                      process_health_identity,
+                                                      process_status, start_stamp,
+                                                      verify_process)
 
 MAX_PROCESSES = 8192
 SCAN_DEADLINE_SECONDS = 3.0
+
+#: Owner verdicts that mean the recorded process instance is gone. Each is
+#: positive evidence about the owner only; none of them is evidence about what
+#: it started.
+OWNER_GONE = ("stopped", "not-found", "identity-mismatch")
+
+#: Scopes whose membership is durable: an empty scan is termination.
+#:
+#: Only a POSIX session qualifies. A Windows parent chain is *not* durable: an
+#: intermediate parent that exits takes its identifier with it, so a grandchild
+#: whose parent is gone is no longer reachable from the owner and an empty walk
+#: proves nothing. A job object would qualify; a static chain does not.
+DURABLE_SCOPES = ("session",)
+
+#: ``pids`` are positively observed live members and never include the owner;
+#: ``complete`` says whether their absence may be read as termination.
+Scan = namedtuple("Scan", "pids complete enumeration scope reason")
+
 
 if sys.platform == "win32":
     import ctypes as ct
     from ctypes import wintypes as wt
 
     _TH32CS_SNAPPROCESS = 0x00000002
+    _ERROR_NO_MORE_FILES = 18
+    _INVALID_HANDLE = -1
     _kernel = ct.WinDLL("kernel32", use_last_error=True)
 
     class _Entry(ct.Structure):
@@ -44,152 +111,321 @@ if sys.platform == "win32":
     _kernel.Process32NextW.restype = wt.BOOL
     _kernel.CloseHandle.argtypes = (wt.HANDLE,)
 
-    def _parent_map():
-        """Return ``{pid: parent}`` or ``None`` if the snapshot is unavailable."""
+    def _entries(deadline):
+        """Return ``(entries, enumeration, reason)`` for one Toolhelp walk.
+
+        The walk is bounded by a count cap and a deadline, and it ends for a
+        stated reason: reaching ``ERROR_NO_MORE_FILES`` is the end of the list,
+        anything else is an early stop that must not be read as a complete
+        enumeration.
+        """
         snapshot = _kernel.CreateToolhelp32Snapshot(_TH32CS_SNAPPROCESS, 0)
-        if snapshot == wt.HANDLE(-1).value or snapshot == 2**64 - 1:
-            return None
+        if snapshot in (_INVALID_HANDLE, 2 ** (8 * ct.sizeof(wt.HANDLE)) - 1):
+            return None, "unavailable", "snapshot-failed"
         try:
             entry = _Entry()
             entry.dwSize = ct.sizeof(_Entry)
             if not _kernel.Process32FirstW(snapshot, ct.byref(entry)):
-                return None
-            parents = {}
-            while len(parents) < MAX_PROCESSES:
-                parents[int(entry.th32ProcessID)] = int(entry.th32ParentProcessID)
+                return None, "unavailable", "enumeration-failed"
+            entries = []
+            while True:
+                if len(entries) >= MAX_PROCESSES:
+                    return entries, "truncated", "process-count-limit"
+                if monotonic() >= deadline:
+                    return entries, "timed-out", "scan-deadline"
+                entries.append((int(entry.th32ProcessID), int(entry.th32ParentProcessID)))
                 if not _kernel.Process32NextW(snapshot, ct.byref(entry)):
-                    break
-            return parents
+                    if ct.get_last_error() not in (0, _ERROR_NO_MORE_FILES):
+                        return entries, "degraded", "enumeration-ended-early"
+                    return entries, "complete", "snapshot-complete"
         finally:
             _kernel.CloseHandle(snapshot)
 
-    def _absent_below(pid):
+    def _scan(claim, deadline):
+        pid = claim["pid"]
+        entries, enumeration, reason = _entries(deadline)
+        if entries is None:
+            return Scan((), False, enumeration, "parent-chain", reason)
+        children = defaultdict(list)
+        for child, parent in entries:
+            if child != parent:
+                children[parent].append(child)
+        owner_stamp = start_stamp(claim.get("identity"))
+        found, frontier, unverified = [], [pid], 0
+        while frontier:
+            current = frontier.pop()
+            for child in children.get(current, ()):
+                if child == pid or child in found:
+                    continue
+                stamp = start_stamp(process_health_identity(child))
+                if owner_stamp is not None and stamp is not None and stamp < owner_stamp:
+                    # Created before the owner: this number, not the tree, was
+                    # reused, so the child is not a descendant of this instance.
+                    continue
+                if owner_stamp is not None and stamp is None:
+                    unverified += 1  # reuse cannot be ruled out; keep, but say so
+                found.append(child)
+                frontier.append(child)
+        if enumeration == "complete" and unverified:
+            return Scan(tuple(found), False, "degraded", "parent-chain",
+                        "unverified-child-identities")
+        if enumeration == "complete":
+            # The walk itself finished, but a chain loses a grandchild as soon
+            # as the parent between them exits. Findings stay findings; their
+            # absence is not termination.
+            return Scan(tuple(found), False, "incomplete", "parent-chain",
+                        "scope-loses-orphans")
+        return Scan(tuple(found), False, enumeration, "parent-chain", reason)
+
+    def session_of(pid):
+        """Windows has no session handle; the parent chain is the tree handle."""
         return None
 
-    def _descendants(claim, deadline):
-        parents = _parent_map()
-        if parents is None:
-            return None, False
-        root = claim["pid"]
-        found, frontier = [], [root]
-        while frontier and monotonic() < deadline and len(found) < MAX_PROCESSES:
-            current = frontier.pop()
-            for child, parent in parents.items():
-                if parent == current and child != current and child not in found:
-                    found.append(child)
-                    frontier.append(child)
-        return found, len(found) < MAX_PROCESSES
-
 else:
-    def _absent_below(pid):
+    def _boot_id():
+        """Boot identity in the same form a process identity embeds."""
+        try:
+            return (Path("/proc/sys/kernel/random/boot_id")
+                    .read_text(encoding="ascii").strip().replace("-", ""))
+        except (OSError, ValueError):
+            return None
+
+    def _stat_fields(pid):
+        """Return ``(state, ppid, session, starttime)`` or raise.
+
+        ``FileNotFoundError`` means the process exited during enumeration, which
+        is not a gap. Any other ``OSError`` means the record could not be
+        observed, and a ``ValueError`` means it could not be parsed: neither is
+        evidence that the process does not exist.
+        """
+        with open(f"/proc/{pid}/stat", "rb") as stream:
+            data = stream.read(8192)
+        fields = data.rpartition(b") ")[2].split()
+        if len(fields) < 20:
+            raise ValueError("truncated process record")
+        if not (fields[1].isdigit() and fields[3].isdigit() and fields[19].isdigit()):
+            raise ValueError("non-numeric process record")
+        return fields[0], int(fields[1]), int(fields[3]), int(fields[19])
+
+    def session_of(pid):
         """The session id of a live process, used as the durable tree handle."""
         try:
             return os.getsid(pid)
         except (OSError, AttributeError):
             return None
 
-    def _descendants(claim, deadline):
-        """Match the recorded session, which survives reparenting."""
-        session = claim.get("session")
-        if session is None:
-            return None, False
-        found, complete, scanned = [], True, 0
+    def _session_scan(claim, deadline):
+        session = claim["session"]
+        # A recorded lease carries its boot binding inside the process identity
+        # (``linux-<boot>-<start>``), so the guard applies without a new field.
+        recorded_boot = claim.get("boot") or identity_boot(claim.get("identity"))
+        if recorded_boot is not None:
+            boot = _boot_id()
+            if boot is None:
+                return Scan((), False, "unavailable", "session",
+                            "boot-identity-unavailable")
+            if boot != recorded_boot:
+                # Process start times are relative to a boot. Comparing them
+                # across a reboot would silently exclude the real tree.
+                return Scan((), False, "unavailable", "session", "boot-changed")
         try:
-            entries = os.listdir("/proc")
+            names = os.listdir("/proc")
         except OSError:
-            return None, False
-        for name in entries:
+            return Scan((), False, "unavailable", "session", "proc-unavailable")
+        owner_start = start_stamp(claim.get("identity"))
+        found, scanned, unobservable = [], 0, 0
+        truncated = timed_out = reused = False
+        for name in names:
             if not name.isdigit():
                 continue
             scanned += 1
-            if scanned > MAX_PROCESSES or monotonic() >= deadline:
-                complete = False
+            if scanned > MAX_PROCESSES:
+                truncated = True
                 break
+            if monotonic() >= deadline:
+                timed_out = True
+                break
+            pid = int(name)
             try:
-                with open(f"/proc/{name}/stat", "rb") as stream:
-                    data = stream.read(8192)
-            except OSError:
+                state, _, member_of, start = _stat_fields(pid)
+            except FileNotFoundError:
+                continue  # exited during enumeration: expected, not a gap
+            except (OSError, ValueError):
+                unobservable += 1
                 continue
-            fields = data.rpartition(b") ")[2].split()
-            # state, ppid, pgrp, session, tty, tpgid, ...
-            if len(fields) < 6:
+            if member_of != session or pid == claim["pid"]:
                 continue
-            if fields[3].isdigit() and int(fields[3]) == session and fields[0] not in (b"Z", b"X", b"x"):
-                found.append(int(name))
-        return found, complete
+            if state in (b"Z", b"X", b"x"):
+                continue  # terminated, awaiting reaping
+            if owner_start is not None and start < owner_start:
+                reused = True  # predates the owner: not its descendant
+                continue
+            found.append(pid)
+        enumeration = ("truncated" if truncated else "timed-out" if timed_out
+                       else "degraded" if unobservable else "complete")
+        reason = {"truncated": "process-count-limit", "timed-out": "scan-deadline",
+                  "degraded": "unobservable-process-records",
+                  "complete": "session-scan-complete"}[enumeration]
+        if enumeration == "complete" and reused:
+            reason = "session-id-reused"
+        return Scan(tuple(found), enumeration == "complete", enumeration,
+                    "session", reason)
+
+    def _chain_scan(claim, deadline):
+        """Best-effort parent walk for a process with no durable session.
+
+        POSIX reparents orphans to init, so this walk loses members and a
+        missing descendant is never proof that none exists. Positive findings
+        are still real, so they are reported; completeness never is.
+        """
+        try:
+            names = os.listdir("/proc")
+        except OSError:
+            return Scan((), False, "unavailable", "process", "proc-unavailable")
+        owner = claim["pid"]
+        parents, scanned, unobservable = {}, 0, 0
+        truncated = timed_out = False
+        for name in names:
+            if not name.isdigit():
+                continue
+            scanned += 1
+            if scanned > MAX_PROCESSES:
+                truncated = True
+                break
+            if monotonic() >= deadline:
+                timed_out = True
+                break
+            pid = int(name)
+            try:
+                state, ppid, _, start = _stat_fields(pid)
+            except FileNotFoundError:
+                continue
+            except (OSError, ValueError):
+                unobservable += 1
+                continue
+            parents[pid] = (ppid, state, start)
+        owner_start = start_stamp(claim.get("identity"))
+        found, frontier = [], [owner]
+        while frontier:
+            current = frontier.pop()
+            for pid, (ppid, state, start) in parents.items():
+                if ppid != current or pid == owner or pid in found:
+                    continue
+                if state in (b"Z", b"X", b"x"):
+                    continue
+                if owner_start is not None and start < owner_start:
+                    continue
+                found.append(pid)
+                frontier.append(pid)
+        if truncated:
+            enumeration, reason = "truncated", "process-count-limit"
+        elif timed_out:
+            enumeration, reason = "timed-out", "scan-deadline"
+        elif unobservable:
+            enumeration, reason = "degraded", "unobservable-process-records"
+        else:
+            enumeration, reason = "incomplete", "scope-not-durable"
+        return Scan(tuple(found), False, enumeration, "process", reason)
+
+    def _scan(claim, deadline):
+        if claim.get("session") is None:
+            return _chain_scan(claim, deadline)
+        return _session_scan(claim, deadline)
+
+
+def _valid(claim):
+    if type(claim) is not dict:
+        return False
+    pid = claim.get("pid")
+    return type(pid) is int and 1 <= pid < 2 ** 31 and claim.get("scope") != "unclaimed"
 
 
 def tree_claim(pid=None):
-    """Claim an owner plus the durable handle for its future descendants."""
+    """Claim an owner plus the durable handle for its future descendants.
+
+    Returns ``None`` when the process is not alive. A caller that has just
+    spawned a process should record the degraded claim from :func:`unclaimed`
+    instead, so that "no handle was ever taken" stays visible.
+    """
     pid = os.getpid() if pid is None else pid
-    if type(pid) is not int or not 1 <= pid < 2**31:
+    if type(pid) is not int or not 1 <= pid < 2 ** 31:
         raise ValueError("invalid PID")
-    identity, status = _owner_sample(pid)
+    identity, status = process_health_identity(pid), process_status(pid)
     if identity is None or status != "alive":
         return None
-    claim = {"pid": pid, "identity": identity}
-    # A session id is only a usable tree handle when the process leads its own
-    # session. Recording the shared session of an ordinary shell process would
-    # make every sibling look like a descendant.
-    session = None if sys.platform == "win32" else _absent_below(pid)
+    claim = {"pid": pid, "identity": identity, "platform": sys.platform}
+    if sys.platform == "win32":
+        # The chain is the only handle Windows offers without a job object. It
+        # finds members and it survives the owner's exit, but it cannot prove
+        # that none is left (see DURABLE_SCOPES).
+        claim["scope"] = "parent-chain"
+        return claim
+    session = session_of(pid)
     if session is not None and session == pid:
         claim["session"] = session
         claim["scope"] = "session"
+        boot = _boot_id()
+        if boot is not None:
+            claim["boot"] = boot
     else:
+        # Recording the shared session of an ordinary process would make every
+        # sibling look like a descendant, so only the display scope remains.
         claim["scope"] = "process"
     return claim
 
 
+def unclaimed(pid):
+    """A claim for a process that died before its tree handle could be taken."""
+    if type(pid) is not int or not 1 <= pid < 2 ** 31:
+        raise ValueError("invalid PID")
+    return {"pid": pid, "identity": None, "platform": sys.platform,
+            "scope": "unclaimed", "reason": "owner-exited-before-claim"}
+
+
 def live_pids(claim, *, deadline_seconds=SCAN_DEADLINE_SECONDS):
-    """PIDs still alive in the recorded tree, for inspection and cleanup."""
-    pid = claim.get("pid") if type(claim) is dict else None
-    if type(pid) is not int or not 1 <= pid < 2**31:
-        return []
-    found, complete = _descendants(claim, monotonic() + deadline_seconds)
-    if not complete:
-        return []
-    return [pid for pid in found if process_status(pid) == "alive"]
+    """Positively observed live members of the recorded tree.
 
-
-def _owner_sample(pid):
-    from deskmate_formats.observer import process_health
-
-    return process_health._sample(pid)
+    Returns a :data:`Scan`. Its ``pids`` are safe to pass to a kill; its
+    ``complete`` field is the only thing that may be read as "nothing is left".
+    An incomplete scan is reported as incomplete, never as an empty tree.
+    """
+    if not _valid(claim):
+        return Scan((), False, "unavailable", "none", "invalid-claim")
+    scan = _scan(claim, monotonic() + deadline_seconds)
+    alive = tuple(pid for pid in scan.pids if process_status(pid) not in ("stopped", "not-found"))
+    return scan._replace(pids=alive)
 
 
 def tree_state(claim, *, deadline_seconds=SCAN_DEADLINE_SECONDS):
     """Report the owner separately from its descendants.
 
-    ``descendants`` is ``stopped`` only when a complete scan found none.
-    ``unknown`` means the scan could not be trusted, which must never be read
-    as proof that nothing is still running.
+    ``descendants`` is ``stopped`` only for a complete scan of a durable scope
+    on the same boot as the claim. ``unknown`` means the scan cannot be
+    trusted, which must never be read as proof that nothing is still running.
     """
-    pid = claim.get("pid") if type(claim) is dict else None
-    if type(pid) is not int or not 1 <= pid < 2**31:
-        return {"owner": "unknown", "descendants": "unknown", "live": None}
-    owner = verify_process(pid, claim.get("identity"))
-    deadline = monotonic() + deadline_seconds
-    found, complete = _descendants(claim, deadline)
-    if not complete:
-        return {"owner": owner, "descendants": "unknown", "live": None}
-    alive = [pid for pid in found if process_status(pid) == "alive"]
+    if not _valid(claim):
+        return {"owner": "unknown", "descendants": "unknown", "live": None,
+                "scope": "unclaimed" if type(claim) is dict else "none",
+                "enumeration": "unavailable", "reason": "no-tree-handle"}
+    owner = verify_process(claim["pid"], claim.get("identity"))
+    scan = _scan(claim, monotonic() + deadline_seconds)
+    base = {"owner": owner, "scope": scan.scope, "enumeration": scan.enumeration}
+    if owner == "identity-mismatch" and scan.scope == "parent-chain":
+        # The number belongs to another process now, and a static parent chain
+        # cannot separate the original children from the new process's.
+        return dict(base, descendants="unknown", live=None, reason="owner-pid-reused")
+    alive = [pid for pid in scan.pids if process_status(pid) not in ("stopped", "not-found")]
     if alive:
-        return {"owner": owner, "descendants": "alive", "live": len(alive)}
-    return {"owner": owner,
-            "descendants": "not-found" if owner == "not-found" else "stopped",
-            "live": 0}
+        return dict(base, descendants="alive", live=len(alive), reason="live-descendants")
+    if scan.complete and scan.scope in DURABLE_SCOPES:
+        return dict(base, descendants="stopped", live=0, reason=scan.reason)
+    return dict(base, descendants="unknown", live=None, reason=scan.reason)
 
 
 def stopped(claim, *, deadline_seconds=SCAN_DEADLINE_SECONDS):
     """True only when the owner and every descendant are positively gone."""
     state = tree_state(claim, deadline_seconds=deadline_seconds)
-    return (state["owner"] in ("stopped", "not-found")
-            and state["descendants"] in ("stopped", "not-found"))
-
-
-def session_of(pid):
-    """Public helper for tests that need the durable handle of a live process."""
-    return None if sys.platform == "win32" else _absent_below(pid)
+    return state["owner"] in OWNER_GONE and state["descendants"] == "stopped"
 
 
 def worktree_root():

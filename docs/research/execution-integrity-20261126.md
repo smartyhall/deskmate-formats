@@ -408,7 +408,7 @@ with its own name.
 | Deterministic backend | 24 tests OK (2 symlink tests skipped on Windows) |
 | CLI states and supersession | 5 tests OK |
 | Procedure limits and classification | 9 tests OK |
-| Process tree | 4 tests OK |
+| Process tree | 4 tests OK (see the 2026-11-27 review below for the corrected contract) |
 | Campaign registry and leases | 12 tests OK |
 | Snapshot collector | 9 tests OK |
 | Observer HTTP and projection | 15 and 5 tests OK |
@@ -429,3 +429,34 @@ coverage runs in CI on both supported Python versions.
 - Transitive imports outside the supervisor package are not individually bound.
 - A symlink race between verification and open is narrowed, not eliminated.
 - No unattended service, scheduler daemon or automatic retry exists.
+
+## Second independent review — 2026-11-27
+
+A second review found that one of the corrections above was implemented in a
+way that conflated two different questions, and that the CI matrix was right to
+fail. The full analysis is in
+[process-tree-observation-20261127.md](process-tree-observation-20261127.md).
+
+### Disposition
+
+| Finding | Disposition |
+| --- | --- |
+| Linux CI failure `'not-found' != 'stopped'` | Corrected in the implementation, not the test. The descendant verdict is no longer derived from the owner verdict. |
+| Missing owner treated as descendant evidence | Removed. Owner and tree are sampled and reported separately. |
+| Incomplete enumeration reported as an empty tree | `live_pids` now returns a `Scan` with an explicit `complete` flag; `[]` with `complete=True` is the only empty tree. |
+| Unreadable or malformed `/proc` records silently absent | Classified as `degraded`; absence is then not proven. |
+| Windows count limit used as a completeness proxy | Replaced by an explicit end-of-walk reason (`ERROR_NO_MORE_FILES` versus anything else). |
+| Static parent identifiers and PID reuse | Creation stamps exclude pre-owner candidates; a reused owner number is `unknown`, never a guess. |
+| A parent chain cannot prove descendants that outlive an intermediate parent | Accepted. `parent-chain` is no longer a durable scope: absence there is `unknown`, and `stopped()` is false on Windows until job-backed execution exists. |
+| Observations compared across a reboot | Boot identity is recorded in the claim and already embedded in the process identity, so leases inherit the guard. |
+| Unknown tree closed by recovery | Recovery refuses an unobservable tree unless the operator confirms explicitly; the confirmation is recorded. |
+| Reclamation on an incomplete observation | Any non-`stopped` descendant verdict requires `--confirm-descendants-stopped`, and the scope, enumeration and reason are recorded. |
+| Termination requested but never observed | `_stop_tree` re-scans, kills only positively observed PIDs, and records a `termination` observation; outcomes now carry `custody`. |
+| Predictable record path could serve stale evidence | `status`/`recover` refuse a record whose `plan_sha256` is not this plan. |
+| No containment mechanism stronger than a parent chain | Job Object experiment added and qualified on Windows; execution deliberately still does not claim it. |
+
+That review also confirmed the parts of this report that hold: the plan binding,
+single-use fence, canonical path identities, atomic publication and the
+cooperating-owner limitation statement needed no change.
+
+`Ran 218 tests ... OK (skipped=4)` locally, plus 4 Job Object tests.

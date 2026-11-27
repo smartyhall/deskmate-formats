@@ -491,8 +491,49 @@ def _pump(stream, sink):
         return
 
 
-def _stop_tree(process):
-    """Terminate the process and its descendants; never leave an orphan."""
+_STOP_ROUNDS = 20
+_STOP_PAUSE = 0.05
+
+
+def _kill_pid(pid):
+    """Kill exactly one positively observed process; never by name pattern."""
+    if os.name == "nt":
+        from shutil import which
+
+        taskkill = which("taskkill")
+        if taskkill:
+            try:
+                subprocess.run([taskkill, "/F", "/PID", str(pid)],
+                               stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                               stderr=subprocess.DEVNULL, timeout=30)
+            except (OSError, subprocess.TimeoutExpired):
+                pass
+        return
+    try:
+        os.kill(pid, signal.SIGKILL)
+    except OSError:
+        pass
+
+
+def _observe_tree(claim):
+    """Observe a tree without touching it: an exit is not an empty tree."""
+    if claim is None:
+        return {"requested": False, "descendants": "unknown",
+                "enumeration": "unavailable", "remaining": None,
+                "reason": "no-tree-handle"}
+    state = process_tree.tree_state(claim)
+    return {"requested": False, "descendants": state["descendants"],
+            "enumeration": state["enumeration"], "remaining": state["live"],
+            "reason": state["reason"]}
+
+
+def _stop_tree(process, claim=None):
+    """Terminate the process and its descendants, then observe the result.
+
+    Termination is requested, never assumed: the returned observation records
+    what a bounded re-scan could still see, and an unobservable tree stays
+    ``unknown``.
+    """
     if os.name == "nt":
         from shutil import which
 
@@ -521,6 +562,22 @@ def _stop_tree(process):
     except subprocess.TimeoutExpired:
         process.kill()
         process.wait(timeout=5)
+    if claim is None:
+        return {"requested": True, "descendants": "unknown", "enumeration": "unavailable",
+                "remaining": None, "reason": "no-tree-handle"}
+    for _ in range(_STOP_ROUNDS):
+        # A descendant that left the group or session survives the group kill,
+        # so the scan decides what is left instead of the kill call succeeding.
+        scan = process_tree.live_pids(claim)
+        for pid in scan.pids:
+            _kill_pid(pid)
+        if not scan.pids:
+            break
+        sleep(_STOP_PAUSE)
+    state = process_tree.tree_state(claim)
+    return {"requested": True, "descendants": state["descendants"],
+            "enumeration": state["enumeration"], "remaining": state["live"],
+            "reason": state["reason"]}
 
 
 def _artifacts(directory):
@@ -701,12 +758,15 @@ def _execute(root, plan, token):
                                   "--untracked-files=all"),
     }
     process = None
+    claim = None
+    termination = None
     try:
         process = _limited_subprocess(plan["argv"], cwd=plan["working_directory"],
                                       env=environment(artifacts, plan["working_directory"]))
-        claim = process_tree.tree_claim(process.pid)
-        if claim is not None:
-            _write_once(root / "child.json", claim)
+        # A degraded claim is still written: "the tree handle was lost" must be
+        # visible to recovery instead of looking like "nothing was started".
+        claim = process_tree.tree_claim(process.pid) or process_tree.unclaimed(process.pid)
+        _write_once(root / "child.json", claim)
         readers = [Thread(target=_pump, args=(process.stdout, stdout), daemon=True),
                    Thread(target=_pump, args=(process.stderr, stderr), daemon=True)]
         for reader in readers:
@@ -719,11 +779,11 @@ def _execute(root, plan, token):
                 break
             if (root / "cancel.json").exists():
                 cancelled = True
-                _stop_tree(process)
+                termination = _stop_tree(process, claim)
                 break
             if monotonic() >= deadline:
                 timed_out = True
-                _stop_tree(process)
+                termination = _stop_tree(process, claim)
                 break
             if monotonic() >= next_sample:
                 next_sample += _PROGRESS_INTERVAL
@@ -747,8 +807,18 @@ def _execute(root, plan, token):
         outcome.update(state="failed", reason="spawn-failed", exit_status=None,
                        error_type=type(error).__name__)
     finally:
-        if process is not None and process.poll() is None:
-            _stop_tree(process)
+        if process is not None:
+            if process.poll() is None:
+                termination = _stop_tree(process, claim)
+            elif termination is None:
+                # A clean exit says nothing about what it started.
+                termination = _observe_tree(claim)
+        outcome["termination"] = termination or {
+            "requested": False, "descendants": "unknown", "enumeration": "unavailable",
+            "remaining": None, "reason": "no-process-was-spawned"}
+        outcome["custody"] = ("clean" if outcome["termination"]["descendants"] == "stopped"
+                              else "descendants-alive" if outcome["termination"]["descendants"] == "alive"
+                              else "unobserved")
         for stream in getattr(process, "stdout", None), getattr(process, "stderr", None):
             if stream is not None:
                 try:
@@ -776,6 +846,9 @@ def _execute(root, plan, token):
             "host kill cannot prove a descendant completed no external effect",
             "captured output is a bounded prefix; the full stream was drained and discarded",
         ]
+        if outcome["custody"] != "clean":
+            outcome["limitations"].append(
+                "the attempt's process tree could not be shown empty after it ended")
         _progress(root, "finished", outcome_state=outcome["state"],
                   exit_status=outcome["exit_status"])
         with journal_lock(root):
@@ -817,7 +890,14 @@ def status(directory):
         attempt = _read(root / "attempt.json") if (root / "attempt.json").exists() else None
         outcome = _read(root / "outcome.json") if (root / "outcome.json").exists() else None
         child = _read(root / "child.json") if (root / "child.json").exists() else None
-        tree = {"owner": "unknown", "descendants": "unknown", "live": None}
+        # A record path is predictable, so a record is only this attempt's if it
+        # names this plan. Copied or stale evidence must not read as current.
+        for name, record in (("attempt", attempt), ("outcome", outcome)):
+            if record is not None and record.get("plan_sha256") != token:
+                raise DeterministicError("the recorded %s belongs to another plan; "
+                                         "it is not evidence for this attempt" % name)
+        tree = {"owner": "unknown", "descendants": "unknown", "live": None,
+                "scope": "none", "enumeration": "unavailable", "reason": "no-child-record"}
         if child is not None:
             tree = process_tree.tree_state(child)
         process = tree["owner"]
@@ -834,32 +914,54 @@ def status(directory):
             "attempted": attempt is not None, "terminal": outcome is not None,
             "cancel_requested": (root / "cancel.json").exists(),
             "process": process,
+            "descendants": tree["descendants"],
+            "observation": {key: tree.get(key) for key in ("scope", "enumeration", "reason")},
             "outcome": outcome,
             "requires_inspection": attempt is not None and outcome is None,
             "implementation_unchanged": plan["implementation_sha256"] == implementation_hashes(),
         }
 
 
-def recover(directory):
-    """Close an interrupted attempt as ``uncertain``. Never respawns work."""
+def recover(directory, *, confirm_descendants_stopped=False):
+    """Close an interrupted attempt as ``uncertain``. Never respawns work.
+
+    Closing the record while a process may still be running would hide it, so
+    an owner or descendant that is alive, or a tree that cannot be observed at
+    all, refuses recovery. Only an explicit operator confirmation overrides an
+    unobservable tree, and the confirmation is recorded in the outcome.
+    """
     root = storage_directory(directory)
     with journal_lock(root):
         plan, token = load_plan(root)
         if (root / "outcome.json").exists():
-            return _read(root / "outcome.json")
+            recorded = _read(root / "outcome.json")
+            if recorded.get("plan_sha256") != token:
+                raise DeterministicError("the recorded outcome belongs to another plan")
+            return recorded
         if not (root / "attempt.json").exists():
             raise DeterministicError("no interrupted attempt to recover")
         attempt = _read(root / "attempt.json")
+        if attempt.get("plan_sha256") != token:
+            raise DeterministicError("the recorded attempt belongs to another plan")
         child = _read(root / "child.json") if (root / "child.json").exists() else None
-        tree = ({"owner": "unknown", "descendants": "unknown", "live": None}
+        tree = ({"owner": "unknown", "descendants": "unknown", "live": None,
+                 "scope": "none", "enumeration": "unavailable", "reason": "no-child-record"}
                 if child is None else process_tree.tree_state(child))
+        proven = (tree["owner"] in process_tree.OWNER_GONE
+                  and tree["descendants"] == "stopped")
         if tree["owner"] == "alive" or tree["descendants"] == "alive":
             # The owner, or something it started, is still executing. Closing the
             # attempt now would hide a live process and race its own terminal
-            # record. An ``unknown`` tree is recorded as uncertainty, never as
-            # proof that nothing is running.
+            # record.
             raise DeterministicError("attempt owner or a descendant is still running; "
                                      "stop it before recovery")
+        if not proven and not confirm_descendants_stopped:
+            # An unavailable, degraded or scope-limited observation is never
+            # read as proof that nothing is running.
+            raise DeterministicError(
+                "the attempt's process tree cannot be shown stopped (%s); inspect the "
+                "observed processes, then confirm explicitly to record an uncertain outcome"
+                % tree.get("reason"))
         outcome = {
             "schema_version": SCHEMA_VERSION, "attempt_id": plan["attempt_id"],
             "campaign": plan["campaign"], "procedure": plan["procedure"],
@@ -872,6 +974,8 @@ def recover(directory):
             "state": "uncertain", "reason": "attempt-without-terminal-record",
             "exit_status": None, "timed_out": False, "cancelled": False,
             "process": tree["owner"], "descendants": tree["descendants"],
+            "observation": {key: tree.get(key) for key in ("scope", "enumeration", "reason")},
+            "descendants_confirmed": bool(confirm_descendants_stopped) and not proven,
             "requires_manual_process_check": tree["descendants"] == "unknown",
             "source_revision_after": source_revision(plan["working_directory"]),
             "artifacts": [], "structured_result": None,

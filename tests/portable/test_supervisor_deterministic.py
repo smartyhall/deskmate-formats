@@ -3,6 +3,7 @@
 from hashlib import sha256
 import os
 from pathlib import Path
+import shutil
 import sys
 from tempfile import TemporaryDirectory
 from threading import Event, Thread
@@ -58,6 +59,24 @@ class DeterministicTests(unittest.TestCase):
         with self.assertRaises(deterministic.DeterministicError):
             deterministic.run(self.state, authorization=attempt.plan_sha256)
 
+    def test_a_record_from_another_plan_is_never_read_as_this_attempt(self):
+        """A predictable record path must not let stale evidence look current."""
+        first = self.prepare("print('one')\n")
+        self.assertEqual(deterministic.run(self.state, authorization=first.plan_sha256)["state"],
+                         "completed")
+        other = self.root / "other"
+        with patch.object(procedures, "build", return_value=[PYTHON, "-I", "-c", "print('two')\n"]):
+            second = deterministic.prepare(
+                other, campaign="synthetic-campaign", procedure="hash-files",
+                arguments={"paths": ["README.md"]},
+                working_directory=str(self.root), timeout_seconds=10)
+        self.assertNotEqual(first.plan_sha256, second.plan_sha256)
+        shutil.copyfile(self.state / "outcome.json", other / "outcome.json")
+        with self.assertRaisesRegex(deterministic.DeterministicError, "another plan"):
+            deterministic.status(other)
+        with self.assertRaisesRegex(deterministic.DeterministicError, "another plan"):
+            deterministic.recover(other)
+
     def test_nonzero_exit_is_failed_not_completed(self):
         attempt = self.prepare("raise SystemExit(3)\n")
         outcome = deterministic.run(self.state, authorization=attempt.plan_sha256)
@@ -108,9 +127,16 @@ class DeterministicTests(unittest.TestCase):
         self.assertTrue(view["requires_inspection"])
         with self.assertRaises(deterministic.DeterministicError):
             deterministic.run(self.state, authorization=attempt.plan_sha256)
-        recovered = deterministic.recover(self.state)
+        # No child record means no tree handle: whether anything is still
+        # running cannot be observed, so recovery must not simply close the book.
+        with self.assertRaisesRegex(deterministic.DeterministicError, "cannot be shown stopped"):
+            deterministic.recover(self.state)
+        recovered = deterministic.recover(self.state, confirm_descendants_stopped=True)
         self.assertEqual((recovered["state"], recovered["reason"]),
                          ("uncertain", "attempt-without-terminal-record"))
+        self.assertEqual(recovered["descendants"], "unknown")
+        self.assertTrue(recovered["descendants_confirmed"])
+        self.assertTrue(recovered["requires_manual_process_check"])
         self.assertEqual(deterministic.recover(self.state), recovered)
 
     def test_recovery_refuses_a_live_child(self):
@@ -125,6 +151,9 @@ class DeterministicTests(unittest.TestCase):
             time.sleep(0.02)
         with self.assertRaises(deterministic.DeterministicError):
             deterministic.recover(self.state)
+        # An operator confirmation may not override a positively live tree.
+        with self.assertRaises(deterministic.DeterministicError):
+            deterministic.recover(self.state, confirm_descendants_stopped=True)
         deterministic.cancel(self.state, authorization=attempt.plan_sha256)
         thread.join(60)
         self.assertEqual(result["outcome"]["state"], "cancelled")

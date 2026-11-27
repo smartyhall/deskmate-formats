@@ -142,7 +142,7 @@ class CampaignRegistryTests(unittest.TestCase):
             self.register(registry, "beta")
             registry.acquire("emulator:rsx-02", "alpha", pid=4242,
                              process_identity="previous-owner", ttl_seconds=60, now=now)
-            for observed in ("alive", "unknown", "identity-mismatch"):
+            for observed in ("alive", "unknown"):
                 with self.subTest(observed=observed):
                     with self.assertRaisesRegex(campaigns.RegistryError,
                                                 "not positively stopped"):
@@ -165,6 +165,29 @@ class CampaignRegistryTests(unittest.TestCase):
                              ("alpha", "beta"))
             self.assertEqual(takeover["reason"], "Operator reassignment")
             self.assertEqual(takeover["previous_descendants"], "stopped")
+
+    def test_reclaim_accepts_a_replaced_owner_number(self):
+        """The recorded owner is gone when its number carries another stamp.
+
+        That is evidence about the owner only: the tree must still be proven
+        empty, so no confirmation is set and none is required.
+        """
+        now = campaigns.utcnow()
+        later = now + timedelta(seconds=7200)
+        with self.registry(create=True) as registry:
+            self.register(registry, "alpha")
+            self.register(registry, "beta")
+            registry.acquire("emulator:rsx-02", "alpha", pid=4242,
+                             process_identity="previous-owner", ttl_seconds=60, now=now)
+            lease = registry.reclaim(
+                "emulator:rsx-02", "beta", pid=self.pid, process_identity="beta-owner",
+                ttl_seconds=600, now=later, operator_reason="Owner instance replaced",
+                probe=probe({self.pid: "alive"}), tree=tree(owner="identity-mismatch"))
+            self.assertEqual(lease.campaign, "beta")
+            takeover = registry.takeovers()[0]
+            self.assertEqual(takeover["previous_owner"], "identity-mismatch")
+            self.assertEqual(takeover["previous_descendants"], "stopped")
+            self.assertFalse(takeover["descendants_confirmed"])
 
     def test_reclaim_requires_a_genuine_new_owner_and_no_surviving_descendant(self):
         now = campaigns.utcnow()

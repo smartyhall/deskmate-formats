@@ -155,7 +155,7 @@ def _valid_lease(record):
     return (type(record) is dict and set(record) == _LEASE_KEYS
             and type(record["pid"]) is int and 1 <= record["pid"] < 2**31
             and type(record["ttl_seconds"]) in (int, float)
-            and record["scope"] in ("session", "process"))
+            and record["scope"] in ("session", "parent-chain", "process"))
 
 
 def _load(path):
@@ -419,11 +419,15 @@ class Registry:
         if now < expires:
             raise RegistryError("lease has not expired; wait or coordinate with the owner")
         observed = tree(self._claim(current))
-        if observed["owner"] not in ("stopped", "not-found"):
+        # ``identity-mismatch`` means the recorded owner is gone and the number
+        # now belongs to another process: still evidence about the owner only.
+        if observed["owner"] not in ("stopped", "not-found", "identity-mismatch"):
             raise RegistryError("owner process is not positively stopped; reconcile explicitly")
         if observed["descendants"] == "alive":
             raise RegistryError("a descendant of the previous owner is still running")
-        if observed["descendants"] == "unknown" and not confirm_descendants_stopped:
+        if observed["descendants"] != "stopped" and not confirm_descendants_stopped:
+            # An unavailable, degraded or scope-limited observation is never
+            # read as an empty tree; only an explicit operator act overrides it.
             raise RegistryError("descendants cannot be proven stopped; confirm explicitly")
         if len(self._data["takeovers"]) >= MAX_RECORDS:
             raise RegistryError("takeover record limit reached")
@@ -434,6 +438,9 @@ class Registry:
             "previous_identity": current["process_identity"],
             "previous_owner": observed["owner"],
             "previous_descendants": observed["descendants"],
+            "previous_scope": observed.get("scope"),
+            "previous_enumeration": observed.get("enumeration"),
+            "previous_reason": observed.get("reason"),
             "descendants_confirmed": bool(confirm_descendants_stopped),
             "new_campaign": identifier, "reason": reason, "taken_at": _stamp(now),
         })

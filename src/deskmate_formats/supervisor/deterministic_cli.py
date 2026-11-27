@@ -97,6 +97,10 @@ def _parser():
                                  help="revalidate the accepted revision before dispatch")
             command.add_argument("--registry", type=Path)
             command.add_argument("--lease-seconds", type=float, default=900)
+        if action == "recover":
+            command.add_argument(
+                "--confirm-descendants-stopped", action="store_true",
+                help="record an uncertain outcome when the tree cannot be observed")
     cancel = actions.add_parser("cancel", allow_abbrev=False)
     cancel.add_argument("--state", type=Path, required=True)
     cancel.add_argument("--authorization", required=True)
@@ -148,7 +152,9 @@ def _run(args):
         deterministic.cancel(args.state, authorization=args.authorization)
         _json({"cancel_requested": True})
         return 0
-    _json(deterministic.recover(args.state))
+    _json(deterministic.recover(
+        args.state,
+        confirm_descendants_stopped=getattr(args, "confirm_descendants_stopped", False)))
     return 0
 
 
