@@ -129,6 +129,16 @@ _TH32CS_SNAPPROCESS = 0x00000002
 _INVALID_HANDLE = ctypes.c_void_p(-1).value
 
 
+def _windows_times(idle_ticks: int, kernel_ticks: int, user_ticks: int) -> tuple[int, int, int]:
+    """Turn ``GetSystemTimes`` output into non-overlapping ``(idle, user, system)``.
+
+    The API's kernel time *includes* idle time. Summing the three raw counters
+    therefore counts idle twice and overstates the busy share; subtracting it
+    here keeps the result consistent with the POSIX counters.
+    """
+    return (idle_ticks, user_ticks, max(0, kernel_ticks - idle_ticks))
+
+
 class _WindowsCounters:
     """Lazily bound Win32 calls.  Import-time failure is reported, never fatal."""
 
@@ -176,12 +186,20 @@ class _WindowsCounters:
         )
 
     def system_times(self) -> tuple[int, int, int] | None:
+        """Return non-overlapping ``(idle, user, busy_system)`` counters.
+
+        ``GetSystemTimes`` reports kernel time *including* idle time, so the two
+        must be separated here; summed as returned by the API they would count
+        idle twice and overstate the busy share. The subtraction keeps this
+        function's result consistent with the POSIX counters, which are already
+        non-overlapping.
+        """
         idle, kernel, user = _FILETIME(), _FILETIME(), _FILETIME()
         if not self.kernel32.GetSystemTimes(
             ctypes.byref(idle), ctypes.byref(kernel), ctypes.byref(user)
         ):
             return None
-        return (
+        return _windows_times(
             (idle.dwHighDateTime << 32) | idle.dwLowDateTime,
             (kernel.dwHighDateTime << 32) | kernel.dwLowDateTime,
             (user.dwHighDateTime << 32) | user.dwLowDateTime,
@@ -353,7 +371,12 @@ class HostSampler:
         )
 
     def _deltas(self, times: tuple[int, int, int]) -> tuple[float | None, float | None, float | None]:
-        """Convert cumulative (idle, user, system) counters into percentages."""
+        """Convert cumulative (idle, user, system) counters into percentages.
+
+        The three counters must not overlap, so the total is their sum and the
+        busy share is the total minus idle. Callers are responsible for
+        separating idle from kernel time where the platform conflates them.
+        """
         previous, self._previous = self._previous, times
         if previous is None:
             return None, None, None
@@ -403,7 +426,10 @@ class HostTimeline:
 
     def __init__(self, interval: float = 5.0, sampler: HostSampler | None = None) -> None:
         self.interval = max(0.5, float(interval))
-        self.sampler = sampler or default_sampler()
+        # A timeline owns its baseline: sharing the process-wide sampler lets an
+        # unrelated sample (a per-test one, or a previous run) consume the
+        # interval this timeline meant to measure.
+        self.sampler = sampler or HostSampler()
         self.samples: list[HostSample] = []
         self._stop = threading.Event()
         self._thread: threading.Thread | None = None

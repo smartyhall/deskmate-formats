@@ -36,6 +36,19 @@ class HostLoadTests(unittest.TestCase):
             self.assertGreaterEqual(second.cpu_total_percent, 0.0)
             self.assertLessEqual(second.cpu_total_percent, 100.0)
 
+    def test_windows_kernel_time_excludes_idle(self):
+        # GetSystemTimes reports kernel time including idle. 80 idle, 90 kernel
+        # (10 of it busy) and 10 user is 20% busy; summed naively it reads 55.6%.
+        times = hostload._windows_times(80, 90, 10)
+        sampler = hostload.HostSampler()
+        sampler._previous = (0, 0, 0)
+        self.assertEqual(sampler._deltas(times), (20.0, 10.0, 10.0))
+
+    def test_each_timeline_owns_its_cpu_baseline(self):
+        first = hostload.HostTimeline(interval=60.0)
+        second = hostload.HostTimeline(interval=60.0)
+        self.assertIsNot(first.sampler, second.sampler)
+
     def test_summary_handles_missing_cpu(self):
         summary = hostload.summarize_samples([hostload.HostSample(at_utc="2026-01-01T00:00:00Z")])
         self.assertEqual(summary["samples"], 1)
@@ -159,6 +172,35 @@ class ReportTests(unittest.TestCase):
         other["tests"] = other["tests"][:1]
         comparison = report.compare(self.payload, other)
         self.assertTrue(any("test count" in warning for warning in comparison["warnings"]))
+
+    def test_compare_flags_instrumentation_mismatch(self):
+        other = self.result.as_dict()
+        other["meta"]["trace_processes"] = not other["meta"].get("trace_processes")
+        comparison = report.compare(self.payload, other)
+        self.assertTrue(any("process tracing" in warning for warning in comparison["warnings"]))
+
+    def test_compare_flags_unlike_test_sets_with_equal_counts(self):
+        other = self.result.as_dict()
+        other["tests"] = [dict(test) for test in other["tests"]]
+        other["tests"][0]["test_id"] = "perf_harness_cases.Other.test_replacement"
+        comparison = report.compare(self.payload, other)
+        self.assertTrue(any("same tests" in warning for warning in comparison["warnings"]))
+
+    def test_missing_host_cpu_is_not_comparable(self):
+        other = self.result.as_dict()
+        self.payload["host"]["summary"]["cpu_total_percent"]["mean"] = None
+        other["host"]["summary"]["cpu_total_percent"]["mean"] = None
+        comparison = report.compare(self.payload, other)
+        self.assertFalse(comparison["comparable"])
+        self.assertTrue(any("not observed" in warning for warning in comparison["warnings"]))
+
+    def test_non_comparable_runs_label_deltas_as_observations(self):
+        other = self.result.as_dict()
+        self.payload["host"]["summary"]["cpu_total_percent"]["mean"] = 95.0
+        other["host"]["summary"]["cpu_total_percent"]["mean"] = 5.0
+        comparison = report.compare(self.payload, other)
+        self.assertEqual(comparison["delta_label"], "observation")
+        self.assertIn("not a speedup claim", report.compare_markdown(comparison))
 
 
 class MicrobenchTests(unittest.TestCase):

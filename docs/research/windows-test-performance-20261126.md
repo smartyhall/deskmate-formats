@@ -1,10 +1,11 @@
 # Windows portable-suite performance under concurrent laboratory load
 
 **Status:** two full runs analysed (concurrent load, less contended); an import
-defect corrected, which recovers 72 tests that never ran; one genuine failure
-confirmed in both runs as a race and already fixed on PR #191; the dominant
-bottleneck located down to Git subcommand; a cross-campaign wheel-skew hazard
-documented; remaining items listed as open
+defect corrected, which recovers 72 tests that never ran; a host-CPU measurement
+defect found by review and corrected (§5.4); one genuine failure confirmed in
+both runs as a race and already fixed on PR #191; the dominant bottleneck
+located down to Git subcommand; a cross-campaign wheel-skew hazard documented;
+remaining items listed as open
 **Date:** 2026-11-26 (baseline), 2026-11-27 (recovery and comparison)
 **Host:** Windows 10 Pro 10.0.19045, 6 vCPU, 8 GiB RAM, shared laboratory VM
 **Base revision:** `b5e525002b150352a8995de1bcddfbc5dc18a838`
@@ -34,22 +35,31 @@ constants.
 | | Baseline (concurrent load) | Second run (less contended) |
 | --- | --- | --- |
 | Window (UTC) | 2026-11-26 09:29:02 – 09:50:27 | 2026-11-27 02:27:43 – 02:43:02 |
-| CPU total, mean / max | **82.9 % / 99.8 %** | **60.5 % / 92.0 %** |
+| CPU total, mean / max (corrected †) | **≈79 % / ≈100 %** | **≈35 % / ≈91 %** |
+| CPU total, mean as first reported ‡ | 82.9 % / 99.8 % | 60.5 % / 92.0 % |
 | Available memory, mean / min | 2.8 GiB / 1.9 GiB | 3.1 GiB / 2.3 GiB |
 | Processes, mean / max | 228.9 / 253 | 209.2 / 235 |
 | Threads, mean | 1983.7 | 1920.9 |
 | Samples (5 s interval) | 252 | 183 |
+
+† The first instrumentation double-counted idle time (§5.4). Corrected values
+are derived from the stored ones — see that section for the derivation and its
+limits. ‡ Shown so the earlier figures are traceable rather than quietly
+rewritten.
+
+The correction widens rather than narrows the gap between the windows: the
+baseline was around 79 % busy and the second run around 35 %, not 83 % and 60 %.
+Both runs are still loaded windows, and neither was idle.
 
 The baseline was taken while other campaigns were executing on the same VM. That
 workload is not reproducible on demand, so those numbers are preserved as the
 recorded concurrent-load condition rather than replaced by a quieter one.
 
 The second run was labelled "lower contention" on the strength of a sample taken
-just before it (50.5 % CPU, 207 processes). Its own timeline tells a more honest
-story: the mean was 60.5 % with peaks at 92 %, because another campaign started
-work while it was running. It is therefore a *less* contended window than the
-baseline and a *not idle* one — the comparison below is between two loaded
-windows, not between load and quiet.
+just before it, and its own timeline tells a more honest story: load rose during
+the run because another campaign started work. It is therefore a *less*
+contended window than the baseline and a *not idle* one — the comparison below is
+between two loaded windows, not between load and quiet.
 
 ## 3. Where the time goes (measured)
 
@@ -135,19 +145,24 @@ nothing else.
 
 ### 3.2 What a process round-trip actually costs here
 
-Bounded microbenchmarks, 8 iterations, taken at 79 % host CPU:
+Bounded microbenchmarks, 8 iterations, taken at 56 % host CPU with the corrected
+sampler (§5.4):
 
 | Benchmark | median | p90 | max |
 | --- | --- | --- | --- |
-| `git_rev_parse` | 80.1 ms | 83.7 ms | 84.1 ms |
-| `git_version` | 73.3 ms | 75.5 ms | 75.8 ms |
-| `git_init` | 126.0 ms | 292.8 ms | 389.6 ms |
-| `git_commit` | 191.4 ms | 465.1 ms | 473.4 ms |
-| `python_startup` | 72.7 ms | 76.1 ms | 149.1 ms |
-| `python_import_supervisor` | 322.8 ms | 418.5 ms | 499.5 ms |
+| `git_rev_parse` | 73.9 ms | 75.3 ms | 78.6 ms |
+| `git_version` | 69.1 ms | 70.0 ms | 74.1 ms |
+| `git_init` | 118.2 ms | 125.3 ms | 137.0 ms |
+| `git_commit` | 214.3 ms | 321.2 ms | 374.3 ms |
+| `python_startup` | 61.6 ms | 61.9 ms | 69.3 ms |
+| `python_import_supervisor` | 258.8 ms | 265.7 ms | 283.7 ms |
 | `file_write_4k` | 0.6 ms | 0.6 ms | 0.6 ms |
-| `sqlite_create` | 23.4 ms | 33.2 ms | 71.9 ms |
+| `sqlite_create` | 14.7 ms | 42.3 ms | 196.0 ms |
 | `thread_start_join` | 0.3 ms | 0.3 ms | 0.4 ms |
+
+An earlier session at higher load measured `python_import_supervisor` at
+287–500 ms and `git_rev_parse` at 80 ms; the two sessions bracket the range the
+suite actually experiences.
 
 A bare `git rev-parse` costs about 80 ms and carries almost no work; the 98 ms
 per call seen inside the suite is that plus the pipes, arguments and cwd of a
@@ -157,9 +172,10 @@ process-creation tax roughly a thousand times over, and filesystem work
 
 The same table answers the margin question for the short handshake budgets: a
 child interpreter that imports the supervisor protocol alone costs
-**287–500 ms**, before process creation, identity query and the two JSON
-round-trips of the handshake. Against a `timeout=1` budget that is at best a
-factor of two, and less when the host is busier than this microbenchmark's 79 %.
+**259 ms at 56 % CPU and up to 500 ms at higher load**, before process creation,
+identity query and the two JSON round-trips of the handshake. Against a
+`timeout=1` budget that is roughly 4× headroom when the host is quiet and about
+2× when it is not — a margin that shrinks exactly when the suite is slowest.
 
 ### 3.3 Which Git commands dominate
 
@@ -216,8 +232,8 @@ Ranked by measured wall time that a change could actually reclaim.
    `deadline=0.1`/`0.3` cases exist in `test_supervisor_driver.py` (3 sites) and
    `test_supervisor_s2_live.py` (1 site). They passed in both runs, but §3.2
    shows the child interpreter and protocol import alone consume 287–500 ms of
-   a 1 000 ms budget. Headroom is therefore about a factor of two at 79 % CPU,
-   and it shrinks as the host busies. This is the most likely candidate for a
+   a 1 000 ms budget. Headroom is therefore roughly 4× when the host is quiet
+   and about 2× at 79 % CPU, and it shrinks as the host busies. This is the most likely candidate for a
    future contention-induced failure that is *not* a product defect, and the
    remedy is a stated hang guard, not a hidden deadline increase.
 
@@ -279,7 +295,7 @@ plus a regression test that writes the record from an already-exited process.
 No competing fix is carried here: the fix belongs to that branch, a duplicate
 in this one would only create a conflict on the same lines. What this campaign
 adds is independent evidence that the failure is real: it occurred in **both**
-full runs — once at 82.9 % mean CPU and again at 60.5 % mean CPU — in the one
+full runs — once under the heavier window and once under the lighter one — in the one
 module that already carries a handshake-margin comment for the same reason. Two
 occurrences in two runs, including a run at materially lower load, argue against
 a pure contention threshold and for a genuine ordering defect of the kind #191
@@ -299,6 +315,43 @@ it as semantic — the implementation derives the descendant answer from the
 owner's disappearance, with additional enumeration-completeness concerns. It is
 an implementation correction in the Supervisor campaign's territory and is left
 there; see §9 for the handoff.
+
+### 5.4 A measurement defect found by review: inflated host CPU
+
+An advisory review of this branch found that `GetSystemTimes` reports kernel
+time **including** idle time. The sampler summed the three returned counters, so
+idle was counted twice and the busy share was overstated. Checking it against
+the host's own counter confirmed the finding decisively:
+
+```
+raw deltas  idle=152031250 kernel=170156250 user=10781250
+pre-fix formula : 54.3 %
+corrected       : 16.0 %
+Windows LoadPercentage (approximate, different window): 16
+```
+
+`_windows_times` now subtracts idle from kernel time before the delta is taken,
+and a regression test asserts the documented example (80 idle, 90 kernel, 10
+user → 20 % busy, not 55.6 %).
+
+This is classification §5.1 again, in a more dangerous form: a measurement
+defect that produces *plausible* numbers. 82.9 % CPU on a shared VM reads as
+entirely believable, and every conclusion drawn from it would have been wrong by
+a third without ever looking wrong.
+
+**Effect on the numbers in this document.** The stored reports cannot be
+re-derived exactly, because the summary keeps the mean of per-sample ratios
+rather than the counters. For a single interval the relation is exact:
+reported `b = (kernel + user) / (idle + kernel + user)`, so the corrected share
+is `(2b − 1) / b`. That is what the "corrected †" row in §2 applies, and it is an
+estimate for a mean of ratios — accurate to roughly a percentage point here, and
+labelled as derived rather than measured. The microbenchmarks were re-run with
+the corrected sampler, so §3.2 is measured, not derived.
+
+What does **not** change: every wall-clock figure, spawn count, Git-call count
+and per-test CPU ratio, none of which use the host CPU percentage. The
+`compare` guard now also refuses comparability when host CPU is missing, which
+this defect showed could happen.
 
 ## 6. Measured improvement: reuse the synthetic task repository
 
@@ -338,7 +391,7 @@ bound around `_run_git`; no behaviour depends on which hunk is kept first.
 
 **Measured:** the spawn counts, wall and CPU splits, module shares, Pareto
 concentration, the fixture A/B, the resolved module origin of child processes
-(§7.1), the two failure classes in §5.1 and §5.2, and the host conditions in §2.
+(§7.1), the two failure classes in §5.1 and §5.2, and the host conditions in §2 (with §5.4's correction).
 
 **Hypothesis, not measured:**
 
@@ -422,8 +475,8 @@ have the harness record each child's resolved module origin.
 - **Scheduling.** Admission should use measured host conditions plus a profile's
   measured cost class, not a fixed maximum number of concurrent suites. The
   baseline itself is the evidence: the same suite moved between 1 284 s under
-  83 % CPU and materially different conditions at 50 % CPU, so a fixed timeout
-  cannot be correct for both.
+  ≈79 % CPU and materially different conditions at ≈35 % CPU, so a fixed
+  timeout cannot be correct for both.
 - **Concurrency of the suite itself.** Because the suite is idle-waiting most of
   its wall time, running modules concurrently would raise throughput without
   adding CPU pressure — but it would add process-creation pressure, which is the
@@ -466,5 +519,8 @@ have the harness record each child's resolved module origin.
 - Child processes started with `python -I` execute the installed wheel rather
   than this checkout (§7.1). This campaign verified that the modules in question
   were byte-identical, but that verification is manual and does not generalise.
+- Host CPU percentages from the two full runs are derived corrections of
+  inflated figures, not direct measurements (§5.4). They are good to about a
+  percentage point and should be treated as a band, not a value.
 - Raw measurement files, logs and the campaign registry are retained outside
   Git; only this analysis and the harness are published.

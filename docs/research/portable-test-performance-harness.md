@@ -117,6 +117,10 @@ to the change. Compare distributions, and compare under stated conditions.
   report shows them as unattributed time.
 - Subprocess tracing adds a Python-level wrapper around process creation. It is
   small but not zero; use the same flag on both sides of a comparison.
+- Host CPU comes from `GetSystemTimes`, whose kernel counter includes idle
+  time; the sampler separates them before taking a delta. Getting this wrong
+  overstates the busy share while still looking plausible, so the regression
+  test in `test_perf_harness.py` pins the arithmetic rather than a live reading.
 - Disk latency and queue depth are not sampled by default.
 - Endpoint-security scanning is reported only where the host exposes it; a
   missing value is `null`, never zero.

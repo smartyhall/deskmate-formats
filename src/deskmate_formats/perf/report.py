@@ -321,6 +321,27 @@ def compare(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
                 "Available memory differs by more than a third between runs;"
                 " paging behaviour may differ."
             )
+    before_meta = before.get("meta") or {}
+    after_meta = after.get("meta") or {}
+    for key, label in (("trace_processes", "process tracing"),
+                       ("trace_git_commands", "Git command sampling"),
+                       ("sample_tests", "per-test host sampling")):
+        if bool(before_meta.get(key)) != bool(after_meta.get(key)):
+            warnings.append(
+                f"{label} differs between the runs; one side paid instrumentation"
+                " overhead the other did not."
+            )
+    if old_cpu is None or new_cpu is None:
+        warnings.append(
+            "Host CPU was not observed in one or both runs, so comparable load"
+            " cannot be claimed."
+        )
+    if set(before_tests) != set(after_tests):
+        difference = len(set(before_tests) ^ set(after_tests))
+        warnings.append(
+            f"The runs do not cover the same tests ({difference} appear in only one);"
+            " suite totals are not like-for-like even where the counts agree."
+        )
     if not common:
         warnings.append("No tests appear in both runs.")
 
@@ -350,6 +371,9 @@ def compare(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
         },
         "comparable": not warnings,
         "warnings": warnings,
+        # The same signed deltas mean different things depending on comparability,
+        # so the label travels with them instead of being assumed by the reader.
+        "delta_label": "observation" if warnings else "improvement",
         "improved": [item for item in deltas if item["delta_seconds"] < -0.005][:25],
         "regressed": [item for item in reversed(deltas) if item["delta_seconds"] > 0.005][:25],
         "per_test": deltas,
@@ -378,7 +402,9 @@ def compare_markdown(comparison: dict[str, Any]) -> str:
     if comparison.get("warnings"):
         lines.append("")
 
-    lines += ["## Most improved tests", "",
+    observed = comparison.get("delta_label") == "observation"
+    lines += ["## Largest reductions (observations, not a speedup claim)" if observed
+              else "## Most improved tests", "",
               "| Test | Before | After | Delta |", "| --- | --- | --- | --- |"]
     for item in comparison.get("improved", []):
         lines.append(
@@ -386,7 +412,8 @@ def compare_markdown(comparison: dict[str, Any]) -> str:
             f" | {_format_seconds(item['after_seconds'])}"
             f" | {_format_seconds(item['delta_seconds'])} |"
         )
-    lines += ["", "## Most regressed tests", "",
+    lines += ["", "## Largest increases (observations, not a slowdown claim)" if observed
+              else "## Most regressed tests", "",
               "| Test | Before | After | Delta |", "| --- | --- | --- | --- |"]
     for item in comparison.get("regressed", []):
         lines.append(

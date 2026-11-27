@@ -219,7 +219,9 @@ class _TimedResult(unittest.TextTestResult):
         parts = identifier.split(".")
         record = TestRecord(
             test_id=identifier,
-            module=parts[0] if len(parts) > 2 else "",
+            # Keep dotted package prefixes: ``pkg.test_alpha.Case.test_one`` is
+            # in module ``pkg.test_alpha``, not ``pkg``.
+            module=".".join(parts[:-2]) if len(parts) > 2 else "",
             case=parts[-2] if len(parts) > 1 else "",
             name=parts[-1],
             host=None,
@@ -468,7 +470,10 @@ def run_suite(
     try:
         with HostTimeline(interval=sample_interval) as timeline:
             result = runner.run(suite)
-            samples = list(timeline.samples)
+        # After ``__exit__``, which appends the closing sample; copying inside
+        # the block loses the last interval, and on a short run that is the only
+        # sample carrying a CPU delta.
+        samples = list(timeline.samples)
     finally:
         timer.uninstall()
         if tracer is not None:

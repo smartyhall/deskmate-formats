@@ -26,6 +26,10 @@ from .hostload import HostTimeline, describe_environment, summarize_samples
 
 SCHEMA_VERSION = 1
 
+# A benchmark that hangs must not hang the whole session: ``_measure`` records a
+# ``subprocess.SubprocessError`` as an error row, but only if the call returns.
+BENCHMARK_TIMEOUT = 120.0
+
 _GIT_ENV_KEYS = ("GIT_CONFIG_NOSYSTEM", "GIT_CONFIG_GLOBAL", "GIT_TERMINAL_PROMPT")
 
 
@@ -51,7 +55,8 @@ class Benchmark:
 
 def _bench_python_startup(_index: int) -> float:
     start = time.perf_counter()
-    subprocess.run(_python("-c", "pass"), check=True, stdin=subprocess.DEVNULL,
+    subprocess.run(_python("-c", "pass"), check=True, timeout=BENCHMARK_TIMEOUT,
+                   stdin=subprocess.DEVNULL,
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return time.perf_counter() - start
 
@@ -59,14 +64,15 @@ def _bench_python_startup(_index: int) -> float:
 def _bench_python_import(_index: int) -> float:
     start = time.perf_counter()
     subprocess.run(_python("-c", "import deskmate_formats.supervisor.protocol"),
-                   check=True, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                   stderr=subprocess.DEVNULL)
+                   check=True, timeout=BENCHMARK_TIMEOUT, stdin=subprocess.DEVNULL,
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return time.perf_counter() - start
 
 
 def _bench_git_version(_index: int) -> float:
     start = time.perf_counter()
     subprocess.run(["git", "--version"], check=True, env=_git_environment(),
+                   timeout=BENCHMARK_TIMEOUT,
                    stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                    stderr=subprocess.DEVNULL)
     return time.perf_counter() - start
@@ -77,6 +83,7 @@ def _bench_git_init(_index: int) -> float:
         start = time.perf_counter()
         subprocess.run(["git", "init", "-q", "-b", "main", "--object-format=sha1"],
                        cwd=directory, check=True, env=_git_environment(),
+                       timeout=BENCHMARK_TIMEOUT,
                        stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                        stderr=subprocess.DEVNULL)
         return time.perf_counter() - start
@@ -91,11 +98,13 @@ def _bench_git_commit(_index: int) -> float:
                    GIT_AUTHOR_DATE="2026-01-01T00:00:00Z",
                    GIT_COMMITTER_DATE="2026-01-01T00:00:00Z")
         subprocess.run(["git", "init", "-q", "-b", "main", "--object-format=sha1"],
-                       cwd=directory, check=True, env=env, stdin=subprocess.DEVNULL,
+                       cwd=directory, check=True, env=env, timeout=BENCHMARK_TIMEOUT,
+                       stdin=subprocess.DEVNULL,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         start = time.perf_counter()
         subprocess.run(["git", "commit", "-q", "--allow-empty", "-m", "Synthetic benchmark"],
-                       cwd=directory, check=True, env=env, stdin=subprocess.DEVNULL,
+                       cwd=directory, check=True, env=env, timeout=BENCHMARK_TIMEOUT,
+                       stdin=subprocess.DEVNULL,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         return time.perf_counter() - start
 
@@ -109,13 +118,16 @@ def _bench_git_rev_parse(_index: int) -> float:
                    GIT_AUTHOR_DATE="2026-01-01T00:00:00Z",
                    GIT_COMMITTER_DATE="2026-01-01T00:00:00Z")
         subprocess.run(["git", "init", "-q", "-b", "main", "--object-format=sha1"],
-                       cwd=directory, check=True, env=env, stdin=subprocess.DEVNULL,
+                       cwd=directory, check=True, env=env, timeout=BENCHMARK_TIMEOUT,
+                       stdin=subprocess.DEVNULL,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.run(["git", "commit", "-q", "--allow-empty", "-m", "anchor"],
-                       cwd=directory, check=True, env=env, stdin=subprocess.DEVNULL,
+                       cwd=directory, check=True, env=env, timeout=BENCHMARK_TIMEOUT,
+                       stdin=subprocess.DEVNULL,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         start = time.perf_counter()
         subprocess.run(["git", "rev-parse", "HEAD"], cwd=directory, check=True, env=env,
+                       timeout=BENCHMARK_TIMEOUT,
                        stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                        stderr=subprocess.DEVNULL)
         return time.perf_counter() - start
