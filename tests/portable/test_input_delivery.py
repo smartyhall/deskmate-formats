@@ -59,7 +59,9 @@ class Peer:
                  queue_only=False, drain=True, trim=False, cursor_offset=0,
                  delay_steps=0, ring='normal', bios_mode=3, blink=False, history=False,
                  commands=None, prompt='C:\\>', no_prompt_return=False, stale=None,
-                 instrumented=False):
+                 instrumented=False, cursor_offset_after=0, hold_last=None,
+                 regress_at=None, regress_to=0, mutate_after=None, clear_on=(),
+                 leave_text_on=(), long_history=False):
         self.ms = 0
         self.frames = 1
         self.bios_mode = bios_mode
@@ -72,11 +74,22 @@ class Peer:
         self.drain = drain
         self.trim = trim
         self.cursor_offset = cursor_offset
+        self.cursor_offset_after = cursor_offset_after
+        self.hold_last = hold_last
+        self.regress_at = regress_at
+        self.regress_to = regress_to
+        self.regressed = False
+        self.mutate_after = mutate_after
+        self.mutated = False
+        self.clear_on = set(clear_on)
+        self.leave_text_on = set(leave_text_on)
         self.delay_steps = delay_steps
         self.delay_left = 0
         self.deferred = ''
         self.prompt = prompt
         self.lines = [prompt + 'VER', 'MS-DOS Version 5.00'] if history else []
+        if long_history:
+            self.lines = [f'HISTORY LINE {index:02d}' for index in range(30)]
         self.typed = ''
         self.received = ''
         self.commands = dict(commands or {})
@@ -152,12 +165,18 @@ class Peer:
     def _cursor(self):
         rows = self._screen()
         row = len(rows) - 1
-        column = len(self.prompt) + len(self.typed) + self.cursor_offset
+        offset = self.cursor_offset
+        if self.typed:
+            offset += self.cursor_offset_after
+        column = len(self.prompt) + len(self.typed) + offset
         return [row, max(0, min(COLS - 1, column))]
 
     def _memory(self):
         data = bytearray(0x10000)
-        data[0x41A:0x41C] = struct.pack('<H', self.head)
+        # A malformed ring stays malformed: the guest never wrote plausible
+        # extents or pointers, and stepping the machine does not repair that.
+        head = 0x90 if self.ring == 'malformed' else self.head
+        data[0x41A:0x41C] = struct.pack('<H', head)
         data[0x41C:0x41E] = struct.pack('<H', self.tail)
         data[0x480:0x482] = struct.pack('<H', 0x1E)
         data[0x482:0x484] = struct.pack('<H', 0x3E)
@@ -200,6 +219,12 @@ class Peer:
         self.typed += text
         if self.trim:
             self.typed = self.typed.rstrip(' ')
+        if (self.mutate_after is not None and not self.mutated
+                and len(self.received) >= self.mutate_after):
+            # A second row that also carries the anchor makes the location
+            # ambiguous, exactly as a relocated input field would.
+            self.lines.append(self.prompt)
+            self.mutated = True
 
     def _key(self, request):
         parts = request.split()
@@ -233,16 +258,28 @@ class Peer:
         if self.no_prompt_return:
             return
         line = self.typed
+        upper = line.strip().upper()
+        if upper in self.leave_text_on:
+            self.bios_mode = 0x12
+            return
+        if upper in self.clear_on:
+            self.lines = []
         self.lines.append(self.prompt + line)
-        output = self.commands.get(line.strip().upper())
+        output = self.commands.get(upper)
         if output:
             self.lines.extend(output)
         self.typed = ''
 
     def _step(self, amount):
         self.ms += amount
-        if self.drain:
+        if self.drain and not (self.hold_last is not None
+                               and len(self.received) >= self.hold_last):
             self.head = self.tail
+        if (self.regress_at is not None and not self.regressed
+                and len(self.received) >= self.regress_at):
+            # Previously verified text disappears while the queue is empty.
+            self.typed = self.typed[:self.regress_to]
+            self.regressed = True
         if self.deferred and self.delay_left > 0:
             self.delay_left -= 1
             if self.delay_left == 0:
@@ -487,14 +524,14 @@ class FacilityTests(unittest.TestCase):
         self.assertEqual(report.detail, 'recovery budget exhausted')
 
     def test_cursor_lagging_behind_echoed_text_blocks_recovery(self):
-        facility = self.facility(peer={'cursor_offset': -2}, chunk=4)
+        facility = self.facility(peer={'cursor_offset_after': -2}, chunk=4)
         report = facility.type_text('ABCD', anchor=PROMPT)
         self.assertEqual(report.status, inp.UNCHANGED)
         self.assertEqual(report.recoveries, 0)
         self.assertEqual(report.bursts, 1)
 
     def test_cursor_ahead_of_the_echoed_text_is_ambiguous(self):
-        facility = self.facility(peer={'cursor_offset': 2}, chunk=4)
+        facility = self.facility(peer={'cursor_offset_after': 2}, chunk=4)
         report = facility.type_text('AB', anchor=PROMPT)
         self.assertEqual(report.status, inp.AMBIGUOUS)
         self.assertEqual(report.recoveries, 0)
@@ -543,15 +580,130 @@ class FacilityTests(unittest.TestCase):
         self.assertFalse(state['valid'])
         self.assertIsNone(state['depth'])
         self.assertEqual(state['reason'], 'pointer outside extents')
+        # An unreadable ring cannot satisfy a prerequisite, so nothing is sent.
+        report = facility.type_text('AB', anchor=PROMPT)
+        self.assertEqual(report.status, inp.WITHHELD)
+        self.assertIn('keyboard ring unreadable', report.detail)
+        self.assertIsNone(report.evidence.accepted)
+        self.assertEqual([r for r in self.peer.requests if r.split()[0] == 'key'], [])
+
+    def test_bypass_profile_observes_without_claiming_translation(self):
+        # The qualified alternative for a guest that hooks INT 09h: the ring is
+        # meaningless, so the limitation is recorded and acceptance is unknown.
+        facility = self.facility(peer={'ring': 'malformed'},
+                                 keyboard=inp.KEYBOARD_BYPASS)
         report = facility.type_text('AB', anchor=PROMPT)
         self.assertEqual(report.status, inp.OBSERVED)
         self.assertIsNone(report.evidence.accepted)
+        self.assertIsNone(report.evidence.translated)
+        self.assertIn('bios_keyboard_ring_bypassed', report.evidence.limitations)
+        self.assertIs(report.evidence.observed, True)
+
+    def test_bypass_profile_refuses_recovery_it_cannot_qualify(self):
+        facility = self.facility(peer={'drop': (3,), 'ring': 'malformed'}, chunk=4,
+                                 keyboard=inp.KEYBOARD_BYPASS, max_recoveries=1)
+        report = facility.type_text('ABCDEFGH', anchor=PROMPT)
+        self.assertEqual(report.status, inp.AMBIGUOUS)
+        self.assertEqual(report.recoveries, 0)
+        self.assertIn('cannot be excluded', report.steps[0]['gate']['reason'])
 
     def test_ring_drain_steps_until_empty(self):
         facility = self.facility(peer={'queue_only': True})
         facility.client.type_ascii('AB')
         self.assertEqual(facility.bios_keyboard_queue()['depth'], 2)
         self.assertEqual(facility.wait_drained(timeout_ms=200)['depth'], 0)
+
+    # ---- insertion point, completion and recovery re-gating ----
+
+    def test_wrong_initial_cursor_withholds_all_input(self):
+        facility = self.facility(peer={'cursor_offset': 1})
+        report = facility.type_text('AB', anchor=PROMPT)
+        self.assertEqual(report.status, inp.WITHHELD)
+        self.assertEqual(report.detail, 'cursor is not at the anchor end')
+        self.assertEqual(report.bursts, 0)
+        self.assertEqual([r for r in self.peer.requests if r.split()[0] == 'key'], [])
+
+    def test_text_beside_the_anchor_is_not_an_insertion_point(self):
+        # An empty region after the anchor says nothing about the cursor; text
+        # already sitting there makes the position unknown, so nothing is sent.
+        facility = self.facility()
+        self.peer.typed = 'OLD'
+        report = facility.type_text('AB', anchor=PROMPT)
+        self.assertEqual(report.status, inp.WITHHELD)
+        self.assertIn('not followed by an empty input position', report.detail)
+        self.assertEqual(self.peer.received, '')
+
+    def test_pending_input_after_matching_text_is_not_observed(self):
+        facility = self.facility(peer={'hold_last': 4}, chunk=4)
+        report = facility.type_text('ABCD', anchor=PROMPT)
+        # The screen reads exactly the requested text, but the ring still owes a
+        # keystroke: a late arrival could change the row, so this is pending.
+        self.assertEqual(report.status, inp.PENDING)
+        self.assertEqual(report.observed, 'ABCD')
+        self.assertIs(report.evidence.observed, False)
+        self.assertIn('completion', report.steps[-1])
+
+    def test_completion_refuses_a_row_that_changed_after_observation(self):
+        facility = self.facility()
+        before, _, _ = facility._insertion_point(PROMPT, 'only')
+        start_col = before['col'] + len(PROMPT)
+        facility.client.type_ascii('ABC')
+        self.peer.typed = 'AB'
+        completion = facility._completion(PROMPT, 'only', before, start_col, 'ABC')
+        self.assertFalse(completion['ok'])
+        self.assertIn('changed between observation and completion', completion['reason'])
+
+    def test_completion_refuses_when_the_ring_still_holds_input(self):
+        facility = self.facility()
+        before, _, _ = facility._insertion_point(PROMPT, 'only')
+        start_col = before['col'] + len(PROMPT)
+        facility.client.type_ascii('ABC')
+        self.peer.hold_last = 0        # the ring never drains from here
+        completion = facility._completion(PROMPT, 'only', before, start_col, 'ABC')
+        self.assertFalse(completion['ok'])
+        self.assertTrue(completion['pending'])
+
+    def test_recovery_gate_refuses_a_second_anchor(self):
+        facility = self.facility()
+        info, _, reason = facility._insertion_point(PROMPT, 'only')
+        self.assertIsNone(reason)
+        start_col = info['col'] + len(PROMPT)
+        facility.client.type_ascii('ABC')
+        self.peer.lines.append(PROMPT)
+        allowed, gate = facility._recovery_gate(PROMPT, 'only', info, start_col, 'ABC')
+        self.assertFalse(allowed)
+        self.assertIn('anchor', gate['reason'])
+
+    def test_recovery_gate_refuses_pending_input(self):
+        facility = self.facility()
+        info, _, _ = facility._insertion_point(PROMPT, 'only')
+        start_col = info['col'] + len(PROMPT)
+        facility.client.type_ascii('ABC')
+        self.peer.head = self.peer.tail - 2
+        self.peer.drain = False
+        allowed, gate = facility._recovery_gate(PROMPT, 'only', info, start_col, 'ABC')
+        self.assertFalse(allowed)
+        self.assertTrue(gate['pending'])
+
+    def test_recovery_gate_refuses_a_different_insertion_point(self):
+        facility = self.facility()
+        info, _, _ = facility._insertion_point(PROMPT, 'only')
+        start_col = info['col'] + len(PROMPT)
+        facility.client.type_ascii('ABC')
+        self.peer.typed = 'AB'
+        allowed, gate = facility._recovery_gate(PROMPT, 'only', info, start_col, 'ABC')
+        self.assertFalse(allowed)
+        self.assertIn('verified prefix', gate['reason'])
+
+    def test_previously_verified_prefix_cannot_regress_into_a_replay(self):
+        facility = self.facility(peer={'drop': (3,), 'regress_at': 6, 'regress_to': 2},
+                                 chunk=4, max_recoveries=2)
+        report = facility.type_text('ABCDEF', anchor=PROMPT)
+        # ABC had been verified; the row now shows AB. Resending DEF would
+        # duplicate C if it were only a display lag, so no replay is allowed.
+        self.assertEqual(report.status, inp.AMBIGUOUS)
+        self.assertEqual(report.detail, 'previously verified text regressed')
+        self.assertEqual(report.recoveries, 1)
 
     # ---- menus, pointer and render gates ----
 
@@ -668,6 +820,60 @@ class FacilityTests(unittest.TestCase):
         self.assertTrue(result.prompt_returned)
         self.assertFalse(result.output_matched)
         self.assertFalse(result.succeeded)
+
+    def test_command_echo_is_not_credited_as_output(self):
+        # The command text is on screen before Enter; finding it after Enter
+        # proves nothing about what the command printed.
+        facility = self.facility()
+        prompt = profiles.DosPrompt(facility, PROMPT)
+        result = prompt.submit('VER', expect_output='VER', timeout_ms=200)
+        self.assertTrue(result.prompt_returned)
+        self.assertFalse(result.output_matched)
+        self.assertFalse(result.succeeded)
+
+    def test_pre_enter_reference_is_captured_after_entry(self):
+        facility = self.facility(peer={'commands': {'VER': ['MS-DOS Version 5.00']}})
+        prompt = profiles.DosPrompt(facility, PROMPT)
+        result = prompt.submit('VER')
+        self.assertIsNotNone(result.pre_enter)
+        self.assertEqual(result.pre_enter['rows'], ROWS)
+        stages = [step['stage'] for step in result.steps]
+        self.assertEqual(stages[:3], ['entry', 'pre-enter', 'submit'])
+
+    def test_scrolled_history_is_not_credited_as_new_output(self):
+        # A full screen scrolls: old rows move up. A common-prefix comparison
+        # would call almost all of that fresh; the shift model must not.
+        facility = self.facility(peer={'long_history': True})
+        prompt = profiles.DosPrompt(facility, PROMPT)
+        result = prompt.submit('NOOP', expect_output='HISTORY LINE 29', timeout_ms=200)
+        self.assertTrue(result.prompt_returned)
+        self.assertFalse(result.output_matched)
+        self.assertEqual(result.output['shift'], 1)
+
+    def test_cleared_screen_output_is_fresh_and_old_history_is_gone(self):
+        facility = self.facility(peer={'history': True, 'clear_on': ('CLS',),
+                                       'commands': {'CLS': ['Screen cleared']}})
+        prompt = profiles.DosPrompt(facility, PROMPT)
+        result = prompt.submit('CLS', expect_output='Screen cleared')
+        self.assertTrue(result.output_matched)
+        self.assertTrue(result.succeeded)
+
+    def test_command_that_leaves_text_mode_is_reported_unknown(self):
+        facility = self.facility(peer={'leave_text_on': ('WIN',)})
+        prompt = profiles.DosPrompt(facility, PROMPT, prompt_timeout_ms=300)
+        result = prompt.submit('WIN')
+        self.assertTrue(result.submitted)
+        self.assertIsNone(result.prompt_returned)
+        self.assertTrue(result.left_text)
+        self.assertFalse(result.succeeded)
+        self.assertIn('left the text screen', result.detail)
+
+    def test_prompt_return_is_corroborated_by_screen_quiet(self):
+        facility = self.facility(peer={'commands': {'VER': ['MS-DOS Version 5.00']}})
+        prompt = profiles.DosPrompt(facility, PROMPT, quiet_ms=100)
+        result = prompt.submit('VER', expect_output='MS-DOS Version')
+        self.assertTrue(result.prompt_returned)
+        self.assertTrue(result.settled)
 
     def test_screen_state_profile_recognises_only_captured_states(self):
         facility = self.facility(peer={'bios_mode': 0x12})
@@ -822,9 +1028,45 @@ class FacilityTests(unittest.TestCase):
         import json
         payload = json.loads(json.dumps(report.as_dict()))
         self.assertEqual(set(payload['evidence']),
-                         {'acknowledged', 'delivered', 'accepted', 'observed'})
+                         {'acknowledged', 'delivered', 'accepted', 'translated',
+                          'observed', 'limitations'})
+        self.assertEqual(payload['evidence']['translated'],
+                         payload['evidence']['accepted'])
         self.assertEqual(len(payload['steps']), report.bursts)
         self.assertNotIn(TOKEN, json.dumps(payload))
+
+
+class FreshRegionTests(unittest.TestCase):
+    """The output-region model, independent of any peer or emulator."""
+
+    def test_unchanged_screen_has_no_fresh_text(self):
+        rows = ['A', 'B']
+        self.assertEqual(profiles.fresh_text(rows, list(rows)), '')
+
+    def test_appended_row_is_fresh(self):
+        self.assertEqual(profiles.fresh_text(['A'], ['A', 'B']), 'B')
+
+    def test_rewritten_row_is_fresh(self):
+        self.assertEqual(profiles.fresh_text(['A', 'B'], ['A', 'C']), 'C')
+
+    def test_scrolled_row_is_not_fresh(self):
+        before = ['OLD1', 'OLD2', 'OLD3']
+        after = ['OLD2', 'OLD3', 'NEW']
+        region = profiles.fresh_region(before, after)
+        self.assertEqual((region['shift'], region['rows']), (1, ['NEW']))
+
+    def test_scrolled_history_does_not_match_a_needle(self):
+        before = ['OLD1', 'OLD2', 'OLD3']
+        after = ['OLD2', 'OLD3', 'NEW']
+        self.assertNotIn('OLD1', profiles.fresh_text(before, after))
+
+    def test_a_blank_screen_makes_every_drawn_row_fresh(self):
+        before = [' ' * 8] * 3
+        self.assertEqual(profiles.fresh_text(before, [' ' * 8, ' ' * 8, 'HELLO']), 'HELLO')
+
+    def test_rows_of_different_length_are_rejected(self):
+        with self.assertRaises(TypeError):
+            profiles.fresh_region('rows', ['A'])
 
 
 if __name__ == '__main__':
