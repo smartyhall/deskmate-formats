@@ -84,9 +84,11 @@ python -m deskmate_formats.campaign_env.cli provision --campaign <campaign> --py
 ```
 
 `--allow-build-isolation` is recorded in the receipt
-(`installation.install_mode`, `build_isolation_explicitly_enabled`), and it is
-never implied. Try the offline mode first; a network fetch should be a decision,
-not a surprise.
+(`installation.install_mode`, `installation.index_access`,
+`build_isolation_explicitly_enabled`), and it is never implied. The offline mode
+passes `--no-index` as well as `--no-build-isolation`, so it cannot contact a
+package index even indirectly. Try the offline mode first; a network fetch should
+be a decision, not a surprise.
 
 **Ownership is checked before anything is written.** An existing directory at
 the target path is used only if it holds an `environment.json` that binds to
@@ -94,10 +96,24 @@ this campaign, checkout, package and layout, with an interpreter and a `venv`
 inside. Otherwise the provision refuses with one of
 `existing-directory-without-valid-record`, `existing-directory-with-foreign-record`,
 `existing-record-without-interpreter` or `existing-redirect-at-target` — a
-symbolic link or Windows junction is never followed. Replacing an owned
-environment builds a complete new one under `.staging-<campaign>-<uuid>` and
-swaps it in, so no file from the old installation survives; the previous
-environment is renamed aside and then deleted.
+symbolic link or Windows junction is never followed, and a redirected
+environment root (or a redirect anywhere between the checkout and that root) is
+refused as `redirected-environment-root`.
+
+Only one provision per campaign may run: an exclusive `.lock-<campaign>` file in
+the environment root makes a second one fail with `provisioning-in-progress`.
+The lock is deliberately not self-expiring. If a provision crashed, confirm that
+nothing is running and delete that one lock file.
+
+Replacing an owned environment builds a complete new one under
+`.staging-<campaign>-<uuid>`, revalidates ownership under the lock immediately
+before the swap (refusing `target-changed-during-provisioning` if the target or
+its record changed), moves the previous environment aside, and deletes it only
+after the new installation has passed final verification and its receipt is
+durable. If either fails, the previous environment is restored and the old
+receipt is untouched. If the restore itself cannot be established, the command
+fails with `replacement-recovery-uncertain`, whose detail names the retired
+environment: nothing is deleted, and the operator decides what to do next.
 
 Re-provision after any source change you intend to measure; a stale installation
 is reported, not silently used.
@@ -123,8 +139,8 @@ $py = 'local-results\campaign-envs\<campaign>\venv\Scripts\python.exe'
 | --- | --- | --- |
 | `environment-record` | no record, or a record bound to another campaign, checkout, package or layout | provision this checkout and campaign; do not adopt the directory |
 | `checkout-root` | the checkout is a subdirectory of another repository | provision from the repository root |
-| `parent-interpreter` | the parent is not the campaign interpreter | run the tool with `& $py -m …`; `--interpreter` does **not** fix this |
-| `requested-interpreter` | `--interpreter` names something other than the recorded interpreter | pass the campaign interpreter, or omit the option |
+| `parent-interpreter` | the parent's prefix, invocation path or executable digest does not match the record | run the tool with `& $py -m …`; `--interpreter` does **not** fix this |
+| `requested-interpreter` | `--interpreter` names an interpreter whose own prefix, path or digest differs, or one that cannot be described | pass the campaign interpreter, or omit the option |
 | `parent-package` | the parent imported different code (usually another campaign's wheel via `PYTHONPATH`) | clear `PYTHONPATH`, or point it at this checkout |
 | `source-content` | the checkout changed after provisioning | re-provision |
 | `source-revision` | `HEAD` moved (or could not be read) | re-provision, or fix the Git metadata |
@@ -134,10 +150,12 @@ $py = 'local-results\campaign-envs\<campaign>\venv\Scripts\python.exe'
 | `child-isolation` | the child ran without `-I` | use `deskmate-campaign-env launch` |
 
 `--interpreter` records a **selection** for the child. It is a separate check
-from `parent-interpreter`, which reads the running process's own prefix and
-invocation path. Naming the campaign interpreter from a shared parent therefore
-still fails: the request is not evidence about the parent. To qualify, run the
-preflight *with* the campaign interpreter:
+from `parent-interpreter`, which reads the running process's own prefix,
+invocation path and executable digest. Naming the campaign interpreter from a
+shared parent therefore still fails: the request is not evidence about the
+parent, and a requested interpreter is described in its own process before its
+prefix, path and digest are compared. To qualify, run the preflight *with* the
+campaign interpreter:
 
 ```powershell
 & $py -m deskmate_formats.campaign_env.cli preflight --campaign <campaign>
@@ -210,7 +228,12 @@ Raw receipts, pip logs and the synthetic checkouts stay private.
 * Ownership beats convenience: a lost `environment.json` means the environment
   is not adoptable. Delete that directory deliberately and provision again.
 * On POSIX, two virtual environments share one executable inode through
-  symbolic links; identify environments by `sys.prefix`, never by executable.
+  symbolic links; identify environments by `sys.prefix`, and compare
+  interpreter paths as they were *named* (`same_invocation_path`), never after
+  resolving them.
+* Do not edit an environment, its record or its lock by hand while a provision
+  could be running; the lock exists because that overlap produces exactly the
+  mixed state the mechanism now refuses.
 * If a future campaign needs a different package name, pass `--package`.
 * The procedure owns no production behaviour: Supervisor and Observatory changes
   that consume these receipts need their own reviewed PRs (see the

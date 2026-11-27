@@ -195,6 +195,22 @@ def same_path(observed: "str | os.PathLike[str] | None",
             os.path.normpath(str(expected)))
 
 
+def same_invocation_path(observed: "str | os.PathLike[str] | None",
+                         expected: "str | os.PathLike[str] | None") -> "bool | None":
+    """Whether two interpreters were *named* by the same path, without resolving.
+
+    ``same_path`` resolves before comparing, which is right for a file that must
+    be found and wrong for a virtual environment: on POSIX every
+    ``<venv>/bin/python`` is a symbolic link to the base interpreter, so two
+    different environments resolve to one path.  The invocation path is the name
+    the caller used, and it is the only path that identifies an environment.
+    """
+    if not observed or not expected:
+        return None
+    return os.path.normcase(os.path.abspath(str(observed))) == os.path.normcase(
+        os.path.abspath(str(expected)))
+
+
 def contained(observed: "str | None", directory: "str | None") -> "bool | None":
     """Whether ``observed`` is ``directory`` or a subdirectory of it."""
     if not observed or not directory:

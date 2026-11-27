@@ -513,8 +513,9 @@ class LayoutTest(unittest.TestCase):
     def test_campaign_names_and_paths_are_predictable(self) -> None:
         root = Path(self.enterContext(tempfile.TemporaryDirectory(prefix="campaign-layout-")))
         described = environment.layout(root, "campaign-one")
+        # Unresolved on purpose: a redirecting root has to remain visible.
         self.assertEqual(Path(str(described["directory"])),
-                         (root / "local-results" / "campaign-envs" / "campaign-one").resolve())
+                         root / "local-results" / "campaign-envs" / "campaign-one")
         self.assertTrue(str(described["interpreter"]).endswith(("python", "python.exe")))
         for name in ("Uppercase", "with space", "../escape", "", "a" * 65):
             with self.subTest(name=name), self.assertRaises(environment.CampaignEnvironmentError) as caught:
@@ -548,7 +549,7 @@ class TargetOwnershipTest(unittest.TestCase):
         make_repository(self.repository)
         self.target = environment.layout(self.repository, "campaign", root=self.root / "envs")
 
-    def _declare_owned(self, *, campaign: str = "campaign") -> None:
+    def _declare_owned(self, *, campaign: str = "campaign") -> str:
         directory = Path(str(self.target["directory"]))
         directory.mkdir(parents=True, exist_ok=True)
         venue = Path(str(self.target["venv"]))
@@ -557,6 +558,7 @@ class TargetOwnershipTest(unittest.TestCase):
         Path(str(self.target["interpreter"])).write_text("", encoding="utf-8")
         receipts.write(str(self.target["record"]),
                        make_record(self.repository, self.target, campaign=campaign))
+        return receipts.file_digest(str(self.target["record"]))
 
     def test_path_kind_sees_redirects_windows_does_not_call_links(self) -> None:
         plain = self.root / "plain"
@@ -620,14 +622,23 @@ class TargetOwnershipTest(unittest.TestCase):
             environment.classify_target(self.target, "campaign", self.repository, "isolation_probe")
         self.assertEqual(caught.exception.code, "existing-redirect-at-target")
 
+    def _staging(self, name: str = "fresh-install.txt") -> Path:
+        staging = Path(str(self.target["root"])) / f".staging-synthetic-{name}"
+        (staging / environment.VENV_NAME).mkdir(parents=True)
+        (staging / environment.VENV_NAME / name).write_text("new\n", encoding="utf-8")
+        return staging
+
+    def _swap(self, staging: Path, *, replace: bool, digest: "str | None") -> "Path | None":
+        return environment._swap_into_place(staging, self.target, replace=replace,
+                                            campaign="campaign", checkout=self.repository,
+                                            package="isolation_probe",
+                                            expected_record_sha256=digest)
+
     def test_staging_swap_replaces_content_and_retires_the_old_environment(self) -> None:
-        self._declare_owned()
+        digest = self._declare_owned()
         venue = Path(str(self.target["venv"]))
         (venue / "stale-install.txt").write_text("old\n", encoding="utf-8")
-        staging = Path(str(self.target["root"])) / ".staging-synthetic"
-        (staging / environment.VENV_NAME).mkdir(parents=True)
-        (staging / environment.VENV_NAME / "fresh-install.txt").write_text("new\n", encoding="utf-8")
-        retired = environment._swap_into_place(staging, self.target, replace=True)
+        retired = self._swap(self._staging(), replace=True, digest=digest)
         self.assertIsNotNone(retired)
         resident = sorted(path.name for path in venue.iterdir())
         self.assertEqual(resident, ["fresh-install.txt"])
@@ -635,12 +646,430 @@ class TargetOwnershipTest(unittest.TestCase):
         shutil.rmtree(retired, ignore_errors=True)
 
     def test_swap_refuses_to_replace_without_permission(self) -> None:
-        self._declare_owned()
-        staging = Path(str(self.target["root"])) / ".staging-synthetic"
-        (staging / environment.VENV_NAME).mkdir(parents=True)
+        digest = self._declare_owned()
         with self.assertRaises(environment.CampaignEnvironmentError) as caught:
-            environment._swap_into_place(staging, self.target, replace=False)
+            self._swap(self._staging(), replace=False, digest=digest)
         self.assertEqual(caught.exception.code, "existing-environment-not-replaceable")
+        self.assertTrue(Path(str(self.target["interpreter"])).is_file())
+
+    def test_a_record_changed_after_classification_blocks_the_swap(self) -> None:
+        digest = self._declare_owned()
+        receipts.write(str(self.target["record"]),
+                       make_record(self.repository, self.target, campaign="campaign",
+                                   python_digest="f" * 64))
+        with self.assertRaises(environment.CampaignEnvironmentError) as caught:
+            self._swap(self._staging(), replace=True, digest=digest)
+        self.assertEqual(caught.exception.code, "target-changed-during-provisioning")
+        self.assertIn("record-changed", caught.exception.detail)
+        self.assertTrue(Path(str(self.target["interpreter"])).is_file())
+
+    def test_a_disappeared_record_blocks_the_swap(self) -> None:
+        digest = self._declare_owned()
+        Path(str(self.target["record"])).unlink()
+        with self.assertRaises(environment.CampaignEnvironmentError) as caught:
+            self._swap(self._staging(), replace=True, digest=digest)
+        self.assertEqual(caught.exception.code, "target-changed-during-provisioning")
+        self.assertTrue(Path(str(self.target["interpreter"])).is_file())
+
+    def test_an_intervening_first_provision_blocks_a_fresh_swap(self) -> None:
+        self._declare_owned()
+        with self.assertRaises(environment.CampaignEnvironmentError) as caught:
+            self._swap(self._staging(), replace=True, digest=None)
+        self.assertEqual(caught.exception.code, "target-changed-during-provisioning")
+        self.assertIn("target-appeared", caught.exception.detail)
+
+
+class ParentIdentityTest(unittest.TestCase):
+    """A passing prefix is not a passing parent: path and digest must match too.
+
+    The running parent is replaced by a crafted identity here so that each of the
+    three conditions can be broken on its own; the real parent is exercised in
+    ``QualifiedPreflightTest``.
+    """
+
+    def setUp(self) -> None:
+        self.root = Path(self.enterContext(tempfile.TemporaryDirectory(prefix="campaign-parent-"))).resolve()
+        self.repository = self.root / "checkout"
+        package = write_package(self.repository, "parent-checkout")
+        self.revision = make_repository(self.repository)
+        self.target = environment.layout(self.repository, "campaign", root=self.root / "envs")
+        self.digests = identity.package_digests(package)
+        Path(str(self.target["record"])).parent.mkdir(parents=True)
+        self.record = make_record(self.repository, self.target,
+                                  python_digest=self.digests["python_digest"],
+                                  tree_digest=self.digests["tree_digest"], revision=self.revision,
+                                  prefix=str(self.target["venv"]),
+                                  executable_sha256="a" * 64)
+        receipts.write(str(self.target["record"]), self.record)
+        self.parent = {
+            "state": "running-interpreter",
+            "prefix": str(self.target["venv"]),
+            "executable": str(self.target["interpreter"]),
+            "executable_sha256": "a" * 64,
+        }
+
+    def _parent(self, **changes) -> dict:
+        parent = dict(self.parent) | changes
+        with mock.patch.object(preflight.identity, "describe_running_interpreter", return_value=parent):
+            described = preflight.preflight(self.repository, campaign="campaign",
+                                            root=self.root / "envs", package="isolation_probe")
+        return {entry["check"]: entry for entry in described["checks"]}["parent-interpreter"]
+
+    def test_prefix_path_and_digest_all_matching_passes(self) -> None:
+        parent = self._parent()
+        self.assertEqual(parent["state"], preflight._PASS, parent)
+        self.assertIs(parent["prefix_matches"], True)
+        self.assertIs(parent["invocation_path_matches"], True)
+        self.assertIs(parent["executable_digest_matches"], True)
+
+    def test_a_matching_prefix_alone_does_not_pass(self) -> None:
+        parent = self._parent(executable=str(self.root / "elsewhere" / "bin" / "python"))
+        self.assertEqual(parent["state"], preflight._FAIL)
+        self.assertIs(parent["prefix_matches"], True)
+        self.assertIs(parent["invocation_path_matches"], False)
+        self.assertIn("invoked by a different", parent["detail"])
+
+    def test_a_matching_prefix_and_path_with_a_different_digest_do_not_pass(self) -> None:
+        parent = self._parent(executable_sha256="b" * 64)
+        self.assertEqual(parent["state"], preflight._FAIL)
+        self.assertIs(parent["invocation_path_matches"], True)
+        self.assertIs(parent["executable_digest_matches"], False)
+        self.assertIn("digest", parent["detail"])
+
+    def test_a_record_without_a_digest_cannot_prove_the_parent(self) -> None:
+        self.record["environment_identity"]["executable_sha256"] = None
+        receipts.write(str(self.target["record"]), self.record)
+        parent = self._parent(executable_sha256=None)
+        self.assertEqual(parent["state"], preflight._FAIL)
+        self.assertIn("no executable digest", parent["detail"])
+
+    def test_a_different_environment_fails_on_the_prefix(self) -> None:
+        parent = self._parent(prefix=str(self.root / "other-venv"))
+        self.assertEqual(parent["state"], preflight._FAIL)
+        self.assertIs(parent["prefix_matches"], False)
+
+
+class RequestedInterpreterTest(unittest.TestCase):
+    """Two real POSIX virtual environments that share one executable."""
+
+    def setUp(self) -> None:
+        self.root = Path(self.enterContext(tempfile.TemporaryDirectory(prefix="campaign-requested-"))).resolve()
+        self.repository = self.root / "checkout"
+        package = write_package(self.repository, "requested-checkout")
+        self.revision = make_repository(self.repository)
+        self.target = environment.layout(self.repository, "campaign", root=self.root / "envs")
+        Path(str(self.target["venv"])).parent.mkdir(parents=True)
+        try:
+            self.selected = make_environment(Path(str(self.target["venv"])), symlinks=True)
+            self.other = make_environment(self.root / "other-venv", symlinks=True)
+        except (OSError, subprocess.SubprocessError) as error:
+            self.skipTest(f"virtual environments are unavailable here: {type(error).__name__}")
+        if not os.path.islink(self.selected):
+            self.skipTest("this platform created real copies instead of symbolic links")
+        digests = identity.package_digests(package)
+        self.record = make_record(self.repository, self.target,
+                                  python_digest=digests["python_digest"],
+                                  tree_digest=digests["tree_digest"], revision=self.revision,
+                                  prefix=str(self.target["venv"]),
+                                  executable_sha256=identity.file_digest(self.selected))
+        self.record["site_packages"] = environment.site_packages(self.selected)
+        receipts.write(str(self.target["record"]), self.record)
+
+    def _states(self, requested: Path) -> "dict[str, dict]":
+        parent = identity.interpreter_identity(self.selected)
+        with mock.patch.object(preflight.identity, "describe_running_interpreter", return_value=parent):
+            described = preflight.preflight(self.repository, campaign="campaign",
+                                            root=self.root / "envs", package="isolation_probe",
+                                            interpreter=requested)
+        return {entry["check"]: entry for entry in described["checks"]}
+
+    def test_the_two_environments_share_one_executable(self) -> None:
+        self.assertTrue(os.path.samefile(self.selected, self.other))
+        self.assertTrue(identity.same_path(self.selected, self.other))
+        self.assertNotEqual(identity.interpreter_identity(self.selected)["prefix"],
+                            identity.interpreter_identity(self.other)["prefix"])
+
+    def test_requesting_the_recorded_interpreter_passes(self) -> None:
+        states = self._states(self.selected)
+        self.assertEqual(states["requested-interpreter"]["state"], preflight._PASS)
+        self.assertIs(states["requested-interpreter"]["prefix_matches"], True)
+        self.assertIs(states["requested-interpreter"]["invocation_path_matches"], True)
+
+    def test_requesting_the_other_environment_fails_despite_the_shared_executable(self) -> None:
+        states = self._states(self.other)
+        check = states["requested-interpreter"]
+        self.assertEqual(check["state"], preflight._FAIL)
+        self.assertIs(check["prefix_matches"], False)
+        self.assertEqual(check["requested_prefix"], str(self.root / "other-venv"))
+        self.assertIn("different environment", check["detail"])
+        self.assertEqual(states["parent-interpreter"]["state"], preflight._PASS)
+
+    def test_a_requested_path_that_does_not_exist_is_not_a_selection(self) -> None:
+        check = self._states(self.root / "absent" / "bin" / "python")["requested-interpreter"]
+        self.assertEqual(check["state"], preflight._FAIL)
+        self.assertEqual(check["requested_state"], "unavailable")
+
+
+class EnvironmentRootTest(unittest.TestCase):
+    """A redirecting root is refused rather than silently followed."""
+
+    def setUp(self) -> None:
+        self.root = Path(self.enterContext(tempfile.TemporaryDirectory(prefix="campaign-root-"))).resolve()
+        self.repository = self.root / "checkout"
+        make_repository(self.repository)
+
+    def _redirect(self, path: Path, destination: Path) -> bool:
+        try:
+            os.symlink(destination, path, target_is_directory=True)
+            return True
+        except (OSError, NotImplementedError):
+            pass
+        if os.name == "nt":
+            completed = subprocess.run(["cmd", "/c", "mklink", "/J", str(path), str(destination)],
+                                       capture_output=True, text=True)
+            return completed.returncode == 0
+        return False
+
+    def test_a_redirected_root_is_refused(self) -> None:
+        elsewhere = self.root / "elsewhere"
+        elsewhere.mkdir()
+        redirect = self.root / "redirected-envs"
+        if not self._redirect(redirect, elsewhere):
+            self.skipTest("this host cannot create a directory redirect")
+        with self.assertRaises(environment.CampaignEnvironmentError) as caught:
+            environment.provision(self.repository, "campaign", root=redirect)
+        self.assertEqual(caught.exception.code, "redirected-environment-root")
+        self.assertEqual(list(elsewhere.iterdir()), [])
+
+    def test_a_redirect_inside_the_checkout_is_refused_for_the_default_root(self) -> None:
+        elsewhere = self.root / "elsewhere"
+        elsewhere.mkdir()
+        if not self._redirect(self.repository / "local-results", elsewhere):
+            self.skipTest("this host cannot create a directory redirect")
+        with self.assertRaises(environment.CampaignEnvironmentError) as caught:
+            environment.provision(self.repository, "campaign")
+        self.assertEqual(caught.exception.code, "redirected-environment-root")
+        self.assertEqual(list(elsewhere.iterdir()), [])
+
+    def test_a_plain_root_is_accepted_before_the_provision_runs(self) -> None:
+        with self.assertRaises(environment.CampaignEnvironmentError) as caught:
+            # No Git checkout package, so the provision stops after the root check.
+            environment.provision(self.root / "plain-checkout", "campaign",
+                                  root=self.root / "envs")
+        self.assertEqual(caught.exception.code, "source-identity-not-established")
+
+
+class ProvisioningLockTest(unittest.TestCase):
+    """One provision per campaign at a time."""
+
+    def setUp(self) -> None:
+        self.root = Path(self.enterContext(tempfile.TemporaryDirectory(prefix="campaign-lock-"))).resolve()
+        self.repository = self.root / "checkout"
+        make_repository(self.repository)
+        self.target = environment.layout(self.repository, "campaign", root=self.root / "envs")
+
+    def test_a_held_lock_refuses_a_second_provision(self) -> None:
+        Path(str(self.target["root"])).mkdir(parents=True)
+        Path(str(self.target["lock"])).write_text("pid=0\n", encoding="utf-8")
+        with self.assertRaises(environment.CampaignEnvironmentError) as caught:
+            environment.provision(self.repository, "campaign", root=self.root / "envs")
+        self.assertEqual(caught.exception.code, "provisioning-in-progress")
+
+    def test_the_lock_is_held_while_the_target_is_examined_and_released_afterwards(self) -> None:
+        observed: dict[str, str] = {}
+        real = environment.classify_target
+
+        def spy(target, campaign, checkout, package):
+            observed["lock"] = environment.path_kind(target["lock"])
+            return real(target, campaign, checkout, package)
+
+        plain = self.root / "not-a-repository"
+        plain.mkdir()
+        with mock.patch.object(environment, "classify_target", side_effect=spy):
+            with self.assertRaises(environment.CampaignEnvironmentError) as caught:
+                environment.provision(plain, "campaign", root=self.root / "envs")
+        self.assertEqual(caught.exception.code, "source-identity-not-established")
+        self.assertEqual(observed["lock"], "file")
+        self.assertEqual(environment.path_kind(self.target["lock"]), "absent")
+
+
+class ReplacementRecoveryTest(unittest.TestCase):
+    """The previous installation survives until the new receipt is durable."""
+
+    def setUp(self) -> None:
+        self.root = Path(self.enterContext(tempfile.TemporaryDirectory(prefix="campaign-recovery-"))).resolve()
+        self.repository = self.root / "checkout"
+        package = write_package(self.repository, "recovery-checkout")
+        self.revision = make_repository(self.repository)
+        self.target = environment.layout(self.repository, "recovery", root=self.root / "envs")
+        self.digests = identity.package_digests(package)
+        self._declare_owned()
+
+    def _declare_owned(self) -> None:
+        directory = Path(str(self.target["directory"]))
+        directory.mkdir(parents=True, exist_ok=True)
+        venue = Path(str(self.target["venv"]))
+        Path(str(self.target["interpreter"])).parent.mkdir(parents=True, exist_ok=True)
+        Path(str(self.target["interpreter"])).write_text("", encoding="utf-8")
+        (venue / "installed-marker.txt").write_text("previous\n", encoding="utf-8")
+        (venue / "pyvenv.cfg").write_text("home = synthetic\n", encoding="utf-8")
+        receipts.write(str(self.target["record"]),
+                       make_record(self.repository, self.target, campaign="recovery",
+                                   python_digest=self.digests["python_digest"],
+                                   tree_digest=self.digests["tree_digest"], revision=self.revision,
+                                   prefix=str(self.target["venv"]),
+                                   executable_sha256="a" * 64))
+
+    @contextlib.contextmanager
+    def _patches(self, *, verify=None, write=None):
+        def fake_create(_bootstrap, venue, **_kwargs):
+            Path(venue).mkdir(parents=True)
+            return {"argv": [], "exit_status": 0}
+
+        def fake_site(interpreter):
+            return str(Path(interpreter).parent.parent / "Lib" / "site-packages")
+
+        stacked = [
+            mock.patch.object(environment, "create_venv", side_effect=fake_create),
+            mock.patch.object(environment, "site_packages", side_effect=fake_site),
+            mock.patch.object(environment, "install_source",
+                              return_value={"attempts": [], "install_mode": "offline",
+                                            "installed": True, "index_access": False,
+                                            "build_isolation_explicitly_enabled": False}),
+            mock.patch.object(environment.launch, "probe",
+                              return_value={"report_parsed": True, "exit_status": 0,
+                                            "report": {"package": {
+                                                "state": "imported",
+                                                "python_digest": self.digests["python_digest"]},
+                                                "isolated": True}}),
+            mock.patch.object(environment, "_verify",
+                              side_effect=verify or (lambda *a, **k: ({}, {"state": "imported"}, [],
+                                                                     str(self.target["venv"])))),
+            mock.patch.object(environment.receipts, "write",
+                              side_effect=write if write is not None else receipts.write),
+        ]
+        with contextlib.ExitStack() as stack:
+            for patcher in stacked:
+                stack.enter_context(patcher)
+            yield
+
+    def test_a_successful_replacement_removes_the_retired_environment(self) -> None:
+        with self._patches() as _:
+            record = environment.provision(self.repository, "recovery", root=self.root / "envs",
+                                           package="isolation_probe", replace=True)
+        venue = Path(str(self.target["venv"]))
+        self.assertEqual(record["verdict"], "qualified")
+        self.assertFalse((venue / "installed-marker.txt").is_file())
+        self.assertEqual(record["ownership"]["mode"], "replaced-owned")
+        self.assertIs(record["ownership"]["retired_removed"], True)
+        self.assertFalse(Path(str(record["ownership"]["retired_path"])).exists())
+
+    def test_a_failed_receipt_write_restores_the_previous_environment(self) -> None:
+        before = receipts.file_digest(str(self.target["record"]))
+        with self._patches(write=OSError("synthetic write failure")):
+            with self.assertRaises(environment.CampaignEnvironmentError) as caught:
+                environment.provision(self.repository, "recovery", root=self.root / "envs",
+                                      package="isolation_probe", replace=True)
+        self.assertEqual(caught.exception.code, "receipt-write-failed")
+        venue = Path(str(self.target["venv"]))
+        self.assertTrue((venue / "installed-marker.txt").is_file())
+        self.assertEqual(receipts.file_digest(str(self.target["record"])), before)
+        self.assertEqual([path.name for path in Path(str(self.target["root"])).iterdir()
+                          if path.name.startswith(".failed-")], [])
+
+    def test_a_failed_final_verification_restores_the_previous_environment(self) -> None:
+        before = receipts.file_digest(str(self.target["record"]))
+        failure = environment.CampaignEnvironmentError("verification-failed", "synthetic")
+
+        def verify(*_args, **_kwargs):
+            raise failure
+
+        with self._patches(verify=verify):
+            with self.assertRaises(environment.CampaignEnvironmentError) as caught:
+                environment.provision(self.repository, "recovery", root=self.root / "envs",
+                                      package="isolation_probe", replace=True)
+        self.assertEqual(caught.exception.code, "verification-failed")
+        self.assertTrue((Path(str(self.target["venv"])) / "installed-marker.txt").is_file())
+        self.assertEqual(receipts.file_digest(str(self.target["record"])), before)
+
+    def test_an_uncertain_recovery_is_reported_and_keeps_the_retired_data(self) -> None:
+        with self._patches(write=OSError("synthetic write failure")):
+            with mock.patch.object(environment, "_restore_previous",
+                                   return_value={"state": "uncertain", "reason": "synthetic",
+                                                 "retired_path": str(self.root / ".retired-synthetic")}):
+                with self.assertRaises(environment.CampaignEnvironmentError) as caught:
+                    environment.provision(self.repository, "recovery", root=self.root / "envs",
+                                          package="isolation_probe", replace=True)
+        self.assertEqual(caught.exception.code, "replacement-recovery-uncertain")
+        detail = json.loads(caught.exception.detail)
+        self.assertIn("retired_path", detail)
+        self.assertEqual(detail["error"], "receipt-write-failed")
+        retired = [path for path in Path(str(self.target["root"])).iterdir()
+                   if path.name.startswith(".retired-")]
+        self.assertEqual(len(retired), 1)
+        self.assertTrue((retired[0] / "installed-marker.txt").is_file())
+
+    def test_a_failed_fresh_provision_leaves_no_environment_behind(self) -> None:
+        with self._patches(write=OSError("synthetic write failure")):
+            with self.assertRaises(environment.CampaignEnvironmentError) as caught:
+                environment.provision(self.repository, "recovery", root=self.root / "fresh-envs",
+                                      package="isolation_probe")
+        self.assertEqual(caught.exception.code, "receipt-write-failed")
+        self.assertEqual(environment.path_kind(
+            environment.layout(self.repository, "recovery", root=self.root / "fresh-envs")["directory"]),
+            "absent")
+
+
+class BootstrapInvocationTest(unittest.TestCase):
+    """A bootstrap virtual environment is named, not resolved."""
+
+    def setUp(self) -> None:
+        self.root = Path(self.enterContext(tempfile.TemporaryDirectory(prefix="campaign-bootstrap-"))).resolve()
+        self.repository = self.root / "checkout"
+        package = write_package(self.repository, "bootstrap-checkout")
+        self.revision = make_repository(self.repository)
+        self.digests = identity.package_digests(package)
+        self.bootstrap_venv = self.root / "bootstrap-venv"
+        self.bootstrap = make_environment(self.bootstrap_venv, symlinks=True)
+
+    def test_the_recorded_bootstrap_keeps_its_invocation_path_and_prefix(self) -> None:
+        target = environment.layout(self.repository, "campaign", root=self.root / "envs")
+
+        def fake_create(_bootstrap, venue, **_kwargs):
+            Path(venue).mkdir(parents=True)
+            return {"argv": [], "exit_status": 0}
+
+        def fake_site(interpreter):
+            return str(Path(interpreter).parent.parent / "Lib" / "site-packages")
+
+        with mock.patch.object(environment, "create_venv", side_effect=fake_create), \
+                mock.patch.object(environment, "site_packages", side_effect=fake_site), \
+                mock.patch.object(environment, "install_source",
+                                  return_value={"attempts": [], "install_mode": "offline",
+                                                "installed": True, "index_access": False,
+                                                "build_isolation_explicitly_enabled": False}), \
+                mock.patch.object(environment.launch, "probe",
+                                  return_value={"report_parsed": True, "exit_status": 0,
+                                                "report": {"package": {
+                                                    "state": "imported",
+                                                    "python_digest": self.digests["python_digest"]},
+                                                    "isolated": True}}), \
+                mock.patch.object(environment, "_verify",
+                                  return_value=({}, {"state": "imported"}, [],
+                                                str(target["venv"]))):
+            record = environment.provision(self.repository, "campaign",
+                                           root=self.root / "envs", python=self.bootstrap,
+                                           package="isolation_probe")
+        self.assertEqual(record["bootstrap_interpreter"], os.path.abspath(str(self.bootstrap)))
+        self.assertEqual(record["bootstrap_identity"]["prefix"], str(self.bootstrap_venv))
+        self.assertIs(record["bootstrap_identity"]["virtual_environment"], True)
+        if os.name != "nt":
+            # On POSIX the venv interpreter is a link to the base interpreter; the
+            # record keeps the link, not the base path it would resolve to.
+            self.assertEqual(os.path.realpath(record["bootstrap_interpreter"]),
+                             os.path.realpath(sys.executable))
+            self.assertNotEqual(record["bootstrap_interpreter"],
+                                os.path.realpath(record["bootstrap_interpreter"]))
 
 
 class RecordBindingTest(unittest.TestCase):
@@ -692,7 +1121,7 @@ class InstallationBoundaryTest(unittest.TestCase):
 
     def _fake_run(self, argv, **kwargs):
         self.calls.append(list(argv))
-        failing = "--no-build-isolation" in argv
+        failing = "--no-index" in argv
         return {"argv": list(argv), "exit_status": 2 if failing else 0, "stdout": "",
                 "stderr": "synthetic failure" if failing else "", "failure": None,
                 "timeout_seconds": kwargs.get("timeout"), "elapsed_seconds": 0.0,
@@ -707,13 +1136,32 @@ class InstallationBoundaryTest(unittest.TestCase):
         self.assertNotIn("build-isolation", [attempt["install_mode"] for attempt in result["attempts"]])
         self.assertFalse(result["build_isolation_explicitly_enabled"])
 
+    def test_offline_mode_cannot_reach_a_package_index(self) -> None:
+        with mock.patch.object(environment.launch, "run", side_effect=self._fake_run):
+            result = environment.install_source("python.exe", "checkout", "target")
+        argv = self.calls[0]
+        self.assertIn("--no-index", argv)
+        self.assertEqual(result["attempts"][0]["install_mode"], "offline")
+        self.assertIs(result["attempts"][0]["index_access"], False)
+        self.assertIs(result["index_access"], False)
+        self.assertIsNone(result["install_mode"])
+
+    def test_only_the_explicit_opt_in_may_use_an_index(self) -> None:
+        with mock.patch.object(environment.launch, "run", side_effect=self._fake_run):
+            result = environment.install_source("python.exe", "checkout", "target",
+                                               allow_build_isolation=True)
+        self.assertNotIn("--no-index", self.calls[1])
+        self.assertIs(result["index_access"], True)
+        self.assertEqual([entry["install_mode"] for entry in result["attempts"]],
+                         ["offline", "build-isolation"])
+
     def test_build_isolation_is_used_only_when_explicitly_enabled(self) -> None:
         with mock.patch.object(environment.launch, "run", side_effect=self._fake_run):
             result = environment.install_source("python.exe", "checkout", "target",
                                                 allow_build_isolation=True)
         self.assertTrue(result["installed"])
         self.assertEqual([attempt["install_mode"] for attempt in result["attempts"]],
-                         ["no-build-isolation", "build-isolation"])
+                         ["offline", "build-isolation"])
         self.assertNotIn("--no-build-isolation", self.calls[1])
         self.assertTrue(result["build_isolation_explicitly_enabled"])
 
@@ -794,15 +1242,18 @@ class PreflightTest(unittest.TestCase):
         self.assertEqual(described["reasons"], ["environment-not-provisioned"])
         self.assertEqual(preflight.exit_code(described["verdict"]), 2)
 
-    def test_a_shared_parent_cannot_prove_identity_by_naming_the_child(self) -> None:
+    def test_a_request_cannot_rescue_a_shared_parent(self) -> None:
         described = self._preflight(interpreter=self.target["interpreter"])
         states = self._states(described)
         # The request is recorded, and it is not evidence about the parent.
         self.assertTrue(described["requested_interpreter"]["supplied"])
-        self.assertEqual(states["requested-interpreter"]["state"], preflight._PASS)
         self.assertEqual(states["parent-interpreter"]["state"], preflight._FAIL)
         self.assertEqual(states["parent-interpreter"]["parent_prefix"], sys.prefix)
         self.assertNotEqual(states["parent-interpreter"]["expected_prefix"], sys.prefix)
+        # A requested interpreter that cannot be described is not a selection
+        # either: the check proves the interpreter, it does not accept the name.
+        self.assertEqual(states["requested-interpreter"]["state"], preflight._FAIL)
+        self.assertEqual(states["requested-interpreter"]["requested_state"], "unavailable")
         self.assertFalse(described["measurement_allowed"])
         self.assertIn("parent-interpreter", described["reasons"])
 

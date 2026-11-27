@@ -85,7 +85,10 @@ def preflight(checkout: "str | os.PathLike[str]" = ".", *, campaign: str,
     current_source = identity.source_identity(checkout_path, accept_enclosing=accept_enclosing)
     parent_package = identity.import_identity(package)
     parent_identity = identity.describe_running_interpreter()
-    requested = str(Path(interpreter).resolve()) if interpreter is not None else None
+    # Named, not resolved: on POSIX the resolved path of any virtual
+    # environment's interpreter is the base interpreter, which would make two
+    # different environments indistinguishable here.
+    requested = os.path.abspath(str(interpreter)) if interpreter is not None else None
 
     receipt: dict[str, object] = {
         "schema_version": SCHEMA_VERSION,
@@ -177,36 +180,81 @@ def preflight(checkout: "str | os.PathLike[str]" = ".", *, campaign: str,
                              "the checkout is the root of its own Git repository",
                              exact_checkout_root=True))
 
-    # The actual running parent.  `--interpreter` is never consulted here.
+    # The actual running parent.  `--interpreter` is never consulted here, and a
+    # passing prefix alone is not enough: an interpreter path is compared as it
+    # was named, and the digest of the invoked file must match the record too.
     parent_prefix = parent_identity.get("prefix")
     expected_prefix = environment_identity.get("prefix") or str(expected_venue)
-    parent_environment = identity.same_environment(parent_prefix, expected_prefix)
-    interpreter_path_matches = identity.same_path(parent_identity.get("executable"),
-                                                  str(expected_interpreter))
+    recorded_executable = environment_identity.get("executable_sha256")
+    parent_prefix_ok = identity.same_environment(parent_prefix, expected_prefix)
+    parent_path_ok = identity.same_invocation_path(parent_identity.get("executable"),
+                                                   str(expected_interpreter))
+    parent_digest_ok = (bool(recorded_executable)
+                        and parent_identity.get("executable_sha256") == recorded_executable)
+    parent_ok = parent_prefix_ok is True and parent_path_ok is True and parent_digest_ok
+    if parent_ok:
+        parent_detail = "the running parent is the recorded interpreter in the recorded environment"
+    elif parent_prefix_ok is not True:
+        parent_detail = "the running parent is not in the campaign environment"
+    elif parent_path_ok is not True:
+        parent_detail = "the running parent was invoked by a different interpreter path"
+    elif not recorded_executable:
+        parent_detail = "the record holds no executable digest to compare"
+    else:
+        parent_detail = "the running parent's executable digest differs from the record"
     checks.append(_check(
         "parent-interpreter",
-        _PASS if parent_environment is True else _FAIL,
-        "the running parent is the campaign interpreter" if parent_environment
-        else "the running parent is not in the campaign environment",
+        _PASS if parent_ok else _FAIL,
+        parent_detail,
         parent_prefix=parent_prefix,
         expected_prefix=expected_prefix,
         parent_invocation_path=parent_identity.get("executable"),
         expected_interpreter=expected_interpreter,
-        invocation_path_matches=interpreter_path_matches,
+        prefix_matches=parent_prefix_ok,
+        invocation_path_matches=parent_path_ok,
+        executable_digest_matches=parent_digest_ok,
+        parent_executable_sha256=parent_identity.get("executable_sha256"),
+        expected_executable_sha256=recorded_executable,
     ))
 
     if requested is None:
         checks.append(_check("requested-interpreter", _PASS,
                              "no child interpreter was requested", supplied=False))
     else:
-        selected = identity.same_path(requested, str(expected_interpreter))
+        # The selection is verified by describing that interpreter, independently
+        # of the parent: its own prefix, its own invocation path and its own
+        # digest.  Comparing executable identity would accept another POSIX
+        # virtual environment that shares the base interpreter.
+        described_request = identity.interpreter_identity(requested)
+        requested_prefix_ok = identity.same_environment(described_request.get("prefix"),
+                                                        expected_prefix)
+        requested_path_ok = identity.same_invocation_path(requested, str(expected_interpreter))
+        requested_digest_ok = (bool(recorded_executable) and described_request.get("state") == "described"
+                               and described_request.get("executable_sha256") == recorded_executable)
+        selected = (described_request.get("state") == "described" and requested_prefix_ok is True
+                    and requested_path_ok is True and requested_digest_ok)
+        if selected:
+            selection_detail = "the requested child interpreter is the recorded one"
+        elif described_request.get("state") != "described":
+            selection_detail = "the requested child interpreter could not be described"
+        elif requested_prefix_ok is not True:
+            selection_detail = "the requested child interpreter is in a different environment"
+        elif requested_path_ok is not True:
+            selection_detail = "the requested child interpreter path differs from the record"
+        else:
+            selection_detail = "the requested child interpreter's digest differs from the record"
         checks.append(_check(
             "requested-interpreter",
             _PASS if selected else _FAIL,
-            "the requested child interpreter is the recorded one" if selected
-            else "the requested child interpreter is not the recorded one",
+            selection_detail,
             supplied=True,
             selection_only=True,
+            requested_state=described_request.get("state"),
+            requested_prefix=described_request.get("prefix"),
+            expected_prefix=expected_prefix,
+            prefix_matches=requested_prefix_ok,
+            invocation_path_matches=requested_path_ok,
+            executable_digest_matches=requested_digest_ok,
         ))
 
     # Positive content match: location inside the environment is an observation,
@@ -272,7 +320,7 @@ def preflight(checkout: "str | os.PathLike[str]" = ".", *, campaign: str,
                                  exit_status=child.get("exit_status")))
     else:
         child_environment = identity.same_environment(report.get("prefix"), str(expected_venue))
-        child_path = identity.same_path(report.get("interpreter"), str(expected_interpreter))
+        child_path = identity.same_invocation_path(report.get("interpreter"), str(expected_interpreter))
         child_digest = report.get("interpreter_sha256")
         recorded_digest = environment_identity.get("executable_sha256")
         digest_matches = bool(recorded_digest) and child_digest == recorded_digest

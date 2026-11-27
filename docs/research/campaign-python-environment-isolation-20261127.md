@@ -24,10 +24,10 @@ This campaign adds a reusable mechanism rather than a document:
   durable receipts, with a redacted publication projection;
 * `deskmate-campaign-env` — `inventory`, `provision`, `preflight`, `probe`,
   `identity` and `launch`;
-* `tests/portable/test_campaign_env.py` — 60 portable tests, including a
+* `tests/portable/test_campaign_env.py` — 85 portable tests, including a
   controlled two-checkout experiment, POSIX symlink-environment identity,
-  ownership and replacement controls, and package-content matching that does
-  not depend on where the package was found;
+  ownership, lock and replacement-recovery controls, and package-content
+  matching that does not depend on where the package was found;
 * `tools/campaign_environment_experiment.py` — the laboratory experiment whose
   receipts this report quotes;
 * [campaign environment procedure](campaign-environment-procedure.md) — the
@@ -132,7 +132,7 @@ which itself qualifies.
 
 Build isolation downloads a build backend, so it is now opt-in:
 `install_source(..., allow_build_isolation=False)` makes exactly one attempt with
-`--no-build-isolation` and records the failure; only
+`--no-index --no-build-isolation` and records the failure; only
 `provision --allow-build-isolation` reaches the network, and every attempt
 records its mode plus `build_isolation_explicitly_enabled`. The historical run's
 `install_mode: build-isolation` was produced that way deliberately and is
@@ -143,6 +143,63 @@ campaign provisions carry `install_mode: build-isolation` and
 `build_isolation_explicitly_enabled: true`. The mechanism still writes only
 below its own root: never the bootstrap interpreter's site-packages, and never
 another campaign's environment.
+
+### Second review: unresolved paths, ownership revalidation and replacement recovery
+
+A follow-up review of `cb65039` found three integration gaps that the passing
+checks did not cover. They are corrected here; the laboratory experiments and
+their receipts are unchanged, because none of the corrections needed a new
+native run.
+
+**1. Unresolved interpreter paths.** `preflight` used to resolve the requested
+path and compare it with `same_path`, so on POSIX *any* virtual environment's
+`bin/python` matched the record — they are links to the same base executable.
+Worse, the parent check gated only on the prefix and merely *recorded* the
+invocation path and digest.
+
+* `identity.same_invocation_path()` compares paths as they were named, without
+  resolving, and every interpreter comparison uses it: parent, requested child
+  and observed child;
+* `parent-interpreter` now requires all three — the record's prefix, the
+  record's invocation path and the record's executable digest — and each
+  condition is reported separately (`prefix_matches`,
+  `invocation_path_matches`, `executable_digest_matches`);
+* `requested-interpreter` is verified *independently* by describing the
+  requested interpreter in its own isolated process, then comparing its prefix,
+  invocation path and digest. A request for another environment fails even
+  though the two share one executable, and a path that cannot be described is
+  not a selection at all;
+* provisioning records the bootstrap interpreter the same way: named, not
+  resolved, with its own prefix (`bootstrap_identity`).
+
+**2. Redirected roots and ownership revalidation.** `layout()` used to resolve
+the root, which hid any redirect between the caller and the directory: the check
+saw the destination. It now keeps absolute, unresolved paths and
+`redirected_ancestor()` refuses a symbolic link or junction at the root or at
+any component inside the checkout. `_swap_into_place` re-runs the classification
+immediately before it changes anything, compares the digest of the record that
+was checked against the record now on disk, and refuses
+(`target-changed-during-provisioning`) if the target appeared, disappeared or was
+rewritten. The whole provision runs under an exclusive `.lock-<campaign>` file
+in the root, so a second provision of the same campaign is refused
+(`provisioning-in-progress`) instead of invalidating the first one's checks.
+
+**3. Preserving the previous installation and receipt.** The previous behaviour
+moved the new environment into place and left the retired one behind while
+writing the receipt, so a failure after the swap left a mixed state. Now the
+retired environment is deleted only after final verification *and* a durable
+receipt write have succeeded. A failed verification or receipt write restores
+the previous environment and removes only the abandoned, never-qualified copy;
+the old receipt is untouched because it is only replaced by the atomic write
+that succeeds. If restoration itself cannot be established, the provision raises
+`replacement-recovery-uncertain` with the retired path, and the retired
+environment and previous receipt are kept for a human rather than deleted.
+
+**Installation boundary.** The offline attempt now passes `--no-index` as well as
+`--no-build-isolation`: the former stops pip from *contacting* an index, which
+`--no-build-isolation` alone never did. Only the explicit opt-in attempt may use
+an index, and every attempt records `install_mode` (`offline` or
+`build-isolation`) and `index_access`.
 
 ### 5. Evidence and licensing
 
@@ -313,10 +370,18 @@ cannot pass them.
   offline; see the procedure.
 * **Ownership is refused, not guessed.** An existing directory without a valid,
   bound record is never reused or overwritten, and neither is a symbolic link or
-  a Windows junction at the target path. A replacement builds a complete new
-  environment under a staging path and swaps it in; the previous environment is
-  renamed aside and deleted. Recovering a campaign whose record was lost means
-  deleting that environment deliberately, not letting a provision adopt it.
+  a Windows junction at the target path or at any component of the environment
+  root inside the checkout. A replacement builds a complete new environment
+  under a staging path, revalidates ownership under an exclusive campaign lock
+  immediately before swapping, and deletes the previous environment only after
+  the new one is verified and its receipt is durable. Recovering a campaign
+  whose record was lost means deleting that environment deliberately, not
+  letting a provision adopt it.
+* **A stale lock blocks provisioning.** The lock is an exclusive file in the
+  environment root. A crashed provision leaves it behind on purpose: the
+  operator checks that nothing is running and removes that one file. The
+  alternative — a lock that expires on its own — would let a slow provision and
+  a new one overlap, which is the condition it exists to prevent.
 * **Staging needs the same filesystem.** The swap is a directory rename inside
   the campaign root, so `--root` must not span filesystems; otherwise the
   replacement fails and the previous environment is restored.
@@ -382,6 +447,12 @@ $env:PYTHONPATH = 'src'
 python -m deskmate_formats.campaign_env.cli inventory --out local-results/inventory.json
 python tools/campaign_environment_experiment.py --output local-results/experiment-20261127
 ```
+
+The mechanism's behaviour in failure is covered by the portable tests rather
+than by a new laboratory run: `ReplacementRecoveryTest` simulates a failed final
+verification, a failed receipt write, an uncertain restoration and a failed
+fresh provision, and `TargetOwnershipTest` simulates an intervening record
+change. The experiment below is the earlier, still-valid measurement.
 
 The experiment writes `01-inventory.json`,
 `02-installation-boundary.json`, `03-isolation.json`, `04-qualification.json`,
