@@ -33,6 +33,14 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Require a fresh main publication run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$GITHUB_REF" = refs/heads/main
+          test "$GITHUB_RUN_ATTEMPT" = 1
+          current="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq .object.sha)"
+          test "$current" = "$GITHUB_SHA"
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -64,24 +72,27 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload static site
+        id: upload
         uses: actions/upload-pages-artifact@v4
         with:
           path: website/_site
-      # Pages sometimes queries the Actions artifact index before a just-uploaded
-      # artifact is visible. Poll this run's artifacts rather than rerun the
-      # failed deploy job, which would upload a duplicate github-pages artifact.
+      # The REST artifact index is not the runtime artifact-service index used
+      # by deploy-pages v5. Verify the exact upload here, but do not mistake
+      # REST visibility for proof that the deployment service can see it.
       - name: Wait for Pages artifact indexing
         env:
           GH_TOKEN: ${{ github.token }}
+          UPLOADED_ARTIFACT_ID: ${{ steps.upload.outputs.artifact_id }}
         run: |
+          [[ "$UPLOADED_ARTIFACT_ID" =~ ^[0-9]+$ ]]
           for attempt in {1..30}; do
-            if count="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts?per_page=100" --jq '[.artifacts[] | select(.name == "github-pages" and .expired == false)] | length')"; then
-              if [[ "$count" == "1" ]]; then
-                echo "Pages artifact indexed for this run (attempt $attempt)."
+            if ids="$(gh api --paginate "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts?per_page=100" --jq '.artifacts[] | select(.name == "github-pages" and .expired == false) | .id')"; then
+              if [[ "$ids" == "$UPLOADED_ARTIFACT_ID" ]]; then
+                echo "Exact Pages artifact $ids REST-indexed for this run (poll $attempt)."
                 exit 0
               fi
-              if [[ "$count" != "0" ]]; then
-                echo "::error::Expected one github-pages artifact; found $count."
+              if [[ -n "$ids" ]]; then
+                echo "::error::Unexpected or multiple Pages artifact IDs."
                 exit 1
               fi
             fi
@@ -89,6 +100,42 @@ jobs:
           done
           echo "::error::Timed out waiting for the Pages artifact to be indexed."
           exit 1
+      - name: Recheck current main before deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          current="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq .object.sha)"
+          test "$current" = "$GITHUB_SHA"
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v5
+      - name: Verify published critical routes against this build
+        run: |
+          base="https://deskmate.retroconnect.org"
+          scratch="$(mktemp -d)"
+          trap 'rm -rf "$scratch"' EXIT
+          for poll in {1..12}; do
+            mismatch=0
+            for file in index.html research/index.html sitemap.xml; do
+              route="/$file"
+              if [[ "$file" == */index.html || "$file" == index.html ]]; then
+                route="/${file%index.html}"
+              fi
+              # A successful status alone could be an old deployment or soft 404.
+              if ! status="$(curl --silent --show-error --fail --compressed --max-time 15 \
+                  --header 'Cache-Control: no-cache' --output "$scratch/body" \
+                  --write-out '%{http_code}' "$base$route?revision=$GITHUB_SHA")" ||
+                 [[ "$status" != 200 ]] ||
+                 ! cmp -s "$scratch/body" "website/_site/$file"; then
+                echo "Published bytes not yet verified: $route (poll $poll)"
+                mismatch=1
+              fi
+            done
+            if [[ "$mismatch" == 0 ]]; then
+              echo "Critical routes match the reviewed build $GITHUB_SHA."
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::Deployment reported success but critical public bytes did not match."
+          exit 1
