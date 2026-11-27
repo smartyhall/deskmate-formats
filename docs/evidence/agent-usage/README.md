@@ -30,6 +30,17 @@ The initial supplemental receipt contract (schema version 1) includes:
   unrelated activities or unrestricted provider logs. Retain private source
   evidence separately; review all public receipt fields.
 
+## Receipts
+
+- [Campaign Python environment review corrections](freebuff-campaign-python-environment-20261127-review-corrections.json)
+  — checkpoint receipt for the
+  [campaign report](../../research/campaign-python-environment-isolation-20261127.md).
+  Usage measurements are unknown and recorded as an empty list.
+- [Native emulator startup](freebuff-native-emulator-20261126-startup.json),
+  [checkpoint](freebuff-native-emulator-20261126-checkpoint-native.json) and
+  [completion](freebuff-native-emulator-20261126-completion.json) — the earlier
+  Freebuff campaign.
+
 Freebuff's initial read-only evaluation reported that its agent tools did not
 expose model identity, context size or quota. The desktop model selector and
 usage UI are possible manual observation sources, but API/collector support,

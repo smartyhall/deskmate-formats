@@ -1,0 +1,842 @@
+{
+  "collected_utc": "2026-11-27T10:18:28Z",
+  "conducted_utc": "2026-11-27T10:18:07Z",
+  "kind": "campaign-python-environment-corrections-evidence",
+  "measurement": {
+    "conducted_utc": "2026-11-27T10:18:07Z",
+    "drift": {
+      "after_commit_reasons": [
+        "source-revision",
+        "source-content"
+      ],
+      "after_commit_verdict": "unqualified",
+      "after_edit_reasons": [
+        "source-content"
+      ],
+      "after_edit_verdict": "unqualified",
+      "campaign": "alpha",
+      "exit_statuses": {
+        "after_commit": 1,
+        "after_edit": 1
+      },
+      "revisions_differ": true
+    },
+    "elapsed_seconds": 174.623,
+    "experiment_root": "<path>",
+    "host": {
+      "after": {
+        "counts": {
+          "environments": 7,
+          "interpreters": 2,
+          "isolated_module_sites": 9,
+          "launch_sites": 30,
+          "worktrees": 42
+        },
+        "environments": [
+          {
+            "package_origin": "<path>",
+            "path": "<path>"
+          },
+          {
+            "package_origin": "<path>",
+            "path": "<path>"
+          },
+          {
+            "package_origin": "<path>",
+            "path": "<path>"
+          },
+          {
+            "package_origin": "<path>",
+            "path": "<path>"
+          },
+          {
+            "package_origin": "<path>",
+            "path": "<path>"
+          },
+          {
+            "package_origin": "<path>",
+            "path": "<path>"
+          },
+          {
+            "package_origin": "<path>",
+            "path": "<path>"
+          }
+        ]
+      },
+      "checkout": "<path>",
+      "counts": {
+        "environments": 2,
+        "interpreters": 2,
+        "isolated_module_sites": 9,
+        "launch_sites": 30,
+        "worktrees": 42
+      },
+      "environments": [
+        {
+          "package_origin": "<path>",
+          "path": "<path>"
+        },
+        {
+          "package_origin": "<path>",
+          "path": "<path>"
+        }
+      ],
+      "interpreters": [
+        {
+          "deskmate_formats_version": "0.1.0.dev0",
+          "executable": "<path>",
+          "package_origin": "<path>",
+          "state": "described",
+          "version": "3.13.17",
+          "virtual_environment": false
+        },
+        {
+          "deskmate_formats_version": null,
+          "executable": "<path>",
+          "package_origin": "error:exit-9009",
+          "state": "unreadable",
+          "version": null,
+          "virtual_environment": null
+        }
+      ],
+      "launch_sites": [
+        {
+          "inline_code": true,
+          "interpreter_expression": "unresolved",
+          "line": 375,
+          "module": null,
+          "path": "src/deskmate_formats/campaign_env/identity.py",
+          "sys_executable": false
+        },
+        {
+          "inline_code": true,
+          "interpreter_expression": "unresolved",
+          "line": 84,
+          "module": null,
+          "path": "src/deskmate_formats/campaign_env/inventory.py",
+          "sys_executable": false
+        },
+        {
+          "inline_code": true,
+          "interpreter_expression": "unresolved",
+          "line": 101,
+          "module": null,
+          "path": "src/deskmate_formats/campaign_env/inventory.py",
+          "sys_executable": false
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "sys.executable",
+          "line": 3,
+          "module": "deskmate_formats...",
+          "path": "src/deskmate_formats/campaign_env/launch.py",
+          "sys_executable": true
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "unresolved",
+          "line": 27,
+          "module": null,
+          "path": "src/deskmate_formats/campaign_env/launch.py",
+          "sys_executable": false
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "unresolved",
+          "line": 55,
+          "module": null,
+          "path": "src/deskmate_formats/campaign_env/launch.py",
+          "sys_executable": false
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "unresolved",
+          "line": 134,
+          "module": "deskmate_formats.supervisor.synthetic_peer",
+          "path": "src/deskmate_formats/supervisor/driver.py",
+          "sys_executable": false
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "unresolved",
+          "line": 355,
+          "module": "deskmate_formats.supervisor.synthetic_peer",
+          "path": "src/deskmate_formats/supervisor/driver.py",
+          "sys_executable": false
+        },
+        {
+          "inline_code": true,
+          "interpreter_expression": "unresolved",
+          "line": 173,
+          "module": "reuse",
+          "path": "src/deskmate_formats/supervisor/workspace.py",
+          "sys_executable": false
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "unresolved",
+          "line": 743,
+          "module": null,
+          "path": "tools/archive/intelligence_extract.py",
+          "sys_executable": false
+        },
+        {
+          "inline_code": true,
+          "interpreter_expression": "sys.executable",
+          "line": 82,
+          "module": null,
+          "path": "tools/campaign_environment_experiment.py",
+          "sys_executable": true
+        },
+        {
+          "inline_code": true,
+          "interpreter_expression": "unresolved",
+          "line": 158,
+          "module": null,
+          "path": "tools/campaign_environment_experiment.py",
+          "sys_executable": false
+        },
+        {
+          "inline_code": true,
+          "interpreter_expression": "unresolved",
+          "line": 256,
+          "module": null,
+          "path": "tools/campaign_environment_experiment.py",
+          "sys_executable": false
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "sys.executable",
+          "line": 86,
+          "module": "deskmate_formats.supervisor.task_cli",
+          "path": "tools/experimental/supervisor_editing_demo.py",
+          "sys_executable": true
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "sys.executable",
+          "line": 98,
+          "module": "deskmate_formats.supervisor.editing_cli",
+          "path": "tools/experimental/supervisor_editing_demo.py",
+          "sys_executable": true
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "sys.executable",
+          "line": 72,
+          "module": "deskmate_formats.supervisor.task_cli",
+          "path": "tools/experimental/supervisor_offline_demo.py",
+          "sys_executable": true
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "sys.executable",
+          "line": 84,
+          "module": "deskmate_formats.supervisor.bridge_cli",
+          "path": "tools/experimental/supervisor_offline_demo.py",
+          "sys_executable": true
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "sys.executable",
+          "line": 146,
+          "module": null,
+          "path": "tools/experimental/supervisor_readiness_probe.py",
+          "sys_executable": true
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "sys.executable",
+          "line": 91,
+          "module": "isolation_probe.probe",
+          "path": "tests/portable/test_campaign_env.py",
+          "sys_executable": true
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "unresolved",
+          "line": 136,
+          "module": "isolation_probe.probe",
+          "path": "tests/portable/test_campaign_env.py",
+          "sys_executable": false
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "unresolved",
+          "line": 437,
+          "module": "example.module",
+          "path": "tests/portable/test_campaign_env.py",
+          "sys_executable": false
+        },
+        {
+          "inline_code": true,
+          "interpreter_expression": "unresolved",
+          "line": 441,
+          "module": null,
+          "path": "tests/portable/test_campaign_env.py",
+          "sys_executable": false
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "unresolved",
+          "line": 205,
+          "module": null,
+          "path": "tests/portable/test_intelligence_extract.py",
+          "sys_executable": false
+        },
+        {
+          "inline_code": true,
+          "interpreter_expression": "sys.executable",
+          "line": 156,
+          "module": null,
+          "path": "tests/portable/test_supervisor_driver.py",
+          "sys_executable": true
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "sys.executable",
+          "line": 264,
+          "module": "deskmate_formats.supervisor.driver_cli",
+          "path": "tests/portable/test_supervisor_driver.py",
+          "sys_executable": true
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "sys.executable",
+          "line": 335,
+          "module": "deskmate_formats.supervisor.synthetic_peer",
+          "path": "tests/portable/test_supervisor_driver.py",
+          "sys_executable": true
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "sys.executable",
+          "line": 185,
+          "module": "deskmate_formats.supervisor.synthetic_peer",
+          "path": "tests/portable/test_supervisor_editing.py",
+          "sys_executable": true
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "sys.executable",
+          "line": 18,
+          "module": null,
+          "path": "tests/portable/test_supervisor_protocol.py",
+          "sys_executable": true
+        },
+        {
+          "inline_code": false,
+          "interpreter_expression": "sys.executable",
+          "line": 252,
+          "module": "deskmate_formats.supervisor.synthetic_peer",
+          "path": "tests/portable/test_supervisor_s2_live.py",
+          "sys_executable": true
+        },
+        {
+          "inline_code": true,
+          "interpreter_expression": "unresolved",
+          "line": 50,
+          "module": "reuse",
+          "path": "tests/portable/test_supervisor_timeouts.py",
+          "sys_executable": false
+        }
+      ],
+      "launcher": {
+        "distinct_modules": 9,
+        "interpreter": "<path>",
+        "modules": {
+          "deskmate_formats...": {
+            "origin": "error:ModuleNotFoundError",
+            "outside_package_root": null,
+            "resolves": false
+          },
+          "deskmate_formats.supervisor.bridge_cli": {
+            "origin": "<path>",
+            "outside_package_root": false,
+            "resolves": true
+          },
+          "deskmate_formats.supervisor.driver_cli": {
+            "origin": "<path>",
+            "outside_package_root": false,
+            "resolves": true
+          },
+          "deskmate_formats.supervisor.editing_cli": {
+            "origin": "<path>",
+            "outside_package_root": false,
+            "resolves": true
+          },
+          "deskmate_formats.supervisor.synthetic_peer": {
+            "origin": "<path>",
+            "outside_package_root": false,
+            "resolves": true
+          },
+          "deskmate_formats.supervisor.task_cli": {
+            "origin": "<path>",
+            "outside_package_root": false,
+            "resolves": true
+          },
+          "example.module": {
+            "origin": "error:ModuleNotFoundError",
+            "outside_package_root": null,
+            "resolves": false
+          },
+          "isolation_probe.probe": {
+            "origin": "error:ModuleNotFoundError",
+            "outside_package_root": null,
+            "resolves": false
+          },
+          "reuse": {
+            "origin": "<path>",
+            "outside_package_root": false,
+            "resolves": true
+          }
+        },
+        "package_origin": "<path>",
+        "sys_executable_sites": 14,
+        "unresolved_sites": 16
+      },
+      "source": {
+        "accept_enclosing": false,
+        "branch": "freebuff/campaign-python-environment-20261127",
+        "changed_file_count": 0,
+        "detached": false,
+        "dirty": false,
+        "exact_checkout_root": true,
+        "failure": null,
+        "observed_utc": "2026-11-27T10:15:14Z",
+        "revision": "44462766948f6f0cfe6d2f86d806dfa9e279ada6",
+        "state": "git",
+        "top_level": "<path>",
+        "untracked_file_count": 0
+      },
+      "worktree_count": 42
+    },
+    "installation_boundary": {
+      "campaign_build_isolation_explicit": {
+        "alpha": true,
+        "beta": true
+      },
+      "campaign_install_modes": {
+        "alpha": "build-isolation",
+        "beta": "build-isolation"
+      },
+      "default_provision_build_isolation": false,
+      "default_provision_detail": "",
+      "default_provision_outcome": "refused",
+      "default_provision_reason": "installation-failed",
+      "default_provision_target_kind": "absent"
+    },
+    "isolation": {
+      "environment_verdicts": {
+        "alpha": "qualified",
+        "beta": "qualified"
+      },
+      "markers": {
+        "alpha": "alpha-checkout-2",
+        "beta": "beta-checkout-7"
+      },
+      "observations": {
+        "alpha": {
+          "child_marker": "alpha-checkout-2",
+          "isolated_child_reported_isolated": true,
+          "isolated_child_with_other_checkout_pythonpath_marker": "alpha-checkout-2",
+          "isolated_child_with_shared_pythonpath_marker": "alpha-checkout-2",
+          "own_marker": "alpha-checkout-2",
+          "parent_marker": "alpha-checkout-2",
+          "unisolated_control_marker": "shared-preinstalled-0"
+        },
+        "beta": {
+          "child_marker": "beta-checkout-7",
+          "isolated_child_reported_isolated": true,
+          "isolated_child_with_other_checkout_pythonpath_marker": "beta-checkout-7",
+          "isolated_child_with_shared_pythonpath_marker": "beta-checkout-7",
+          "own_marker": "beta-checkout-7",
+          "parent_marker": "beta-checkout-7",
+          "unisolated_control_marker": "shared-preinstalled-0"
+        }
+      },
+      "ownership_modes": {
+        "alpha": "fresh",
+        "beta": "fresh"
+      },
+      "shared_conflict_marker": "shared-preinstalled-0",
+      "shared_interpreter_cannot_see_synthetic_campaign": true,
+      "source_revisions": {
+        "alpha": "373b77460d99ae238738303b7c2e78c9d9fd7967",
+        "beta": "38ec13f6bdeb9aaddf2e8dddc44c3708bf0f0a84"
+      },
+      "source_tree_digests": {
+        "alpha": "b36962993fdf8550f9abd97f391b277b959b71ab43445847c4ebc45284fff9c6",
+        "beta": "d405d7f05aded2344ffbcde10ca70b83bbfc2192f986acf6d691f383e077a3bf"
+      }
+    },
+    "kind": "campaign-env-experiment-summary",
+    "metadata_failure": {
+      "campaign": "beta",
+      "exit_status": 2,
+      "measurement_allowed": false,
+      "reasons": [
+        "checkout-root",
+        "source-revision"
+      ],
+      "revision_while_hidden": null,
+      "source_failure_while_hidden": "rev-parse-failed",
+      "source_state_after_restore": "git",
+      "source_state_while_hidden": "not-a-repository",
+      "verdict": "unknown"
+    },
+    "ownership": {
+      "junction": {
+        "applicable": true,
+        "detail": "",
+        "kind": "junction",
+        "reason": "existing-redirect-at-target"
+      },
+      "kind": "campaign-env-ownership",
+      "replacement": {
+        "first_ownership": "fresh",
+        "retired_path_recorded": true,
+        "second_ownership": "replaced-owned",
+        "stale_file_present_after": false,
+        "stale_file_present_before": true,
+        "verdict": "qualified"
+      },
+      "unowned_directory": {
+        "detail": "",
+        "reason": "existing-directory-without-valid-record"
+      },
+      "unowned_directory_content_preserved": true
+    },
+    "projected_utc": "2026-11-27T10:18:07Z",
+    "public_projection_version": 1,
+    "qualification": {
+      "campaign": "campaign-python-environment",
+      "checks_conflicted": [
+        {
+          "check": "environment-record",
+          "detail": "record binds to this campaign, checkout, package and layout",
+          "problems": [],
+          "state": "pass"
+        },
+        {
+          "check": "checkout-root",
+          "detail": "the checkout is the root of its own Git repository",
+          "exact_checkout_root": true,
+          "state": "pass"
+        },
+        {
+          "check": "parent-interpreter",
+          "detail": "the running parent is the campaign interpreter",
+          "expected_interpreter": "<path>",
+          "expected_prefix": "<path>",
+          "invocation_path_matches": true,
+          "parent_invocation_path": "<path>",
+          "parent_prefix": "<path>",
+          "state": "pass"
+        },
+        {
+          "check": "requested-interpreter",
+          "detail": "no child interpreter was requested",
+          "state": "pass",
+          "supplied": false
+        },
+        {
+          "check": "parent-package",
+          "detail": "the parent's package content does not match the receipt",
+          "inside_campaign_environment": false,
+          "same_code": false,
+          "state": "fail"
+        },
+        {
+          "check": "source-revision",
+          "detail": "Git HEAD matches the recorded revision",
+          "revision": "44462766948f6f0cfe6d2f86d806dfa9e279ada6",
+          "state": "pass"
+        },
+        {
+          "check": "source-content",
+          "detail": "checkout content matches the installed source",
+          "state": "pass",
+          "tree_digest": "3b15c3a4d48fc002e04170a47b44494f8b53fe2b94cd3e47b5649b7f0ebc5a09"
+        },
+        {
+          "check": "child-interpreter",
+          "detail": "the child ran the recorded interpreter in the recorded environment",
+          "executable_digest_matches": true,
+          "invocation_path_matches": true,
+          "state": "pass"
+        },
+        {
+          "check": "observed-origin",
+          "detail": "the child imported the recorded package content",
+          "inside_campaign_environment": true,
+          "same_code": true,
+          "state": "pass"
+        },
+        {
+          "check": "observed-content",
+          "detail": "installed content matches the provisioning receipt",
+          "observed_tree_digest": "3b15c3a4d48fc002e04170a47b44494f8b53fe2b94cd3e47b5649b7f0ebc5a09",
+          "recorded_tree_digest": "3b15c3a4d48fc002e04170a47b44494f8b53fe2b94cd3e47b5649b7f0ebc5a09",
+          "state": "pass"
+        },
+        {
+          "check": "child-isolation",
+          "detail": "the child ran under -I",
+          "pythonpath_present": true,
+          "state": "pass"
+        }
+      ],
+      "checks_inside": [
+        {
+          "check": "environment-record",
+          "detail": "record binds to this campaign, checkout, package and layout",
+          "problems": [],
+          "state": "pass"
+        },
+        {
+          "check": "checkout-root",
+          "detail": "the checkout is the root of its own Git repository",
+          "exact_checkout_root": true,
+          "state": "pass"
+        },
+        {
+          "check": "parent-interpreter",
+          "detail": "the running parent is the campaign interpreter",
+          "expected_interpreter": "<path>",
+          "expected_prefix": "<path>",
+          "invocation_path_matches": true,
+          "parent_invocation_path": "<path>",
+          "parent_prefix": "<path>",
+          "state": "pass"
+        },
+        {
+          "check": "requested-interpreter",
+          "detail": "no child interpreter was requested",
+          "state": "pass",
+          "supplied": false
+        },
+        {
+          "check": "parent-package",
+          "detail": "the parent's package content matches the receipt",
+          "inside_campaign_environment": true,
+          "same_code": true,
+          "state": "pass"
+        },
+        {
+          "check": "source-revision",
+          "detail": "Git HEAD matches the recorded revision",
+          "revision": "44462766948f6f0cfe6d2f86d806dfa9e279ada6",
+          "state": "pass"
+        },
+        {
+          "check": "source-content",
+          "detail": "checkout content matches the installed source",
+          "state": "pass",
+          "tree_digest": "3b15c3a4d48fc002e04170a47b44494f8b53fe2b94cd3e47b5649b7f0ebc5a09"
+        },
+        {
+          "check": "child-interpreter",
+          "detail": "the child ran the recorded interpreter in the recorded environment",
+          "executable_digest_matches": true,
+          "invocation_path_matches": true,
+          "state": "pass"
+        },
+        {
+          "check": "observed-origin",
+          "detail": "the child imported the recorded package content",
+          "inside_campaign_environment": true,
+          "same_code": true,
+          "state": "pass"
+        },
+        {
+          "check": "observed-content",
+          "detail": "installed content matches the provisioning receipt",
+          "observed_tree_digest": "3b15c3a4d48fc002e04170a47b44494f8b53fe2b94cd3e47b5649b7f0ebc5a09",
+          "recorded_tree_digest": "3b15c3a4d48fc002e04170a47b44494f8b53fe2b94cd3e47b5649b7f0ebc5a09",
+          "state": "pass"
+        },
+        {
+          "check": "child-isolation",
+          "detail": "the child ran under -I",
+          "pythonpath_present": false,
+          "state": "pass"
+        }
+      ],
+      "checks_outside": [
+        {
+          "check": "environment-record",
+          "detail": "record binds to this campaign, checkout, package and layout",
+          "problems": [],
+          "state": "pass"
+        },
+        {
+          "check": "checkout-root",
+          "detail": "the checkout is the root of its own Git repository",
+          "exact_checkout_root": true,
+          "state": "pass"
+        },
+        {
+          "check": "parent-interpreter",
+          "detail": "the running parent is not in the campaign environment",
+          "expected_interpreter": "<path>",
+          "expected_prefix": "<path>",
+          "invocation_path_matches": false,
+          "parent_invocation_path": "<path>",
+          "parent_prefix": "<path>",
+          "state": "fail"
+        },
+        {
+          "check": "requested-interpreter",
+          "detail": "no child interpreter was requested",
+          "state": "pass",
+          "supplied": false
+        },
+        {
+          "check": "parent-package",
+          "detail": "the parent's package content matches the receipt",
+          "inside_campaign_environment": false,
+          "same_code": true,
+          "state": "pass"
+        },
+        {
+          "check": "source-revision",
+          "detail": "Git HEAD matches the recorded revision",
+          "revision": "44462766948f6f0cfe6d2f86d806dfa9e279ada6",
+          "state": "pass"
+        },
+        {
+          "check": "source-content",
+          "detail": "checkout content matches the installed source",
+          "state": "pass",
+          "tree_digest": "3b15c3a4d48fc002e04170a47b44494f8b53fe2b94cd3e47b5649b7f0ebc5a09"
+        },
+        {
+          "check": "child-interpreter",
+          "detail": "the child ran the recorded interpreter in the recorded environment",
+          "executable_digest_matches": true,
+          "invocation_path_matches": true,
+          "state": "pass"
+        },
+        {
+          "check": "observed-origin",
+          "detail": "the child imported the recorded package content",
+          "inside_campaign_environment": true,
+          "same_code": true,
+          "state": "pass"
+        },
+        {
+          "check": "observed-content",
+          "detail": "installed content matches the provisioning receipt",
+          "observed_tree_digest": "3b15c3a4d48fc002e04170a47b44494f8b53fe2b94cd3e47b5649b7f0ebc5a09",
+          "recorded_tree_digest": "3b15c3a4d48fc002e04170a47b44494f8b53fe2b94cd3e47b5649b7f0ebc5a09",
+          "state": "pass"
+        },
+        {
+          "check": "child-isolation",
+          "detail": "the child ran under -I",
+          "pythonpath_present": true,
+          "state": "pass"
+        }
+      ],
+      "checks_selection": [
+        {
+          "check": "environment-record",
+          "detail": "record binds to this campaign, checkout, package and layout",
+          "problems": [],
+          "state": "pass"
+        },
+        {
+          "check": "checkout-root",
+          "detail": "the checkout is the root of its own Git repository",
+          "exact_checkout_root": true,
+          "state": "pass"
+        },
+        {
+          "check": "parent-interpreter",
+          "detail": "the running parent is not in the campaign environment",
+          "expected_interpreter": "<path>",
+          "expected_prefix": "<path>",
+          "invocation_path_matches": false,
+          "parent_invocation_path": "<path>",
+          "parent_prefix": "<path>",
+          "state": "fail"
+        },
+        {
+          "check": "requested-interpreter",
+          "detail": "the requested child interpreter is the recorded one",
+          "selection_only": true,
+          "state": "pass",
+          "supplied": true
+        },
+        {
+          "check": "parent-package",
+          "detail": "the parent's package content matches the receipt",
+          "inside_campaign_environment": false,
+          "same_code": true,
+          "state": "pass"
+        },
+        {
+          "check": "source-revision",
+          "detail": "Git HEAD matches the recorded revision",
+          "revision": "44462766948f6f0cfe6d2f86d806dfa9e279ada6",
+          "state": "pass"
+        },
+        {
+          "check": "source-content",
+          "detail": "checkout content matches the installed source",
+          "state": "pass",
+          "tree_digest": "3b15c3a4d48fc002e04170a47b44494f8b53fe2b94cd3e47b5649b7f0ebc5a09"
+        },
+        {
+          "check": "child-interpreter",
+          "detail": "the child ran the recorded interpreter in the recorded environment",
+          "executable_digest_matches": true,
+          "invocation_path_matches": true,
+          "state": "pass"
+        },
+        {
+          "check": "observed-origin",
+          "detail": "the child imported the recorded package content",
+          "inside_campaign_environment": true,
+          "same_code": true,
+          "state": "pass"
+        },
+        {
+          "check": "observed-content",
+          "detail": "installed content matches the provisioning receipt",
+          "observed_tree_digest": "3b15c3a4d48fc002e04170a47b44494f8b53fe2b94cd3e47b5649b7f0ebc5a09",
+          "recorded_tree_digest": "3b15c3a4d48fc002e04170a47b44494f8b53fe2b94cd3e47b5649b7f0ebc5a09",
+          "state": "pass"
+        },
+        {
+          "check": "child-isolation",
+          "detail": "the child ran under -I",
+          "pythonpath_present": true,
+          "state": "pass"
+        }
+      ],
+      "conflicted_reasons": [
+        "parent-package"
+      ],
+      "conflicted_verdict": "unqualified",
+      "exit_statuses": {
+        "conflicted": 1,
+        "inside": 0,
+        "outside": 1,
+        "selection": 1
+      },
+      "inside_verdict": "qualified",
+      "install_mode": "build-isolation",
+      "outside_reasons": [
+        "parent-interpreter"
+      ],
+      "outside_verdict": "unqualified",
+      "provision_verdict": "qualified",
+      "selection_reasons": [
+        "parent-interpreter"
+      ],
+      "selection_verdict": "unqualified"
+    }
+  }
+}
