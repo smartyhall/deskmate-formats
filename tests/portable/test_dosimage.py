@@ -365,5 +365,174 @@ class CliTests(unittest.TestCase):
         self.assertIn('error', json.loads(buffer.getvalue()))
 
 
+class SignatureTests(unittest.TestCase):
+    def test_zm_is_the_same_header_with_the_bytes_reversed(self):
+        data, expected = fixtures.build_segmented_mz()
+        mirror = b'ZM' + data[2:]
+        image = dosimage.MzImage.parse(mirror)
+        self.assertEqual(image.signature, b'ZM')
+        self.assertEqual(image.image_bytes, expected['image_bytes'])
+        self.assertEqual(image.entry_file_offset, expected['entry_file_offset'])
+        self.assertEqual(
+            [r.image_offset for r in image.relocations],
+            [entry[1] for entry in expected['relocation_sites']],
+        )
+        self.assertEqual(image.describe()['signature'], 'ZM')
+
+    def test_mz_reports_its_own_signature(self):
+        data, _ = fixtures.build_segmented_mz()
+        self.assertEqual(dosimage.MzImage.parse(data).describe()['signature'], 'MZ')
+
+    def test_identify_accepts_the_mirror_signature(self):
+        data, _ = fixtures.build_segmented_mz()
+        result = dosimage.identify(b'ZM' + data[2:])
+        self.assertEqual(result['format'], 'mz')
+        self.assertEqual(result['signature'], 'ZM')
+
+    def test_a_non_signature_is_still_refused(self):
+        data, _ = fixtures.build_segmented_mz()
+        for bad in (b'NZ' + data[2:], b'zm' + data[2:]):
+            with self.assertRaises(dosimage.DosImageError):
+                dosimage.MzImage.parse(bad)
+
+
+class ComExtentTests(unittest.TestCase):
+    def test_the_addressable_extent_is_offsets_0100_to_ffff(self):
+        self.assertEqual(dosimage.MAX_COM_BYTES, 0xFF00)
+        image = dosimage.ComImage.parse(bytes(dosimage.MAX_COM_BYTES))
+        self.assertEqual(image.max_representable_bytes, dosimage.MAX_COM_BYTES)
+        self.assertEqual(image.describe()['max_representable_bytes'], 0xFF00)
+        # The last representable byte is offset FFFF.
+        self.assertEqual(
+            image.file_to_linear(dosimage.MAX_COM_BYTES - 1, 0x1000), 0x1FFFF
+        )
+
+    def test_an_image_too_large_for_a_sixteen_bit_offset_is_refused(self):
+        with self.assertRaises(dosimage.DosImageError) as raised:
+            dosimage.ComImage.parse(bytes(dosimage.MAX_COM_BYTES + 1))
+        self.assertIn('0100h', str(raised.exception))
+
+    def test_the_com_reading_refuses_a_relocatable_image(self):
+        data, _ = fixtures.build_segmented_mz()
+        with self.assertRaises(dosimage.DosImageError) as raised:
+            dosimage.ComImage.parse(data)
+        self.assertIn('signature', str(raised.exception))
+
+
+class HeaderEvidenceTests(unittest.TestCase):
+    def test_a_sane_header_raises_no_warnings(self):
+        data, _ = fixtures.build_segmented_mz()
+        self.assertEqual(dosimage.MzImage.parse(data).header_warnings(), [])
+
+    def test_an_entry_point_outside_the_image_is_reported(self):
+        data = fixtures.build_mz(
+            image=b'\x90' * 0x20, entry_cs=0x0040, entry_ip=0
+        )
+        warnings = dosimage.MzImage.parse(data).header_warnings()
+        self.assertTrue(any('entry point' in warning for warning in warnings))
+
+    def test_contradictory_allocation_words_are_reported(self):
+        data = fixtures.build_mz(
+            image=b'\x90' * 0x20, entry_cs=0, entry_ip=0,
+            min_alloc=0x2000, max_alloc=0x1000,
+        )
+        warnings = dosimage.MzImage.parse(data).header_warnings()
+        self.assertTrue(any('minimum allocation' in warning for warning in warnings))
+
+    def test_overlapping_relocation_sites_are_reported(self):
+        data = fixtures.build_mz(
+            image=b'\x90' * 0x40, entry_cs=0, entry_ip=0,
+            relocations=((0x0000, 0x10, 0x0010), (0x0000, 0x11, 0x0010)),
+        )
+        warnings = dosimage.MzImage.parse(data).header_warnings()
+        self.assertTrue(any('overlapping words' in warning for warning in warnings))
+
+    def test_trailing_bytes_are_classified_as_possibly_an_overlay(self):
+        data = fixtures.build_mz(
+            image=b'\x90' * 0x20, entry_cs=0, entry_ip=0, trailing=b'OVERLAY'
+        )
+        overlay = dosimage.MzImage.parse(data).describe()['overlay']
+        self.assertEqual(overlay['status'], 'possible')
+        self.assertEqual(overlay['trailing_bytes'], len(b'OVERLAY'))
+        self.assertIn('requires separate evidence', overlay['note'])
+
+    def test_a_file_ending_at_its_declared_image_has_no_overlay(self):
+        data, _ = fixtures.build_segmented_mz()
+        overlay = dosimage.MzImage.parse(data).describe()['overlay']
+        self.assertEqual(overlay['status'], 'none')
+        self.assertEqual(overlay['trailing_bytes'], 0)
+
+    def test_a_header_offset_is_not_reported_as_an_image_offset(self):
+        data, expected = fixtures.build_segmented_mz()
+        mz = dosimage.MzImage.parse(data)
+        with self.assertRaises(dosimage.DosImageError) as raised:
+            mz.file_to_image(0x10)
+        message = str(raised.exception)
+        self.assertIn('inside the MZ header', message)
+        self.assertIn(f'{expected["header_bytes"]:#x}', message)
+
+    def test_a_relocation_offset_names_the_load_image(self):
+        data, _ = fixtures.build_segmented_mz()
+        for record in dosimage.MzImage.parse(data).relocations:
+            self.assertEqual(record.image_relative_offset, record.image_offset)
+            self.assertFalse(hasattr(record, 'linear_offset'))
+
+
+class SegmentLabelTests(unittest.TestCase):
+    def setUp(self):
+        self.data, self.expected = fixtures.build_segmented_mz()
+        handle = tempfile.NamedTemporaryFile(delete=False, suffix='.EXE')
+        handle.write(self.data)
+        handle.close()
+        self.path = handle.name
+
+    def tearDown(self):
+        Path(self.path).unlink(missing_ok=True)
+
+    def run_cli(self, *argv):
+        import contextlib
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            code = probe.main(list(argv))
+        return code, json.loads(buffer.getvalue())
+
+    def test_an_explicit_segment_zero_is_honoured(self):
+        # Segment 0000h is a real real-mode segment. Treating it as "unset"
+        # silently relabels the address with the load paragraph instead.
+        offset = self.expected['string_file_offset']
+        code, payload = self.run_cli(
+            'map', self.path, '--file-offset', hex(offset),
+            '--load-paragraph', '0', '--segment', '0'
+        )
+        self.assertEqual(code, 0)
+        entry = payload['coordinates'][0]
+        self.assertEqual(entry['segment'], 0)
+        self.assertEqual(entry['offset'], entry['linear'])
+
+    def test_a_segment_that_cannot_label_the_address_is_refused(self):
+        # With the default synthetic load paragraph the address is 1000h-based,
+        # so segment 0000h has no window over it. Refusing is honest; silently
+        # substituting 1000h would answer a question nobody asked.
+        offset = self.expected['string_file_offset']
+        import contextlib
+        buffer = io.StringIO()
+        with contextlib.redirect_stderr(buffer):
+            code = probe.main(
+                ['map', self.path, '--file-offset', hex(offset), '--segment', '0']
+            )
+        self.assertEqual(code, 2)
+        self.assertIn('64 KiB window', json.loads(buffer.getvalue())['error'])
+
+    def test_an_absent_segment_falls_back_to_the_load_paragraph(self):
+        offset = self.expected['string_file_offset']
+        code, payload = self.run_cli(
+            'map', self.path, '--file-offset', hex(offset), '--load-paragraph', '0x2000'
+        )
+        self.assertEqual(code, 0)
+        entry = payload['coordinates'][0]
+        self.assertEqual(entry['segment'], 0x2000)
+        self.assertEqual(entry['offset'], entry['linear'] - 0x20000)
+
+
 if __name__ == '__main__':
     unittest.main()
