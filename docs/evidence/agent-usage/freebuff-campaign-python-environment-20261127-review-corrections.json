@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "provider": "Freebuff",
+  "agent": "Freebuff desktop coding agent",
+  "campaign_id": "freebuff-campaign-python-environment-20261127",
+  "checkpoint": "review-corrections",
+  "observed_at_utc": null,
+  "observed_at_note": "Session date is 2026-11-27 from the host clock. The agent tools expose no timestamp for the checkpoint itself, so the exact UTC instant is unknown and is not inferred from the experiment receipt.",
+  "git_revision": "44462766948f6f0cfe6d2f86d806dfa9e279ada6",
+  "execution_mode": "Freebuff desktop agent using local shell and file tools in the operator's interactive Windows session; no MCP servers loaded and no provider API client started",
+  "model": null,
+  "reasoning_effort": null,
+  "model_note": "The Freebuff client shows a model selector but does not expose the active model identity or reasoning effort to agent tools. Recorded as unknown rather than inferred from the client UI.",
+  "source": {
+    "kind": "manual UI observation",
+    "version": null,
+    "detail": "The agent inspected its own tool inventory and the local shell environment while answering the PR #206 review; no provider usage screen, usage API or account telemetry was read."
+  },
+  "coverage": "Review-corrections checkpoint only: five correctness findings on the campaign environment and identity mechanism, their regression tests, the corrected laboratory experiment, and the evidence and licensing updates. The earlier implementation checkpoint of this campaign is not covered by this receipt.",
+  "attribution_limits": "Single-provider session on a shared laboratory host. The concurrent campaign worktree and any other Freebuff session are different work and are not part of this record; a shared account meter could not be attributed to this campaign even if it had been readable.",
+  "status": "review corrections implemented, measured and published to the existing PR without merging",
+  "measurements": [],
+  "measurement_note": "Freebuff's agent tools expose no token, context, allowance, credit or wall-clock telemetry, and no provider usage screen or API was read. Unknown usage is recorded as an empty measurement list; it is not omitted to imply zero and not estimated from the host clock. The experiment's own 174.6 s wall time is a local execution measurement in the campaign evidence, not provider usage.",
+  "private_evidence": "Raw experiment receipts, pip logs and the synthetic checkouts stay under the campaign checkout's local-results/, outside Git."
+}
