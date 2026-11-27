@@ -184,9 +184,11 @@ change is proposed here.
 
 ## Observed test costs
 
-Recorded for the separate performance campaign: the 27 FAT-volume tests take
-about 5 s locally (sparse 32 MB fixtures, no long scans); the 26 compression
-tests about 8 s, of which roughly 60 % is the gzip cross-check spawning one
-process per matrix case; the sector-bound tests about 2 s. The archive-focused
-suites together stay under 20 s on this workstation, so they are cheap enough to
-run per checkpoint rather than deferring to CI.
+Recorded for the separate performance campaign, measured on this workstation
+while it was running its normal background load: the 27 FAT-volume tests take
+8–9 s (sparse 32 MB fixtures, no long scans); the 26 compression tests 7–8 s,
+of which roughly 60 % is the gzip cross-check spawning one process per matrix
+case; the 14 sector-bound tests 1.6–1.9 s; the 28 disk-image tests 5–10 s, with
+the spread tracking unrelated load rather than the change. The nine
+archive-focused suites together take roughly 35–40 s, so they stay cheap enough
+to run at every checkpoint rather than deferring them to CI.
