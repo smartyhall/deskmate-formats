@@ -204,3 +204,28 @@ test("pending images are inconclusive, broken or missing-alt images fail", async
   const broken = await check({ total: 1, missingAlt: [], broken: ["bad.png"], pending: [] });
   assert.equal(broken.ok, false);
 });
+
+test("a trap returning to the first focus stop is inconclusive, not a pass", async () => {
+  const stops = ["One", "Two", "Three"].map((text, identity) => ({
+    identity, tag: "button", text, visible: true,
+  }));
+  const result = await CHECKS["focus-order"](focusPage([...stops, stops[0]]));
+  assert.equal(result.stops.length, 3);
+  assert.equal(result.truncated, false);
+  assert.equal(result.inconclusive, true);
+  assert.match(result.detail, /possible focus trap/);
+  assert.equal(renderingState({ problems: [], checks: [result] }), "inconclusive");
+  assert.equal(qualificationExitCode({ requested: 1, renderings: 1, passed: 0, inconclusive: 1 },
+    { requireMatrix: true, allowFindings: false }), 1);
+});
+
+test("a noninitial repeated focus stop is inconclusive, while body exit completes", async () => {
+  const stops = ["One", "Two", "Three"].map((text, identity) => ({
+    identity, tag: "button", text, visible: true,
+  }));
+  const repeated = await CHECKS["focus-order"](focusPage([...stops, stops[1]]));
+  assert.equal(repeated.inconclusive, true);
+  const ended = await CHECKS["focus-order"](focusPage(stops));
+  assert.equal(ended.inconclusive, false);
+  assert.equal(renderingState({ problems: [], checks: [ended] }), "passed");
+});

@@ -99,7 +99,7 @@ run means the specific assertions above held in these engines at these sizes.
 
 Keyboard qualification distinguishes three outcomes: a pass, a failure, and
 *inconclusive* — WebKit moves Tab between form controls only, so a zero-stop
-result there is recorded as inconclusive rather than as a pass or a defect. Traversal reaching the 40-stop cap or a noninitial cycle is also inconclusive; repeated labels are not identity. Unsettled images receive a bounded wait and remain inconclusive if pending, while broken images and absent alt attributes are findings.
+result there is recorded as inconclusive rather than as a pass or a defect. Traversal reaching the 40-stop cap or any repeated element identity (including the first stop) is inconclusive; only the null/body focus observation ends a nonempty traversal. Repeated labels are not identity. A cycle may indicate a focus trap; do not count it as a pass. Unsettled images receive a bounded wait and remain inconclusive if pending, while broken images and absent alt attributes are findings.
 
 ## Extending to other interfaces
 

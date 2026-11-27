@@ -161,8 +161,9 @@ async function focusOrder(page) {
     });
     if (!stop) { ended = true; break; }
     if (stops.some((entry) => entry.identity === stop.identity)) {
-      cycle = stop.identity !== stops[0].identity;
-      ended = !cycle;
+      // A repeated first control can also be a keyboard trap. Only the
+      // body/null sentinel establishes an observed exit from this traversal.
+      cycle = true;
       break;
     }
     stops.push(stop);
@@ -190,7 +191,7 @@ async function focusOrder(page) {
     inconclusive,
     truncated,
     detail: `${stops.length} stop(s), ${invisible.length} without a visible indicator` +
-      (truncated ? `; traversal capped at ${MAX_TAB_STOPS}` : cycle ? "; focus repeated before returning to first stop" : ""),
+      (truncated ? `; traversal capped at ${MAX_TAB_STOPS}` : cycle ? "; focus repeated without an observed exit; possible focus trap" : ""),
     stops,
     invisible: invisible.map((stop) => `${stop.tag}: ${stop.text}`),
   };
