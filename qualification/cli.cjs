@@ -27,6 +27,7 @@ function parseArgs(argv) {
     axe: false,
     timeout: DEFAULT_TIMEOUT,
     allowFindings: false,
+    requireMatrix: false,
   };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
@@ -43,6 +44,7 @@ function parseArgs(argv) {
     else if (flag === "--profiles") options.profiles = value();
     else if (flag === "--out") options.out = value();
     else if (flag === "--axe") options.axe = true;
+    else if (flag === "--require-matrix") options.requireMatrix = true;
     else if (flag === "--allow-findings") options.allowFindings = true;
     else if (flag === "--timeout") options.timeout = Number(value());
     else throw new Error(`Unknown argument: ${flag}`);
@@ -71,6 +73,7 @@ async function main(argv) {
       console.log(`axe reported ${report.summary.totals.axeViolations} violation type(s)`);
     }
     console.log(`artifacts: ${path.resolve(options.out)}`);
+    if (options.requireMatrix && report.summary.totals.renderings !== report.summary.totals.requested) return 1;
     if (report.summary.totals.failed && !options.allowFindings) return 1;
     return 0;
   } finally {
