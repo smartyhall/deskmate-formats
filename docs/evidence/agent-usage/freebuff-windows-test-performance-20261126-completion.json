@@ -58,7 +58,7 @@
     },
     {
       "name": "microbenchmark_iterations",
-      "value": 96,
+      "value": 192,
       "unit": "iterations",
       "scope": "campaign",
       "semantics": "cumulative",
@@ -66,6 +66,6 @@
       "reset_boundary": null
     }
   ],
-  "measurement_note": "Provider allowance, tokens, context size and quota remain unobservable to the agent; no figure is estimated or inferred from a shared account meter. measured_test_wall_clock sums instrumented test execution only and excludes agent session time: 1284.3 s + 918.6 s for the two full runs, plus 45.8 s across the smoke run and the two-arm fixture comparison, plus 197.1 s for the two Git-command-mix runs. Campaign activity counts are reported as activity, not as provider consumption.",
+  "measurement_note": "Provider allowance, tokens, context size and quota remain unobservable to the agent; no figure is estimated or inferred from a shared account meter. measured_test_wall_clock sums instrumented test execution only and excludes agent session time: 1284.3 s + 918.6 s for the two full runs, plus 45.8 s across the smoke run and the two-arm fixture comparison, plus 197.1 s for the two Git-command-mix runs. Campaign activity counts are reported as activity, not as provider consumption. The microbenchmark session was repeated after the host-CPU correction: 12 benchmarks x 8 iterations twice.",
   "private_evidence": "Raw run JSON, host timelines, logs, comparison artifacts and the campaign registry are retained outside Git under the laboratory private-evidence directory; only the harness, the analysis and these reviewed receipts are published."
 }
