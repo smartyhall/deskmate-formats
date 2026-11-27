@@ -1,0 +1,55 @@
+{
+  "agent_label": "Freebuff Desktop native session (local shell and file tools)",
+  "attribution_limitations": [
+    "A shared account meter cannot be attributed to one campaign.",
+    "Token counts, context utilization and allowance hours are distinct units with no verified exchange relationship.",
+    "Cumulative thread usage reported by the desktop UI is not a per-campaign charge."
+  ],
+  "campaign_id": "convergence-02",
+  "checkpoint": "convergence-checkpoint-02-canary-preparation",
+  "checkpoint_status": "orientation and preparation only: the shared origin, campaign worktree and qualified campaign environment are recorded, the proposed github-hash-canary manifest is validated against the implemented schema, and 18 refusal and durability controls were exercised against disposable synthetic fixtures. No real task was accepted, prepared, authorized or executed; no frozen plan exists and no baseline tag was created. The manifest pull request is open for independent review.",
+  "coverage": "this campaign only; shared account state is not attributable",
+  "evidence": [
+    "docs/research/convergence-checkpoint-02-canary-preparation-20261127.md",
+    "ops/tasks/github-hash-canary.json",
+    "docs/research/source-bound-execution-procedure.md",
+    "docs/research/campaign-environment-procedure.md",
+    "src/deskmate_formats/supervisor/deterministic.py",
+    "src/deskmate_formats/supervisor/task_git.py",
+    "src/deskmate_formats/supervisor/procedures.py"
+  ],
+  "execution_mode": "interactive local desktop session; no unattended dispatch, no model API call, no provider endpoint contacted, no emulator use",
+  "git_revision": null,
+  "git_revision_note": "The observed base revision is 277a42a2d2fc23dffc4f4e60fc10d9f745ee9d91. The documentation revision that publishes this receipt is recorded in the pull request; no revision is guessed here.",
+  "measurement_note": "No provider usage measurement was observed; a missing measurement is recorded as absent, never as zero. The private control run is an infrastructure qualification, not a performance measurement.",
+  "measurements": [],
+  "model": {
+    "note": "The client model selector and runtime model identity were not observed at any checkpoint.",
+    "reasoning_effort": null,
+    "runtime_identity": null,
+    "selected_label": null
+  },
+  "observed_at_utc": "2026-11-27T21:45:00Z",
+  "privacy": "No transcript, credential, account identifier, private path or raw process identity is included.",
+  "provider": "freebuff",
+  "receipt_written_utc": "2026-11-27T21:45:00Z",
+  "schema_version": 1,
+  "source": {
+    "detail": "No programmatic usage interface is available to this session; the desktop context tooltip was not read.",
+    "kind": "unavailable",
+    "version": "Freebuff Desktop, native local session; build identifier not observed"
+  },
+  "verification": {
+    "ci": "recorded in the pull request for the exact head",
+    "local": "manifest schema validation, campaign environment provision and preflight, 18 synthetic controls, four existing portable supervisor modules, REUSE lint",
+    "not_performed": [
+      "trusted-source acceptance of the canary manifest",
+      "prepare-task and frozen plan production",
+      "operator plan authorization and execution",
+      "emulator or native experiment",
+      "paid provider call",
+      "creation of a baseline tag",
+      "merge of this pull request"
+    ]
+  }
+}
