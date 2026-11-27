@@ -287,6 +287,53 @@ class StandardLibraryStreamTests(unittest.TestCase):
         self.assertEqual((result.status, result.detail), ('limited', 'stream-count-limit'))
         self.assertIsNone(result.data)
 
+    def test_a_later_member_cannot_raise_the_decoder_memory_budget(self):
+        # The first member declares 100 kB blocks and fits a 1 MiB budget; the
+        # second declares 900 kB blocks, whose documented requirement is
+        # 3700 KiB. The budget belongs to the caller, so a small first member
+        # must not authorise the larger second one.
+        small = bz2.compress(b'low block control', compresslevel=1)
+        large = bz2.compress(b'high block control', compresslevel=9)
+        self.assertEqual(small[3], ord('1'))
+        self.assertEqual(large[3], ord('9'))
+        budget = compression_streams.Bounds(decoder_bytes=1024 * 1024)
+        self.assertEqual(compression_streams.decode_bzip2(small, budget).status, 'ok')
+        result = compression_streams.decode_bzip2(small + large, budget)
+        self.assertEqual((result.status, result.detail), ('limited', 'decoder-memory-limit'))
+        self.assertEqual(result.streams, 2)
+        self.assertIsNone(result.data)
+
+    def test_a_later_member_cannot_raise_the_xz_dictionary_budget(self):
+        # 256 KiB covers a 4 KiB dictionary with the decoder's fixed tables.
+        budget = compression_streams.Bounds(decoder_bytes=1 << 18)
+        small = lzma.compress(b'low dictionary', format=lzma.FORMAT_XZ,
+                              filters=[{'id': lzma.FILTER_LZMA2, 'dict_size': 1 << 12}])
+        large = lzma.compress(b'high dictionary', format=lzma.FORMAT_XZ,
+                              filters=[{'id': lzma.FILTER_LZMA2, 'dict_size': 1 << 24}])
+        self.assertEqual(compression_streams.decode_xz(small, budget).status, 'ok')
+        result = compression_streams.decode_xz(small + large, budget)
+        self.assertEqual((result.status, result.detail), ('limited', 'decoder-memory-limit'))
+        self.assertEqual(result.streams, 2)
+        self.assertIsNone(result.data)
+
+    def test_a_damaged_later_member_keeps_the_members_that_verified(self):
+        first = b'first verified member\n' * 8
+        second = bytearray(bz2.compress(b'second damaged member\n' * 8))
+        second[10] ^= 0xFF
+        result = compression_streams.decode_bzip2(bz2.compress(first) + bytes(second))
+        self.assertEqual((result.status, result.data), ('partial', first))
+        self.assertTrue(result.detail.startswith('member-2-'), result.detail)
+        truncated = bz2.compress(b'second truncated member\n' * 8)[:-4]
+        result = compression_streams.decode_bzip2(bz2.compress(first) + truncated)
+        self.assertEqual((result.status, result.data, result.detail),
+                         ('partial', first, 'member-2-truncated-stream'))
+
+    def test_a_damaged_first_member_yields_no_payload(self):
+        damaged = bytearray(bz2.compress(b'damaged member\n' * 8))
+        damaged[10] ^= 0xFF
+        result = compression_streams.decode_bzip2(bytes(damaged) + bz2.compress(b'second'))
+        self.assertEqual((result.status, result.data), ('failed', None))
+
     def test_trailing_data_is_reported_without_hiding_the_payload(self):
         payload = b'truncation control' * 20
         result = compression_streams.decode_bzip2(bz2.compress(payload) + b'leavings')
@@ -317,6 +364,24 @@ class StandardLibraryStreamTests(unittest.TestCase):
             packed, compression_streams.Bounds(decoder_bytes=1 << 16))
         self.assertEqual((limited.status, limited.detail), ('limited', 'decoder-memory-limit'))
         self.assertIsNone(limited.data)
+
+    def test_the_documented_bzip2_requirement_is_the_budget_unit(self):
+        # bzip2(1)'s MEMORY MANAGEMENT table gives 3700 KiB for 900 kB blocks;
+        # four block bytes (3600 kB) is the table allocation alone and
+        # understates the decoder's working set.
+        stream = bz2.compress(b'documented requirement')
+        required = compression_streams.BZIP2_DECOMPRESS_KIB[9] * 1024
+        self.assertEqual(required, 3700 * 1024)
+        exact = compression_streams.decode_bzip2(
+            stream, compression_streams.Bounds(decoder_bytes=required))
+        self.assertEqual(exact.status, 'ok')
+        under = compression_streams.decode_bzip2(
+            stream, compression_streams.Bounds(decoder_bytes=required - 1))
+        self.assertEqual((under.status, under.detail), ('limited', 'decoder-memory-limit'))
+        # A 100 kB member fits the same budget that a 900 kB member cannot use.
+        low = bz2.compress(b'documented requirement', compresslevel=1)
+        self.assertEqual(compression_streams.decode_bzip2(
+            low, compression_streams.Bounds(decoder_bytes=500 * 1024)).status, 'ok')
 
     def test_output_bound_applies_before_full_expansion(self):
         payload = bytes(1 << 20)
@@ -373,6 +438,16 @@ class ExtractorIntegrationTests(unittest.TestCase):
                                  archive.Limits(member_bytes=4))
         self.assertEqual((result.status, result.detail), ('limited', 'xz; output-byte-limit'))
         self.assertEqual(result.members, [])
+
+    def test_the_compression_input_bound_is_enforced_by_the_read_itself(self):
+        archive = self.load()
+        target = self.root / 'payload.xz'
+        target.write_bytes(lzma.compress(b'bound control' * 4, format=lzma.FORMAT_XZ))
+        # extract()'s size inspection is only a pre-check; the read that feeds
+        # the decoder is what enforces the caller's input bound.
+        result = archive._compressed(target, 'payload.xz', 'xz',
+                                     archive.Limits(input_bytes=8))
+        self.assertEqual((result.status, result.detail), ('limited', 'input-byte-limit'))
 
     def test_text_that_resembles_a_stream_header_stays_text(self):
         archive = self.load()

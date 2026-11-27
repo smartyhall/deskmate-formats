@@ -987,10 +987,18 @@ def _compressed(path, name, kind, limits):
 
     Complete decoding, partial recovery, a resource limit and malformed input
     stay distinguishable here: a partially decoded payload is returned with a
-    ``partial`` status, never presented as a complete member.
+    ``partial`` status, never presented as a complete member. The caller's
+    input bound is enforced by the read that feeds the decoder, not by a
+    separate size inspection that a growing file could outrun.
     """
+    try:
+        data = _read(lambda: path.open('rb'), limits.input_bytes)
+    except OSError as exc:
+        return Extraction(status='failed', detail=type(exc).__name__)
+    if len(data) > limits.input_bytes:
+        return Extraction(status='limited', detail='input-byte-limit')
     decoded = compression_streams.decode(
-        path.read_bytes(), kind,
+        data, kind,
         compression_streams.Bounds(output_bytes=limits.member_bytes,
                                    codes=max(4096, limits.member_bytes),
                                    decoder_bytes=limits.total_bytes))
@@ -1011,7 +1019,11 @@ def _compressed(path, name, kind, limits):
     if decoded.status == 'partial':
         detail += f'; {decoded.detail}'
     payload = decoded.data or b''
-    result = Extraction(members=[Member(0, child or 'payload', len(payload), payload, 'ok')],
+    # The member carries the same qualifier as the extraction: bytes recovered
+    # from a damaged concatenated stream are useful, but they are not a
+    # complete member and are not labelled as one.
+    status = 'partial' if decoded.status == 'partial' else 'ok'
+    result = Extraction(members=[Member(0, child or 'payload', len(payload), payload, status)],
                         detail=detail)
     if decoded.status == 'partial':
         result.status = 'partial'
