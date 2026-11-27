@@ -110,7 +110,8 @@ class FixtureAuditTest(unittest.TestCase):
         if with_sidecar:
             (path.parent / (path.name + '.license')).write_text(
                 'SPDX-FileCopyrightText: 2026 Example contributor\n'
-                'SPDX-License-Identifier: CC-BY-4.0\n', encoding='utf-8')
+                'SPDX-License-Identifier: LicenseRef-DeskMate-Documentary-Capture\n',
+                encoding='utf-8')
         spec = {'schema_version': 1, 'images': [{
             'id': 'ui.calendar.day-view',
             'path': rel,
@@ -171,6 +172,76 @@ class FixtureAuditTest(unittest.TestCase):
         spec['images'][0]['path'] = '../outside.png'
         (self.root / audit_repository.SITE_IMAGE_MANIFEST).write_text(json.dumps(spec))
         with self.assertRaisesRegex(ValueError, 'unsafe site image path'):
+            self.audit()
+
+    def historical_site_image(self, license_id='LicenseRef-Third-Party-Historical-Advertising'):
+        data = self.example_site_png()
+        rel = 'history/offer.png'
+        base = self.root / audit_repository.SITE_IMAGE_DIR
+        path = base / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+        (path.parent / (path.name + '.license')).write_text(
+            'SPDX-FileCopyrightText: Example publisher\n'
+            f'SPDX-License-Identifier: {license_id}\n', encoding='utf-8')
+        entry = {
+            'id': 'history.hx-1988-offer', 'path': rel,
+            'sha256': hashlib.sha256(data).hexdigest(), 'source_sha256': '1' * 64,
+            'size': len(data), 'width': 1, 'height': 1,
+            'origin': 'historical-advertising-excerpt', 'source_id': 'catalog-test-001',
+            'publisher': 'Example publisher', 'publication_title': 'Example 1988 catalog',
+            'publication_date': '1988', 'page_reference': 'printed p. 9',
+            'source_url': 'https://example.org/scan.pdf#page=9',
+            'provenance': 'Synthetic test provenance for a catalog crop.',
+            'attribution': 'Example publisher, 1988 catalog, printed p. 9.',
+            'caption': 'Synthetic historical advertising test',
+            'alt': 'One-pixel test image standing in for a catalog excerpt',
+            'rights_note': 'Third-party historical advertising; publisher rights retained.',
+        }
+        spec = {'schema_version': 1, 'images': [entry]}
+        manifest = self.root / audit_repository.SITE_IMAGE_MANIFEST
+        manifest.parent.mkdir(parents=True, exist_ok=True)
+        manifest.write_text(json.dumps(spec), encoding='utf-8')
+        return path, spec
+
+    def test_historical_advertising_excerpt_passes_publication_audit(self):
+        self.manifest([])
+        self.historical_site_image()
+        self.assertEqual(self.audit()['documentary_site_images_checked'], 1)
+
+    def test_incomplete_historical_advertising_record_is_rejected(self):
+        self.manifest([])
+        _, spec = self.historical_site_image()
+        del spec['images'][0]['publisher']
+        (self.root / audit_repository.SITE_IMAGE_MANIFEST).write_text(json.dumps(spec))
+        with self.assertRaisesRegex(ValueError, 'missing historical advertising publisher'):
+            self.audit()
+
+    def test_historical_advertising_cannot_reuse_software_capture_classification(self):
+        self.manifest([])
+        self.historical_site_image(license_id='LicenseRef-DeskMate-Documentary-Capture')
+        with self.assertRaisesRegex(ValueError, 'incorrect site image rights classification'):
+            self.audit()
+
+    def test_historical_identifier_and_origin_must_agree(self):
+        self.manifest([])
+        _, spec = self.historical_site_image()
+        spec['images'][0]['origin'] = 'documentary-software-ui-capture'
+        (self.root / audit_repository.SITE_IMAGE_MANIFEST).write_text(json.dumps(spec))
+        with self.assertRaisesRegex(ValueError, 'historical identifier requires historical origin'):
+            self.audit()
+        spec['images'][0]['origin'] = 'historical-advertising-excerpt'
+        spec['images'][0]['id'] = 'ui.history.offer'
+        (self.root / audit_repository.SITE_IMAGE_MANIFEST).write_text(json.dumps(spec))
+        with self.assertRaisesRegex(ValueError, 'historical advertising requires a history'):
+            self.audit()
+
+    def test_historical_advertising_source_must_be_https(self):
+        self.manifest([])
+        _, spec = self.historical_site_image()
+        spec['images'][0]['source_url'] = 'http://example.org/scan.pdf'
+        (self.root / audit_repository.SITE_IMAGE_MANIFEST).write_text(json.dumps(spec))
+        with self.assertRaisesRegex(ValueError, 'must be an https URL'):
             self.audit()
 
     def test_generated_fil_database_accepted(self):

@@ -87,7 +87,15 @@ SITE_IMAGE_ORIGINS = {
     'synthetic-project-illustration',
     'documentary-software-ui-capture',
     'publisher-distributed-illustration',
+    'historical-advertising-excerpt',
 }
+SITE_HISTORICAL_ORIGIN = 'historical-advertising-excerpt'
+SITE_IMAGE_SIDECARS = {
+    'documentary-software-ui-capture': 'LicenseRef-DeskMate-Documentary-Capture',
+    'historical-advertising-excerpt': 'LicenseRef-Third-Party-Historical-Advertising',
+}
+SITE_HISTORICAL_FIELDS = ('publisher', 'publication_title', 'publication_date',
+                          'page_reference', 'source_url', 'provenance', 'attribution')
 TYPOGRAPHY_IMAGES = {
     f'{case}-{kind}.png' for case in ('lab-grid', 'bonum', 'liberation-mono')
     for kind in ('native', 'independent')
@@ -140,7 +148,7 @@ def site_image_manifest():
         rel = (SITE_IMAGE_DIR / name).as_posix()
         identifier = entry.get('id')
         if (rel in entries or not isinstance(identifier, str)
-                or not re.fullmatch(r'ui\.[a-z0-9]+(?:[.-][a-z0-9]+)*', identifier)
+                or not re.fullmatch(r'(?:ui|history)\.[a-z0-9]+(?:[.-][a-z0-9]+)*', identifier)
                 or identifier in ids):
             raise ValueError('duplicate or invalid site image identifier')
         ids.add(identifier)
@@ -151,8 +159,24 @@ def site_image_manifest():
                 or width > 4096 or height > 4096 or width * height > SITE_IMAGE_MAX_PIXELS
                 or type(entry.get('size')) is not int or not 0 < entry['size'] <= SITE_IMAGE_MAX_BYTES):
             raise ValueError('invalid site image dimensions or size')
-        if entry.get('origin') not in SITE_IMAGE_ORIGINS:
+        origin = entry.get('origin')
+        if origin not in SITE_IMAGE_ORIGINS:
             raise ValueError('unreviewed site image origin')
+        if origin == SITE_HISTORICAL_ORIGIN:
+            if not identifier.startswith('history.'):
+                raise ValueError('historical advertising requires a history. identifier')
+            for key in SITE_HISTORICAL_FIELDS:
+                value = entry.get(key)
+                if not isinstance(value, str) or not value.strip() or len(value) > 500:
+                    raise ValueError('missing historical advertising ' + key)
+                if any(re.search(pattern, value) for pattern in PATTERNS.values()):
+                    raise ValueError('private data in site image metadata')
+            if not re.fullmatch(r'https://[^\s]+', entry['source_url']):
+                raise ValueError('historical advertising source must be an https URL')
+        elif identifier.startswith('history.'):
+            raise ValueError('historical identifier requires historical origin')
+        elif origin == 'documentary-software-ui-capture' and not identifier.startswith('ui.'):
+            raise ValueError('documentary capture requires a ui. identifier')
         for key in ('caption', 'alt', 'source_id', 'rights_note'):
             value = entry.get(key)
             if not isinstance(value, str) or not value.strip() or len(value) > 500:
@@ -458,6 +482,9 @@ def audit():
             sidecar = ROOT / (rel + '.license')
             if not sidecar.is_file() or 'SPDX-License-Identifier:' not in sidecar.read_text(encoding='utf-8'):
                 raise ValueError('site image requires accurate REUSE sidecar: ' + rel)
+            required = SITE_IMAGE_SIDECARS.get(site_images[rel]['origin'])
+            if required and required not in sidecar.read_text(encoding='utf-8'):
+                raise ValueError('incorrect site image rights classification: ' + rel)
             check_site_image(rel, path.read_bytes(), site_images[rel])
             site_images_found.add(rel)
             count += 1
