@@ -114,7 +114,13 @@ REQUIRED_FIELDS = {
         "toolchain",
     ),
     "reopen": ("attempt_id", "status"),
+    "reopen_comparison": ("match", "complete"),
 }
+
+# The reopen worker's payload is a result document rather than a receipt, but
+# it is read under the same rules: unknown statuses are not successes and a
+# malformed payload is never a downgraded success.
+REOPEN_STATUSES = ("ok", "reopen_mismatch", "reopen_failed", "reopen_malformed")
 
 EXIT_FOR_OUTCOME = {
     "succeeded": EXIT_OK,
@@ -375,6 +381,126 @@ def validate_receipt(
                     f"persistence.{stage} is {persistence.get(stage)!r}, so this "
                     "analysis was not persisted"
                 )
+
+    # A published receipt that carries a reopen section is read as a whole: a
+    # consumer of this file must not be able to see "ok" next to an attempt
+    # identifier that belongs to someone else, or next to no identity at all.
+    reopen = receipt.get("reopen")
+    if reopen is not None:
+        problems += _missing_fields(reopen, REQUIRED_FIELDS["reopen"], "reopen.")
+        if isinstance(reopen, dict):
+            status = reopen.get("status")
+            if status is not None and status not in REOPEN_STATUSES:
+                problems.append(
+                    f"reopen.status {status!r} is not a recognised reopen status"
+                )
+            if attempt_id is not None and reopen.get("attempt_id") != attempt_id:
+                problems.append(
+                    f"reopen.attempt_id is {reopen.get('attempt_id')!r}, which is "
+                    f"not this attempt ({attempt_id!r})"
+                )
+            if status == "ok":
+                comparison = reopen.get("comparison")
+                problems += _missing_fields(
+                    comparison, REQUIRED_FIELDS["reopen_comparison"],
+                    "reopen.comparison.",
+                )
+                if isinstance(comparison, dict):
+                    for field in ("match", "complete"):
+                        if comparison.get(field) is not True:
+                            problems.append(
+                                f"reopen.comparison.{field} is "
+                                f"{comparison.get(field)!r}; a reopen reported as "
+                                "ok must carry a literal true here"
+                            )
+    return problems
+
+
+def validate_reopen_payload(
+    payload,
+    *,
+    attempt_id: str,
+    project: str | None = None,
+    project_dir: str | None = None,
+    require_success: bool = True,
+) -> list[str]:
+    """Return identity and content problems with a reopen worker's payload.
+
+    Empty means the payload names this attempt exactly, describes the project
+    the caller asked for and, when a success is claimed, carries a literal
+    boolean and a complete, well-formed program identity. A missing field is a
+    problem, never agreement with whatever is absent.
+
+    A program whose fingerprint merely *differs* from the one this attempt
+    recorded is not malformed: the payload is well formed and the difference is
+    a real finding, so it is reported as a mismatch with the differing field
+    named, rather than being thrown away as an unreadable document.
+    """
+    problems: list[str] = []
+    if not isinstance(payload, dict):
+        return ["the reopen payload is not a JSON object"]
+
+    problems += _missing_fields(
+        payload, ("schema", "mode", "attempt_id", "ok"), ""
+    )
+
+    schema = payload.get("schema")
+    if schema is not None and schema != RECEIPT_SCHEMA:
+        problems.append(
+            f"payload schema is {schema!r}, expected {RECEIPT_SCHEMA!r}"
+        )
+    mode = payload.get("mode")
+    if mode is not None and mode != "reopen_only":
+        problems.append(f"payload mode is {mode!r}, expected 'reopen_only'")
+
+    recorded_attempt = payload.get("attempt_id")
+    if recorded_attempt != attempt_id:
+        problems.append(
+            f"attempt_id is {recorded_attempt!r}, so this payload does not "
+            f"belong to attempt {attempt_id!r}"
+        )
+
+    recorded_project = payload.get("project")
+    problems += _missing_fields(recorded_project, ("name", "dir"), "project.")
+    if isinstance(recorded_project, dict):
+        if project is not None and recorded_project.get("name") not in (
+            None,
+            project,
+        ):
+            problems.append(
+                f"project.name is {recorded_project.get('name')!r}, expected "
+                f"{project!r}"
+            )
+        recorded_dir = recorded_project.get("dir")
+        if (
+            project_dir is not None
+            and recorded_dir is not None
+            and not _same_path(recorded_dir, project_dir)
+        ):
+            problems.append(
+                f"project.dir is {recorded_dir!r}, which is not the project "
+                f"directory this attempt used ({project_dir!r})"
+            )
+
+    files = payload.get("project_files")
+    if files is not None and not isinstance(files, list):
+        problems.append("project_files is not a list")
+
+    if not require_success:
+        return problems
+
+    if payload.get("ok") is not True:
+        problems.append(
+            f"ok is {payload.get('ok')!r}; a success claim must be the "
+            "literal true"
+        )
+
+    program = payload.get("program")
+    problems += _missing_fields(program, REQUIRED_FIELDS["program"], "program.")
+    if isinstance(program, dict):
+        content = program.get("content_sha256")
+        if content is not None and not SHA256_RE.match(str(content)):
+            problems.append("program.content_sha256 is not a SHA-256 digest")
     return problems
 
 
@@ -827,6 +953,8 @@ def reopen_only(
         "mode": "reopen_only",
         "attempt_id": attempt_id,
         "ok": False,
+        "project": {"name": name, "dir": str(project_dir)},
+        "expected_content_sha256": expect_content_sha256,
         "project_files": [],
     }
     pyghidra.start()
@@ -1145,10 +1273,14 @@ def main(argv: list[str] | None = None) -> int:
         reopen = _run_reopen(args, receipt, project_dir, attempt, attempt_dir)
         receipt["reopen"] = reopen
         if reopen["status"] != "ok":
-            receipt["outcome"] = (
-                "reopen_mismatch" if reopen["status"] == "reopen_mismatch"
-                else "reopen_failed"
-            )
+            if reopen["status"] == "reopen_mismatch":
+                receipt["outcome"] = "reopen_mismatch"
+            elif reopen["status"] == "reopen_malformed":
+                # The worker's own document could not be trusted, so nothing
+                # this attempt produced can be reported as verified.
+                receipt["outcome"] = "receipt_malformed"
+            else:
+                receipt["outcome"] = "reopen_failed"
         publish_json(output, receipt)
         if reopen["status"] == "ok":
             return EXIT_OK
@@ -1170,6 +1302,17 @@ def _run_reopen(args, receipt: dict, project_dir: Path, attempt: dict,
         }
 
     expected_content = receipt.get("program", {}).get("content_sha256")
+    if not expected_content:
+        return {
+            "status": "reopen_failed",
+            "attempt_id": attempt["id"],
+            "reason": "missing_expected_fingerprint",
+            "error": (
+                "the import receipt records no program fingerprint, so a "
+                "reopened program cannot be corroborated"
+            ),
+            "attempts": 0,
+        }
     attempts = []
     deadline = time.time() + min(args.timeout, args.lock_wait)
     result: dict = {"status": "reopen_failed", "attempt_id": attempt["id"],
@@ -1213,35 +1356,78 @@ def _run_reopen(args, receipt: dict, project_dir: Path, attempt: dict,
         payload = None
         try:
             payload = json.loads(completed.stdout)
-        except json.JSONDecodeError:
+        except (json.JSONDecodeError, TypeError):
             payload = None
 
-        identity_problem = None
-        if payload is not None:
-            if payload.get("attempt_id") not in (None, attempt["id"]):
-                identity_problem = (
-                    "the reopen payload belongs to attempt "
-                    f"{payload.get('attempt_id')!r}, not {attempt['id']!r}"
-                )
-            elif completed.returncode != 0 and payload.get("ok"):
-                identity_problem = (
-                    f"the reopen worker reported success but exited "
-                    f"{completed.returncode}"
-                )
-        if identity_problem:
+        if payload is None:
             result = {
                 "status": "reopen_failed",
                 "attempt_id": attempt["id"],
-                "reason": "attempt_identity",
-                "error": identity_problem,
+                "reason": "payload_unreadable",
+                "error": "the reopen worker wrote no readable payload",
+                "worker_exit_code": completed.returncode,
+                "worker_stderr": (completed.stderr or "")[-2000:],
                 "attempts": len(attempts),
                 "history": attempts,
             }
             break
-        if payload is not None and payload.get("ok") and completed.returncode == 0:
+
+        ok = payload.get("ok") if isinstance(payload, dict) else None
+        problems = validate_reopen_payload(
+            payload,
+            attempt_id=attempt["id"],
+            project=args.project,
+            project_dir=str(project_dir),
+            require_success=ok is True,
+        )
+        if not isinstance(ok, bool):
+            # A truthy string or number is not a success claim.
+            problems.append(
+                f"ok is {ok!r}, which is not a boolean; success must be the "
+                "literal true"
+            )
+        if problems:
+            result = {
+                "status": "reopen_malformed",
+                "attempt_id": attempt["id"],
+                "reason": "payload_malformed",
+                "errors": problems,
+                "worker_exit_code": completed.returncode,
+                "attempts": len(attempts),
+                "history": attempts,
+            }
+            break
+
+        if ok is True:
+            if completed.returncode != 0:
+                result = {
+                    "status": "reopen_malformed",
+                    "attempt_id": attempt["id"],
+                    "reason": "exit_disagrees",
+                    "error": (
+                        "the reopen payload claims success but the worker "
+                        f"exited {completed.returncode}"
+                    ),
+                    "worker_exit_code": completed.returncode,
+                    "attempts": len(attempts),
+                    "history": attempts,
+                }
+                break
             comparison = compare_programs(
                 receipt.get("program", {}), payload.get("program", {})
             )
+            if not comparison["complete"]:
+                # Every compared field should be present on both sides by now.
+                # If one is not, the result is unknown, not equal.
+                result = {
+                    "status": "reopen_malformed",
+                    "attempt_id": attempt["id"],
+                    "reason": "comparison_incomplete",
+                    "missing": comparison["missing"],
+                    "attempts": len(attempts),
+                    "history": attempts,
+                }
+                break
             result = {
                 "status": "ok" if comparison["match"] else "reopen_mismatch",
                 "attempt_id": attempt["id"],
@@ -1252,7 +1438,7 @@ def _run_reopen(args, receipt: dict, project_dir: Path, attempt: dict,
                 "comparison": comparison,
             }
             break
-        reason = (payload or {}).get("reason")
+        reason = payload.get("reason")
         if reason == "project_locked_or_unopenable" and time.time() < deadline:
             time.sleep(min(2.0, max(0.2, deadline - time.time())))
             continue
@@ -1260,11 +1446,15 @@ def _run_reopen(args, receipt: dict, project_dir: Path, attempt: dict,
             "status": "reopen_failed",
             "attempt_id": attempt["id"],
             "reason": reason or "reopen_error",
-            "error": (payload or {}).get("error") or (completed.stderr or "")[-2000:],
+            "error": payload.get("error") or (completed.stderr or "")[-2000:],
             "attempts": len(attempts),
             "history": attempts,
-            "project_files": (payload or {}).get("project_files"),
+            "project_files": payload.get("project_files"),
         }
+        if completed.returncode == 0:
+            # A failure payload from a worker that exited zero is a real
+            # failure, but the disagreement is worth recording.
+            result["worker_exit_disagrees"] = True
         break
 
     result["lock_after"] = project_lock_state(project_dir, args.project)

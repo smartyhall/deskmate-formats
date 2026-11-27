@@ -276,13 +276,56 @@ Three separate gaps, all about a claim outranking the evidence for it:
 * **Reopen identity.** The reopen worker now receives the originating attempt
   identifier and the expected content digest, and echoes the identifier. A
   payload from another attempt, or a success payload from a worker that exited
-  nonzero, is `reopen_failed` with `reason: attempt_identity` rather than a
-  restart of the comparison.
+  nonzero, is rejected rather than accepted as a restart of the comparison.
+  The first version of this check still let a *missing* identifier through;
+  finding 13 corrects it.
 
 Receipts are published with `os.replace` after writing sibling temporary bytes,
 so a reader sees either the previous complete file or this complete one. The
 digest is computed over the published **bytes**: `write_text` would translate
 newlines on Windows and the recorded digest would not describe the file.
+
+### 13. A missing reopen identity was read as agreement
+
+Follow-up review, 2026-11-27. `_run_reopen` compared
+`payload.get("attempt_id") in (None, attempt["id"])`, so a payload that named no
+attempt at all satisfied the check, and a zero worker exit plus `ok: true` then
+established success. Two more weaknesses sat in the same few lines: `ok` was
+tested for truthiness, so `"yes"` and `1` counted as success, and nothing
+checked that the payload described *this* project or carried a program identity
+at all.
+
+* **Identity by absence.** Exact equality is required. A missing or null
+  attempt identifier is a payload that does not belong to this attempt.
+* **Literal booleans.** Success requires `ok is true`. Any other value,
+  including a truthy one, is malformed. `validate_receipt` applies the same
+  rule to the `match` and `complete` fields of a published reopen comparison.
+* **A payload schema.** `validate_reopen_payload` now requires the schema and
+  mode, this attempt's exact identifier, this project's name and directory,
+  and — for a success claim — the literal `ok`, `program.project_path`, a
+  well-formed `program.content_sha256` and `program.block_count`.
+
+The reopen result vocabulary gained `reopen_malformed`, which the driver
+reports as `receipt_malformed` (exit 8): the worker's own document could not be
+trusted, so nothing this attempt produced may be presented as verified. A
+well-formed payload describing *different* bytes is not malformed — it is
+`reopen_mismatch` (exit 7), because the difference is the finding and the
+comparison names the field. An unreadable payload is `reopen_failed` with
+`reason: payload_unreadable`, and a failure payload from a worker that exited
+zero keeps its failure outcome with `worker_exit_disagrees: true`.
+
+`_run_reopen_single` no longer exists. The corresponding code is the
+attempt-scoped worker `reopen_only`, which now also echoes the project identity,
+the digest it was asked to corroborate, and whether it closed the project, so a
+reopen that leaves the project open is visible in the receipt rather than
+inferred.
+
+Nine negative tests cover a zero-exit success payload with no attempt id, a
+null attempt id, a foreign attempt id, truthy non-boolean `ok` values, a success
+payload with no fingerprint, drifted bytes, another project, an unreadable
+payload, and a failure payload from a zero-exit worker. Five more assert that a
+published receipt whose `reopen` section claims `ok` without this attempt's
+identifier, or without a literal `match`/`complete`, is rejected.
 
 ## Qualification as a deterministic procedure
 

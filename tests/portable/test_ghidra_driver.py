@@ -102,9 +102,19 @@ class FakeWorker:
             return payload, True
         if isinstance(payload, dict):
             payload = dict(payload)
+            # The real worker echoes these fields. Tests omit them to simulate
+            # a payload that does not name its attempt or its project, so they
+            # are only supplied here when a test has not replaced them.
+            payload.setdefault('schema', driver.RECEIPT_SCHEMA)
+            payload.setdefault('mode', 'reopen_only')
             payload.setdefault('attempt_id', attempt)
+            payload.setdefault('project', {
+                'name': mode_args[mode_args.index('--project') + 1],
+                'dir': mode_args[mode_args.index('--project-dir') + 1],
+            })
         return driver.subprocess.CompletedProcess(
-            mode_args, 0 if payload.get('ok') else 1, json.dumps(payload), ''
+            mode_args, 0 if payload.get('ok') is True else 1,
+            json.dumps(payload), ''
         ), False
 
 
@@ -403,6 +413,11 @@ class ReceiptIdentityTests(DriverTestCase):
 
 
 class ReopenTests(DriverTestCase):
+    # Sentinels for ``_spawn_reopen``: fill this field in from the worker's
+    # arguments, or leave it out of the payload entirely.
+    STAMP = object()
+    OMIT = object()
+
     def setUp(self):
         super().setUp()
         self.imported = imported()
@@ -438,33 +453,197 @@ class ReopenTests(DriverTestCase):
                      'project_files': ['/PROGRAM']}],
         )
         self.assertEqual(self.run_main(worker, '--reopen-check'),
-                         driver.EXIT_REOPEN_FAILED)
+                         driver.EXIT_RECEIPT_REJECTED)
         reopen = self.receipt()['reopen']
-        self.assertEqual(reopen['status'], 'reopen_failed')
-        self.assertEqual(reopen['reason'], 'attempt_identity')
+        self.assertEqual(reopen['status'], 'reopen_malformed')
+        self.assertEqual(reopen['reason'], 'payload_malformed')
+        self.assertIn('attempt_id', ' '.join(reopen['errors']))
 
-    def test_a_reopen_success_claim_with_a_failed_exit_is_rejected(self):
+    def _spawn_reopen(self, payload, exit_code, *, attempt_id=STAMP,
+                      project=STAMP):
+        """A reopen worker that emits exactly this payload.
+
+        ``attempt_id`` and ``project`` default to the values the driver asked
+        for, because that is what the real worker echoes. Passing a value
+        overrides it, and the ``OMIT`` sentinel removes the field, so a test can
+        express a payload that never names its attempt or names another project.
+        ``None`` as the payload writes unreadable output.
+        """
+        imported = self.imported
+        sentinel = self.STAMP
+        omit = self.OMIT
+
         def spawn(mode_args, timeout, python=None):
             if '--import-worker' in mode_args:
                 output = Path(mode_args[mode_args.index('--output') + 1])
                 output.parent.mkdir(parents=True, exist_ok=True)
                 body = envelope(
-                    dict(self.imported),
+                    dict(imported),
                     attempt=mode_args[mode_args.index('--attempt-id') + 1],
-                    sha=driver._sha256(Path(mode_args[mode_args.index('--input') + 1])),
+                    sha=driver._sha256(
+                        Path(mode_args[mode_args.index('--input') + 1])
+                    ),
                     project='probe',
                     project_dir=mode_args[mode_args.index('--project-dir') + 1],
                 )
                 output.write_text(json.dumps(body), encoding='utf-8')
-                return driver.subprocess.CompletedProcess(mode_args, 0, '', ''), False
-            payload = {'ok': True, 'attempt_id': mode_args[
-                mode_args.index('--attempt-id') + 1], 'program': summary()}
+                return driver.subprocess.CompletedProcess(
+                    mode_args, 0, '', ''
+                ), False
+            if not isinstance(payload, dict):
+                return driver.subprocess.CompletedProcess(
+                    mode_args, exit_code, 'not json', ''
+                ), False
+            body = dict(payload)
+            for field, wanted, fallback in (
+                ('attempt_id', attempt_id,
+                 mode_args[mode_args.index('--attempt-id') + 1]),
+                ('project', project, {
+                    'name': mode_args[mode_args.index('--project') + 1],
+                    'dir': mode_args[mode_args.index('--project-dir') + 1],
+                }),
+            ):
+                if wanted is omit:
+                    body.pop(field, None)
+                elif wanted is sentinel:
+                    body.setdefault(field, fallback)
+                else:
+                    body[field] = wanted
             return driver.subprocess.CompletedProcess(
-                mode_args, 3, json.dumps(payload), ''), False
+                mode_args, exit_code, json.dumps(body), ''
+            ), False
 
+        return spawn
+
+    def _reopen_payload(self, **overrides):
+        """A reopen payload with every field the real worker writes."""
+        body = {
+            'schema': driver.RECEIPT_SCHEMA,
+            'mode': 'reopen_only',
+            'ok': True,
+            'program': summary(),
+            'project_files': ['/PROGRAM'],
+        }
+        body.update(overrides)
+        return body
+
+    def test_a_success_payload_without_an_attempt_id_is_rejected(self):
+        # A zero-exit success payload that names no attempt at all is the case
+        # the independent reviewer found: absence of identity was being read as
+        # agreement with the expected attempt.
+        self.assertEqual(
+            self.run_main(
+                self._spawn_reopen(
+                    self._reopen_payload(), 0, attempt_id=self.OMIT
+                ),
+                '--reopen-check',
+            ),
+            driver.EXIT_RECEIPT_REJECTED,
+        )
+        receipt = self.receipt()
+        self.assertEqual(receipt['outcome'], 'receipt_malformed')
+        self.assertEqual(receipt['reopen']['status'], 'reopen_malformed')
+        self.assertIn('attempt_id', ' '.join(receipt['reopen']['errors']))
+
+    def test_a_null_attempt_id_is_recorded_as_an_attempt_identity_problem(self):
+        self.run_main(
+            self._spawn_reopen(
+                self._reopen_payload(), 0, attempt_id=None
+            ),
+            '--reopen-check',
+        )
+        errors = self.receipt()['reopen']['errors']
+        self.assertTrue(
+            any('None' in e and 'attempt_id' in e for e in errors), errors
+        )
+
+    def test_a_truthy_but_not_boolean_ok_is_rejected(self):
+        for value in ('yes', 1, [], {}):
+            with self.subTest(ok=value):
+                payload = self._reopen_payload(ok=value)
+                self.assertEqual(
+                    self.run_main(self._spawn_reopen(payload, 0), '--reopen-check'),
+                    driver.EXIT_RECEIPT_REJECTED,
+                )
+                receipt = self.receipt()
+                self.assertEqual(receipt['outcome'], 'receipt_malformed')
+                self.assertIn(
+                    'not a boolean', ' '.join(receipt['reopen']['errors'])
+                )
+
+    def test_a_success_payload_without_a_program_fingerprint_is_rejected(self):
+        payload = self._reopen_payload(program={'project_path': '/PROGRAM'})
+        self.assertEqual(
+            self.run_main(self._spawn_reopen(payload, 0), '--reopen-check'),
+            driver.EXIT_RECEIPT_REJECTED,
+        )
+        errors = ' '.join(self.receipt()['reopen']['errors'])
+        self.assertIn('program.content_sha256', errors)
+        self.assertIn('program.block_count', errors)
+
+    def test_a_payload_whose_fingerprint_drifted_is_a_mismatch(self):
+        # The worker was asked to corroborate 'b' * 64 and reported 'c' * 64.
+        # That is a well-formed document describing different bytes, so the
+        # result is a mismatch that names the field, not an unreadable payload.
+        payload = self._reopen_payload(program=summary(content_sha256='c' * 64))
+        self.assertEqual(
+            self.run_main(self._spawn_reopen(payload, 0), '--reopen-check'),
+            driver.EXIT_REOPEN_MISMATCH,
+        )
+        reopen = self.receipt()['reopen']
+        self.assertEqual(reopen['status'], 'reopen_mismatch')
+        self.assertEqual(
+            reopen['comparison']['differences'],
+            [{'field': 'content_sha256', 'before': 'b' * 64, 'after': 'c' * 64}],
+        )
+
+    def test_a_payload_for_another_project_is_rejected(self):
+        self.assertEqual(
+            self.run_main(
+                self._spawn_reopen(
+                    self._reopen_payload(),
+                    0,
+                    project={'name': 'someone-else',
+                             'dir': str((self.dir / 'projects').resolve())},
+                ),
+                '--reopen-check',
+            ),
+            driver.EXIT_RECEIPT_REJECTED,
+        )
+        self.assertIn(
+            'project.name', ' '.join(self.receipt()['reopen']['errors'])
+        )
+
+    def test_an_unreadable_payload_is_a_failure_not_a_success(self):
+        self.assertEqual(
+            self.run_main(self._spawn_reopen(None, 0), '--reopen-check'),
+            driver.EXIT_REOPEN_FAILED,
+        )
+        reopen = self.receipt()['reopen']
+        self.assertEqual(reopen['status'], 'reopen_failed')
+        self.assertEqual(reopen['reason'], 'payload_unreadable')
+        self.assertFalse(reopen.get('comparison'))
+
+    def test_a_failure_payload_from_a_zero_exit_worker_is_still_a_failure(self):
+        payload = self._reopen_payload(ok=False, reason='program_missing',
+                                       error='/PROGRAM is not present')
+        self.assertEqual(
+            self.run_main(self._spawn_reopen(payload, 0), '--reopen-check'),
+            driver.EXIT_REOPEN_FAILED,
+        )
+        reopen = self.receipt()['reopen']
+        self.assertEqual(reopen['reason'], 'program_missing')
+        self.assertTrue(reopen['worker_exit_disagrees'])
+
+    def test_a_reopen_success_claim_with_a_failed_exit_is_rejected(self):
+        # Everything else about this payload is well formed, so the only
+        # disagreement is between the claim and the process exit status.
+        spawn = self._spawn_reopen(self._reopen_payload(), 3)
         self.assertEqual(self.run_main(spawn, '--reopen-check'),
-                         driver.EXIT_REOPEN_FAILED)
-        self.assertEqual(self.receipt()['reopen']['reason'], 'attempt_identity')
+                         driver.EXIT_RECEIPT_REJECTED)
+        receipt = self.receipt()
+        self.assertEqual(receipt['outcome'], 'receipt_malformed')
+        self.assertEqual(receipt['reopen']['reason'], 'exit_disagrees')
 
     def test_differing_bytes_are_a_mismatch_even_when_the_summary_matches(self):
         drifted = summary(content_sha256='c' * 64)
@@ -544,6 +723,65 @@ class ReopenTests(DriverTestCase):
         worker = FakeWorker(receipts=[imported(program={})], reopen=[])
         self.assertEqual(self.run_main(worker, '--reopen-check'),
                          driver.EXIT_RECEIPT_REJECTED)
+
+
+class ReopenReceiptTests(DriverTestCase):
+    """A published receipt must not carry an unverifiable reopen section."""
+
+    def receipt_with(self, reopen):
+        return driver.validate_receipt(
+            envelope(
+                imported(),
+                attempt='a' * 32,
+                sha=SHA,
+                project='probe',
+                project_dir='/projects',
+            ) | {'reopen': reopen},
+            attempt_id='a' * 32,
+            input_sha256=SHA,
+            project='probe',
+        )
+
+    def test_a_reopen_section_without_an_attempt_is_a_problem(self):
+        problems = self.receipt_with(
+            {'status': 'ok', 'comparison': {'match': True, 'complete': True}}
+        )
+        self.assertTrue(any('reopen.attempt_id' in p for p in problems), problems)
+
+    def test_a_reopen_section_for_another_attempt_is_a_problem(self):
+        problems = self.receipt_with(
+            {'attempt_id': 'b' * 32, 'status': 'ok',
+             'comparison': {'match': True, 'complete': True}}
+        )
+        self.assertTrue(any('reopen.attempt_id' in p for p in problems), problems)
+
+    def test_a_reopen_claimed_ok_without_a_complete_comparison_is_a_problem(self):
+        for comparison in (
+            {'match': True},
+            {'match': 'yes', 'complete': 1},
+            {'match': True, 'complete': False},
+        ):
+            with self.subTest(comparison=comparison):
+                problems = self.receipt_with(
+                    {'attempt_id': 'a' * 32, 'status': 'ok',
+                     'comparison': comparison}
+                )
+                self.assertTrue(
+                    any('reopen.comparison' in p for p in problems), problems
+                )
+
+    def test_a_well_formed_reopen_section_is_accepted(self):
+        problems = self.receipt_with(
+            {'attempt_id': 'a' * 32, 'status': 'ok',
+             'comparison': {'match': True, 'complete': True}}
+        )
+        self.assertEqual(problems, [])
+
+    def test_an_unknown_reopen_status_is_a_problem(self):
+        problems = self.receipt_with(
+            {'attempt_id': 'a' * 32, 'status': 'probably_fine'}
+        )
+        self.assertTrue(any('reopen.status' in p for p in problems), problems)
 
 
 class LockTests(DriverTestCase):
