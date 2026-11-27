@@ -62,13 +62,14 @@ class ArchiveIntelligenceTests(unittest.TestCase):
 
     def test_arc_decoder_addresses_one_member_and_verifies_bytes(self):
         expected = b"ARC\n"
-        packed = b"synthetic"
+        packed = b"\0\1"
         header = pack('<13sIHHHI', b'NOTE.TXT', len(packed), 0, 0, _arc_crc(expected), len(expected))
-        raw = b'\x1a\x08' + header + packed + b'\x1a\0'
+        # Method 5 is the static 12-bit form, which still needs an external decoder.
+        raw = b'\x1a\x05' + header + packed + b'\x1a\0'
         path = self.root / 'source.arc'
         path.write_bytes(raw)
         self.assertEqual(extract(path, path.name, 'arc').members[0].status,
-                         'unsupported-arc-method-8')
+                         'unsupported-arc-method-5')
 
         def decode(args, cap, timeout):
             self.assertEqual(args[1], '-p')
@@ -84,6 +85,29 @@ class ArchiveIntelligenceTests(unittest.TestCase):
             result = extract(path, path.name, 'arc', nomarch=self.home/'nomarch')
             self.assertEqual(result.members[0].status, 'read-error')
         self.assertEqual(path.read_bytes(), raw)
+
+    def test_method_8_is_decoded_without_calling_an_external_decoder(self):
+        # Eight nine-bit literal codes of 'A' fill a whole group of eight.
+        codes = bytearray(b'\x0c')
+        buffer = count = 0
+        for _ in range(8):
+            buffer |= 0x41 << count
+            count += 9
+            while count >= 8:
+                codes.append(buffer & 0xFF)
+                buffer >>= 8
+                count -= 8
+        original = b'A' * 8
+        header = pack('<13sIHHHI', b'LETTERS.TXT', len(codes), 0, 0,
+                      _arc_crc(original), len(original))
+        raw = b'\x1a\x08' + header + bytes(codes) + b'\x1a\0'
+        path = self.root / 'native.arc'
+        path.write_bytes(raw)
+        with patch('intelligence_extract._capture') as capture:
+            result = extract(path, path.name, 'arc', nomarch=self.home/'nomarch')
+        capture.assert_not_called()
+        self.assertEqual([(m.name, m.status, m.data) for m in result.members],
+                         [('LETTERS.TXT', 'ok', original)])
 
     def test_resume_duplicates_nested_requeue_and_search(self):
         text = b"Fixture Title\r\nRockwell outlined \x82 specimen\r\n"

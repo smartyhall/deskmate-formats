@@ -298,7 +298,8 @@ class Client:
         plain = '1234567890-=qwertyuiop[]asdfghjkl;\'`\\zxcvbnm,./'
         scans = list(range(2, 14)) + list(range(16, 28)) + list(range(30, 42)) + [43] + list(range(44, 54))
         mapping = dict(zip(plain, scans))
-        mapping.update({' ': 57, '\n': 28, '\t': 15, '\b': 14, '\x1b': 1})
+        # DOS Enter is set-1 scancode 0x1c; both common line terminators reach it.
+        mapping.update({' ': 57, '\n': 28, '\r': 28, '\t': 15, '\b': 14, '\x1b': 1})
         shifted = dict(zip('!@#$%^&*()_+{}:"~|<>?', '1234567890-=[];\'`\\,./'))
         events = []
         for char in text:

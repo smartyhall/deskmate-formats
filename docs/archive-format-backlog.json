@@ -18,7 +18,13 @@
         "UC2",
         "DWC"
       ],
-      "status": "needs-audit"
+      "status": "partial",
+      "capability_records": [
+        "arc",
+        "lzh",
+        "legacy-7zip-adapter",
+        "arj-zoo-sqz-ha-uc2-dwc"
+      ]
     },
     {
       "id": "compression",
@@ -31,7 +37,13 @@
         "BZIP2",
         "XZ"
       ],
-      "status": "needs-audit"
+      "status": "partial",
+      "capability_records": [
+        "unix-compress",
+        "bzip2",
+        "xz",
+        "squeeze-crunch"
+      ]
     },
     {
       "id": "pc-sector-images",
@@ -45,7 +57,13 @@
         "CopyQM",
         "DCF"
       ],
-      "status": "needs-audit"
+      "status": "partial",
+      "capability_records": [
+        "imd",
+        "td0",
+        "copyqm",
+        "dcf"
+      ]
     },
     {
       "id": "fat",
@@ -57,7 +75,11 @@
         "FAT32",
         "VFAT"
       ],
-      "status": "needs-audit"
+      "status": "partial",
+      "capability_records": [
+        "fat12-fat16",
+        "fat32-vfat"
+      ]
     },
     {
       "id": "xdf",
@@ -66,7 +88,10 @@
       "formats": [
         "XDF"
       ],
-      "status": "needs-audit"
+      "status": "planned",
+      "capability_records": [
+        "xdf"
+      ]
     },
     {
       "id": "bitstreams",
@@ -130,7 +155,10 @@
         "VDK",
         "JVC"
       ],
-      "status": "needs-audit"
+      "status": "planned",
+      "capability_records": [
+        "tandy-images"
+      ]
     },
     {
       "id": "tandy-filesystems",
@@ -318,5 +346,18 @@
       ],
       "status": "needs-audit"
     }
-  ]
+  ],
+  "audit": {
+    "observed": "2026-11-26",
+    "campaign": "freebuff/archival-format-coverage-research-campaign",
+    "registry": "docs/archive-capabilities.json",
+    "report": "docs/research/archive-capability-inventory-20261126.md",
+    "note": "Status values here reflect an audit of the implementation, not a coverage target. The registry remains the authoritative capability claim; this backlog only records how far each package has been advanced.",
+    "status_values": {
+      "needs-audit": "User-facing name: the implementation has not been reviewed against this package.",
+      "partial": "Some formats in the package are qualified; the rest are planned, unimplemented or blocked.",
+      "planned": "Reviewed and confirmed to have no implementation.",
+      "blocked": "Reviewed and prevented by a missing specification or specimen."
+    }
+  }
 }

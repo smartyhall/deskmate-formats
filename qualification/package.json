@@ -1,0 +1,17 @@
+{
+  "name": "deskmate-qualification",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Cross-engine visual and accessibility qualification harness for the DeskMate reference site and other project interfaces",
+  "scripts": {
+    "test": "node --test test/*.test.cjs",
+    "qualify": "node cli.cjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.1",
+    "playwright": "1.65.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

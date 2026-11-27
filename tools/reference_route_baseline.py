@@ -7,6 +7,16 @@ from pathlib import Path
 import re
 
 
+SOURCE_KINDS = ("verified-ci-artifact", "verified-local-build")
+HISTORY_KEYS = {
+    "source_revision", "source_kind", "captured_at", "artifact_id",
+    "artifact_sha256", "workflow_run_id",
+}
+REVISION = re.compile(r"[0-9a-f]{40}")
+DIGEST = re.compile(r"[0-9a-f]{64}")
+TIMESTAMP = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|\+00:00)")
+
+
 class AnchorDocument(HTMLParser):
     """Track all public targets, plus the document article's content targets."""
 
@@ -36,9 +46,56 @@ class AnchorDocument(HTMLParser):
             self.article_depth -= 1
 
 
+def _positive(value):
+    return type(value) is int and value > 0
+
+
+def _validate_history(history) -> list[str]:
+    """History entries must stay reviewable across hand edits and tool updates."""
+    if history is None:
+        return []
+    if not isinstance(history, list):
+        return ["capture history must be a list"]
+    issues = []
+    for index, record in enumerate(history, 1):
+        label = f"capture history {index}"
+        if not isinstance(record, dict):
+            issues.append(f"{label}: must be an object")
+            continue
+        unknown = set(record) - HISTORY_KEYS
+        if unknown:
+            issues.append(f"{label}: unknown keys {sorted(unknown)}")
+        revision = record.get("source_revision")
+        if not isinstance(revision, str) or not REVISION.fullmatch(revision):
+            issues.append(f"{label}: source_revision must be an exact revision")
+        if record.get("source_kind") not in SOURCE_KINDS:
+            issues.append(f"{label}: invalid source_kind")
+        stamp = record.get("captured_at")
+        if not isinstance(stamp, str) or not TIMESTAMP.fullmatch(stamp):
+            issues.append(f"{label}: captured_at must be a UTC timestamp")
+        artifact = record.get("artifact_id")
+        digest = record.get("artifact_sha256")
+        if record.get("source_kind") == "verified-ci-artifact":
+            if not _positive(artifact) or not isinstance(digest, str) or not DIGEST.fullmatch(digest):
+                issues.append(f"{label}: CI capture requires artifact ID and SHA-256")
+        elif artifact is not None or digest is not None:
+            issues.append(f"{label}: local capture must not claim an artifact")
+        run_id = record.get("workflow_run_id")
+        if run_id is not None and not _positive(run_id):
+            issues.append(f"{label}: workflow_run_id must be null or a positive integer")
+    return issues
+
+
+def _now() -> str:
+    return (
+        datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+        .replace("+00:00", "Z")
+    )
+
+
 def check_baseline(root: Path, baseline: dict, *, capture=False, extend=False,
                    source_revision=None, source_kind=None, artifact_id=None,
-                   artifact_sha256=None) -> list[str]:
+                   artifact_sha256=None, workflow_run_id=None) -> list[str]:
     """Check or update in memory; capture/extension never removes old anchors.
 
     Source revision is a caller attestation, not a claim that HTML proves
@@ -50,24 +107,29 @@ def check_baseline(root: Path, baseline: dict, *, capture=False, extend=False,
     status = baseline.get("anchor_status")
     if status not in ("pending-rendered-baseline", "captured"):
         return ["invalid route baseline anchor status"]
+    history_issues = _validate_history(baseline.get("capture_history"))
+    if history_issues:
+        return history_issues
     if capture and (extend or status != "pending-rendered-baseline"):
         return ["initial capture requires a pending baseline"]
     if extend and status != "captured":
         return ["extension requires a captured baseline"]
     updating = capture or extend
     if updating:
-        if not isinstance(source_revision, str) or not re.fullmatch(r"[0-9a-f]{40}", source_revision):
+        if not isinstance(source_revision, str) or not REVISION.fullmatch(source_revision):
             return ["capture/extension requires an exact source revision"]
         if capture and source_revision != baseline.get("source_revision"):
             return ["capture revision does not match the pinned baseline"]
-        if source_kind not in ("verified-ci-artifact", "verified-local-build"):
+        if source_kind not in SOURCE_KINDS:
             return ["capture/extension requires a verified source kind"]
         if source_kind == "verified-ci-artifact" and (
-            type(artifact_id) is not int or artifact_id <= 0
+            not _positive(artifact_id)
             or not isinstance(artifact_sha256, str)
-            or not re.fullmatch(r"[0-9a-f]{64}", artifact_sha256)
+            or not DIGEST.fullmatch(artifact_sha256)
         ):
             return ["CI capture requires artifact ID and SHA-256"]
+        if workflow_run_id is not None and not _positive(workflow_run_id):
+            return ["workflow run ID must be a positive integer"]
     routes = baseline.get("routes")
     if not isinstance(routes, list) or not routes:
         return ["route baseline must contain routes"]
@@ -128,8 +190,9 @@ def check_baseline(root: Path, baseline: dict, *, capture=False, extend=False,
         baseline.setdefault("capture_history", []).append({
             "source_revision": source_revision,
             "source_kind": source_kind,
-            "captured_at": datetime.now(timezone.utc).isoformat(),
+            "captured_at": _now(),
             "artifact_id": artifact_id,
             "artifact_sha256": artifact_sha256,
+            "workflow_run_id": workflow_run_id,
         })
     return issues
