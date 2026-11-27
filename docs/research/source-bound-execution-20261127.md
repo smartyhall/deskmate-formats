@@ -167,6 +167,7 @@ Local, at the head that adds this document:
 | `test_supervisor_task_deterministic.py` | 7 tests OK |
 | `test_supervisor_editing.py` | 13 tests OK (364 s) |
 | `test_supervisor_timeouts.py` | 7 tests OK (89 s) |
+| `test_supervisor_workers.py` / `test_supervisor_windows_backend.py` | 7 / 4 tests OK |
 | `ruff check src tests/portable tools` | clean |
 | `reuse lint` | 2005/2005 files |
 | `tools/audit_repository.py` | exit 0 |

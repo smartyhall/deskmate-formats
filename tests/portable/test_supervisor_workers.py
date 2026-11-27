@@ -7,6 +7,7 @@ from tempfile import TemporaryDirectory
 import unittest
 
 from deskmate_formats.supervisor import deterministic, workers
+import execution_fixture
 
 
 class WorkerCapabilityTests(unittest.TestCase):
@@ -83,17 +84,19 @@ class DeterministicWorkerIntegrationTests(unittest.TestCase):
 
     def test_failing_procedure_reports_a_structured_failure(self):
         root = Path(self.enterContext(TemporaryDirectory()))
-        worktree = root / "worktree"
-        (worktree / "tests" / "portable").mkdir(parents=True)
-        (worktree / "src").mkdir()
-        (worktree / "src" / "synthetic.py").write_text("VALUE = 1\n", encoding="utf-8")
-        (worktree / "pyproject.toml").write_text("[project]\nname = 'synthetic'\n",
-                                                  encoding="utf-8")
-        (worktree / "tests" / "portable" / "test_supervisor_synthetic_failure.py").write_text(
-            "import unittest\n\n\nclass SyntheticFailure(unittest.TestCase):\n"
-            "    def test_deliberate_failure(self):\n"
-            "        self.fail('synthetic failure for the worker contract')\n",
-            encoding="utf-8")
+        worktree, commit = execution_fixture.make_checkout(
+            root / "worktree", marker="worker",
+            tests={"src/synthetic.py": "VALUE = 1\n",
+                   "tests/portable/test_supervisor_synthetic_failure.py":
+                       "import unittest\n\n\nclass SyntheticFailure(unittest.TestCase):\n"
+                       "    def test_deliberate_failure(self):\n"
+                       "        self.fail('synthetic failure for the worker contract')\n"})
+        # A workspace procedure executes the accepted checkout through a
+        # qualified campaign interpreter; an unbound launch would not be
+        # attributable, so the worker refuses it by design.
+        environment, _, _ = execution_fixture.make_environment(
+            root=root / "envs", checkout=worktree, campaign="synthetic-campaign",
+            revision=commit)
         worker = workers.DeterministicWorker()
         attempt = worker.prepare({
             "directory": root / "attempt",
@@ -101,6 +104,7 @@ class DeterministicWorkerIntegrationTests(unittest.TestCase):
             "procedure": "portable-tests",
             "arguments": {"scope": "supervisor"},
             "working_directory": str(worktree),
+            "environment": environment,
         })
         result = worker.dispatch(attempt, authorization=attempt.plan_sha256)
         self.assertEqual((result.state, result.exit_status), ("failed", 1))
