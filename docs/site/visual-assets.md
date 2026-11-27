@@ -157,6 +157,46 @@ build when its bytes match. It is not proof of original capture provenance,
 historical software rights, successful live publication, or the correctness
 of every image in the artifact. The ordinary publication checklist still applies.
 
+## Historical advertising and sales material
+
+The operator's 2026-11-27 standing authorization permits period advertisements,
+catalogs, sales brochures, promotional flyers and comparable sales material to
+be published for historical and documentary commentary without a separate
+approval for each ordinary illustration. It is an editorial publication
+authorization, not a copyright license, a public-domain finding or an
+unconditional fair-use determination; third-party rights remain with their
+holders. See [LICENSING.md](https://github.com/smartyhall/deskmate-formats/blob/main/LICENSING.md).
+
+Manifest contract for these assets:
+
+- `origin` must be `historical-advertising-excerpt`, never
+  `documentary-software-ui-capture`, and the asset id begins `history.`.
+- `publisher`, `publication_title`, `publication_date`, `page_reference`,
+  `source_url`, `provenance` and `attribution` are required, together with the
+  normal caption, alternative text, dimensions and hashes.
+- `source_sha256` is the digest of the verified original scan; `sha256` and
+  `size` describe the published derivative.
+- The REUSE sidecar must use
+  `LicenseRef-Third-Party-Historical-Advertising`, whose notice states that the
+  historical material is not licensed by the project and that only the crop
+  selection, caption, alternative text and provenance are project contributions.
+- The rendered figure prints the publisher attribution, a link to the complete
+  original and the rights note.
+
+Keep complete magazines, catalogs, commercial scan collections and archival
+libraries out of Git and out of the site. Publish only the reviewed excerpts,
+never the source PDFs, and honor correction or removal requests.
+
+## Preview workflow scope
+
+The `Reference site preview` workflow
+(`.github/workflows/reference-preview.yml`) builds every PR that changes
+`website/**` or `docs/**` and uploads the generated site as the artifact
+`deskmate-reference-preview` (seven-day retention). It does not deploy. Follow
+the exact-head artifact procedure above; for a historical chronology change,
+also confirm the artifact contains no PDFs or complete scans, and record the run
+identifier, artifact name and image paths in the PR handoff.
+
 ## A useful DeskMate-derived design system
 
 Build a measured *design evidence* table separately from the gallery:

@@ -17,6 +17,24 @@ function readFigures() {
     throw new Error("Invalid reference image manifest");
   return document.images.filter((image) => image.page_id && image.section_heading);
 }
+function figureCredit(item) {
+  if (item.origin === "historical-advertising-excerpt") {
+    if (!/^history\./.test(item.id) ||
+        typeof item.source_url !== "string" || !/^https:\/\//.test(item.source_url) ||
+        !["publisher", "publication_title", "page_reference", "attribution", "rights_note"]
+          .every((key) => typeof item[key] === "string" && item[key].trim()))
+      throw new Error("Invalid historical advertising entry " + item.id);
+    const source = escapeHtml(item.publisher) + ", " + escapeHtml(item.publication_title) +
+      ", " + escapeHtml(item.page_reference);
+    return ' <small class="reference-figure-credit">' + escapeHtml(item.attribution) +
+      ' <a href="' + escapeHtml(item.source_url) + '" rel="noreferrer">Source: ' + source +
+      '</a>. ' + escapeHtml(item.rights_note) + '</small>';
+  }
+  if (item.origin === "documentary-software-ui-capture" && !/^ui\./.test(item.id))
+    throw new Error("Invalid documentary capture entry " + item.id);
+  return ' <small class="reference-figure-credit">Documentary capture of original software; ' +
+    'publisher interface rights retained.</small>';
+}
 function renderFigureSet(items, siteUrl, assets = assetRoot) {
   const figures = items.map((item) => {
     if (!/^[a-z0-9][a-z0-9_.\/-]*\.png$/.test(item.path) ||
@@ -30,14 +48,17 @@ function renderFigureSet(items, siteUrl, assets = assetRoot) {
     if (!fs.existsSync(filename))
       throw new Error("Missing approved illustrated-reference PNG " + item.path);
     const url = siteUrl("/assets/reference/" + item.path);
-    return '<figure class="reference-figure">' +
-      '<a href="' + escapeHtml(url) + '" aria-label="View full-size screenshot">' +
+    const label = item.origin === "historical-advertising-excerpt"
+      ? "View full-size historical excerpt" : "View full-size screenshot";
+    const className = item.origin === "historical-advertising-excerpt"
+      ? "reference-figure reference-figure-historical" : "reference-figure";
+    return '<figure class="' + className + '">' +
+      '<a href="' + escapeHtml(url) + '" aria-label="' + label + '">' +
       '<img src="' + escapeHtml(url) + '" alt="' + escapeHtml(item.alt) +
       '" width="' + item.width + '" height="' + item.height +
       '" loading="lazy" decoding="async"></a>' +
-      '<figcaption>' + escapeHtml(item.caption) +
-      ' <small class="reference-figure-credit">Documentary capture of original software; ' +
-      'publisher interface rights retained.</small></figcaption></figure>';
+      '<figcaption>' + escapeHtml(item.caption) + figureCredit(item) +
+      '</figcaption></figure>';
   }).join("");
   return '<div class="reference-figures" aria-label="Illustrated interface evidence">' +
     figures + '</div>';
@@ -81,4 +102,4 @@ function injectFigures(tokens, pageId, items, siteUrl, assets = assetRoot) {
     );
   }
 }
-module.exports = { escapeHtml, readFigures, renderFigureSet, injectFigures };
+module.exports = { escapeHtml, readFigures, figureCredit, renderFigureSet, injectFigures };
