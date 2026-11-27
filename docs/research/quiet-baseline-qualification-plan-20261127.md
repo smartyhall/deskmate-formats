@@ -1,9 +1,17 @@
 # Quiet-host baseline qualification plan (after #206 and #207)
 
-Status: **plan only**. This checkpoint implements no optimization, runs no
-laboratory baseline and makes no performance claim. It records what a baseline
-would have to satisfy, and which Git subprocess costs the recorded measurements
+Status: **plan, with one attempt published**. This document implements no
+optimization and makes no performance claim. It records what a baseline would
+have to satisfy, and which Git subprocess costs the recorded measurements
 already identify as the first candidates.
+
+The first attempt is recorded in
+[convergence baseline 001](convergence-baseline-001-20261127.md): measured
+revision `2b3113c15b333f8a0718e353698e427404b2c31b`, two passing quiet gates,
+three recorded iterations. It qualifies as a **characterization** baseline only
+— §4's `package.source_first` condition fails structurally and the per-iteration
+CPU condition was not recorded. The gates below are unchanged; nothing in this
+plan was reweighted after the result was known.
 
 ## 1. Why another baseline is needed
 

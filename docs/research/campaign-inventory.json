@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "as_of": "2026-11-27",
-  "base_revision": "7dee5fa25eb1b02b2724bdd87759ce53fcb3256b",
+  "base_revision": "2b3113c15b333f8a0718e353698e427404b2c31b",
   "purpose": "Advisory research planning inventory; not a queue, permission, availability assertion, or capability registry. Status is a dated planning assessment, not live GitHub state.",
   "campaigns": [
     {
       "id": "supervisor-integration",
       "domain": "infrastructure",
       "priority": 1,
-      "status": "review",
+      "status": "completed",
       "effort": "medium",
       "workers": [
         "repository-review"
@@ -25,15 +25,18 @@
       "pull_requests": [
         191
       ],
-      "evidence": "Deterministic runner and private campaign leases are proposed in #191, not integrated at this snapshot.",
+      "evidence": "Integrated as #191: the deterministic executor, private campaign leases and the read-only observation projection are on main. Live model gates remain unexercised and operator-controlled; their integration is not a live qualification.",
       "acceptance": "Independent exact-head review, combined tests and custody corrections; preserve manual gates.",
-      "completion_refs": []
+      "completion_refs": [
+        "https://github.com/smartyhall/deskmate-formats/pull/191",
+        "docs/research/supervisor-observatory-state-audit-20261126.md"
+      ]
     },
     {
       "id": "environment-isolation",
       "domain": "infrastructure",
       "priority": 1,
-      "status": "proposed",
+      "status": "completed",
       "effort": "medium",
       "workers": [
         "offline-lab",
@@ -51,16 +54,21 @@
       "issues": [
         201
       ],
-      "pull_requests": [],
-      "evidence": "Shared Python imports can confound worktree provenance; an owned interpreter is required.",
+      "pull_requests": [
+        206
+      ],
+      "evidence": "Integrated as #206: campaign-owned environment provisioning and preflight now prove the parent and an isolated child import identity. The convergence-01 environment used it and preflight reported qualified with 11 of 11 checks.",
       "acceptance": "Two source-distinct checkouts prove parent and isolated child import identity; no shared environment mutation.",
-      "completion_refs": []
+      "completion_refs": [
+        "https://github.com/smartyhall/deskmate-formats/pull/206",
+        "docs/research/campaign-python-environment-isolation-20261127.md"
+      ]
     },
     {
       "id": "performance-integration",
       "domain": "infrastructure",
       "priority": 1,
-      "status": "review",
+      "status": "completed",
       "effort": "medium",
       "workers": [
         "repository-review"
@@ -78,15 +86,18 @@
       "pull_requests": [
         199
       ],
-      "evidence": "Measurement harness is under review; previous measurements are not a quiet integrated baseline.",
+      "evidence": "Integrated as #199: the harness records source and package identity, host sampling and per-test spawn/Git attribution. Its first findings are retained as loaded-host observations, not as a quiet baseline.",
       "acceptance": "Reconcile shared fixtures and configuration, independent exact-head tests, retain raw measurement distinctions. Coordinate shared fixture/configuration merge order with #191; neither PR is a hard functional prerequisite of the other.",
-      "completion_refs": []
+      "completion_refs": [
+        "https://github.com/smartyhall/deskmate-formats/pull/199",
+        "docs/research/portable-test-performance-harness.md"
+      ]
     },
     {
       "id": "quiet-performance-baseline",
       "domain": "infrastructure",
       "priority": 1,
-      "status": "proposed",
+      "status": "review",
       "effort": "large",
       "workers": [
         "offline-lab"
@@ -100,14 +111,16 @@
         "performance-integration"
       ],
       "sources": [
-        "docs/research/codex-supervisor-operator-driver.md"
+        "docs/research/codex-supervisor-operator-driver.md",
+        "docs/research/convergence-baseline-001-20261127.md"
       ],
       "issues": [
-        147
+        147,
+        214
       ],
       "pull_requests": [],
-      "evidence": "A loaded-host run identified Git-heavy tests; comparable isolated measurements remain open.",
-      "acceptance": "Record complete equivalent test selection, source/import identity, CPU and subprocess metrics, repetitions and limitations.",
+      "evidence": "Measured on 2b3113c under two passing quiet gates and published as convergence-baseline-001. It is a characterization baseline: source_first is structurally false, per-iteration CPU means were not sampled, and instrumentation overhead is unquantified, so optimization qualification stays open under #147.",
+      "acceptance": "Accepted as the initial characterization baseline. Optimization qualification requires a matched uninstrumented control, per-iteration CPU sampling, a decision on the source_first gate and an explicitly named tag; none is claimed here.",
       "completion_refs": []
     },
     {
@@ -134,7 +147,7 @@
         147
       ],
       "pull_requests": [],
-      "evidence": "Git subprocess batching is a hypothesis, not a demonstrated whole-suite improvement.",
+      "evidence": "Git subprocess batching remains a hypothesis. The characterization baseline measures 32,835 Git calls and 2,673.7 s of cumulative Git call duration, which ranks the target but does not show that any wall time is reclaimable.",
       "acceptance": "Controlled before/after exact test set and semantic equivalence, fewer subprocesses, measured improvement.",
       "completion_refs": []
     },
@@ -159,13 +172,14 @@
         "environment-isolation"
       ],
       "sources": [
-        "docs/research/codex-supervisor-design.md"
+        "docs/research/codex-supervisor-design.md",
+        "docs/research/source-bound-execution-procedure.md"
       ],
       "issues": [
         204
       ],
       "pull_requests": [],
-      "evidence": "Local deterministic procedures are proposed in #191; real GitHub-to-lab result return unproved.",
+      "evidence": "Prerequisites #191 and #206 are integrated and the operator procedure is published. The canary is unexecuted: it awaits a reviewed manifest and a separate authorization of one exact plan digest. No attempt has been prepared or submitted.",
       "acceptance": "One reviewed hash-files task, independent expected digest, explicit authorization, one attempt and sanitized returned receipt.",
       "completion_refs": []
     },
@@ -194,7 +208,7 @@
         187,
         193
       ],
-      "evidence": "Stock input improvements and stacked experimental instrumentation must remain separately qualified.",
+      "evidence": "PR #187 is integrated; PR #193 remains intentionally parked, so the queue-counter and Corkboard instrumentation is not promoted. Remaining input work waits on that decision and on open issues #10 and #35.",
       "acceptance": "Exact-head guard review and focused tests; experimental #193 stays draft unless separately approved.",
       "completion_refs": []
     },
@@ -202,7 +216,7 @@
       "id": "ghidra-integration",
       "domain": "infrastructure",
       "priority": 1,
-      "status": "review",
+      "status": "completed",
       "effort": "medium",
       "workers": [
         "repository-review"
@@ -220,9 +234,13 @@
         196,
         198
       ],
-      "evidence": "Candidate static-analysis tooling, fresh-process reopen checks, and separate 12.2 qualification; native binding not thereby established.",
+      "evidence": "Integrated as #190, #196 and #198: static-analysis tooling, correlated static and runtime evidence, and Ghidra 12.2 as the preferred release with the 12.1.4 historical profile retained. Native DMDB binding is not thereby established.",
       "acceptance": "Review stack in order, preserve old receipts and release-specific claims, verify exact heads.",
-      "completion_refs": []
+      "completion_refs": [
+        "https://github.com/smartyhall/deskmate-formats/pull/198",
+        "https://github.com/smartyhall/deskmate-formats/pull/196",
+        "docs/research/ghidra-12.2-qualification-20261126.md"
+      ]
     },
     {
       "id": "archive-integration",
@@ -692,7 +710,7 @@
       "id": "chronology",
       "domain": "reference",
       "priority": 3,
-      "status": "blocked",
+      "status": "completed",
       "effort": "medium",
       "workers": [
         "repository-development"
@@ -709,9 +727,12 @@
       "pull_requests": [
         155
       ],
-      "evidence": "Draft timeline has a factual catalog-page correction, figure-tool validation, and unresolved source-image/rights review; no public derivatives yet.",
+      "evidence": "Integrated via #211: the chronology is a published reference page at history/chronology with three manifest-listed historical excerpts under the operator's historical-advertising authorization. The earlier draft blockers are resolved; no scan collection is published.",
       "acceptance": "Inspect actual historical images, source/license/caption review, manifest derivatives, then route and editorial verification.",
-      "completion_refs": []
+      "completion_refs": [
+        "https://github.com/smartyhall/deskmate-formats/pull/211",
+        "docs/history/timeline.md"
+      ]
     },
     {
       "id": "website-qualification",

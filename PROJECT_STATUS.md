@@ -1,5 +1,33 @@
 # Project status — DeskMate formats
 
+## Convergence baseline 001 — characterization — 2026-11-27
+
+The [convergence checkpoint](docs/research/convergence-baseline-001-20261127.md)
+qualified one quiet Windows host and recorded the initial laboratory
+characterization baseline at `2b3113c15b333f8a0718e353698e427404b2c31b`. Three
+iterations of the portable suite took 1354.4 s, 1317.6 s and 1315.6 s
+(3987.6 s in total) over 4782 records and 1594 test identities, under a
+campaign-owned CPython 3.13.17 environment with two passing five-minute quiet
+gates and complete host sampling. The harness `compare` reports the first and
+last iterations comparable on every qualification dimension.
+
+This is a **characterization baseline, not an optimization-qualified one**.
+`package.source_first` is structurally false under the CLI's discovery path,
+per-iteration CPU means were not sampled, instrumentation overhead is
+unquantified and no matched uninstrumented control exists; those requirements
+stay open under [#147](https://github.com/smartyhall/deskmate-formats/issues/147).
+The suite is also not green: five harness self-instrumentation errors, one
+blocked report class and one deterministic process-tree expectation failure are
+classified in the record and tracked separately, not repaired here.
+
+The sanitized harness projection is published as
+[structured evidence](docs/evidence/convergence-baseline-001-20261127.public.json);
+the raw report, console log and gate captures remain private. Optimization is
+unstarted, PR [#193](https://github.com/smartyhall/deskmate-formats/pull/193)
+stays parked, the [#204](https://github.com/smartyhall/deskmate-formats/issues/204)
+canary is unexecuted, and the annotated tag `research-baseline-001` is proposed
+for the measured revision only if the operator accepts this record.
+
 ## Source-bound Supervisor execution — 2026-11-27
 
 The [source-binding campaign](docs/research/source-bound-execution-20261127.md)

@@ -1,7 +1,10 @@
 # Research campaign inventory
 
-Snapshot: 2026-11-27, based on integrated revision `7dee5fa25eb1b02b2724bdd87759ce53fcb3256b` and the separately
-identified pending PRs. Campaign `chatgpt/research-campaign-inventory-20261127`; repository-only planning.
+Snapshot: 2026-11-27, refreshed against integrated revision
+`2b3113c15b333f8a0718e353698e427404b2c31b` and the separately identified pending
+PRs. The original snapshot was taken at `7dee5fa25eb1b02b2724bdd87759ce53fcb3256b`
+by campaign `chatgpt/research-campaign-inventory-20261127`; the infrastructure
+rows were reconciled by campaign `convergence-01`. Repository-only planning.
 
 The [machine-readable inventory](campaign-inventory.json) joins research
 questions to existing evidence, candidate work, prerequisites, possible worker
@@ -43,14 +46,35 @@ no resource is reserved, no task is accepted, and no execution is authorized.
   result or documented blocker. Private media, paths, approval tokens, and raw
   measurements do not belong here.
 
+## Integrated infrastructure state — 2026-11-27 refresh
+
+This refresh reconciles only the infrastructure rows named here. A row this
+refresh did not touch keeps the status its owning campaign gave it; a stale row
+is not evidence that the work is unintegrated, and `completed` here means the
+implementation is on the integrated revision, not that a live gate was exercised.
+
+| State | Campaigns |
+| --- | --- |
+| Integrated implementation | PR #191 deterministic execution, leases and observation (`supervisor-integration`); PR #199 performance harness (`performance-integration`); PR #206 environment isolation, closing issue #201 (`environment-isolation`); PR #210 source binding |
+| Qualified native observation | PR #187 verified guest input (`guest-input-integration`). PRs #190, #196 and #198 qualify tooling rather than a DeskMate runtime observation: Ghidra 12.2 is preferred and 12.1.4 is retained as the historical profile. |
+| Synthetic-only verification | `hash-files`, `repository-audit` and `portable-tests` procedures, leases and supervision paths are qualified against synthetic peers; no real model turn, live provider or external service is exercised |
+| Completed characterization | `quiet-performance-baseline`: [convergence-baseline-001](convergence-baseline-001-20261127.md) on `2b3113c`, accepted as characterization |
+| Deferred optimization qualification | `quiet-performance-baseline` and `git-performance`: `source_first` is structurally false, per-iteration CPU means were not sampled, instrumentation overhead is unquantified and no matched uninstrumented control exists (#147) |
+| Parked experiments | #193 instrumented 86Box automation and its `-idq` binary, intentionally not promoted |
+| Pending deterministic task qualification | `deterministic-canary`: #204 procedure published, prerequisites integrated, canary unexecuted and separately authorized |
+
 ## Proposed first sequence
 
 Integrate the current stacks independently; isolate campaign environments;
-qualify the single deterministic hash task in issue #204. The quiet integrated
-performance baseline in #147 precedes optimization but is not a dependency
-of the hash canary. Coordinate #191/#199 shared fixture and configuration changes as merge-order concerns, not hard functional dependencies. Existing native socket procedures can support Corkboard follow-up independently of the candidate input improvements. Resume the highest-value native work when resources and
-authority are available. Preserve the archive backlog rather than copying
-its individual formats into this inventory.
+qualify the single deterministic hash task in issue #204. The characterization
+baseline is published, but optimization qualification in #147 is still open and
+precedes any optimization arm; it is not a dependency of the hash canary.
+Coordinate #191/#199 shared fixture and configuration changes as merge-order
+concerns, not hard functional dependencies. Existing native socket procedures
+can support Corkboard follow-up independently of the candidate input
+improvements. Resume the highest-value native work when resources and authority
+are available. Preserve the archive backlog rather than copying its individual
+formats into this inventory.
 
 ## Inspect and validate
 
