@@ -10,6 +10,13 @@ The [M0/M1 implementation guide](observatory-v2-m0-m1.md) and
 [M2 Codex CLI guide](observatory-v2-m2.md) record the shipped contracts,
 operator workflows, and milestone decisions.
 
+**2026-11-25 planning supplement:** The
+[Supervisor revisit](supervisor-next-campaign-20261125.md) proposes normalized
+events and usage observations from heterogeneous agent and deterministic
+workers. Freebuff desktop telemetry is observed manually; programmatic
+collection is unqualified. Preserve the read-only publication contract and
+existing native telemetry semantics; this is not a new control surface.
+
 ## 1. Purpose and decisions
 
 Build a browser-based, **strictly read-only** operations console for agents conducting emulator experiments. The operator must be able to monitor emulator screens, host/guest state, agent progress, tool/test activity, pending approvals, and historical milestones from a different computer or phone **without RDP, keyboard/mouse capture, or any emulator-control surface**.
