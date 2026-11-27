@@ -22,7 +22,7 @@ length" without showing what the word tracks.
 Each row is one cold boot on the same guest image:
 
 1. boot DOS, run `MOUSE`, then `DESK`, and wait for the desktop to render;
-2. open Corkboard through the documented F10 applications menu;
+2. open Corkboard through the documented F10 Accessories menu;
 3. apply the cursor moves and text in the row;
 4. press Escape, which is the close-and-save path, and quit the emulator;
 5. extract `DESKMATE/DMCORKBD` from the stopped image with the repository FAT16

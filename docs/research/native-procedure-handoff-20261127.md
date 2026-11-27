@@ -20,7 +20,7 @@ The two procedures are deliberately different in kind:
 | Execution mode | One exclusively owned emulator process, visible window, authenticated loopback socket |
 | Emulator capabilities | Stock builds: none. Instrumented builds: `input_queue`, `event_seq`, `wait_queue`, `input_accounting` for queue evidence; absence is reported, never assumed |
 | Guest profile | Text-mode DOS prompt at a known anchor (`C:\>`-shaped), 80×25 text mode, BIOS keyboard ring readable through `memr` |
-| Application profile | For the note: DeskMate desktop rendered, Corkboard reachable through the F10 applications menu |
+| Application profile | For the note: DeskMate desktop rendered, Corkboard reachable through the F10 Accessories menu |
 | Typed arguments | Command string (ASCII, validated before any input); note text (ASCII + CR, validated) |
 | Input identity | Caller-supplied anchor/occurrence; the procedure refuses an ambiguous anchor |
 | Authorization | Operator authorization for live emulator work; exclusive reservation of machine, socket and guest image |

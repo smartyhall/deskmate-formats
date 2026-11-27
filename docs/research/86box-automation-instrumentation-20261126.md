@@ -28,6 +28,16 @@ its own path and hash throughout.
 The patch applies to the pinned revision only and is not installed into the
 production tree.
 
+The patch is a diff against upstream 86Box, which is distributed under the GNU
+General Public License, version 2 or later. It therefore carries
+`GPL-2.0-or-later`, not the project's `GPL-3.0-or-later` software offer: the
+upstream notices (`src/automation.c`, Justin Akers; `src/device/keyboard.c` and
+`src/include/86box/keyboard.h`, Sarah Walker, Miran Grca and Fred N. van Kempen)
+and the campaign's modifications travel together, and
+[`LICENSES/GPL-2.0-or-later.txt`](../../LICENSES/GPL-2.0-or-later.txt) holds the
+unmodified standard text. No instrumented executable is distributed here; the
+build stays in the private lab.
+
 ## Three queues, kept apart
 
 The review asked not to conflate the automation queue with keyboard-controller
@@ -190,6 +200,30 @@ These are offered to the Ghidra work; nothing here was changed in its worktree.
 4. Under burst delivery, where does the keystroke get discarded: the
    application's `INT 16h` polling loop, its redraw path, or a fixed-size
    keyboard lookahead of its own?
+
+## Preparation for independent integration, 2026-11-27
+
+This branch was rebased onto nothing and force-pushed nowhere: it merged the
+qualified input branch at `c875d17`, which itself merged current `main`. The
+merge brought the corrected screenshot caption, the dual documentation licences
+and the repaired manifest characters; no instrumentation code changed.
+
+What this branch still claims, and what it does not:
+
+* The counters are interface-side evidence. `accepted`, `forwarded`, `dropped`,
+  `pending` and `queue` describe what the automation socket did; the burst result
+  showed them agreeing at 76 while the BIOS ring lost a character, which is why
+  they are never reported as application-level acceptance.
+* Application-level evidence stays where it was: BIOS ring movement, the live
+  buffer differential, the saved `DMCORKBD` bytes and a frame comparison after a
+  cold reopen.
+* The instrumented executable is a separate build of a separate checkout,
+  addressed by path and hash. The production emulator is unchanged, and nothing
+  here makes the instrumented build the laboratory default.
+
+Two prose references still called the F10 menu "applications"; they now say
+Accessories, matching the desktop menu bar's F8 Applications entry. That is the
+same editorial correction the published screenshot needed.
 
 ## Limits
 
