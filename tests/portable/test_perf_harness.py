@@ -654,7 +654,9 @@ class SanitizeTests(unittest.TestCase):
         # Built at run time: the repository audit (correctly) rejects a literal
         # host path in tracked source.
         drive = "C:" + os.sep
-        unc = os.sep * 2 + "server" + os.sep + "share"
+        # A UNC path is always backslash-delimited, whatever the host's
+        # separator is: this is the shape a Windows report actually contains.
+        unc = "\\\\" + "server" + "\\" + "share"
         posix_home = "/" + "home/" + "someone/private/notes.md"
         text = (f"failed at {drive}Users{os.sep}someone{os.sep}AppData{os.sep}Local"
                 f"{os.sep}Temp{os.sep}tmp123{os.sep}f.json"

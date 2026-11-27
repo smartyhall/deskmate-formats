@@ -68,7 +68,20 @@ def _describe(err: object) -> str:
         text = str(err[1]) if len(err) > 1 else ""  # type: ignore[index]
     except (TypeError, IndexError):
         name, text = "Exception", ""
-    return redact_text(f"{name}: {text}")[:400]
+    return redact_text(f"{name}: {text}", roots=_private_roots())[:400]
+
+
+def _private_roots() -> tuple[str, ...]:
+    """Directories that must never appear in a recorded message.
+
+    The working directory is always included: it usually *is* the checkout a
+    test names in an assertion, and it contains the account name on every
+    platform.
+    """
+    try:
+        return (os.getcwd(),)
+    except OSError:  # pragma: no cover - defensive
+        return ()
 
 
 @dataclass
@@ -415,7 +428,7 @@ class _TimedResult(unittest.TextTestResult):
         if err is not None:
             record.message = _describe(err)
         elif message:
-            record.message = redact_text(message)[:400]
+            record.message = redact_text(message, roots=_private_roots())[:400]
 
     def _note_suite_issue(self, test: object | None, outcome: str, err: object | None,
                           message: str) -> None:
@@ -430,9 +443,10 @@ class _TimedResult(unittest.TextTestResult):
         except Exception:  # pragma: no cover - defensive
             identifier = str(test)
         self._issues.append({
-            "test_id": redact_text(identifier)[:400],
+            "test_id": redact_text(identifier, roots=_private_roots())[:400],
             "outcome": outcome,
-            "message": (_describe(err) if err is not None else redact_text(message))[:400],
+            "message": (_describe(err) if err is not None
+                        else redact_text(message, roots=_private_roots()))[:400],
         })
 
     # -- fixture timing ----------------------------------------------------
