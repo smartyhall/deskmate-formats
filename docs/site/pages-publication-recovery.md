@@ -66,3 +66,7 @@ production deployment was initiated during this investigation.
 The earlier worker's 58-file byte comparison is reported in
 [visual qualification report in PR #197](https://github.com/smartyhall/deskmate-formats/blob/5aee34c413ece85fd5ef62bfb2e5485d1d5afd47/docs/research/visual-qualification-20261126.md). Independent inspection here is limited to logs and source, not
 downloaded archive bytes or the live site.
+
+## Artifact byte access for independent review
+
+The [visual publication guidance](visual-assets.md#reviewing-actual-pixels-through-a-ci-preview-artifact) records a successful exact-head preview ZIP retrieval and member-by-member hash/pixel inspection for PR #187. This technique may also support future deployment artifact comparisons, but does not independently verify the historic Pages archives or live responses discussed above.

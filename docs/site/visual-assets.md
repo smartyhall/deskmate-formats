@@ -95,6 +95,68 @@ hash, size, dimensions, metadata-free PNG structure and sidecar.
 Redactions or annotations create a derivative and must not replace
 the private original. A near-duplicate hash is only a triage lead.
 
+## Reviewing actual pixels through a CI preview artifact
+
+Confirmed by independent ChatGPT review of PR #187 on 2026-11-27.
+The GitHub connector's ordinary file/URL fetch and blob fetch are text-only:
+a PNG fetch failed with a UTF-8 decoding error. This is a transport
+limitation, not a reason to infer pixels from alt text or accept an image
+without inspecting it.
+
+Use an exact-head Actions preview artifact as a binary transport:
+
+1. Read the PR head SHA and find the completed successful **Reference site
+   preview** workflow for that exact revision. Confirm the artifact name,
+   numeric ID, expiration status, and originating run. Do not substitute
+   an artifact from a different branch/revision.
+2. In ChatGPT with the GitHub connector, use its workflow-run artifact
+   listing and **download workflow artifact** actions (rather than its
+   text fetch actions). The download produces a ZIP file reference; in
+   the tested session it was also mounted under `/mnt/data/`. Inspect the
+   actual tool-returned file path or materialize the returned file reference
+   if necessary. Do not invent a sandbox filename or rely on a temporary
+   signed download URL surviving another conversation. A local reviewer
+   can equivalently use the authenticated GitHub Actions UI or
+   `gh run download RUN_ID --name ARTIFACT_NAME --dir OWNED_REVIEW_DIR`
+   and verify the same bytes.
+3. Read the ZIP's member inventory without wholesale extraction. Select the
+   exact expected relative path, reject duplicate matches, enforce a
+   reasonable uncompressed size cap, and extract only the required public
+   derivative to a scratch file. For the native-size PNG, calculate
+   SHA-256 and Git blob SHA-1 (`sha1(b"blob " + str(len(data)).encode("ascii")
+   + b"\\0" + data)`); compare against the exact-head repository tree
+   and `website/reference-images.json`, along with dimensions and size.
+   If a build transforms the image, identify that difference instead of
+   claiming it is the same source blob.
+4. Open the extracted PNG with an image-capable viewer and inspect the
+   actual pixels at native size. Check visible private information,
+   credentials, irrelevant host content, UI state, caption, alternative
+   text, and attribution/rights. Record the exact head, run, artifact ID,
+   member path, hashes, and disposition in the independent PR review.
+   Do not publish the ZIP, temporary URLs, unrelated files, or raw private
+   evidence. Expired/missing artifacts or mismatched bytes remain explicit
+   review blockers unless an equivalent exact-byte route is available.
+
+Worked example (not a promise that the artifact remains available):
+
+- [PR #187](https://github.com/smartyhall/deskmate-formats/pull/187),
+  head `0edd94c3662b15c39206ebb01c87a7ed1d2a00ad`,
+  [preview run 45966788527](https://github.com/smartyhall/deskmate-formats/actions/runs/45966788527).
+- Artifact `deskmate-reference-preview`, ID `15183960287`.
+- Member `assets/reference/collection-01/ui.desktop.accessories-menu.png`
+  corresponds to `website/src/assets/reference/collection-01/ui.desktop.accessories-menu.png`.
+- 19,662 bytes, 640 × 480; Git blob
+  `6ad8d0bdd130f765e37b7dfe2a28d8f21770cb19`;
+  SHA-256 `2d0b16f4ebf7e819f7dedca67a0cef866306e4ca344d747ba44171c6a90db620`.
+- [Independent review](https://github.com/smartyhall/deskmate-formats/pull/187#pullrequestreview-6085713486)
+  inspected the image and found a caption/alt-text menu-name correction.
+  It did not require another emulator session.
+
+A preview artifact proves the checked-out derivative was present in the
+build when its bytes match. It is not proof of original capture provenance,
+historical software rights, successful live publication, or the correctness
+of every image in the artifact. The ordinary publication checklist still applies.
+
 ## A useful DeskMate-derived design system
 
 Build a measured *design evidence* table separately from the gallery:
