@@ -1,0 +1,48 @@
+{
+  "schema": "supplementary-agent-receipt/1",
+  "provider": "OpenAI",
+  "agent_label": "ChatGPT",
+  "campaign_id": "chatgpt/research-campaign-inventory-20261127",
+  "provider_prefix": "chatgpt",
+  "checkpoint": "inventory-and-crosswalk",
+  "observed_at": "2026-11-27T08:46:53Z",
+  "observed_at_note": "GitHub PR update timestamp for the inspected checkpoint, not a measurement of inference start, completion or duration.",
+  "execution_mode": "Interactive ChatGPT conversation with authenticated repository connector; repository-only work.",
+  "git": {
+    "base_revision": "7dee5fa25eb1b02b2724bdd87759ce53fcb3256b",
+    "working_branch": "chatgpt/research-campaign-inventory-20261127",
+    "commits": [
+      "c3dff396a5e87ad0925e4be5b05fb59df4b2ac9a",
+      "2cf89e9482648a9e88d5f83c09b05c4c9ddf3aa7"
+    ],
+    "pull_request": 205,
+    "merged": false
+  },
+  "model": {
+    "label": "GPT-6.2",
+    "reasoning_setting": null,
+    "verified_runtime_identity": false,
+    "note": "Product identity only; actual serving configuration and effort not independently measured."
+  },
+  "source": {
+    "kind": "unavailable",
+    "collector_version": null,
+    "coverage": "No campaign-attributable account or inference meter exposed.",
+    "attribution_limitations": "No token, credit, quota or duration value inferred from Git timestamps or tool calls."
+  },
+  "measurements": [],
+  "measurements_note": "Unknown, not zero; unavailable at startup and checkpoint. No extra provider calls for collection.",
+  "checkpoint_status": "submitted-for-review",
+  "scope_completed": [
+    "30 campaign planning records with six domains and explicit gates",
+    "Read-only structural validator and tests",
+    "Source-path verification against exact tree",
+    "Workbench capability crosswalk based on integrated source"
+  ],
+  "scope_deferred": [
+    "Independent review and exact-head CI",
+    "Operational resource availability and authority checks",
+    "Live planner integration"
+  ],
+  "privacy_note": "No private paths, account identifiers, raw transcripts, approval tokens or lab inputs."
+}
