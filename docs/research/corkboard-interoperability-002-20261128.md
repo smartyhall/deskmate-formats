@@ -283,8 +283,11 @@ second header word was never exercised, because no operation sets it.
 Information Center **3.61** was opened on a cold boot with the same tool-built
 note in place (T17). Its dashboard's yellow notepad drew all four lines,
 including the CP437 characters, without opening the accessory first, and the note
-file was **byte-identical** after the visit - as were `INFOCNTR.DB` and the rest
-of the installation apart from desktop state.
+file was **byte-identical** after the visit. `INFOCNTR.DB` was also unchanged:
+6,144 bytes with the same SHA-256 as in the sealed source image
+(`5630520c…c3228dab7`), which was hashed at `3085c689…6a107fc1` before the
+campaign began. No other file in the installation was compared, so nothing here
+says what the dashboard wrote to its own desktop state.
 
 That is one direction of the interaction only. This campaign opened the dashboard
 and closed it without editing. It did not edit the note through the dashboard,
