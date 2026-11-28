@@ -1,5 +1,6 @@
 """Export native specimens through the Workbench without DeskMate or an emulator."""
 from contextlib import redirect_stderr, redirect_stdout
+from csv import reader as csv_reader
 from hashlib import sha256
 from io import StringIO
 import json
@@ -21,6 +22,22 @@ DEMO = ('worksheet/wmix.wks', 'text/tp06.doc', 'draw/d17.fig', 'filer/g18.fil',
         'calendar/alarm-on-86box-trial-c.cln', 'addressbook/native-two-contact-20261117.adr',
         'sound/tone-native-pcm.snd', 'music/mtempo.sng')
 SVG = '{http://www.w3.org/2000/svg}'
+
+# Record order and storage IDs from the HU002 campaign report and native results.
+HU002_INSERTION_ORDER = (('ZULU', 16), ('ALPHA', 17), ('MIKE', 18), ('BRAVO', 19),
+                         ('CHARLIE', 20), ('DELTA', 21), ('ECHO', 22), ('FOXTROT', 23))
+HU002_FILER_RECORDS = {
+    'hu002-form.fil': (),
+    'hu002-unsorted.fil': HU002_INSERTION_ORDER,
+    'hu002-sorted.fil': tuple(sorted(HU002_INSERTION_ORDER)),
+    'hu002-churn.fil': (('BRAVO', 18), ('CHARLIE', 19), ('DELTA', 20), ('ECHO', 21),
+                        ('FOXTROT', 22), ('GOLF', 23), ('MIKE', 17), ('ZULU', 16)),
+    'hu002-dbrepair-unsorted.fil': HU002_INSERTION_ORDER,
+    'hu002-dbrepair-link-loss.fil': (('ALPHA', 17), ('BRAVO', 19), ('CHARLIE', 20),
+                                     ('MIKE', 18), ('ZULU', 16)),
+    'hu002-dbrepair-frame-loss.fil': (('ALPHA', 17), ('BRAVO', 19), ('CHARLIE', 20),
+                                      ('DELTA', 21), ('ECHO', 22), ('MIKE', 18), ('ZULU', 16)),
+}
 
 
 def codes(result):
@@ -204,6 +221,8 @@ class GraphicsPreservationTest(unittest.TestCase):
         # The controlled dangling locator is covered by a strict rejection test.
         negative = FIXTURES / 'filer/qrecord-index-defect-20261127.fil'
         for path in sorted(set((FIXTURES / 'filer').glob('*.fil')) - {negative}):
+            if path.name in HU002_FILER_RECORDS:
+                continue
             with self.subTest(path=path.name):
                 result = bundle.prepare(path)
                 self.assertIn(b'FTXT_A', result.files['records.csv'])
@@ -219,6 +238,30 @@ class GraphicsPreservationTest(unittest.TestCase):
         card = ElementTree.fromstring(g18.files['assets/card.svg'])
         self.assertEqual(len(card.findall(SVG + 'line')), 36)
         self.assertIn(b'Card GRAPHICS', g18.files['preview.html'])
+
+    def test_filer_hu002_schema_and_retained_records(self):
+        columns = ['ITEM_CODE', 'MEMO TEXT', 'AMT', 'DATE/TEXT']
+        for filename, expected in HU002_FILER_RECORDS.items():
+            with self.subTest(path=filename):
+                result = bundle.prepare(FIXTURES / 'filer' / filename)
+                csv_text = result.files['records.csv'].decode('utf-8')
+                header, *rows = csv_reader(StringIO(csv_text, newline=''))
+                self.assertEqual(header, columns)
+                self.assertEqual(len(rows), len(expected))
+                self.assertEqual([len(row) for row in rows], [len(columns)] * len(expected))
+                self.assertEqual([row[0] for row in rows], [code for code, _ in expected])
+
+                content = json.loads(result.files['content.json'])
+                self.assertEqual(content['data_columns'], columns)
+                tables = {table['name']: table for table in content['tables']}
+                self.assertEqual(tables['DATA']['record_count'], len(expected))
+                identities = tuple((row['values'][0], row['storage_record_id'])
+                                   for row in content['data_records'])
+                self.assertEqual(identities, expected)
+                self.assertEqual(content['retired_data_records'], [])
+                self.assertNotIn('GRAPHICS', tables)
+                self.assertEqual(content['graphics'], [])
+                self.assertFalse(any(name.endswith('.svg') for name in result.files))
 
     def test_filer_synthetic_report_and_opaque_data(self):
         with TemporaryDirectory() as directory:
