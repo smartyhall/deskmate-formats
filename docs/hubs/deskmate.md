@@ -35,8 +35,10 @@ The applications and releases group covers the software as a user met it.
 
 - [Note Pad, Corkboard, and Information Center](../history/note-pad-corkboard.md)
   describes three closely related programs and how their documents relate.
+- [Install generic DeskMate 3.00 on a DOS PC](../ecosystem/deskmate-installation-300.md)
+  covers the release that predates the vendor installer and is copied by hand.
 - [Install DeskMate 3.03.01 on a DOS PC](../ecosystem/deskmate-installation-303.md)
-  is the older release walkthrough, retained because the releases behave
+  is the older installer walkthrough, retained because the releases behave
   differently in ways this reference documents rather than smooths over.
 - [DeskMate 3.03.01 and 3.05 native comparison](../research/deskmate-303-305-comparison.md)
   records observed differences between the two releases.

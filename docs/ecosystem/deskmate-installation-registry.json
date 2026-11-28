@@ -217,8 +217,8 @@
         "disk_sha256": "676fa9f8a6d9a1974967979d1000db78edd8216c6aa078cce4ff0c6a9ee042dd",
         "files_in_install_directory": 80
       },
-      "guide": null,
-      "notes": "No vendor installer exists in this set; the documented procedure is the DOS copy in dm300dsk.txt. A version-specific guide is still unwritten."
+      "guide": "docs/ecosystem/deskmate-installation-300.md",
+      "notes": "No vendor installer exists in this set; the documented procedure is the DOS copy in dm300dsk.txt. The run ended at the Desktop exit, so this release is not recorded as cold-launch qualified."
     },
     {
       "id": "dm-301",
@@ -525,7 +525,7 @@
     "Run the Personal DeskMate 1000 EX INSTALL.EXE and record the resulting layout.",
     "Establish a 1000 RL machine profile and run the 3.04 INSTALL.PDM.",
     "Record a native on-screen version identity for the 1000 SL/2 ROM desktop and the 1100 FD media.",
-    "Write version-specific guides for 3.00, 3.02, and the RSX OEM 03.04.04, all of which are installed but undocumented as procedures.",
+    "Write version-specific guides for 3.02 and the RSX OEM 03.04.04, both of which are installed but undocumented as procedures.",
     "Determine whether the 3.05 nine-ZIP printer phase still reads Disk 6 when ONE rather than ALL is selected.",
     "Identify whether any verified Professional DeskMate media exists in the retained collections.",
     "Establish image-versus-file-set equivalence for the OEM raw disks whose TeleDisk counterparts are untested."

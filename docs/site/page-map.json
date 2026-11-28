@@ -561,6 +561,19 @@
       "source": "docs/research/deskmate-automatic-house-x10.md"
     },
     {
+      "id": "applications.installation-300",
+      "slug": "installation/deskmate-300",
+      "title": "Install generic DeskMate 3.00 on a DOS PC",
+      "section": "deskmate",
+      "subsection": "Applications and releases",
+      "order": 45,
+      "summary": "The five-set generic DeskMate 3.00 procedure, which copies files by hand and sets DMCONFIG instead of running an installer.",
+      "date": null,
+      "is_hub": false,
+      "role": "current-guide",
+      "source": "docs/ecosystem/deskmate-installation-300.md"
+    },
+    {
       "id": "applications.installation-303",
       "slug": "installation/deskmate-303",
       "title": "Install DeskMate 3.03.01 on a DOS PC",

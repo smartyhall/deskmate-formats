@@ -50,7 +50,7 @@ evidence that a release has been recovered.
 | Personal DeskMate 01.00.00 (1000 HX) | Personal DeskMate | ROM desktop plus file sets | Launched | — |
 | Personal DeskMate 2 01.00.00 | Personal DeskMate | One 35-file set for four or five disks | Launched | — |
 | Professional DeskMate | Professional | None identified | Listed | — |
-| DeskMate 03.00.00 | DeskMate 3 | Five file sets | Installed | — |
+| DeskMate 03.00.00 | DeskMate 3 | Five file sets | Installed | [3.00 guide](deskmate-installation-300.md) |
 | DeskMate 3.01 | DeskMate 3 | None found | Listed | — |
 | DeskMate 03.02.00 | DeskMate 3 | Three file sets | Installed | — |
 | DeskMate 3.02 (1000 TL) | DeskMate 3 OEM | Three raw 720 KiB disks | Inspected | — |
@@ -81,17 +81,20 @@ rather than 3.68.
   new in this atlas, 140 installed files, Desktop 3.68, cold launch verified.
 - [Install DeskMate 3.05 on a DOS PC](deskmate-installation-305.md): the
   five-disk retail lineage, including the printer and reset sequence.
+- [Install generic DeskMate 3.00 on a DOS PC](deskmate-installation-300.md):
+  the earliest generic release with a walkthrough, which has no vendor
+  installer and is copied by hand before `DMCONFIG` is set.
 - [Install DeskMate 3.03.01 on a DOS PC](deskmate-installation-303.md): the
-  earliest generic release with a complete walkthrough, including the disk
-  label rules that the installer enforces.
+  earliest generic release with a vendor installer walkthrough, including
+  the disk label rules that the installer enforces.
 - [Five-numbered-set 3.05 and SL/2 ROM startup](../research/deskmate-305-variants-sl2-20261122.md):
   a dated comparison rather than a step-by-step guide.
 - [RSX OEM 03.04.04 recovery](../research/deskmate-rsx-oem-recovery-20261122.md):
   the only completed OEM installer run, recorded as an experiment.
 
-Three installed releases still lack their own guide: generic 3.00 and 3.02,
-which have no vendor installer, and the RSX OEM 03.04.04, which does. They
-are the next authoring tasks rather than open installation questions.
+Two installed releases still lack their own guide: generic 3.02, which has
+no vendor installer, and the RSX OEM 03.04.04, which does. They are the next
+authoring tasks rather than open installation questions.
 [Installation roadmap #153](https://github.com/smartyhall/deskmate-formats/issues/153)
 
 ## Hardware and operating-system compatibility
