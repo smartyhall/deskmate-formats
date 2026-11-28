@@ -398,6 +398,33 @@ class Client:
             self.key('down', code)
             return self.key('up', code)
 
+    def mouse(self, dx, dy, buttons=0):
+        """Relative motion and the button bitmask (1 left, 2 right, 4 middle).
+
+        Units are emulator mouse counts, not guest pixels; the guest driver's
+        scale is a guest property (see pointer calibration). Buttons are an
+        absolute state, so releasing with zero is idempotent. Delivery is not
+        proof that the guest processed or the application acted on the event.
+        """
+        if (type(dx) is not int or type(dy) is not int or type(buttons) is not int
+                or abs(dx) > 32767 or abs(dy) > 32767 or not 0 <= buttons <= 7):
+            raise ValueError('invalid mouse delta or button mask')
+        return self._call(f'mouse {dx} {dy} {buttons}')
+
+    def tablet(self, x=None, y=None, buttons=0):
+        """Absolute pen position in pixels of the last frame; None lifts it out.
+
+        Requires a configured tablet/touch screen/light pen. The production
+        image is a plain PS/2 mouse, so this raises CommandError there; callers
+        must select the capability explicitly instead of assuming it.
+        """
+        if x is None or y is None:
+            return self._call('tablet out')
+        if (type(x) not in (int, float) or type(y) not in (int, float)
+                or type(buttons) is not int or not 0 <= buttons <= 7 or x < 0 or y < 0):
+            raise ValueError('invalid tablet position or button mask')
+        return self._call(f'tablet {int(x)} {int(y)} {buttons}')
+
     def type_ascii(self, text, *, pace_ms=None):
         # US set-1 keyboard. Validate the entire string before sending any input.
         plain = '1234567890-=qwertyuiop[]asdfghjkl;\'`\\zxcvbnm,./'
