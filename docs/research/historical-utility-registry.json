@@ -1,0 +1,1743 @@
+{
+  "schema_version": 1,
+  "campaign": "historical-utility-qualification-001",
+  "origin": "a49e72b3b967e6ed0b6097cb040114072a4970e7",
+  "survey_date": "2026-11-27",
+  "method": "Preserved TVDog and operator-supplied bytes. Selected members were decompressed and hashed. Advertised compatibility comes from package documentation or catalogue descriptions.",
+  "indexes": [
+    "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/00_index.txt",
+    "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/00_index.txt",
+    "http://ftp.oldskool.org/pub/tvdog/tandy1000/graphics/00_index.txt"
+  ],
+  "status_definitions": {
+    "archived": "Accession held and hashed.",
+    "identified": "Selected member identity checked offline.",
+    "environment-ready": "Named environment exercised for a related operation.",
+    "launched": "Execution observed; operation output still unverified.",
+    "qualified": "Named operation observed and independently checked in this campaign.",
+    "qualified-prior": "Named operation retained from prior native reports.",
+    "blocked": "An attempted step could not meet a named prerequisite."
+  },
+  "packages": {
+    "dmrepair.exe": {
+      "bytes": 26984,
+      "sha256": "9acddafc4cdd117559dee413c0e73304454980861710146281eb8758ffa0aa75",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dmrepair.exe",
+      "members": [
+        {
+          "name": "DBREPAIR.PDM",
+          "bytes": 18119,
+          "sha256": "e1922f36dd470c0f78f8e3872dce055aa3fd088e2ac4d8ccd852b9d2cb2389c4"
+        },
+        {
+          "name": "README.TXT",
+          "bytes": 3859,
+          "sha256": "a1b2d55437c2ab5726779ff9718ae1e42310521b860680c47cb2275982851da2"
+        }
+      ]
+    },
+    "f2d01.zip": {
+      "bytes": 43259,
+      "sha256": "eab2aacee477caf4d7ab8e978f0809ae4e773aa1f20392514149ef12724c5924",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/f2d01.zip",
+      "members": [
+        {
+          "name": "DBREPAIR.PDM",
+          "bytes": 18119,
+          "sha256": "e1922f36dd470c0f78f8e3872dce055aa3fd088e2ac4d8ccd852b9d2cb2389c4"
+        },
+        {
+          "name": "DBREPAIR.TXT",
+          "bytes": 3859,
+          "sha256": "a1b2d55437c2ab5726779ff9718ae1e42310521b860680c47cb2275982851da2"
+        },
+        {
+          "name": "FIL2DBF.PDM",
+          "bytes": 45712,
+          "sha256": "26d2ab728b7de3a4b1f8d82797b2225695a3810cff83176e844d0d1f73fd444c"
+        },
+        {
+          "name": "FIL2DBF.TXT",
+          "bytes": 10073,
+          "sha256": "a430c34ec18f914132c107e3d5908407705cd32fca66ba629f4e0180af3c884e"
+        }
+      ]
+    },
+    "f2ddos.zip": {
+      "bytes": 255409,
+      "sha256": "e887b2c49775775b6585b04cc59197da632d44fbe0015fd41c263708f70ddb25",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/f2ddos.zip",
+      "members": [
+        {
+          "name": "FIL2DBF.EXE",
+          "bytes": 16168,
+          "sha256": "55bbb869ad40316c029e63fd2e36c7912a9be1c5f748d2086cf5cca973f5f404"
+        },
+        {
+          "name": "README",
+          "bytes": 339,
+          "sha256": "08f83b628cba908056086625466d877c257c490d7ae4568a2965653cace41034"
+        }
+      ]
+    },
+    "filer.zip": {
+      "bytes": 6745,
+      "sha256": "6831fb2c9740a9f3f1dfd31277b33de028e934c791086566ab1a58953a898446",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/filer.zip",
+      "members": [
+        {
+          "name": "FILER.BAS",
+          "bytes": 14828,
+          "sha256": "18684f56eb7afca310998477808f899d9dfa8164b31083e9b94bb4172226f559"
+        },
+        {
+          "name": "FILER.DOC",
+          "bytes": 1912,
+          "sha256": "63a8c4a68b574ed7c36f670ff67750cf7939f9f6e9318196d9427b8572579677"
+        }
+      ]
+    },
+    "undesk.zip": {
+      "bytes": 16312,
+      "sha256": "b97e9853fb3529fef950a4e53926681f076fc13cfc0c1ed9b81dea12db1fa132",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/undesk.zip",
+      "members": [
+        {
+          "name": "UNDESK.DOC",
+          "bytes": 8143,
+          "sha256": "cf901c830614a1fbd0c3460e5fbbde58c0dbdeb5297d8930ded3bce9d8e881ac"
+        },
+        {
+          "name": "UNDESK.COM",
+          "bytes": 17920,
+          "sha256": "729d20a0420b1048ce568b7351fdc79e51441a8b029e89916f4cfe431b07f5b2"
+        },
+        {
+          "name": "UDALL.BAT",
+          "bytes": 145,
+          "sha256": "9e4ca4fa254b51f833dfe4553d25ce71cfa2db0f2994562d0dcd9d94f8b7aaea"
+        }
+      ]
+    },
+    "hmw2txt.zip": {
+      "bytes": 10997,
+      "sha256": "f0721572206a4b6f54011e372a0c131cf2ed57ff958919bae16ccff21a77cd84",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/hmw2txt.zip",
+      "members": [
+        {
+          "name": "HMW2TXT.C",
+          "bytes": 7511,
+          "sha256": "4a19cdee9494f52bdfcf1fa5437296d518d75d47470ec4e5cf2c7e2260ca4354"
+        },
+        {
+          "name": "HMW2TXT.TXT",
+          "bytes": 5871,
+          "sha256": "b1da64a18c1828044b40a522e045d7ba6c6e9c23de92271d1a1fb693a7a3c513"
+        },
+        {
+          "name": "HMW2TXT.EXE",
+          "bytes": 11937,
+          "sha256": "b283780484994dc24a5e8fba7f0aebbf2358a7cb25c0da625e52a0e5d3a638c2"
+        }
+      ]
+    },
+    "prn2file.zip": {
+      "bytes": 5477,
+      "sha256": "f9dc21b56daa069310f426e3ad9b747cf6009f42a7a2f125774f8bf414aabb50",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/prn2file.zip",
+      "members": [
+        {
+          "name": "PRN2FILE.C",
+          "bytes": 2872,
+          "sha256": "f0edb6df09180e84e3cf806afcf8e55717cbf84f3c826fd2561fe52c804b1de4"
+        },
+        {
+          "name": "PRN2FILE.MAK",
+          "bytes": 804,
+          "sha256": "2a30303c7ede8108bab37f24a8084091c6fcd14e64066237b818eb1f0bb999bc"
+        },
+        {
+          "name": "PRN2FILE.EXE",
+          "bytes": 69743,
+          "sha256": "ffa1b7bb3ac56725bde8840afe760b8dcdfa4da4050a77e534fd66563999b5ab"
+        }
+      ]
+    },
+    "prn2fil2.zip": {
+      "bytes": 5768,
+      "sha256": "a77d94eed4bef217a6a03f0eaecd23b6589d2dbdf39a0706c14cd054a9df5f38",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/prn2fil2.zip",
+      "members": [
+        {
+          "name": "PRN2FILE.C",
+          "bytes": 2773,
+          "sha256": "279c38a91cae92bfb75b54b4718db5e999ef58819e433d75806c0023094d0320"
+        },
+        {
+          "name": "PRN2FILE.TXT",
+          "bytes": 1129,
+          "sha256": "03229848721ad5f97e9e164933583ac76524280456886f86ba98cda26f954d5d"
+        },
+        {
+          "name": "PRN2FILE.EXE",
+          "bytes": 6549,
+          "sha256": "f2dc1f82a131cf0050dfde93328071563f7cff6d322aba8d1eded4b5e6b45c6d"
+        }
+      ]
+    },
+    "prtsnd.zip": {
+      "bytes": 2315,
+      "sha256": "4e9de92b5ae3d5858225d056c0a81bd863b37aec60a224046c7bd7a71f4a2d60",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/prtsnd.zip",
+      "members": [
+        {
+          "name": "PRTSND.COM",
+          "bytes": 511,
+          "sha256": "429b94fb6b0ca82bd01d7382c25dd1c904d90e0c83f2fd8ca706074c783944d4"
+        },
+        {
+          "name": "PRTSND.ASM",
+          "bytes": 4134,
+          "sha256": "cc004e700612ca57981663b110c6f5647463c9b20a8e2281e184771fc8e73a29"
+        }
+      ]
+    },
+    "dmsnd07.zip": {
+      "bytes": 107272,
+      "sha256": "bbf64c7017defb82f01967c8f37a3bd7b5d617c516cca8168dab8e297f91dcea",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/dmsnd07.zip",
+      "members": [
+        {
+          "name": "DMSOUND.DOC",
+          "bytes": 44449,
+          "sha256": "ffb97f03409ee4e8e0a2bd3e6ef689abd6bf0b3e08c193d4759a077773275151"
+        },
+        {
+          "name": "DMSOUND.PDM",
+          "bytes": 137161,
+          "sha256": "f1b7516992aa3215cbc54a625fa1d03bb60557dd4012cc37507fc4e3975401fb"
+        },
+        {
+          "name": "HISTORY",
+          "bytes": 13177,
+          "sha256": "9cfb4210abbdfe74a2ec7448d8ed5415892992bc7331a80974f5422e7cc78094"
+        },
+        {
+          "name": "EFDIALOG.ACC",
+          "bytes": 10017,
+          "sha256": "726277979735fafb97b17e4effd1b823bc8dcb12db4cc02c5d0f63e428b3d91b"
+        }
+      ]
+    },
+    "dmsnddos.zip": {
+      "bytes": 282031,
+      "sha256": "02c48e715ecb2270fdfabb8196ca2f7ea4c36fa421909232d91683f57b2b7549",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/dmsnddos.zip",
+      "members": [
+        {
+          "name": "DMSOUND.EXE",
+          "bytes": 16168,
+          "sha256": "8726b4ab6dff6d160ee837d855f75bd40a887cdb57c2aca5086c7eab3508395f"
+        },
+        {
+          "name": "README.DOS",
+          "bytes": 5024,
+          "sha256": "b9197f5538d8709f71efd43e50355e529531b36a67386400400e7fa85f5d1b7e"
+        }
+      ]
+    },
+    "conver.zip": {
+      "bytes": 18061,
+      "sha256": "4300dd311a0a0b6d2845b658088e82a7f5971f6981e76152763e65059421037e",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/conver.zip",
+      "members": [
+        {
+          "name": "CONVERT.DOC",
+          "bytes": 1152,
+          "sha256": "6a2e803213a5a3543f528aaba99e4f3fbd5f4a445c7d470d90c2aa9d041d9894"
+        },
+        {
+          "name": "CONVERT.EXE",
+          "bytes": 26290,
+          "sha256": "def6b1e476e4fa1ad75f5da2a4e9f086669b9c515ba4b235498930d03d18861b"
+        }
+      ]
+    },
+    "c2snd202.zip": {
+      "bytes": 65305,
+      "sha256": "ee2b12cfbddcfe275870c7079a13a4fb5e919bccb154528d11b5e942b2bbd9dc",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/c2snd202.zip",
+      "members": [
+        {
+          "name": "CONV2SND.DOC",
+          "bytes": 31703,
+          "sha256": "32e011b0abb0e1afac1f3becde180bf18122aa58ba6d6d1c310c3e291478f2a3"
+        },
+        {
+          "name": "PPWAV.ASM",
+          "bytes": 29018,
+          "sha256": "9d6e90a8c6df79732cd93dbbcac1c8592966d33b02aacc31be8a4a3d9e96f819"
+        },
+        {
+          "name": "CONV2SND.PAS",
+          "bytes": 39228,
+          "sha256": "65eb5f0130435e50dd1ecd2cbb8eb41dd6adee51b2cfd7ce983fe0a602e55fb3"
+        },
+        {
+          "name": "CONV2SND.EXE",
+          "bytes": 21040,
+          "sha256": "00882a55f7726d8ee50ff2d213f3e7806708dbe6afd1f1aa7dab02e5dc56201a"
+        },
+        {
+          "name": "SND2WAV.DOC",
+          "bytes": 11279,
+          "sha256": "b94566a0981c8343652751273a061e495ff41c411fd9ef7a54e9ac7cf47584e4"
+        },
+        {
+          "name": "SND2WAV.PAS",
+          "bytes": 33596,
+          "sha256": "8e6ceb458abfaad5464a4143f9622646b98eae2cff4c43b5516a47d221736263"
+        },
+        {
+          "name": "SND2WAV.EXE",
+          "bytes": 15328,
+          "sha256": "042d052011872286ebbe72df38fe746c6c49477749885a4145288934f644c5c3"
+        }
+      ]
+    },
+    "dmgif09.zip": {
+      "bytes": 99320,
+      "sha256": "2d8a837c8fd5032fe6a68670df84988d312b0447478fceb87e0afc7f50fdf481",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/graphics/dmgif09.zip",
+      "members": [
+        {
+          "name": "DMGIF.PDM",
+          "bytes": 164637,
+          "sha256": "12c44726f8ceaabb51a27ea29a82187083b8526c22842209deff04f09df84d92"
+        },
+        {
+          "name": "DMGIF.DOC",
+          "bytes": 44889,
+          "sha256": "afb32e51c860630dcf07c379f1032cd0d10ac87854802465983d604c6e9d0535"
+        },
+        {
+          "name": "TECHNOTE",
+          "bytes": 36107,
+          "sha256": "637ead5f849c9f737506f2090ba2280e80c059c635d98b2768d3d3f7c1212ba3"
+        },
+        {
+          "name": "README",
+          "bytes": 789,
+          "sha256": "2be17323ea5ee2e123ff947e270afc18fc473b7cf2c465188cc277772997f486"
+        }
+      ]
+    },
+    "dmgif12a.zip": {
+      "bytes": 221542,
+      "sha256": "972a9dce2d20ec9081163c2a2bfa9b39d13407ac12347bfb7fbdf12afde93392",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/graphics/dmgif12a.zip",
+      "members": [
+        {
+          "name": "DMGIF.EXE",
+          "bytes": 16168,
+          "sha256": "63b0a80664e7c36e3e44bff7b64b2e0c16cf4ddbc703118bd48a59905da09caf"
+        }
+      ]
+    },
+    "dmgif12b.zip": {
+      "bytes": 173384,
+      "sha256": "c842f9af3d3705cab8557603f534fad1cc82fece07b78e32947bf7ff166a690c",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/graphics/dmgif12b.zip",
+      "members": [
+        {
+          "name": "DMGIF.PDM",
+          "bytes": 165387,
+          "sha256": "3d6843fe8484ab4eec05c3b1cb35913b1a9427a8c45cf1be11ea16180303ad1e"
+        }
+      ]
+    },
+    "dmgif12c.zip": {
+      "bytes": 132161,
+      "sha256": "8ba065a8be003099a55b0927ba05b298e54f883b50cac61a94c3bf72c6d4e484",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/graphics/dmgif12c.zip",
+      "members": [
+        {
+          "name": "DMGIF.DOC",
+          "bytes": 54332,
+          "sha256": "69b82a1db3ed401e1e8b8e0bf4060ec28327fa90a47c4e6147e9789050b225b9"
+        },
+        {
+          "name": "DMGIF.HLP",
+          "bytes": 74752,
+          "sha256": "a4f6ce6ea1e225b8e755553a405db9f2cb7e90dbb69a218c3dfb68c0ca4d69d9"
+        },
+        {
+          "name": "INSTALL.DOC",
+          "bytes": 9696,
+          "sha256": "a9c74004c0f9e5c592eca07d3ec48f91325784b13d00bcbb200683a13248e29a"
+        }
+      ]
+    },
+    "dmgif12.txt": {
+      "bytes": 6209,
+      "sha256": "5fd0a92fbd937127890c1621747fb3c01c092eb9547c9e212bf3b5d6c5d29f76",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/graphics/dmgif12.txt",
+      "members": []
+    },
+    "dmclip.zip": {
+      "bytes": 10150,
+      "sha256": "972997ee565d40e0d532e13c97e8a318cf241defa85352b1ab14135956bd8f19",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/dmclip.zip",
+      "members": [
+        {
+          "name": "CLIPART.PDM",
+          "bytes": 13273,
+          "sha256": "1eed5c8685efa9276a4550f952c6b87bd75c4e99074f2d2c4d9cb5f27584b8d2"
+        },
+        {
+          "name": "CLIPART.DOC",
+          "bytes": 2146,
+          "sha256": "c90f484f727cd5ae8acc60049eb5d056d18e1416d7f66b53bf6114bf7baf9f97"
+        }
+      ]
+    },
+    "dm_music.zip": {
+      "bytes": 24629,
+      "sha256": "3f25b8f3367659fc89abd8617a5d4dc9e448e6ee5de51aec5d7f02c0402db902",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/sound/dm_music.zip",
+      "members": [
+        {
+          "name": "DM_Music.exe",
+          "bytes": 77824,
+          "sha256": "b84f1a9a9dab3252c6c85127a7c9d25f68c0cde53a572ede80a4674230a02150"
+        },
+        {
+          "name": "DM_Music_Readme.txt",
+          "bytes": 7854,
+          "sha256": "14c9bbd21742d42d736ed8c7befaade0a35e2c694729b53df298b0cd9c8cb0d2"
+        }
+      ]
+    },
+    "MidiMapper.zip": {
+      "bytes": 440568,
+      "sha256": "323a06e1ae757de09ac25721d94a29ac7bbb1d4038d91cd74cdcdaee2dad798b",
+      "source_url": "http://my.voyager.net/~wb/misc/MidiMapper.zip",
+      "members": [
+        {
+          "name": "pad_file.xml",
+          "bytes": 6038,
+          "sha256": "7a85ac9abcd7a164d3f3b01311e29adc757f317aab1bc298dd7fc3abcd003511"
+        },
+        {
+          "name": "SETUP.LST",
+          "bytes": 6589,
+          "sha256": "79230d8889301583134c52575c6dd8567999e18bdb58fb5f41131b57415949e3"
+        },
+        {
+          "name": "MidiMapper.CAB!MidiMapper.exe",
+          "bytes": 344064,
+          "sha256": "c9c802b31abda0344a058a6b4d1f8f48cdff4c74a91d6db8814d7cc8a493c3e9"
+        },
+        {
+          "name": "MidiMapper.CAB!midifl32.ocx",
+          "bytes": 52224,
+          "sha256": "3acbbe016c41e2c9b5f580d40a31ce02e97ee60e38d8478334c351cba85c6e1b"
+        }
+      ]
+    },
+    "rcpshare.zip": {
+      "bytes": 10617,
+      "sha256": "a43ad3de187e40bf4488fd3c06c48b7d4a5050277aeea4129ba3f8042ff0d849",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/rcpshare.zip",
+      "members": [
+        {
+          "name": "RCPSHARE.DOC",
+          "bytes": 2664,
+          "sha256": "6ceb4dde8efa51901272c0064a611a205db309f02fcc7867da257782729ec69e"
+        },
+        {
+          "name": "RCPSHARE.PDM",
+          "bytes": 17323,
+          "sha256": "34262bdb94b8cb57dd8cc0c41295dabee98ab03a1b66f578ac8305015ab14f01"
+        }
+      ]
+    },
+    "rsxdisks.zip": {
+      "bytes": 4083315,
+      "sha256": "e8289597e3d246727ff977f151ee986dd59d50ace72bdfdd2a65614b88588a5c",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/system/rsxdisks.zip",
+      "members": [
+        {
+          "name": "DISK3.ZIP!RCPSHARE.HLP",
+          "bytes": 17408,
+          "sha256": "314add7dbd319e0616a5916086fed0f0e72973f5b3ca18897b9578faa45ef9a8"
+        },
+        {
+          "name": "DISK3.ZIP!RCPSHARE.PDM",
+          "bytes": 26945,
+          "sha256": "98c498222a91eade43c872cb2bcb9b7a6bda60aef9573cdb98c4c5e472323383"
+        }
+      ]
+    },
+    "1000RLX_HD-B.zip": {
+      "bytes": 2431617,
+      "sha256": "c19e395880113fed55ad50e8a8d1e05b6cdf87ca883f700b0d28dd062882463f",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/1000RLX_HD-B.zip",
+      "members": [
+        {
+          "name": "DESKMATE/RCPSHARE.HLP",
+          "bytes": 17408,
+          "sha256": "314add7dbd319e0616a5916086fed0f0e72973f5b3ca18897b9578faa45ef9a8"
+        },
+        {
+          "name": "DESKMATE/RCPSHARE.PDM",
+          "bytes": 26945,
+          "sha256": "98c498222a91eade43c872cb2bcb9b7a6bda60aef9573cdb98c4c5e472323383"
+        }
+      ]
+    },
+    "macros.zip": {
+      "bytes": 207197,
+      "sha256": "c48145e80e8a3188d6aa1709c1c18d139de0da0c62e67ece4f24f16f6775f34b",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/macros.zip",
+      "members": [
+        {
+          "name": "README.DOC",
+          "bytes": 7792,
+          "sha256": "c552c07a03012ec376d3a18c3945f60199e694d4dc7d61262da243728ea08135"
+        },
+        {
+          "name": "DMMACRO.ACC",
+          "bytes": 8841,
+          "sha256": "084d1250d3489c8d7a0d9699be59aa7bb1e4ddaae201300c2158bd5645bc2d8a"
+        },
+        {
+          "name": "DMMACRO.HLP",
+          "bytes": 13312,
+          "sha256": "0818fbe3794209cc197e1dda63ec999f539c474516472b8892fbd8d0a300a34e"
+        },
+        {
+          "name": "DMMACRO.RES",
+          "bytes": 19223,
+          "sha256": "da8ba851f93ec227aa8021f84a57f7021bbbe2bc7da6e29988e287104990cede"
+        }
+      ]
+    },
+    "diskin.zip": {
+      "bytes": 23110,
+      "sha256": "055873146229ff5a06a515a1c09795a76fa8125155175d00b1b96fa516d523ff",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/diskin.zip",
+      "members": [
+        {
+          "name": "DISKINFO.DOC",
+          "bytes": 2940,
+          "sha256": "1c94705474ae40da6c469dfd808dedf741fba3734c9d76dddab63e0736b8ccb5"
+        },
+        {
+          "name": "DISKINFO.PDM",
+          "bytes": 19316,
+          "sha256": "9593bf52c30fb41d207e62a0d4f56d3416f7adfcf59e0af9f1829095eddabf1a"
+        },
+        {
+          "name": "INSTALL.PDM",
+          "bytes": 15988,
+          "sha256": "5924856c96ff6a793e60cc06290d3506f359b16b566738587bbc8e94efca8191"
+        }
+      ]
+    },
+    "backupdm.zip": {
+      "bytes": 13136,
+      "sha256": "59acfc46faf0b0cce1d3c9b73aae4ce05545957071dafbc531fd69eaffa6abaf",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/backupdm.zip",
+      "members": [
+        {
+          "name": "BATPOPUP.EXE",
+          "bytes": 11433,
+          "sha256": "2a7138ec1494fd60df857e19a8bee317b77e94ba1942146048b90725e2165615"
+        },
+        {
+          "name": "BACKUPDM.BAT",
+          "bytes": 6577,
+          "sha256": "457659e370db3eabf6fc121e0eb4359dcc6b1b97a584cc0a0a05905baf06d7ca"
+        },
+        {
+          "name": "README.COM",
+          "bytes": 8541,
+          "sha256": "ccdabfe3880d0674207cde5ff25d6725c32f63f71c1a5b4c2f15cc8f961dbab9"
+        }
+      ]
+    },
+    "bp-720k.zip": {
+      "bytes": 467142,
+      "sha256": "b5825e438c41dc0b97f98385da34879f0efb360f574b01253b0b72620716429e",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Backup-Pro-for-DeskMate/bp-720k.zip",
+      "members": [
+        {
+          "name": "BACKPRO.HLP",
+          "bytes": 33449,
+          "sha256": "cdba7ddf10347bceaaf7575002d1ee7dfcf5046498216946c7a48f4bdb9e871c"
+        },
+        {
+          "name": "BP.EXE",
+          "bytes": 15992,
+          "sha256": "2dd7c457292285be0082cfb8db8fb997604044575fc2df936a1688ab796b2719"
+        },
+        {
+          "name": "BPUTILS.EXE",
+          "bytes": 31471,
+          "sha256": "c1d7e0b805205e3bb537ce6b0c9d7d8fbd0ee9fbae8572e55bf895e5c80d6d12"
+        },
+        {
+          "name": "READ.ME",
+          "bytes": 2097,
+          "sha256": "c542bfc5dc9b0adb1200737f1a932bfacf7e6a7bf83801e8e9dc4d5eb0786190"
+        },
+        {
+          "name": "BP.PDM",
+          "bytes": 73569,
+          "sha256": "f25a4f48b86015a147ccc2aae97f6b2502296c9fa73d86e60d94bbd6f4685689"
+        }
+      ]
+    },
+    "bpman.zip": {
+      "bytes": 1896400,
+      "sha256": "0fe9c43816fdde99306a303b92cd673d61cf1ff70b32724a700a7210d303c14c",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/wares/Backup-Pro-for-DeskMate/bpman.zip",
+      "members": [
+        {
+          "name": "bpman.pdf",
+          "bytes": 2074021,
+          "sha256": "0b626a20af9677000cb371785ebc835f9989ff281f310fcf21b4b0ee714f0cc4"
+        }
+      ]
+    },
+    "deskhe.zip": {
+      "bytes": 73526,
+      "sha256": "b86deb2dc74437138414b200d2ccdffa6da7a3034537ae1c47a264dbbade0f50",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/deskhe.zip",
+      "members": [
+        {
+          "name": "DESKHELP.HLP",
+          "bytes": 1592,
+          "sha256": "aeb53f1632f78787be434b07c717337b13381d0a226297666db1d31299492aca"
+        },
+        {
+          "name": "DH-DEMO.DOC",
+          "bytes": 26368,
+          "sha256": "c43e572549dc6fe544afa573757b05b391fbea132cc2b820d119fb957480dcc3"
+        },
+        {
+          "name": "DH-DEMO.EXE",
+          "bytes": 137223,
+          "sha256": "ec6e97a91a88f4c07347c5ec46da4d065f6fb0151aab9da9b90dbebda5f424c9"
+        },
+        {
+          "name": "READ.ME!",
+          "bytes": 797,
+          "sha256": "0132e3418b5715197e083c27cfb8c7a9487969761a00a0e1d916517888dcfb9a"
+        }
+      ]
+    },
+    "pocket.zip": {
+      "bytes": 439097,
+      "sha256": "b2eb79d224fc7a579df3de32f3792f055ef223a3414504d63cd5a35f799f89dd",
+      "source_url": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/pocket.zip",
+      "members": [
+        {
+          "name": "POCKET.DOC",
+          "bytes": 5094,
+          "sha256": "0eaee8c71f74fdb79fe87863fbfbce82c63f4ce9cf72653895a99728fd6d21a5"
+        },
+        {
+          "name": "DISK1.ZIP!POCKET.EXE",
+          "bytes": 16462,
+          "sha256": "29e5e3afebae6e7369e8ac2f46a59f7bb424d0cd25dc0988fb2192a8a6f685a8"
+        },
+        {
+          "name": "DISK1.ZIP!POCKET.PDM",
+          "bytes": 36302,
+          "sha256": "5ebc41e3fa4fce316a3e66af8635c8865fb146e049efe8d4262c6f254f46cb78"
+        }
+      ]
+    }
+  },
+  "operations": [
+    {
+      "id": "dbrepair-native",
+      "name": "DBrepair",
+      "version": "version unverified",
+      "attribution": "Tandy Corporation",
+      "category": "repair",
+      "packages": [
+        "dmrepair.exe",
+        "f2d01.zip"
+      ],
+      "dependencies": "DeskMate 3.0+ with native DMDB",
+      "advertised_compatibility": "DeskMate and Home Organizer database types per README",
+      "input": "FIL and other advertised databases",
+      "output": "recovered database and OLD",
+      "source_code": "absent",
+      "publication": "Tandy software; private",
+      "profile": "desk-305-filer",
+      "status": "qualified",
+      "smoke_test": "Repair healthy QRECORD then one dangling DATA locator; cold reopen both.",
+      "evidence": "Both converge to the same normalized FIL; DBCOLS IDs changed.",
+      "follow_up": "Expand to multiple DATA pages before additional application profiles.",
+      "member_refs": [
+        "dmrepair.exe!DBREPAIR.PDM",
+        "dmrepair.exe!README.TXT",
+        "f2d01.zip!DBREPAIR.PDM",
+        "f2d01.zip!DBREPAIR.TXT"
+      ],
+      "documentation": [
+        "README.TXT",
+        "DBREPAIR.TXT"
+      ],
+      "references": [
+        "../evidence/historical-utility-qualification-001.json"
+      ],
+      "archived": true,
+      "launched_in_campaign": true,
+      "follow_up_required": true
+    },
+    {
+      "id": "dbrepair-runtime",
+      "name": "DBrepair through Fil2dbf runtime",
+      "version": "version unverified / runtime 03.03.01",
+      "attribution": "Tandy Corporation",
+      "category": "repair",
+      "packages": [
+        "f2d01.zip",
+        "f2ddos.zip"
+      ],
+      "dependencies": "isolated DOS plus Fil2dbf runtime",
+      "advertised_compatibility": "documented Fil2dbf recovery handoff",
+      "input": "supported database",
+      "output": "recovered database and OLD",
+      "source_code": "absent",
+      "publication": "commercial runtime and utility private",
+      "profile": "dos-f2d-30301",
+      "status": "environment-ready",
+      "smoke_test": "Exercise the documented repair handoff on one recoverable input.",
+      "evidence": "Shared PDM verified; DOS export works; repair handoff unobserved.",
+      "follow_up": "Find an input-processing error that offers the handoff.",
+      "member_refs": [
+        "f2d01.zip!DBREPAIR.PDM",
+        "f2d01.zip!DBREPAIR.TXT",
+        "f2ddos.zip!FIL2DBF.EXE"
+      ],
+      "documentation": [
+        "DBREPAIR.TXT"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "fil2dbf-native",
+      "name": "Fil2dbf PDM",
+      "version": "0.1",
+      "attribution": "Jeffrey L. Hayes",
+      "category": "converter",
+      "packages": [
+        "f2d01.zip"
+      ],
+      "dependencies": "DeskMate 3.0x",
+      "advertised_compatibility": "Filer and Address Book discussed; Calendar and recipe limitations",
+      "input": "one selected table, excluding DBCOLS",
+      "output": "dBASE III/IV advertised",
+      "source_code": "absent",
+      "publication": "author permits free distribution; program held privately",
+      "profile": "desk-305-filer",
+      "status": "qualified",
+      "smoke_test": "Export QRECORD DATA as FTXT_A, then try a non-database ASCII marker.",
+      "evidence": "Matched expected DBF; invalid input left a zero-byte DBF.",
+      "follow_up": "Try sorted multi-field numeric and decimal controls.",
+      "member_refs": [
+        "f2d01.zip!FIL2DBF.PDM",
+        "f2d01.zip!FIL2DBF.TXT"
+      ],
+      "documentation": [
+        "FIL2DBF.TXT"
+      ],
+      "references": [
+        "../evidence/historical-utility-qualification-001.json"
+      ],
+      "archived": true,
+      "launched_in_campaign": true,
+      "follow_up_required": true
+    },
+    {
+      "id": "fil2dbf-dos",
+      "name": "Fil2dbf DOS",
+      "version": "0.1 / runtime 03.03.01",
+      "attribution": "Jeffrey L. Hayes / Tandy runtime",
+      "category": "converter",
+      "packages": [
+        "f2d01.zip",
+        "f2ddos.zip"
+      ],
+      "dependencies": "isolated DOS; runtime on PATH; own DMCONFIG",
+      "advertised_compatibility": "DOS form prompts without command-line filenames",
+      "input": "same table model as PDM",
+      "output": "dBASE III on measured control",
+      "source_code": "absent",
+      "publication": "author permits free distribution; bundled runtime private",
+      "profile": "dos-f2d-30301",
+      "status": "qualified",
+      "smoke_test": "Launch, cancel mouse setup and export DOSGOOD.FIL DATA as FTXT_A.",
+      "evidence": "Byte-identical DBF to native; launcher uses the same conversion PDM.",
+      "follow_up": "Compare additional field categories in both runtime modes.",
+      "member_refs": [
+        "f2d01.zip!FIL2DBF.PDM",
+        "f2d01.zip!FIL2DBF.TXT",
+        "f2ddos.zip!FIL2DBF.EXE",
+        "f2ddos.zip!README"
+      ],
+      "documentation": [
+        "FIL2DBF.TXT",
+        "README"
+      ],
+      "references": [
+        "../evidence/historical-utility-qualification-001.json"
+      ],
+      "archived": true,
+      "launched_in_campaign": true,
+      "follow_up_required": true
+    },
+    {
+      "id": "filer-basic",
+      "name": "Early Filer BASIC utility",
+      "version": "unverified",
+      "attribution": "unverified",
+      "category": "converter",
+      "packages": [
+        "filer.zip"
+      ],
+      "dependencies": "DOS BASIC and early Filer template",
+      "advertised_compatibility": "index excludes DeskMate 3; docs flag reverse conversion problems",
+      "input": "early FIL or sorted delimited ASCII",
+      "output": "ASCII, early FIL, or metadata",
+      "source_code": "BASIC present",
+      "publication": "rights unverified; private",
+      "profile": "early-filer-basic",
+      "status": "identified",
+      "smoke_test": "Export two known rows and reopen independently reverse-converted file.",
+      "evidence": "Package and index; no runtime trial.",
+      "follow_up": "Pin exact early Filer and BASIC editions.",
+      "member_refs": [
+        "filer.zip!FILER.BAS",
+        "filer.zip!FILER.DOC"
+      ],
+      "documentation": [
+        "FILER.DOC"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "undesk",
+      "name": "UnDesk",
+      "version": "1986 guide; binary version unverified",
+      "attribution": "Hal Kopeikin",
+      "category": "converter",
+      "packages": [
+        "undesk.zip"
+      ],
+      "dependencies": "standalone DOS and early DeskMate Text",
+      "advertised_compatibility": "index excludes DeskMate 3",
+      "input": "early Text DOC",
+      "output": "ASCII, with optional separate output",
+      "source_code": "absent",
+      "publication": "rights unverified; private",
+      "profile": "early-deskmate-text",
+      "status": "identified",
+      "smoke_test": "Convert native plain and styled documents with the two-name form; compare line bytes.",
+      "evidence": "Package and index; no runtime trial.",
+      "follow_up": "Create an early Text control and preserve original before one-name operation.",
+      "member_refs": [
+        "undesk.zip!UNDESK.DOC",
+        "undesk.zip!UNDESK.COM",
+        "undesk.zip!UDALL.BAT"
+      ],
+      "documentation": [
+        "UNDESK.DOC"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "hmw2txt",
+      "name": "Hmw2txt",
+      "version": "0.1",
+      "attribution": "unverified",
+      "category": "converter",
+      "packages": [
+        "hmw2txt.zip"
+      ],
+      "dependencies": "standalone DOS with native HomeWord II input",
+      "advertised_compatibility": "readme names Sierra HomeWord for DeskMate",
+      "input": "HMW",
+      "output": "ASCII TXT",
+      "source_code": "C present",
+      "publication": "rights unverified; private",
+      "profile": "homeword-120",
+      "status": "identified",
+      "smoke_test": "Convert a short styled HomeWord II 1.20 paragraph.",
+      "evidence": "Package and index; no runtime trial.",
+      "follow_up": "Create a cold-opened native control in isolated HomeWord.",
+      "member_refs": [
+        "hmw2txt.zip!HMW2TXT.C",
+        "hmw2txt.zip!HMW2TXT.TXT",
+        "hmw2txt.zip!HMW2TXT.EXE"
+      ],
+      "documentation": [
+        "HMW2TXT.TXT"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "prn2file-early",
+      "name": "Prn2file early accession",
+      "version": "unverified",
+      "attribution": "Jeffrey L. Hayes attribution via successor",
+      "category": "report-filter",
+      "packages": [
+        "prn2file.zip"
+      ],
+      "dependencies": "DOS stdin/stdout and native ASCII output",
+      "advertised_compatibility": "earlier accession listed; version relation open",
+      "input": "DeskMate report stream",
+      "output": "text",
+      "source_code": "C and makefile present",
+      "publication": "early accession rights unverified; private",
+      "profile": "dos-report",
+      "status": "identified",
+      "smoke_test": "Compare both filters on one pinned native report.",
+      "evidence": "Exact older archive and members checked.",
+      "follow_up": "Identify actual version and differences from 2.",
+      "member_refs": [
+        "prn2file.zip!PRN2FILE.C",
+        "prn2file.zip!PRN2FILE.MAK",
+        "prn2file.zip!PRN2FILE.EXE"
+      ],
+      "documentation": [
+        "TVDog index and C source"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "prn2file-2",
+      "name": "Prn2file",
+      "version": "2",
+      "attribution": "Jeffrey L. Hayes",
+      "category": "report-filter",
+      "packages": [
+        "prn2fil2.zip"
+      ],
+      "dependencies": "DOS stdin/stdout; ASCII driver, LF filter off, CR=CR",
+      "advertised_compatibility": "readme warns underlining discards the letters",
+      "input": "ASCII Print to File report",
+      "output": "plain text, form feed to CR/LF",
+      "source_code": "C present",
+      "publication": "readme permits free distribution; source kept privately",
+      "profile": "dos-report",
+      "status": "identified",
+      "smoke_test": "Print one Filer record to file in ASCII mode and compare exact filtered bytes.",
+      "evidence": "Earlier binary LPT tests used other profiles.",
+      "follow_up": "Create a native ASCII report; compare overstrike and form feed.",
+      "member_refs": [
+        "prn2fil2.zip!PRN2FILE.C",
+        "prn2fil2.zip!PRN2FILE.TXT",
+        "prn2fil2.zip!PRN2FILE.EXE"
+      ],
+      "documentation": [
+        "PRN2FILE.TXT"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "prtsnd",
+      "name": "Prtsnd",
+      "version": "unverified",
+      "attribution": "unverified",
+      "category": "waveform-plotter",
+      "packages": [
+        "prtsnd.zip"
+      ],
+      "dependencies": "DOS and emulated printer",
+      "advertised_compatibility": "index describes uncompressed SND and IBM/Epson printers",
+      "input": "uncompressed SND",
+      "output": "printer waveform stream",
+      "source_code": "assembly present",
+      "publication": "rights unverified; private",
+      "profile": "dos-lpt-sound",
+      "status": "identified",
+      "smoke_test": "Plot a tiny waveform to an isolated binary LPT sink.",
+      "evidence": "Package and index; no runtime trial.",
+      "follow_up": "Check accepted SND and printer mode first.",
+      "member_refs": [
+        "prtsnd.zip!PRTSND.COM",
+        "prtsnd.zip!PRTSND.ASM"
+      ],
+      "documentation": [
+        "PRTSND.ASM and TVDog index"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "dmsound-native",
+      "name": "Dmsound PDM",
+      "version": "0.7",
+      "attribution": "Jeffrey L. Hayes",
+      "category": "player",
+      "packages": [
+        "dmsnd07.zip"
+      ],
+      "dependencies": "DeskMate 3.00+ with device resources",
+      "advertised_compatibility": "docs advertise native and separate DOS mode",
+      "input": "SND, WAV, AU and others",
+      "output": "playback and documented conversion modes",
+      "source_code": "source offered by request; absent here",
+      "publication": "free as documented; preserve privately",
+      "profile": "desk-305-audio",
+      "status": "identified",
+      "smoke_test": "Play a native PCM tone and measure captured rate and duration.",
+      "evidence": "Package and index; no runtime trial.",
+      "follow_up": "Pin working target device and capture.",
+      "member_refs": [
+        "dmsnd07.zip!DMSOUND.DOC",
+        "dmsnd07.zip!DMSOUND.PDM",
+        "dmsnd07.zip!HISTORY",
+        "dmsnd07.zip!EFDIALOG.ACC"
+      ],
+      "documentation": [
+        "DMSOUND.DOC",
+        "HISTORY"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "dmsound-dos",
+      "name": "Dmsound DOS",
+      "version": "0.7 family",
+      "attribution": "Jeffrey L. Hayes",
+      "category": "player",
+      "packages": [
+        "dmsnd07.zip",
+        "dmsnddos.zip"
+      ],
+      "dependencies": "DOS 2.11+ with bundled runtime and device files",
+      "advertised_compatibility": "readme warns against running DOS build alongside DeskMate",
+      "input": "advertised sound formats",
+      "output": "playback and documented conversion modes",
+      "source_code": "source offered by request; absent here",
+      "publication": "bundled runtime private",
+      "profile": "dos-dmsound",
+      "status": "identified",
+      "smoke_test": "Run in isolation and compare a single tone against known PCM.",
+      "evidence": "Package and index; no runtime trial.",
+      "follow_up": "Pin the module/launcher and DOS driver.",
+      "member_refs": [
+        "dmsnd07.zip!DMSOUND.DOC",
+        "dmsnd07.zip!DMSOUND.PDM",
+        "dmsnddos.zip!DMSOUND.EXE",
+        "dmsnddos.zip!README.DOS"
+      ],
+      "documentation": [
+        "DMSOUND.DOC",
+        "README.DOS"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "convert-mac-sound",
+      "name": "Convert",
+      "version": "unverified",
+      "attribution": "unverified",
+      "category": "converter",
+      "packages": [
+        "conver.zip"
+      ],
+      "dependencies": "DOS; documentation in DeskMate Text",
+      "advertised_compatibility": "TVDog describes Mac sound conversion",
+      "input": "Macintosh sound; exact header unresolved",
+      "output": "DeskMate SND",
+      "source_code": "absent",
+      "publication": "rights unverified; private",
+      "profile": "dos-mac-convert",
+      "status": "identified",
+      "smoke_test": "Convert a documented synthetic Mac sound and native-open the SND.",
+      "evidence": "Package and index; no runtime trial.",
+      "follow_up": "Recover exact input container requirements from the documentation.",
+      "member_refs": [
+        "conver.zip!CONVERT.DOC",
+        "conver.zip!CONVERT.EXE"
+      ],
+      "documentation": [
+        "CONVERT.DOC"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "conv2snd",
+      "name": "Conv2snd",
+      "version": "2.02",
+      "attribution": "Kenneth Udut; revision Jeffrey L. Hayes",
+      "category": "converter",
+      "packages": [
+        "c2snd202.zip"
+      ],
+      "dependencies": "standalone DOS",
+      "advertised_compatibility": "readme describes WAV headers and old/new SND outputs",
+      "input": "WAV and other documented sound",
+      "output": "DeskMate SND",
+      "source_code": "Pascal and companion assembly present",
+      "publication": "package claims public domain for named files; kept private",
+      "profile": "dos-pcm",
+      "status": "identified",
+      "smoke_test": "Convert unsigned PCM WAV and compare SND bytes and native reopen.",
+      "evidence": "Package and index; no runtime trial.",
+      "follow_up": "Separate input PCM types and selected SND generation.",
+      "member_refs": [
+        "c2snd202.zip!CONV2SND.DOC",
+        "c2snd202.zip!PPWAV.ASM",
+        "c2snd202.zip!CONV2SND.PAS",
+        "c2snd202.zip!CONV2SND.EXE"
+      ],
+      "documentation": [
+        "CONV2SND.DOC"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "snd2wav",
+      "name": "SND2WAV",
+      "version": "1.2",
+      "attribution": "Jeffrey L. Hayes",
+      "category": "converter",
+      "packages": [
+        "c2snd202.zip"
+      ],
+      "dependencies": "standalone DOS",
+      "advertised_compatibility": "readme claims early/later SND and multiple instrument outputs",
+      "input": "DeskMate SND",
+      "output": "RIFF WAVE PCM",
+      "source_code": "Pascal present",
+      "publication": "public-domain claim in readme; WAV and package retained privately",
+      "profile": "dos-pcm",
+      "status": "qualified",
+      "smoke_test": "Convert the later odd-length 5,500 Hz recording, then compare RIFF framing and PCM.",
+      "evidence": "All 555 samples matched; missing odd-length pad.",
+      "follow_up": "Test early layout, instrument splitting and compressed sound separately.",
+      "member_refs": [
+        "c2snd202.zip!SND2WAV.DOC",
+        "c2snd202.zip!SND2WAV.PAS",
+        "c2snd202.zip!SND2WAV.EXE"
+      ],
+      "documentation": [
+        "SND2WAV.DOC"
+      ],
+      "references": [
+        "../evidence/historical-utility-qualification-001.json"
+      ],
+      "archived": true,
+      "launched_in_campaign": true,
+      "follow_up_required": true
+    },
+    {
+      "id": "dmgif-09",
+      "name": "Dmgif PDM",
+      "version": "0.9",
+      "attribution": "Jeffrey L. Hayes",
+      "category": "viewer",
+      "packages": [
+        "dmgif09.zip"
+      ],
+      "dependencies": "DeskMate 3.00+",
+      "advertised_compatibility": "readme advertises GIF/JPEG display",
+      "input": "GIF and JPEG",
+      "output": "display",
+      "source_code": "absent",
+      "publication": "shareware per readme; private",
+      "profile": "desk-dmgif",
+      "status": "identified",
+      "smoke_test": "View a known indexed GIF and compare palette and pixels.",
+      "evidence": "Package and index; no runtime trial.",
+      "follow_up": "Pin supported GIF variants and display driver.",
+      "member_refs": [
+        "dmgif09.zip!DMGIF.PDM",
+        "dmgif09.zip!DMGIF.DOC",
+        "dmgif09.zip!TECHNOTE",
+        "dmgif09.zip!README"
+      ],
+      "documentation": [
+        "DMGIF.DOC",
+        "README",
+        "TECHNOTE"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "dmgif-12-native",
+      "name": "Dmgif PDM",
+      "version": "1.2",
+      "attribution": "Jeffrey L. Hayes",
+      "category": "viewer",
+      "packages": [
+        "dmgif12a.zip",
+        "dmgif12b.zip",
+        "dmgif12c.zip",
+        "dmgif12.txt"
+      ],
+      "dependencies": "DeskMate 3.0x and labeled install volumes",
+      "advertised_compatibility": "installation guide describes native and DOS modes",
+      "input": "GIF and JPEG",
+      "output": "display",
+      "source_code": "absent",
+      "publication": "edition-specific distribution terms; private",
+      "profile": "desk-dmgif",
+      "status": "identified",
+      "smoke_test": "Compare the same indexed GIF in 0.9 and 1.2; inspect menu operations.",
+      "evidence": "Package and index; no runtime trial.",
+      "follow_up": "Prepare the three correctly labeled volumes.",
+      "member_refs": [
+        "dmgif12b.zip!DMGIF.PDM",
+        "dmgif12c.zip!DMGIF.DOC",
+        "dmgif12c.zip!DMGIF.HLP",
+        "dmgif12c.zip!INSTALL.DOC"
+      ],
+      "documentation": [
+        "DMGIF.DOC",
+        "DMGIF.HLP",
+        "INSTALL.DOC",
+        "dmgif12.txt (standalone TVDog accession)"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "dmgif-12-dos",
+      "name": "Dmgif DOS",
+      "version": "1.2",
+      "attribution": "Jeffrey L. Hayes",
+      "category": "viewer",
+      "packages": [
+        "dmgif12a.zip",
+        "dmgif12b.zip",
+        "dmgif12c.zip",
+        "dmgif12.txt"
+      ],
+      "dependencies": "isolated DOS, bundled runtime, labeled install volumes",
+      "advertised_compatibility": "guide warns against DOS install on an existing DeskMate setup",
+      "input": "GIF and JPEG",
+      "output": "display",
+      "source_code": "absent",
+      "publication": "bundled runtime private",
+      "profile": "dos-dmgif",
+      "status": "identified",
+      "smoke_test": "Compare a tiny synthetic GIF to the native view.",
+      "evidence": "Package and index; no runtime trial.",
+      "follow_up": "Prepare independent DOS profile and expected frame.",
+      "member_refs": [
+        "dmgif12a.zip!DMGIF.EXE",
+        "dmgif12b.zip!DMGIF.PDM",
+        "dmgif12c.zip!DMGIF.DOC",
+        "dmgif12c.zip!INSTALL.DOC"
+      ],
+      "documentation": [
+        "DMGIF.DOC",
+        "INSTALL.DOC",
+        "dmgif12.txt (standalone TVDog accession)"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "clipart-editor",
+      "name": "ClipArt Editor",
+      "version": "beta",
+      "attribution": "Tandy Corporation",
+      "category": "graphics-converter",
+      "packages": [
+        "dmclip.zip"
+      ],
+      "dependencies": "DeskMate with compatible Draw",
+      "advertised_compatibility": "beta documentation describes Draw object workflow",
+      "input": "FIG object",
+      "output": "CLP",
+      "source_code": "absent",
+      "publication": "commercial beta and documentation private",
+      "profile": "desk-draw-clip",
+      "status": "identified",
+      "smoke_test": "Export one native FIG object and verify any available import/reopen path.",
+      "evidence": "Package and index; no runtime trial.",
+      "follow_up": "Verify supported Draw release and clipboard behavior.",
+      "member_refs": [
+        "dmclip.zip!CLIPART.PDM",
+        "dmclip.zip!CLIPART.DOC"
+      ],
+      "documentation": [
+        "CLIPART.DOC"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "dm-music",
+      "name": "DM_Music",
+      "version": "1.04",
+      "attribution": "W. H. Baldwin and TVDog, prior report",
+      "category": "converter",
+      "packages": [
+        "dm_music.zip"
+      ],
+      "dependencies": "Windows 98 SE and VB6 profile",
+      "advertised_compatibility": "documented SNG-to-HDS workflow",
+      "input": "SNG",
+      "output": "HDS",
+      "source_code": "absent",
+      "publication": "third-party binary private",
+      "profile": "win98-vb6",
+      "status": "qualified-prior",
+      "smoke_test": "Reuse measured scale and alternate-ending controls.",
+      "evidence": "See prior DM_Music report and existing native fixtures.",
+      "follow_up": "Add only controls needed by an active Music question.",
+      "member_refs": [
+        "dm_music.zip!DM_Music.exe",
+        "dm_music.zip!DM_Music_Readme.txt"
+      ],
+      "documentation": [
+        "DM_Music_Readme.txt"
+      ],
+      "references": [
+        "dm-music-hds-20261120.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "midimapper",
+      "name": "MidiMapper",
+      "version": "6.38 PE; 6.25 installer; 6.12 PAD",
+      "attribution": "W. H. Baldwin",
+      "category": "editor-player-converter",
+      "packages": [
+        "MidiMapper.zip"
+      ],
+      "dependencies": "Windows 98 SE VB6 SP6, registered OCX and MIDI device",
+      "advertised_compatibility": "prior package versions differ; actual PE version pins observation",
+      "input": "HDS and instrument definitions",
+      "output": "playback and MIDI",
+      "source_code": "absent",
+      "publication": "operator-provided freeware installer private",
+      "profile": "win98-vb6",
+      "status": "qualified-prior",
+      "smoke_test": "Reuse playback and MIDI export from native HDS scale.",
+      "evidence": "Prior native report and tested samples.",
+      "follow_up": "Keep installer and embedded executable identities distinct.",
+      "member_refs": [
+        "MidiMapper.zip!pad_file.xml",
+        "MidiMapper.zip!SETUP.LST",
+        "MidiMapper.zip!MidiMapper.CAB!MidiMapper.exe",
+        "MidiMapper.zip!MidiMapper.CAB!midifl32.ocx"
+      ],
+      "documentation": [
+        "SETUP.LST",
+        "PAD and CAB manual"
+      ],
+      "references": [
+        "midimapper-win98-20261120.md",
+        "midimapper-semantics-20261120.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "recipe-sharing-tvdog",
+      "name": "Recipe Sharing TVDog",
+      "version": "unverified",
+      "attribution": "unverified",
+      "category": "companion-interchange",
+      "packages": [
+        "rcpshare.zip"
+      ],
+      "dependencies": "DeskMate Home Organizer CookBook",
+      "advertised_compatibility": "docs describe entire database export/import",
+      "input": "KITCHEN.DB or RCP",
+      "output": "RCP or changed KITCHEN.DB",
+      "source_code": "absent",
+      "publication": "third-party package private",
+      "profile": "home-organizer",
+      "status": "identified",
+      "smoke_test": "Round-trip a synthetic recipe between two isolated databases.",
+      "evidence": "Module differs from preserved OEM.",
+      "follow_up": "Establish compatible runtime and RCP content.",
+      "member_refs": [
+        "rcpshare.zip!RCPSHARE.DOC",
+        "rcpshare.zip!RCPSHARE.PDM"
+      ],
+      "documentation": [
+        "RCPSHARE.DOC"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "recipe-sharing-oem",
+      "name": "Recipe Sharing OEM",
+      "version": "module version unverified; RSX 03.04.04 and RLX HD-B media",
+      "attribution": "Tandy Home Organizer distribution",
+      "category": "companion-interchange",
+      "packages": [
+        "rsxdisks.zip",
+        "1000RLX_HD-B.zip"
+      ],
+      "dependencies": "matched OEM Home Organizer",
+      "advertised_compatibility": "OEM module identity common to both packages; operation unverified",
+      "input": "candidate KITCHEN.DB and RCP",
+      "output": "candidate recipe interchange",
+      "source_code": "absent",
+      "publication": "commercial OEM software private",
+      "profile": "rsx-oem-home-organizer",
+      "status": "identified",
+      "smoke_test": "Repeat single synthetic recipe interchange with OEM module.",
+      "evidence": "RSX and RLX module hashes match and differ from TVDog package.",
+      "follow_up": "Confirm actual menu and compare with TVDog profile.",
+      "member_refs": [
+        "rsxdisks.zip!DISK3.ZIP!RCPSHARE.HLP",
+        "rsxdisks.zip!DISK3.ZIP!RCPSHARE.PDM",
+        "1000RLX_HD-B.zip!DESKMATE/RCPSHARE.HLP",
+        "1000RLX_HD-B.zip!DESKMATE/RCPSHARE.PDM"
+      ],
+      "documentation": [
+        "DISK3.ZIP!RCPSHARE.HLP",
+        "DESKMATE/RCPSHARE.HLP"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "macro-companion",
+      "name": "Macro Companion",
+      "version": "unverified",
+      "attribution": "unverified",
+      "category": "automation-companion",
+      "packages": [
+        "macros.zip"
+      ],
+      "dependencies": "DeskMate accessory; packaged installer and runtime",
+      "advertised_compatibility": "docs distinguish capacity in 3.2 or earlier and 3.3 onward",
+      "input": "keystroke and click sequences",
+      "output": "replay and possible macro files",
+      "source_code": "absent",
+      "publication": "historical accessory private",
+      "profile": "desk-macro",
+      "status": "identified",
+      "smoke_test": "Record and replay one scratch edit; examine persisted files.",
+      "evidence": "Package and documentation; no runtime trial.",
+      "follow_up": "Identify actual release and compatibility.",
+      "member_refs": [
+        "macros.zip!README.DOC",
+        "macros.zip!DMMACRO.ACC",
+        "macros.zip!DMMACRO.HLP",
+        "macros.zip!DMMACRO.RES"
+      ],
+      "documentation": [
+        "DMMACRO.HLP",
+        "README.DOC"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "disk-info",
+      "name": "Disk Info",
+      "version": "3.01",
+      "attribution": "Bob Jack Software",
+      "category": "storage-diagnostic",
+      "packages": [
+        "diskin.zip"
+      ],
+      "dependencies": "DeskMate and FAT volume",
+      "advertised_compatibility": "index excludes RAM disks",
+      "input": "disk boot sector",
+      "output": "displayed FAT information",
+      "source_code": "absent",
+      "publication": "third-party utility private",
+      "profile": "desk-disk-info",
+      "status": "identified",
+      "smoke_test": "Compare reported geometry with independent scratch FAT inspection.",
+      "evidence": "Catalog identifies version and publisher from executable metadata.",
+      "follow_up": "Stage a known FAT volume.",
+      "member_refs": [
+        "diskin.zip!DISKINFO.DOC",
+        "diskin.zip!DISKINFO.PDM",
+        "diskin.zip!INSTALL.PDM"
+      ],
+      "documentation": [
+        "DISKINFO.DOC"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "backupdm",
+      "name": "BackupDM",
+      "version": "unverified",
+      "attribution": "unverified",
+      "category": "storage-backup",
+      "packages": [
+        "backupdm.zip"
+      ],
+      "dependencies": "DOS batch and helper",
+      "advertised_compatibility": "index describes automated DeskMate data backup",
+      "input": "DeskMate data files",
+      "output": "backup media",
+      "source_code": "batch present; helper source absent",
+      "publication": "third-party materials private",
+      "profile": "dos-backup",
+      "status": "identified",
+      "smoke_test": "Back up two scratch files and verify restore to separate target.",
+      "evidence": "Package and index; no runtime trial.",
+      "follow_up": "Read batch and README payload offline to confirm selection and restore.",
+      "member_refs": [
+        "backupdm.zip!BATPOPUP.EXE",
+        "backupdm.zip!BACKUPDM.BAT",
+        "backupdm.zip!README.COM"
+      ],
+      "documentation": [
+        "README.COM (embedded)"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "backup-pro",
+      "name": "Backup Pro",
+      "version": "1.0",
+      "attribution": "Software Toolworks (1989 timer copyright, prior catalogue)",
+      "category": "storage-backup",
+      "packages": [
+        "bp-720k.zip",
+        "bpman.zip"
+      ],
+      "dependencies": "separate bundled runtime and native components",
+      "advertised_compatibility": "packaged readme identifies 1.0",
+      "input": "DOS filesystem files and backup volumes",
+      "output": "backup and restored files",
+      "source_code": "absent",
+      "publication": "commercial program and manual private",
+      "profile": "desk-backup-pro",
+      "status": "identified",
+      "smoke_test": "Back up and restore two known files and compare exact bytes.",
+      "evidence": "Package and manual identities; no runtime trial.",
+      "follow_up": "Verify supported edition and usable backup media.",
+      "member_refs": [
+        "bp-720k.zip!BACKPRO.HLP",
+        "bp-720k.zip!BP.EXE",
+        "bp-720k.zip!BPUTILS.EXE",
+        "bp-720k.zip!READ.ME",
+        "bp-720k.zip!BP.PDM",
+        "bpman.zip!bpman.pdf"
+      ],
+      "documentation": [
+        "BACKPRO.HLP",
+        "READ.ME",
+        "bpman.pdf"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "deskhelp-demo",
+      "name": "DeskHelp demo",
+      "version": "1.00.00",
+      "attribution": "Atmospheres / Bobby Ballard",
+      "category": "help-productivity-companion",
+      "packages": [
+        "deskhe.zip"
+      ],
+      "dependencies": "early DeskMate I/II and DOS",
+      "advertised_compatibility": "index excludes Personal DeskMate and DeskMate 3; demo limited",
+      "input": "DeskMate Help and utilities",
+      "output": "help screens and limited demo functions",
+      "source_code": "absent",
+      "publication": "demo remains private",
+      "profile": "early-deskhelp",
+      "status": "identified",
+      "smoke_test": "Launch Help with a synthetic document on the matched early runtime.",
+      "evidence": "Version and attribution from catalog static evidence.",
+      "follow_up": "Establish exact supported editions and demo limits.",
+      "member_refs": [
+        "deskhe.zip!DESKHELP.HLP",
+        "deskhe.zip!DH-DEMO.DOC",
+        "deskhe.zip!DH-DEMO.EXE",
+        "deskhe.zip!READ.ME!"
+      ],
+      "documentation": [
+        "DH-DEMO.DOC",
+        "DESKHELP.HLP",
+        "READ.ME!"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    },
+    {
+      "id": "pocket-watch",
+      "name": "Pocket Watch",
+      "version": "3.1 / DOS runtime 03.03.01",
+      "attribution": "Bob Jack Software",
+      "category": "clock-accessory",
+      "packages": [
+        "pocket.zip"
+      ],
+      "dependencies": "DeskMate 3 or bundled standalone runtime",
+      "advertised_compatibility": "docs describe both modes; Q&A Write pairing untested",
+      "input": "guest clock and settings",
+      "output": "clock display",
+      "source_code": "absent",
+      "publication": "third-party utility and bundled runtime private",
+      "profile": "desk-clock",
+      "status": "identified",
+      "smoke_test": "Compare clock display to guest time in both modes.",
+      "evidence": "Nested member identities rechecked.",
+      "follow_up": "Pin actual editions and measure any persistent settings.",
+      "member_refs": [
+        "pocket.zip!POCKET.DOC",
+        "pocket.zip!DISK1.ZIP!POCKET.EXE",
+        "pocket.zip!DISK1.ZIP!POCKET.PDM"
+      ],
+      "documentation": [
+        "POCKET.DOC"
+      ],
+      "references": [
+        "../ecosystem/tvdog-directory-index-review.md",
+        "../historical-utility-validation.md"
+      ],
+      "archived": true,
+      "launched_in_campaign": false,
+      "follow_up_required": true
+    }
+  ]
+}

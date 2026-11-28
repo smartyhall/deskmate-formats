@@ -340,6 +340,19 @@
       "source": "docs/research/filer-native-20261117.md"
     },
     {
+      "id": "research.historical-utilities",
+      "slug": "research/historical-utilities",
+      "title": "Historical DeskMate utility qualification",
+      "section": "research",
+      "subsection": "Format experiments",
+      "order": 15,
+      "summary": "Measured DBrepair and Fil2dbf behavior on one synthetic Filer control.",
+      "date": "2026-11-27",
+      "is_hub": false,
+      "role": "dated-research",
+      "source": "docs/research/historical-utility-qualification-20261127.md"
+    },
+    {
       "id": "research.corkboard",
       "slug": "research/corkboard",
       "title": "Corkboard and Home Organizer storage",

@@ -51,6 +51,7 @@ SYNTHETIC_PRINT_COMPANION = {
     'print-companion/card-ibm-graphic.prn',
     'print-companion/card-hp-laserjet.prn',
 }
+SYNTHETIC_DBF = 'fil2dbf/qrecord-data-20261127.dbf'
 SYNTHETIC_FF1 = 'draw/typography-lab-grid.ff1'
 SYNTHETIC_MID = {
     f'midimapper/{case}-midimapper-6.38.mid'
@@ -115,7 +116,7 @@ TELEMETRY_FIXTURES = {
 BAD_EXT = {'.exe', '.com', '.dll', '.img', '.ima', '.iso', '.zip', '.7z',
            '.png', '.pdf', '.pdm', '.res', '.r89', '.hlp',
            '.tut', '.nvr', '.rom', '.vhd', '.vhdx', '.hdi', '.raw', '.token', '.wav', '.mid',
-           '.ff1', '.otf', '.ttf', '.prn', '.hds', '.db', '.col', '.crd', '.not', '.per', '.ntg'} | DATA_EXT
+           '.ff1', '.otf', '.ttf', '.prn', '.hds', '.db', '.dbf', '.col', '.crd', '.not', '.per', '.ntg'} | DATA_EXT
 PATTERNS = {
     'host Windows user path': r'(?i)[a-z]:[\\/]Users[\\/]',
     'host POSIX user path': r'/(?:home|Users)/[^/\s]+',
@@ -257,7 +258,7 @@ def fixture_manifest():
         if rel.is_absolute() or '..' in rel.parts or len(rel.parts) < 2:
             raise ValueError('unsafe fixture path: ' + name)
         if (rel.suffix.lower() not in DATA_EXT and not native_text_export(FIXTURE_DIR / rel)
-                and name not in (SYNTHETIC_DB, SYNTHETIC_FF1)
+                and name not in (SYNTHETIC_DB, SYNTHETIC_DBF, SYNTHETIC_FF1)
                 and name not in SYNTHETIC_NOTE_STORAGE and name not in SYNTHETIC_PRINT_COMPANION
                 and name not in SYNTHETIC_MID and name not in SYNTHETIC_HDS):
             raise ValueError('unexpected fixture extension: ' + name)

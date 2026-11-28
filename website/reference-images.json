@@ -1924,6 +1924,54 @@
       "rights_note": "Third-party historical advertising. Publisher rights retained; not covered by the project's GPL or CC licenses. Limited attributed excerpt under the operator's 2026-11-27 authorization.",
       "page_id": "history.chronology",
       "section_heading": "The 1988 ROM generation"
+    },
+    {
+      "id": "ui.historical-utilities.dbrepair-defect-results",
+      "path": "historical-utilities/dbrepair-defect-results.png",
+      "sha256": "62efc54d84b3ca712d809c999d8e734da3286c061d43fc8df4c56a67924a0475",
+      "source_sha256": "62efc54d84b3ca712d809c999d8e734da3286c061d43fc8df4c56a67924a0475",
+      "size": 12865,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "historical-utility-qualification-001-dbrepair-defect-results",
+      "caption": "Tandy DBrepair reported 8,192 recovered bytes and zero unrecovered after processing the synthetic dangling-index specimen.",
+      "alt": "Database Results dialog on a blue DeskMate screen over the Open File dialog for DEFECT.FIL.",
+      "rights_note": "Native guest framebuffer, unaltered. Interface attributed to Tandy Corporation. Underlying third-party material retains its rights and falls outside project GPL and Creative Commons offers.",
+      "page_id": "research.historical-utilities",
+      "section_heading": "DBrepair"
+    },
+    {
+      "id": "ui.historical-utilities.filer-repaired-cold-reopen",
+      "path": "historical-utilities/filer-repaired-cold-reopen.png",
+      "sha256": "a98ba4fad25704fddf7e4fc0e7ae0c67df9623f422124262ff9a123c1ddf3d42",
+      "source_sha256": "a98ba4fad25704fddf7e4fc0e7ae0c67df9623f422124262ff9a123c1ddf3d42",
+      "size": 9446,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "historical-utility-qualification-001-filer-repaired-cold-reopen",
+      "caption": "DeskMate 03.05.00 Filer cold-opened the repaired defect specimen and displayed F7Q9.",
+      "alt": "Filer screen for DEFECT.FIL with the single synthetic F7Q9 value at upper left.",
+      "rights_note": "Native guest framebuffer, unaltered. Interface attributed to Tandy Corporation. Underlying third-party material retains its rights and falls outside project GPL and Creative Commons offers.",
+      "page_id": "research.historical-utilities",
+      "section_heading": "DBrepair"
+    },
+    {
+      "id": "ui.historical-utilities.fil2dbf-field-name",
+      "path": "historical-utilities/fil2dbf-field-name.png",
+      "sha256": "f85efb84797bba33890fb41a30031ab14849c1ae94eb67363d019b93c06327fe",
+      "source_sha256": "f85efb84797bba33890fb41a30031ab14849c1ae94eb67363d019b93c06327fe",
+      "size": 19537,
+      "width": 640,
+      "height": 480,
+      "origin": "documentary-software-ui-capture",
+      "source_id": "historical-utility-qualification-001-fil2dbf-field-name",
+      "caption": "Fil2dbf 0.1 prompts for the DBF name of the Filer DATA column FTXT_A. The operator-entered name is FTXT_A.",
+      "alt": "Enter Field Name dialog showing FTXT_A as the DeskMate source column and the entered dBASE field name.",
+      "rights_note": "Native guest framebuffer, unaltered. Interface attributed to Jeffrey L. Hayes and Tandy Corporation. Underlying third-party material retains its rights and falls outside project GPL and Creative Commons offers.",
+      "page_id": "research.historical-utilities",
+      "section_heading": "Fil2dbf"
     }
   ]
 }

@@ -1,5 +1,9 @@
 # Codex research usage ledger
 
+The historical utility qualification campaign recorded [startup](20261127-historical-utility-startup.json),
+[known-good DBrepair](20261127-historical-utility-known-good-usage.json), and
+[publication checkpoint](20261127-historical-utility-checkpoint.json) receipts.
+
 The [TVDog descriptive index review](../../ecosystem/tvdog-directory-index-review.md)
 recorded [startup](20261123-tvdog-directory-index-startup.json),
 [reconciliation](20261123-tvdog-directory-index-reconciled.json), and

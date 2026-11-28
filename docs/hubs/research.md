@@ -64,6 +64,7 @@ its run, oldest first.
 - **November 22, 2026** — [Automatic House, Plug 'n Power, and the CP290](../research/deskmate-automatic-house-x10.md)
 - **November 23, 2026** — [Corkboard and Home Organizer storage](../research/deskmate-corkboard-20261123.md)
 - **November 23, 2026** — [Print Companion and native printing](../research/print-companion-20261123.md)
+- **November 27, 2026** — [Historical DeskMate utility qualification](../research/historical-utility-qualification-20261127.md)
 
 Two entries in this section carry no run date. The
 [TVDog descriptive directory index review](../ecosystem/tvdog-directory-index-review.md)
