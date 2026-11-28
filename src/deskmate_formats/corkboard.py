@@ -1,10 +1,15 @@
 """Read the measured fixed-size DOS DeskMate DMCORKBD note buffer.
 
-The text area is treated as CP437 bytes, not ASCII: the RSX editor renders
-CP437 glyphs and stores the bytes unchanged (Alt+130 stored 0x82, Alt+225
-stored 0xE1). Printable ASCII, CR and the high half are accepted; the control
-range other than CR, and DEL, stay rejected because no native specimen has
-exercised them.
+The text area is treated as CP437 bytes, not ASCII: the RSX editor drew the
+CP437 glyphs for two natively entered bytes (Alt+130 stored 0x82, Alt+225 stored
+0xE1) and preserved them across a cold reopen, and it displayed and re-saved a
+seeded note of eleven further high bytes. That is a sample of the high half, not
+a sweep. Accepting the whole 0x20-0xFF range except DEL is this reader's policy,
+chosen because every observed byte was displayed and preserved; the control range
+other than CR stays rejected because no native specimen has exercised it.
+
+CR delimits logical lines. The editor wraps a longer line over several drawn
+rows, so `rows` reports stored CR-delimited lines rather than the rows on screen.
 """
 
 from dataclasses import dataclass
@@ -33,7 +38,11 @@ class Corkboard:
 
     @property
     def rows(self):
-        """CR-delimited rows as CP437 text, without a trailing empty row for a final CR."""
+        """CR-delimited logical lines as CP437, without a trailing empty line for a final CR.
+
+        These are not the editor's drawn rows: a line wider than the window is
+        wrapped on screen into more than one row.
+        """
         rows = self.text.split(TERMINATOR)
         if self.text.endswith(TERMINATOR):
             rows.pop()
@@ -41,8 +50,10 @@ class Corkboard:
 
 
 def _supported(byte):
-    # Measured: 0x0D delimiters, printable ASCII, and the CP437 high half.
-    # Unmeasured: 0x00-0x1F other than CR, and 0x7F.
+    # Measured: CR delimiters, printable ASCII, and CP437 high bytes at the
+    # sampled code points (0x82 and 0xE1 typed; eleven more displayed).
+    # Accepted by policy, not measurement: the rest of the high half.
+    # Rejected as unmeasured: 0x00-0x1F other than CR, and 0x7F.
     return byte == 0x0D or 0x20 <= byte <= 0xFF and byte != 0x7F
 
 
