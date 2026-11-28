@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "campaign": "corkboard-storage-001",
+  "issue": 165,
+  "base_commit": "a49e72b3b967e6ed0b6097cb040114072a4970e7",
+  "base_tag": "research-origin-001",
+  "date": "2026-11-28",
+  "report": "docs/research/corkboard-storage-001-20261128.md",
+  "sources": {
+    "emulator": "86Box 7.0 automation build",
+    "emulator_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+    "automation_seed": 20261128,
+    "automation_port": 8765,
+    "display": "visible",
+    "rsx_stock_disk_sha256": "3085c68955b7fcad648995a40ff30f8f3a799e943710bd43cc0326c69a107fc1",
+    "rsx_stock_cfg_sha256": "ccdfb129802cdee9467c1316ca1cbedeb30a83192d0ffdec7a57fad64d55b8b9",
+    "rsx_stock_nvr_sha256": "e3ad097bc778d2be320b6f9a01e662eda1ba4ed4bcb9f4e41071d236f84368ac",
+    "rsx_stock_note_sha256": "35ea3bc020cf509336e438b06974ec7aea3736f4d0fd3db23a741fa98bd3bb30",
+    "edition": "Tandy 1000 RSX OEM DeskMate 03.04.04",
+    "machine_profile": "tandy1000rsx, i386SX 25 MHz, 4096 KB, internal video, BIOS mode 0x12 at 640x480"
+  },
+  "scope": {
+    "offsets": "zero-based file offsets; the text area begins at 0x0004",
+    "positions": "byte offsets into the text area, zero based",
+    "guest_memory": "0x4A0E8 is a runtime observation for this edition and configuration, not a format property",
+    "not_measured": [
+      "cross-edition transfer of a note file",
+      "native entry of CP437 code points 0x01-0x1F and 0x7F",
+      "scrollbar or pointer driven viewport changes",
+      "any edition other than RSX OEM 03.04.04",
+      "whether a selection or a reopen in the same boot after an edit marks the buffer dirty",
+      "the caret convention when the stored offset lands on a CR",
+      "capacity of a composition built from wrapped logical lines"
+    ]
+  },
+  "sessions": [
+    {"id": "rsx-a", "clone_of": "sealed RSX install", "emulated_ms_at_quit": 226031,
+     "image_sha256": "c39d5fc93acb1babbdcdd457c63125155826a432b0b2b94c44115c9134ceb807",
+     "purpose": "caret calibration, selection, mid-text edit"},
+    {"id": "rsx-b", "clone_of": "sealed RSX install", "emulated_ms_at_quit": 553375,
+     "image_sha256": "1ffec7d8728edc81aac5a27bd24647e1f963d3125ee1ee5ff26119ddc8f62c1f",
+     "purpose": "40-character-row capacity boundary"},
+    {"id": "rsx-c", "clone_of": "sealed RSX install", "emulated_ms_at_quit": [771763, 51374],
+     "image_sha256": ["0985c5ce2ddca78cbebec9788e1a399fdec320e6ee70e2241c1528a5080300fb",
+                      "d39b1f6cdfdd054b1660874cef348eea1eb87ed6c922752c39d4f7d3edf356dc"],
+     "purpose": "20-character-row composition, limit isolation, maximum-length note, cold reopen"},
+    {"id": "rsx-d", "clone_of": "sealed RSX install", "emulated_ms_at_quit": 114190,
+     "image_sha256": "4910394d1694093291415c5012d34daed78c31ce4383c45c017bdade6e5aa306",
+     "purpose": "CP437 display, preservation, and native numeric-keypad entry"}
+  ],
+  "emulated_guest_time_total_ms": 1716733,
+  "experiments": [
+    {
+      "id": "CB001-H1",
+      "question": "Is the first header word the insertion position or the text length?",
+      "discriminating_state": "a caret strictly inside a non-empty note",
+      "trials": [
+        {"id": "T1", "operation": "typed three lines, caret at end, Escape", "text_bytes": 61, "word0": 61},
+        {"id": "T2", "operation": "reopen, Home, Escape", "text_bytes": 61, "word0": 61,
+         "note": "reported byte-identical afterwards; the before-image was not retained"},
+        {"id": "T3", "operation": "reopen, Home, type X at text index 51, Escape", "text_bytes": 62, "word0": 52},
+        {"id": "T4", "operation": "F10 Corkboard from DOS, type A then B at 52-53, Left x3, Escape, exit, DEBUG read",
+         "text_bytes": 64, "word0": 51, "journal": "journals/state-edit-then-move.jsonl",
+         "captures": ["captures/c01-ab-typed.png", "captures/c02-left3.png"],
+         "retained_bytes": false,
+         "note": "word 51 came from the guest DEBUG screen read in that session; the file was overwritten later in the same clone"},
+        {"id": "T5", "operation": "reopen the 64-byte note, Shift+Left x7, Escape",
+         "text_bytes": 64, "word0": 57,
+         "journals": ["journals/probe-select.jsonl", "journals/sel-save.jsonl"],
+         "captures": ["captures/d01-reopen.png", "captures/d02-shift-left5.png", "captures/d03-down.png",
+                      "captures/e01-selection.png", "captures/e02-after-escape.png"],
+         "retained_bytes": "final only: extract/rsx-a/DESKMATE/DMCORKBD, sha256 8cd0a2b88fe6c6c9...",
+         "note": "both journals contain modifier and arrow keys only; probe-select also pressed Down once and is not the published seven-step trial"},
+        {"id": "T6", "operation": "reopen the 2666-byte note, Home, close",
+         "text_bytes": 2666, "word0": 2624,
+         "captures": ["captures/b01-reopen.png", "captures/b02-home.png"],
+         "retained_bytes": "final only: extract/rsx-b/DESKMATE/DMCORKBD, sha256 b48eabde0918de92...",
+         "note": "Home moved the caret one drawn row (42 bytes) back from the end"},
+        {"id": "T7", "operation": "save 2794-byte note with caret at 42, cold reopen", "text_bytes": 2794, "word0": 42}
+      ],
+      "result": "word0 is the caret byte offset in the text area at the moment the note was written; when that offset lands on a CR the row-boundary convention is unresolved",
+      "excluded": ["text length", "visual column", "row index", "viewport position"],
+      "confidence": "strong: T3 separates position from length, T4 separates close-time from edit-time capture; T5 and T6 survive only as final files"
+    },
+    {
+      "id": "CB001-H2",
+      "question": "Does a close rewrite the note when only the caret moved?",
+      "trials": [
+        {"id": "T2", "before_sha256": "not retained", "after_sha256": "reported equal to before",
+         "interval": "Home then Escape",
+         "note": "reopen then Home; identity was observed at the time but the before-image was not kept"},
+        {"id": "T7b", "before_sha256": "8ebaa22476c8b44e5f789d7f70c3d38eaf4bcc7d9a9abdec0f1063e1d463413a",
+         "after_sha256": "8ebaa22476c8b44e5f789d7f70c3d38eaf4bcc7d9a9abdec0f1063e1d463413a",
+         "interval": "cold reopen, Home, Escape, quit, extract"}
+      ],
+      "counter_observations": [
+        {"id": "T5", "before_word0": 51, "after_word0": 57, "text_changed": false,
+         "evidence": "the word 51 comes from T4's in-session DEBUG read; T5's journals send no text key; the retained final file is the only surviving bytes"},
+        {"id": "T6", "before_word0": 2666, "after_word0": 2624, "text_changed": false,
+         "evidence": "captures b01/b02 and the final rsx-b extract; the pre-trial file was not retained"}
+      ],
+      "result": "a plain cursor-only close on a freshly opened note left the file unchanged in T2 and T7b; T5 and T6 moved the caret and left a changed word, so a general no-write rule is not established",
+      "confidence": "strong only for T7b's whole-file comparison; T5 and T6 cannot be adjudicated from retained evidence",
+      "unresolved": "whether a selection, or a reopen in the same boot after an edit, marks the buffer dirty"
+    },
+    {
+      "id": "CB001-H3",
+      "question": "What is the second header word?",
+      "states_tested": ["blank note", "2, 3, and 14 line notes", "caret inside text",
+                        "seven-character selection", "65-row document scrolled to its end",
+                        "2794-byte document scrolled back to row 0", "refused keystroke at the limit",
+                        "CP437 note"],
+      "observed_values": [0],
+      "excluded": ["first visible row", "scroll offset", "selection anchor", "line count", "text length"],
+      "result": "unestablished; zero in every measured state",
+      "confidence": "the exclusions are strong for the states exercised; the meaning is unknown"
+    },
+    {
+      "id": "CB001-C1",
+      "question": "What is the real editable capacity, as distinct from the 2860-byte text area?",
+      "trials": [
+        {"id": "C1", "composition": "40-character rows", "stop_text_bytes": 2666,
+         "stop_rows": 65, "refusal": "the CR that would begin row 66"},
+        {"id": "C2", "composition": "20-character rows", "stop_text_bytes": 1364,
+         "stop_rows": 65, "refusal": "the CR that would begin row 66",
+         "note": "characters continued onto row 65 after the refused CR"},
+        {"id": "C3", "composition": "single row of characters", "accepted_characters": 81,
+         "note": "no 42-character cap observed on the first row of an empty note"},
+        {"id": "C4", "composition": "65 rows, append to the last row", "last_row_stop": 42},
+        {"id": "C5", "composition": "65 rows of 42 characters", "text_bytes": 2794,
+         "refusals": ["Enter", "printable character", "mid-row insertion at row 64"],
+         "post_refusal_control": "Home still moved the caret; the close stored word0 from it"},
+        {"id": "C6", "composition": "cold reopen of the 2794-byte note", "restored_bytes": 2794,
+         "restored_word0": 42}
+      ],
+      "measured_maximum_text_bytes": 2794,
+      "measured_maximum_visual_rows": 65,
+      "measured_row_width": 42,
+      "unused_text_area_bytes": 66,
+      "units": {"logical_line": "bytes between CR delimiters",
+                "visual_row": "a drawn row; a longer logical line wraps over several"},
+      "result": "the editor accepted 65 drawn rows of 42 characters in these CR-delimited compositions; 2794 bytes is the largest stored text demonstrated, not a proven universal maximum",
+      "confidence": "strong for the trials and this edition at 640x480; wrapped-line compositions were not driven to refusal, so other arrangements are unmeasured",
+      "limits": ["C3 accepted 81 characters on one logical line, so 42 is a wrap width, not a line-length cap",
+                 "no trial filled the row budget with wrapped lines, so the byte maximum for that shape is unknown"]
+    },
+    {
+      "id": "CB001-E1",
+      "question": "Is the text area ASCII or CP437?",
+      "trials": [
+        {"id": "E1", "operation": "open a seeded note containing CP437 high bytes",
+         "observed": "the editor drew the CP437 glyphs for 82 9B B0 B1 B2 C4 C9 CD DB E1 F1"},
+        {"id": "E2", "operation": "Alt+130 and Alt+225 on the numeric keypad, then Escape",
+         "intended": ["Alt+130", "Alt+225"], "stored": ["0x82", "0xE1"],
+         "rendered": ["é", "ß"], "cold_reopen": "both bytes present"},
+        {"id": "E3", "operation": "extract the saved file",
+         "text_hex": "829bb0b1b2c4c9cddbe1f10d454e4482e1", "word0": 17, "word1": 0}
+      ],
+      "result": "the text area holds CP437 bytes; the editor renders them and preserves them across a save",
+      "confidence": "strong at two nonadjacent typed code points; the rest of the high half is inferred from display and preservation only, so the reader's 0x20-0xFF acceptance is policy rather than measurement"
+    }
+  ],
+  "fixtures": [
+    {"path": "corkboard/rsx-caret-selection-20261128/DMCORKBD", "size": 2864,
+     "sha256": "8cd0a2b88fe6c6c93eb4969e0b105aedbbe83420412ca7ad2eec7ff9ddfb68ad",
+     "word0": 57, "word1": 0, "text_bytes": 64, "session": "rsx-a",
+     "word0_note": "stored value after the selection session; the T4 value it replaced is not retained (see CB001-H2 and reconciliation.t45t6)"},
+    {"path": "corkboard/rsx-cp437-20261128/DMCORKBD", "size": 2864,
+     "sha256": "63ec0dcfe2702ff0f6f314d20725aa3126836fbb844afe43e0f6c8b24024e700",
+     "word0": 17, "word1": 0, "text_bytes": 17, "session": "rsx-d",
+     "note": "seeded starting buffer written by the guest DEBUG; the final file was written by the accessory"},
+    {"path": "corkboard/rsx-maximum-2794-20261128/DMCORKBD", "size": 2864,
+     "sha256": "8ebaa22476c8b44e5f789d7f70c3d38eaf4bcc7d9a9abdec0f1063e1d463413a",
+     "word0": 42, "word1": 0, "text_bytes": 2794, "visual_rows": 65, "row_width": 42, "session": "rsx-c",
+     "word0_offset_byte": "0x0D, the CR ending the first 42-byte row; the next logical row begins at 43",
+     "cold_reopen_caret": "drawn at the start of the second row in captures/m01-cold-reopen-max.png"}
+  ],
+  "reconciliation": {
+    "t45t6": {
+      "status": "partially resolved",
+      "established": ["T4 ran from the DOS prompt in a session whose journal and captures survive; its word 51 was read through the guest DEBUG screen and its file was later overwritten",
+                      "T5 and T6 ran in later sessions and their journals/captures show caret and selection keys only",
+                      "T5 left 64 text bytes and word 57; T6 left 2666 text bytes and word 2624; both final files are retained"],
+      "not_established": ["the before/after hash of T4's file", "whether T5 wrote because the selection dirtied the buffer or because the reopened note was already dirty",
+                           "whether a general cursor-only close can write"],
+      "disposition": "report and reference limited to T2 and T7b for the no-write control; T5 and T6 recorded as uncleared counter-observations"
+    },
+    "maximum_word0_boundary": {
+      "stored": 42,
+      "text_byte_at_42": "0x0D",
+      "next_logical_row_start": 43,
+      "screenshot": "captures/m01-cold-reopen-max.png shows the caret at the start of the second row",
+      "disposition": "the stored offset is reported as the write-time caret byte; the row-boundary convention and any insertion-offset reading are left open"
+    },
+    "shared_artifacts": {
+      "pull_request": 223,
+      "files": ["tests/fixtures/application-generated/manifest.json", "website/reference-images.json",
+                 "tools/audit_repository.py", "src/deskmate_formats/supervisor/repository_audit.py"],
+      "check": "git merge-tree of this branch and pr-223-head at their shared base produced a clean tree containing both campaigns' manifest and reference-image entries",
+      "disposition": "additive entries only; integration may land in either order without dropping a campaign's additions"
+    }
+  },
+  "local_verification": {
+    "interpreter": "CPython 3.13.17",
+    "executable": "<user>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "imported_package": "<user>\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\deskmate_formats",
+    "imported_package_state": "older build: 42 files under src/deskmate_formats are absent from it (including campaign_env/ and automation/input.py) and 11 modules differ, among them most of supervisor/ and corkboard.py",
+    "campaign_driver_import": "probe.py inserts the worktree src on sys.path, so native campaign tooling used the worktree code",
+    "worktree_test_import": "PYTHONPATH=src, because a bare python -m unittest from the worktree imports the installed copy",
+    "isolated_child": "test_supervisor_driver spawns sys.executable -I -m deskmate_formats.supervisor.driver_cli; -I ignores PYTHONPATH and the working directory, so the child imported the stale site-packages copy",
+    "shared_interpreter_result": "test_owner_termination_leaves_permanent_fence_and_read_only_restart failed: owner never durably observed acknowledgement, 15.823 s",
+    "owned_environment": "temporary venv in the system temp directory, created with --system-site-packages only for jsonschema, installed from a wheel built from this branch",
+    "owned_environment_result": "the same focused test passed in 2.266 s",
+    "shared_install_modified": false,
+    "full_local_suite_rerun": false,
+    "claim": "the failure was a stale installed package, not a repository defect; no claim is made that the full local suite passes"
+  },
+  "corrections": [
+    {
+      "document": "docs/research/deskmate-corkboard-static-20261126.md",
+      "claim": "Clear zeroed 0x0000",
+      "evidence": "the published cleared specimen corkboard/rsx-cleared/DMCORKBD (29a77821…) holds header words (20, 0) and differs from its parent at exactly one byte, 0x0004",
+      "disposition": "corrected in place"
+    }
+  ],
+  "failed_trials": [
+    {"id": "F1", "symptom": "a 200-character burst produced a stray 0x0A, a lost CR, and a 5 to Q substitution",
+     "disposition": "discarded, not published; the live-array check detected it"},
+    {"id": "F2", "symptom": "DEBUG E reset the write count so W wrote 0 bytes",
+     "disposition": "procedure corrected: set the count with R CX"},
+    {"id": "F3", "symptom": "E and W ran at C:\\ instead of C:\\DESKMATE and edited a different file",
+     "disposition": "procedure corrected: CD \\DESKMATE first; the stray file was deleted on the disposable clone"}
+  ],
+  "publication": {
+    "fixtures": "three application-generated synthetic specimens with manifest entries and REUSE sidecars",
+    "images": "three documentary captures under the operator's 2026-11-21 authorization",
+    "withheld": ["stopped disk images", "CP437 module binaries", "guest memory dumps", "socket journals", "raw captures"]
+  }
+}

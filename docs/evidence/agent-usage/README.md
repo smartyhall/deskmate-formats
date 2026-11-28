@@ -51,6 +51,12 @@ The initial supplemental receipt contract (schema version 1) includes:
   [checkpoint](freebuff-native-emulator-20261126-checkpoint-native.json) and
   [completion](freebuff-native-emulator-20261126-completion.json) — the earlier
   Freebuff campaign.
+- [Corkboard storage startup](freebuff-corkboard-storage-001-startup.json),
+  [checkpoint](freebuff-corkboard-storage-001-checkpoint-native.json) and
+  [completion](freebuff-corkboard-storage-001-completion.json) — the
+  [Corkboard storage campaign](../../research/corkboard-storage-001-20261128.md).
+  Emulated guest time and session counts are measured from the socket journals;
+  model identity and quota remain unknown and are recorded as null.
 
 Freebuff's initial read-only evaluation reported that its agent tools did not
 expose model identity, context size or quota. The desktop model selector and

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "provider": "Freebuff",
+  "agent": "Freebuff native desktop agent",
+  "campaign_id": "corkboard-storage-001",
+  "checkpoint": "completion",
+  "observed_at_utc": "2026-11-28",
+  "observed_at_note": "Host date 2026-11-28; exact UTC instant unknown to agent tools.",
+  "git_revision": null,
+  "git_revision_note": "The receipt ships with the commit it describes; the branch freebuff/corkboard-storage-001 and the pull request carry the exact head.",
+  "execution_mode": "native desktop agent; five visible 86Box sessions; no host input injection; no pointer input; no MCP server",
+  "model": null,
+  "reasoning_effort": null,
+  "model_note": "Not exposed to agent tools. No paid provider was connected, no credits were purchased and no reset was redeemed.",
+  "source": {
+    "kind": "local allowlisted collector",
+    "version": "deskmate_formats.automation.client protocol 1",
+    "detail": "Socket journals plus stopped-image extraction by 7-Zip 26.05 and the repository FAT16 walker."
+  },
+  "coverage": "Header-word calibration, second-word constraints, editable capacity with the measured maximum, CP437 display and native entry, cold reopen, and a reader profile change with portable tests.",
+  "attribution_limits": "Row and character limits are measured for this edition, accessory and 640x480 mode only.",
+  "status": "campaign complete: three published native fixtures, three documentary exemplars, one reader profile change, one corrected static claim, one explicit cross-edition gap",
+  "measurements": [
+    {"name": "emulated_guest_time_total", "value": 1716733, "unit": "ms",
+     "scope": "campaign", "semantics": "cumulative", "observed_at": "completion", "reset_boundary": null},
+    {"name": "native_sessions", "value": 5, "unit": "launches",
+     "scope": "campaign", "semantics": "cumulative", "observed_at": "completion", "reset_boundary": null},
+    {"name": "native_framebuffer_captures", "value": 68, "unit": "images",
+     "scope": "campaign", "semantics": "cumulative", "observed_at": "completion", "reset_boundary": null},
+    {"name": "published_native_fixtures", "value": 3, "unit": "files",
+     "scope": "campaign", "semantics": "cumulative", "observed_at": "completion", "reset_boundary": null}
+  ],
+  "measurement_note": "Provider allowance, tokens, context size and quota remain unobservable to the agent. No figure is estimated.",
+  "private_evidence": "Journals, raw captures, memory windows, stopped disks and launch receipts are retained outside Git."
+}
