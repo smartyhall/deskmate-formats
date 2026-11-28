@@ -175,7 +175,7 @@
       "installed": null,
       "baseline": "applib-001-quicken2",
       "stopped_disk_sha256": "40099ef1fdbb01935e78afe010169b10d907394420d35505c82cd97c151f02a0",
-      "captures": {"directory": "qn/captures", "frames": 12},
+      "captures": {"directory": "qn/captures", "frames": 16},
       "blockers": [
         "missing Program Disk 2",
         "installer hang at runtime splash",
