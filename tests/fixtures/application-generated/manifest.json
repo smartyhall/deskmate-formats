@@ -5118,6 +5118,65 @@
       "synthetic_data": true,
       "native_saved": true,
       "source_sha256": "35ea3bc020cf509336e438b06974ec7aea3736f4d0fd3db23a741fa98bd3bb30"
+    },
+    {
+      "path": "filer/hu002-form.fil",
+      "size": 8192,
+      "sha256": "640b84292c45373def401dbf17c9222ced3fc0febc53e840fc601de085b2a9c8",
+      "application": "Tandy DeskMate Form Setup and Filer",
+      "version": "03.05.00",
+      "experiment": "historical-utility-qualification-002",
+      "origin": "Exact synthetic guest file from native Form Setup and Filer. Direct FAT16 and 7-Zip stopped-disk extraction agreed.",
+      "expected_content": "Empty DATA; three character fields and one numeric field; eight layouts.",
+      "evidence_class": "native application-produced synthetic data",
+      "synthetic_data": true,
+      "native_saved": true,
+      "native_opened": false
+    },
+    {
+      "path": "filer/hu002-unsorted.fil",
+      "size": 9216,
+      "sha256": "7276f288e3dd38fcaf961d2aec4ae4220fa31dc78e7991d06b3fc687beefd9db",
+      "application": "Tandy DeskMate Form Setup and Filer",
+      "version": "03.05.00",
+      "experiment": "historical-utility-qualification-002",
+      "origin": "Exact synthetic guest file from native Form Setup and Filer. Direct FAT16 and 7-Zip stopped-disk extraction agreed.",
+      "expected_content": "Eight rows in insertion order, filling DATA pages 6 and 8.",
+      "evidence_class": "native application-produced synthetic data",
+      "synthetic_data": true,
+      "native_saved": true,
+      "native_opened": true,
+      "parent": "filer/hu002-form.fil"
+    },
+    {
+      "path": "filer/hu002-sorted.fil",
+      "size": 9216,
+      "sha256": "5b878f77b43dc6517b4065477f0e15b9d42b02ad0b0b493bc029ec8f06125682",
+      "application": "Tandy DeskMate Form Setup and Filer",
+      "version": "03.05.00",
+      "experiment": "historical-utility-qualification-002",
+      "origin": "Exact synthetic guest file from native Form Setup and Filer. Direct FAT16 and 7-Zip stopped-disk extraction agreed.",
+      "expected_content": "Eight rows sorted by ITEM_CODE; physical rows and IDs match the unsorted specimen.",
+      "evidence_class": "native application-produced synthetic data",
+      "synthetic_data": true,
+      "native_saved": true,
+      "native_opened": true,
+      "parent": "filer/hu002-unsorted.fil"
+    },
+    {
+      "path": "filer/hu002-churn.fil",
+      "size": 9216,
+      "sha256": "2c5ab1d14b8cae0410b70cb80a9f314ef2f6e41c17dc19459ff18330e0678eaf",
+      "application": "Tandy DeskMate Form Setup and Filer",
+      "version": "03.05.00",
+      "experiment": "historical-utility-qualification-002",
+      "origin": "Exact synthetic guest file from native Form Setup and Filer. Direct FAT16 and 7-Zip stopped-disk extraction agreed.",
+      "expected_content": "Sorted rows after deleting ALPHA and inserting GOLF; compacted DATA and reused IDs.",
+      "evidence_class": "native application-produced synthetic data",
+      "synthetic_data": true,
+      "native_saved": true,
+      "native_opened": false,
+      "parent": "filer/hu002-sorted.fil"
     }
   ]
 }

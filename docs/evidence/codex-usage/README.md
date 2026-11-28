@@ -1,4 +1,9 @@
 # Codex research usage ledger
+Historical Utility Qualification 002 recorded
+[startup](20261128-historical-utility-002-startup.json) and
+[native specimens](20261128-historical-utility-002-specimens.json).
+The collector found no campaign-attributable rollout or quota observation
+in those captures.
 
 The historical utility qualification campaign recorded [startup](20261127-historical-utility-startup.json),
 [known-good DBrepair](20261127-historical-utility-known-good-usage.json),

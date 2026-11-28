@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "collector_version": 1,
+  "label": "historical-utility-qualification-002",
+  "source": "codex_rollout",
+  "coverage": {
+    "sessions": 0
+  },
+  "checkpoint": "specimens",
+  "collected_at": "2026-11-28T05:04:13.930464+00:00",
+  "commit": "5045901177b735c7f5aaaa3512e4d4741a9d7bb2",
+  "observation": null
+}
