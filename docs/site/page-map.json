@@ -574,6 +574,19 @@
       "source": "docs/ecosystem/deskmate-installation-300.md"
     },
     {
+      "id": "applications.installation-media",
+      "slug": "installation/media-by-release",
+      "title": "DeskMate installation media by release",
+      "section": "deskmate",
+      "subsection": "Applications and releases",
+      "order": 46,
+      "summary": "Archive names, hashes, members and disk labels behind every release in the installation atlas, and why one version number covers several incompatible media sets.",
+      "date": null,
+      "is_hub": false,
+      "role": "current-guide",
+      "source": "docs/ecosystem/deskmate-installation-media-by-release.md"
+    },
+    {
       "id": "applications.installation-303",
       "slug": "installation/deskmate-303",
       "title": "Install DeskMate 3.03.01 on a DOS PC",

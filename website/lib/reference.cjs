@@ -68,6 +68,28 @@ const md = new MarkdownIt({ html: false, linkify: true, typographer: false });
 md.linkify.set({ fuzzyLink: false });
 // Render only figure blocks generated from the vetted site image manifest.
 md.renderer.rules.reference_figure_block = (tokens, idx) => tokens[idx].content + "\n";
+// Wide tables and long command blocks scroll inside the article. A scrolling
+// region that cannot take focus is unreachable by keyboard, so each one is a
+// tab stop with its own visible focus indicator.
+md.renderer.rules.table_open = (tokens, idx, options, env, self) =>
+  '<div class="table-scroll" tabindex="0">' + self.renderToken(tokens, idx, options);
+md.renderer.rules.table_close = (tokens, idx, options, env, self) =>
+  self.renderToken(tokens, idx, options) + "</div>\n";
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"]/g, (character) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;",
+  }[character]));
+}
+function fencedCode(token) {
+  const info = token.info ? token.info.trim() : "";
+  const language = info.split(/\s+/)[0];
+  const attribute = language ? ' class="language-' + escapeHtml(language) + '"' : "";
+  return '<pre tabindex="0"><code' + attribute + ">" +
+    escapeHtml(token.content) + "</code></pre>\n";
+}
+md.renderer.rules.fence = (tokens, idx) => fencedCode(tokens[idx]);
+md.renderer.rules.code_block = (tokens, idx) => '<pre tabindex="0"><code>' +
+  escapeHtml(tokens[idx].content) + "</code></pre>\n";
 
 function siteUrl(pathname) {
   if (typeof pathname !== "string" || !pathname.startsWith("/") ||

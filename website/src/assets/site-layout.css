@@ -6,7 +6,10 @@
 /* Restrict oversized archived diagrams, tables and filenames to the article. */
 .document { min-width: 0; max-width: min(100%, 95ch); overflow-x: clip; overflow-wrap: anywhere; }
 .document pre { display: block; max-width: 100%; overflow-x: auto; }
-.document table { display: block; width: 100%; max-width: 100%; overflow-x: auto; }
+.document table { width: 100%; max-width: 100%; }
+/* Scrolling regions are tab stops; show which one has focus. */
+.document .table-scroll { max-width: 100%; overflow-x: auto; }
+.document .table-scroll:focus, .document pre:focus { outline: 2px solid currentColor; outline-offset: 2px; }
 .document img { max-width: 100%; height: auto; }
 #reference-sections { overflow-wrap: anywhere; }
 #reference-sections summary { cursor: pointer; }

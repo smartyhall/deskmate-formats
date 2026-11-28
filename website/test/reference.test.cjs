@@ -113,7 +113,12 @@ test("site layout preserves independently scrollable technical tables on phones"
   const css = fs.readFileSync(path.join(ROOT, "website/src/assets/site-layout.css"), "utf8");
   assert.match(css, /\.document\s*\{[^}]*overflow-x:\s*clip/);
   assert.match(css, /\.document pre\s*\{[^}]*overflow-x:\s*auto/);
-  assert.match(css, /\.document table\s*\{[^}]*overflow-x:\s*auto/);
+  assert.match(css, /\.document \.table-scroll\s*\{[^}]*overflow-x:\s*auto/);
+  // A region that scrolls has to be reachable without a pointing device.
+  assert.match(css, /\.document \.table-scroll:focus[^{]*\{[^}]*outline:/);
+  const calendar = pages.find((entry) => entry.slug === "formats/calendar");
+  assert.match(renderSource(calendar), /<div class="table-scroll" tabindex="0"><table>/);
+  assert.match(renderSource(calendar), /<pre tabindex="0"><code/);
 });
 
 

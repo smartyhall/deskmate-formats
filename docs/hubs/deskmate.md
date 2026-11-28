@@ -42,6 +42,9 @@ The applications and releases group covers the software as a user met it.
   differently in ways this reference documents rather than smooths over.
 - [DeskMate 3.03.01 and 3.05 native comparison](../research/deskmate-303-305-comparison.md)
   records observed differences between the two releases.
+- [DeskMate installation media by release](../ecosystem/deskmate-installation-media-by-release.md)
+  holds the archive, hash, and disk-label identities behind the atlas, including
+  the releases that share a version number but not their media.
 - [DeskMate Evolution Atlas](../ecosystem/deskmate-evolution-atlas.md) follows
   the product line across versions and editions.
 
