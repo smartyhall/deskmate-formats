@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-28",
+  "campaign": "release-installation-atlas-001",
+  "base_commit": "5045901177b735c7f5aaaa3512e4d4741a9d7bb2",
+  "head_commit": null,
+  "head_commit_note": "This receipt was written before the checkpoint commit; the commit identity is recorded in the pull request rather than guessed here.",
+  "report": "docs/research/release-installation-atlas-001.md",
+  "guide": "docs/ecosystem/deskmate-installation-305-ninedisk.md",
+  "registry": "docs/ecosystem/deskmate-installation-registry.json",
+  "machine": {
+    "model": "Tandy 1000 RSX",
+    "emulator_version": "7.0",
+    "cpu": "i386SX",
+    "cpu_hz": 25000000,
+    "ram_kib": 4096,
+    "video": "internal Cirrus GD5402 VGA",
+    "audio": "internal",
+    "keyboard": "PS/2",
+    "mouse": "PS/2",
+    "drive_a": "3.5-inch 1.44 MB",
+    "drive_b": null,
+    "hard_disk_geometry_c_h_s": [1024, 4, 26],
+    "dos": "Tandy MS-DOS 5.00",
+    "dynamic_recompilation": false,
+    "host_clock_sync": false,
+    "automation": "authenticated IPv4 loopback, visible, held, seed 1, nohook",
+    "executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+    "source_revision": "855258da966f1594f568350be59e8e1eca082ed1",
+    "rom_revision": "908394b690f7da28f47727d9876774fd672c4ed3",
+    "launch_pid": 7216,
+    "launch_mode": "visible",
+    "launch_receipt_config_sha256": "0b482c9f02e5a659ee7a16a37a1e81f580660c6f05e2e3fbbbac6ed04e5ed789"
+  },
+  "preserved_sources": {
+    "dos_disk": {
+      "bytes": 54525952,
+      "sha256": "6c146364c24000dbf46898eec1abd4940c3f8a3a666670bdda3aa30a01e681ec"
+    },
+    "config_after_run": {
+      "sha256": "a96865de9b6df71cf27d9f8a67136f36185f02a3599659c97ef151da4031544f"
+    },
+    "nvram_after_run": {
+      "sha256": "76e47b742f2648d4b10fa81ba1f0a254018e72af5d3b4172248a9c82d74d6497"
+    },
+    "installed_disk": {
+      "bytes": 54525952,
+      "sha256": "e8a2f15b95cfccdc5ddc3058d6678fbeb6ece60b9d3f34e5bfd13d3519144fd8"
+    }
+  },
+  "media": {
+    "source": "private TVDog mirror originals, tandy1000/deskmate",
+    "reconstruction_tool": "tools/experimental/deskmate_install_media.py",
+    "reconstruction_command": "python tools/experimental/deskmate_install_media.py 305 <originals> <output>",
+    "images": [
+      {"name": "dm305dk1.img", "label": "DESKMATE_1", "bytes": 737280, "sha256": "31305d3404c43124f0efa0fd5a628d9e3488e136637db92a2a49595f01995c5e"},
+      {"name": "dm305dk2.img", "label": "DESKMATE_2", "bytes": 737280, "sha256": "d799bff522047be092004e493016756a3bbfc583e16cb597cb526554868914b0"},
+      {"name": "dm305dk3.img", "label": "DESKMATE_3", "bytes": 737280, "sha256": "a760db22f66df3045014cf741d2ef60352713f32f94ef19b8e5778b5f64558e0"},
+      {"name": "dm305dk4.img", "label": "DESKMATE_4", "bytes": 737280, "sha256": "9c413bdc3f95ebe94e23674f6eb443e7561f2dcf4f0fd64b6baf33625bcebe15"},
+      {"name": "dm305dk5.img", "label": "DESKMATE_5", "bytes": 737280, "sha256": "dbd4f2ed518d902c577620332885d84786e7cee6247a8db3c22bfec239ee5154"},
+      {"name": "dm305dk6.img", "label": "DESKMATE_6", "bytes": 737280, "sha256": "145f112ddf3d5f643ba6bbe5797b8cf3642e5a507587c31c91c6f88be9c58207"},
+      {"name": "dm305dk7.img", "label": "DESKMATE_7", "bytes": 737280, "sha256": "e0c5f4911187fc166fd26cb622aeb18edc005b4c7b69ef88b691145fb6716f94"},
+      {"name": "dm305dk8.img", "label": "DESKMATE_8", "bytes": 737280, "sha256": "7e32e26ac0bf1b76f848cc62208e599b81b93c1b4ad1b5837cdf1ed305e92c0a"},
+      {"name": "dm305dk9.img", "label": "DESKMATE_9", "bytes": 737280, "sha256": "2484a3536da18a6f2816a8c879d1fa779502ff1155ccd6ca7acab7bfff91d3f8"}
+    ],
+    "archive_identities": [
+      {"name": "dm305dk1.zip", "sha256": "5fdd7fe79032860274bd0e679b94ce14eb175ea6dde9296d9cf105cbe1186bec"},
+      {"name": "dm305dk2.zip", "sha256": "188e8bd58eb9b46b3707014d0e955fb9f2d9f2d49169520606a01714a409a8fa"},
+      {"name": "dm305dk3.zip", "sha256": "53b2a8bfd45b5c16d4103a65109317288aefbef02d4133da717c9c013b8bfeed"},
+      {"name": "dm305dk4.zip", "sha256": "07fd75ecc80499c17260dd9e2c8889e13a889efc4c73ad686853396c39ff6066"},
+      {"name": "dm305dk5.zip", "sha256": "8d5b2843e8b9de9d69ed6d1f2fb08ade76527bea3f5f5cf5a219c44774ec677c"},
+      {"name": "dm305dk6.zip", "sha256": "d6395d8bc3d21ed1bf66d49f53161287af89d9b338487004898a778ed5118d3b"},
+      {"name": "dm305dk7.zip", "sha256": "b7d34274cb95797691f997daed53721c57b8d7c1c31e98d93febaaf27d3c3d02"},
+      {"name": "dm305dk8.zip", "sha256": "d32d6c3fe6692112c8bd3f7c689649cf20222de6de8ae94ec28ee7e7c7c5e3e4"},
+      {"name": "dm305dk9.zip", "sha256": "52befdd828e7065fc2e1fde60c010693d946ca5e4c477703f9c43564086cd883"}
+    ]
+  },
+  "timeline": {
+    "unit": "sampled cumulative emulated milliseconds; a sample bounds when a state had already appeared",
+    "events": [
+      {"event": "boot to C:\\>", "ms": 11682},
+      {"event": "installer banner 03.05.00 in text mode", "ms": 19518},
+      {"event": "Installation Directory dialog", "ms": 37522},
+      {"event": "Searching files on Disk 1", "ms": 51514},
+      {"event": "DeskMate 2 requested", "ms": 141514},
+      {"event": "DeskMate 3 requested", "ms": 241518},
+      {"event": "DeskMate 4 requested", "ms": 341522},
+      {"event": "DeskMate 5 requested", "ms": 441526},
+      {"event": "DeskMate 6 requested", "ms": 641534},
+      {"event": "DeskMate 7 requested", "ms": 741538},
+      {"event": "DeskMate 8 requested", "ms": 841542},
+      {"event": "Printer Settings with DMPDIBMM.ACC lookup", "ms": 941546},
+      {"event": "DeskMate 9 requested during printer phase", "ms": 1115578},
+      {"event": "Updating AUTOEXEC.BAT", "ms": 1195582},
+      {"event": "Desktop visible after reset", "ms": 1226082}
+    ]
+  },
+  "observed_inconsistencies": [
+    "The Installation Directory field opened empty for this lineage; an unpaced automation keystroke burst produced a truncated path and a filename error before the complete value was accepted.",
+    "A premature media swap during the printer driver copy produced an insert-disk prompt while copying DRAW.PDM, which is on Disk 8; RETRY after mounting Disk 8 resumed the copy."
+  ],
+  "installed": {
+    "directory": "C:\\DESKMATE",
+    "files_in_directory": 140,
+    "root_files": 2,
+    "version_banner": "DeskMate / Version: 03.05.00 / Copyright 1984,1990 Tandy Corporation",
+    "about": {
+      "DESKTOP.PDM": "3.68",
+      "DESK.EXE": "68.19",
+      "DMCSR.RES": "3.111",
+      "DMGUF.RES": "2.15",
+      "DMMDS.RES": "2.10"
+    },
+    "file_sha256": {
+      "DESK.EXE": "0f2a40243c997276904d2555a117c60eedf0016dde073285e8d63c8345a2eba3",
+      "DESKTOP.PDM": "85e56146a4da122c6ac646ca76895dcd7375454d8d9e2067b5f25f160daa8c5d",
+      "DESKTOP.CFG": "456412de789cfe1680e2be9ae7ae057b10f7afa81548cc1e34f0e33cffed1899",
+      "CALENDAR.PDM": "819df5658b663aa69b15584abf805062679e97f587f3404738f6e82876e4bd23",
+      "TEXT.PDM": "44cc8632a2c655659bfe524b83e49bc27f85bd0107a5444590b1446398cc5ea7",
+      "PC_LINK.PDM": "3334347668812343e5deef2b6058b4e75f9dd6fe257868f994fee9215f49adbf",
+      "HANGMAN.PDM": "21fc09b9328decbc6c4db1d9e7a7a90862b8b4f766ae84b2d72daccfb4b802d4",
+      "AUTOEXEC.BAT": "81e3342527a29f11e043564a81af4a71709ced599d995f44632535ad295aa4b9",
+      "CONFIG.SYS": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+    },
+    "absent": ["MUSIC.PDM", "SOUND.PDM"],
+    "extension_counts": {"RES": 50, "ACC": 18, "PDM": 13, "HLP": 12, "TUT": 9, "PCL": 9, "RFD": 6, "CFG": 4, "FF1": 3, "R89": 3, "FIL": 2, "EXE": 2}
+  },
+  "verification": {
+    "cold_launch": "hard reset from the stopped state returned to C:\\>, executed SET DMCONFIG=C:\\DESKMATE, and DESK reached the Desktop again",
+    "normal_exit": "Desktop Escape opened 'Press Enter to confirm exit'; confirming returned to C:\\>",
+    "media_listing": "7-Zip 26.05 listed all nine working images and read their directory entries independently"
+  },
+  "captures": {
+    "private_sequence": "25 numbered native frames plus two duplicate states, retained outside Git",
+    "published_ids": [
+      "ui.release-atlas-305ninedisk.banner",
+      "ui.release-atlas-305ninedisk.destination",
+      "ui.release-atlas-305ninedisk.about",
+      "ui.release-atlas-305ninedisk.desktop"
+    ]
+  },
+  "private_evidence": "Campaign machine directory, media images, launch receipts, socket journals, full frame sequence, and installed manifest are retained in the private lab outside Git.",
+  "limits": [
+    "One hardware profile, one floppy drive, default destination, and the ALL printer option were exercised.",
+    "The ONE printer option, alternate displays, earlier DOS versions, disk geometries, and physical hardware were not tested.",
+    "The installer's search across multiple drives was not exercised.",
+    "No native Music or Sound application was launched from this installation."
+  ]
+}
