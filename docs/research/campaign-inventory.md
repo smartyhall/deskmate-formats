@@ -1,10 +1,11 @@
 # Research campaign inventory
 
 Snapshot: 2026-11-27, refreshed against integrated revision
-`2b3113c15b333f8a0718e353698e427404b2c31b` and the separately identified pending
+`a5ea5a99e9e901a4b7b51bb3861077ebe17d9004` and the separately identified pending
 PRs. The original snapshot was taken at `7dee5fa25eb1b02b2724bdd87759ce53fcb3256b`
 by campaign `chatgpt/research-campaign-inventory-20261127`; the infrastructure
-rows were reconciled by campaign `convergence-01`. Repository-only planning.
+rows were reconciled by campaign `convergence-01`; the deterministic canary row
+was reconciled after independent integration of #220. Repository-only planning.
 
 The [machine-readable inventory](campaign-inventory.json) joins research
 questions to existing evidence, candidate work, prerequisites, possible worker
@@ -57,18 +58,20 @@ implementation is on the integrated revision, not that a live gate was exercised
 | --- | --- |
 | Integrated implementation | PR #191 deterministic execution, leases and observation (`supervisor-integration`); PR #199 performance harness (`performance-integration`); PR #206 environment isolation, closing issue #201 (`environment-isolation`); PR #210 source binding |
 | Qualified native observation | PR #187 verified guest input (`guest-input-integration`). PRs #190, #196 and #198 qualify tooling rather than a DeskMate runtime observation: Ghidra 12.2 is preferred and 12.1.4 is retained as the historical profile. |
-| Synthetic-only verification | `hash-files`, `repository-audit` and `portable-tests` procedures, leases and supervision paths are qualified against synthetic peers; no real model turn, live provider or external service is exercised |
+| Synthetic-only verification | `repository-audit` and `portable-tests` workspace procedures and other supervision paths retain their synthetic scope; no live model/provider operation is implied by the controller canary |
 | Completed characterization | `quiet-performance-baseline`: [convergence-baseline-001](convergence-baseline-001-20261127.md) on `2b3113c`, accepted as characterization |
 | Deferred optimization qualification | `quiet-performance-baseline` and `git-performance`: `source_first` is structurally false, per-iteration CPU means were not sampled, instrumentation overhead is unquantified and no matched uninstrumented control exists (#147) |
 | Parked experiments | #193 instrumented 86Box automation and its `-idq` binary, intentionally not promoted |
-| Pending deterministic task qualification | `deterministic-canary`: #204 procedure published, prerequisites integrated, canary unexecuted and separately authorized |
+| Completed bounded controller canary | `deterministic-canary`: #204, manifest #218 and evidence #220 integrated; [one authorized execution](convergence-checkpoint-05-canary-qualification-20261127.md) matched independently verified README.md bytes; lease inferred, process-tree custody unknown (#215); workspace execution not qualified |
 
 ## Proposed first sequence
 
-Integrate the current stacks independently; isolate campaign environments;
-qualify the single deterministic hash task in issue #204. The characterization
-baseline is published, but optimization qualification in #147 is still open and
-precedes any optimization arm; it is not a dependency of the hash canary.
+The integrated stacks, isolated campaign environments and bounded #204 hash
+canary are recorded above. Final shared-origin and publication verification
+remain under #213. The characterization baseline is published, but optimization
+qualification in #147/#214 is still open and precedes any optimization arm.
+#215 (process-tree observation), #219 (workspace CLI environment selection),
+and #221 (prior-head Windows S2 dispatch failure) remain deferred.
 Coordinate #191/#199 shared fixture and configuration changes as merge-order
 concerns, not hard functional dependencies. Existing native socket procedures
 can support Corkboard follow-up independently of the candidate input

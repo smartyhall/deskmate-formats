@@ -24,9 +24,33 @@ The sanitized harness projection is published as
 [structured evidence](docs/evidence/convergence-baseline-001-20261127.public.json);
 the raw report, console log and gate captures remain private. Optimization is
 unstarted, PR [#193](https://github.com/smartyhall/deskmate-formats/pull/193)
-stays parked, the [#204](https://github.com/smartyhall/deskmate-formats/issues/204)
-canary is unexecuted, and the annotated tag `research-baseline-001` is proposed
-for the measured revision only if the operator accepts this record.
+stays parked. The annotated tag `research-baseline-001` remains proposed for
+this measured revision; it is distinct from the final shared research origin.
+
+## Deterministic canary — bounded controller qualification — 2026-11-27
+
+The [#204](https://github.com/smartyhall/deskmate-formats/issues/204) canary
+completed one separately authorized `hash-files` execution against the frozen
+trusted revision `e72c97ca47720fe38e32a2b8a37dff6202cda4a3`. The README.md
+result (22,079 bytes, SHA-256
+`779b499e3760045f336151fa3910ce3abcba4836f2632e22b88a441583e86773`)
+matched the independent expectation. The [qualification record](docs/research/convergence-checkpoint-05-canary-qualification-20261127.md)
+and [public projection](docs/evidence/convergence-checkpoint-05-canary-20261127.public.json)
+were independently reviewed and merged in #220 at
+`a5ea5a99e9e901a4b7b51bb3861077ebe17d9004` after the exact-head portable matrix
+passed (run 46085912168). The operator accepted the bounded controller-only
+result. Lease acquisition/release is inferred from reviewed control flow and
+reported registry disposition, not directly sampled; post-exit process-tree
+emptiness remains unknown (#215). No workspace execution, unattended dispatch,
+provider invocation or general resource-custody qualification is implied.
+The attempt is consumed; no replay is authorized.
+
+Deferred: #147/#214 performance qualification and optimization, #215 Windows
+process-tree observation, #219 deterministic CLI environment selection, and
+#221 prior-head Windows S2 dependency dispatch failure. #193 remains parked.
+The final shared research origin remains pending #213's exact-revision checks,
+reference-site publication verification and annotated tag decision. The canary
+source, measured performance source and final research origin are distinct.
 
 ## Source-bound Supervisor execution — 2026-11-27
 
@@ -40,7 +64,8 @@ verifies the bound checkout before the reviewed target runs. A child that cannot
 prove its import makes the attempt fail rather than producing a measurement of
 unknown provenance. The
 [procedure guide](docs/research/source-bound-execution-procedure.md) covers
-migration and the bounded #204 handoff; no live task was dispatched.
+migration and the bounded #204 handoff; that campaign dispatched no live task.
+The later controller-only #204 run is documented above.
 
 ## Historical chronology and advertising publication — 2026-11-27
 
