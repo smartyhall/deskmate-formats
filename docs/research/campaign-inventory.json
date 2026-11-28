@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "as_of": "2026-11-27",
-  "base_revision": "2b3113c15b333f8a0718e353698e427404b2c31b",
+  "base_revision": "a5ea5a99e9e901a4b7b51bb3861077ebe17d9004",
   "purpose": "Advisory research planning inventory; not a queue, permission, availability assertion, or capability registry. Status is a dated planning assessment, not live GitHub state.",
   "campaigns": [
     {
@@ -155,7 +155,7 @@
       "id": "deterministic-canary",
       "domain": "infrastructure",
       "priority": 1,
-      "status": "proposed",
+      "status": "completed",
       "effort": "small",
       "workers": [
         "offline-lab",
@@ -173,15 +173,24 @@
       ],
       "sources": [
         "docs/research/codex-supervisor-design.md",
-        "docs/research/source-bound-execution-procedure.md"
+        "docs/research/source-bound-execution-procedure.md",
+        "docs/research/convergence-checkpoint-05-canary-qualification-20261127.md",
+        "docs/evidence/convergence-checkpoint-05-canary-20261127.public.json"
       ],
       "issues": [
         204
       ],
-      "pull_requests": [],
-      "evidence": "Prerequisites #191 and #206 are integrated and the operator procedure is published. The canary is unexecuted: it awaits a reviewed manifest and a separate authorization of one exact plan digest. No attempt has been prepared or submitted.",
+      "pull_requests": [
+        218,
+        220
+      ],
+      "evidence": "One separately authorized controller hash-files attempt at e72c97ca47720fe38e32a2b8a37dff6202cda4a3 completed; independently verified expected bytes and returned projection match. #220 integrated after required CI; operator accepted bounded scope. Lease inferred, process-tree emptiness unknown (#215), no workspace-import qualification or replay authority.",
       "acceptance": "One reviewed hash-files task, independent expected digest, explicit authorization, one attempt and sanitized returned receipt.",
-      "completion_refs": []
+      "completion_refs": [
+        "https://github.com/smartyhall/deskmate-formats/pull/220",
+        "docs/research/convergence-checkpoint-05-canary-qualification-20261127.md",
+        "docs/evidence/convergence-checkpoint-05-canary-20261127.public.json"
+      ]
     },
     {
       "id": "guest-input-integration",
