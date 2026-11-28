@@ -10,6 +10,7 @@
   "checkpoint_status": "One operator-authorized execution of the frozen deterministic plan 5681fe8c8fa35d5425651e5fa0e7ee83299f617e6c97b9ab953390d2d3e7b0ba completed with exit status 0 and a structured result exactly matching the independently established README.md identity. The attempt ran under a registered campaign lease for worktree:convergence-02-trusted that was released; the transient lease was not sampled and post-exit process-tree emptiness was not proven. The attempt is consumed and replay is refused.",
   "coverage": "this campaign only; shared account state is not attributable",
   "evidence": [
+    "docs/evidence/convergence-checkpoint-05-canary-20261127.public.json",
     "docs/research/convergence-checkpoint-05-canary-qualification-20261127.md",
     "docs/research/convergence-checkpoint-02-canary-preparation-20261127.md",
     "ops/tasks/github-hash-canary.json",

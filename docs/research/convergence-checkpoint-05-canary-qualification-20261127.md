@@ -10,6 +10,11 @@ canary inside [issue #213](https://github.com/smartyhall/deskmate-formats/issues
 It reports a completed laboratory run; it is not a convergence declaration and
 carries no execution authority.
 
+*Revised 2026-11-28 after independent review: the usage receipt link, the
+process-survival wording, the blob-binding command, the `progress.jsonl` event
+count and the published identifiers were corrected. The execution, the frozen
+plan and every durable record are unchanged.*
+
 - Campaign: `convergence-02-trusted` (campaign `convergence-02`)
 - Repository: `smartyhall/deskmate-formats`
 - Base revision: `e72c97ca47720fe38e32a2b8a37dff6202cda4a3` (merge of PR #218)
@@ -19,7 +24,9 @@ carries no execution authority.
   deterministic plan, execution and campaign-registry components. No parallel
   task format, executor, registry or service was introduced.
 - Sanitized usage receipt:
-  [freebuff-convergence-checkpoint-05-20261127.json](../../evidence/agent-usage/freebuff-convergence-checkpoint-05-20261127.json)
+  [freebuff-convergence-checkpoint-05-20261127.json](../evidence/agent-usage/freebuff-convergence-checkpoint-05-20261127.json)
+- Machine-readable evidence projection:
+  [convergence-checkpoint-05-canary-20261127.public.json](../evidence/convergence-checkpoint-05-canary-20261127.public.json)
 
 ## 1. Scope and boundary
 
@@ -63,7 +70,7 @@ change, or a shared baseline tag.
 | Controller implementation | `deskmate_formats.supervisor` SHA-256 `b8e4d08237d59cc45e6a0e37bceee50a21452d97a7ef0331ff8d9f5922972e6d` (33 modules) |
 | Supervisor Git tree at the pin | `7de95935d6bb1a6a408cfe3526d2f71ed0418523` |
 | Interpreter | CPython 3.13.17 in the qualified campaign virtual environment; executable digest recorded privately |
-| Attempt | opaque `55d1057917354c3f93a1092ea9322bc4`, frozen plan only |
+| Attempt | one; the frozen plan above is its only public identifier (the opaque private attempt identifier is not published) |
 
 The **plan SHA-256 is a historical evidence identifier for one consumed
 attempt**, as issue #204 requires. It is not an execution grant: replay of this
@@ -150,18 +157,28 @@ Execution receipt summary:
 
 Durable attempt records: `attempt.json` (plan digest and start time),
 `child.json` (process claim), `outcome.json` (the full receipt above),
-`progress.jsonl` (started and finished events), `stdout.bin` and `stderr.bin`.
+`progress.jsonl`, `stdout.bin` (129 bytes) and `stderr.bin` (0 bytes).
+
+`progress.jsonl` is 222 bytes and holds exactly two JSON lines, written by the
+controller's own progress calls: `started` at `2026-11-27T23:31:43Z` for
+`hash-files`, and `finished` at `2026-11-27T23:31:44Z` with `exit_status: 0`
+and `outcome_state: completed`. An earlier private completion narrative
+described this file as holding one finished event. That description was wrong;
+the review found the durable file unchanged, with both events, and it was not
+rewritten. The projection below reproduces both lines with the private attempt
+identifier removed from the `started` line.
 
 ## 7. Queue revalidation and source integrity
 
-- Queue `b34c0fb3f53d4967b67cf4a3196d3c62`, integrity check `ok`, exactly one
-  record: sequence 1, `github-hash-canary` revision 1, `accepted`, resolved
+- The private queue's integrity check returned `ok` with exactly one record:
+  sequence 1, `github-hash-canary` revision 1, `accepted`, resolved
   `2026-11-27T23:20:26Z`. Execution does not write to the queue; its digest was
-  unchanged by the run.
-- The plan's acceptance binding (queue id, sequence, task, revision,
-  idempotency key, review token, source provenance) was revalidated from the
-  queue before dispatch, and the new composition was accepted only because the
-  binding still matched.
+  unchanged by the run. The queue identifier and that digest are not published,
+  because the database is private runtime state.
+- The plan's acceptance binding (queue sequence, task, revision, idempotency
+  key, review token, source provenance) was revalidated from the queue before
+  dispatch, and the new composition was accepted only because the binding still
+  matched.
 - Source revision was `e72c97ca47720fe38e32a2b8a37dff6202cda4a3` before and
   after the run.
 - `git status --porcelain --untracked-files=all` was empty before and after, the
@@ -183,15 +200,16 @@ campaign registered:
 | Provider | `freebuff` |
 | Branch | `canary/trusted-source` |
 | Base commit | `e72c97ca47720fe38e32a2b8a37dff6202cda4a3` |
-| Resource | `worktree:convergence-02-trusted` |
-| Lease identity | `worktree:84635729fdeaa190cbd1f0804e6263b5` |
+| Resource label | `worktree:convergence-02-trusted` |
 | Lease duration | 900 seconds (procedure timeout unchanged at 300) |
 
 The lease identity is derived from the canonical path of the registered
 worktree, not from a caller-chosen label, so two campaigns naming the same
 directory collide instead of holding independent "exclusive" leases. Both a
 recomputation made for review and the controller's own identity calculation
-produced the same value, and the lease was confirmed free before dispatch.
+produced the same value, and the lease was confirmed free before dispatch. That
+path-derived identity is not published; the registered resource label is
+sufficient to name the lease in this record.
 
 The executing deterministic process acquired the lease itself and released it
 from a `finally` block; no separate process took a lease and no lease was
@@ -226,7 +244,7 @@ claimed to qualify.
 | Independently predictable result | pass | Expected digest derived from the source before dispatch and matched exactly |
 | Durable result return | pass | Structured result, stdout receipt, outcome record and progress record all persisted and inspected |
 | Absence of source mutation | pass | Clean before and after; no tracked modification; branch stationary |
-| Sanitized evidence return to GitHub | this pull request | Record plus provider-neutral receipt; private runtime state stays outside Git |
+| Sanitized evidence return to GitHub | this pull request | Record, provider-neutral receipt and machine-readable projection; private runtime state stays outside Git |
 
 The file hash alone is therefore necessary but not sufficient. Two dimensions —
 transient-lease observation and post-exit process-tree emptiness — are reported
@@ -262,8 +280,11 @@ documentation only and did not modify those components.
 2. **Process-tree emptiness unproven.** The termination record reports
    `owner: stopped`, `descendants: unknown`, `enumeration: incomplete`,
    `reason: scope-loses-orphans` and `authority: no-tree-handle`. Operationally
-   the child exited 0 and its PID no longer exists, and no new process survives;
-   that is weaker than a proven empty tree.
+   the child exited 0 and its PID no longer existed afterwards; descendant
+   processes were not enumerated, so no statement is made about whether any
+   survives. That is weaker than a proven empty tree, and it is why the
+   post-exit process-tree dimension stays `unknown` here and deferred to issue
+   #215.
 3. **Plan digest is not publicly recomputable.** The plan binds private host
    identities (absolute paths, interpreter and package digests), so only its
    digest is published. A verifier can confirm that the durable outcome records
@@ -283,12 +304,27 @@ documentation only and did not modify those components.
 
 Anyone can confirm the source-side facts from public data:
 
+The first command binds the path `README.md` to a blob at the exact pinned
+revision, so the hash demonstrated afterwards is the hash of that path at that
+revision and not of an unnamed blob:
+
 ```bash
-git cat-file blob b2b3d17a0a70b94b5ae231feba319556bbff6430 | wc -c
+git rev-parse e72c97ca47720fe38e32a2b8a37dff6202cda4a3:README.md
+# must print b2b3d17a0a70b94b5ae231feba319556bbff6430
+git cat-file -s b2b3d17a0a70b94b5ae231feba319556bbff6430
+# must print 22079
 git cat-file blob b2b3d17a0a70b94b5ae231feba319556bbff6430 | sha256sum
+# must print 779b499e3760045f336151fa3910ce3abcba4836f2632e22b88a441583e86773
 git rev-parse e72c97ca47720fe38e32a2b8a37dff6202cda4a3:ops/tasks/github-hash-canary.json
+# must print 369bdc3196b63c6cf84da542bc64b0143a480346
+git cat-file -s 369bdc3196b63c6cf84da542bc64b0143a480346
+# must print 946
 git cat-file blob 369bdc3196b63c6cf84da542bc64b0143a480346 | sha256sum
+# must print 16d17ba48d1f7bcba2192caa4959690a2a30efa4104f5be8f17d420eeafe7ae0
 ```
+
+On Git for Windows, `sha256sum` appends ` *-` to its output; the leading 64
+hexadecimal characters are the digest.
 
 The controller implementation digest is reproducible from the source tree at the
 pinned revision, over the reviewed supervisor modules in sorted order:
@@ -306,11 +342,72 @@ print(len(mods), d.hexdigest())
 PY
 ```
 
+## 13. Machine-readable evidence projection
+
+[`docs/evidence/convergence-checkpoint-05-canary-20261127.public.json`](../evidence/convergence-checkpoint-05-canary-20261127.public.json)
+restates the facts above in an allowlisted, machine-readable form. It is
+**derived, not recorded**: it was built from the attempt's durable files
+(`attempt.json`, `child.json`, `outcome.json`, `progress.jsonl`, `stdout.bin`,
+`stderr.bin`), the expected result recorded in checkpoint 04, and source facts
+recomputed from the pinned revision. Nothing was re-measured, no plan was
+regenerated and no original record was edited.
+
+Every value under `task`, `source`, `manifest`, `plan`, `procedure`,
+`controller`, `result`, `execution`, `progress`, `custody`, `queue`, `registry`,
+`qualification` and `limitations` is classified in `provenance.fields`:
+
+| Class | Meaning |
+| --- | --- |
+| `durable-record` | projected from the attempt's durable files, without reconstruction or edit |
+| `independent-source-fact` | recomputed from the pinned revision, or recorded before dispatch and independent of the result |
+| `producer-observation` | observed by the producing session outside the durable files, or a conclusion stated here |
+| `inferred-control-flow` | inferred from the reviewed controller's control flow plus the final registry state, not observed |
+
+Withheld by construction, and listed in `projection.excluded`: the plan body,
+the review token, private absolute paths, the child process identity, the queue
+identifier, the opaque attempt identifier and the path-derived lease identity.
+The only alteration to a projected value is the removal of the attempt
+identifier from the `progress.events` lines; no other field was transformed.
+
+**Reproduction and integrity.** The document carries its own digest. To check
+it, load the JSON, set `projection.integrity.self_sha256` to `null`, serialize
+as UTF-8 JSON with sorted keys and separators `(',', ':')` (`ensure_ascii`
+false, `allow_nan` false), and hash with SHA-256:
+
+```bash
+python - <<'PY'
+import hashlib, json
+path = "docs/evidence/convergence-checkpoint-05-canary-20261127.public.json"
+doc = json.load(open(path, encoding="utf-8"))
+doc["projection"]["integrity"]["self_sha256"] = None
+blob = json.dumps(doc, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
+print(hashlib.sha256(blob.encode("utf-8")).hexdigest())
+PY
+```
+
+Expected: `7607090513bc44186e6e302df4662396b686da8cb464dabeb7aee21c1fe4a377`.
+As Git stores it, the blob is LF and 17,561 bytes with byte digest
+`b086fa1180301b3ecf514ce25dd265aca1891588c3b1fd841f211477f93711d0`. A
+Windows checkout converts it to CRLF, which changes the byte digest but not
+the canonical self digest above, so compare the stored bytes rather than a
+working copy:
+
+```bash
+git cat-file blob <published-commit>:docs/evidence/convergence-checkpoint-05-canary-20261127.public.json | sha256sum
+```
+
+The builder reads no build-clock value and takes every input from the durable
+records and the pinned source, so rebuilding it reproduces both digests
+exactly. This is an integrity check on the published projection, not additional
+experimental evidence, and it adds nothing to the qualification above.
+
 ## References
 
 - [Issue #204](https://github.com/smartyhall/deskmate-formats/issues/204) — canary scope
 - [Issue #213](https://github.com/smartyhall/deskmate-formats/issues/213) — convergence campaign
 - [Checkpoint 02 — canary preparation](convergence-checkpoint-02-canary-preparation-20261127.md)
+- [Machine-readable evidence projection](../evidence/convergence-checkpoint-05-canary-20261127.public.json)
+  and its [usage receipt](../evidence/agent-usage/freebuff-convergence-checkpoint-05-20261127.json)
 - [`ops/tasks/github-hash-canary.json`](../../ops/tasks/github-hash-canary.json)
 - [`src/deskmate_formats/supervisor/deterministic.py`](../../src/deskmate_formats/supervisor/deterministic.py),
   [`procedures.py`](../../src/deskmate_formats/supervisor/procedures.py),
