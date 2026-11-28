@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "campaign": "application-library-001",
+  "updated": "2026-11-28",
+  "description": "Reusable DeskMate application environments qualified during campaign application-library-001. Commercial media, installed program trees, disk images, ROMs and raw captures are private; this file records identities and observations only.",
+  "evidence_page": "docs/evidence/application-library-001/README.md",
+  "overview": "docs/ecosystem/application-library.md",
+  "machine_profiles": {
+    "tandy1000rsx-dos500": {
+      "emulator": "86Box 7.0 automation build",
+      "emulator_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+      "profile": "tandy1000rsx",
+      "processor": "i386SX 25 MHz",
+      "memory_kib": 4096,
+      "video": "internal",
+      "sound": "internal",
+      "floppy": "fdd_01_type = 35_2hd",
+      "hard_disk_bytes": 54525952,
+      "operating_system": "Tandy MS-DOS 5.00",
+      "parent_baseline": "rsx-dos5-pristine-20261104"
+    }
+  },
+  "host_environments": [
+    {
+      "id": "deskmate.host.030500.nine-disk",
+      "product": "DeskMate",
+      "publisher": "Tandy Corporation",
+      "observed_release": "03.05.00",
+      "category": "desktop environment",
+      "architecture": "native DeskMate environment",
+      "source_archives": [
+        {
+          "path": "deskmate/dm305dk1.zip through dm305dk9.zip",
+          "origin": "private TVDog mirror",
+          "source_index": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/00_index.txt"
+        }
+      ],
+      "working_media": [
+        {"label": "DESKMATE_1", "sha256": "31305d3404c43124f0efa0fd5a628d9e3488e136637db92a2a49595f01995c5e"},
+        {"label": "DESKMATE_2", "sha256": "d799bff522047be092004e493016756a3bbfc583e16cb597cb526554868914b0"},
+        {"label": "DESKMATE_3", "sha256": "a760db22f66df3045014cf741d2ef60352713f32f94ef19b8e5778b5f64558e0"},
+        {"label": "DESKMATE_4", "sha256": "9c413bdc3f95ebe94e23674f6eb443e7561f2dcf4f0fd64b6baf33625bcebe15"},
+        {"label": "DESKMATE_5", "sha256": "dbd4f2ed518d902c577620332885d84786e7cee6247a8db3c22bfec239ee5154"},
+        {"label": "DESKMATE_6", "sha256": "145f112ddf3d5f643ba6bbe5797b8cf3642e5a507587c31c91c6f88be9c58207"},
+        {"label": "DESKMATE_7", "sha256": "e0c5f4911187fc166fd26cb622aeb18edc005b4c7b69ef88b691145fb6716f94"},
+        {"label": "DESKMATE_8", "sha256": "7e32e26ac0bf1b76f848cc62208e599b81b93c1b4ad1b5837cdf1ed305e92c0a"},
+        {"label": "DESKMATE_9", "sha256": "2484a3536da18a6f2816a8c879d1fa779502ff1155ccd6ca7acab7bfff91d3f8"}
+      ],
+      "machine_profile": "tandy1000rsx-dos500",
+      "installed_directory": "C:\\DESKMATE",
+      "installed_files": 142,
+      "installed_bytes": 2602369,
+      "qualification": "sealed-baseline",
+      "baseline": "applib-001-host-desk305-20261128",
+      "stopped_disk_sha256": "cd530f8f9cbb7fd550d5af69632bdb0480d5eca0a5426c654bcb58d40cb32e41",
+      "guide": "docs/ecosystem/application-library-desk305-host.md",
+      "smoke_test": "Desktop launched from the hard disk in 640x480 after installation.",
+      "limitations": [
+        "Media are rebuilt 720 KiB FAT12 images from flat file sets; factory disk labels and layout are not recovered.",
+        "Desktop accessory menus did not accept socket keyboard events."
+      ]
+    }
+  ],
+  "applications": [
+    {
+      "id": "homeword2.deskmate.120",
+      "product": "HomeWord II for DeskMate",
+      "publisher": "Sierra",
+      "observed_release": "1.20",
+      "release_basis": "1990-dated media set and installer banner",
+      "category": "word processing",
+      "source_archives": [
+        {
+          "path": "Homeword-II-for-DeskMate/HomeWord II 1.20 (1990) (5.25-360k).7z",
+          "sha256": "8de88e3d08f355b7b0e09e77452b714e0132afba56c6b70f40582c01f2a8c2cf",
+          "bytes": 6417357
+        },
+        {
+          "path": "Homeword-II-for-DeskMate/install.zip",
+          "sha256": "d863afb2eec08a230a5e66c7ea129aa8ec23d47a82fc7d8041c31ed546a326dd",
+          "bytes": 330839
+        }
+      ],
+      "working_media": [
+        {"name": "hw2dk1.img", "sha256": "4886d76932381aa4d89ab6807fe4d1e080cae10172194e9f6559a3dd20f42c64"},
+        {"name": "hw2dk2.img", "sha256": "424440c0dc68218b8bf773122120b37f9d5a127609b15216b5ae4a365cc70924"},
+        {"name": "hw2dk3.img", "sha256": "f597f3ab7ae5b34b3dfcfd89ffbdbfdcb027c826590e564ab73dc79882685d40"},
+        {"name": "hw2dk4.img", "sha256": "767645bdcee105008f6405e10b3a284be493a39cd09aafd22139ca939ca02885"}
+      ],
+      "architecture": "native application with bundled runtime resources",
+      "runtime_dependencies": {
+        "deskmate_release": "03.05.00 host",
+        "dos": "5.00",
+        "graphics": "VGA",
+        "mouse": "PS/2",
+        "printer": "IBM graphics",
+        "extra_resources": ["DMMDSERI.RES from installation Disk 2 on first launch"]
+      },
+      "machine_profile": "tandy1000rsx-dos500",
+      "installed_directory": "C:\\HOMEWORD",
+      "qualification": "smoke-tested",
+      "guide": "docs/ecosystem/application-library-homeword-ii.md",
+      "baseline": "applib-001-homeword2",
+      "stopped_disk_sha256": "1f551f42353bff17b7c1da35ca3e12e650cd35f0d9c6f3c7a124eaa1154802cf",
+      "smoke_test": {
+        "workflow": "Typed two fictional lines, saved as SYNTH001, exited, relaunched cold and reopened the file.",
+        "artifact": "C:\\HOMEWORD\\SYNTH001.HMW",
+        "bytes": 770,
+        "sha256": "204f2ab3fb932efd3757eda9599b3422638a98bdc2420eb5d66e0a2a32e3cdb3",
+        "reopen_verified": true
+      },
+      "native_formats": [".HMW"],
+      "existing_research": "Ecosystem catalog entry for HomeWord II; TVDog reference library.",
+      "research_opportunities": [
+        "Compare .HMW with DeskMate Text and Q&A Write documents.",
+        "Separate application-specific runtime resources from host runtime files.",
+        "Test thesaurus data independently of the application."
+      ],
+      "blockers": [],
+      "limitations": [
+        "Original 360 KiB images were never mounted on this profile; installations used content-identical 720 KiB rebuilds.",
+        "Thesaurus disk label required one retry."
+      ]
+    },
+    {
+      "id": "lotus-spreadsheet.deskmate.100",
+      "product": "Lotus Spreadsheet for DeskMate",
+      "publisher": "Lotus Development Corporation",
+      "observed_release": "1.0",
+      "release_basis": "Program files dated 1989-09-28 and 1990-09-26; installer directory LOTUS-DM",
+      "category": "spreadsheet",
+      "source_archives": [
+        {"path": "Lotus-Spreadsheet-for-DeskMate/123disk1.zip", "sha256": "7b927b4fd91a024d5a17420d3a1fc92a6429a422053c529ceb8c8518c2aae266", "bytes": 403666},
+        {"path": "Lotus-Spreadsheet-for-DeskMate/123disk2.zip", "sha256": "4252861db9ad749701a2ac02ca4060af4e05fc32a3f01950c9aba2651e552c68", "bytes": 381918}
+      ],
+      "working_media": [
+        {"name": "123dk1.img", "sha256": "d0de611d62eda7c0ad3a1fdad1b479b20a7635b0e9aff125bda565156e3bcc9e"},
+        {"name": "123dk2.img", "sha256": "d9c6a32b22f2199ca29f4cf62c90da1f3644e87dfc1de376c14c3e7fcd66ca40"}
+      ],
+      "architecture": "native module plus standalone launcher",
+      "runtime_dependencies": {
+        "deskmate_release": "03.05.00 host",
+        "dos": "5.00",
+        "graphics": "VGA"
+      },
+      "machine_profile": "tandy1000rsx-dos500",
+      "installed_directory": "C:\\LOTUS-DM",
+      "installed_files": 49,
+      "installed_bytes": 1326144,
+      "qualification": "smoke-tested",
+      "guide": "docs/ecosystem/application-library-lotus-spreadsheet.md",
+      "baseline": "applib-001-lotus",
+      "stopped_disk_sha256": "fa626de115c9701df774b16a9cfe294ca1b8671a77ed1d94538af52a50728c9a",
+      "smoke_test": {
+        "workflow": "Entered 10 in A1, 20 in A2 and +A1+A2 in A3 (displayed 30), then saved as SYNTH001.WK1.",
+        "artifact": "C:\\LOTUS-DM\\SYNTH001.WK1",
+        "bytes": 1443,
+        "sha256": "d05f8e1085b7995f27b8c23e2aaa02b60fc2eb28174cd34cb2ff789963ed372a",
+        "reopen_verified": false,
+        "reopen_note": "Open dialog kept focus in the file list, so a typed name was ignored; command-line filename also did not open."
+      },
+      "native_formats": [".WK1"],
+      "existing_research": "Ecosystem catalog entry for Lotus Spreadsheet; TVDog reference library.",
+      "research_opportunities": [
+        "Compare .WK1 output with DeskMate Worksheet documents and Lotus 1-2-3 release 2 files.",
+        "Test whether the standalone launcher and the Desktop load the same LOTUS-DM.PDM module.",
+        "Check document interchange between standalone and integrated modes."
+      ],
+      "blockers": [],
+      "limitations": [
+        "Native reopen not verified.",
+        "Desktop-integrated launch not exercised."
+      ]
+    },
+    {
+      "id": "express-publisher.deskmate.100",
+      "product": "Express Publisher for DeskMate",
+      "publisher": "Power Up! Software Corporation",
+      "observed_release": "1.00 (bundled runtime 03.05.00)",
+      "release_basis": "1991 media set; installer and runtime copyright banners",
+      "category": "desktop publishing",
+      "source_archives": [
+        {"path": "Express-Publisher-for-DeskMate/EPDisk1.zip", "sha256": "9427a2f71d12c2bbb8a6c7b7fc2dfe8655d4bc14241fd1362d78992334c4bed2", "bytes": 661409},
+        {"path": "Express-Publisher-for-DeskMate/EPDisk2.zip", "sha256": "741a1e9b68df704562ef8df2780acf7776be97736da8fb680765e9e370ed9556", "bytes": 540301},
+        {"path": "Express-Publisher-for-DeskMate/EPDisk3.zip", "sha256": "9138249ce155c82507c9fa17a9db503f3f34ae18bae136a99bcaa3f9088e79b6", "bytes": 691674}
+      ],
+      "working_media": [
+        {"name": "epdk1.img", "sha256": "8e4c7a75d27bbab9136a651bd336b8817981ba113dc8c3b75535979fb1e9c0ad"},
+        {"name": "epdk2.img", "sha256": "5452fbdd6871372b7511779c0dbd7495c56593b0fa243a6cd63ab8dc6dd92f20"},
+        {"name": "epdk3.img", "sha256": "108025dbb11f18eb80d171230dc2c06f8089b5fcd38044098904d03692ed2c0b"}
+      ],
+      "architecture": "standalone distribution with bundled DeskMate runtime",
+      "runtime_dependencies": {
+        "deskmate_release": "bundled 03.05.00 runtime in C:\\EXPRESS",
+        "dos": "5.00",
+        "config_sys": "FILES=20 statement required by the runtime",
+        "graphics": "VGA",
+        "extra_resources": ["COBB.FF1", "DIXON.FF1", "MARIN.FF1", "installed by the font installer"]
+      },
+      "machine_profile": "tandy1000rsx-dos500",
+      "installed_directory": "C:\\EXPRESS",
+      "installed_files": 162,
+      "installed_bytes": 2798696,
+      "launcher": "EPDM",
+      "qualification": "launched",
+      "guide": "docs/ecosystem/application-library-express-publisher.md",
+      "baseline": "applib-001-express",
+      "stopped_disk_sha256": "b9147b1d987a5ba43195610589c9d3cc22a049f1f4cd3dd6b52aebca67f26444",
+      "smoke_test": {
+        "workflow": "Typed 'SYNTHETIC PAGE' into the page area, then opened File > Save As (UNTITLED.EPD, C:\\EXPRESS\\DOCS).",
+        "artifact": null,
+        "reopen_verified": false,
+        "note": "Save As dialog ignored socket key events, so no .EPD document was written."
+      },
+      "native_formats": [".EPD", ".EPB", ".FF1"],
+      "existing_research": "Express Publisher native interface frames in the ecosystem catalog; TVDog reference library.",
+      "research_opportunities": [
+        "Compare .FF1 fonts and printer resources with First Publisher and Print Magic.",
+        "Capture an .EPD document with pointer input and compare its container with .EPB packages.",
+        "Compare the bundled runtime with the generic 03.05.00 installation."
+      ],
+      "blockers": [],
+      "limitations": [
+        "No document saved; smoke test stops at the Save As dialog.",
+        "Installer options kept at defaults; alternate printers and art-copy option untested.",
+        "Bundled runtime must not be confused with the host DeskMate runtime."
+      ]
+    },
+    {
+      "id": "quicken2.deskmate.200-release3",
+      "product": "Quicken 2 for DeskMate",
+      "publisher": "Intuit",
+      "observed_release": "2.0 Release 3",
+      "release_basis": "1989-dated program files; release number from the archive directory name",
+      "category": "personal finance",
+      "source_archives": [
+        {"path": "Quicken-2-for-DeskMate/quicken2.zip", "sha256": "551ac18c69ce9ae38fa6f7d89f779229867311138ffd63d1948234f7f488da67", "bytes": 380185}
+      ],
+      "working_media": [{"name": "quicken2.img", "sha256": "not recorded"}],
+      "architecture": "standalone INSTALL.COM with DeskMate runtime 03.02",
+      "runtime_dependencies": {
+        "deskmate_release": "03.02 (bundled installer runtime)",
+        "dos": "5.00"
+      },
+      "machine_profile": "tandy1000rsx-dos500",
+      "installed_directory": null,
+      "qualification": "blocked",
+      "guide": "docs/ecosystem/application-library-quicken-2.md",
+      "baseline": "applib-001-quicken2",
+      "stopped_disk_sha256": "40099ef1fdbb01935e78afe010169b10d907394420d35505c82cd97c151f02a0",
+      "smoke_test": null,
+      "native_formats": [".PDM"],
+      "existing_research": "Ecosystem catalog entry for Quicken; TVDog reference library.",
+      "research_opportunities": [
+        "Compare Q.PDM and QCHECKS.DAT with Release 4 and Personal Financial Assistant.",
+        "Determine what the missing Program Disk 2 contains."
+      ],
+      "blockers": [
+        "Archive lacks the Program Disk 2 requested by INSTALL.COM.",
+        "INSTALL.COM hangs at the runtime splash before accepting input.",
+        "DeskMate Desktop Install accessory did not respond to socket keyboard events."
+      ],
+      "limitations": [
+        "No installation; baseline is a clean host clone retained for a retry."
+      ]
+    }
+  ],
+  "queue": [
+    {"product": "Music Studio 3 for DeskMate", "status": "media verified, not attempted"},
+    {"product": "Q&A Write 1.00 for DeskMate", "status": "media verified, not attempted"},
+    {"product": "Print Magic 1.1", "status": "media verified, not attempted"},
+    {"product": "Form Finisher 1.01", "status": "media verified, not attempted"},
+    {"product": "Business Graphs", "status": "media verified, not attempted"},
+    {"product": "First Publisher 2.01 for DeskMate", "status": "media verified, not attempted"},
+    {"product": "MemoryMate 1.0", "status": "media verified, not attempted"},
+    {"product": "Outliner", "status": "media verified, not attempted"},
+    {"product": "RightWriter 3.2 for DeskMate", "status": "media verified, not attempted"},
+    {"product": "Personal Financial Assistant", "status": "media verified, not attempted"},
+    {"product": "Retail Home Organizer components", "status": "media verified, not attempted"},
+    {"product": "Workgroup Companion", "status": "media verified, not attempted"},
+    {"product": "Macro Companion", "status": "media verified, not attempted"},
+    {"product": "Thesaurus Companion", "status": "media verified, not attempted"},
+    {"product": "Mavis Beacon Teaches Typing 1.31T", "status": "media verified, not attempted"},
+    {"product": "Alge-Blaster Plus 1.3", "status": "media verified, not attempted"},
+    {"product": "StudyWare Physics", "status": "media verified, not attempted"},
+    {"product": "StudyWare GRE", "status": "media verified, not attempted"},
+    {"product": "StudyWare SAT variants", "status": "media verified, not attempted"},
+    {"product": "filePro for DeskMate", "status": "media verified, not attempted"},
+    {"product": "Quicken 2.0 Release 4", "status": "not inspected; may supply the missing Release 3 program disk"}
+  ]
+}

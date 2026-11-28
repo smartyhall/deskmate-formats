@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "campaign": "application-library-001",
+  "recorded": "2026-11-28",
+  "publication": {
+    "includes": "hashes, configuration, observations, file counts, screenshot inventory counts",
+    "excludes": "original archives, rebuilt media, disk images, installed trees, native documents, raw captures, transcripts, driver scripts"
+  },
+  "emulator": {
+    "name": "86Box",
+    "version": "7.0",
+    "build": "automation build",
+    "sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+    "control": "authenticated loopback automation socket only"
+  },
+  "machine_profile": {
+    "id": "tandy1000rsx-dos500",
+    "profile": "tandy1000rsx",
+    "processor": "i386SX 25 MHz",
+    "memory_kib": 4096,
+    "floppy": "fdd_01_type = 35_2hd",
+    "hard_disk_bytes": 54525952,
+    "operating_system": "Tandy MS-DOS 5.00",
+    "parent_baseline": "rsx-dos5-pristine-20261104"
+  },
+  "timing_checkpoints": {
+    "note": "Host elapsed time and emulated guest time are reported separately. Provider usage telemetry was not available to this campaign and is not inferred.",
+    "environment_ready": "sealed DOS 5.00 baseline reused; no new baseline needed",
+    "host_install_stopped": {"emulated_ms": 501766, "frames": 30886}
+  },
+  "receipts": [
+    {
+      "id": "receipt.host.desk305",
+      "kind": "host-environment",
+      "product": "DeskMate 03.05.00, nine-disk TVDog set",
+      "observed_version": "03.05.00",
+      "installer_screen": "DeskMate / Version: 03.05.00 / Copyright 1984,1990 Tandy Corporation",
+      "media": {
+        "source": "dm305dk1.zip through dm305dk9.zip (private TVDog mirror)",
+        "reconstruction": "nine 720 KiB FAT12 images built with tools/experimental/application_library_media.py",
+        "image_sha256": [
+          "31305d3404c43124f0efa0fd5a628d9e3488e136637db92a2a49595f01995c5e",
+          "d799bff522047be092004e493016756a3bbfc583e16cb597cb526554868914b0",
+          "a760db22f66df3045014cf741d2ef60352713f32f94ef19b8e5778b5f64558e0",
+          "9c413bdc3f95ebe94e23674f6eb443e7561f2dcf4f0fd64b6baf33625bcebe15",
+          "dbd4f2ed518d902c577620332885d84786e7cee6247a8db3c22bfec239ee5154",
+          "145f112ddf3d5f643ba6bbe5797b8cf3642e5a507587c31c91c6f88be9c58207",
+          "e0c5f4911187fc166fd26cb622aeb18edc005b4c7b69ef88b691145fb6716f94",
+          "7e32e26ac0bf1b76f848cc62208e599b81b93c1b4ad1b5837cdf1ed305e92c0a",
+          "2484a3536da18a6f2816a8c879d1fa779502ff1155ccd6ca7acab7bfff91d3f8"
+        ]
+      },
+      "installation": {
+        "command": "A:INSTALL",
+        "destination": "C:\\DESKMATE",
+        "media_order": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        "printer_phase": "installer requested DMPDIBMM.ACC from Disk 6; answer ALL re-read Disks 7, 8, 9",
+        "result": "installation complete screen; Desktop launched from the hard disk in 640x480"
+      },
+      "installed": {"files": 142, "bytes": 2602369},
+      "baseline": "applib-001-host-desk305-20261128",
+      "stopped_disk_sha256": "cd530f8f9cbb7fd550d5af69632bdb0480d5eca0a5426c654bcb58d40cb32e41",
+      "captures": {"directory": "host/captures", "frames": 33},
+      "limitations": [
+        "Factory disk labels and layout not recovered; media are reconstructions.",
+        "Desktop accessory menus ignored socket keyboard events."
+      ]
+    },
+    {
+      "id": "receipt.homeword2.120",
+      "kind": "application",
+      "product": "HomeWord II 1.20",
+      "source_archive_sha256": "8de88e3d08f355b7b0e09e77452b714e0132afba56c6b70f40582c01f2a8c2cf",
+      "media": {
+        "originals": "four 360 KiB images preserved as media identity",
+        "working": "four 720 KiB images rebuilt from the same file contents",
+        "mount_attempt": "changing fdd_01_type to 525_2dd produced BIOS invalid configuration information and a floppy boot loop"
+      },
+      "installation": {
+        "command": "A:INSTALL.EXE",
+        "choices": ["VGA", "IBM graphics printer", "PS/2 mouse"],
+        "destination": "C:\\HOMEWORD",
+        "extra_step": "first launch requested DMMDSERI.RES from Disk 2",
+        "result": "installer completed; editor reached"
+      },
+      "smoke_test": {
+        "data": "fictional memo text only",
+        "artifact": "SYNTH001.HMW",
+        "bytes": 770,
+        "sha256": "204f2ab3fb932efd3757eda9599b3422638a98bdc2420eb5d66e0a2a32e3cdb3",
+        "save": "File > Save As accepted SYNTH001",
+        "cold_relaunch": true,
+        "reopen": true
+      },
+      "baseline": "applib-001-homeword2",
+      "stopped_disk_sha256": "1f551f42353bff17b7c1da35ca3e12e650cd35f0d9c6f3c7a124eaa1154802cf",
+      "captures": {"directory": "hw/captures", "frames": 36}
+    },
+    {
+      "id": "receipt.lotus.100",
+      "kind": "application",
+      "product": "Lotus Spreadsheet 1.0 for DeskMate",
+      "source_archive_sha256": [
+        "7b927b4fd91a024d5a17420d3a1fc92a6429a422053c529ceb8c8518c2aae266",
+        "4252861db9ad749701a2ac02ca4060af4e05fc32a3f01950c9aba2651e552c68"
+      ],
+      "installation": {
+        "command": "A:INSTALL",
+        "destination": "C:\\LOTUS-DM",
+        "media_order": [1, 2],
+        "result": "installation procedure is now complete"
+      },
+      "installed": {"files": 49, "bytes": 1326144},
+      "smoke_test": {
+        "data": "10 in A1, 20 in A2, +A1+A2 in A3 displayed 30",
+        "artifact": "SYNTH001.WK1",
+        "bytes": 1443,
+        "sha256": "d05f8e1085b7995f27b8c23e2aaa02b60fc2eb28174cd34cb2ff789963ed372a",
+        "save": "File > Save as wrote SYNTH001.WK1",
+        "reopen": false,
+        "reopen_note": "Open dialog kept focus in the file list; typed filename ignored and HOMEBUY.WK1 opened instead. Command-line filename was not honored."
+      },
+      "launcher": "lotus-dm standalone; Desktop-integrated launch not exercised",
+      "baseline": "applib-001-lotus",
+      "stopped_disk_sha256": "fa626de115c9701df774b16a9cfe294ca1b8671a77ed1d94538af52a50728c9a",
+      "captures": {"directory": "lt/captures", "frames": 39}
+    },
+    {
+      "id": "receipt.express.100",
+      "kind": "application",
+      "product": "Express Publisher 1.00",
+      "source_archive_sha256": [
+        "9427a2f71d12c2bbb8a6c7b7fc2dfe8655d4bc14241fd1362d78992334c4bed2",
+        "741a1e9b68df704562ef8df2780acf7776be97736da8fb680765e9e370ed9556",
+        "9138249ce155c82507c9fa17a9db503f3f34ae18bae136a99bcaa3f9088e79b6"
+      ],
+      "installation": {
+        "command": "A:INSTALL (EINSTALL.EXE)",
+        "runtime_disk": 3,
+        "destination": "C:\\EXPRESS",
+        "options": ["Express Publisher", "printer drivers", "Atech FastFont"],
+        "art_copy": false,
+        "media_order": [3, 1, 2],
+        "result": "Express Publisher installation complete; font installation complete"
+      },
+      "installed": {"files": 162, "bytes": 2798696},
+      "runtime_requirement": {
+        "message": "Express Publisher requires a FILES=20 statement in your CONFIG.SYS.",
+        "observed": "FILES=10 and FILES=30 both failed; FILES=20 succeeded when present as a plain statement in CONFIG.SYS",
+        "classification": "runtime observation, not vendor documentation"
+      },
+      "smoke_test": {
+        "data": "typed SYNTHETIC PAGE in Text Mode",
+        "save_dialog": "File > Save As proposed UNTITLED.EPD in C:\\EXPRESS\\DOCS",
+        "artifact": null,
+        "note": "Save As dialog ignored socket key events; no document written"
+      },
+      "launcher": "EPDM",
+      "baseline": "applib-001-express",
+      "stopped_disk_sha256": "b9147b1d987a5ba43195610589c9d3cc22a049f1f4cd3dd6b52aebca67f26444",
+      "captures": {"directory": "ep/captures", "frames": 73}
+    },
+    {
+      "id": "receipt.quicken2.release3",
+      "kind": "application",
+      "product": "Quicken 2.0 Release 3",
+      "source_archive_sha256": "551ac18c69ce9ae38fa6f7d89f779229867311138ffd63d1948234f7f488da67",
+      "installation": {
+        "attempts": [
+          "INSTALL.COM from a labelled image: DeskMate 03.02 runtime splash, then hang awaiting Program Disk 2",
+          "DeskMate Desktop F7 Install accessory: menu did not accept socket keyboard events"
+        ],
+        "result": "not installed"
+      },
+      "installed": null,
+      "baseline": "applib-001-quicken2",
+      "stopped_disk_sha256": "40099ef1fdbb01935e78afe010169b10d907394420d35505c82cd97c151f02a0",
+      "captures": {"directory": "qn/captures", "frames": 12},
+      "blockers": [
+        "missing Program Disk 2",
+        "installer hang at runtime splash",
+        "Desktop accessory input path"
+      ]
+    }
+  ]
+}

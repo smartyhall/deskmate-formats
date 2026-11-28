@@ -106,6 +106,23 @@ page-editing workspace and Save As dialog using synthetic demonstration
 content. They document the observed interface, not independent confirmation
 of every save/reopen behavior or underlying file-format capability.
 
+### Application library environments
+
+The [application library](application-library.md) records a separate
+installation campaign that built reusable private guest environments for
+larger DeskMate applications. Its
+[machine-readable registry](application-library-registry.json) lists the
+qualified environments, and each application has its own guide:
+[DeskMate 3.05 host](application-library-desk305-host.md),
+[HomeWord II 1.20](application-library-homeword-ii.md),
+[Lotus Spreadsheet 1.0](application-library-lotus-spreadsheet.md),
+[Express Publisher 1.00](application-library-express-publisher.md), and the
+[blocked Quicken 2.0 attempt](application-library-quicken-2.md).
+
+The screenshots below show those environments running with fictional data.
+They document the observed interface; they are not a redistribution of the
+applications.
+
 ## Publication
 
 The project publishes independently authored specifications, tools,
