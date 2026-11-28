@@ -1,4 +1,4 @@
-# DeskMate Note Pad and Corkboard: read-only file format reference
+# DeskMate Note Pad and Corkboard: measured file format reference
 
 **Status:** maintained, evidence-bounded reference for observed native files. This is **not** a complete vendor specification or a universal DeskMate database profile. Sources: [November 23 native write and cold-reopen campaign](../research/deskmate-corkboard-20261123.md#corkboard-storage); [November 28 header, capacity and encoding campaign](../research/corkboard-storage-001-20261128.md); [November 28 cross-edition, boundary and control-byte campaign](../research/corkboard-interoperability-002-20261128.md); [published fixture manifest](../../tests/fixtures/application-generated/manifest.json).
 
@@ -70,7 +70,9 @@ In the measured RSX Clear operation, **only offset `0x0004` changed**: the first
 
 ## Compatibility and limits
 
-The demonstrated byte identity is confined to matched synthetic notes and named editions. A read-only inspection can recognize the measured size and CP437/CR/NUL profile, but **cannot reliably identify an arbitrary file by signature**: a stock all-zero note and unrelated zero-filled data are indistinguishable. Untested or unsupported cases include control characters other than CR, most of the CP437 high half by native entry, import/export, printing, any nonzero second-header-word meaning, and broader cross-edition migration. No write or in-place repair is promised.
+The demonstrated byte identity is confined to matched synthetic notes and named editions. A read-only inspection can recognize the measured size and CP437/CR/NUL profile, but **cannot reliably identify an arbitrary file by signature**: a stock all-zero note and unrelated zero-filled data are indistinguishable. Untested or unsupported cases include control characters other than CR, most of the CP437 high half by native entry, import/export, printing, any nonzero second-header-word meaning, and broader cross-edition migration.
+
+A construction API now exists (below), but there is no in-place repair of an arbitrary file and no provenance check. `update_note` and `clear_note` trust the exact-size buffer they are handed: size alone does not establish that the bytes are a DeskMate note, which edition wrote them, or that they are structurally valid. The reader's signature limitation applies to the writer's input as well.
 
 ## Construction API and its policies
 
@@ -85,14 +87,30 @@ word, and `clear_note` reproduces the published cleared file from its parent.
 Every policy is a documented choice, not a measured universal:
 
 * the first word defaults to the end of the new text and accepts any offset in
-  `0..len(text)`; no insertion-boundary normalisation is applied;
+  `0..len(text)`; no insertion-boundary normalisation is applied, and the
+  convention for a caret sitting on a CR was never isolated;
 * the second word is zero for a new note and preserved by `update_note`, because
   no operation was observed to set it;
 * `update_note` preserves bytes after the terminator unless the caller asks for
-  them to be zeroed, and `clear_note` defaults to the measured one-byte Clear;
+  them to be zeroed, and `clear_note` defaults to the measured one-byte Clear.
+  Residual bytes are prior content: the reader does not report them as visible
+  text, and the writer does not interpret them;
+* `update_note` and `clear_note` accept any caller-supplied 2,864-byte buffer.
+  Size is the only check, so a supplied buffer proves nothing about its
+  identity, provenance or structural validity;
 * 2,794 bytes is a default refusal point with an explicit override up to the
-  last byte that still leaves a terminator;
-* NUL, control bytes other than CR, DEL and non-CP437 strings are refused.
+  last byte that still leaves a terminator. That ceiling is a **construction
+  policy, not a capacity guarantee**: it is the largest composition demonstrated
+  in a native editor, and logical lines and wrapped visual rows impose further
+  constraints this module does not model, so a shorter text can still be
+  refused by the original accessory;
+* NUL, control bytes other than CR, DEL and non-CP437 strings are refused. That
+  restriction is deliberate even though a seeded native note displayed and
+  preserved the control range: the bytes were injected rather than typed, so
+  this is a smaller profile for the normal path, not a limit derived from the
+  seeded evidence;
+* `sanitize=True` zeroes the buffer `clear_note` returns. It is not a secure
+  erase of physical storage, of earlier copies, or of backups.
 
 ## Related storage
 
@@ -106,12 +124,15 @@ In the measured RSX 03.04.04 accessory at 640 × 480, a drawn row holds **42 cha
 
 That 2,794 is the largest composition demonstrated rather than a proven universal maximum. The capacity trials used CR-delimited lines short enough to fill exactly one drawn row each, so they establish the row budget for that shape; no trial drove a composition of wrapped logical lines to its refusal boundary, and another arrangement of the same budget was not measured. A note of 65 short rows refuses earlier than a note of 65 full rows, so the limit is structural rather than a byte budget; 66 bytes were never observed to hold text, which is not proof that no composition can reach them. [November 28 capacity trials](../research/corkboard-storage-001-20261128.md#experiment-3-real-editable-capacity)
 
-The load side is broader than the input side. A file holding **one** logical line
-of 2,730 bytes - the same 65 drawn rows of 42 characters with no CR at all -
-loaded completely, was drawn wrapped, and was saved unchanged. So the editor's
-budget is on drawn rows and no load-time byte limit was reached at 2,730 bytes;
-the refusal at 2,794 is an input-side rule. The refusal boundary for a wrapped
-composition was not measured. [Wrapped-line trial](../research/corkboard-interoperability-002-20261128.md#phase-3-the-capacity-model-from-the-load-side)
+These are three separate observations, not one model. A file holding **one**
+logical line of 2,730 bytes - the same 65 drawn rows of 42 characters with no CR
+at all - **loaded** completely, was drawn wrapped, and was saved unchanged. A
+65-row composition at 2,794 bytes **refused further input** silently. Two edits
+near a boundary left **residual bytes** after the terminator. The results are
+consistent with a budget on drawn rows, and no load-time byte limit was reached
+at 2,730 bytes, so the measured refusal is input-side. They do not establish the
+complete capacity model: the refusal boundary for a wrapped or mixed composition
+was not measured. [Wrapped-line trial](../research/corkboard-interoperability-002-20261128.md#phase-3-loading-input-refusal-and-residual-writes)
 
 An edit near a soft-wrap boundary, or one whose stored caret lies past the
 loaded text, can leave bytes **after** the terminator while the visible text stays
@@ -122,9 +143,9 @@ neither mechanism is established. [Residual writes](../research/corkboard-intero
 
 ## Character set
 
-The text area stores **CP437** bytes, and the accessory renders and preserves them. Native entry of Alt+130 and Alt+225 on the numeric keypad stored `0x82` and `0xE1`, which the editor drew as `é` and `ß` and preserved across a cold reopen; a seeded note containing eleven further box-drawing, shading, and accented bytes was displayed correctly and saved unchanged.
+The text area stores **CP437** bytes, and the accessory renders and preserves them. Native entry of Alt+130 and Alt+225 on the numeric keypad stored `0x82` and `0xE1`, which the editor drew as `é` and `ß` and preserved across a cold reopen. A seeded note also carried eleven high bytes; two of them repeated those same natively entered values, so **nine further code points** - box-drawing, shading and accented bytes - were displayed correctly and saved unchanged.
 
-That is a sample, not a sweep: two code points were entered natively and eleven more were displayed. The reader accepts `0x20`–`0xFF` except `0x7F` as a **deliberately broader policy** chosen from that evidence, rejects other control bytes, decodes as CP437, and keeps the raw bytes regardless of decoding. It is not a measured claim that every high byte was exercised. [November 28 encoding trials](../research/corkboard-storage-001-20261128.md#experiment-4-character-set)
+That is a sample, not a sweep: two code points were entered natively and nine further code points were displayed from a seeded buffer. The reader accepts `0x20`–`0xFF` except `0x7F` as a **deliberately broader policy** chosen from that evidence, rejects other control bytes, decodes as CP437, and keeps the raw bytes regardless of decoding. It is not a measured claim that every high byte was exercised. [November 28 encoding trials](../research/corkboard-storage-001-20261128.md#experiment-4-character-set)
 
 ### The control range, seeded
 
@@ -134,12 +155,13 @@ preceded by its own textual tag, and opened it in the 03.04.04 accessory.
 | Byte class | Drawn | Stored on save |
 | --- | --- | --- |
 | `0x01`–`0x09`, `0x0B`–`0x1F` | each acted as a line break: one tag per drawn row | preserved byte for byte |
-| `0x0A` (LF) | acted as a line break | **removed** from the visible text; the only substitution observed |
-| `0x7F` (DEL) | drawn with a glyph | preserved |
+| `0x0A` (LF) | acted as a line break | **dropped when the note loaded**; the 159-byte visible text was then saved as-is (the only substitution observed) |
+| `0x7F` (DEL) | drawn as a glyph, not as a row break | preserved |
 | `0x0D` (CR) | line break | preserved |
 
-These bytes were **seeded, not typed**, so they are display-and-preservation
-evidence: a user cannot enter them from the keyboard. The reader still rejects
-them, because a typed note cannot contain them and a file that does is outside
-the measured normal path; the evidence now exists to relax that deliberately,
-with `0x0A` singled out. [Control-range trial](../research/corkboard-interoperability-002-20261128.md#phase-4-the-control-range)
+These bytes were **seeded by an injector, not typed**, so they are
+display-and-preservation evidence only: no trial typed one, and nothing here
+establishes how the keyboard behaves for them. The reader and the writer still
+reject them, because a typed note cannot be shown to contain them and a file that
+does is outside the measured normal path; the evidence now exists to relax that
+deliberately, with `0x0A` singled out. [Control-range trial](../research/corkboard-interoperability-002-20261128.md#phase-4-the-control-range)

@@ -30,8 +30,10 @@ class CorkboardTests(unittest.TestCase):
         self.assertEqual(note.header_words, (377, 0))
         self.assertEqual(note.text, expected)
 
-    def test_first_word_is_an_insertion_offset_not_a_length(self):
-        # Saved with the caret inside the note: word 57, text 64 bytes.
+    def test_first_word_is_a_caret_offset_not_a_text_length(self):
+        # Saved with the caret inside the note: word 57, text 64 bytes. The value
+        # is a position rather than a length; the convention for a caret on a CR
+        # was not isolated.
         note = corkboard.parse_file(FIXTURES / 'rsx-caret-selection-20261128/DMCORKBD')
         self.assertEqual(len(note.text), 64)
         self.assertEqual(note.header_words, (57, 0))
@@ -100,9 +102,11 @@ class CrossEditionTests(unittest.TestCase):
         self.assertEqual(sum(1 for byte in residual if byte), 63)
         self.assertIn(b'\n', residual)
 
-    def test_a_control_range_save_dropped_only_the_line_feed(self):
+    def test_a_control_range_note_lost_its_line_feed_on_load(self):
         # The reader refuses control bytes by policy, so this native file is
-        # inspected as bytes rather than through parse_bytes.
+        # inspected as bytes rather than through parse_bytes. The single LF was
+        # dropped when the note loaded; the save then persisted the 159-byte
+        # visible text, so the absence is a load result, not a save rewrite.
         data = self.fixture('rsx-control-range-save-20261128')
         first, second = struct.unpack_from('<HH', data)
         body = data[4:]
@@ -126,7 +130,7 @@ class CorkboardWriterTests(unittest.TestCase):
     def fixture(self, name):
         return (FIXTURES / name / 'DMCORKBD').read_bytes()
 
-    def test_create_reproduces_every_published_native_file(self):
+    def test_create_reproduces_five_native_application_files(self):
         cases = [('rsx-two-lines', 41), ('305-alternate', 377),
                  ('rsx-cp437-20261128', 17), ('rsx-maximum-2794-20261128', 42),
                  ('rsx-caret-selection-20261128', 57)]
@@ -157,13 +161,16 @@ class CorkboardWriterTests(unittest.TestCase):
         self.assertEqual(built[8:], bytes(2864 - 8))
         self.assertEqual(corkboard.parse_bytes(built).decoded, 'CAF\u00c9')
 
-    def test_refuses_text_the_native_editor_was_never_observed_to_accept(self):
-        for text, error in ((b'A\0B', 'NUL'), (b'A\x1bB', 'outside the measured'),
-                            (b'A\x7fB', 'outside the measured'), ('\u4e2d', 'CP437')):
+    def test_refuses_text_outside_the_supported_profile(self):
+        # A seeded native note did display 0x01-0x1F and 0x7F, so the refusal is
+        # a deliberate policy for the normal path rather than an absence of
+        # evidence.
+        for text, error in ((b'A\0B', 'NUL'), (b'A\x1bB', 'outside the supported'),
+                            (b'A\x7fB', 'outside the supported'), ('\u4e2d', 'CP437')):
             with self.subTest(text=text), self.assertRaisesRegex(corkboard.PolicyError, error):
                 corkboard.create_note(text)
 
-    def test_capacity_policy_is_a_demonstrated_boundary_with_an_override(self):
+    def test_capacity_policy_is_a_construction_limit_with_an_override(self):
         with self.assertRaisesRegex(corkboard.PolicyError, '2794'):
             corkboard.create_note(b'A' * 2795)
         self.assertEqual(len(corkboard.create_note(b'A' * 2795,
@@ -197,13 +204,16 @@ class CorkboardWriterTests(unittest.TestCase):
         self.assertEqual(updated[2:4], b'\x01\x02')
         self.assertEqual(len(updated), 2864)
 
-    def test_write_helpers_refuse_a_buffer_that_is_not_a_note(self):
+    def test_write_helpers_require_an_exact_size_buffer(self):
         for bad in (b'', b'\0' * 2863, b'\0' * 2865, 'text', None):
             with self.subTest(bad=bad):
                 with self.assertRaises(corkboard.PolicyError):
                     corkboard.update_note(bad, b'X')
                 with self.assertRaises(corkboard.PolicyError):
                     corkboard.clear_note(bad)
+        # Size is the only check: a same-size buffer is treated as a note even
+        # though nothing identifies it as one.
+        self.assertEqual(len(corkboard.update_note(bytes(2864), b'X')), 2864)
 
     def test_clear_is_not_a_secure_erase_unless_sanitize_is_asked_for(self):
         native = self.fixture('rsx-information-center-edit')

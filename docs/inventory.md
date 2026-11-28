@@ -48,7 +48,7 @@ and allocation policies are not interchangeable by assumption. See the
 
 ## Corkboard and Home Organizer
 
-[Illustrated Note Pad → Corkboard → Information Center comparison](history/note-pad-corkboard.md) · [Maintained read-only format reference](reference/deskmate-corkboard-format.md).
+[Illustrated Note Pad → Corkboard → Information Center comparison](history/note-pad-corkboard.md) · [Maintained format reference](reference/deskmate-corkboard-format.md).
 
 The RSX Desktop lists Corkboard in its F10 Accessories menu. Its
 `DMCORKBD` file also backs Information Center's yellow notepad.

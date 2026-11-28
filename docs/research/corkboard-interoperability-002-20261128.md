@@ -127,9 +127,10 @@ of the eight trials listed above**, including an active selection. The stored wo
 recomputed on open or on close by itself. Campaign 001's T5 changed the word after
 a selection *within a boot in which the note had already been edited*; T12
 reproduces its key gesture on a clean, unedited open and leaves the file alone.
-The retained evidence still cannot say whether that earlier write came from the
-selection or from the earlier edit in the same session, but it does exclude
-"a selection alone always marks the note dirty" for this clean state.
+That establishes one negative: **a selection alone does not always cause a
+write**. It does not identify what caused the T5 write. The selection, the
+earlier edit in that same session, or some other difference in that boot all
+remain open, and this campaign did not reproduce the write at all.
 
 ### Where the caret is drawn
 
@@ -146,6 +147,10 @@ caret there:
   were not distinguished at pixel level in this campaign, so the row-boundary
   convention stays open exactly as campaign 001 left it.
 
+The drawing convention at a CR boundary is therefore **still unresolved**:
+whether the caret sits on the CR, immediately after it, or at the start of the
+next row was not isolated, and no insertion coordinate is claimed there.
+
 ### End moves to a drawn-row boundary, not the logical line end
 
 In T10 the note was one logical line of 2,730 bytes, drawn as 65 wrapped rows.
@@ -154,29 +159,31 @@ and the text unchanged. So End is not "end of logical line" in this editor; it i
 a row-scoped motion. Read with campaign 001's T6 (Home from a wrapped row moved
 the caret back 42 bytes), the editor's Home/End work in drawn rows.
 
-## Phase 3: the capacity model, from the load side
+## Phase 3: loading, input refusal, and residual writes
 
 The 2,794-byte composition of campaign 001 is 65 CR-delimited rows of 42
 characters. This campaign asked whether the *same* row budget expressed as one
-wrapped logical line is also accepted.
+wrapped logical line is also accepted. Three different things were observed, and
+they stay separate here: what loads, what input is refused, and what a save
+leaves behind.
 
 T10 seeded a single logical line of **2,730 bytes** - 65 drawn rows of 42
 characters with no CR at all - and opened it. The accessory loaded **all 2,730
 bytes**; the live array matched, the display showed the wrapped rows, and the
-saved file kept the visible text byte-for-byte. So:
+saved file kept the visible text byte-for-byte. Read narrowly, that says a
+composition of this shape loads. It is consistent with a budget on drawn rows
+rather than on logical lines or stored bytes at load time, since 2,730 bytes
+alone is 64 short of the demonstrated maximum, but it is a single load
+observation and not a measured rule.
 
-* the editor's limit is on **drawn rows**, and it is not a limit on logical
-  lines or on stored bytes at load time;
-* a 65-row wrapped line is inside the budget, which is consistent with the row
-  model rather than with a byte budget, since 2,730 bytes alone is 64 short of
-  the demonstrated maximum.
-
-The refusal itself is an **input-side** rule: in T10 the typed character did not
+The refusal is an **input-side** observation: in T10 the typed character did not
 reach the visible text at all, and in T05 (2,794 bytes, CR-delimited) the same
-silent refusal appeared. This campaign did not drive a wrapped composition to its
-refusal boundary, so the boundary value for that shape remains unmeasured; what
-is established is that 65 wrapped rows load, and that the composition's limit is
-not a byte limit.
+silent refusal appeared while the file stayed byte-identical. This campaign did
+not drive a wrapped composition to its refusal boundary, so the boundary value
+for that shape remains unmeasured, and nothing here shows that every composition
+below 2,794 bytes is accepted. **No complete capacity model is claimed**: these
+trials do not separate the byte count, the drawn-row budget, the logical-line
+shape and the input path into a rule.
 
 ### An unexplained write after the terminator
 
@@ -184,7 +191,7 @@ T10 also produced the campaign's most surprising byte pattern. After End (word
 42) and one typed `X`, the visible text was **unchanged** (2,730 bytes, still
 terminated) but 63 non-zero bytes appeared **after** the terminator: a shifted
 fragment of the note's own character pattern (`89AB…V`) containing one `0x0A`,
-which the note format otherwise never stores.
+which typed input does not otherwise produce in this format.
 
 T11 produced a related pattern. Its seeded note kept a `0x0A` control byte; on
 load the editor dropped that byte from the visible text (160 → 159 bytes) but the
@@ -192,7 +199,9 @@ stored caret stayed beyond the remaining text. The typed `Z9` then appeared on
 screen on its own row, while the saved file kept the 159-byte visible text, stored
 a first word of **161** (not the 159-byte text length, and not the 160-byte caret
 this campaign had seen before that byte was dropped) and wrote `Z`, then `Z9`
-(with intervening NULs) **after** the terminator.
+(with intervening NULs) **after** the terminator. The absent LF is therefore a
+**load-time** result: the save carried forward the shorter visible text rather
+than rewriting it.
 
 Neither write damaged the visible text. Both are recorded as **observed
 anomalies with an unestablished mechanism**: an edit near a soft-wrap boundary, or
@@ -208,24 +217,26 @@ exercised them. A seeded note (`<01>` `0x01` … `<1F>` `0x1F`, `<7F>` `0x7F`,
 each byte preceded by its own tag) was opened, inspected, edited and saved on
 03.04.04.
 
-| Byte class | Displayed | Preserved on save | Notes |
+| Byte class | Displayed | In the saved file | Notes |
 | --- | --- | --- | --- |
-| `0x01`–`0x09`, `0x0B`–`0x1F` | each ended the drawn row: one tag per row | yes, byte for byte | the editor acts on them as line breaks but stores the original bytes |
-| `0x0A` (LF) | acted on as a line break | **no** - removed from the visible text | the only substitution observed |
-| `0x7F` (DEL) | drawn (with a glyph) | yes | stored unchanged |
-| CR (`0x0D`) | line break | yes | as measured before |
+| `0x01`–`0x09`, `0x0B`–`0x1F` | each ended the drawn row: one tag per row | present, byte for byte | the editor acts on them as line breaks but stores the original bytes |
+| `0x0A` (LF) | acted on as a line break | **absent** | dropped when the note loaded (160 → 159 visible bytes); the save then persisted the shorter text - the only substitution observed |
+| `0x7F` (DEL) | drawn as a glyph | present | **not** a row break, and stored unchanged |
+| CR (`0x0D`) | line break | present | as measured before |
 
-Two qualifications matter here. The file was **seeded**, not typed - a user
-cannot enter these through the keyboard - so this is *display and
-preservation* evidence, not key-entry evidence. And the editor's treatment of
-control bytes as row breaks means the on-screen layout of such a note is not its
-stored layout.
+Two qualifications matter here. The file was **seeded by an injector**, not
+typed: no trial typed a control byte, so this is *display and preservation*
+evidence and does not establish universal keyboard-entry behaviour in either
+direction. And the editor's treatment of `0x01`–`0x1F` as row breaks means the
+on-screen layout of such a note is not its stored layout. The LF disappearance is
+separately a **load-time** result - the save carried forward the 159-byte visible
+text rather than rewriting it.
 
 This does not change the reader's policy: it still rejects control bytes other
-than CR, because a *typed* note cannot contain them and a file that does is
-outside the measured normal path. The evidence now exists to relax that policy
-deliberately in a later change, with `0x0A` singled out as the one value a native
-save rewrites.
+than CR, because a *typed* note cannot be shown to contain them and a file that
+does is outside the measured normal path. The evidence now exists to relax that
+policy deliberately in a later change, with `0x0A` singled out as the one value a
+native editor did not carry forward.
 
 ## Phase 6: a writer that reproduces native files
 
@@ -246,15 +257,29 @@ The policies are written down in the module and in the
 choice rather than a measured universal:
 
 * the first word defaults to the end of the new text, and a caller may set any
-  offset in `0..len(text)`; nothing is normalised to an "insertion boundary";
+  offset in `0..len(text)`; nothing is normalised to an "insertion boundary",
+  and the convention for a caret sitting on a CR stays unresolved;
 * the second word is zero for a new note and **preserved** on update, because no
   operation was ever observed to set it;
 * bytes after the terminator are preserved on update unless the caller asks for
-  them to be zeroed, and `clear_note` reproduces the measured one-byte Clear;
+  them to be zeroed, and `clear_note` reproduces the measured one-byte Clear.
+  They are prior content: the reader does not report them as visible text and
+  the writer does not interpret them;
+* `update_note` and `clear_note` take any caller-supplied 2,864-byte buffer. Size
+  is the only check, so an exact-size buffer establishes neither file identity
+  nor structural validity, and provenance stays the caller's decision;
 * 2,794 bytes is the default refusal point with an explicit
   `allow_above_demonstrated=True` override up to the last byte that still leaves
-  a terminator, because it is a demonstrated maximum, not a proven capacity;
-* NUL, control bytes other than CR, DEL and non-CP437 strings are refused.
+  a terminator. It is a **construction policy, not a capacity guarantee**: it is
+  the largest composition demonstrated in a native editor, and logical lines and
+  wrapped visual rows impose constraints the module does not model, so a shorter
+  text can still be refused by the accessory;
+* NUL, control bytes other than CR, DEL and non-CP437 strings are refused. The
+  seeded control-range trial displayed and preserved those bytes, but it seeded
+  them rather than typing them, so the reader and writer keep a deliberately
+  smaller supported profile for the normal path;
+* `sanitize=True` zeroes the buffer `clear_note` returns, not physical storage or
+  earlier copies.
 
 ### Native qualification
 

@@ -17,14 +17,17 @@ the caret inside the first row, a word of 43 - past a 41-byte text - degraded to
 end-of-text instead of being rejected, and words on and after a CR both reopened
 byte-identical. Home and End are **row-scoped**: End on a 65-row wrapped logical
 line stored 42. A cold open plus close wrote nothing even with an active
-selection, so campaign 001's T5 difference is session history rather than the
-gesture alone.
+selection, so a selection alone does not always mark the note dirty; what caused
+campaign 001's T5 write stays unestablished, and the caret's exact convention at
+a CR boundary remains unresolved.
 
-A seeded control-range note showed `0x01`–`0x1F` and `0x7F` are displayed as
-line breaks and preserved on save, while `0x0A` is removed from the visible text -
-the only substitution observed. Two edits near a soft-wrap boundary left bytes
-after the terminator with the visible text unchanged; both are published and
-their mechanism is not claimed.
+A seeded control-range note showed `0x01`–`0x1F` acted as row breaks and were
+preserved, `0x7F` was drawn as a glyph rather than a row break, and `0x0A` was
+dropped when the note loaded - the save then persisted the 159-byte visible text.
+Two edits near a soft-wrap boundary left bytes after the terminator with the
+visible text unchanged; both are published and their mechanism is not claimed.
+Wrapped-line loading, input refusal and residual writes stay separate
+observations, and no complete capacity model is claimed.
 
 `deskmate_formats.corkboard` now builds notes as well as reading them:
 `create_note`, `update_note` and `clear_note` reproduce **five published
