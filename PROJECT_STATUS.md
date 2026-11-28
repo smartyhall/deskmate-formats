@@ -1,5 +1,27 @@
 # Project status — DeskMate formats
 
+## Graphical input qualification 001 — 2026-11-28
+
+The [graphical input campaign](docs/research/graphical-input-qualification-001.md)
+qualified a guest-level pointer facility for the laboratory and cleared two of
+the three Application Library input blockers. The production 86Box automation
+build already carried relative mouse motion and button state, so no emulator
+change was needed: the earlier blockage was a host configuration defect, since
+the DeskMate 3.05 image ships `MOUSE.COM` but never loads it. The pointer is
+delivered, calibrated against the guest's own `INT 33h` diagnostic and
+confirmed by framebuffer differencing; clicks, drags, menus, file lists and
+Save As dialogs are production-qualified in
+[`pointer.py`](src/deskmate_formats/automation/pointer.py) with structured
+receipts and explicit failure classes. DeskMate Text saved a synthetic
+`SYNTH001.TXT` (verified on disk), Lotus Spreadsheet reopened the synthetic
+worksheet through its original file list with values and formula intact, and
+Express Publisher produced the laboratory's first native `.EPD` document and
+reopened it after a cold start. The Install accessory, Draw operation and the
+in-app Express Publisher menu arming remain unqualified; the sanitized record
+is [structured evidence](docs/evidence/graphical-input-qualification-001.json)
+and the recipes are in the
+[graphical automation runbook](docs/research/graphical-automation-runbook.md).
+
 ## Convergence baseline 001 — characterization — 2026-11-27
 
 The [convergence checkpoint](docs/research/convergence-baseline-001-20261127.md)

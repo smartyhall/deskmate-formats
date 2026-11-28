@@ -1,0 +1,121 @@
+{
+  "schema": "deskmate-formats/graphical-input-qualification/1",
+  "campaign": "graphical-input-qualification-001",
+  "captured": "2026-11-28",
+  "adapter": {
+    "name": "86Box automation socket",
+    "protocol": 1,
+    "executable": "86Box.exe (86Box 7.0)",
+    "executable_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+    "source": "https://github.com/86Box/86Box",
+    "source_revision": "855258da966f1594f568350be59e8e1eca082ed1",
+    "mouse_commits": ["1b3985523", "0a88fbcda"],
+    "production_change": false,
+    "host_input_used": false
+  },
+  "guest": {
+    "machine": "Tandy 1000 RSX",
+    "display": [640, 480],
+    "dos": "5.00",
+    "deskmate": "3.05",
+    "mouse_device": "PS/2",
+    "tablet_type": "none",
+    "mouse_driver": {
+      "product": "Logitech Mouse",
+      "version": "6.00",
+      "files": ["C:\\DOS\\MOUSE.COM", "C:\\DOS\\MOUSE.SYS"],
+      "loaded_by_host_config": false,
+      "loaded_for_campaign": true
+    },
+    "diagnostic": {
+      "name": "MDIAG.COM",
+      "bytes": 424,
+      "sha256": "b79d1f1379cdde704c2b00c8ca51a837e836476313d0c9969794207c6bbf6066",
+      "signature": "MDIAG001",
+      "version": 1,
+      "records": ["x", "y", "buttons", "presses", "releases", "ticks"]
+    }
+  },
+  "calibration": {
+    "method": "closed loop against the resident INT 33h diagnostic, confirmed by framebuffer differencing",
+    "units_to_pixels": {
+      "4": 2, "8": 10, "16": 26, "24": 42, "32": 58, "48": 90, "64": 122, "128": 0
+    },
+    "max_request_units": 64,
+    "truncation_threshold_units": 128,
+    "clamp_corner": [0, 5],
+    "converged_points": [[320, 240], [100, 100], [600, 460], [35, 42]],
+    "convergence_tolerance_px": 2,
+    "driver_tick_hz": 18.2,
+    "modes_tested": ["640x480 graphics"],
+    "modes_not_tested": ["text mode", "other video configurations"]
+  },
+  "qualifications": [
+    {
+      "workflow": "DeskMate Text Save As",
+      "application": "DeskMate 3.05 Text",
+      "result": "complete",
+      "steps": ["desktop File menu", "double-click Text icon", "File -> Save as", "field focus", "type name", "SAVE"],
+      "application_visible_check": "title bar became Text - SYNTH001.TXT",
+      "disk_check": {
+        "path": "C:\\SYNTH001.TXT",
+        "bytes": 32,
+        "sha256": "8a43e5d4b11c1b2a847de66c71e95c47d909072d27564551ededf99be16186c9",
+        "contains": "synthetic pointer line"
+      }
+    },
+    {
+      "workflow": "Lotus Spreadsheet open through the original file list",
+      "application": "Lotus Spreadsheet (DeskMate)",
+      "result": "complete",
+      "steps": ["File -> Open...", "list step control", "row click for SYNTH001.WK1", "OK"],
+      "application_visible_check": "A1=10 A2=20 A3=30; clicking A3 shows +A1+A2 in the control line",
+      "document_written": false
+    },
+    {
+      "workflow": "Express Publisher create, Save As, exit, cold reopen",
+      "application": "Express Publisher 1.00 (bundled runtime 03.05.00)",
+      "result": "complete",
+      "steps": ["click inside text frame", "type page text", "File -> Save as", "clear field", "type name", "OK", "Escape to DOS", "restart", "EPDM DOCS\\SYNTH01.EPD"],
+      "application_visible_check": "title EP - DOCS\\SYNTH01.EPD and the synthetic page text after a cold restart",
+      "disk_check": {
+        "path": "C:\\EXPRESS\\DOCS\\SYNTH01.EPD",
+        "bytes": 3265,
+        "sha256": "9ddb9368364b8b283d080bd95f9a0bac8c30fb3146a7ed9ab6335c5b5471bec0"
+      }
+    }
+  ],
+  "receipt_example": {
+    "operation": "click_at",
+    "target": [388, 223],
+    "actual": [388, 223],
+    "acknowledged": true,
+    "delivered": true,
+    "guest": {"buttons": 0, "presses": 4, "releases": 4, "press_events": 1, "release_events": 1},
+    "steps": 2,
+    "emulated_ms": 610,
+    "failure": null
+  },
+  "failure_modes": [
+    "no guest mouse driver: socket accepts, guest discards",
+    "reading before the 18.2 Hz driver tick reports a dropped move",
+    "busy guest accumulates motion and applies it in one jump",
+    "menu highlight lags the pointer by one processing tick",
+    "release over an already-open menu selects but does not activate",
+    "requests of 128 units or more are dropped",
+    "4-unit requests fall inside the driver dead zone",
+    "typed text arrives late or duplicated in redraw-heavy runtimes"
+  ],
+  "limitations": [
+    "DeskMate Install accessory not exercised",
+    "Draw graphical operations not exercised",
+    "absolute positioning unavailable (tablet_type none)",
+    "Express Publisher in-app Save as arming unreliable without a visual highlight check",
+    "one Express session lost unsaved page text after OK",
+    "text mode and other video configurations not calibrated"
+  ],
+  "private_evidence": {
+    "location": "campaign evidence directory outside Git",
+    "contents": ["machine clones", "before/after PNG sequences", "diagnostic media", "synthetic document extracts", "helper scripts"]
+  }
+}
