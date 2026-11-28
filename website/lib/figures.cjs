@@ -42,7 +42,8 @@ function renderFigureSet(items, siteUrl, assets = assetRoot) {
         !Number.isInteger(item.width) || !Number.isInteger(item.height) ||
         item.width <= 0 || item.height <= 0 ||
         typeof item.alt !== "string" || !item.alt.trim() ||
-        typeof item.caption !== "string" || !item.caption.trim())
+        typeof item.caption !== "string" || !item.caption.trim() ||
+        (item.loading !== undefined && !["lazy", "eager"].includes(item.loading)))
       throw new Error("Invalid illustrated-reference entry " + item.id);
     const filename = path.join(assets, item.path);
     if (!fs.existsSync(filename))
@@ -56,7 +57,7 @@ function renderFigureSet(items, siteUrl, assets = assetRoot) {
       '<a href="' + escapeHtml(url) + '" aria-label="' + label + '">' +
       '<img src="' + escapeHtml(url) + '" alt="' + escapeHtml(item.alt) +
       '" width="' + item.width + '" height="' + item.height +
-      '" loading="lazy" decoding="async"></a>' +
+      '" loading="' + (item.loading ?? "lazy") + '" decoding="async"></a>' +
       '<figcaption>' + escapeHtml(item.caption) + figureCredit(item) +
       '</figcaption></figure>';
   }).join("");

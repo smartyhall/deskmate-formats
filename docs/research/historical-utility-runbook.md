@@ -114,8 +114,19 @@ result identities. Reproduce on independently owned disposable media.
    type `FTXT_A`. The output-file prompt was observed at 55,872 ms and the
    stopped guest remained at 62,944 ms after the DOS directory check.
 5. After each stop, compare every created and modified file by size and
-   SHA-256. Run `python -m tools.experimental.inspect_fil2dbf <export.dbf>`
-   on the verified extracted DBF. It reports the measured dBASE III
+   SHA-256. For offline DBF inspection, create a separate owned checkout at
+   `c679d9666febfb28212c132be30df51be0c5ab59` and verify its HEAD. This
+   [analysis revision](https://github.com/smartyhall/deskmate-formats/blob/c679d9666febfb28212c132be30df51be0c5ab59/tools/experimental/inspect_fil2dbf.py)
+   contains the inspector. Create a dedicated CPython 3.13 environment
+   with `py -3.13 -m venv --without-pip <analysis-venv>`. The inspector uses
+   the standard library. Run the following from the analysis checkout.
+
+   ```powershell
+   & "<analysis-venv>/Scripts/python.exe" -I tools/experimental/inspect_fil2dbf.py "<absolute-path-to-export.dbf>"
+   ```
+
+   The measured guest runs remain tied to `research-origin-001` at
+   `a49e72b3b967e6ed0b6097cb040114072a4970e7`. The inspector reports the measured dBASE III
    character framing, raw descriptor, record bytes, padding and EOF.
    Compare its JSON against the independently written expectation.
 
