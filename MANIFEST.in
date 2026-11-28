@@ -19,6 +19,6 @@ exclude tests/fixtures/application-generated/text/*.txt
 exclude tests/fixtures/application-generated/aol/*.txt
 global-exclude task-queue.sqlite3 task-queue.sqlite3-journal task-queue.sqlite3-wal task-queue.sqlite3-shm
 global-exclude *.hds
-global-exclude *.db
+global-exclude *.db *.dbf
 global-exclude *.col DMCORKBD
 global-exclude *.CRD *.NOT *.PER *.NTG *.FIG

@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "campaign": "historical-utility-qualification-001",
+  "registry": "historical-utility-registry.json",
+  "experiments": [
+    {
+      "priority": 1,
+      "operation_id": "dbrepair-native",
+      "profile": "desk-305-filer",
+      "next_check_or_prerequisite": "Expand to multiple DATA pages before additional application profiles."
+    },
+    {
+      "priority": 2,
+      "operation_id": "dbrepair-runtime",
+      "profile": "dos-f2d-30301",
+      "next_check_or_prerequisite": "Find an input-processing error that offers the handoff."
+    },
+    {
+      "priority": 3,
+      "operation_id": "fil2dbf-native",
+      "profile": "desk-305-filer",
+      "next_check_or_prerequisite": "Try sorted multi-field numeric and decimal controls."
+    },
+    {
+      "priority": 4,
+      "operation_id": "fil2dbf-dos",
+      "profile": "dos-f2d-30301",
+      "next_check_or_prerequisite": "Compare additional field categories in both runtime modes."
+    },
+    {
+      "priority": 5,
+      "operation_id": "hmw2txt",
+      "profile": "homeword-120",
+      "next_check_or_prerequisite": "Create a cold-opened native control in isolated HomeWord."
+    },
+    {
+      "priority": 6,
+      "operation_id": "prn2file-2",
+      "profile": "dos-report",
+      "next_check_or_prerequisite": "Create a native ASCII report; compare overstrike and form feed."
+    },
+    {
+      "priority": 7,
+      "operation_id": "snd2wav",
+      "profile": "dos-pcm",
+      "next_check_or_prerequisite": "Test early layout, instrument splitting and compressed sound separately."
+    },
+    {
+      "priority": 8,
+      "operation_id": "dmgif-09",
+      "profile": "desk-dmgif",
+      "next_check_or_prerequisite": "Pin supported GIF variants and display driver."
+    },
+    {
+      "priority": 9,
+      "operation_id": "filer-basic",
+      "profile": "early-filer-basic",
+      "next_check_or_prerequisite": "Pin exact early Filer and BASIC editions."
+    },
+    {
+      "priority": 10,
+      "operation_id": "undesk",
+      "profile": "early-deskmate-text",
+      "next_check_or_prerequisite": "Create an early Text control and preserve original before one-name operation."
+    },
+    {
+      "priority": 11,
+      "operation_id": "prn2file-early",
+      "profile": "dos-report",
+      "next_check_or_prerequisite": "Identify actual version and differences from 2."
+    },
+    {
+      "priority": 12,
+      "operation_id": "prtsnd",
+      "profile": "dos-lpt-sound",
+      "next_check_or_prerequisite": "Check accepted SND and printer mode first."
+    },
+    {
+      "priority": 13,
+      "operation_id": "dmsound-native",
+      "profile": "desk-305-audio",
+      "next_check_or_prerequisite": "Pin working target device and capture."
+    },
+    {
+      "priority": 14,
+      "operation_id": "dmsound-dos",
+      "profile": "dos-dmsound",
+      "next_check_or_prerequisite": "Pin the module/launcher and DOS driver."
+    },
+    {
+      "priority": 15,
+      "operation_id": "convert-mac-sound",
+      "profile": "dos-mac-convert",
+      "next_check_or_prerequisite": "Recover exact input container requirements from the documentation."
+    },
+    {
+      "priority": 16,
+      "operation_id": "conv2snd",
+      "profile": "dos-pcm",
+      "next_check_or_prerequisite": "Separate input PCM types and selected SND generation."
+    },
+    {
+      "priority": 17,
+      "operation_id": "dmgif-12-native",
+      "profile": "desk-dmgif",
+      "next_check_or_prerequisite": "Prepare the three correctly labeled volumes."
+    },
+    {
+      "priority": 18,
+      "operation_id": "dmgif-12-dos",
+      "profile": "dos-dmgif",
+      "next_check_or_prerequisite": "Prepare independent DOS profile and expected frame."
+    },
+    {
+      "priority": 19,
+      "operation_id": "clipart-editor",
+      "profile": "desk-draw-clip",
+      "next_check_or_prerequisite": "Verify supported Draw release and clipboard behavior."
+    },
+    {
+      "priority": 20,
+      "operation_id": "dm-music",
+      "profile": "win98-vb6",
+      "next_check_or_prerequisite": "Add only controls needed by an active Music question."
+    },
+    {
+      "priority": 21,
+      "operation_id": "midimapper",
+      "profile": "win98-vb6",
+      "next_check_or_prerequisite": "Keep installer and embedded executable identities distinct."
+    },
+    {
+      "priority": 22,
+      "operation_id": "recipe-sharing-tvdog",
+      "profile": "home-organizer",
+      "next_check_or_prerequisite": "Establish compatible runtime and RCP content."
+    },
+    {
+      "priority": 23,
+      "operation_id": "recipe-sharing-oem",
+      "profile": "rsx-oem-home-organizer",
+      "next_check_or_prerequisite": "Confirm actual menu and compare with TVDog profile."
+    },
+    {
+      "priority": 24,
+      "operation_id": "macro-companion",
+      "profile": "desk-macro",
+      "next_check_or_prerequisite": "Identify actual release and compatibility."
+    },
+    {
+      "priority": 25,
+      "operation_id": "disk-info",
+      "profile": "desk-disk-info",
+      "next_check_or_prerequisite": "Stage a known FAT volume."
+    },
+    {
+      "priority": 26,
+      "operation_id": "backupdm",
+      "profile": "dos-backup",
+      "next_check_or_prerequisite": "Read batch and README payload offline to confirm selection and restore."
+    },
+    {
+      "priority": 27,
+      "operation_id": "backup-pro",
+      "profile": "desk-backup-pro",
+      "next_check_or_prerequisite": "Verify supported edition and usable backup media."
+    },
+    {
+      "priority": 28,
+      "operation_id": "deskhelp-demo",
+      "profile": "early-deskhelp",
+      "next_check_or_prerequisite": "Establish exact supported editions and demo limits."
+    },
+    {
+      "priority": 29,
+      "operation_id": "pocket-watch",
+      "profile": "desk-clock",
+      "next_check_or_prerequisite": "Pin actual editions and measure any persistent settings."
+    }
+  ]
+}

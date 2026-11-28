@@ -1,0 +1,1474 @@
+{
+  "schema_version": 1,
+  "campaign": "historical-utility-qualification-001",
+  "study_date": "2026-11-27",
+  "origin": "a49e72b3b967e6ed0b6097cb040114072a4970e7",
+  "environment": {
+    "python": "3.13.17",
+    "package_tree_sha256": "9f733f809fa336d23afc4ccc1d2e627b9dd55308ea7b1bce9596d48a47838b34",
+    "preflight": {
+      "verdict": "qualified",
+      "checks": {
+        "environment-record": "pass",
+        "checkout-root": "pass",
+        "parent-interpreter": "pass",
+        "requested-interpreter": "pass",
+        "parent-package": "pass",
+        "source-revision": "pass",
+        "source-content": "pass",
+        "child-interpreter": "pass",
+        "observed-origin": "pass",
+        "observed-content": "pass",
+        "child-isolation": "pass"
+      }
+    },
+    "emulator": {
+      "version": "7.0",
+      "bytes_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+      "profile": "qualified visible build",
+      "source_revision_from_existing_build_record": "855258da966f1594f568350be59e8e1eca082ed1",
+      "rom_set_revision": "908394b690f7da28f47727d9876774fd672c4ed3",
+      "rsx_bios_sha256": "17984fe7c31ab6b51c96272ba8ee89580eb139aab01399a1b865f6743f3334f2",
+      "machine": "Tandy 1000 RSX, i386SX 25 MHz, 4 MiB, internal video/sound, PS/2, network links down",
+      "socket": "authenticated IPv4 loopback, held guest time, seed 1"
+    },
+    "desk_305": {
+      "initial_disk_sha256": "c013712c0cda7628a5a3138047a7d0e9b631098c5c72d41d5b8f717a6f90a281",
+      "initial_config_sha256": "12bb7f7699f85c1eb094bd17da5994f5fc2a0c7bc74de27117b904ce5e5d1773",
+      "initial_nvr_sha256": "a883930c6a8ed73bfbe238b7cdad519e63acea18b68f9ff1f367d6f02fd4aba2",
+      "stage_floppy_sha256": "d52ce883e7888285464d4c8ca243c221a835e4d8e8e7b7b1f7dc05337699e2ef",
+      "edit_utility_members": {
+        "DBREPAIR.PDM": "e1922f36dd470c0f78f8e3872dce055aa3fd088e2ac4d8ccd852b9d2cb2389c4",
+        "FIL2DBF.PDM": "26d2ab728b7de3a4b1f8d82797b2225695a3810cff83176e844d0d1f73fd444c",
+        "GOOD.FIL": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476"
+      },
+      "desk_exe": {
+        "bytes": 19047,
+        "sha256": "0f2a40243c997276904d2555a117c60eedf0016dde073285e8d63c8345a2eba3"
+      },
+      "filer_pdm": {
+        "bytes": 40081,
+        "sha256": "5c62bfcf9676153003753046b223467136659a23ad0883ba56fb312e55b96005"
+      },
+      "dmdbrd_res": {
+        "bytes": 21955,
+        "sha256": "c4bc9f5699bfaf1ac5adb57a011b04dcec00a2ae75edb2baf603c8001fa99cee"
+      },
+      "dmdb_r89": {
+        "bytes": 1109,
+        "sha256": "799444bb8c04632d261f61498ba269f9352e5528718f2e0a89512bf6ef7b808f"
+      },
+      "dmcsr_r89": {
+        "bytes": 80911,
+        "sha256": "085edb2f2c67ae323343d9efedd7c731778f5fbb8dc59ed8bd6560006b45da75"
+      },
+      "initial_launch": "Readiness socket timed out; same owned visible PID later authenticated held at zero. No guest command was replayed.",
+      "defect_stage_floppy_sha256": "0b4b6a64d5a201183dd2e8c30a1a10fd4dc1d911a116efecf33e1b0a5d740c1e"
+    },
+    "dos_f2d": {
+      "initial_disk_sha256": "6c146364c24000dbf46898eec1abd4940c3f8a3a666670bdda3aa30a01e681ec",
+      "initial_nvr_sha256": "31191210f08d4b5aec3d76aa682987013f215dae57dbf7e1f642a6cb976f7b0a",
+      "staged_config_sha256": "12bb7f7699f85c1eb094bd17da5994f5fc2a0c7bc74de27117b904ce5e5d1773",
+      "launcher": {
+        "bytes": 16168,
+        "sha256": "55bbb869ad40316c029e63fd2e36c7912a9be1c5f748d2086cf5cca973f5f404"
+      },
+      "converter": {
+        "bytes": 45712,
+        "sha256": "26d2ab728b7de3a4b1f8d82797b2225695a3810cff83176e844d0d1f73fd444c"
+      },
+      "dbread_res": {
+        "bytes": 19235,
+        "sha256": "008727eda24d3d698dd4095be94b5b384a63f477face8a53a353ad9dfa66dc30"
+      },
+      "dmdb_r89": {
+        "bytes": 1117,
+        "sha256": "5051e8d298e9a282430fa2bb21897880cc891d1d983847b5d28894d05c33e6a5"
+      },
+      "dmcsr_r89": {
+        "bytes": 80097,
+        "sha256": "8139d20e151647cae75fdcd3476c497deb87cd1f2f3be38492311147961100f8"
+      },
+      "archived_original_config_sha256": "13b465714f34de910200026456cc3e672321695ee8b7da00ad12719ae5d76aed",
+      "stage_floppy_sha256": "ca99ef5dc1a4e2fd29b6757208ea0d839b3586120cbf1d191a77873c30115ede"
+    },
+    "stopped_disks": {
+      "native-305": {
+        "bytes": 54525952,
+        "sha256": "0ab9c3d7a588466b95d9a8011a61c4b97f2a1273a9a5fc55e8371bd402e812a9"
+      },
+      "native-305-followup": {
+        "bytes": 54525952,
+        "sha256": "230650f2e68b2701ad9b8f284df1de2f794a5e78ca6f08c45240b0dfe0a7a76c"
+      },
+      "standalone-dos": {
+        "bytes": 54525952,
+        "sha256": "2f0316115d7eb20b4b8f49660af669ce7a850f25a0aa5b3fc3bd621cd61614a1"
+      }
+    },
+    "second_extraction_matches_7zip": {
+      "native-305/UTILTEST": {
+        "GOOD.FIL": {
+          "bytes": 8192,
+          "sha256": "eed8ddb2c44dd79d2b4997b7f97d629abead1ed2dc941bb0c3361204be115084"
+        },
+        "GOOD.OLD": {
+          "bytes": 8192,
+          "sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476"
+        },
+        "COLD.FIL": {
+          "bytes": 8192,
+          "sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476"
+        },
+        "EXPORT.FIL": {
+          "bytes": 8192,
+          "sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476"
+        }
+      },
+      "native-305-followup/UTILTEST": {
+        "DEFECT.FIL": {
+          "bytes": 8192,
+          "sha256": "eed8ddb2c44dd79d2b4997b7f97d629abead1ed2dc941bb0c3361204be115084"
+        },
+        "DEFECT.OLD": {
+          "bytes": 8192,
+          "sha256": "b557d25f3a1cac93b8297b12cc13dfbe24a3f7dddbb957b02714ffefd8f8213c"
+        },
+        "EXPORT.DBF": {
+          "bytes": 89,
+          "sha256": "5a8e393c7756fdd2dbce07e5226e38fb9e4f6b22593e1e6902f224eccb682b67"
+        },
+        "EXPORT.FIL": {
+          "bytes": 8192,
+          "sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476"
+        },
+        "BAD.FIL": {
+          "bytes": 16,
+          "sha256": "d4e4d1ee779d19c7fb09d0459cc78d02a295dac937eb2a14fd98a51d692a91e4"
+        }
+      },
+      "standalone-dos/F2D": {
+        "DOSGOOD.DBF": {
+          "bytes": 89,
+          "sha256": "5a8e393c7756fdd2dbce07e5226e38fb9e4f6b22593e1e6902f224eccb682b67"
+        },
+        "DOSGOOD.FIL": {
+          "bytes": 8192,
+          "sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476"
+        }
+      },
+      "standalone-dos/SNDTEST": {
+        "ODD.WAV": {
+          "bytes": 599,
+          "sha256": "a17cad83d63a92e4254e66099135c70d7f7df6a2b13e63cc70531ee1b6cb6820"
+        },
+        "ODD.SND": {
+          "bytes": 715,
+          "sha256": "72af86071d9fdf0741a9da25f832f830eb585875e0ea3e6f78f6a07aa8049a8f"
+        },
+        "SND2WAV.EXE": {
+          "bytes": 15328,
+          "sha256": "042d052011872286ebbe72df38fe746c6c49477749885a4145288934f644c5c3"
+        }
+      }
+    }
+  },
+  "dbrepair": {
+    "member": "e1922f36dd470c0f78f8e3872dce055aa3fd088e2ac4d8ccd852b9d2cb2389c4",
+    "member_and_document_identical_between_packages": true,
+    "workflow": "DESK DBREPAIR; F2; R; Enter; Tab; absolute FIL path; Enter; acknowledge result; Escape.",
+    "known_good": {
+      "input": {
+        "bytes": 8192,
+        "sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476"
+      },
+      "output": {
+        "bytes": 8192,
+        "sha256": "eed8ddb2c44dd79d2b4997b7f97d629abead1ed2dc941bb0c3361204be115084"
+      },
+      "old": {
+        "bytes": 8192,
+        "sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476"
+      },
+      "message": "Recovered 8192 bytes, 0 bytes unrecovered.",
+      "result": {
+        "emulated_ms": 44382,
+        "frames": 2976,
+        "framebuffer_sha256": "b7f46a425ae2fb4087e54fee072ed9f5937595d9af13016eef3aa47c6cee2895"
+      },
+      "cold_reopen": {
+        "emulated_ms": 18484,
+        "frames": 1220,
+        "framebuffer_sha256": "f87cd9e670c6372b7a5d4e23e11da56ed8cafe6aa6a33814818f30b8c02445df"
+      },
+      "classification": "structural normalization on healthy input",
+      "byte_diff": {
+        "changed_bytes": 819,
+        "pages_1024": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "spans_end_exclusive": [
+          [
+            "0x042c",
+            "0x042d"
+          ],
+          [
+            "0x0441",
+            "0x0442"
+          ],
+          [
+            "0x044e",
+            "0x044f"
+          ],
+          [
+            "0x0463",
+            "0x0464"
+          ],
+          [
+            "0x089a",
+            "0x089b"
+          ],
+          [
+            "0x089c",
+            "0x08d6"
+          ],
+          [
+            "0x08e1",
+            "0x08e2"
+          ],
+          [
+            "0x08ec",
+            "0x0928"
+          ],
+          [
+            "0x0929",
+            "0x092c"
+          ],
+          [
+            "0x092d",
+            "0x095d"
+          ],
+          [
+            "0x095e",
+            "0x096c"
+          ],
+          [
+            "0x096d",
+            "0x09b3"
+          ],
+          [
+            "0x09b4",
+            "0x09b7"
+          ],
+          [
+            "0x09b8",
+            "0x09b9"
+          ],
+          [
+            "0x09ba",
+            "0x09d1"
+          ],
+          [
+            "0x09d2",
+            "0x09d5"
+          ],
+          [
+            "0x09d6",
+            "0x09d7"
+          ],
+          [
+            "0x09d8",
+            "0x09e0"
+          ],
+          [
+            "0x09e1",
+            "0x09f1"
+          ],
+          [
+            "0x09f2",
+            "0x09f5"
+          ],
+          [
+            "0x09f6",
+            "0x0a11"
+          ],
+          [
+            "0x0a12",
+            "0x0a15"
+          ],
+          [
+            "0x0a16",
+            "0x0a1f"
+          ],
+          [
+            "0x0a20",
+            "0x0a22"
+          ],
+          [
+            "0x0a23",
+            "0x0a2c"
+          ],
+          [
+            "0x0a2e",
+            "0x0a30"
+          ],
+          [
+            "0x0a32",
+            "0x0a33"
+          ],
+          [
+            "0x0c2a",
+            "0x0c2d"
+          ],
+          [
+            "0x0c54",
+            "0x0c55"
+          ],
+          [
+            "0x0c56",
+            "0x0c57"
+          ],
+          [
+            "0x0c5a",
+            "0x0c5b"
+          ],
+          [
+            "0x0c5c",
+            "0x0c5d"
+          ],
+          [
+            "0x0c60",
+            "0x0c61"
+          ],
+          [
+            "0x0c62",
+            "0x0c63"
+          ],
+          [
+            "0x0c66",
+            "0x0c69"
+          ],
+          [
+            "0x0c6c",
+            "0x0c6d"
+          ],
+          [
+            "0x0c6e",
+            "0x0c6f"
+          ],
+          [
+            "0x0c72",
+            "0x0c73"
+          ],
+          [
+            "0x0c74",
+            "0x0c75"
+          ],
+          [
+            "0x0c78",
+            "0x0c79"
+          ],
+          [
+            "0x0c7a",
+            "0x0c7b"
+          ],
+          [
+            "0x0c7e",
+            "0x0c7f"
+          ],
+          [
+            "0x0c80",
+            "0x0c81"
+          ],
+          [
+            "0x0c84",
+            "0x0c85"
+          ],
+          [
+            "0x0c86",
+            "0x0c87"
+          ],
+          [
+            "0x0c8a",
+            "0x0c8b"
+          ],
+          [
+            "0x0c8c",
+            "0x0c8d"
+          ],
+          [
+            "0x0c90",
+            "0x0c91"
+          ],
+          [
+            "0x0c92",
+            "0x0c93"
+          ],
+          [
+            "0x0c96",
+            "0x0c97"
+          ],
+          [
+            "0x0c98",
+            "0x0c99"
+          ],
+          [
+            "0x0c9c",
+            "0x0c9f"
+          ],
+          [
+            "0x1002",
+            "0x10c6"
+          ],
+          [
+            "0x142a",
+            "0x142b"
+          ],
+          [
+            "0x142c",
+            "0x142d"
+          ],
+          [
+            "0x142e",
+            "0x142f"
+          ],
+          [
+            "0x1432",
+            "0x1433"
+          ],
+          [
+            "0x1434",
+            "0x1435"
+          ],
+          [
+            "0x1436",
+            "0x1437"
+          ],
+          [
+            "0x1438",
+            "0x1439"
+          ],
+          [
+            "0x143a",
+            "0x143b"
+          ],
+          [
+            "0x143c",
+            "0x143d"
+          ],
+          [
+            "0x143e",
+            "0x143f"
+          ],
+          [
+            "0x1440",
+            "0x1441"
+          ],
+          [
+            "0x1442",
+            "0x1443"
+          ],
+          [
+            "0x1444",
+            "0x1445"
+          ],
+          [
+            "0x1802",
+            "0x18c6"
+          ],
+          [
+            "0x1c2a",
+            "0x1c2b"
+          ],
+          [
+            "0x1c2c",
+            "0x1c2d"
+          ],
+          [
+            "0x1c2e",
+            "0x1c2f"
+          ],
+          [
+            "0x1c32",
+            "0x1c33"
+          ],
+          [
+            "0x1c34",
+            "0x1c35"
+          ],
+          [
+            "0x1c36",
+            "0x1c37"
+          ],
+          [
+            "0x1c38",
+            "0x1c39"
+          ],
+          [
+            "0x1c3a",
+            "0x1c3b"
+          ],
+          [
+            "0x1c3c",
+            "0x1c3d"
+          ],
+          [
+            "0x1c3e",
+            "0x1c3f"
+          ],
+          [
+            "0x1c40",
+            "0x1c41"
+          ],
+          [
+            "0x1c42",
+            "0x1c43"
+          ],
+          [
+            "0x1c44",
+            "0x1c45"
+          ]
+        ]
+      }
+    },
+    "single_defect": {
+      "pre_run": {
+        "field_offset": "0x1c2a",
+        "original_u16le": 0,
+        "damaged_u16le": 1,
+        "page": 7,
+        "original_sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476",
+        "damaged_sha256": "b557d25f3a1cac93b8297b12cc13dfbe24a3f7dddbb957b02714ffefd8f8213c",
+        "size": 8192,
+        "actual_pre_run_parser_result": "unsupported_layout at 0x1800: unindexed row, overlap or gap; retired rows require opt-in",
+        "interpretation": "The entry still points to page 6 and claims ID 16, but the offset now points into the ID byte of the physical row at 0x1800.",
+        "predictions": [
+          "A scan of the surviving physical data can recover F7Q9 and reconstruct a valid locator.",
+          "An index-led salvage may reject the file, omit F7Q9, or leave the dangling locator.",
+          "Normalization may move DATA to another page without changing its schema or the F7Q9 value."
+        ],
+        "recorded_utc": "2026-11-28T01:13:23.5973489Z"
+      },
+      "output_after_cold_reopen": {
+        "bytes": 8192,
+        "sha256": "eed8ddb2c44dd79d2b4997b7f97d629abead1ed2dc941bb0c3361204be115084"
+      },
+      "old": {
+        "bytes": 8192,
+        "sha256": "b557d25f3a1cac93b8297b12cc13dfbe24a3f7dddbb957b02714ffefd8f8213c"
+      },
+      "message": "Recovered 8192 bytes, 0 bytes unrecovered.",
+      "result": {
+        "emulated_ms": 35656,
+        "frames": 2319,
+        "framebuffer_sha256": "62efc54d84b3ca712d809c999d8e734da3286c061d43fc8df4c56a67924a0475"
+      },
+      "cold_reopen": {
+        "emulated_ms": 55156,
+        "frames": 3606,
+        "framebuffer_sha256": "a98ba4fad25704fddf7e4fc0e7ae0c67df9623f422124262ff9a123c1ddf3d42"
+      },
+      "classification": "correct recovery with normalization; no distinct diagnosis shown",
+      "byte_diff": {
+        "changed_bytes": 819,
+        "pages_1024": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "spans_end_exclusive": [
+          [
+            "0x042c",
+            "0x042d"
+          ],
+          [
+            "0x0441",
+            "0x0442"
+          ],
+          [
+            "0x044e",
+            "0x044f"
+          ],
+          [
+            "0x0463",
+            "0x0464"
+          ],
+          [
+            "0x089a",
+            "0x089b"
+          ],
+          [
+            "0x089c",
+            "0x08d6"
+          ],
+          [
+            "0x08e1",
+            "0x08e2"
+          ],
+          [
+            "0x08ec",
+            "0x0928"
+          ],
+          [
+            "0x0929",
+            "0x092c"
+          ],
+          [
+            "0x092d",
+            "0x095d"
+          ],
+          [
+            "0x095e",
+            "0x096c"
+          ],
+          [
+            "0x096d",
+            "0x09b3"
+          ],
+          [
+            "0x09b4",
+            "0x09b7"
+          ],
+          [
+            "0x09b8",
+            "0x09b9"
+          ],
+          [
+            "0x09ba",
+            "0x09d1"
+          ],
+          [
+            "0x09d2",
+            "0x09d5"
+          ],
+          [
+            "0x09d6",
+            "0x09d7"
+          ],
+          [
+            "0x09d8",
+            "0x09e0"
+          ],
+          [
+            "0x09e1",
+            "0x09f1"
+          ],
+          [
+            "0x09f2",
+            "0x09f5"
+          ],
+          [
+            "0x09f6",
+            "0x0a11"
+          ],
+          [
+            "0x0a12",
+            "0x0a15"
+          ],
+          [
+            "0x0a16",
+            "0x0a1f"
+          ],
+          [
+            "0x0a20",
+            "0x0a22"
+          ],
+          [
+            "0x0a23",
+            "0x0a2c"
+          ],
+          [
+            "0x0a2e",
+            "0x0a30"
+          ],
+          [
+            "0x0a32",
+            "0x0a33"
+          ],
+          [
+            "0x0c2a",
+            "0x0c2d"
+          ],
+          [
+            "0x0c54",
+            "0x0c55"
+          ],
+          [
+            "0x0c56",
+            "0x0c57"
+          ],
+          [
+            "0x0c5a",
+            "0x0c5b"
+          ],
+          [
+            "0x0c5c",
+            "0x0c5d"
+          ],
+          [
+            "0x0c60",
+            "0x0c61"
+          ],
+          [
+            "0x0c62",
+            "0x0c63"
+          ],
+          [
+            "0x0c66",
+            "0x0c69"
+          ],
+          [
+            "0x0c6c",
+            "0x0c6d"
+          ],
+          [
+            "0x0c6e",
+            "0x0c6f"
+          ],
+          [
+            "0x0c72",
+            "0x0c73"
+          ],
+          [
+            "0x0c74",
+            "0x0c75"
+          ],
+          [
+            "0x0c78",
+            "0x0c79"
+          ],
+          [
+            "0x0c7a",
+            "0x0c7b"
+          ],
+          [
+            "0x0c7e",
+            "0x0c7f"
+          ],
+          [
+            "0x0c80",
+            "0x0c81"
+          ],
+          [
+            "0x0c84",
+            "0x0c85"
+          ],
+          [
+            "0x0c86",
+            "0x0c87"
+          ],
+          [
+            "0x0c8a",
+            "0x0c8b"
+          ],
+          [
+            "0x0c8c",
+            "0x0c8d"
+          ],
+          [
+            "0x0c90",
+            "0x0c91"
+          ],
+          [
+            "0x0c92",
+            "0x0c93"
+          ],
+          [
+            "0x0c96",
+            "0x0c97"
+          ],
+          [
+            "0x0c98",
+            "0x0c99"
+          ],
+          [
+            "0x0c9c",
+            "0x0c9f"
+          ],
+          [
+            "0x1002",
+            "0x10c6"
+          ],
+          [
+            "0x142a",
+            "0x142b"
+          ],
+          [
+            "0x142c",
+            "0x142d"
+          ],
+          [
+            "0x142e",
+            "0x142f"
+          ],
+          [
+            "0x1432",
+            "0x1433"
+          ],
+          [
+            "0x1434",
+            "0x1435"
+          ],
+          [
+            "0x1436",
+            "0x1437"
+          ],
+          [
+            "0x1438",
+            "0x1439"
+          ],
+          [
+            "0x143a",
+            "0x143b"
+          ],
+          [
+            "0x143c",
+            "0x143d"
+          ],
+          [
+            "0x143e",
+            "0x143f"
+          ],
+          [
+            "0x1440",
+            "0x1441"
+          ],
+          [
+            "0x1442",
+            "0x1443"
+          ],
+          [
+            "0x1444",
+            "0x1445"
+          ],
+          [
+            "0x1802",
+            "0x18c6"
+          ],
+          [
+            "0x1c2a",
+            "0x1c2b"
+          ],
+          [
+            "0x1c2c",
+            "0x1c2d"
+          ],
+          [
+            "0x1c2e",
+            "0x1c2f"
+          ],
+          [
+            "0x1c32",
+            "0x1c33"
+          ],
+          [
+            "0x1c34",
+            "0x1c35"
+          ],
+          [
+            "0x1c36",
+            "0x1c37"
+          ],
+          [
+            "0x1c38",
+            "0x1c39"
+          ],
+          [
+            "0x1c3a",
+            "0x1c3b"
+          ],
+          [
+            "0x1c3c",
+            "0x1c3d"
+          ],
+          [
+            "0x1c3e",
+            "0x1c3f"
+          ],
+          [
+            "0x1c40",
+            "0x1c41"
+          ],
+          [
+            "0x1c42",
+            "0x1c43"
+          ],
+          [
+            "0x1c44",
+            "0x1c45"
+          ]
+        ]
+      },
+      "limit": "Defect output extracted after read-only Filer cold reopen; no stopped-disk sample between repair and reopen."
+    },
+    "common_output": {
+      "tables": {
+        "DBCOLS": {
+          "initial_pages": [
+            2,
+            3
+          ],
+          "repaired_pages": [
+            2,
+            3
+          ],
+          "records": 20,
+          "schema_equal": true,
+          "field_multiset_equal": true,
+          "record_id_and_fields_multiset_equal": false
+        },
+        "DATA": {
+          "initial_pages": [
+            6,
+            7
+          ],
+          "repaired_pages": [
+            4,
+            5
+          ],
+          "records": 1,
+          "schema_equal": true,
+          "field_multiset_equal": true,
+          "record_id_and_fields_multiset_equal": true
+        },
+        "LAYOUTS": {
+          "initial_pages": [
+            4,
+            5
+          ],
+          "repaired_pages": [
+            6,
+            7
+          ],
+          "records": 5,
+          "schema_equal": true,
+          "field_multiset_equal": true,
+          "record_id_and_fields_multiset_equal": true
+        }
+      },
+      "data_value": "F7Q9",
+      "data_id": 16,
+      "data_address": 4096
+    }
+  },
+  "fil2dbf": {
+    "expectations": {
+      "profile": "DeskMate 03.05.00, Filer DATA, qrecord-one.fil",
+      "native_sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476",
+      "source": {
+        "name": "FTXT_A",
+        "type": "K",
+        "width": 22,
+        "records": [
+          "F7Q9"
+        ],
+        "native_id": 16
+      },
+      "prediction": {
+        "name_to_enter": "FTXT_A",
+        "type": "C",
+        "width": 22,
+        "decimals": 0,
+        "record_count": 1,
+        "record_length": 23,
+        "header_length": 65,
+        "version": 3,
+        "header_terminator": 13,
+        "conventional_eof": 26,
+        "record_bytes_hex": "2046375139202020202020202020202020202020202020"
+      },
+      "policy_variables": [
+        "header date",
+        "field address slot",
+        "actual width chosen by converter",
+        "end-of-file convention",
+        "native ID and form are outside the selected columns"
+      ],
+      "recorded_utc": "2026-11-28T01:08:41.9478513Z"
+    },
+    "native": {
+      "input": {
+        "bytes": 8192,
+        "sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476"
+      },
+      "output": {
+        "bytes": 89,
+        "sha256": "5a8e393c7756fdd2dbce07e5226e38fb9e4f6b22593e1e6902f224eccb682b67"
+      },
+      "field_prompt": {
+        "emulated_ms": 64880,
+        "frames": 4197,
+        "framebuffer_sha256": "f85efb84797bba33890fb41a30031ab14849c1ae94eb67363d019b93c06327fe"
+      },
+      "returned_to_dos": {
+        "emulated_ms": 68184,
+        "frames": 4423,
+        "framebuffer_sha256": "ee5ec14821278f18551b18f5f40ab0d82f749b5a5b8ed08c433b97cdf301d8ad"
+      }
+    },
+    "dos": {
+      "input": {
+        "bytes": 8192,
+        "sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476"
+      },
+      "output": {
+        "bytes": 89,
+        "sha256": "5a8e393c7756fdd2dbce07e5226e38fb9e4f6b22593e1e6902f224eccb682b67"
+      },
+      "default_output_prompt": {
+        "emulated_ms": 55872,
+        "frames": 3812,
+        "framebuffer_sha256": "39fb40994ab75ca115c0337af519eed125675efe89d855b83bf5ce2957598098"
+      },
+      "returned_to_dos": {
+        "emulated_ms": 62944,
+        "frames": 4271,
+        "framebuffer_sha256": "edf6e54a07181f0ee5cbe96220a1ba2853a966132923d5a6d4e6e6d9d951f43e"
+      }
+    },
+    "independent_dbf_inspection": {
+      "version": 3,
+      "date_hex": "1a0b04",
+      "header_hex": "031a0b0401000000410017000000000000000000000000000000000000000000",
+      "record_count": 1,
+      "header_length": 65,
+      "record_length": 23,
+      "fields": [
+        {
+          "name": "FTXT_A",
+          "type": "C",
+          "width": 22,
+          "decimals": 0,
+          "descriptor_hex": "465458545f410000000000430000000016000000010000000000000000000000"
+        }
+      ],
+      "records": [
+        {
+          "deleted": false,
+          "values": [
+            "F7Q9"
+          ],
+          "raw_hex": "2046375139202020202020202020202020202020202020"
+        }
+      ],
+      "header_terminator": 13,
+      "eof_hex": "1a"
+    },
+    "negative": {
+      "input": {
+        "bytes": 16,
+        "sha256": "d4e4d1ee779d19c7fb09d0459cc78d02a295dac937eb2a14fd98a51d692a91e4"
+      },
+      "output": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "dialog": "Open Failed. Unable to open requested input database file.",
+      "status_line": "Input file missing or invalid.",
+      "observation": {
+        "emulated_ms": 74904,
+        "frames": 4831,
+        "framebuffer_sha256": "58b8b2e9609e2f891039bce7b522e92bd80c4c9767a5a2a98c35e8961e42b816"
+      }
+    }
+  },
+  "snd2wav": {
+    "expectations": {
+      "source_sha256": "72af86071d9fdf0741a9da25f832f830eb585875e0ea3e6f78f6a07aa8049a8f",
+      "source_bytes": 715,
+      "executable_sha256": "042d052011872286ebbe72df38fe746c6c49477749885a4145288934f644c5c3",
+      "sample_rate": 5500,
+      "frames": 555,
+      "channels": 1,
+      "sample_bytes": 1,
+      "pcm_sha256": "fdda9e62337ff8048578860ce7847b430f13ffde5a5611e6c963d4fd563fe06e",
+      "riff_expectation": "555-byte data chunk with a separate word-alignment pad",
+      "recorded_utc": "2026-11-28T01:20:24.5503817Z"
+    },
+    "output_private": {
+      "bytes": 599,
+      "sha256": "a17cad83d63a92e4254e66099135c70d7f7df6a2b13e63cc70531ee1b6cb6820"
+    },
+    "wave_inspection": {
+      "nchannels": 1,
+      "sampwidth": 1,
+      "framerate": 5500,
+      "nframes": 555,
+      "comptype": "NONE",
+      "compname": "not compressed"
+    },
+    "header_hex": "524946464f02000057415645666d742010000000010001007c1500007c15000001000800646174612b020000",
+    "pcm": {
+      "bytes": 555,
+      "sha256": "fdda9e62337ff8048578860ce7847b430f13ffde5a5611e6c963d4fd563fe06e"
+    },
+    "riff_size": 591,
+    "data_chunk_size": 555,
+    "pad_present": false,
+    "observation": {
+      "emulated_ms": 37592,
+      "frames": 2599,
+      "framebuffer_sha256": "eaf5bc85d3a5cee3342ac20350aa532a63c5c94250dcdb547a4a2cfbd1489e80"
+    },
+    "stage_floppy_sha256": "21ed30c0c9e2546594eee62d1196e9a9b735178e0fef639858f7a2ff04ea80f4"
+  },
+  "filesystem_content_changes": {
+    "native_initial_to_healthy_stop": {
+      "before_count": 242,
+      "after_count": 248,
+      "changes": {
+        "DESKMATE/DBREPAIR.PDM": {
+          "before": null,
+          "after": {
+            "bytes": 18119,
+            "sha256": "e1922f36dd470c0f78f8e3872dce055aa3fd088e2ac4d8ccd852b9d2cb2389c4"
+          }
+        },
+        "DESKMATE/FIL2DBF.PDM": {
+          "before": null,
+          "after": {
+            "bytes": 45712,
+            "sha256": "26d2ab728b7de3a4b1f8d82797b2225695a3810cff83176e844d0d1f73fd444c"
+          }
+        },
+        "UTILTEST/COLD.FIL": {
+          "before": null,
+          "after": {
+            "bytes": 8192,
+            "sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476"
+          }
+        },
+        "UTILTEST/EXPORT.FIL": {
+          "before": null,
+          "after": {
+            "bytes": 8192,
+            "sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476"
+          }
+        },
+        "UTILTEST/GOOD.FIL": {
+          "before": null,
+          "after": {
+            "bytes": 8192,
+            "sha256": "eed8ddb2c44dd79d2b4997b7f97d629abead1ed2dc941bb0c3361204be115084"
+          }
+        },
+        "UTILTEST/GOOD.OLD": {
+          "before": null,
+          "after": {
+            "bytes": 8192,
+            "sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476"
+          }
+        }
+      }
+    },
+    "healthy_stop_to_followup_stop": {
+      "before_count": 248,
+      "after_count": 253,
+      "changes": {
+        "UTILTEST/BAD.DBF": {
+          "before": null,
+          "after": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "UTILTEST/BAD.FIL": {
+          "before": null,
+          "after": {
+            "bytes": 16,
+            "sha256": "d4e4d1ee779d19c7fb09d0459cc78d02a295dac937eb2a14fd98a51d692a91e4"
+          }
+        },
+        "UTILTEST/DEFECT.FIL": {
+          "before": null,
+          "after": {
+            "bytes": 8192,
+            "sha256": "eed8ddb2c44dd79d2b4997b7f97d629abead1ed2dc941bb0c3361204be115084"
+          }
+        },
+        "UTILTEST/DEFECT.OLD": {
+          "before": null,
+          "after": {
+            "bytes": 8192,
+            "sha256": "b557d25f3a1cac93b8297b12cc13dfbe24a3f7dddbb957b02714ffefd8f8213c"
+          }
+        },
+        "UTILTEST/EXPORT.DBF": {
+          "before": null,
+          "after": {
+            "bytes": 89,
+            "sha256": "5a8e393c7756fdd2dbce07e5226e38fb9e4f6b22593e1e6902f224eccb682b67"
+          }
+        }
+      }
+    },
+    "dos_initial_to_fil2dbf_stop": {
+      "before_count": 98,
+      "after_count": 127,
+      "changes": {
+        "F2D/DBREAD.RES": {
+          "before": null,
+          "after": {
+            "bytes": 19235,
+            "sha256": "008727eda24d3d698dd4095be94b5b384a63f477face8a53a353ad9dfa66dc30"
+          }
+        },
+        "F2D/DBREPAIR.PDM": {
+          "before": null,
+          "after": {
+            "bytes": 18119,
+            "sha256": "e1922f36dd470c0f78f8e3872dce055aa3fd088e2ac4d8ccd852b9d2cb2389c4"
+          }
+        },
+        "F2D/DMCSR.CFG": {
+          "before": null,
+          "after": {
+            "bytes": 63,
+            "sha256": "0d9355cd20785eaa92e564ed6a8be797ac62d749d212310e6be4f587b9cc8831"
+          }
+        },
+        "F2D/DMCSR.R89": {
+          "before": null,
+          "after": {
+            "bytes": 80097,
+            "sha256": "8139d20e151647cae75fdcd3476c497deb87cd1f2f3be38492311147961100f8"
+          }
+        },
+        "F2D/DMDB.R89": {
+          "before": null,
+          "after": {
+            "bytes": 1117,
+            "sha256": "5051e8d298e9a282430fa2bb21897880cc891d1d983847b5d28894d05c33e6a5"
+          }
+        },
+        "F2D/DMGUF.R89": {
+          "before": null,
+          "after": {
+            "bytes": 14904,
+            "sha256": "0edc190deec585d21ea1c47487483786f154a80d2d321a0986405cbcb034dfd2"
+          }
+        },
+        "F2D/DMHELP.ACC": {
+          "before": null,
+          "after": {
+            "bytes": 5378,
+            "sha256": "5cb73ed1cadad830eb9c3d2aac0af4dab74058bea6cf3eaaa19e32fb06adbeba"
+          }
+        },
+        "F2D/DMMDJOY.RES": {
+          "before": null,
+          "after": {
+            "bytes": 1476,
+            "sha256": "7a00a499ac95b80216bab7b77382c208492b60e5d9f7d5f3a0a7d7ecbe169418"
+          }
+        },
+        "F2D/DMMDP.RES": {
+          "before": null,
+          "after": {
+            "bytes": 1432,
+            "sha256": "7b532f8553b802580e4fe23c22c44940a43f5bb2a0532818f7b079b28e61219e"
+          }
+        },
+        "F2D/DMMDSERI.RES": {
+          "before": null,
+          "after": {
+            "bytes": 1860,
+            "sha256": "a097233cf35f88c4808492471558d344e25d6c358380a3ad747622ba42ce2d61"
+          }
+        },
+        "F2D/DMSETUP.ACC": {
+          "before": null,
+          "after": {
+            "bytes": 26651,
+            "sha256": "a365aea92fca4e3916d9ac44a4b7ab501861fce0684cea2dc25ebd48d659af68"
+          }
+        },
+        "F2D/DMSETUP.HLP": {
+          "before": null,
+          "after": {
+            "bytes": 22528,
+            "sha256": "9fb468108d09136a72c594a52ceb383310d1b95684bc1e7b751bc289ea01a053"
+          }
+        },
+        "F2D/DMVID.DOC": {
+          "before": null,
+          "after": {
+            "bytes": 1843,
+            "sha256": "dc29fcfffceb4db7be313896c08fed47217b157a7860480bbf68a30c95147474"
+          }
+        },
+        "F2D/DMVID.EXE": {
+          "before": null,
+          "after": {
+            "bytes": 16787,
+            "sha256": "59ea49a886199d4865d7488c530923813914c3101e59b0545ccb52742347a6eb"
+          }
+        },
+        "F2D/DMVS1000.RES": {
+          "before": null,
+          "after": {
+            "bytes": 21778,
+            "sha256": "575764a1c63296f7966d16a9fa35dad9dbdbb51ffe76889dd53f1bfb3199f70b"
+          }
+        },
+        "F2D/DMVSCGA.RES": {
+          "before": null,
+          "after": {
+            "bytes": 23570,
+            "sha256": "eb6ee22c0a95802853b336b4913b019d002cf871f0795f4580d7191e75f814e6"
+          }
+        },
+        "F2D/DMVSEGA.RES": {
+          "before": null,
+          "after": {
+            "bytes": 23810,
+            "sha256": "06297876b6698d55f7dfa1296c51706eb21816d911c01b3847a139bcbd5b9332"
+          }
+        },
+        "F2D/DMVSHERC.RES": {
+          "before": null,
+          "after": {
+            "bytes": 25506,
+            "sha256": "a511e1490b78099312dd4d11aedd4b0f5a85249ad39a5ad5a82a86e70c2274f8"
+          }
+        },
+        "F2D/DMVSMCGA.RES": {
+          "before": null,
+          "after": {
+            "bytes": 22578,
+            "sha256": "6f4f900a960808ea8307f799fdbf54490e477aab69f2ce29c0056dc05f56b0ff"
+          }
+        },
+        "F2D/DMVST.RES": {
+          "before": null,
+          "after": {
+            "bytes": 24322,
+            "sha256": "3305ecaf741ffbe6e9ee1ee7c5b23116b3d3f7ce9ae2271724c45da63a3ea7f5"
+          }
+        },
+        "F2D/DMVSTC16.RES": {
+          "before": null,
+          "after": {
+            "bytes": 22418,
+            "sha256": "4afb658ec4394591020bdbfb511a5a0b3ad5e2bc33d63c0b0489352270eb6843"
+          }
+        },
+        "F2D/DMVSVGA.RES": {
+          "before": null,
+          "after": {
+            "bytes": 23746,
+            "sha256": "c9eb565747b09c372fb39f637d9586c76242b50aeb3c3a330d9a2a9b68187eca"
+          }
+        },
+        "F2D/DOSGOOD.DBF": {
+          "before": null,
+          "after": {
+            "bytes": 89,
+            "sha256": "5a8e393c7756fdd2dbce07e5226e38fb9e4f6b22593e1e6902f224eccb682b67"
+          }
+        },
+        "F2D/DOSGOOD.FIL": {
+          "before": null,
+          "after": {
+            "bytes": 8192,
+            "sha256": "8d9ed82cf8526fb833f4df8689184905905d40cd8b8c3c5925cbf10336ff1476"
+          }
+        },
+        "F2D/FIL2DBF.EXE": {
+          "before": null,
+          "after": {
+            "bytes": 16168,
+            "sha256": "55bbb869ad40316c029e63fd2e36c7912a9be1c5f748d2086cf5cca973f5f404"
+          }
+        },
+        "F2D/FIL2DBF.PDM": {
+          "before": null,
+          "after": {
+            "bytes": 45712,
+            "sha256": "26d2ab728b7de3a4b1f8d82797b2225695a3810cff83176e844d0d1f73fd444c"
+          }
+        },
+        "F2D/FIL2DBF.PIF": {
+          "before": null,
+          "after": {
+            "bytes": 545,
+            "sha256": "13f58b544b059667854352d87ba79b022e71eaa4916363ba6a254253c7face2b"
+          }
+        },
+        "F2D/PRGUF.RES": {
+          "before": null,
+          "after": {
+            "bytes": 6496,
+            "sha256": "8a3266705265d78ad8ae37a144e788f56947f5b4b896d3c6df5dcd834f1bb7f9"
+          }
+        },
+        "F2D/README": {
+          "before": null,
+          "after": {
+            "bytes": 339,
+            "sha256": "08f83b628cba908056086625466d877c257c490d7ae4568a2965653cace41034"
+          }
+        }
+      }
+    },
+    "dos_fil2dbf_stop_to_final": {
+      "before_count": 127,
+      "after_count": 130,
+      "changes": {
+        "SNDTEST/ODD.SND": {
+          "before": null,
+          "after": {
+            "bytes": 715,
+            "sha256": "72af86071d9fdf0741a9da25f832f830eb585875e0ea3e6f78f6a07aa8049a8f"
+          }
+        },
+        "SNDTEST/ODD.WAV": {
+          "before": null,
+          "after": {
+            "bytes": 599,
+            "sha256": "a17cad83d63a92e4254e66099135c70d7f7df6a2b13e63cc70531ee1b6cb6820"
+          }
+        },
+        "SNDTEST/SND2WAV.EXE": {
+          "before": null,
+          "after": {
+            "bytes": 15328,
+            "sha256": "042d052011872286ebbe72df38fe746c6c49477749885a4145288934f644c5c3"
+          }
+        }
+      }
+    }
+  },
+  "shutdown": {
+    "known_good": {
+      "emulated_ms": 56108,
+      "frames": 3789,
+      "framebuffer_sha256": null
+    },
+    "native_followup": {
+      "emulated_ms": 76276,
+      "frames": 4913,
+      "framebuffer_sha256": null
+    },
+    "dos_export": {
+      "emulated_ms": 62944,
+      "frames": 4271,
+      "framebuffer_sha256": null
+    },
+    "dos_sound": {
+      "emulated_ms": 37592,
+      "frames": 2599,
+      "framebuffer_sha256": null
+    }
+  }
+}

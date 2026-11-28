@@ -20,6 +20,7 @@ tests/fixtures/application-generated/notebook/*.db binary
 tests/fixtures/application-generated/collections/*.col binary
 tests/fixtures/application-generated/corkboard/**/DMCORKBD binary
 tests/fixtures/application-generated/filer/*.fil -text
+tests/fixtures/application-generated/fil2dbf/*.dbf binary
 tests/fixtures/application-generated/text/*.doc binary
 tests/fixtures/application-generated/text/*.txt binary
 tests/fixtures/application-generated/aol/*.txt binary

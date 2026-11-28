@@ -201,7 +201,9 @@ class GraphicsPreservationTest(unittest.TestCase):
                     self.assertIn(' Q ', shape.get('d'))
 
     def test_filer_native_records_and_card_graphics(self):
-        for path in sorted((FIXTURES / 'filer').glob('*.fil')):
+        # The controlled dangling locator is covered by a strict rejection test.
+        negative = FIXTURES / 'filer/qrecord-index-defect-20261127.fil'
+        for path in sorted(set((FIXTURES / 'filer').glob('*.fil')) - {negative}):
             with self.subTest(path=path.name):
                 result = bundle.prepare(path)
                 self.assertIn(b'FTXT_A', result.files['records.csv'])

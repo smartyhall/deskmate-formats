@@ -57,6 +57,12 @@ test("figure renderer escapes alt/caption and honors hosting path", () => withAs
   assert.doesNotMatch(html, /<test>/);
 }));
 
+test("the Fil2dbf evidence figure loads eagerly", () => {
+  const figure = readFigures().find((item) => item.id === "ui.historical-utilities.fil2dbf-field-name");
+  assert.ok(figure);
+  assert.match(renderFigureSet([figure], (url) => url), /loading="eager"/);
+});
+
 test("injection follows first explanatory paragraph at matching heading", () => withAsset((dir) => {
   const tokens = [
     {type: "heading_open"},

@@ -5,6 +5,15 @@ Research proposal following the 2026-11-23 planning discussion; standing policy 
 The objective is to use original diagnostic, conversion, playback, printing, and companion utilities as independently observable implementations, not to assume that their behavior defines a universal DeskMate specification. Some tools may share Tandy libraries or code, others are independent implementations, and a utility may normalize, discard, or silently accept unsupported data. Keep these distinctions explicit.
 
 
+## Initial campaign results
+
+The November 27 [qualification report](research/historical-utility-qualification-20261127.md)
+records DBrepair's healthy and damaged Filer inputs, the two Fil2dbf runtime
+modes, and one SND2WAV comparison. The [utility registry](research/historical-utility-registry.json),
+[runbook](research/historical-utility-runbook.md), and
+[prioritized backlog](research/historical-utility-backlog.json) extend the plan
+with measured results and prerequisites.
+
 ## Static-analysis handoff — 2026-11-27
 
 The initial static survey has advanced in the Ghidra stack [#190](https://github.com/smartyhall/deskmate-formats/pull/190), [#196](https://github.com/smartyhall/deskmate-formats/pull/196), and [#198](https://github.com/smartyhall/deskmate-formats/pull/198), pending integration. The [utility analysis report](https://github.com/smartyhall/deskmate-formats/blob/5260ee442dc1f1b844bbe26e18a3a752949b2d97/docs/research/historical-utility-analysis-20261126.md) records matching service-call patterns and compiled shared skeletons in DBREPAIR.PDM and FIL2DBF.PDM, with distinct standalone FIL2DBF.EXE behavior. The reported treatment of DBCOLS as reserved internal state is a useful static cross-check. These observations do not qualify native conversion or repair. Keep the initial native known-good control, one controlled defect, independently predicted DBF records and schema, and native cold-reopen matrix below. Reuse qualified static reports rather than repeating the survey; distinguish the historical Ghidra 12.1.4 observations from the proposed 12.2 default. No legacy executable or private disassembly is to be published.
