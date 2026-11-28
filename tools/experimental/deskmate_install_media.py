@@ -10,7 +10,7 @@ from zipfile import ZipFile
 
 
 INVENTORY = Path(__file__).resolve().parents[2] / 'docs/ecosystem/deskmate-installation-media.json'
-DISK_COUNTS = {'300': 5, '302': 3, '303': 4}
+DISK_COUNTS = {'300': 5, '302': 3, '303': 4, '305': 9}
 SECTOR_SIZE = 512
 # Total sectors, sectors per FAT, sectors per track, sectors per cluster,
 # root directory entries, and media descriptor.

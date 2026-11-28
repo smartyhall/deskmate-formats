@@ -1,0 +1,533 @@
+{
+  "schema_version": 1,
+  "campaign": "release-installation-atlas-001",
+  "updated": "2026-11-28",
+  "purpose": "Machine-readable record of DeskMate releases, their installation media identity, and how far each has been qualified. Evidence states are cumulative and are never inferred from a source listing.",
+  "evidence_states": [
+    {
+      "id": "listed",
+      "definition": "Named in a period source, archive index, or catalog. No local media identity is established."
+    },
+    {
+      "id": "acquired",
+      "definition": "Original bytes are retained privately and recorded in a transfer receipt."
+    },
+    {
+      "id": "verified",
+      "definition": "Archive size and SHA-256 match the recorded source receipt."
+    },
+    {
+      "id": "inspected",
+      "definition": "Selected payloads, signatures, FAT labels, or nested members were examined and described."
+    },
+    {
+      "id": "installer-inspected",
+      "definition": "The distribution's own installer was executed and its prompts observed, without a completed installation."
+    },
+    {
+      "id": "installed",
+      "definition": "A documented, observed installation completed on a stated environment and reached a working program."
+    },
+    {
+      "id": "launched",
+      "definition": "A native first launch was observed from an installation or from documentation media and its version identity was recorded."
+    },
+    {
+      "id": "cold-launch-qualified",
+      "definition": "The installed release also survived a normal exit and a subsequent cold restart in the same environment."
+    }
+  ],
+  "environments": [
+    {
+      "id": "env-rsx-dos5-atlas001",
+      "label": "Tandy 1000 RSX with Tandy MS-DOS 5.00 (campaign disposable clone)",
+      "machine": "tandy1000rsx",
+      "cpu": "i386SX 25 MHz, no dynamic recompilation",
+      "memory_kb": 4096,
+      "video": "internal Cirrus VGA, 640x480 BIOS mode 0x12",
+      "sound": "internal",
+      "input": "PS/2 keyboard and mouse",
+      "floppy": "one 3.5-inch 1.44 MB drive",
+      "hard_disk": "primary IDE master, 1024x4x26 sectors, FAT16, 54,525,952 bytes",
+      "os": "Tandy MS-DOS 5.00",
+      "os_disk_sha256": "6c146364c24000dbf46898eec1abd4940c3f8a3a666670bdda3aa30a01e681ec",
+      "emulator": "86Box 7.0 automation build, visible window, authenticated loopback, held execution advanced in 1000 ms steps",
+      "emulator_build_sha256": "e7e1244588ea721aa239564a43fa2636611ae965ea8431672fdc06d8c12c280d",
+      "emulator_source": "855258da966f1594f568350be59e8e1eca082ed1",
+      "rom_revision": "908394b690f7da28f47727d9876774fd672c4ed3",
+      "config_sha256": "a96865de9b6df71cf27d9f8a67136f36185f02a3599659c97ef151da4031544f",
+      "nvr_sha256": "76e47b742f2648d4b10fa81ba1f0a254018e72af5d3b4172248a9c82d74d6497",
+      "evidence": "docs/research/release-installation-atlas-001.md"
+    }
+  ],
+  "documented_profiles": [
+    {
+      "id": "profile-1000-sx",
+      "label": "Tandy 1000 SX compatibility profile",
+      "used_for": ["dm-010100", "dm-ii-1000sx", "pdm-1000ex-media", "pdm2"],
+      "evidence": "docs/research/deskmate-evolution-native-20261121.md"
+    },
+    {
+      "id": "profile-1000-hx",
+      "label": "Tandy 1000 HX profile with ROM startup",
+      "used_for": ["pdm-1000hx"],
+      "evidence": "docs/research/deskmate-evolution-native-20261121.md"
+    },
+    {
+      "id": "profile-1000-sl2",
+      "label": "Tandy 1000 SL/2 profile with factory-initialized EEPROM",
+      "used_for": ["dm-1000sl2"],
+      "evidence": "docs/research/deskmate-305-variants-sl2-20261122.md"
+    },
+    {
+      "id": "profile-1000-rsx",
+      "label": "Tandy 1000 RSX profile",
+      "used_for": ["dm-300", "dm-302", "dm-303", "dm-305-ninedisk", "dm-305-dm369", "dm-305-raw", "rsx-oem-030404"],
+      "evidence": "docs/research/deskmate-303-305-comparison.md"
+    }
+  ],
+  "releases": [
+    {
+      "id": "dm-010100",
+      "marketed_name": "DeskMate for the Tandy 1000",
+      "lineage": "deskmate-1",
+      "reported_version": "01.01.00",
+      "observed_version": "01.01.00 in DESK.EXE",
+      "media": [
+        {"path": "tandy1000/system/d1000.zip", "sha256": "4c4a7ae8d76c994d9ec978ddb35ebdb5c7ce14c0d7b77a96ed861672ef74387b", "kind": "two raw 360 KiB images"}
+      ],
+      "requirements": {"advertised": "Tandy 1000 and DOS 02.11.22 per bundled notes", "observed": "booted with bundled DOS on a 1000 SX compatibility profile"},
+      "state": "launched",
+      "installation": {"method": "documentation media, no installer", "environment": "profile-1000-sx", "result": "Desktop and native task screen observed"},
+      "guide": null,
+      "notes": "No hard-disk installation procedure has been recorded for this release."
+    },
+    {
+      "id": "dm-ii-3000",
+      "marketed_name": "DeskMate II for the Tandy 3000",
+      "lineage": "deskmate-2",
+      "reported_version": "01.00.00",
+      "observed_version": "01.00.00 in DESK.EXE",
+      "media": [
+        {"path": "tandy1000/deskmate/3kdm2dk1.zip", "sha256": "43ee33d44a2edc816e844759b7e2ef21842ac497725632d72cd608bed80b2e2a", "kind": "program file set"},
+        {"path": "tandy1000/deskmate/3kdm2dk2.zip", "sha256": "698e2a42ac13f61d0cad56989aadb211c12fcfa7004a03582ed7b21f6d2294cb", "kind": "sample file set"}
+      ],
+      "requirements": {"advertised": "Tandy 3000 and standard PCs per archive index", "observed": "Desktop and Calendar launched on the RSX under DOS 5.00"},
+      "state": "launched",
+      "installation": {"method": "file sets copied to a hard disk", "environment": "profile-1000-rsx", "result": "Desktop and Calendar observed"},
+      "guide": null,
+      "notes": "Shares the 01.00.00 build number with the 1000 SX set; keep the media distinct."
+    },
+    {
+      "id": "dm-ii-1000sx",
+      "marketed_name": "DeskMate II for the Tandy 1000 SX",
+      "lineage": "deskmate-2",
+      "reported_version": "01.00.00",
+      "observed_version": "01.00.00 in launcher on DISK3.DSK",
+      "media": [
+        {"path": "tandy1000/system/d1000sx.zip", "sha256": null, "kind": "four raw 360 KiB images"},
+        {"path": "tandy1000/system/old/sxdisk2.zip", "sha256": null, "kind": "TeleDisk images"},
+        {"path": "tandy1000/system/old/sxdisk3.zip", "sha256": null, "kind": "TeleDisk images"}
+      ],
+      "requirements": {"advertised": "Tandy 1000 SX with bundled DOS 03.20.02", "observed": "launched on the 1000 SX profile"},
+      "state": "launched",
+      "installation": {"method": "documentation media boot", "environment": "profile-1000-sx", "result": "DeskMate II Desktop observed"},
+      "guide": null,
+      "notes": "Three TeleDisk payloads recur under different member names."
+    },
+    {
+      "id": "pdm-1000ex-media",
+      "marketed_name": "Personal DeskMate for the Tandy 1000 EX",
+      "lineage": "personal-deskmate",
+      "reported_version": "01.01.00",
+      "observed_version": "01.01.00 in DESK.EXE on PDDISK1.DSK",
+      "media": [
+        {"path": "tandy1000/system/d1000ex.zip", "sha256": "1ee318543b32c4bcffbb3466f890d2c4e6ec0bba6161df35a74273e19a393a51", "kind": "three raw 360 KiB images"}
+      ],
+      "requirements": {"advertised": "1000 EX and DOS 02.11.24 per readme", "observed": "media listed and files read; installer not yet executed"},
+      "state": "inspected",
+      "installation": null,
+      "guide": null,
+      "notes": "PDDISK1.DSK contains INSTALL.EXE and PDDISK2.DSK the second DeskMate disk. Running the installer is the outstanding first-launch step for this release."
+    },
+    {
+      "id": "pdm-1000hx",
+      "marketed_name": "Personal DeskMate for the Tandy 1000 HX",
+      "lineage": "personal-deskmate",
+      "reported_version": "01.00.00",
+      "observed_version": "01.00.00 in launcher",
+      "media": [
+        {"path": "tandy1000/system/hxdisks.zip", "sha256": null, "kind": "nested personal and msdos file sets"},
+        {"path": "tandy1000/system/d1000hx.zip", "sha256": "70d09ffe398fab3f2e9ee2944efb9ac07f32e676987dc4661dcbcb18b14ae461", "kind": "ImageDisk utility dump"}
+      ],
+      "requirements": {"advertised": "HX-only software, ROM boot, nonbootable DOS utility disk", "observed": "ROM startup and disk-loaded DeskMate 2 launched on the HX profile"},
+      "state": "launched",
+      "installation": {"method": "ROM desktop plus program media", "environment": "profile-1000-hx", "result": "ROM startup and disk-loaded release observed"},
+      "guide": null,
+      "notes": "The separate ImageDisk utility disk remains untested. Tandy Faxback 1378 documents the ROM desktop arrangement."
+    },
+    {
+      "id": "pdm2",
+      "marketed_name": "Personal DeskMate 2",
+      "lineage": "personal-deskmate",
+      "reported_version": "01.00.00",
+      "observed_version": "01.00.00 in DESK.EXE",
+      "media": [
+        {"path": "tandy1000/deskmate/pdm2.zip", "sha256": "74c86fd7173fbd32ac7b5d7727a59e547e67ffa8257e72138ce4e30921c36833", "kind": "35-file set for four or five 360 KiB disks"}
+      ],
+      "requirements": {"advertised": "Tandy 1000 video, 256 KiB RAM, TX bundle per TVDog", "observed": "launched from reconstructed 360 KiB disks with DOS 03.20.02 on the SX"},
+      "state": "launched",
+      "installation": {"method": "reconstructed 360 KiB file-set disks, no vendor installer", "environment": "profile-1000-sx", "result": "Desktop reached; native Text control saved"},
+      "guide": null,
+      "notes": "Original factory labels and disk layout remain unknown. The archive's pdm2_360.txt arrangement reproduces a working set."
+    },
+    {
+      "id": "professional-deskmate",
+      "marketed_name": "Professional DeskMate",
+      "lineage": "professional-deskmate",
+      "reported_version": null,
+      "observed_version": null,
+      "media": [],
+      "requirements": {"advertised": "Network-oriented edition and a Tandy 3000 HL bundle per period sources", "observed": "none"},
+      "state": "listed",
+      "installation": null,
+      "guide": null,
+      "notes": "No verified installer or exact build has been identified. The 1988 Radio Shack catalog and PC World, May 1988, p. 13 are reference leads, not holdings."
+    },
+    {
+      "id": "dm-300",
+      "marketed_name": "DeskMate 3.00 (generic)",
+      "lineage": "deskmate-3",
+      "reported_version": "03.00.00",
+      "observed_version": "03.00.00 in DESK.EXE",
+      "media": [
+        {"path": "tandy1000/deskmate/dm300dk1.zip", "sha256": "75e8eb1fab7ada4d4e73dfead5a5b7e70c4a378e8f360c4f1f85de64fa820fdf", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm300dk2.zip", "sha256": "dedcb4bb0dba2281f886dbbb4f98b421da13a1fd0fd4987d8b435b6292be8a50", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm300dk3.zip", "sha256": "23ac6d45afaa23d8acb4b8e05691c45115ac534c969cdd154a4cfae7a0b82304", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm300dk4.zip", "sha256": "e55de40c38406c2e4e54e5882bfbec0d6e69749ca36a52e1736772cab3b94a12", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm300dk5.zip", "sha256": "9d84551c100b4c2653656ccfe2040713a3f073d6d80020352db9fdbe1b623571", "kind": "file set"}
+      ],
+      "requirements": {"advertised": "360 KiB or larger media per TVDog", "observed": "reconstructed 720 KiB images copied to a hard disk on the RSX"},
+      "state": "installed",
+      "installation": {
+        "date": "2026-11-21",
+        "method": "manual DOS copy of five reconstructed images plus DMCONFIG startup setting",
+        "environment": "profile-1000-rsx",
+        "result": "Desktop launched; Text save produced a matched synthetic fixture",
+        "disk_sha256": "676fa9f8a6d9a1974967979d1000db78edd8216c6aa078cce4ff0c6a9ee042dd",
+        "files_in_install_directory": 80
+      },
+      "guide": "docs/ecosystem/deskmate-installation-300.md",
+      "notes": "No vendor installer exists in this set; the documented procedure is the DOS copy in dm300dsk.txt. The run ended at the Desktop exit, so this release is not recorded as cold-launch qualified."
+    },
+    {
+      "id": "dm-301",
+      "marketed_name": "DeskMate 3.01",
+      "lineage": "deskmate-3",
+      "reported_version": "03.01",
+      "observed_version": null,
+      "media": [],
+      "requirements": {"advertised": "unknown", "observed": "none"},
+      "state": "listed",
+      "installation": null,
+      "guide": null,
+      "notes": "A 1994 community program list associates the version with SWITCH.EXE, but no distribution was found in the inspected ZIP member listings. The 03.01 string also appears inside 3.03.01 binaries, which is not evidence of a separate 3.01 distribution."
+    },
+    {
+      "id": "dm-302",
+      "marketed_name": "DeskMate 3.02 (generic)",
+      "lineage": "deskmate-3",
+      "reported_version": "03.02.00",
+      "observed_version": "03.02.00 in DESK.EXE",
+      "media": [
+        {"path": "tandy1000/deskmate/dm302dk1.zip", "sha256": "ebf2b2a0c8e4caf1468c896f83beb4deea6780a67c0b5532104ffb4b1657639d", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm302dk2.zip", "sha256": "47c4104ed68dcce464130f5cd200772fef0b7fc8d9f61899092b7fbe2fd6c008", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm302dk3.zip", "sha256": "18d97c5842d15eac8a15cdd5db770493693a06c33f9315203003bd674c873f73", "kind": "file set"}
+      ],
+      "requirements": {"advertised": "720 KiB or larger media; archive instructions misname the dm300dk files", "observed": "DOS copy on the RSX reached the Desktop and wrote Calendar and Address Book data"},
+      "state": "installed",
+      "installation": {"date": "2026-11-21", "method": "manual DOS copy of three reconstructed images", "environment": "profile-1000-rsx", "result": "Desktop reached; Calendar and Address Book files written"},
+      "guide": null,
+      "notes": "No vendor installer in this set. A version-specific guide is still unwritten."
+    },
+    {
+      "id": "dm-302-1000tl",
+      "marketed_name": "DeskMate 3.02 for the Tandy 1000 TL",
+      "lineage": "deskmate-3-oem",
+      "reported_version": "03.02",
+      "observed_version": "not established from the images",
+      "media": [
+        {"path": "tandy1000/system/d1000tl.zip", "sha256": null, "kind": "three raw 720 KiB images"},
+        {"path": "tandy1000/system/old/tldisk2.zip", "sha256": null, "kind": "TeleDisk images"}
+      ],
+      "requirements": {"advertised": "DOS 3.30.20; ROM desktop and drivers per Tandy Faxback 1367", "observed": "all three raw disks inspected"},
+      "state": "inspected",
+      "installation": null,
+      "guide": null,
+      "notes": "Calendar and PERSONAL.CAL are on the second disk; Music and Sound are on the third."
+    },
+    {
+      "id": "dm-303",
+      "marketed_name": "DeskMate 3.03 (generic)",
+      "lineage": "deskmate-3",
+      "reported_version": "03.03.01",
+      "observed_version": "03.03.01 in the installer banner and launcher",
+      "media": [
+        {"path": "tandy1000/deskmate/dm303dk1.zip", "sha256": "a9897beaaddd29c47ec3ad4046d57ea2e28872399afea0731c12f2e8a259ebfe", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm303dk2.zip", "sha256": "edb617433344c50361c23c582bccefd63441fa1dd5205d64905981c6f995638b", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm303dk3.zip", "sha256": "e4c9fbada6cbcd158df1c488afbcb79b7b3fae9b28c4dff13bb87108ade8a18f", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm303dk4.zip", "sha256": "b164799dbf99511eda5e562ca3423622fa0452c591b6d548ea6783a58607055a", "kind": "file set"}
+      ],
+      "requirements": {"advertised": "720 KiB or larger media per TVDog", "observed": "installer on the RSX with Tandy MS-DOS 5.00"},
+      "state": "cold-launch-qualified",
+      "installation": {
+        "date": "2026-11-21",
+        "method": "vendor INSTALL from reconstructed 720 KiB images",
+        "environment": "profile-1000-rsx",
+        "result": "96 installed files; Desktop, Calendar, Address Book, and Text launched",
+        "files_in_install_directory": 96
+      },
+      "guide": "docs/ecosystem/deskmate-installation-303.md",
+      "notes": "The FAT label must use an underscore: DESKMATE_1. A space was rejected by the installer's disk check."
+    },
+    {
+      "id": "dm-303-1000tl2",
+      "marketed_name": "DeskMate 3.03 for the Tandy 1000 TL/2",
+      "lineage": "deskmate-3-oem",
+      "reported_version": "3.03",
+      "observed_version": "exact build open",
+      "media": [
+        {"path": "tandy1000/system/d1000tl2.zip", "sha256": null, "kind": "four raw 720 KiB images"},
+        {"path": "tandy1000/system/old/tl2disks.zip", "sha256": null, "kind": "TeleDisk images"}
+      ],
+      "requirements": {"advertised": "DOS 3.30.22", "observed": "raw disks inspected; INSTALL.PDM on DeskMate 1"},
+      "state": "inspected",
+      "installation": null,
+      "guide": null,
+      "notes": "Music and Sound are on DeskMate 3 of this OEM set."
+    },
+    {
+      "id": "dm-1000sl2",
+      "marketed_name": "DeskMate for the Tandy 1000 SL/2",
+      "lineage": "deskmate-3-oem",
+      "reported_version": "not printed on the sampled screens",
+      "observed_version": "ROM Desktop launched from a factory-initialized EEPROM",
+      "media": [
+        {"path": "tandy1000/system/1000SL2D.zip", "sha256": "516cb60ddad983cb1dd9d6ae1b496cdcd19b747d08c7566f52aa43a1e97c17ed", "kind": "DOS plus three raw 720 KiB program disks"}
+      ],
+      "requirements": {"advertised": "ROM DOS 3.30.22 and ROM DeskMate Desktop", "observed": "exact SL/2 profile with restored factory EEPROM"},
+      "state": "launched",
+      "installation": {"method": "ROM startup plus program media; no hard-disk installer run", "environment": "profile-1000-sl2", "result": "Address Book, Calendar, Music, and Sound opened from their program disks"},
+      "guide": null,
+      "notes": "A native on-screen version display for this configuration is still outstanding."
+    },
+    {
+      "id": "dm-1100fd",
+      "marketed_name": "DeskMate for the Tandy 1100 FD",
+      "lineage": "deskmate-3-oem",
+      "reported_version": "open",
+      "observed_version": "not established",
+      "media": [
+        {"path": "tandy1000/system/d1100fd.zip", "sha256": null, "kind": "four raw 720 KiB images"}
+      ],
+      "requirements": {"advertised": "DOS 3.30.40", "observed": "raw disks inspected; Calendar and PERSONAL.CAL on DeskMate 2"},
+      "state": "inspected",
+      "installation": null,
+      "guide": null,
+      "notes": "EMS driver dependencies remain unresolved."
+    },
+    {
+      "id": "dm-1000rl-304",
+      "marketed_name": "DeskMate 3.04 for the Tandy 1000 RL/RL-HD",
+      "lineage": "deskmate-3-oem",
+      "reported_version": "3.04",
+      "observed_version": "not established from a native screen",
+      "media": [
+        {"path": "tandy1000/system/d1000rl.zip", "sha256": "4f3eb5325298046ec3c7d3667fdd622f39bf49225fb9dc63028c545f845937bb", "kind": "six raw 720 KiB images"},
+        {"path": "tandy1000/system/d1000rl_alternates.zip", "sha256": "48546ded27b7f7ad039cf9e3410d57b38ee5c6a023b0ce2337ab70695f193f5f", "kind": "alternate dumps"}
+      ],
+      "requirements": {"advertised": "DOS 3.30.22; EEPROM-backed desktop storage with disk fallback per Faxback 1311", "observed": "raw disks inspected; INSTALL.PDM and OEM Music and Sound present"},
+      "state": "inspected",
+      "installation": null,
+      "guide": null,
+      "notes": "A 1000 RL machine profile has not been established in the lab, so the shipped installer has not been run."
+    },
+    {
+      "id": "rlx-hd-b-030403",
+      "marketed_name": "DeskMate 03.04.03 for the Tandy 1000 RLX-HD B",
+      "lineage": "deskmate-3-oem",
+      "reported_version": "03.04.03",
+      "observed_version": "from supplied notes and Tandy's bulletin",
+      "media": [
+        {"path": "tandy1000/system/dskrlxhd.zip", "sha256": null, "kind": "two raw 1.44 MB images"},
+        {"path": "tandy1000/deskmate/1000RLX_HD-B.zip", "sha256": "c19e395880113fed55ad50e8a8d1e05b6cdf87ca883f700b0d28dd062882463f", "kind": "populated installed tree"}
+      ],
+      "requirements": {"advertised": "two compressed high-density disks for the HD edition per Faxback 1342", "observed": "both compressed disks read on the RSX after booting the RLX B DOS floppy"},
+      "state": "inspected",
+      "installation": null,
+      "guide": null,
+      "notes": "The five-disk floppy-only RLX B variant remains reference-only. The populated tree includes a truncated Cobb FF1."
+    },
+    {
+      "id": "rsx-oem-030404",
+      "marketed_name": "DeskMate 03.04.04 for the Tandy 1000 RSX",
+      "lineage": "deskmate-3-oem",
+      "reported_version": "03.04.04",
+      "observed_version": "03.04.04 in the startup launcher, with a separate 04.03 runtime marker",
+      "media": [
+        {"path": "tandy1000/system/rsxdisks.zip", "sha256": null, "kind": "six nested file sets plus utilities"}
+      ],
+      "requirements": {"advertised": "RSX with separate Tandy MS-DOS 5.00", "observed": "six 1.44 MB working floppies on the RSX profile"},
+      "state": "cold-launch-qualified",
+      "installation": {
+        "date": "2026-11-22",
+        "method": "vendor native installer from six reconstructed floppies",
+        "environment": "profile-1000-rsx",
+        "result": "printer configured, files copied to C:\\DESKMATE, AUTOEXEC updated, OEM Desktop launched after reset"
+      },
+      "guide": null,
+      "notes": "The only OEM edition with a completed vendor-installer record. Its guide is still unwritten."
+    },
+    {
+      "id": "dm-305-ninedisk",
+      "marketed_name": "DeskMate 03.05.00, nine TVDog file sets",
+      "lineage": "deskmate-3",
+      "reported_version": "03.05.00",
+      "observed_version": "03.05.00 banner; DESKTOP.PDM reports 3.68",
+      "media": [
+        {"path": "tandy1000/deskmate/dm305dk1.zip", "sha256": "5fdd7fe79032860274bd0e679b94ce14eb175ea6dde9296d9cf105cbe1186bec", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm305dk2.zip", "sha256": "188e8bd58eb9b46b3707014d0e955fb9f2d9f2d49169520606a01714a409a8fa", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm305dk3.zip", "sha256": "53b2a8bfd45b5c16d4103a65109317288aefbef02d4133da717c9c013b8bfeed", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm305dk4.zip", "sha256": "07fd75ecc80499c17260dd9e2c8889e13a889efc4c73ad686853396c39ff6066", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm305dk5.zip", "sha256": "8d5b2843e8b9de9d69ed6d1f2fb08ade76527bea3f5f5cf5a219c44774ec677c", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm305dk6.zip", "sha256": "d6395d8bc3d21ed1bf66d49f53161287af89d9b338487004898a778ed5118d3b", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm305dk7.zip", "sha256": "b7d34274cb95797691f997daed53721c57b8d7c1c31e98d93febaaf27d3c3d02", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm305dk8.zip", "sha256": "d32d6c3fe6692112c8bd3f7c689649cf20222de6de8ae94ec28ee7e7c7c5e3e4", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm305dk9.zip", "sha256": "52befdd828e7065fc2e1fde60c010693d946ca5e4c477703f9c43564086cd883", "kind": "file set"}
+      ],
+      "requirements": {"advertised": "360 KiB or larger media per TVDog; generic PC-compatible DeskMate 3 needs at least 512 KiB RAM per archive notes", "observed": "720 KiB reconstructed images on the RSX with Tandy MS-DOS 5.00, 4 MiB RAM, VGA"},
+      "state": "cold-launch-qualified",
+      "installation": {
+        "date": "2026-11-28",
+        "method": "vendor INSTALL from nine reconstructed 720 KiB images",
+        "environment": "env-rsx-dos5-atlas001",
+        "result": "140 installed files; Desktop reached; About identified DESKTOP.PDM 3.68; hard reset reproduced the launch",
+        "disk_sha256": "e8a2f15b95cfccdc5ddc3058d6678fbeb6ece60b9d3f34e5bfd13d3519144fd8",
+        "files_in_install_directory": 140,
+        "autoexec_sha256": "81e3342527a29f11e043564a81af4a71709ced599d995f44632535ad295aa4b9",
+        "config_sys_sha256": "0b1574c75cf4c4b0f5b25ffa1c14f307098e292002e2b7e10232e15e8080c7c6"
+      },
+      "guide": "docs/ecosystem/deskmate-installation-305-ninedisk.md",
+      "notes": "The Installation Directory field opens empty. The printer phase reads .ACC data from Disk 6 and asks for Disks 7 and 9 again. Installed DESK.EXE, DESKTOP.PDM, and DESKTOP.CFG match the five-disk retail set; CALENDAR.PDM and TEXT.PDM match the dm369 set."
+    },
+    {
+      "id": "dm-305-dm369",
+      "marketed_name": "DeskMate 03.05.00, dm369 five file sets",
+      "lineage": "deskmate-3",
+      "reported_version": "03.05.00",
+      "observed_version": "03.05.00 banner; DESKTOP.PDM reports 3.69",
+      "media": [
+        {"path": "tandy1000/deskmate/dm369dks1.zip", "sha256": "142e44bd220e5f2ae63b5cadb914396b7a56b8c7bf1bb35ed85fe4866f0f6622", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm369dks2.zip", "sha256": "815954bea80b0685a0ff2fcf2c4de558c016e525d1284f513ce4cf636651c140", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm369dks3.zip", "sha256": "fa64d470630c4f13d830a72cab971be29fb77f8bae2444dbca97133a457d9c3c", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm369dks4.zip", "sha256": "173e68395fd23380e3340d841002f966352e4855ec9fc9abf85fbd56b1a60e16", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm369dks5.zip", "sha256": "a5e4e2b246952d51a26a885c71f5116bf6532d4d886a591159fd9473a510416a", "kind": "file set"},
+        {"path": "tandy1000/deskmate/dm369dks6.zip", "sha256": "c8241c43ce908c544504f7396f06ca9003d4095710a73cdb606ea347fe0bad65", "kind": "Thesaurus companion"}
+      ],
+      "requirements": {"advertised": "720 KiB or larger media", "observed": "installer on the RSX with Tandy MS-DOS 5.00"},
+      "state": "cold-launch-qualified",
+      "installation": {
+        "date": "2026-11-22",
+        "method": "vendor INSTALL from reconstructed 720 KiB images",
+        "environment": "profile-1000-rsx",
+        "result": "131 installed files; Desktop, Help, Teach Me, and Text exercised",
+        "files_in_install_directory": 131
+      },
+      "guide": "docs/research/deskmate-305-variants-sl2-20261122.md",
+      "notes": "Hangman occupies the PC-Link shortcut position and PC-Link is absent. Do not substitute this set for the nine-ZIP or five-disk lineages."
+    },
+    {
+      "id": "dm-305-raw",
+      "marketed_name": "DeskMate 03.05.00, five raw 720 KiB images",
+      "lineage": "deskmate-3",
+      "reported_version": "03.05.00",
+      "observed_version": "03.05.00 banner; DESKTOP.PDM reports 3.68",
+      "media": [
+        {"path": "winworldpc: Tandy DeskMate 3.05 (3.5)", "sha256": "bb1a74f787cfbdbda813e34a6a912a8533e0f9449ef0edbcb65353bedc9e323c", "kind": "5 x 737,280-byte FAT12 images inside a 1,075,628-byte archive"}
+      ],
+      "requirements": {"advertised": "manufacturer minimum for this exact edition unconfirmed", "observed": "RSX with Tandy MS-DOS 5.00, 4 MiB RAM, VGA"},
+      "state": "cold-launch-qualified",
+      "installation": {
+        "date": "2026-11-05",
+        "method": "vendor INSTALL from five raw images",
+        "environment": "profile-1000-rsx",
+        "result": "143 installed files; Calendar launched and reproduced synthetic fixtures",
+        "disk_sha256": "9afd080411c37a96cdce802cb129ffe7d6e1d84fb43314add7221dc71e141df0",
+        "files_in_install_directory": 143
+      },
+      "guide": "docs/ecosystem/deskmate-installation-305.md",
+      "notes": "The Installation Directory default is C:\\DESKMATE in this lineage, unlike the nine-ZIP set."
+    },
+    {
+      "id": "coco-deskmate",
+      "marketed_name": "DeskMate for the Color Computer",
+      "lineage": "other-lineage",
+      "reported_version": "unknown",
+      "observed_version": null,
+      "media": [],
+      "requirements": {"advertised": "Color Computer", "observed": "none"},
+      "state": "listed",
+      "installation": null,
+      "guide": null,
+      "notes": "Named in the 1994 community program register. Shares the product name, not the PC technical lineage; no media or native test exists here."
+    },
+    {
+      "id": "os9-deskmate",
+      "marketed_name": "DeskMate for OS-9",
+      "lineage": "other-lineage",
+      "reported_version": "unknown",
+      "observed_version": null,
+      "media": [],
+      "requirements": {"advertised": "OS-9 host", "observed": "none"},
+      "state": "listed",
+      "installation": null,
+      "guide": null,
+      "notes": "Named in the same register. Historical inventory only; excluded from PC compatibility statements."
+    },
+    {
+      "id": "winmate",
+      "marketed_name": "WinMate (Windows-era DeskMate companion)",
+      "lineage": "other-lineage",
+      "reported_version": "unknown",
+      "observed_version": null,
+      "media": [],
+      "requirements": {"advertised": "Windows with Sensation CD media", "observed": "none"},
+      "state": "listed",
+      "installation": null,
+      "guide": null,
+      "notes": "A separate Windows environment supplied on Sensation CD media, not an installation procedure for DeskMate 3 on DOS."
+    }
+  ],
+  "supplements": [
+    {"id": "sdk-runtime", "name": "DeskMate Development System runtime disks", "state": "verified", "note": "Application and development media, not a release installer."},
+    {"id": "express-publisher-runtime", "name": "Express Publisher standalone runtime", "state": "verified", "note": "Applications on DeskMate media; see the ecosystem catalog."},
+    {"id": "sat-trainer", "name": "SAT Trainer package", "state": "verified", "note": "Application package."},
+    {"id": "dm302drv", "name": "dm302drv.zip device files", "state": "verified", "note": "Driver supplement for the 3.02 generation."},
+    {"id": "dm305drv", "name": "dm305drv.zip device files", "state": "verified", "note": "Driver supplement for the 3.05 generation."},
+    {"id": "dmvid", "name": "dmvid series video drivers", "state": "verified", "note": "Alternate display drivers; DMVID.DOC describes updating DMCSR.CFG."},
+    {"id": "drivers", "name": "drivers.zip", "state": "verified", "note": "Device files."},
+    {"id": "diskin", "name": "diskin.zip installer utility", "state": "verified", "note": "Individual utility, not a release."},
+    {"id": "f2ddos", "name": "f2ddos.zip", "state": "verified", "note": "Utility and accessory set with its own DMCSR.R89."},
+    {"id": "macros", "name": "macros.zip", "state": "verified", "note": "Accessory set; its installer carries the 03.03.01 marker."},
+    {"id": "dos5desk", "name": "dos5desk.zip", "state": "verified", "note": "Optional DOS batch helpers."}
+  ],
+  "open_questions": [
+    "Run the Personal DeskMate 1000 EX INSTALL.EXE and record the resulting layout.",
+    "Establish a 1000 RL machine profile and run the 3.04 INSTALL.PDM.",
+    "Record a native on-screen version identity for the 1000 SL/2 ROM desktop and the 1100 FD media.",
+    "Write version-specific guides for 3.02 and the RSX OEM 03.04.04, both of which are installed but undocumented as procedures.",
+    "Determine whether the 3.05 nine-ZIP printer phase still reads Disk 6 when ONE rather than ALL is selected.",
+    "Identify whether any verified Professional DeskMate media exists in the retained collections.",
+    "Establish image-versus-file-set equivalence for the OEM raw disks whose TeleDisk counterparts are untested."
+  ]
+}

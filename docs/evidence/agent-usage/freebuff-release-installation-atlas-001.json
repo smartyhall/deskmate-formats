@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "campaign_id": "release-installation-atlas-001",
+  "provider": "freebuff",
+  "checkpoint": "nine-disk installation and atlas documentation",
+  "observed_at_utc": "2026-11-28T05:40:00Z",
+  "receipt_written_utc": "2026-11-28T05:40:00Z",
+  "agent_label": "Freebuff Desktop native session (local shell and file tools)",
+  "execution_mode": "interactive local desktop session; no unattended dispatch, no model API call, no provider endpoint contacted",
+  "coverage": "this campaign only; shared account state is not attributable",
+  "checkpoint_status": "nine-disk generic DeskMate 3.05 installed from reconstructed media, version identified, cold launch verified; atlas landing page, registry, recipe, guide, and sanitized evidence receipt written; focused local checks recorded; exact-head CI pending at the time this receipt was written",
+  "git_revision": null,
+  "git_revision_note": "The receipt was written before the checkpoint commit was created; the commit is recorded in the pull request, not guessed here.",
+  "measurements": [],
+  "measurement_note": "No usage measurement was observed. A missing measurement is recorded as absent, never as zero. Host elapsed time and emulated guest time are recorded separately in the campaign report and are not provider usage.",
+  "model": {
+    "note": "The runtime model identity, selected label, and reasoning effort were not observed at any checkpoint.",
+    "runtime_identity": null,
+    "selected_label": null,
+    "reasoning_effort": null
+  },
+  "source": {
+    "kind": "unavailable",
+    "detail": "No programmatic usage interface is available to this session; the desktop context tooltip was not read.",
+    "version": "Freebuff Desktop, native local session; build identifier not observed"
+  },
+  "attribution_limitations": [
+    "A shared account meter cannot be attributed to one campaign.",
+    "Token counts, context utilization, and allowance hours are distinct units with no verified exchange relationship.",
+    "Cumulative thread usage reported by the desktop UI is not a per-campaign charge."
+  ],
+  "evidence": [
+    "docs/research/release-installation-atlas-001.md",
+    "docs/ecosystem/deskmate-installation-305-ninedisk.md",
+    "docs/ecosystem/deskmate-installation-registry.json",
+    "docs/ecosystem/deskmate-lab-installation-recipe.md",
+    "docs/evidence/release-installation-atlas-001.json",
+    "tools/experimental/deskmate_install_media.py"
+  ],
+  "privacy": "No transcript, credential, account identifier, private path, or guest image is included."
+}

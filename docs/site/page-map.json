@@ -524,11 +524,11 @@
     {
       "id": "applications.installations",
       "slug": "installation",
-      "title": "DeskMate installation media by release",
+      "title": "DeskMate installation atlas",
       "section": "deskmate",
       "subsection": "Applications and releases",
       "order": 40,
-      "summary": "Documented DeskMate releases and installation media, separating verified copies from reported ones.",
+      "summary": "Documented DeskMate releases, their qualification status, hardware prerequisites, and installation guides.",
       "date": null,
       "is_hub": false,
       "role": "current-guide",
@@ -559,6 +559,32 @@
       "is_hub": false,
       "role": "dated-research",
       "source": "docs/research/deskmate-automatic-house-x10.md"
+    },
+    {
+      "id": "applications.installation-300",
+      "slug": "installation/deskmate-300",
+      "title": "Install generic DeskMate 3.00 on a DOS PC",
+      "section": "deskmate",
+      "subsection": "Applications and releases",
+      "order": 45,
+      "summary": "The five-set generic DeskMate 3.00 procedure, which copies files by hand and sets DMCONFIG instead of running an installer.",
+      "date": null,
+      "is_hub": false,
+      "role": "current-guide",
+      "source": "docs/ecosystem/deskmate-installation-300.md"
+    },
+    {
+      "id": "applications.installation-media",
+      "slug": "installation/media-by-release",
+      "title": "DeskMate installation media by release",
+      "section": "deskmate",
+      "subsection": "Applications and releases",
+      "order": 46,
+      "summary": "Archive names, hashes, members and disk labels behind every release in the installation atlas, and why one version number covers several incompatible media sets.",
+      "date": null,
+      "is_hub": false,
+      "role": "current-guide",
+      "source": "docs/ecosystem/deskmate-installation-media-by-release.md"
     },
     {
       "id": "applications.installation-303",
@@ -663,6 +689,32 @@
       "is_hub": true,
       "role": "current-guide",
       "source": "docs/hubs/project.md"
+    },
+    {
+      "id": "applications.installation-305-ninedisk",
+      "slug": "installation/deskmate-305-ninedisk",
+      "title": "Install DeskMate 3.05 from the nine TVDog disk sets",
+      "section": "deskmate",
+      "subsection": "Applications and releases",
+      "order": 65,
+      "summary": "Installing the nine-set generic DeskMate 3.05 lineage, including its empty destination default and printer-media prompts.",
+      "date": null,
+      "is_hub": false,
+      "role": "current-guide",
+      "source": "docs/ecosystem/deskmate-installation-305-ninedisk.md"
+    },
+    {
+      "id": "research.release-installation-atlas",
+      "slug": "research/release-installation-atlas",
+      "title": "Release Installation Atlas 001: the nine-disk DeskMate 3.05",
+      "section": "research",
+      "subsection": "Format experiments",
+      "order": 17,
+      "summary": "Dated record of the nine-set 3.05 installation, its sampled checkpoints, and its cross-media binary identities.",
+      "date": "2026-11-28",
+      "is_hub": false,
+      "role": "dated-research",
+      "source": "docs/research/release-installation-atlas-001.md"
     }
   ]
 }
