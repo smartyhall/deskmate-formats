@@ -1,0 +1,78 @@
+{
+  "source_sha256": "5b878f77b43dc6517b4065477f0e15b9d42b02ad0b0b493bc029ec8f06125682",
+  "cases": {
+    "BADLOC.FIL": {
+      "offset": 7210,
+      "before_hex": "25",
+      "after_hex": "26",
+      "bytes": 9216,
+      "sha256": "3d5d01d7cc4c6ed99eab4ee9614b5bce1ad40fee261bd4b5c870c11807c75950",
+      "defect": "ALPHA's locator points inside its physical row.",
+      "predictions": [
+        "Rebuild from DATA and recover ALPHA",
+        "Trust the index and lose ALPHA or reject the file"
+      ]
+    },
+    "BADID.FIL": {
+      "offset": 7212,
+      "before_hex": "11",
+      "after_hex": "18",
+      "bytes": 9216,
+      "sha256": "25b510a4b4b60dfdb4f48f553f63d5dd643ea7e84a310b28c7d7a0f795152123",
+      "defect": "ALPHA's index ID becomes 24 while its row still carries 17.",
+      "predictions": [
+        "Rebuild the association from DATA",
+        "Use the index ID, skip ALPHA, or reject the file"
+      ]
+    },
+    "NOENTRY.FIL": {
+      "offset": 7250,
+      "before_hex": "060000001000",
+      "after_hex": "000000000000",
+      "bytes": 9216,
+      "sha256": "119ffa08713277bd657ef9c6809feccb7fae88318d71ff00727d3ab89c9ff333",
+      "defect": "The final indexed entry for ZULU is absent; the physical row and declared count remain.",
+      "predictions": [
+        "Scan DATA and restore ZULU",
+        "Recover only the seven indexed rows or reject the count mismatch"
+      ]
+    },
+    "BADLINK.FIL": {
+      "offset": 41,
+      "before_hex": "00",
+      "after_hex": "ff",
+      "bytes": 9216,
+      "sha256": "7fd690710bee8a4e14ffba7015e3e9f75958057c551fda0d28848d31ddf37d65",
+      "defect": "DATA page 6 becomes terminal (008 to FF8), leaving page 8 disconnected from its chain.",
+      "predictions": [
+        "Find the disconnected page and recover all eight rows",
+        "Follow the shortened chain and lose DELTA, ECHO and FOXTROT, or reject"
+      ]
+    },
+    "BADFRAME.FIL": {
+      "offset": 9077,
+      "before_hex": "02",
+      "after_hex": "03",
+      "bytes": 9216,
+      "sha256": "443c4bceb6079f33ef2b32c827c7c919520839e138320a3ca9c41892030599e7",
+      "defect": "FOXTROT's end-of-row marker becomes an end-of-list marker.",
+      "predictions": [
+        "Recognize the final record from its field framing or index",
+        "Skip FOXTROT or reject"
+      ]
+    },
+    "BADCOUNT.FIL": {
+      "offset": 1115,
+      "before_hex": "38",
+      "after_hex": "39",
+      "bytes": 9216,
+      "sha256": "254905887c66136bc31eab490280216f2fe988519e07193857e41ac5a8806515",
+      "defect": "The declared DATA row count rises from eight to nine.",
+      "predictions": [
+        "Count the eight intact rows during rebuild",
+        "Trust the directory count or reject the mismatch"
+      ]
+    }
+  },
+  "generated_utc": "2026-11-28T05:00:13.278202+00:00"
+}

@@ -1,0 +1,1951 @@
+{
+  "schema_version": 1,
+  "campaign": "historical-utility-qualification-002",
+  "starting_revision": "5045901177b735c7f5aaaa3512e4d4741a9d7bb2",
+  "interrupted_run_git_checkpoint": "822a7ca6e1c59aedb99c83f3bc3b71a5c31b0ad3",
+  "environment": {
+    "python": "3.13.17",
+    "qualified_utc": "2026-11-28T04:52:55Z",
+    "package_tree_sha256": "27a4e0012e9b26ca5310e8a7e24da914f982ef555c2b2dd42eee358e41b39c8a",
+    "checks": {
+      "environment-record": "pass",
+      "checkout-root": "pass",
+      "parent-interpreter": "pass",
+      "requested-interpreter": "pass",
+      "parent-package": "pass",
+      "source-revision": "pass",
+      "source-content": "pass",
+      "child-interpreter": "pass",
+      "observed-origin": "pass",
+      "observed-content": "pass",
+      "child-isolation": "pass"
+    }
+  },
+  "timing": {
+    "first_host_checkpoint_utc": "2026-11-28T04:50:35.5138328Z",
+    "first_visible_launch_receipt_utc": "2026-11-28T04:53:02.672349+00:00",
+    "first_native_interaction": {
+      "wall_utc": "2026-11-28T04:53:15.257558+00:00",
+      "guest_ms": 15000,
+      "framebuffer_sha256": "598e8ce5c939f69c1c6331a5750329f9c5df09d45fea0e88edb2fdf2444553d2"
+    },
+    "first_saved_form": {
+      "wall_utc": "2026-11-28T04:56:06.291291+00:00",
+      "guest_ms": 39899,
+      "framebuffer_sha256": "ee5ec14821278f18551b18f5f40ab0d82f749b5a5b8ed08c433b97cdf301d8ad"
+    },
+    "specimen_session_stop": {
+      "wall_utc": "2026-11-28T04:59:03.107900+00:00",
+      "guest_ms": 116123
+    },
+    "specimens_stopped_disk_sha256": "5a358f05311051b55e5215b31b3ce54ec1fc4e83a0ccb6c1a3155d4de1f08d87",
+    "repair_session_stop": {
+      "wall_utc": "2026-11-28T05:02:35.580772+00:00",
+      "guest_ms": 82962
+    },
+    "reopen_session_stop": {
+      "wall_utc": "2026-11-28T05:05:57.355988+00:00",
+      "guest_ms": 186006
+    },
+    "last_guest_observation": {
+      "wall_utc": "2026-11-28T05:07:06.017170+00:00",
+      "guest_ms": 22604,
+      "framebuffer_sha256": "450116822576a5b54cf4c4d32587f745194e0fdb47bc116f2aabc65c8a845b20"
+    }
+  },
+  "repair": {
+    "stage_sha256": "24d23a30d7df93bb944bf2cfccff390506724eeab8352697bcad471d63e763fa",
+    "dual_extraction_verified": true,
+    "stopped_disk_before_and_after_reopen_sha256": "9539a39ad01c24fce984d36b12956e4b743857cea8f13dd1cbb05c5977516b65",
+    "cases": {
+      "GOODMIX": {
+        "input": {
+          "bytes": 9216,
+          "sha256": "5b878f77b43dc6517b4065477f0e15b9d42b02ad0b0b493bc029ec8f06125682"
+        },
+        "input_reader": "accepted",
+        "old_backup_matches_input": true,
+        "repair_dialog": {
+          "wall_utc": "2026-11-28T05:01:13.881155+00:00",
+          "guest_ms": 40576,
+          "framebuffer_sha256": "c4a65b253ee7f4033cc51387053ddb1eb8d2ac0b90b2229388c0f0f77a394c4d",
+          "recovered_bytes": 9216,
+          "unrecovered_bytes": 0
+        },
+        "output_before_reopen": {
+          "bytes": 9216,
+          "sha256": "5b878f77b43dc6517b4065477f0e15b9d42b02ad0b0b493bc029ec8f06125682"
+        },
+        "cold_reopen": {
+          "wall_utc": "2026-11-28T05:03:32.638531+00:00",
+          "guest_ms": 21818,
+          "framebuffer_sha256": "37bb803f87475690a78db87733390b048b3a79d36ba1abec9a8e311a584505f1",
+          "selected_records": 8,
+          "total_records": 8
+        },
+        "post_reopen_files_byte_identical": true,
+        "result": "byte-identical control",
+        "changed_offsets_in_common_prefix": 0,
+        "differing_spans_exclusive_end": [],
+        "size_delta": 0
+      },
+      "GOODUN": {
+        "input": {
+          "bytes": 9216,
+          "sha256": "7276f288e3dd38fcaf961d2aec4ae4220fa31dc78e7991d06b3fc687beefd9db"
+        },
+        "input_reader": "accepted",
+        "old_backup_matches_input": true,
+        "repair_dialog": {
+          "wall_utc": "2026-11-28T05:01:28.281787+00:00",
+          "guest_ms": 46340,
+          "framebuffer_sha256": "fffa982a7bdeca06d82017516c9279a8bc353e81e4893c0e1ffbd91191ca11c0",
+          "recovered_bytes": 9216,
+          "unrecovered_bytes": 0
+        },
+        "output_before_reopen": {
+          "bytes": 9216,
+          "sha256": "570b00d75defd6c6f4e61ea7c647cd02e78789caad4318146761a28055ae12cc"
+        },
+        "cold_reopen": {
+          "wall_utc": "2026-11-28T05:04:21.116667+00:00",
+          "guest_ms": 45018,
+          "framebuffer_sha256": "d4844d2d26fff0aa9bff04c020a3aed8598998f5674daffaf765f75db08b90e0",
+          "selected_records": 8,
+          "total_records": 8
+        },
+        "post_reopen_files_byte_identical": true,
+        "result": "structural normalization",
+        "changed_offsets_in_common_prefix": 2400,
+        "differing_spans_exclusive_end": [
+          [
+            38,
+            39
+          ],
+          [
+            41,
+            42
+          ],
+          [
+            1068,
+            1069
+          ],
+          [
+            1089,
+            1090
+          ],
+          [
+            1102,
+            1103
+          ],
+          [
+            1123,
+            1124
+          ],
+          [
+            2206,
+            2217
+          ],
+          [
+            2218,
+            2223
+          ],
+          [
+            2224,
+            2225
+          ],
+          [
+            2226,
+            2246
+          ],
+          [
+            2247,
+            2271
+          ],
+          [
+            2272,
+            2276
+          ],
+          [
+            2284,
+            2289
+          ],
+          [
+            2290,
+            2300
+          ],
+          [
+            2301,
+            2305
+          ],
+          [
+            2306,
+            2307
+          ],
+          [
+            2313,
+            2316
+          ],
+          [
+            2317,
+            2332
+          ],
+          [
+            2333,
+            2334
+          ],
+          [
+            2335,
+            2336
+          ],
+          [
+            2337,
+            2359
+          ],
+          [
+            2360,
+            2363
+          ],
+          [
+            2364,
+            2414
+          ],
+          [
+            2415,
+            2437
+          ],
+          [
+            2438,
+            2445
+          ],
+          [
+            2446,
+            2493
+          ],
+          [
+            2494,
+            2498
+          ],
+          [
+            2499,
+            2505
+          ],
+          [
+            2506,
+            2537
+          ],
+          [
+            2538,
+            2560
+          ],
+          [
+            2561,
+            2592
+          ],
+          [
+            2593,
+            2600
+          ],
+          [
+            2601,
+            2616
+          ],
+          [
+            2617,
+            2634
+          ],
+          [
+            2635,
+            2650
+          ],
+          [
+            2651,
+            2662
+          ],
+          [
+            2663,
+            2689
+          ],
+          [
+            2690,
+            2694
+          ],
+          [
+            2695,
+            2696
+          ],
+          [
+            3114,
+            3117
+          ],
+          [
+            3120,
+            3123
+          ],
+          [
+            3126,
+            3129
+          ],
+          [
+            3132,
+            3135
+          ],
+          [
+            3174,
+            3177
+          ],
+          [
+            3180,
+            3183
+          ],
+          [
+            3186,
+            3189
+          ],
+          [
+            3192,
+            3195
+          ],
+          [
+            3198,
+            3199
+          ],
+          [
+            3200,
+            3201
+          ],
+          [
+            3204,
+            3205
+          ],
+          [
+            3206,
+            3207
+          ],
+          [
+            3210,
+            3211
+          ],
+          [
+            3212,
+            3213
+          ],
+          [
+            3216,
+            3217
+          ],
+          [
+            3218,
+            3219
+          ],
+          [
+            3222,
+            3223
+          ],
+          [
+            3224,
+            3225
+          ],
+          [
+            3228,
+            3231
+          ],
+          [
+            3234,
+            3237
+          ],
+          [
+            3240,
+            3243
+          ],
+          [
+            3246,
+            3249
+          ],
+          [
+            4098,
+            4131
+          ],
+          [
+            4132,
+            4140
+          ],
+          [
+            4141,
+            4142
+          ],
+          [
+            4143,
+            4162
+          ],
+          [
+            4163,
+            4165
+          ],
+          [
+            4166,
+            4167
+          ],
+          [
+            4168,
+            4205
+          ],
+          [
+            4206,
+            4207
+          ],
+          [
+            4208,
+            4216
+          ],
+          [
+            4217,
+            4245
+          ],
+          [
+            4246,
+            4247
+          ],
+          [
+            4248,
+            4264
+          ],
+          [
+            4265,
+            4305
+          ],
+          [
+            4306,
+            4356
+          ],
+          [
+            4357,
+            4408
+          ],
+          [
+            4409,
+            4412
+          ],
+          [
+            4413,
+            4414
+          ],
+          [
+            4415,
+            5044
+          ],
+          [
+            5162,
+            5163
+          ],
+          [
+            5164,
+            5165
+          ],
+          [
+            5168,
+            5169
+          ],
+          [
+            5170,
+            5171
+          ],
+          [
+            5174,
+            5175
+          ],
+          [
+            5176,
+            5177
+          ],
+          [
+            5180,
+            5183
+          ],
+          [
+            5186,
+            5189
+          ],
+          [
+            5190,
+            5191
+          ],
+          [
+            5192,
+            5193
+          ],
+          [
+            5194,
+            5195
+          ],
+          [
+            5196,
+            5197
+          ],
+          [
+            5198,
+            5201
+          ],
+          [
+            5202,
+            5203
+          ],
+          [
+            5204,
+            5206
+          ],
+          [
+            6146,
+            6179
+          ],
+          [
+            6180,
+            6188
+          ],
+          [
+            6189,
+            6190
+          ],
+          [
+            6191,
+            6210
+          ],
+          [
+            6211,
+            6213
+          ],
+          [
+            6214,
+            6215
+          ],
+          [
+            6216,
+            6253
+          ],
+          [
+            6254,
+            6255
+          ],
+          [
+            6256,
+            6264
+          ],
+          [
+            6265,
+            6293
+          ],
+          [
+            6294,
+            6295
+          ],
+          [
+            6296,
+            6312
+          ],
+          [
+            6313,
+            6353
+          ],
+          [
+            6354,
+            6404
+          ],
+          [
+            6405,
+            6456
+          ],
+          [
+            6457,
+            6460
+          ],
+          [
+            6461,
+            6462
+          ],
+          [
+            6463,
+            7092
+          ],
+          [
+            7210,
+            7211
+          ],
+          [
+            7212,
+            7213
+          ],
+          [
+            7216,
+            7217
+          ],
+          [
+            7218,
+            7219
+          ],
+          [
+            7222,
+            7223
+          ],
+          [
+            7224,
+            7225
+          ],
+          [
+            7228,
+            7231
+          ],
+          [
+            7234,
+            7237
+          ],
+          [
+            7238,
+            7239
+          ],
+          [
+            7240,
+            7241
+          ],
+          [
+            7242,
+            7243
+          ],
+          [
+            7244,
+            7245
+          ],
+          [
+            7246,
+            7249
+          ],
+          [
+            7250,
+            7251
+          ],
+          [
+            7252,
+            7254
+          ]
+        ],
+        "size_delta": 0
+      },
+      "BADLOC": {
+        "input": {
+          "bytes": 9216,
+          "sha256": "3d5d01d7cc4c6ed99eab4ee9614b5bce1ad40fee261bd4b5c870c11807c75950"
+        },
+        "input_reader": "unsupported_layout at 0x1825: unindexed row, overlap or gap; retired rows require opt-in",
+        "old_backup_matches_input": true,
+        "repair_dialog": {
+          "wall_utc": "2026-11-28T05:01:38.945132+00:00",
+          "guest_ms": 52104,
+          "framebuffer_sha256": "478f1a701439f2dd462eea1daaab3243a9d57d3198bb9d5a3bfddd11332a35dd",
+          "recovered_bytes": 9216,
+          "unrecovered_bytes": 0
+        },
+        "output_before_reopen": {
+          "bytes": 9216,
+          "sha256": "5b878f77b43dc6517b4065477f0e15b9d42b02ad0b0b493bc029ec8f06125682"
+        },
+        "cold_reopen": {
+          "wall_utc": "2026-11-28T05:04:33.251624+00:00",
+          "guest_ms": 68218,
+          "framebuffer_sha256": "43d581ad4c7ac9c1572b3957c5179ebe5cf8d3fccdcaa88d0a2d0897e903ad81",
+          "selected_records": 8,
+          "total_records": 8
+        },
+        "post_reopen_files_byte_identical": true,
+        "result": "full recovery",
+        "changed_offsets_in_common_prefix": 1,
+        "differing_spans_exclusive_end": [
+          [
+            7210,
+            7211
+          ]
+        ],
+        "size_delta": 0
+      },
+      "BADID": {
+        "input": {
+          "bytes": 9216,
+          "sha256": "25b510a4b4b60dfdb4f48f553f63d5dd643ea7e84a310b28c7d7a0f795152123"
+        },
+        "input_reader": "invalid_record at 0x1825: index/row ID mismatch",
+        "old_backup_matches_input": true,
+        "repair_dialog": {
+          "wall_utc": "2026-11-28T05:01:46.555894+00:00",
+          "guest_ms": 57842,
+          "framebuffer_sha256": "cb57d25c470f1ae1f52e87c12c1161fa9a147ce4126b2df0b0d1265ce1c2036f",
+          "recovered_bytes": 9216,
+          "unrecovered_bytes": 0
+        },
+        "output_before_reopen": {
+          "bytes": 9216,
+          "sha256": "5b878f77b43dc6517b4065477f0e15b9d42b02ad0b0b493bc029ec8f06125682"
+        },
+        "cold_reopen": {
+          "wall_utc": "2026-11-28T05:04:45.516096+00:00",
+          "guest_ms": 91392,
+          "framebuffer_sha256": "5e6280acf5686d4314dcf3314c47be3ea087386588254b8f0bdc70a01615f2fc",
+          "selected_records": 8,
+          "total_records": 8
+        },
+        "post_reopen_files_byte_identical": true,
+        "result": "full recovery",
+        "changed_offsets_in_common_prefix": 1,
+        "differing_spans_exclusive_end": [
+          [
+            7212,
+            7213
+          ]
+        ],
+        "size_delta": 0
+      },
+      "NOENTRY": {
+        "input": {
+          "bytes": 9216,
+          "sha256": "119ffa08713277bd657ef9c6809feccb7fae88318d71ff00727d3ab89c9ff333"
+        },
+        "input_reader": "invalid_index at 0x1C00: count disagrees with index",
+        "old_backup_matches_input": true,
+        "repair_dialog": {
+          "wall_utc": "2026-11-28T05:01:53.814291+00:00",
+          "guest_ms": 63632,
+          "framebuffer_sha256": "9825c1f2eec24b213218d3996ed97cea0d072cbf796827518e9bad8541bd21e3",
+          "recovered_bytes": 9216,
+          "unrecovered_bytes": 0
+        },
+        "output_before_reopen": {
+          "bytes": 9216,
+          "sha256": "5b878f77b43dc6517b4065477f0e15b9d42b02ad0b0b493bc029ec8f06125682"
+        },
+        "cold_reopen": {
+          "wall_utc": "2026-11-28T05:04:57.712549+00:00",
+          "guest_ms": 114618,
+          "framebuffer_sha256": "33476e42f8226a863302d242dcf6559fba1e5c48393cb14528ef0679459c7dc4",
+          "selected_records": 8,
+          "total_records": 8
+        },
+        "post_reopen_files_byte_identical": true,
+        "result": "full recovery",
+        "changed_offsets_in_common_prefix": 2,
+        "differing_spans_exclusive_end": [
+          [
+            7250,
+            7251
+          ],
+          [
+            7254,
+            7255
+          ]
+        ],
+        "size_delta": 0
+      },
+      "BADLINK": {
+        "input": {
+          "bytes": 9216,
+          "sha256": "7fd690710bee8a4e14ffba7015e3e9f75958057c551fda0d28848d31ddf37d65"
+        },
+        "input_reader": "invalid_index at 0x1C3A: index target outside owning chain or nonempty group after gap",
+        "old_backup_matches_input": true,
+        "repair_dialog": {
+          "wall_utc": "2026-11-28T05:02:02.579742+00:00",
+          "guest_ms": 69422,
+          "framebuffer_sha256": "d4a3e2a8f0e20d93ab836edad62e63e994bf1e82edf328ed027dd6b44ba549b3",
+          "recovered_bytes": 8192,
+          "unrecovered_bytes": 1024
+        },
+        "output_before_reopen": {
+          "bytes": 8192,
+          "sha256": "57c6a26d01ed58e7d68a39ab528a7ab18baa0b5f70296b79d7ec74e6b4e63c54"
+        },
+        "cold_reopen": {
+          "wall_utc": "2026-11-28T05:05:10.169609+00:00",
+          "guest_ms": 137844,
+          "framebuffer_sha256": "6cc28a83ed6dd88da98ed00f3eaea976e16f82fe6b159536cf80ee3a85b29c9c",
+          "selected_records": 5,
+          "total_records": 5
+        },
+        "post_reopen_files_byte_identical": true,
+        "result": "reported partial recovery",
+        "changed_offsets_in_common_prefix": 20,
+        "differing_spans_exclusive_end": [
+          [
+            45,
+            47
+          ],
+          [
+            1115,
+            1116
+          ],
+          [
+            1125,
+            1126
+          ],
+          [
+            7226,
+            7227
+          ],
+          [
+            7228,
+            7229
+          ],
+          [
+            7230,
+            7231
+          ],
+          [
+            7232,
+            7233
+          ],
+          [
+            7234,
+            7237
+          ],
+          [
+            7238,
+            7239
+          ],
+          [
+            7240,
+            7243
+          ],
+          [
+            7244,
+            7245
+          ],
+          [
+            7246,
+            7247
+          ],
+          [
+            7248,
+            7249
+          ],
+          [
+            7250,
+            7251
+          ],
+          [
+            7254,
+            7255
+          ]
+        ],
+        "size_delta": -1024
+      },
+      "BADFRAME": {
+        "input": {
+          "bytes": 9216,
+          "sha256": "443c4bceb6079f33ef2b32c827c7c919520839e138320a3ca9c41892030599e7"
+        },
+        "input_reader": "invalid_record at 0x224D: missing page-bounded row terminator",
+        "old_backup_matches_input": true,
+        "repair_dialog": {
+          "wall_utc": "2026-11-28T05:02:13.593601+00:00",
+          "guest_ms": 75238,
+          "framebuffer_sha256": "8532383b37789b1172ee20ce000c4de60826b3f5ebe8c283bc5f97bd92df4881",
+          "recovered_bytes": 9216,
+          "unrecovered_bytes": 0
+        },
+        "output_before_reopen": {
+          "bytes": 9216,
+          "sha256": "a1354bfa9ecd6a80c85631ba2d6745298dacd8f53b7c2048537fb2d4d7c21ee7"
+        },
+        "cold_reopen": {
+          "wall_utc": "2026-11-28T05:05:22.773910+00:00",
+          "guest_ms": 161096,
+          "framebuffer_sha256": "a8777c95d341416dc636b80bdc9e64664e576d99709d219b5539393785366185",
+          "selected_records": 7,
+          "total_records": 7
+        },
+        "post_reopen_files_byte_identical": true,
+        "result": "unreported record loss",
+        "changed_offsets_in_common_prefix": 308,
+        "differing_spans_exclusive_end": [
+          [
+            1115,
+            1116
+          ],
+          [
+            1125,
+            1126
+          ],
+          [
+            7238,
+            7239
+          ],
+          [
+            7240,
+            7243
+          ],
+          [
+            7246,
+            7247
+          ],
+          [
+            7248,
+            7249
+          ],
+          [
+            7250,
+            7251
+          ],
+          [
+            7254,
+            7255
+          ],
+          [
+            8781,
+            9079
+          ]
+        ],
+        "size_delta": 0
+      },
+      "BADCOUNT": {
+        "input": {
+          "bytes": 9216,
+          "sha256": "254905887c66136bc31eab490280216f2fe988519e07193857e41ac5a8806515"
+        },
+        "input_reader": "invalid_index at 0x1C00: count disagrees with index",
+        "old_backup_matches_input": true,
+        "repair_dialog": {
+          "wall_utc": "2026-11-28T05:02:23.017159+00:00",
+          "guest_ms": 81054,
+          "framebuffer_sha256": "cc9aa770ceee9f76ee9f347a00073de404d3413785b99e7cb3e510183e7ad24c",
+          "recovered_bytes": 9216,
+          "unrecovered_bytes": 0
+        },
+        "output_before_reopen": {
+          "bytes": 9216,
+          "sha256": "5b878f77b43dc6517b4065477f0e15b9d42b02ad0b0b493bc029ec8f06125682"
+        },
+        "cold_reopen": {
+          "wall_utc": "2026-11-28T05:05:35.093269+00:00",
+          "guest_ms": 184348,
+          "framebuffer_sha256": "b59586536a700d9dd4008bdc865414e8d6162f9ba3118e4e15845ac15a389f26",
+          "selected_records": 8,
+          "total_records": 8
+        },
+        "post_reopen_files_byte_identical": true,
+        "result": "full recovery",
+        "changed_offsets_in_common_prefix": 1,
+        "differing_spans_exclusive_end": [
+          [
+            1115,
+            1116
+          ]
+        ],
+        "size_delta": 0
+      }
+    },
+    "outputs_by_sha256": {
+      "5b878f77b43dc6517b4065477f0e15b9d42b02ad0b0b493bc029ec8f06125682": {
+        "fixture": "tests/fixtures/application-generated/filer/hu002-sorted.fil",
+        "output_tables": {
+          "DBCOLS": {
+            "data_pages": [
+              2
+            ],
+            "index_page": 3,
+            "fields": [
+              [
+                "cname",
+                80,
+                "C"
+              ],
+              [
+                "owner",
+                80,
+                "C"
+              ],
+              [
+                "pos",
+                4,
+                "N"
+              ],
+              [
+                "len",
+                4,
+                "N"
+              ],
+              [
+                "type",
+                1,
+                "C"
+              ],
+              [
+                "uniq",
+                1,
+                "N"
+              ]
+            ],
+            "record_ids": [
+              35,
+              36,
+              37,
+              38,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34
+            ],
+            "row_offsets": [
+              2589,
+              2618,
+              2648,
+              2671,
+              2048,
+              2075,
+              2102,
+              2126,
+              2150,
+              2175,
+              2200,
+              2227,
+              2256,
+              2282,
+              2311,
+              2340,
+              2373,
+              2403,
+              2434,
+              2465,
+              2495,
+              2525,
+              2557
+            ],
+            "retired_count": 0,
+            "logical_rows_sha256": "b416eec5859e833955e1acb2da26b1b0e02370b9a76143274f22d8b2989eab3a"
+          },
+          "LAYOUTS": {
+            "data_pages": [
+              4
+            ],
+            "index_page": 5,
+            "fields": [
+              [
+                "ITEM#",
+                3,
+                "N"
+              ],
+              [
+                "FIELDID",
+                3,
+                "N"
+              ],
+              [
+                "TYPE",
+                3,
+                "N"
+              ],
+              [
+                "FORMAT1",
+                3,
+                "N"
+              ],
+              [
+                "FORMAT2",
+                3,
+                "N"
+              ],
+              [
+                "FMT_CHARS",
+                133,
+                "K"
+              ],
+              [
+                "DESCRIP",
+                21,
+                "K"
+              ],
+              [
+                "START_COL",
+                3,
+                "N"
+              ],
+              [
+                "START_ROW",
+                2,
+                "N"
+              ],
+              [
+                "NUM_COLS",
+                3,
+                "N"
+              ],
+              [
+                "NUM_ROWS",
+                2,
+                "N"
+              ],
+              [
+                "COL_OFFSET",
+                2,
+                "N"
+              ],
+              [
+                "ROW_OFFSET",
+                2,
+                "N"
+              ]
+            ],
+            "record_ids": [
+              20,
+              16,
+              21,
+              17,
+              18,
+              22,
+              19,
+              23
+            ],
+            "row_offsets": [
+              4254,
+              4096,
+              4297,
+              4135,
+              4174,
+              4340,
+              4214,
+              4379
+            ],
+            "retired_count": 0,
+            "logical_rows_sha256": "d39b05f362e5c909ebb4261f83c5c55631d3eaca65c49347caec209ac887884a"
+          },
+          "DATA": {
+            "data_pages": [
+              6,
+              8
+            ],
+            "index_page": 7,
+            "fields": [
+              [
+                "ITEM_CODE",
+                40,
+                "K"
+              ],
+              [
+                "MEMO TEXT",
+                336,
+                "K"
+              ],
+              [
+                "AMT",
+                18,
+                "N"
+              ],
+              [
+                "DATE/TEXT",
+                15,
+                "K"
+              ]
+            ],
+            "record_ids": [
+              17,
+              19,
+              20,
+              21,
+              22,
+              23,
+              18,
+              16
+            ],
+            "row_offsets": [
+              6181,
+              6511,
+              6794,
+              8192,
+              8487,
+              8781,
+              6204,
+              6144
+            ],
+            "retired_count": 0,
+            "logical_rows_sha256": "b14ba8af3965c4a28a864fe892c3ed5bb36fd2e3bbd6d699f000e38fbdbe0ab3"
+          }
+        },
+        "data_order": [
+          "ALPHA",
+          "BRAVO",
+          "CHARLIE",
+          "DELTA",
+          "ECHO",
+          "FOXTROT",
+          "MIKE",
+          "ZULU"
+        ]
+      },
+      "570b00d75defd6c6f4e61ea7c647cd02e78789caad4318146761a28055ae12cc": {
+        "fixture": "tests/fixtures/application-generated/filer/hu002-dbrepair-unsorted.fil",
+        "output_tables": {
+          "DBCOLS": {
+            "data_pages": [
+              2
+            ],
+            "index_page": 3,
+            "fields": [
+              [
+                "cname",
+                80,
+                "C"
+              ],
+              [
+                "owner",
+                80,
+                "C"
+              ],
+              [
+                "pos",
+                4,
+                "N"
+              ],
+              [
+                "len",
+                4,
+                "N"
+              ],
+              [
+                "type",
+                1,
+                "C"
+              ],
+              [
+                "uniq",
+                1,
+                "N"
+              ]
+            ],
+            "record_ids": [
+              22,
+              23,
+              24,
+              25,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38
+            ],
+            "row_offsets": [
+              2200,
+              2229,
+              2259,
+              2282,
+              2048,
+              2075,
+              2102,
+              2126,
+              2150,
+              2175,
+              2311,
+              2338,
+              2367,
+              2393,
+              2422,
+              2451,
+              2484,
+              2514,
+              2545,
+              2576,
+              2606,
+              2636,
+              2668
+            ],
+            "retired_count": 0,
+            "logical_rows_sha256": "b416eec5859e833955e1acb2da26b1b0e02370b9a76143274f22d8b2989eab3a"
+          },
+          "DATA": {
+            "data_pages": [
+              4,
+              8
+            ],
+            "index_page": 5,
+            "fields": [
+              [
+                "ITEM_CODE",
+                40,
+                "K"
+              ],
+              [
+                "MEMO TEXT",
+                336,
+                "K"
+              ],
+              [
+                "AMT",
+                18,
+                "N"
+              ],
+              [
+                "DATE/TEXT",
+                15,
+                "K"
+              ]
+            ],
+            "record_ids": [
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23
+            ],
+            "row_offsets": [
+              4096,
+              4133,
+              4156,
+              4463,
+              4746,
+              8192,
+              8487,
+              8781
+            ],
+            "retired_count": 0,
+            "logical_rows_sha256": "cc2ff6b7eba27f93ef19caf2576dd18fba760832784e961678554c02386b7f73"
+          },
+          "LAYOUTS": {
+            "data_pages": [
+              6
+            ],
+            "index_page": 7,
+            "fields": [
+              [
+                "ITEM#",
+                3,
+                "N"
+              ],
+              [
+                "FIELDID",
+                3,
+                "N"
+              ],
+              [
+                "TYPE",
+                3,
+                "N"
+              ],
+              [
+                "FORMAT1",
+                3,
+                "N"
+              ],
+              [
+                "FORMAT2",
+                3,
+                "N"
+              ],
+              [
+                "FMT_CHARS",
+                133,
+                "K"
+              ],
+              [
+                "DESCRIP",
+                21,
+                "K"
+              ],
+              [
+                "START_COL",
+                3,
+                "N"
+              ],
+              [
+                "START_ROW",
+                2,
+                "N"
+              ],
+              [
+                "NUM_COLS",
+                3,
+                "N"
+              ],
+              [
+                "NUM_ROWS",
+                2,
+                "N"
+              ],
+              [
+                "COL_OFFSET",
+                2,
+                "N"
+              ],
+              [
+                "ROW_OFFSET",
+                2,
+                "N"
+              ]
+            ],
+            "record_ids": [
+              20,
+              16,
+              21,
+              17,
+              18,
+              22,
+              19,
+              23
+            ],
+            "row_offsets": [
+              6302,
+              6144,
+              6345,
+              6183,
+              6222,
+              6388,
+              6262,
+              6427
+            ],
+            "retired_count": 0,
+            "logical_rows_sha256": "d39b05f362e5c909ebb4261f83c5c55631d3eaca65c49347caec209ac887884a"
+          }
+        },
+        "data_order": [
+          "ZULU",
+          "ALPHA",
+          "MIKE",
+          "BRAVO",
+          "CHARLIE",
+          "DELTA",
+          "ECHO",
+          "FOXTROT"
+        ]
+      },
+      "57c6a26d01ed58e7d68a39ab528a7ab18baa0b5f70296b79d7ec74e6b4e63c54": {
+        "fixture": "tests/fixtures/application-generated/filer/hu002-dbrepair-link-loss.fil",
+        "output_tables": {
+          "DBCOLS": {
+            "data_pages": [
+              2
+            ],
+            "index_page": 3,
+            "fields": [
+              [
+                "cname",
+                80,
+                "C"
+              ],
+              [
+                "owner",
+                80,
+                "C"
+              ],
+              [
+                "pos",
+                4,
+                "N"
+              ],
+              [
+                "len",
+                4,
+                "N"
+              ],
+              [
+                "type",
+                1,
+                "C"
+              ],
+              [
+                "uniq",
+                1,
+                "N"
+              ]
+            ],
+            "record_ids": [
+              35,
+              36,
+              37,
+              38,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34
+            ],
+            "row_offsets": [
+              2589,
+              2618,
+              2648,
+              2671,
+              2048,
+              2075,
+              2102,
+              2126,
+              2150,
+              2175,
+              2200,
+              2227,
+              2256,
+              2282,
+              2311,
+              2340,
+              2373,
+              2403,
+              2434,
+              2465,
+              2495,
+              2525,
+              2557
+            ],
+            "retired_count": 0,
+            "logical_rows_sha256": "b416eec5859e833955e1acb2da26b1b0e02370b9a76143274f22d8b2989eab3a"
+          },
+          "LAYOUTS": {
+            "data_pages": [
+              4
+            ],
+            "index_page": 5,
+            "fields": [
+              [
+                "ITEM#",
+                3,
+                "N"
+              ],
+              [
+                "FIELDID",
+                3,
+                "N"
+              ],
+              [
+                "TYPE",
+                3,
+                "N"
+              ],
+              [
+                "FORMAT1",
+                3,
+                "N"
+              ],
+              [
+                "FORMAT2",
+                3,
+                "N"
+              ],
+              [
+                "FMT_CHARS",
+                133,
+                "K"
+              ],
+              [
+                "DESCRIP",
+                21,
+                "K"
+              ],
+              [
+                "START_COL",
+                3,
+                "N"
+              ],
+              [
+                "START_ROW",
+                2,
+                "N"
+              ],
+              [
+                "NUM_COLS",
+                3,
+                "N"
+              ],
+              [
+                "NUM_ROWS",
+                2,
+                "N"
+              ],
+              [
+                "COL_OFFSET",
+                2,
+                "N"
+              ],
+              [
+                "ROW_OFFSET",
+                2,
+                "N"
+              ]
+            ],
+            "record_ids": [
+              20,
+              16,
+              21,
+              17,
+              18,
+              22,
+              19,
+              23
+            ],
+            "row_offsets": [
+              4254,
+              4096,
+              4297,
+              4135,
+              4174,
+              4340,
+              4214,
+              4379
+            ],
+            "retired_count": 0,
+            "logical_rows_sha256": "d39b05f362e5c909ebb4261f83c5c55631d3eaca65c49347caec209ac887884a"
+          },
+          "DATA": {
+            "data_pages": [
+              6
+            ],
+            "index_page": 7,
+            "fields": [
+              [
+                "ITEM_CODE",
+                40,
+                "K"
+              ],
+              [
+                "MEMO TEXT",
+                336,
+                "K"
+              ],
+              [
+                "AMT",
+                18,
+                "N"
+              ],
+              [
+                "DATE/TEXT",
+                15,
+                "K"
+              ]
+            ],
+            "record_ids": [
+              17,
+              19,
+              20,
+              18,
+              16
+            ],
+            "row_offsets": [
+              6181,
+              6511,
+              6794,
+              6204,
+              6144
+            ],
+            "retired_count": 0,
+            "logical_rows_sha256": "e55b192bf9a84ad97744bdb946fd48ac159483035c4fecf873165c2fe7e2367e"
+          }
+        },
+        "data_order": [
+          "ALPHA",
+          "BRAVO",
+          "CHARLIE",
+          "MIKE",
+          "ZULU"
+        ]
+      },
+      "a1354bfa9ecd6a80c85631ba2d6745298dacd8f53b7c2048537fb2d4d7c21ee7": {
+        "fixture": "tests/fixtures/application-generated/filer/hu002-dbrepair-frame-loss.fil",
+        "output_tables": {
+          "DBCOLS": {
+            "data_pages": [
+              2
+            ],
+            "index_page": 3,
+            "fields": [
+              [
+                "cname",
+                80,
+                "C"
+              ],
+              [
+                "owner",
+                80,
+                "C"
+              ],
+              [
+                "pos",
+                4,
+                "N"
+              ],
+              [
+                "len",
+                4,
+                "N"
+              ],
+              [
+                "type",
+                1,
+                "C"
+              ],
+              [
+                "uniq",
+                1,
+                "N"
+              ]
+            ],
+            "record_ids": [
+              35,
+              36,
+              37,
+              38,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34
+            ],
+            "row_offsets": [
+              2589,
+              2618,
+              2648,
+              2671,
+              2048,
+              2075,
+              2102,
+              2126,
+              2150,
+              2175,
+              2200,
+              2227,
+              2256,
+              2282,
+              2311,
+              2340,
+              2373,
+              2403,
+              2434,
+              2465,
+              2495,
+              2525,
+              2557
+            ],
+            "retired_count": 0,
+            "logical_rows_sha256": "b416eec5859e833955e1acb2da26b1b0e02370b9a76143274f22d8b2989eab3a"
+          },
+          "LAYOUTS": {
+            "data_pages": [
+              4
+            ],
+            "index_page": 5,
+            "fields": [
+              [
+                "ITEM#",
+                3,
+                "N"
+              ],
+              [
+                "FIELDID",
+                3,
+                "N"
+              ],
+              [
+                "TYPE",
+                3,
+                "N"
+              ],
+              [
+                "FORMAT1",
+                3,
+                "N"
+              ],
+              [
+                "FORMAT2",
+                3,
+                "N"
+              ],
+              [
+                "FMT_CHARS",
+                133,
+                "K"
+              ],
+              [
+                "DESCRIP",
+                21,
+                "K"
+              ],
+              [
+                "START_COL",
+                3,
+                "N"
+              ],
+              [
+                "START_ROW",
+                2,
+                "N"
+              ],
+              [
+                "NUM_COLS",
+                3,
+                "N"
+              ],
+              [
+                "NUM_ROWS",
+                2,
+                "N"
+              ],
+              [
+                "COL_OFFSET",
+                2,
+                "N"
+              ],
+              [
+                "ROW_OFFSET",
+                2,
+                "N"
+              ]
+            ],
+            "record_ids": [
+              20,
+              16,
+              21,
+              17,
+              18,
+              22,
+              19,
+              23
+            ],
+            "row_offsets": [
+              4254,
+              4096,
+              4297,
+              4135,
+              4174,
+              4340,
+              4214,
+              4379
+            ],
+            "retired_count": 0,
+            "logical_rows_sha256": "d39b05f362e5c909ebb4261f83c5c55631d3eaca65c49347caec209ac887884a"
+          },
+          "DATA": {
+            "data_pages": [
+              6,
+              8
+            ],
+            "index_page": 7,
+            "fields": [
+              [
+                "ITEM_CODE",
+                40,
+                "K"
+              ],
+              [
+                "MEMO TEXT",
+                336,
+                "K"
+              ],
+              [
+                "AMT",
+                18,
+                "N"
+              ],
+              [
+                "DATE/TEXT",
+                15,
+                "K"
+              ]
+            ],
+            "record_ids": [
+              17,
+              19,
+              20,
+              21,
+              22,
+              18,
+              16
+            ],
+            "row_offsets": [
+              6181,
+              6511,
+              6794,
+              8192,
+              8487,
+              6204,
+              6144
+            ],
+            "retired_count": 0,
+            "logical_rows_sha256": "f04a8d8197f7c990c50d3d1e33650c5a9145b8bc32a7ecdd43057072f268eba2"
+          }
+        },
+        "data_order": [
+          "ALPHA",
+          "BRAVO",
+          "CHARLIE",
+          "DELTA",
+          "ECHO",
+          "MIKE",
+          "ZULU"
+        ]
+      }
+    }
+  },
+  "fil2dbf": {
+    "native_runtime": "DeskMate 03.05.00",
+    "input_fixture": "tests/fixtures/application-generated/filer/hu002-sorted.fil",
+    "table_dialog": {
+      "wall_utc": "2026-11-28T05:06:54.268264+00:00",
+      "guest_ms": 21972,
+      "framebuffer_sha256": "ae3f12fad113d062ee9e6b114c24496813336018a7be9985202eb229a3920df9"
+    },
+    "last_recorded_state": "Select Table dialog; DATA visible and unselected",
+    "verified_output": null
+  },
+  "usage": {
+    "startup_checkpoint": "codex-usage/20261128-historical-utility-002-startup.json",
+    "specimen_checkpoint": "codex-usage/20261128-historical-utility-002-specimens.json",
+    "campaign_attributable_observation": null
+  }
+}
