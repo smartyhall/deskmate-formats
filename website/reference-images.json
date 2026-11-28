@@ -2023,20 +2023,20 @@
     "section_heading": "How much a note can hold"
   },
     {
-        "id": "ui.deskmate305.installer-banner",
-        "path": "application-library/ui.deskmate305.installer-banner.png",
-        "sha256": "52d44a64f97fd0689144be77c1bee74e6ca77203b961aea680e2d5c277757de0",
-        "source_sha256": "52d44a64f97fd0689144be77c1bee74e6ca77203b961aea680e2d5c277757de0",
-        "size": 5521,
-        "width": 720,
-        "height": 400,
+        "id": "ui.deskmate305.installation-complete",
+        "path": "application-library/ui.deskmate305.installation-complete.png",
+        "sha256": "8b4cfdf3095729f3a909c502ee5a70d2637a4cc72861eeb0195c9ab7729621c8",
+        "source_sha256": "8b4cfdf3095729f3a909c502ee5a70d2637a4cc72861eeb0195c9ab7729621c8",
+        "size": 11704,
+        "width": 640,
+        "height": 480,
         "origin": "documentary-software-ui-capture",
-        "source_id": "applib-001-host-install-banner-20261128",
-        "caption": "The DeskMate 03.05.00 installer banner in the campaign host environment. The version line identifies the nine-disk TVDog set used for the application library host baseline.",
-        "alt": "Black screen with the words DeskMate, Version 03.05.00, and Copyright 1984,1990 Tandy Corporation.",
+        "source_id": "applib-001-host-installation-complete-20261128",
+        "caption": "The DeskMate 03.05.00 installer reporting completion in the application library host environment, before the first Desktop launch.",
+        "alt": "Installer screen reporting that installation is complete with a prompt to continue.",
         "rights_note": "Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
-        "page_id": "applications.ecosystem",
-        "section_heading": "Application library environments"
+        "page_id": "applications.application-library-host",
+        "section_heading": "Installation result"
     },
     {
         "id": "ui.homeword2.saved-memo",
@@ -2051,8 +2051,8 @@
         "caption": "HomeWord II 1.20 after a cold relaunch, showing the saved synthetic memo reopened from C:\\HOMEWORD\\SYNTH001.HMW in the title bar.",
         "alt": "Blue HomeWord II editing screen with two lines of synthetic memo text and the saved file name in the title bar.",
         "rights_note": "Synthetic test content. Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Tandy Corporation and Sierra. Original vendor rights are retained.",
-        "page_id": "applications.ecosystem",
-        "section_heading": "Application library environments"
+        "page_id": "applications.application-library-homeword-ii",
+        "section_heading": "Smoke test"
     },
     {
         "id": "ui.lotus-spreadsheet.formula-sheet",
@@ -2067,8 +2067,8 @@
         "caption": "Lotus Spreadsheet 1.0 for DeskMate with fictional values 10 in A1 and 20 in A2 and the formula +A1+A2 in A3, which displays 30.",
         "alt": "Spreadsheet grid with 10, 20, and 30 in the first three rows of column A and the formula bar showing +A1+A2.",
         "rights_note": "Synthetic test content. Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Tandy Corporation and Lotus Development Corporation. Original vendor rights are retained.",
-        "page_id": "applications.ecosystem",
-        "section_heading": "Application library environments"
+        "page_id": "applications.application-library-lotus-spreadsheet",
+        "section_heading": "Smoke test"
     },
     {
         "id": "ui.express-publisher.text-mode",
@@ -2083,8 +2083,8 @@
         "caption": "Express Publisher 1.00 running on its own bundled DeskMate 03.05.00 runtime, with a synthetic text object placed on an untitled page.",
         "alt": "Express Publisher page workspace with tool palette, rulers, and the words SYNTHETIC PAGE placed on the page.",
         "rights_note": "Synthetic test content. Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Power Up! Software Corporation and Tandy Corporation. Original vendor rights are retained.",
-        "page_id": "applications.ecosystem",
-        "section_heading": "Application library environments"
+        "page_id": "applications.application-library-express-publisher",
+        "section_heading": "Smoke test"
     }
   ]
 }

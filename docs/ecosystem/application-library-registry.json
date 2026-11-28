@@ -1,10 +1,21 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "campaign": "application-library-001",
   "updated": "2026-11-28",
-  "description": "Reusable DeskMate application environments qualified during campaign application-library-001. Commercial media, installed program trees, disk images, ROMs and raw captures are private; this file records identities and observations only.",
+  "description": "Reusable DeskMate application environments qualified during campaign application-library-001. Commercial media, installed program trees, disk images, ROMs and raw captures are private; this file records opaque identifiers, hashes and observations only.",
   "evidence_page": "docs/evidence/application-library-001/README.md",
   "overview": "docs/ecosystem/application-library.md",
+  "qualification_state_definitions": {
+    "verified_media": "Archive matches its transfer receipt by size and SHA-256.",
+    "inspected_installer": "Installer identified far enough to record its model, choices and media order.",
+    "installed": "Installer reported completion and the destination directory holds the program tree.",
+    "native_launch": "The application reached its own interface in a disposable guest.",
+    "partial_functional_testing": "A representative native workflow was exercised without producing a completed artifact.",
+    "native_document_creation": "The application wrote a document from fictional data.",
+    "cold_reopen": "The application reopened that document after a full restart.",
+    "candidate_baseline": "A stopped image, manifest, hashes and installation record exist for review.",
+    "independent_canonical": "A second party reproduced and reviewed the environment. None reached this state in this campaign."
+  },
   "machine_profiles": {
     "tandy1000rsx-dos500": {
       "emulator": "86Box 7.0 automation build",
@@ -30,7 +41,7 @@
       "architecture": "native DeskMate environment",
       "source_archives": [
         {
-          "path": "deskmate/dm305dk1.zip through dm305dk9.zip",
+          "path": "tandy1000/deskmate/dm305dk1.zip through dm305dk9.zip",
           "origin": "private TVDog mirror",
           "source_index": "http://ftp.oldskool.org/pub/tvdog/tandy1000/deskmate/00_index.txt"
         }
@@ -48,13 +59,34 @@
       ],
       "machine_profile": "tandy1000rsx-dos500",
       "installed_directory": "C:\\DESKMATE",
-      "installed_files": 142,
-      "installed_bytes": 2602369,
-      "qualification": "sealed-baseline",
+      "directory_files": 142,
+      "directory_bytes": 2602369,
+      "installer_root_files": ["AUTOEXEC.BAT", "CONFIG.SYS", "DMCSR.CFG"],
+      "qualification": "candidate-baseline",
+      "qualification_states": {
+        "verified_media": true,
+        "inspected_installer": true,
+        "installed": true,
+        "native_launch": true,
+        "partial_functional_testing": false,
+        "native_document_creation": false,
+        "cold_reopen": false,
+        "candidate_baseline": true,
+        "independent_canonical": false
+      },
       "baseline": "applib-001-host-desk305-20261128",
       "stopped_disk_sha256": "cd530f8f9cbb7fd550d5af69632bdb0480d5eca0a5426c654bcb58d40cb32e41",
       "guide": "docs/ecosystem/application-library-desk305-host.md",
-      "smoke_test": "Desktop launched from the hard disk in 640x480 after installation.",
+      "related_campaigns": [
+        {
+          "campaign": "release-installation-atlas-001",
+          "pr": 225,
+          "media_hashes_identical": true,
+          "stopped_disk_sha256": "e8a2f15b95cfccdc5ddc3058d6678fbeb6ece60b9d3f34e5bfd13d3519144fd8",
+          "file_count_note": "Atlas reports 142 aggregate files as 140 directory files plus AUTOEXEC.BAT and CONFIG.SYS; this campaign lists 142 directory files and three installer-written root files. Separate installation identities.",
+          "duplicate_capture": "The same installer-banner frame (SHA-256 52d44a64f97fd0689144be77c1bee74e6ca77203b961aea680e2d5c277757de0) appeared in both; this PR withdrew its copy and publishes a distinct installation-complete frame."
+        }
+      ],
       "limitations": [
         "Media are rebuilt 720 KiB FAT12 images from flat file sets; factory disk labels and layout are not recovered.",
         "Desktop accessory menus did not accept socket keyboard events."
@@ -99,6 +131,17 @@
       "machine_profile": "tandy1000rsx-dos500",
       "installed_directory": "C:\\HOMEWORD",
       "qualification": "smoke-tested",
+      "qualification_states": {
+        "verified_media": true,
+        "inspected_installer": true,
+        "installed": true,
+        "native_launch": true,
+        "partial_functional_testing": true,
+        "native_document_creation": true,
+        "cold_reopen": true,
+        "candidate_baseline": true,
+        "independent_canonical": false
+      },
       "guide": "docs/ecosystem/application-library-homeword-ii.md",
       "baseline": "applib-001-homeword2",
       "stopped_disk_sha256": "1f551f42353bff17b7c1da35ca3e12e650cd35f0d9c6f3c7a124eaa1154802cf",
@@ -147,7 +190,18 @@
       "installed_directory": "C:\\LOTUS-DM",
       "installed_files": 49,
       "installed_bytes": 1326144,
-      "qualification": "smoke-tested",
+      "qualification": "partial",
+      "qualification_states": {
+        "verified_media": true,
+        "inspected_installer": true,
+        "installed": true,
+        "native_launch": true,
+        "partial_functional_testing": true,
+        "native_document_creation": true,
+        "cold_reopen": false,
+        "candidate_baseline": true,
+        "independent_canonical": false
+      },
       "guide": "docs/ecosystem/application-library-lotus-spreadsheet.md",
       "baseline": "applib-001-lotus",
       "stopped_disk_sha256": "fa626de115c9701df774b16a9cfe294ca1b8671a77ed1d94538af52a50728c9a",
@@ -202,7 +256,18 @@
       "installed_files": 162,
       "installed_bytes": 2798696,
       "launcher": "EPDM",
-      "qualification": "launched",
+      "qualification": "partial",
+      "qualification_states": {
+        "verified_media": true,
+        "inspected_installer": true,
+        "installed": true,
+        "native_launch": true,
+        "partial_functional_testing": true,
+        "native_document_creation": false,
+        "cold_reopen": false,
+        "candidate_baseline": true,
+        "independent_canonical": false
+      },
       "guide": "docs/ecosystem/application-library-express-publisher.md",
       "baseline": "applib-001-express",
       "stopped_disk_sha256": "b9147b1d987a5ba43195610589c9d3cc22a049f1f4cd3dd6b52aebca67f26444",
@@ -227,16 +292,25 @@
       ]
     },
     {
-      "id": "quicken2.deskmate.200-release3",
+      "id": "quicken2.deskmate.200-release4",
       "product": "Quicken 2 for DeskMate",
       "publisher": "Intuit",
-      "observed_release": "2.0 Release 3",
-      "release_basis": "1989-dated program files; release number from the archive directory name",
+      "observed_release": "2.0 Release 4",
+      "release_basis": "Q.PDM member dated 1989-10-19 contains the string 'Version 2.0  Release 4'",
       "category": "personal finance",
       "source_archives": [
         {"path": "Quicken-2-for-DeskMate/quicken2.zip", "sha256": "551ac18c69ce9ae38fa6f7d89f779229867311138ffd63d1948234f7f488da67", "bytes": 380185}
       ],
-      "working_media": [{"name": "quicken2.img", "sha256": "not recorded"}],
+      "source_member_identities": {
+        "Q.PDM": {"bytes": 304192, "sha256": "80386dfe77ee2d3e4ab65ecd5ed29daf94b13c236000457ae93a8932b987470e", "embedded_version": "Version 2.0  Release 4"}
+      },
+      "sibling_release": {
+        "release": "2.0 Release 3",
+        "archive": "Quicken-for-DeskMate/QDM.zip",
+        "archive_sha256": "131d0e110827991a47e0eb49d45705fa238fece64ae92deb6972bb025ce73d2c",
+        "Q.PDM": {"bytes": 304096, "sha256": "affeb2c28f6f8a163291ac7c6f90b68075a0a4b26438065fd313b5c1977b4e45", "embedded_version": "Version 2.0  Release 3"},
+        "note": "Not attempted. Releases are distinct builds; media are not assumed interchangeable."
+      },
       "architecture": "standalone INSTALL.COM with DeskMate runtime 03.02",
       "runtime_dependencies": {
         "deskmate_release": "03.02 (bundled installer runtime)",
@@ -245,6 +319,17 @@
       "machine_profile": "tandy1000rsx-dos500",
       "installed_directory": null,
       "qualification": "blocked",
+      "qualification_states": {
+        "verified_media": true,
+        "inspected_installer": true,
+        "installed": false,
+        "native_launch": false,
+        "partial_functional_testing": false,
+        "native_document_creation": false,
+        "cold_reopen": false,
+        "candidate_baseline": false,
+        "independent_canonical": false
+      },
       "guide": "docs/ecosystem/application-library-quicken-2.md",
       "baseline": "applib-001-quicken2",
       "stopped_disk_sha256": "40099ef1fdbb01935e78afe010169b10d907394420d35505c82cd97c151f02a0",
@@ -252,16 +337,25 @@
       "native_formats": [".PDM"],
       "existing_research": "Ecosystem catalog entry for Quicken; TVDog reference library.",
       "research_opportunities": [
-        "Compare Q.PDM and QCHECKS.DAT with Release 4 and Personal Financial Assistant.",
-        "Determine what the missing Program Disk 2 contains."
+        "Compare the two Q.PDM builds and whether QCHECKS.DAT stays readable across releases.",
+        "Determine what the missing program disk 2 contains."
+      ],
+      "observed": [
+        "INSTALL.COM printed the DeskMate 03.02 runtime banner and stopped at the runtime splash with no prompt and no further input.",
+        "The DeskMate 03.05 Desktop F7 Install accessory opened but did not accept socket keyboard events."
+      ],
+      "established_requirement": [
+        "Q.PDM contains 'Please insert Quicken Disk 2 in drive X.' and labels QUICKEN DISK 1/2 and WORKING QUICKEN DISK 1/2.",
+        "The archived member set is a single program-disk set and contains no second-disk members."
       ],
       "blockers": [
-        "Archive lacks the Program Disk 2 requested by INSTALL.COM.",
-        "INSTALL.COM hangs at the runtime splash before accepting input.",
+        "Archive lacks the program disk 2 that Q.PDM requests.",
+        "INSTALL.COM stopped at the runtime splash before accepting input; the cause is not established.",
         "DeskMate Desktop Install accessory did not respond to socket keyboard events."
       ],
       "limitations": [
-        "No installation; baseline is a clean host clone retained for a retry."
+        "No installation; baseline is a clean host clone retained for a retry.",
+        "The observed splash stop and the missing-disk requirement are separate findings."
       ]
     }
   ],
@@ -286,6 +380,6 @@
     {"product": "StudyWare GRE", "status": "media verified, not attempted"},
     {"product": "StudyWare SAT variants", "status": "media verified, not attempted"},
     {"product": "filePro for DeskMate", "status": "media verified, not attempted"},
-    {"product": "Quicken 2.0 Release 4", "status": "not inspected; may supply the missing Release 3 program disk"}
+    {"product": "Quicken 2.0 Release 3 (QDM.zip)", "status": "verified media, not attempted; distinct from the blocked Release 4"}
   ]
 }

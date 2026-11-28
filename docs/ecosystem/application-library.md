@@ -24,7 +24,7 @@ explains the method and the states those entries record.
 | Sierra HomeWord II | 1.20 (1990 media) | Native module on a bundled runtime | Installed, smoke-tested, save and cold reopen |
 | Lotus Spreadsheet | 1.0 (`LOTUS-DM`, 1989-1990 files) | Native module plus standalone launcher | Installed, smoke-tested, native save |
 | Express Publisher | 1.00, runtime 03.05.00 | Standalone distribution with its own DeskMate runtime | Installed, launched, page edited; save blocked by dialog input |
-| Quicken 2.0 | Release 3 media (`Q.PDM`) | Standalone `INSTALL.COM` with runtime 03.02 | Blocked: missing program disk and an unresponsive installer |
+| Quicken 2.0 | Release 4 media (`quicken2.zip`, `Q.PDM` dated 1989-10-19) | Standalone `INSTALL.COM` with runtime 03.02 | Blocked: installer stopped at its splash; archive lacks the program disk 2 that `Q.PDM` requests |
 
 Detailed procedures live on the subordinate pages:
 
@@ -37,26 +37,34 @@ Detailed procedures live on the subordinate pages:
 ## Qualification states
 
 The campaign uses the same evidence discipline as the release guides, with
-distinctions that matter when a future agent picks an environment:
+distinctions that matter when a future agent picks an environment. These are
+the states the registry records per application:
 
-1. **Cataloged** — the product appears in the ecosystem catalog or a period
-   source.
-2. **Verified media** — an archive in the private TVDog mirror matches its
+1. **Verified media** — an archive in the private TVDog mirror matches its
    transfer receipt by size and SHA-256.
-3. **Inspected installer** — the installer was listed or run far enough to
+2. **Inspected installer** — the installer was listed or run far enough to
    identify its model, choices, and media order.
-4. **Installed** — the installer reported completion and the destination
+3. **Installed** — the installer reported completion and the destination
    directory holds the program tree.
-5. **Launched** — the native application reached its own interface in a
+4. **Native launch** — the application reached its own interface in a
    disposable guest.
-6. **Smoke-tested** — a short native workflow with fictional data produced a
-   native document that the application itself accepted.
-7. **Sealed baseline** — a stopped disk image with a manifest, hashes, and
-   installation record, treated as canonical only after independent review.
+5. **Partial functional testing** — a representative native workflow was
+   exercised, but not to a completed artifact.
+6. **Native document creation** — the application itself wrote a document from
+   fictional data.
+7. **Cold reopen** — the application reopened that document after a full
+   restart, or the campaign records that this was not verified.
+8. **Candidate baseline preserved** — a stopped image, manifest, hashes, and
+   installation record exist for review in private storage.
+9. **Independent canonical qualification** — a second party reproduced and
+   reviewed the environment. **No application in this campaign has reached
+   this state.**
 
-A package can stop at any step without invalidating the earlier ones. Express
-Publisher, for example, is installed and launched but not smoke-tested to a
-saved document; its registry entry says so.
+A package can stop at any step without invalidating the earlier ones, and the
+registry records each state separately rather than as one label. Express
+Publisher is installed, launched, and partially tested, but has no native
+document; Lotus has a document but no verified cold reopen; HomeWord II reaches
+native document creation and cold reopen. None is canonical.
 
 ## Host environment and baselines
 
@@ -143,6 +151,19 @@ limits follow from that and are recorded honestly rather than worked around:
 
 These limits are about the input path, not about the applications.
 
+## Relationship to the Installation Atlas
+
+The nine-disk DeskMate host here is a separate installation identity from the
+one in the unmerged Release Installation Atlas 001 (PR #225). The two runs
+reconstructed nine byte-identical working images from the same TVDog sets and
+followed the same installer sequence, but their stopped disk hashes differ. The
+[host guide](application-library-desk305-host.md#comparison-with-the-installation-atlas)
+records what was independently reproduced and what was not, including the
+140-directory-file versus 142-aggregate-file reporting difference.
+
+Both campaigns also produced the same installer-banner frame. This PR withdrew
+its duplicate and publishes a distinct installation-complete frame instead.
+
 ## Registry
 
 [`application-library-registry.json`](application-library-registry.json)
@@ -186,7 +207,8 @@ campaign ranked them:
 - Mavis Beacon Teaches Typing 1.31T, Alge-Blaster Plus 1.3, StudyWare Physics,
   GRE, and SAT variants.
 - filePro for DeskMate.
-- Quicken 2.0 Release 4, which may supply the program disk Release 3 lacks.
+- Quicken 2.0 Release 3 (`QDM.zip`), which was never attempted and remains a
+  separate identity from the blocked Release 4 attempt.
 
 Historically documented titles without acquired media stay in the
 [ecosystem catalog](README.md) and are deliberately not part of this

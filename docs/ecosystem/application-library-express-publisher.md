@@ -88,6 +88,11 @@ runtime's 570K conventional-memory requirement and its expectation of
 
 ## Smoke test
 
+Qualification states: verified media, inspected installer, installed, native launch,
+partial functional testing, candidate baseline preserved. Native document
+creation and cold reopen: **not achieved**. Independent canonical
+qualification: not achieved.
+
 1. Typed "SYNTHETIC PAGE" into the page area; the text appeared as a placed text
    object in Text Mode.
 2. Opened File → Save As, which proposed `UNTITLED.EPD` in `C:\EXPRESS\DOCS`

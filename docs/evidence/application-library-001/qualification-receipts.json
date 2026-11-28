@@ -57,7 +57,7 @@
         "printer_phase": "installer requested DMPDIBMM.ACC from Disk 6; answer ALL re-read Disks 7, 8, 9",
         "result": "installation complete screen; Desktop launched from the hard disk in 640x480"
       },
-      "installed": {"files": 142, "bytes": 2602369},
+      "installed": {"directory_files": 142, "directory_bytes": 2602369, "installer_root_files": ["AUTOEXEC.BAT", "CONFIG.SYS", "DMCSR.CFG"], "note": "The Atlas run reports 142 aggregate files as 140 directory files plus two root files; this campaign lists 142 directory entries and three installer-written root files. Separate installations; counts are reported as enumerated."},
       "baseline": "applib-001-host-desk305-20261128",
       "stopped_disk_sha256": "cd530f8f9cbb7fd550d5af69632bdb0480d5eca0a5426c654bcb58d40cb32e41",
       "captures": {"directory": "host/captures", "frames": 33},
@@ -161,26 +161,45 @@
       "captures": {"directory": "ep/captures", "frames": 73}
     },
     {
-      "id": "receipt.quicken2.release3",
+      "id": "receipt.quicken2.release4",
       "kind": "application",
-      "product": "Quicken 2.0 Release 3",
-      "source_archive_sha256": "551ac18c69ce9ae38fa6f7d89f779229867311138ffd63d1948234f7f488da67",
+      "product": "Quicken 2.0 Release 4",
+      "identity": {
+        "archive": "Quicken-2-for-DeskMate/quicken2.zip",
+        "archive_sha256": "551ac18c69ce9ae38fa6f7d89f779229867311138ffd63d1948234f7f488da67",
+        "Q.PDM_bytes": 304192,
+        "Q.PDM_sha256": "80386dfe77ee2d3e4ab65ecd5ed29daf94b13c236000457ae93a8932b987470e",
+        "Q.PDM_date": "1989-10-19",
+        "embedded_version": "Version 2.0  Release 4",
+        "sibling_release": {
+          "release": "2.0 Release 3",
+          "archive": "Quicken-for-DeskMate/QDM.zip",
+          "archive_sha256": "131d0e110827991a47e0eb49d45705fa238fece64ae92deb6972bb025ce73d2c",
+          "Q.PDM_bytes": 304096,
+          "Q.PDM_sha256": "affeb2c28f6f8a163291ac7c6f90b68075a0a4b26438065fd313b5c1977b4e45",
+          "embedded_version": "Version 2.0  Release 3",
+          "attempted": false
+        }
+      },
       "installation": {
         "attempts": [
-          "INSTALL.COM from a labelled image: DeskMate 03.02 runtime splash, then hang awaiting Program Disk 2",
-          "DeskMate Desktop F7 Install accessory: menu did not accept socket keyboard events"
+          "INSTALL.COM from a labelled image printed the DeskMate 03.02 runtime banner and stopped at the runtime splash with no prompt",
+          "DeskMate Desktop F7 Install accessory opened but did not accept socket keyboard events"
         ],
-        "result": "not installed"
+        "result": "not installed",
+        "observed": "installer splash stop; cause not established",
+        "established_separately": "Q.PDM requests 'Please insert Quicken Disk 2 in drive X.' and the archived member set contains no second-disk members"
       },
       "installed": null,
       "baseline": "applib-001-quicken2",
       "stopped_disk_sha256": "40099ef1fdbb01935e78afe010169b10d907394420d35505c82cd97c151f02a0",
       "captures": {"directory": "qn/captures", "frames": 16},
       "blockers": [
-        "missing Program Disk 2",
-        "installer hang at runtime splash",
+        "archive lacks the program disk 2 that Q.PDM requests",
+        "installer splash stop (cause unknown)",
         "Desktop accessory input path"
-      ]
+      ],
+      "release_mixing": "Release 3 media were not combined with the Release 4 program."
     }
   ]
 }

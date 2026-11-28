@@ -64,6 +64,10 @@ the table.
 
 ## Smoke test
 
+Qualification states: verified media, inspected installer, installed, native launch,
+partial functional testing, native document creation, cold reopen, candidate
+baseline preserved. Independent canonical qualification: not achieved.
+
 Fictional content only:
 
 1. At the editor, typed two lines: "Synthetic memo for the DeskMate application

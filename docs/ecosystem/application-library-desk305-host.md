@@ -72,18 +72,27 @@ identity.
 7. Reset to the hard disk and run `DESK`; the Desktop starts in 640×480 with
    Text, Address, Calendar, PC-Link, Quick Launch, and Teach Me.
 
-## Result
+## Installation result
+
+Qualification states: verified media, inspected installer, installed, native launch,
+candidate baseline preserved. Independent canonical qualification: not achieved.
 
 - Installation completed with the installer's own completion screen.
 - `C:\DESKMATE` holds 142 files, 2,602,369 bytes.
+- The installer also wrote or updated three files outside that directory:
+  `AUTOEXEC.BAT` and `CONFIG.SYS` at the root, plus `DMCSR.CFG`. The root
+  therefore holds those three files and the four DOS 5.00 baseline files
+  (`IBMBIO.COM`, `IBMDOS.COM`, `COMMAND.COM`, `WINA20.386`).
 - DOS 5.00 verified before and after installation, and the Desktop launched
   from the hard disk.
 - The session was stopped at 501,766 ms of emulated time and 30,886 frames.
 
 ## Sealed baseline
 
-`C:/DeskMateLab/baselines/applib-001-host-desk305-20261128` (private) is
-read-only and carries `baseline-manifest.json`. Stopped disk SHA-256:
+Baseline `applib-001-host-desk305-20261128` (private) is read-only and carries
+the manifest `baseline-manifest.json`. The baseline identifier and the stopped
+disk hash below are the public locators; the storage path stays in private
+campaign records. Stopped disk SHA-256:
 
 ```
 cd530f8f9cbb7fd550d5af69632bdb0480d5eca0a5426c654bcb58d40cb32e41
@@ -93,6 +102,46 @@ The baseline manifest records the emulator build, machine configuration, BIOS
 and ROM identities, configuration and NVRAM hashes, the media hashes above, the
 installation record, and the relationship to
 `rsx-dos5-pristine-20261104`.
+
+## Comparison with the Installation Atlas
+
+The independent Release Installation Atlas 001 (PR #225, unmerged at the time
+of writing) installed the same nine TVDog file sets on the same DOS baseline
+and machine profile. The two runs are separate installation identities, not two
+records of one installation.
+
+**Independently reproduced:**
+
+- All nine working image hashes are byte-identical between the two runs, which
+  independently confirms the reconstruction from the same source sets.
+- The installer sequence matches: banner, destination entry, numbered disk
+  requests, the printer phase reading `DMPDIBMM.ACC` from Disk 6, the `ALL`
+  choice, and the re-read of Disks 7, 8, and 9.
+- The installed tree composition matches: 6 `.RFD`, 4 `.CFG`, 3 `.FF1`,
+  3 `.R89`, 2 `.FIL`, and 2 `.EXE` files among 142 directory entries here.
+
+**Not reproduced, and deliberately kept separate:**
+
+- Stopped disk hashes differ: this campaign's image is
+  `cd530f8f9cbb7fd550d5af69632bdb0480d5eca0a5426c654bcb58d40cb32e41`;
+  the Atlas run reports `e8a2f15b95cfccdc5ddc3058d6678fbeb6ece60b9d3f34e5bfd13d3519144fd8`.
+  Separate sessions, different guest input pacing, and different test state
+  are enough to explain that; neither image is claimed to be the other.
+- File counts are reported differently. This campaign's directory listing
+  enumerates 142 files under `C:\DESKMATE` and three installer-written root
+  files. The Atlas run reports 142 aggregate files as 140 directory files plus
+  `AUTOEXEC.BAT` and `CONFIG.SYS`. The 142 directory entries here match the
+  Atlas's stated extension composition, so the two-file difference in the
+  directory figure is most likely a counting convention rather than a missing
+  program file, but it is not proven and is left open.
+- The Atlas run's destination dialog opened empty; this run accepted
+  `C:\DESKMATE` directly. That is an input-path difference, not a media one.
+
+**Duplicate capture resolved:** both campaigns initially published the same
+installer-banner frame (SHA-256
+`52d44a64f97fd0689144be77c1bee74e6ca77203b961aea680e2d5c277757de0`). This PR
+withdrew its copy and publishes a distinct installation-complete frame instead,
+so integration does not need to deduplicate two identical assets.
 
 ## Use in the library
 

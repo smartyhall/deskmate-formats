@@ -119,9 +119,9 @@ qualified environments, and each application has its own guide:
 [Express Publisher 1.00](application-library-express-publisher.md), and the
 [blocked Quicken 2.0 attempt](application-library-quicken-2.md).
 
-The screenshots below show those environments running with fictional data.
-They document the observed interface; they are not a redistribution of the
-applications.
+Each guide carries a reviewed documentary capture where one is available;
+the captures show the environments running with fictional data. They document
+the observed interface and are not a redistribution of the applications.
 
 ## Publication
 

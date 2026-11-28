@@ -53,6 +53,11 @@ Both disks are file sets rather than images. They were built as labelled
 
 ## Smoke test
 
+Qualification states: verified media, inspected installer, installed, native launch,
+partial functional testing, native document creation, candidate baseline
+preserved. Cold reopen: **not verified**. Independent canonical qualification:
+not achieved.
+
 Fictional values only:
 
 1. Entered `10` in A1 and `20` in A2, using the arrow keys to move between

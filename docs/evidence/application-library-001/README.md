@@ -32,6 +32,24 @@ remain in private laboratory storage.
 - Within one session the host elapsed time and emulated guest time are reported
   separately; no usage telemetry source was available for this campaign.
 
+## Integration corrections (review round)
+
+- Removed the absolute host-side storage path from the published host guide.
+  Opaque baseline identifiers and hashes are the public locators.
+- Corrected the Quicken package identity from Release 3 to Release 4 using the
+  preserved `Q.PDM` members: Release 4's member is 304,192 bytes dated
+  1989-10-19 and contains "Version 2.0  Release 4"; Release 3's is 304,096
+  bytes dated 1989-04-11 and contains "Version 2.0  Release 3". The observed
+  splash stop and the missing second disk are now recorded separately.
+- Added the relationship between this campaign's nine-disk host installation
+  and the Installation Atlas run (PR #225): identical working-media hashes,
+  different stopped-disk hashes, and a recorded 140-plus-two versus 142 count
+  difference.
+- Withdrew the duplicated installer-banner capture and published a distinct
+  installation-complete frame instead.
+- Added public routes for the overview and five guides, and retargeted the
+  captures to those pages.
+
 ## Publication status
 
 - Published: authored documentation, registry, receipts, the media builder
