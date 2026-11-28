@@ -65,3 +65,49 @@ Regenerate those inputs into an empty private output location with:
 ```powershell
 python -I tools/experimental/historical_utility_002_defects.py tests/fixtures/application-generated/filer/hu002-sorted.fil <new-directory>
 ```
+
+## Completed DBrepair results
+
+Two healthy controls and six separate single-defect inputs went through
+the same native DBrepair module. Each OLD backup matches its exact input.
+The eight outputs were extracted from the stopped disk before Filer
+reopen, then cold-opened individually and checked with Records → Count.
+A second stopped-disk extraction matched all sixteen files byte-for-byte.
+The [native results](../evidence/historical-utility-qualification-002-native-results.json)
+give the exact file identities, per-table topology and record IDs,
+physical differences, dialog observations and guest clocks.
+
+| Case | Reported recovered / unrecovered bytes | Filer count | Observed result |
+| --- | ---: | ---: | --- |
+| Healthy sorted | 9,216 / 0 | 8 | Output equals input. |
+| Healthy unsorted | 9,216 / 0 | 8 | All records and their insertion order survive. DATA moves from pages 6 → 8 to 4 → 8, and the index from 7 to 5. LAYOUTS moves from pages 4/5 to 6/7. |
+| Wrong locator | 9,216 / 0 | 8 | Exact healthy sorted bytes restored. |
+| Wrong index ID | 9,216 / 0 | 8 | Exact healthy sorted bytes restored. |
+| Missing index entry | 9,216 / 0 | 8 | Exact healthy sorted bytes restored. |
+| Disconnected DATA page | 8,192 / 1,024 | 5 | DELTA, ECHO and FOXTROT are absent. Page 8 is omitted. |
+| Damaged row terminator | 9,216 / 0 | 7 | FOXTROT is absent. Both DATA pages survive. |
+| Wrong directory count | 9,216 / 0 | 8 | Exact healthy sorted bytes restored. |
+
+The independent reader accepted all eight repaired files and rejected all
+six malformed inputs. DBCOLS and LAYOUTS preserve their logical row values
+and column definitions in all eight outputs. In the unsorted control,
+normalization changes 2,400 byte positions and preserves the DATA logical
+rows and IDs. The row-terminator case shows why the utility's byte
+accounting needs a separate check against the original records.
+
+Three distinct utility outputs are preserved as exact synthetic fixtures
+for [normalization](../../tests/fixtures/application-generated/filer/hu002-dbrepair-unsorted.fil),
+[page loss](../../tests/fixtures/application-generated/filer/hu002-dbrepair-link-loss.fil),
+and [row loss](../../tests/fixtures/application-generated/filer/hu002-dbrepair-frame-loss.fil).
+The sorted fixture already preserves the bytes common to the other five
+outputs.
+
+## Interruption boundary
+
+The native Fil2dbf 0.1 run reached Select Table for MIXED.FIL. Its last
+capture shows DATA visible and unselected. A completed export and the
+standalone comparison remain unverified. The standalone DOS profile was
+prepared and had no campaign launch. Multiple index pages, fixed-decimal
+formatting, further utility qualification, and reader or registry changes
+remain open. This checkpoint records existing work from the stopped
+experiments and the last capture of the unfinished conversion.
