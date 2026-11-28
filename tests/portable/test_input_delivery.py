@@ -117,6 +117,7 @@ class Peer:
         self.sent_buttons = 0
         # A build that lies about completion: reports events still queued.
         self.completion_queue = 0
+        self.stopped_next = False
         if ring == 'wrapped':
             self.head, self.tail = 0x38, 0x1E
         elif ring == 'malformed':
@@ -239,14 +240,17 @@ class Peer:
         parts = request.split()
         down = parts[1] == 'down'
         self.seq += 1
+        events = len(parts) - 2
+        lost = 0
         if (self.discard_at is not None and not self.discarded
                 and len(self.received) >= self.discard_at):
             # The interface accepted an event and then discarded it: an empty
             # queue afterwards must not read as full delivery.
             self.dropped += 1
+            lost = 1
             self.discarded = True
-        self.accepted += len(parts) - 2
-        self.forwarded += len(parts) - 2
+        self.accepted += events
+        self.forwarded += events - lost
         for token in parts[2:]:
             scan = int(token, 0)
             if scan == 0x2A:
@@ -264,9 +268,17 @@ class Peer:
                     self._echo(scan)
             self.ms += 2
         reply = {'ok': True, 'ms': self.ms, 'frames': self.frames, 'held': True}
+        if self.stopped_next:
+            # A key command ended by the debugger leaves events pending.
+            self.stopped_next = False
+            reply.update({'events': len(parts) - 2, 'seq': self.seq,
+                          'stopped': 'debugger'})
+            return reply
         if self.instrumented:
             reply.update({'events': len(parts) - 2, 'seq': self.seq,
-                          'queue': self.completion_queue})
+                          'queue': self.completion_queue, 'replaced': 0,
+                          'accepted': self.accepted, 'forwarded': self.forwarded,
+                          'dropped': self.dropped, 'pending': 0, 'generation': 0})
         return reply
 
     def _submit(self):
@@ -312,10 +324,15 @@ class Peer:
                      'w': 1, 'h': 1, 'bios_mode': self.bios_mode, 'quantum_ms': 1}
             if self.instrumented:
                 reply['caps'] = ['input_queue', 'event_seq', 'wait_queue', 'video_meta',
-                                 'mouse_state', 'keyboard_held']
-                reply['input'] = {'queue': self._depth(), 'capacity': 64, 'seq': self.seq,
+                                 'mouse_state', 'keyboard_held', 'input_accounting',
+                                 'queue_pump', 'key_cancel']
+                # The interface forwards each event immediately here, so its own
+                # queue is empty and every accepted event is forwarded. The BIOS
+                # ring depth is a different queue and lives in guest memory.
+                reply['input'] = {'queue': 0, 'capacity': 64, 'pending': 0, 'seq': self.seq,
                                   'accepted': self.accepted, 'forwarded': self.forwarded,
-                                  'dropped': self.dropped, 'held_keys': 0, 'gap_ms': 2}
+                                  'dropped': self.dropped, 'generation': 0,
+                                  'accounting': True, 'held_keys': 0, 'gap_ms': 2}
             return reply
         if parts == ['video']:
             text = self.bios_mode in inp.TEXT_MODES
@@ -340,6 +357,16 @@ class Peer:
             return self._step(int(parts[1], 0))
         if verb in ('hold', 'release'):
             return {'ok': True, 'ms': self.ms, 'held': True}
+        if parts == ['key', 'cancel']:
+            cancelled = self._depth()
+            self.head = self.tail
+            # These were counted as forwarded when the request arrived; the
+            # cancellation moves them to dropped, so the identity still holds.
+            self.forwarded -= cancelled
+            self.dropped += cancelled
+            return {'ok': True, 'cancelled': cancelled, 'dropped': self.dropped,
+                    'generation': 0, 'ms': self.ms, 'frames': self.frames,
+                    'held': True}
         if verb == 'key':
             return self._key(request)
         if verb == 'memr':
@@ -1126,6 +1153,33 @@ class FacilityTests(unittest.TestCase):
         self.peer.completion_queue = 1
         with self.assertRaises(box.ProtocolError):
             facility.client.tap(0x11)
+
+    def test_input_accounting_balances_across_a_request(self):
+        facility = self.facility(peer={'instrumented': True})
+        facility.client.type_ascii('AB')
+        state = facility.automation_queue()
+        self.assertTrue(state['accounting'])
+        self.assertEqual(state['accepted'],
+                         state['forwarded'] + state['dropped'] + state['pending'])
+        self.assertEqual(facility.client.last_dropped_delta, 0)
+
+    def test_cancel_discards_pending_events_with_accounting(self):
+        facility = self.facility(peer={'instrumented': True, 'queue_only': True,
+                                       'drain': False})
+        facility.client.type_ascii('AB')
+        result = facility.client.cancel_keys()
+        self.assertEqual(result['cancelled'], 2)
+        state = facility.automation_queue()
+        self.assertEqual(state['queue'], 0)
+        self.assertEqual(state['dropped'], 2)
+        self.assertEqual(state['accepted'],
+                         state['forwarded'] + state['dropped'] + state['pending'])
+
+    def test_a_stopped_key_request_is_an_interrupted_delivery(self):
+        facility = self.facility(peer={'instrumented': True})
+        self.peer.stopped_next = True
+        with self.assertRaises(box.ProtocolError):
+            facility.client.tap(0x0F)
 
     def test_wait_queue_is_bounded_when_the_queue_never_drains(self):
         facility = self.facility(peer={'instrumented': True, 'queue_only': True, 'drain': False})

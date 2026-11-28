@@ -63,6 +63,10 @@ class Client:
         self.sock.settimeout(timeout)
         self.pending = bytearray()
         self.last_key_seq = None
+        self.last_key_counts = None
+        self.last_dropped_delta = 0
+        self.last_replaced = 0
+        self.last_generation_delta = 0
         try:
             self.sock.sendall(('auth ' + token + '\n').encode('ascii'))
             reply = self._read()
@@ -191,7 +195,40 @@ class Client:
         if state['forwarded'] > state['accepted'] or state['dropped'] > state['accepted']:
             self.close()
             raise ProtocolError('input counters are inconsistent')
+        # Builds that announce input_accounting also report the events still
+        # pending. Every accepted event is then forwarded, discarded or pending;
+        # if that identity fails, no counter from this build is trustworthy.
+        for key in ('pending', 'generation'):
+            if key in state and type(state[key]) is not int:
+                self.close()
+                raise ProtocolError(f'invalid input {key}')
+        if 'accounting' in state and type(state['accounting']) is not bool:
+            self.close()
+            raise ProtocolError('invalid input accounting flag')
+        if 'pending' in state:
+            if state['pending'] != state['queue']:
+                self.close()
+                raise ProtocolError('input pending count disagrees with occupancy')
+            if state['accepted'] != (state['forwarded'] + state['dropped']
+                                     + state['pending']):
+                self.close()
+                raise ProtocolError('input accounting does not balance')
         return state
+
+    def cancel_keys(self):
+        """Discard events this interface still owes, and report how many.
+
+        Cancellation is explicit and accounted: the build adds the discarded
+        events to `dropped`, so an empty queue afterwards never looks like
+        delivery.
+        """
+        if not self.supports('key_cancel'):
+            raise FeatureUnavailable('this build does not implement key cancel')
+        result = self._call('key cancel')
+        if type(result.get('cancelled')) is not int or result['cancelled'] < 0:
+            self.close()
+            raise ProtocolError('invalid key cancel reply')
+        return result
 
     def wait_queue(self, timeout_ms):
         """Wait, bounded, until the automation key queue has drained."""
@@ -381,6 +418,11 @@ class Client:
         """
         if 'seq' not in reply:
             return
+        if reply.get('stopped'):
+            # A key command can be ended by the debugger with events still
+            # pending. That is an interrupted delivery, not a completion.
+            self.close()
+            raise ProtocolError(f'key request stopped before completion: {reply["stopped"]}')
         seq, queue, reported = reply.get('seq'), reply.get('queue'), reply.get('events')
         if (type(seq) is not int or type(queue) is not int or type(reported) is not int):
             self.close()
@@ -392,6 +434,32 @@ class Client:
             self.close()
             raise ProtocolError('input event sequence gap')
         self.last_key_seq = seq
+        counts = ('accepted', 'forwarded', 'dropped', 'pending', 'generation')
+        present = [key for key in counts if key in reply]
+        if present:
+            if len(present) != len(counts) or any(type(reply[key]) is not int for key in counts):
+                self.close()
+                raise ProtocolError('malformed key completion counters')
+            previous = self.last_key_counts
+            if previous is not None:
+                if reply['accepted'] - previous['accepted'] != events:
+                    self.close()
+                    raise ProtocolError('key request accepted a different number of events')
+                # `replaced` counts events from the previous request discarded
+                # when this one started. Anything else dropped is this
+                # request's own loss, and it must explain the missing forwards.
+                dropped = reply['dropped'] - previous['dropped']
+                replaced = reply.get('replaced', 0)
+                if type(replaced) is not int or not 0 <= replaced <= dropped:
+                    self.close()
+                    raise ProtocolError('malformed replaced-event count')
+                if reply['forwarded'] - previous['forwarded'] + (dropped - replaced) != events:
+                    self.close()
+                    raise ProtocolError('key request did not forward every accepted event')
+                self.last_dropped_delta = dropped
+                self.last_replaced = replaced
+                self.last_generation_delta = reply['generation'] - previous['generation']
+            self.last_key_counts = {key: reply[key] for key in counts}
 
     def tap(self, code):
         with self.lock:
