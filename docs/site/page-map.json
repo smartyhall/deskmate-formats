@@ -663,6 +663,84 @@
       "is_hub": true,
       "role": "current-guide",
       "source": "docs/hubs/project.md"
+    },
+    {
+      "id": "applications.application-library",
+      "slug": "applications/application-library",
+      "title": "DeskMate application library",
+      "section": "deskmate",
+      "subsection": "The wider ecosystem",
+      "order": 115,
+      "summary": "Reusable installed environments for larger DeskMate applications, with qualification states, runtime findings, and a machine-readable registry.",
+      "date": "2026-11-28",
+      "is_hub": false,
+      "role": "current-guide",
+      "source": "docs/ecosystem/application-library.md"
+    },
+    {
+      "id": "applications.application-library-host",
+      "slug": "applications/application-library/deskmate-305-host",
+      "title": "DeskMate 3.05 host environment",
+      "section": "deskmate",
+      "subsection": "Application library environments",
+      "order": 120,
+      "summary": "Installing the nine-disk DeskMate 03.05.00 set as the sealed host environment behind the application library baselines.",
+      "date": "2026-11-28",
+      "is_hub": false,
+      "role": "current-guide",
+      "source": "docs/ecosystem/application-library-desk305-host.md"
+    },
+    {
+      "id": "applications.application-library-homeword-ii",
+      "slug": "applications/application-library/homeword-ii",
+      "title": "HomeWord II 1.20",
+      "section": "deskmate",
+      "subsection": "Application library environments",
+      "order": 130,
+      "summary": "Sierra HomeWord II 1.20: bundled-runtime installation, native memo creation, and a verified cold reopen.",
+      "date": "2026-11-28",
+      "is_hub": false,
+      "role": "current-guide",
+      "source": "docs/ecosystem/application-library-homeword-ii.md"
+    },
+    {
+      "id": "applications.application-library-lotus-spreadsheet",
+      "slug": "applications/application-library/lotus-spreadsheet",
+      "title": "Lotus Spreadsheet 1.0",
+      "section": "deskmate",
+      "subsection": "Application library environments",
+      "order": 140,
+      "summary": "Lotus Spreadsheet 1.0 for DeskMate: two-disk installation, standalone launch, a formula worksheet, and a native save.",
+      "date": "2026-11-28",
+      "is_hub": false,
+      "role": "current-guide",
+      "source": "docs/ecosystem/application-library-lotus-spreadsheet.md"
+    },
+    {
+      "id": "applications.application-library-express-publisher",
+      "slug": "applications/application-library/express-publisher",
+      "title": "Express Publisher 1.00",
+      "section": "deskmate",
+      "subsection": "Application library environments",
+      "order": 150,
+      "summary": "Express Publisher 1.00: its bundled DeskMate 03.05.00 runtime, the FILES=20 requirement, page editing, and an unfinished save.",
+      "date": "2026-11-28",
+      "is_hub": false,
+      "role": "current-guide",
+      "source": "docs/ecosystem/application-library-express-publisher.md"
+    },
+    {
+      "id": "applications.application-library-quicken-2",
+      "slug": "applications/application-library/quicken-2",
+      "title": "Quicken 2.0, blocked",
+      "section": "deskmate",
+      "subsection": "Application library environments",
+      "order": 160,
+      "summary": "Quicken 2.0 Release 4: package identity, the installer splash stop, and the independently established second-disk requirement.",
+      "date": "2026-11-28",
+      "is_hub": false,
+      "role": "current-guide",
+      "source": "docs/ecosystem/application-library-quicken-2.md"
     }
   ]
 }
