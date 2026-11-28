@@ -109,6 +109,14 @@ test("combined archival report retains a single top-level heading", () => {
   assert.match(html, /<h2[^>]*id="phase-iii-a-bounded-multi-record-generation-and-deskmate-validation"/);
 });
 
+test("a renamed heading keeps its published fragment as an alias", () => {
+  const html = renderSource(byId.get("formats.corkboard"));
+  assert.match(html,
+    /<h1[^>]*id="deskmate-note-pad-and-corkboard-measured-file-format-reference"/);
+  const alias = /id="deskmate-note-pad-and-corkboard-read-only-file-format-reference"/g;
+  assert.equal((html.match(alias) || []).length, 1);
+});
+
 test("site layout preserves independently scrollable technical tables on phones", () => {
   const css = fs.readFileSync(path.join(ROOT, "website/src/assets/site-layout.css"), "utf8");
   assert.match(css, /\.document\s*\{[^}]*overflow-x:\s*clip/);

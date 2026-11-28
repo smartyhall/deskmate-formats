@@ -165,6 +165,17 @@ function resolveLink(href, entry) {
   return "https://github.com/smartyhall/deskmate-formats/blob/main/" +
     encodeURI(resolved) + suffix;
 }
+/**
+ * A published fragment is a permanent link. When a heading's wording changes,
+ * its former anchor is kept as an alias rather than dropped. Keys are page IDs;
+ * each value maps the heading's current anchor to the previously published one.
+ */
+const LEGACY_ANCHORS = Object.freeze({
+  "formats.corkboard": Object.freeze({
+    "deskmate-note-pad-and-corkboard-measured-file-format-reference":
+      "deskmate-note-pad-and-corkboard-read-only-file-format-reference",
+  }),
+});
 function renderSource(entry) {
   const raw = fs.readFileSync(sourcePath(entry), "utf8");
   const tokens = md.parse(raw, {});
@@ -193,6 +204,13 @@ function renderSource(entry) {
         const count = headingIds.get(base) || 0;
         headingIds.set(base, count + 1);
         token.attrSet("id", count ? base + "-" + count : base);
+        // The alias sits inside the heading so the old fragment lands exactly
+        // where the old heading did; one element cannot carry two IDs.
+        const alias = (LEGACY_ANCHORS[entry.id] || {})[token.attrGet("id")];
+        if (alias && Array.isArray(items[i + 1].children))
+          items[i + 1].children.unshift({
+            type: "html_inline", content: '<span id="' + alias + '"></span>',
+          });
         // Long reports are read out of order; offer their section headings.
         if (token.tag === "h2")
           contents.push({ id: token.attrGet("id"), text: heading.replace(/[*_`]/g, "") });
