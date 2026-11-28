@@ -1,5 +1,44 @@
 # Project status — DeskMate formats
 
+## Corkboard interoperability and a native-qualified writer — 2026-11-28
+
+The [cross-edition Corkboard campaign](docs/research/corkboard-interoperability-002-20261128.md)
+transferred published note specimens between the RSX OEM **03.04.04** accessory
+and the alternate generic **03.05.00** installation by injecting exact bytes into
+campaign-owned media, then reopened, edited, closed and extracted every result.
+Reopening a foreign note and closing it without an edit changed **no byte** in
+every trial, including a cleared note with residual content and the 2,794-byte
+composition; editing across editions rewrote the first header word as the new
+caret position and preserved CP437 bytes. 03.05.00 loaded all 65 rows of the
+maximum note and refused further input at the same size, silently.
+
+Caret trials separated storage from drawing: a seeded word of 20 reopened with
+the caret inside the first row, a word of 43 - past a 41-byte text - degraded to
+end-of-text instead of being rejected, and words on and after a CR both reopened
+byte-identical. Home and End are **row-scoped**: End on a 65-row wrapped logical
+line stored 42. A cold open plus close wrote nothing even with an active
+selection, so campaign 001's T5 difference is session history rather than the
+gesture alone.
+
+A seeded control-range note showed `0x01`–`0x1F` and `0x7F` are displayed as
+line breaks and preserved on save, while `0x0A` is removed from the visible text -
+the only substitution observed. Two edits near a soft-wrap boundary left bytes
+after the terminator with the visible text unchanged; both are published and
+their mechanism is not claimed.
+
+`deskmate_formats.corkboard` now builds notes as well as reading them:
+`create_note`, `update_note` and `clear_note` reproduce **five published
+application-created files byte for byte** plus the published cleared file, and
+every construction policy - caret default, preserved second word, preserved
+residual bytes, the 2,794-byte refusal with an explicit override - is documented
+as a choice. A tool-built four-line CP437 note was opened in **both** original
+accessories (03.04.04 and 03.05.00), displayed correctly, edited and saved; the
+application's saved file differed from the writer's bytes only by the header word
+and the typed character. Information Center 3.61 drew the same note on its
+dashboard and left the file byte-identical. Qualification covers one text shape
+on two editions; the Personal DeskMate 2 and SL/2 03.03.01 legs and an
+Information Center edit were not completed, and are recorded as limitations.
+
 ## Convergence baseline 001 — characterization — 2026-11-27
 
 The [convergence checkpoint](docs/research/convergence-baseline-001-20261127.md)
