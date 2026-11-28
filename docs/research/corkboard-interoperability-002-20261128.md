@@ -188,9 +188,11 @@ which the note format otherwise never stores.
 
 T11 produced a related pattern. Its seeded note kept a `0x0A` control byte; on
 load the editor dropped that byte from the visible text (160 → 159 bytes) but the
-stored caret stayed at 160. The typed `Z9` then appeared on screen on its own row,
-while the saved file kept the 159-byte visible text and wrote `Z`, `9` (with
-intervening NULs) **after** the terminator.
+stored caret stayed beyond the remaining text. The typed `Z9` then appeared on
+screen on its own row, while the saved file kept the 159-byte visible text, stored
+a first word of **161** (not the 159-byte text length, and not the 160-byte caret
+this campaign had seen before that byte was dropped) and wrote `Z`, then `Z9`
+(with intervening NULs) **after** the terminator.
 
 Neither write damaged the visible text. Both are recorded as **observed
 anomalies with an unestablished mechanism**: an edit near a soft-wrap boundary, or

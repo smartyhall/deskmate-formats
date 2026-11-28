@@ -1,4 +1,5 @@
 from pathlib import Path
+import struct
 import unittest
 
 from deskmate_formats import corkboard
@@ -68,6 +69,9 @@ class CorkboardTests(unittest.TestCase):
 class CrossEditionTests(unittest.TestCase):
     """Native files written by one edition over another edition's note."""
 
+    def fixture(self, name):
+        return (FIXTURES / name / 'DMCORKBD').read_bytes()
+
     def test_rsx_edited_a_305_note_and_appended_its_own_caret_position(self):
         note = corkboard.parse_file(FIXTURES / '305-edited-foreign-14line-20261128/DMCORKBD')
         lines = [f'LAB {i:02d} ALPHA BRAVO CHARLIE'.encode() for i in range(1, 15)]
@@ -78,7 +82,7 @@ class CrossEditionTests(unittest.TestCase):
         note = corkboard.parse_file(FIXTURES / '305-edit-rsx-cp437-20261128/DMCORKBD')
         self.assertEqual(note.header_words, (19, 0))
         self.assertEqual(note.text, bytes.fromhex('829bb0b1b2c4c9cddbe1f10d454e4482e1') + b'Z9')
-        self.assertEqual(note.decoded[-5:], '\u00e9\u00dfZ9')
+        self.assertEqual(note.decoded[-8:], '\rEND\u00e9\u00dfZ9')
 
     def test_305_turned_a_zero_filled_buffer_into_a_two_byte_note(self):
         note = corkboard.parse_file(FIXTURES / '305-create-from-blank-20261128/DMCORKBD')
@@ -97,14 +101,23 @@ class CrossEditionTests(unittest.TestCase):
         self.assertIn(b'\n', residual)
 
     def test_a_control_range_save_dropped_only_the_line_feed(self):
-        note = corkboard.parse_file(FIXTURES / 'rsx-control-range-save-20261128/DMCORKBD')
-        self.assertEqual(note.header_words, (161, 0))
-        self.assertEqual(len(note.text), 159)
-        self.assertNotIn(b'\n', note.text)
-        self.assertIn(b'\x01', note.text)
-        self.assertIn(b'\x1f', note.text)
-        self.assertIn(b'\x7f', note.text)
-        self.assertTrue(note.text.startswith(b'<01>\x01<02>\x02'))
+        # The reader refuses control bytes by policy, so this native file is
+        # inspected as bytes rather than through parse_bytes.
+        data = self.fixture('rsx-control-range-save-20261128')
+        first, second = struct.unpack_from('<HH', data)
+        body = data[4:]
+        end = body.index(0)
+        text = body[:end]
+        # The stored word counts two bytes the file does not hold contiguously:
+        # the visible text is 159 bytes, the word is 161.
+        self.assertEqual((first, second), (161, 0))
+        self.assertEqual(len(text), 159)
+        self.assertNotIn(b'\n', text)
+        for byte in (b'\x01', b'\x1f', b'\x7f'):
+            self.assertIn(byte, text)
+        self.assertTrue(text.startswith(b'<01>\x01<02>\x02'))
+        # The typed characters landed after the terminator, not in the text.
+        self.assertEqual(body[end + 4:end + 6], b'Z9')
 
 
 class CorkboardWriterTests(unittest.TestCase):
