@@ -5025,6 +5025,50 @@
       "synthetic_data": true,
       "native_saved": true,
       "source_sha256": "2f61d4adfb5d007849c5420bea6cbe6fcb72b11478d2216bdcfd0095fba37e17"
+    },
+    {
+      "path": "corkboard/rsx-caret-selection-20261128/DMCORKBD",
+      "size": 2864,
+      "sha256": "8cd0a2b88fe6c6c93eb4969e0b105aedbbe83420412ca7ad2eec7ff9ddfb68ad",
+      "application": "Tandy DeskMate Corkboard",
+      "version": "DeskMate 03.04.04, Tandy 1000 RSX OEM",
+      "experiment": "November 28, 2026 Corkboard header and capacity campaign",
+      "origin": "Typed a three-line synthetic note in F10 Corkboard, then cold-reopened it, extended the first line and closed with Escape. Reopened, selected seven characters with Shift+Left and closed with Escape again. Direct FAT16 traversal and 7-Zip agreed on the file bytes.",
+      "expected_content": "CURSOR PROBE 20261128 ALPHA, CR, BRAVO LINE TWO CHARLIE, CR, XABDELTA LAST. Header words 57 and 0: the first word is the insertion offset of the closed editor, not the 64-byte text length.",
+      "evidence_class": "Application-generated synthetic native specimen",
+      "evidence_report": "docs/research/corkboard-storage-001-20261128.md",
+      "synthetic_data": true,
+      "native_saved": true,
+      "source_sha256": "35ea3bc020cf509336e438b06974ec7aea3736f4d0fd3db23a741fa98bd3bb30"
+    },
+    {
+      "path": "corkboard/rsx-cp437-20261128/DMCORKBD",
+      "size": 2864,
+      "sha256": "63ec0dcfe2702ff0f6f314d20725aa3126836fbb844afe43e0f6c8b24024e700",
+      "application": "Tandy DeskMate Corkboard",
+      "version": "DeskMate 03.04.04, Tandy 1000 RSX OEM",
+      "experiment": "November 28, 2026 Corkboard header and capacity campaign",
+      "origin": "Seeded a disposable clone's note with CP437 bytes through the guest's DEBUG, opened it in F10 Corkboard, then entered Alt+130 and Alt+225 on the numeric keypad and closed with Escape. The editor wrote the resulting file. Direct FAT16 traversal and 7-Zip agreed on the file bytes.",
+      "expected_content": "CP437 bytes 82 9B B0 B1 B2 C4 C9 CD DB E1 F1, one CR, END, then the natively entered 82 and E1. Header words 17 and 0.",
+      "evidence_class": "Application-generated synthetic native specimen with a tool-authored starting buffer",
+      "evidence_report": "docs/research/corkboard-storage-001-20261128.md",
+      "synthetic_data": true,
+      "native_saved": true
+    },
+    {
+      "path": "corkboard/rsx-maximum-2794-20261128/DMCORKBD",
+      "size": 2864,
+      "sha256": "8ebaa22476c8b44e5f789d7f70c3d38eaf4bcc7d9a9abdec0f1063e1d463413a",
+      "application": "Tandy DeskMate Corkboard",
+      "version": "DeskMate 03.04.04, Tandy 1000 RSX OEM",
+      "experiment": "November 28, 2026 Corkboard header and capacity campaign",
+      "origin": "Filled a blank note in F10 Corkboard with sixty-five rows of forty-two synthetic characters, verified against the live text array after every twenty keystrokes, then confirmed that Enter, a further character and a mid-row insertion were all refused. Closed with Escape and cold-reopened the note.",
+      "expected_content": "Sixty-five rows of forty-two characters, each ending in CR except the last, 2794 text bytes, with nothing but zeros after the terminator. Header words 42 and 0.",
+      "evidence_class": "Application-generated synthetic native specimen",
+      "evidence_report": "docs/research/corkboard-storage-001-20261128.md",
+      "synthetic_data": true,
+      "native_saved": true,
+      "source_sha256": "35ea3bc020cf509336e438b06974ec7aea3736f4d0fd3db23a741fa98bd3bb30"
     }
   ]
 }

@@ -23,8 +23,12 @@ From the earlier native trials (not repeated here):
 * an edit that replaced one character mid-text left the text length unchanged
   and changed `0x0000` from `0x29` to `0x14` (= 20), with the changed character
   at `0x0017` (= 23, the twentieth text byte);
-* **Clear** zeroed `0x0000` and wrote a NUL at `0x0004`, while every later text
-  byte stayed in the file.
+* **Clear** wrote a NUL at `0x0004`, while every later text byte stayed in the
+  file and **both header words were left as they were**. A November 28 check of
+  the published cleared specimen (`corkboard/rsx-cleared/DMCORKBD`, SHA-256
+  `29a77821…3348517a`) found words `(20, 0)` and exactly one differing byte at
+  `0x0004`; this note previously claimed Clear zeroed `0x0000` and is corrected
+  here. See the [November 28 campaign](corkboard-storage-001-20261128.md#clear-residual-bytes-and-one-correction).
 
 The stock file from the 03.05.00 media is 2,864 zero bytes
 (SHA-256 `35ea3bc020cf509336e438b06974ec7aea3736f4d0fd3db23a741fa98bd3bb30`),
@@ -97,7 +101,7 @@ Observed, for a 2,864-byte file whose text begins at `0x0004`:
 | 41-byte two-line note, cursor at end | `0x0029` = 41 | 41 text bytes, then zeros |
 | 377-byte fourteen-line note, cursor at end | `0x0179` = 377 | 377 text bytes, then zeros |
 | same note, one character replaced at text index 19, cursor there | `0x0014` = 20 | 41 bytes, one changed |
-| after **Clear** | `0x0000` = 0 | `0x0004` = NUL, later bytes retained |
+| after **Clear** | `0x0014` = 20, unchanged | `0x0004` = NUL, later bytes retained |
 
 Candidate structure:
 
@@ -177,7 +181,7 @@ Expected memory changes for controlled edits, to be confirmed or refuted:
 | type ten characters | bytes `+0x0004…+0x000D`, word = 10 |
 | Home, then type | word = 1, previous text shifted one byte |
 | Backspace at position *k* | byte *k−1* removed, tail shifted, word = *k−1* |
-| Clear | word = 0, byte `+0x0004` = 0, later bytes unchanged |
+| Clear | word unchanged, byte `+0x0004` = 0, later bytes unchanged |
 | fill beyond 2,860 bytes | a refusal or truncation at the capacity boundary |
 
 Two cautions for the worker:

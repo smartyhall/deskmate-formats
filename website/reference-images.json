@@ -1924,6 +1924,54 @@
       "rights_note": "Third-party historical advertising. Publisher rights retained; not covered by the project's GPL or CC licenses. Limited attributed excerpt under the operator's 2026-11-27 authorization.",
       "page_id": "history.chronology",
       "section_heading": "The 1988 ROM generation"
-    }
+    },
+  {
+    "id": "ui.corkboard.maximum-note",
+    "path": "corkboard-20261128/ui.corkboard.maximum-note.png",
+    "sha256": "9491fdb925befbe9b816f24236508479528ad8e0574db2dbffb3e2620331342c",
+    "source_sha256": "9491fdb925befbe9b816f24236508479528ad8e0574db2dbffb3e2620331342c",
+    "size": 32498,
+    "width": 640,
+    "height": 480,
+    "origin": "documentary-software-ui-capture",
+    "source_id": "freebuff-corkboard-20261128-9491fdb925befbe9",
+    "caption": "The measured maximum note in RSX DeskMate 03.04.04 Corkboard: sixty-five rows of forty-two characters, scrolled to rows 052 to 064, where Enter, further characters, and a mid-row insertion were all refused. The file held 2,794 text bytes.",
+    "alt": "Corkboard note scrolled to its last thirteen numbered rows, each a three-digit row number followed by a repeated synthetic alphabet-and-digit string, under the Clear, Print, and Cancel controls.",
+    "rights_note": "Synthetic test content. Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+    "page_id": "applications.note-pad-corkboard",
+    "section_heading": "How much a note can hold"
+  },
+  {
+    "id": "ui.corkboard.cp437-entered",
+    "path": "corkboard-20261128/ui.corkboard.cp437-entered.png",
+    "sha256": "fbc535e93f72c17eef4f3a3facc9986d1b138acf63ed32052d698ea0a4aedd49",
+    "source_sha256": "fbc535e93f72c17eef4f3a3facc9986d1b138acf63ed32052d698ea0a4aedd49",
+    "size": 20520,
+    "width": 640,
+    "height": 480,
+    "origin": "documentary-software-ui-capture",
+    "source_id": "freebuff-corkboard-20261128-fbc535e93f72c17e",
+    "caption": "The Corkboard note after Alt+130 and Alt+225 were entered on the numeric keypad. The accessory stored bytes 82 and E1, drew them as the CP437 characters e-acute and sharp-s, and kept them across a cold reopen.",
+    "alt": "Corkboard showing a short synthetic note of accented, shading, and box-drawing characters followed by END and two accented characters, with a block cursor.",
+    "rights_note": "Synthetic test content. Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+    "page_id": "applications.note-pad-corkboard",
+    "section_heading": "How much a note can hold"
+  },
+  {
+    "id": "ui.corkboard.maximum-note-cold-reopen",
+    "path": "corkboard-20261128/ui.corkboard.maximum-note-cold-reopen.png",
+    "sha256": "725b2a93ea6f53b5133004adfdb6e2cb2896b8e2b594874d5c3164ddf889aa6b",
+    "source_sha256": "725b2a93ea6f53b5133004adfdb6e2cb2896b8e2b594874d5c3164ddf889aa6b",
+    "size": 32402,
+    "width": 640,
+    "height": 480,
+    "origin": "documentary-software-ui-capture",
+    "source_id": "freebuff-corkboard-20261128-725b2a93ea6f53b5",
+    "caption": "The same maximum-length note after a cold boot. All sixty-five rows returned, and the caret came back at the start of row 001, matching the stored first header word of 42.",
+    "alt": "Corkboard reopened at the first rows of the maximum-length note, with the cursor restored at the start of the second row.",
+    "rights_note": "Synthetic test content. Historical UI documentation under the operator's 2026-11-21 authorization. Original interface: Tandy Corporation. Original vendor rights are retained.",
+    "page_id": "applications.note-pad-corkboard",
+    "section_heading": "How much a note can hold"
+  }
   ]
 }

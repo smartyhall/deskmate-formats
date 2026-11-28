@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "provider": "Freebuff",
+  "agent": "Freebuff native desktop agent",
+  "campaign_id": "corkboard-storage-001",
+  "checkpoint": "native-experiments-complete",
+  "observed_at_utc": "2026-11-28",
+  "observed_at_note": "Host date 2026-11-28; exact UTC instant unknown to agent tools.",
+  "git_revision": null,
+  "git_revision_note": "Recorded in the pull request; this receipt ships with the branch that carries the change.",
+  "execution_mode": "five native sessions on four campaign-owned clones of the sealed RSX installation, one emulator instance at a time on loopback port 8765, visible window",
+  "model": null,
+  "reasoning_effort": null,
+  "model_note": "Not exposed to agent tools.",
+  "source": {
+    "kind": "local allowlisted collector",
+    "version": "deskmate_formats.automation.client protocol 1",
+    "detail": "52 socket journals; each status reply contributes its emulated millisecond counter."
+  },
+  "coverage": "Caret calibration, selection, capacity composition trials, the maximum-length note, cold reopen, and a CP437 display and entry trial.",
+  "attribution_limits": "Guest memory reads are runtime observations for one edition and configuration, not format properties.",
+  "status": "native observations complete; report and fixtures being prepared",
+  "measurements": [
+    {"name": "emulated_guest_time_total", "value": 1716733, "unit": "ms",
+     "scope": "campaign", "semantics": "cumulative", "observed_at": "checkpoint", "reset_boundary": null},
+    {"name": "native_sessions", "value": 5, "unit": "launches",
+     "scope": "campaign", "semantics": "cumulative", "observed_at": "checkpoint", "reset_boundary": null},
+    {"name": "native_framebuffer_captures", "value": 68, "unit": "images",
+     "scope": "campaign", "semantics": "cumulative", "observed_at": "checkpoint", "reset_boundary": null},
+    {"name": "stopped_disk_checkpoints", "value": 5, "unit": "images",
+     "scope": "campaign", "semantics": "cumulative", "observed_at": "checkpoint", "reset_boundary": null},
+    {"name": "discarded_trials", "value": 2, "unit": "trials",
+     "scope": "campaign", "semantics": "cumulative", "observed_at": "checkpoint", "reset_boundary": null}
+  ],
+  "measurement_note": "Provider allowance, tokens, context size and quota remain unobservable. Emulated time is the sum of five launch-session counters.",
+  "private_evidence": "Socket journals, 68 raw PNGs, guest memory windows, stopped disks and launch receipts stay outside Git."
+}
